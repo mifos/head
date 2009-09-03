@@ -20,6 +20,7 @@
 
 package org.mifos.application.master.business;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.util.helpers.EntityType;
@@ -44,11 +45,11 @@ public class CustomFieldDefinitionEntityTest extends TestCase {
         CustomFieldDefinitionEntity customFieldMandatory = new CustomFieldDefinitionEntity(customFieldName, (short) 0,
                 CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, "default value", YesNoFlag.YES);
 
-        assertFalse(customFieldNotMandatory.isMandatory());
-        assertEquals(customFieldNotMandatory.getMandatoryStringValue(), "no");
+        Assert.assertFalse(customFieldNotMandatory.isMandatory());
+       Assert.assertEquals(customFieldNotMandatory.getMandatoryStringValue(), "no");
 
-        assertTrue(customFieldMandatory.isMandatory());
-        assertEquals(customFieldMandatory.getMandatoryStringValue(), "yes");
+       Assert.assertTrue(customFieldMandatory.isMandatory());
+       Assert.assertEquals(customFieldMandatory.getMandatoryStringValue(), "yes");
     }
 
 }

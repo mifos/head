@@ -20,6 +20,8 @@
 
 package org.mifos.framework.struts.tags;
 
+import junit.framework.Assert;
+
 import org.apache.struts.util.MessageResources;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -40,8 +42,8 @@ public class MifosPropertyMessageResourcesIntegrationTest extends MifosIntegrati
         MessageResources resource = factory.createResources(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
 
         // get a simple resource bundle entry
-        assertEquals("Admin", resource.getMessage(TestUtils.ukLocale(), "Account.Admin"));
+       Assert.assertEquals("Admin", resource.getMessage(TestUtils.ukLocale(), "Account.Admin"));
         // get a LookupValue
-        assertEquals("Branch Office", resource.getMessage(TestUtils.ukLocale(), ConfigurationConstants.BRANCHOFFICE));
+       Assert.assertEquals("Branch Office", resource.getMessage(TestUtils.ukLocale(), ConfigurationConstants.BRANCHOFFICE));
     }
 }

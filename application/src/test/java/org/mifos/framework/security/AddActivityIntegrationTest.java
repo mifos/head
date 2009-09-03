@@ -25,6 +25,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import junit.framework.Assert;
+
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -86,19 +88,19 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
         ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
 
-        assertEquals("Can use the executive washroom", fetched.getActivityName());
+       Assert.assertEquals("Can use the executive washroom", fetched.getActivityName());
 
-        assertEquals(SecurityConstants.LOAN_MANAGEMENT, (short) fetched.getParent().getId());
+       Assert.assertEquals(SecurityConstants.LOAN_MANAGEMENT, (short) fetched.getParent().getId());
 
         ActivityContext activityContext = new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
         AuthorizationManager authorizer = AuthorizationManager.getInstance();
         authorizer.init(database.openSession());
 
         UserContext admin = TestUtils.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
-        assertTrue(authorizer.isActivityAllowed(admin, activityContext));
+       Assert.assertTrue(authorizer.isActivityAllowed(admin, activityContext));
 
         UserContext nonAdmin = TestUtils.makeUser(TestUtils.DUMMY_ROLE);
-        assertFalse(authorizer.isActivityAllowed(nonAdmin, activityContext));
+        Assert.assertFalse(authorizer.isActivityAllowed(nonAdmin, activityContext));
         return upgrade;
     }
 
@@ -111,15 +113,15 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
                 "Can use the executive washroom");
         upgrade.upgrade(database.openConnection());
         ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
-        assertEquals(null, fetched.getParent());
+       Assert.assertEquals(null, fetched.getParent());
     }
 
     public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "Permissions-CanCreateFunds";
         String format = "Permissions-";
-        assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
+       Assert.assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
         String invalidKey = "CanCreateFunds";
-        assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
     }
 
     public void testConstructorTest() throws Exception {
@@ -131,7 +133,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, null, TEST_LOCALE,
                     "NewActivity");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddActivity.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddActivity.wrongConstructor);
         }
         String invalidKey = "NewActivity";
 
@@ -139,15 +141,15 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
             // use invalid lookup key format
             upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, invalidKey, newId, null);
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddActivity.wrongLookupValueKeyFormat);
+           Assert.assertEquals(e.getMessage(), AddActivity.wrongLookupValueKeyFormat);
         }
         String goodKey = "Permissions-NewActivity";
         // use valid construtor and valid key
         upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, goodKey, newId, null);
         upgrade.upgrade(database.openConnection());
         ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
-        assertEquals(null, fetched.getParent());
-        assertEquals(goodKey, fetched.getActivityName());
-        assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
+       Assert.assertEquals(null, fetched.getParent());
+       Assert.assertEquals(goodKey, fetched.getActivityName());
+       Assert.assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
     }
 }

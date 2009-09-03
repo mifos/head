@@ -48,6 +48,8 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
+import junit.framework.Assert;
+
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -348,8 +350,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         createPayment(loan, new Money("100"));
         StaticHibernateUtil.commitTransaction();
         loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        assertEquals(new LocalDate(), new LocalDate(loan.getAccountApprovalDate().getTime()));
-        assertEquals(new LocalDate(), new LocalDate(loan.getCreatedDate().getTime()));
+       Assert.assertEquals(new LocalDate(), new LocalDate(loan.getAccountApprovalDate().getTime()));
+       Assert.assertEquals(new LocalDate(), new LocalDate(loan.getCreatedDate().getTime()));
 
         TestObjectFactory.cleanUp(loan);
         TestObjectFactory.cleanUp(clientForLoanRedo);
@@ -420,11 +422,11 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         actionPerform();
         verifyForward(ActionForwards.update_success.toString());
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
-        assertEquals("test", loan.getCollateralNote());
-        assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue(), DELTA);
-        assertFalse(loan.isInterestDeductedAtDisbursement());
-        assertEquals(0, loan.getGracePeriodDuration().intValue());
-        assertEquals(firstInstallmentDateWithNoInterestPaidAtDisbursementDate, DateUtils.getUserLocaleDate(
+       Assert.assertEquals("test", loan.getCollateralNote());
+       Assert.assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue(), DELTA);
+        Assert.assertFalse(loan.isInterestDeductedAtDisbursement());
+       Assert.assertEquals(0, loan.getGracePeriodDuration().intValue());
+       Assert.assertEquals(firstInstallmentDateWithNoInterestPaidAtDisbursementDate, DateUtils.getUserLocaleDate(
                 TestObjectFactory.getContext().getPreferredLocale(), DateUtils.toDatabaseFormat(loan
                         .getAccountActionDate(Short.valueOf("1")).getActionDate())));
 
@@ -504,13 +506,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         actionPerform();
         verifyForward("get_success");
 
-        assertEquals(0, loan.getPerformanceHistory().getNoOfPayments().intValue());
-        assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
+       Assert.assertEquals(0, loan.getPerformanceHistory().getNoOfPayments().intValue());
+       Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
         modifyActionDateForFirstInstallment();
-        assertEquals("Total no. of notes should be 6", 6, accountBO.getAccountNotes().size());
-        assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("Total no. of notes should be 6", 6, accountBO.getAccountNotes().size());
+       Assert.assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils.getAttribute(
                 LoanConstants.NOTES, request)).size());
-        assertEquals("Total no. of flags should be 1", 1, accountBO.getAccountFlags().size());
+       Assert.assertEquals("Total no. of flags should be 1", 1, accountBO.getAccountFlags().size());
     }
 
     public void testPrevious() {
@@ -519,7 +521,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("method", "previous");
         performNoErrors();
         verifyForward("load_success");
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testPreview() {
@@ -529,7 +531,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("method", "preview");
         performNoErrors();
         verifyForward("preview_success");
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testforwardWaiveCharge() {
@@ -539,7 +541,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("type", "LoanAccount");
         performNoErrors();
         verifyForward("waiveLoanAccountCharges_Success");
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testLoadChangeLog() {
@@ -557,7 +559,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("entityType", "Loan");
         addRequestParameter("entityId", accountBO.getAccountId().toString());
         actionPerform();
-        assertEquals(1, ((List) request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
+       Assert.assertEquals(1, ((List) request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
         verifyForward("viewLoanChangeLog");
         TestObjectFactory.cleanUpChangeLog();
     }
@@ -583,7 +585,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward("getAllActivity_success");
-        assertEquals(1, ((List<LoanActivityView>) SessionUtils.getAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW,
+       Assert.assertEquals(1, ((List<LoanActivityView>) SessionUtils.getAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW,
                 request)).size());
     }
 
@@ -612,10 +614,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         ViewInstallmentDetails view = (ViewInstallmentDetails) SessionUtils.getAttribute(
                 LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS, request);
-        assertEquals(new Money("12.0"), view.getInterest());
-        assertEquals(new Money("100.0"), view.getFees());
-        assertEquals(new Money("0.0"), view.getPenalty());
-        assertEquals(new Money("100.0"), view.getPrincipal());
+       Assert.assertEquals(new Money("12.0"), view.getInterest());
+       Assert.assertEquals(new Money("100.0"), view.getFees());
+       Assert.assertEquals(new Money("0.0"), view.getPenalty());
+       Assert.assertEquals(new Money("100.0"), view.getPrincipal());
     }
 
     public void testGet() throws Exception {
@@ -629,11 +631,11 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         actionPerform();
         verifyForward("get_success");
 
-        assertEquals(0, loan.getPerformanceHistory().getNoOfPayments().intValue());
-        assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
+       Assert.assertEquals(0, loan.getPerformanceHistory().getNoOfPayments().intValue());
+       Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
         modifyActionDateForFirstInstallment();
-        assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
-        assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
+       Assert.assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils.getAttribute(
                 LoanConstants.NOTES, request)).size());
     }
 
@@ -649,11 +651,11 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         actionPerform();
         verifyForward("get_success");
 
-        assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
-        assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
+       Assert.assertEquals("Total no. of recent notes should be 3", 3, ((List<AccountNotesEntity>) SessionUtils.getAttribute(
                 LoanConstants.NOTES, request)).size());
 
-        assertEquals("Last payment action should be 'PAYMENT'", AccountActionTypes.DISBURSAL.getValue(), SessionUtils
+       Assert.assertEquals("Last payment action should be 'PAYMENT'", AccountActionTypes.DISBURSAL.getValue(), SessionUtils
                 .getAttribute(AccountConstants.LAST_PAYMENT_ACTION, request));
         client = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
         group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
@@ -702,7 +704,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("customerId", group.getCustomerId().toString());
         performNoErrors();
         verifyForward(ActionForwards.getPrdOfferigs_success.toString());
-        assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
+       Assert.assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
                 .getDisplayName());
     }
 
@@ -716,9 +718,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         performNoErrors();
         verifyForward(ActionForwards.getPrdOfferigs_success.toString());
 
-        assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
+       Assert.assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
                 .getDisplayName());
-        assertEquals(2, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
+       Assert.assertEquals(2, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
                 .size());
 
         TestObjectFactory.removeObject(loanOffering2);
@@ -740,9 +742,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         performNoErrors();
         verifyForward(ActionForwards.getPrdOfferigs_success.toString());
 
-        assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
+       Assert.assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
                 .getDisplayName());
-        assertEquals(4, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
+       Assert.assertEquals(4, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
                 .size());
 
         TestObjectFactory.removeObject(loanOffering1);
@@ -790,9 +792,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANFUNDS, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANFUNDS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
     }
 
     public void testLoadForMasterData() throws Exception {
@@ -810,10 +812,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
 
-        assertEquals(2, ((List) SessionUtils.getAttribute(MasterConstants.COLLATERAL_TYPES, request)).size());
+       Assert.assertEquals(2, ((List) SessionUtils.getAttribute(MasterConstants.COLLATERAL_TYPES, request)).size());
         // after the empty lookup name 259 and 263 are removed this will go down
         // to 129
-        assertEquals(131, ((List) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request)).size());
+       Assert.assertEquals(131, ((List) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request)).size());
 
         TestObjectFactory.removeObject(loanOffering);
     }
@@ -830,16 +832,16 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.load_success.toString());
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) request.getSession().getAttribute(
                 "loanAccountActionForm");
-        assertEquals(2, ((List) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST, request)).size());
-        // assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(),
+       Assert.assertEquals(2, ((List) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST, request)).size());
+        //Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(),
         // loanActionForm.getLoanAmount());
 
-        // assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall().toString(),
+        //Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall().toString(),
         // loanActionForm.getNoOfInstallments());
-        assertEquals(loanOffering.getDefInterestRate().toString(), loanActionForm.getInterestRate());
-        assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm.isInterestDedAtDisbValue());
-        assertEquals(loanOffering.getGracePeriodDuration().toString(), loanActionForm.getGracePeriodDuration());
-        assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession().getAttribute("UserContext"))
+       Assert.assertEquals(loanOffering.getDefInterestRate().toString(), loanActionForm.getInterestRate());
+       Assert.assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm.isInterestDedAtDisbValue());
+       Assert.assertEquals(loanOffering.getGracePeriodDuration().toString(), loanActionForm.getGracePeriodDuration());
+       Assert.assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession().getAttribute("UserContext"))
                 .getPreferredLocale()), loanActionForm.getDisbursementDate());
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
@@ -864,18 +866,18 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.load_success.toString());
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) request.getSession().getAttribute(
                 "loanAccountActionForm");
-        assertEquals(1, ((List) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST, request)).size());
-        assertEquals(1, loanActionForm.getDefaultFees().size());
+       Assert.assertEquals(1, ((List) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST, request)).size());
+       Assert.assertEquals(1, loanActionForm.getDefaultFees().size());
 
-        assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(),
+       Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(),
                 loanActionForm.getLoanAmount());
 
-        assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall().toString(),
+       Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall().toString(),
                 loanActionForm.getNoOfInstallments());
-        assertEquals(loanOffering.getDefInterestRate().toString(), loanActionForm.getInterestRate());
-        assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm.isInterestDedAtDisbValue());
-        assertEquals(loanOffering.getGracePeriodDuration().toString(), loanActionForm.getGracePeriodDuration());
-        assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession().getAttribute("UserContext"))
+       Assert.assertEquals(loanOffering.getDefInterestRate().toString(), loanActionForm.getInterestRate());
+       Assert.assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm.isInterestDedAtDisbValue());
+       Assert.assertEquals(loanOffering.getGracePeriodDuration().toString(), loanActionForm.getGracePeriodDuration());
+       Assert.assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession().getAttribute("UserContext"))
                 .getPreferredLocale()), loanActionForm.getDisbursementDate());
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -910,7 +912,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.schedulePreview_success.toString());
 
         LoanBO loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        assertNotNull(loan);
+        Assert.assertNotNull(loan);
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
@@ -985,7 +987,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
      * jumpToSchedulePreview(); performNoErrors();
      * verifyForward(ActionForwards.schedulePreview_success.toString());
      * LoanAccountActionForm actionForm = (LoanAccountActionForm) request
-     * .getSession().getAttribute("loanAccountActionForm"); assertEquals("0",
+     * .getSession().getAttribute("loanAccountActionForm");Assert.assertEquals("0",
      * actionForm.getGracePeriodDuration()); }
      */
     public void testCreate() throws Exception {
@@ -1001,20 +1003,20 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
                 "loanAccountActionForm");
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
+       Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
                 .getLoanAmount().toString());
 
-        assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
-        assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
+       Assert.assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
+       Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
                 .getNoOfInstallments());
-        // assertEquals(new java.sql.Date(DateUtils
+        //Assert.assertEquals(new java.sql.Date(DateUtils
         // .getCurrentDateWithoutTimeStamp().getTime()).toString(),
         // loan.getDisbursementDate().toString());
-        assertEquals(new LocalDate(), new LocalDate(loan.getDisbursementDate().getTime()));
+       Assert.assertEquals(new LocalDate(), new LocalDate(loan.getDisbursementDate().getTime()));
 
-        assertEquals(Short.valueOf("1"), loan.getGracePeriodDuration());
-        assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+       Assert.assertEquals(Short.valueOf("1"), loan.getGracePeriodDuration());
+       Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         TestObjectFactory.cleanUp(loan);
     }
 
@@ -1031,10 +1033,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
             addRequestParameter("method", "manage");
             actionPerform();
             verifyForward(ActionForwards.manage_success.toString());
-            assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
-            assertNotNull(SessionUtils.getAttribute(MasterConstants.COLLATERAL_TYPES, request));
-            assertNotNull(SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request));
-            assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
+            Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
+            Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.COLLATERAL_TYPES, request));
+            Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request));
+            Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1051,8 +1053,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
             addRequestParameter("method", "manage");
             actionPerform();
         } catch (PageExpiredException pe) {
-            assertTrue(true);
-            assertEquals(ExceptionConstants.PAGEEXPIREDEXCEPTION, pe.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(ExceptionConstants.PAGEEXPIREDEXCEPTION, pe.getKey());
         }
 
     }
@@ -1089,9 +1091,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
      * addRequestParameter("intDedDisbursement", "1"); actionPerform();
      * verifyForward(ActionForwards.managepreview_success.toString());
      * 
-     * assertNotNull(SessionUtils.getAttribute(
+     * Assert.assertNotNull(SessionUtils.getAttribute(
      * MasterConstants.COLLATERAL_TYPE_NAME, request));
-     * assertNotNull(SessionUtils.getAttribute(
+     * Assert.assertNotNull(SessionUtils.getAttribute(
      * MasterConstants.BUSINESS_ACTIVITIE_NAME, request)); }
      */
 
@@ -1142,13 +1144,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.update_success.toString());
 
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
-        assertEquals("test", loan.getCollateralNote());
-        assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue(), DELTA);
-        assertFalse(loan.isInterestDeductedAtDisbursement());
-        assertEquals(1, loan.getGracePeriodDuration().intValue());
-        assertEquals(DateUtils.format(newDate), DateUtils.getUserLocaleDate(TestObjectFactory.getContext()
+       Assert.assertEquals("test", loan.getCollateralNote());
+       Assert.assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue(), DELTA);
+        Assert.assertFalse(loan.isInterestDeductedAtDisbursement());
+       Assert.assertEquals(1, loan.getGracePeriodDuration().intValue());
+       Assert.assertEquals(DateUtils.format(newDate), DateUtils.getUserLocaleDate(TestObjectFactory.getContext()
                 .getPreferredLocale(), DateUtils.toDatabaseFormat(loan.getDisbursementDate())));
-        assertEquals(firstInstallmentDate, loan.getAccountActionDate(Short.valueOf("1")).getActionDate());
+       Assert.assertEquals(firstInstallmentDate, loan.getAccountActionDate(Short.valueOf("1")).getActionDate());
     }
 
     public void testLoanAccountFromLastLoan() throws Exception {
@@ -1166,8 +1168,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 "loanAccountActionForm");
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
 
-        assertEquals(new Money("200"), loan.getLoanAmount());
-        assertEquals(new Short("20"), loan.getNoOfInstallments());
+       Assert.assertEquals(new Money("200"), loan.getLoanAmount());
+       Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
         TestObjectFactory.cleanUp(loan);
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
                 .getPrdOfferingId()));
@@ -1188,8 +1190,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
                 "loanAccountActionForm");
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        assertEquals(new Money("2000"), loan.getLoanAmount());
-        assertEquals(new Short("20"), loan.getNoOfInstallments());
+       Assert.assertEquals(new Money("2000"), loan.getLoanAmount());
+       Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
         TestObjectFactory.cleanUp(loan);
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
                 .getPrdOfferingId()));
@@ -1474,7 +1476,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 LoanConstants.GLIM_ENABLED_VALUE, Collections.EMPTY_LIST, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
         replay(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
 
-        assertEquals(glimSessionAttributes, loanAccountAction.getGlimSpecificPropertiesToSet(
+       Assert.assertEquals(glimSessionAttributes, loanAccountAction.getGlimSpecificPropertiesToSet(
                 new LoanAccountActionForm(), "1", customerMock, new ArrayList<ValueListElement>()));
         verify(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
     }
@@ -1491,7 +1493,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         replay(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
         LoanAccountAction.GlimSessionAttributes glimSessionAttributes = new LoanAccountAction.GlimSessionAttributes(
                 LoanConstants.GLIM_DISABLED_VALUE);
-        assertEquals(glimSessionAttributes, loanAccountAction.getGlimSpecificPropertiesToSet(
+       Assert.assertEquals(glimSessionAttributes, loanAccountAction.getGlimSpecificPropertiesToSet(
                 new LoanAccountActionForm(), "1", customerMock, new ArrayList<ValueListElement>()));
         verify(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
     }
@@ -1525,7 +1527,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         List<LoanAccountDetailsViewHelper> clientDetails = new LoanAccountAction().populateClientDetailsFromLoan(Arrays
                 .asList(clientMock1, clientMock2), Arrays.asList(loanMock), new ArrayList<ValueListElement>());
-        assertEquals(Arrays.asList(clientDetails1, clientDetails2), clientDetails);
+       Assert.assertEquals(Arrays.asList(clientDetails1, clientDetails2), clientDetails);
         verify(clientMock1, clientMock2, loanMock);
     }
 

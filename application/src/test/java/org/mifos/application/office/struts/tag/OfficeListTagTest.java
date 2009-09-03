@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
@@ -85,7 +86,7 @@ public class OfficeListTagTest extends TestCase {
 
     public void testBranches() throws Exception {
         createSomeOffices();
-        assertEquals(1, regional.getBranchOnlyChildren().size());
+       Assert.assertEquals(1, regional.getBranchOnlyChildren().size());
         List<OfficeBO> officeList = new ArrayList<OfficeBO>();
         officeList.add(regional);
         new OfficeListTag().getBranchOffices(result, officeList, userContext, branch, "Branch");
@@ -96,7 +97,7 @@ public class OfficeListTagTest extends TestCase {
 
     public void testNothingAboveBranches() throws Exception {
         new OfficeListTag().getAboveBranches(result, null, null, null, null);
-        assertEquals("", result.toString());
+       Assert.assertEquals("", result.toString());
     }
 
     public void testAboveBranches() throws Exception {
@@ -121,7 +122,7 @@ public class OfficeListTagTest extends TestCase {
         assertWellFormedFragment("x <p>this <b>shows it off</b></p> z");
         try {
             assertWellFormedFragment("<unclosed>");
-            fail("Didn't get assertion failure");
+            Assert.fail("Didn't get assertion failure");
         } catch (DocumentException e) {
 
         }
@@ -130,7 +131,7 @@ public class OfficeListTagTest extends TestCase {
     public void testGetLink() throws Exception {
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
         XmlBuilder link = tag.getLink((short) 234, "My Office");
-        assertEquals("<a href=\"action?method=method&amp;"
+       Assert.assertEquals("<a href=\"action?method=method&amp;"
                 + "office.officeId=234&amp;office.officeName=My%20Office&amp;"
                 + "officeId=234&amp;officeName=My%20Office&amp;" + "currentFlowKey=flow\">My Office</a>", link
                 .getOutput());

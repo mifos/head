@@ -20,6 +20,7 @@
 
 package org.mifos.framework.util.helpers;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -28,14 +29,14 @@ public class MifosSelectHelperTest extends TestCase {
 
     public void testGetInstance() {
         MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
-        assertNotNull(mifosSelectHelper);
+        Assert.assertNotNull(mifosSelectHelper);
     }
 
     public void testGetValue() {
         MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
         String[] prdCarStatusIds = mifosSelectHelper.getValue(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID);
-        assertEquals("org.mifos.application.productdefinition.business.PrdStatusEntity", prdCarStatusIds[0]);
-        assertEquals(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, prdCarStatusIds[1]);
+       Assert.assertEquals("org.mifos.application.productdefinition.business.PrdStatusEntity", prdCarStatusIds[0]);
+       Assert.assertEquals(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, prdCarStatusIds[1]);
     }
 
 }

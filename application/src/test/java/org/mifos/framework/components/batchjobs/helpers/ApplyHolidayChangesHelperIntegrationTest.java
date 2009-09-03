@@ -23,6 +23,8 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -76,8 +78,8 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
 
         // There should not be any UnappliedHolidays
-        assertNotNull(holidays);
-        assertEquals(holidays.size(), 0);
+        Assert.assertNotNull(holidays);
+       Assert.assertEquals(holidays.size(), 0);
 
         TestObjectFactory.cleanUpHolidays(holidays);
         holidayEntity = null;
@@ -102,8 +104,8 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
 
         // There should not be any UnappliedHolidays
-        assertNotNull(holidays);
-        assertEquals(holidays.size(), 0);
+        Assert.assertNotNull(holidays);
+       Assert.assertEquals(holidays.size(), 0);
 
         TestObjectFactory.cleanUpHolidays(holidays);
         holidayEntity = null;

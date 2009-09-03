@@ -20,6 +20,8 @@
 
 package org.mifos.application.admindocuments.struts.action;
 
+import junit.framework.Assert;
+
 import org.junit.Ignore;
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
@@ -73,11 +75,11 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         actionPerform();
 
         AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
-        assertNotNull(adminDocument);
+        Assert.assertNotNull(adminDocument);
         ReportsPersistence rp = new ReportsPersistence();
         ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(ReportsJasperMap.class, adminDocument
                 .getAdmindocId());
-        assertNotNull(jasper);
+        Assert.assertNotNull(jasper);
 
         verifyNoActionErrors();
         verifyForward("create_success");
@@ -132,7 +134,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         addRequestParameter("admindocId", "1");
         actionPerform();
         AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
-        assertEquals("1", adminDocument.getAdmindocId().toString());
+       Assert.assertEquals("1", adminDocument.getAdmindocId().toString());
         verifyNoActionErrors();
         verifyForward(ActionForwards.edit_success.toString());
 

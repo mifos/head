@@ -21,6 +21,7 @@
 package org.mifos.application.accounts.business;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -52,16 +53,16 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, SEND_TO_ORPHANS);
         action.setLocaleId(TEST_LOCALE);
 
-        assertEquals(SEND_TO_ORPHANS, (short) action.getId());
-        assertEquals(" ", action.getLookUpValue().getLookUpName());
+       Assert.assertEquals(SEND_TO_ORPHANS, (short) action.getId());
+       Assert.assertEquals(" ", action.getLookUpValue().getLookUpName());
     }
 
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "AccountAction-LoanRepayment";
         String format = "AccountAction-";
-        assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
+       Assert.assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
         String invalidKey = "Action-LoanRepayment";
-        assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
     }
 
     public void testConstructor() throws Exception {
@@ -73,7 +74,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, TEST_LOCALE,
                     "NewAccountAction");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddAccountAction.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddAccountAction.wrongConstructor);
         }
         String invalidKey = "NewAccountAction";
 
@@ -81,7 +82,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
             // use invalid lookup key format
             upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, invalidKey);
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddAccountAction.wrongLookupValueKeyFormat);
+           Assert.assertEquals(e.getMessage(), AddAccountAction.wrongLookupValueKeyFormat);
         }
         String goodKey = "AccountAction-NewAccountAction";
         // use valid construtor and valid key
@@ -89,7 +90,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         upgrade.upgrade(database.openConnection());
         Session session = database.openSession();
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
-        assertEquals(goodKey, action.getLookUpValue().getLookUpName());
+       Assert.assertEquals(goodKey, action.getLookUpValue().getLookUpName());
     }
 
 }

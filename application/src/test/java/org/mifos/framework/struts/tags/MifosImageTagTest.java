@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -39,7 +40,7 @@ public class MifosImageTagTest extends TestCase {
         stringBuilder.append("<img src=" + str + " />");
         stringBuilder.append("</body>");
         stringBuilder.append("</html>");
-        assertEquals(stringBuilder.toString(), mifosImageTag.render());
+       Assert.assertEquals(stringBuilder.toString(), mifosImageTag.render());
         assertWellFormedFragment(mifosImageTag.render());
     }
 }

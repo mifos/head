@@ -28,6 +28,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 import java.sql.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -195,18 +197,18 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "load");
         ProductMixActionForm productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute(
                 "productMixActionForm");
-        assertNull(productMixActionForm);
+        Assert.assertNull(productMixActionForm);
 
         actionPerform();
         List<ProductTypeEntity> productTypeList = (List<ProductTypeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTTYPELIST, request);
 
-        assertNotNull(productTypeList);
+        Assert.assertNotNull(productTypeList);
 
-        assertTrue("" + productTypeList.size(), 1 == productTypeList.size());
+       Assert.assertTrue("" + productTypeList.size(), 1 == productTypeList.size());
         productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute("productMixActionForm");
 
-        assertNotNull(productMixActionForm);
+        Assert.assertNotNull(productMixActionForm);
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
@@ -223,15 +225,15 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
          * List<ProductTypeEntity> productTypeList = (List<ProductTypeEntity>)
          * SessionUtils
          * .getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,request);
-         * assertNotNull(productTypeList);
+         * Assert.assertNotNull(productTypeList);
          */
         ProductMixActionForm productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute(
                 "productMixActionForm");
-        assertNotNull(productMixActionForm);
+        Assert.assertNotNull(productMixActionForm);
         List<LoanOfferingBO> loanOffInstance = (List<LoanOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTINSTANCELIST, request);
 
-        assertTrue(3 == loanOffInstance.size());
+       Assert.assertTrue(3 == loanOffInstance.size());
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
@@ -248,16 +250,16 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
         List<SavingsOfferingBO> savingOffInstance = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTINSTANCELIST, request);
 
-        assertNotNull(savingOffInstance);
+        Assert.assertNotNull(savingOffInstance);
         SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, request);
 
         ProductMixActionForm productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute(
                 "productMixActionForm");
-        assertNotNull(productMixActionForm);
+        Assert.assertNotNull(productMixActionForm);
 
-        assertTrue(1 == savingOffInstance.size());
+       Assert.assertTrue(1 == savingOffInstance.size());
 
-        assertNotNull(savingOffInstance);
+        Assert.assertNotNull(savingOffInstance);
 
         verifyNoActionErrors();
         verifyNoActionMessages();
@@ -273,7 +275,7 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         UserContext userContext2 = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
-        assertEquals(userContext, userContext2);
+       Assert.assertEquals(userContext, userContext2);
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.viewAllProductMix_success.toString());
@@ -293,7 +295,7 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         List<PrdOfferingBO> allPrdOfferingList = (List<PrdOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.ALLOWEDPRODUCTLIST, request);
-        assertNotNull(allPrdOfferingList);
+        Assert.assertNotNull(allPrdOfferingList);
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.get_success.toString());
@@ -316,9 +318,9 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
          * SessionUtils .getAttribute(ProductDefinitionConstants.PRODUCTMIXLIST,
          * request);
          * 
-         * assertNotNull(productMixList);
+         * Assert.assertNotNull(productMixList);
          * 
-         * assertTrue(1 == productMixList.size());
+         *Assert.assertTrue(1 == productMixList.size());
          */
         verifyNoActionErrors();
         verifyNoActionMessages();
@@ -342,11 +344,11 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
         List<PrdOfferingBO> allPrdOfferingList = (List<PrdOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTOFFERINGLIST, request);
 
-        assertNotNull(allowedPrdOfferingList);
-        assertNotNull(allPrdOfferingList);
+        Assert.assertNotNull(allowedPrdOfferingList);
+        Assert.assertNotNull(allPrdOfferingList);
         SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, request);
 
-        assertTrue(3 == allowedPrdOfferingList.size());
+       Assert.assertTrue(3 == allowedPrdOfferingList.size());
 
         verifyNoActionErrors();
         verifyNoActionMessages();

@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.configuration.util.helpers;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.configuration.business.SystemConfiguration;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
@@ -51,24 +53,24 @@ public class ConfigurationIntializerIntegrationTest extends MifosIntegrationTest
 
     public void testCreateSystemCache() throws Exception {
         SystemConfiguration configuration = configInitializer.createSystemConfiguration();
-        assertNotNull(configuration);
-        assertNotNull(configuration.getCurrency());
-        assertNotNull(configuration.getMifosTimeZone());
+        Assert.assertNotNull(configuration);
+        Assert.assertNotNull(configuration.getCurrency());
+        Assert.assertNotNull(configuration.getMifosTimeZone());
     }
 
     public void testCreateOfficeCache() throws Exception {
         configInitializer.initialize();
         OfficeCache officeCache = configInitializer.createOfficeCache();
-        assertNotNull(officeCache);
+        Assert.assertNotNull(officeCache);
     }
 
     public void testStartUpException() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             configInitializer.initialize();
-            fail();
+            Assert.fail();
         } catch (StartUpException sue) {
-            assertEquals(ExceptionConstants.STARTUP_EXCEPTION, sue.getKey());
+           Assert.assertEquals(ExceptionConstants.STARTUP_EXCEPTION, sue.getKey());
         } finally {
             StaticHibernateUtil.closeSession();
         }

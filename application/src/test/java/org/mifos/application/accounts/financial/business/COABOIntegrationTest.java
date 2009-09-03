@@ -23,6 +23,8 @@ package org.mifos.application.accounts.financial.business;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -41,14 +43,14 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
         String interestOnLoansGlCode = "31101";
         COABO coaInterestLoans = ChartOfAccountsCache.get(interestOnLoansGlCode);
         COABO coaHead = coaInterestLoans.getCOAHead();
-        assertEquals(GLCategoryType.INCOME, coaHead.getCategoryType());
+       Assert.assertEquals(GLCategoryType.INCOME, coaHead.getCategoryType());
     }
 
     public void testGetCurrentSubCategory() throws FinancialException {
         String directIncomeGlCode = "31000";
         COABO coaDirectIncome = ChartOfAccountsCache.get(directIncomeGlCode);
         Set<COABO> currentSubCategory = coaDirectIncome.getCurrentSubCategory();
-        assertEquals(TestConstants.FINANCIAL_DIRECTINCOME_SIZE, currentSubCategory.size());
+       Assert.assertEquals(TestConstants.FINANCIAL_DIRECTINCOME_SIZE, currentSubCategory.size());
 
         GLCodeEntity g = (GLCodeEntity) StaticHibernateUtil.getSessionTL().load(GLCodeEntity.class, new Short("1"));
         System.out.println(g.getGlcode());
@@ -73,8 +75,8 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
         List<COABO> subCategories = coa.getSubCategoryCOABOs();
         for (int index = 0; index < subCategories.size(); ++index) {
             COABO subcat1 = subCategories.get(index);
-            assertEquals(SUB_CATEGORY_NAMES[index], subcat1.getAccountName());
-            assertEquals(SUB_CATEGORY_GLCODES[index], subcat1.getAssociatedGlcode().getGlcode());
+           Assert.assertEquals(SUB_CATEGORY_NAMES[index], subcat1.getAccountName());
+           Assert.assertEquals(SUB_CATEGORY_GLCODES[index], subcat1.getAssociatedGlcode().getGlcode());
         }
     }
 

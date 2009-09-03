@@ -24,6 +24,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import junit.framework.Assert;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -55,8 +56,8 @@ public class GroupPerformanceHistoryUpdaterIntegrationTest extends MifosIntegrat
         replay(parentLoanMock1, parentLoanMock2, childLoanMock1, childLoanMock2);
         GroupPerformanceHistoryUpdater.ClientAccountWithParentAccountMatcher matcher = new GroupPerformanceHistoryUpdater.ClientAccountWithParentAccountMatcher(
                 parentLoanMock1);
-        assertTrue(matcher.evaluate(childLoanMock1));
-        assertFalse(matcher.evaluate(childLoanMock2));
+       Assert.assertTrue(matcher.evaluate(childLoanMock1));
+        Assert.assertFalse(matcher.evaluate(childLoanMock2));
         verify(parentLoanMock1, parentLoanMock2, childLoanMock1, childLoanMock2);
     }
 }

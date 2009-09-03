@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -34,7 +35,7 @@ public class MifosNumberTextTagTest extends TestCase {
         inputsForhidden.append("</script>");
         inputsForhidden.append("<script src=" + "\"pages/framework/js/func_test.js\"" + ">");
         inputsForhidden.append("</script>");
-        assertEquals(inputsForhidden.toString(), mifosNumberTextTag.render("test"));
+       Assert.assertEquals(inputsForhidden.toString(), mifosNumberTextTag.render("test"));
         assertWellFormedFragment(mifosNumberTextTag.render("test"));
     }
 }

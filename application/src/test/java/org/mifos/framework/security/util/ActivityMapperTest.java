@@ -22,6 +22,7 @@ package org.mifos.framework.security.util;
 
 import java.util.regex.Pattern;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class ActivityMapperTest extends TestCase {
@@ -31,19 +32,19 @@ public class ActivityMapperTest extends TestCase {
     public void testNamesAcceptable() {
         for (ActionSecurity security : ActivityMapper.getInstance().getAllSecurity()) {
             String name = security.getActionName();
-            assertTrue("unacceptable action name " + name, acceptableName(name));
+           Assert.assertTrue("unacceptable action name " + name, acceptableName(name));
         }
     }
 
     public void testMachinery() {
-        assertTrue(acceptableName("openSesame"));
-        assertFalse(acceptableName("/bin/sh"));
-        assertFalse(acceptableName("/openSesame"));
-        assertFalse(acceptableName("open,sesame"));
-        assertFalse(acceptableName("open sesame"));
-        assertFalse(acceptableName("openSesame "));
-        assertFalse(acceptableName(""));
-        assertFalse(acceptableName(null));
+       Assert.assertTrue(acceptableName("openSesame"));
+        Assert.assertFalse(acceptableName("/bin/sh"));
+        Assert.assertFalse(acceptableName("/openSesame"));
+        Assert.assertFalse(acceptableName("open,sesame"));
+        Assert.assertFalse(acceptableName("open sesame"));
+        Assert.assertFalse(acceptableName("openSesame "));
+        Assert.assertFalse(acceptableName(""));
+        Assert.assertFalse(acceptableName(null));
     }
 
     private boolean acceptableName(String name) {

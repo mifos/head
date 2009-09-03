@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.junit.Assert;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;

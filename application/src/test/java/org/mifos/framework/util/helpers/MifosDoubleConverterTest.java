@@ -22,6 +22,7 @@ package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.config.Localization;
@@ -37,9 +38,9 @@ public class MifosDoubleConverterTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = LocalizationConverter.getInstance();
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
-            assertEquals(test, mifosDoubleConverter.convert(String.class, "2.0"));
+           Assert.assertEquals(test, mifosDoubleConverter.convert(String.class, "2.0"));
         converter.setCurrentLocale(new Locale("IS", "is"));
-        assertEquals(test, mifosDoubleConverter.convert(String.class, "2,0"));
+       Assert.assertEquals(test, mifosDoubleConverter.convert(String.class, "2,0"));
         converter.setCurrentLocale(locale);
     }
 

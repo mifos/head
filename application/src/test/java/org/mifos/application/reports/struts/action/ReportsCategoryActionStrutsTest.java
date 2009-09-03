@@ -20,6 +20,8 @@
 
 package org.mifos.application.reports.struts.action;
 
+import junit.framework.Assert;
+
 import org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
@@ -73,7 +75,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "preview");
         addRequestParameter("categoryName", categoryName);
         actionPerform();
-        assertEquals(categoryName, ((ReportsCategoryActionForm) getActionForm()).getCategoryName());
+       Assert.assertEquals(categoryName, ((ReportsCategoryActionForm) getActionForm()).getCategoryName());
     }
 
     public void testShouldSubmitSuccess() throws Exception {
@@ -113,7 +115,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
         actionPerform();
 
-        assertNull(((ReportsCategoryActionForm) getActionForm()).getCategoryName());
+        Assert.assertNull(((ReportsCategoryActionForm) getActionForm()).getCategoryName());
     }
 
     public void testShouldForwardToViewReportsCategoryPage() throws Exception {
@@ -138,7 +140,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "viewReportsCategory");
         actionPerform();
-        assertNotNull(getSession().getAttribute(ReportsConstants.LISTOFREPORTCATEGORIES));
+        Assert.assertNotNull(getSession().getAttribute(ReportsConstants.LISTOFREPORTCATEGORIES));
     }
 
     public void testCategoryNameShouldEqualsToInputValueWhenDoEditPreivewAction() throws Exception {
@@ -148,7 +150,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("categoryName", categoryName);
         addRequestParameter("categoryId", "1");
         actionPerform();
-        assertEquals(categoryName, ((ReportsCategoryActionForm) getActionForm()).getCategoryName());
+       Assert.assertEquals(categoryName, ((ReportsCategoryActionForm) getActionForm()).getCategoryName());
     }
 
     public void testShouldSubmitSuccessAfterEdit() throws Exception {

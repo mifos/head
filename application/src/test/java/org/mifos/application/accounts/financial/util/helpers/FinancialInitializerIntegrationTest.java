@@ -19,6 +19,8 @@
  */
 
 package org.mifos.application.accounts.financial.util.helpers;
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
@@ -36,7 +38,7 @@ public class FinancialInitializerIntegrationTest extends MifosIntegrationTestCas
     public void testAssetsCategoryIsCached() throws Exception {
         String assetsGlCode = "10000";
         COABO account1 = ChartOfAccountsCache.get(assetsGlCode);
-        assertEquals(GLCategoryType.ASSET, account1.getCategoryType());
+       Assert.assertEquals(GLCategoryType.ASSET, account1.getCategoryType());
     }
 
     public void testFinancialActionInitializer() throws FinancialException {
@@ -44,13 +46,13 @@ public class FinancialInitializerIntegrationTest extends MifosIntegrationTestCas
         FinancialActionBO financialActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
-        assertEquals(financialActionPrincipal.getId().shortValue(), FinancialActionConstants.PRINCIPALPOSTING.value);
+       Assert.assertEquals(financialActionPrincipal.getId().shortValue(), FinancialActionConstants.PRINCIPALPOSTING.value);
     }
 
     public void testCOACacherException() throws Exception {
         try {
             ChartOfAccountsCache.get("-1");
-            fail("Expected FinancialException.");
+            Assert.fail("Expected FinancialException.");
         } catch (FinancialException e) {
             // do nothing
         }

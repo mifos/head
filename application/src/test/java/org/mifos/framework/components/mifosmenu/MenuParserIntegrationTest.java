@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.mifosmenu;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -37,13 +39,13 @@ public class MenuParserIntegrationTest extends MifosIntegrationTestCase {
         MenuParser parser = new MenuParser();
 
         Menu[] menu = parser.parse();
-        assertNotNull(menu);
+        Assert.assertNotNull(menu);
         for (int i = 0; i < menu.length; i++) {
 
             if (i == 0) {
                 MenuGroup[] menuGroups = menu[i].getMenuGroups();
 
-                assertNotNull(menuGroups);
+                Assert.assertNotNull(menuGroups);
 
                 for (int j = 0; j < menuGroups.length; j++) {
 
@@ -51,10 +53,10 @@ public class MenuParserIntegrationTest extends MifosIntegrationTestCase {
                         // System.out.println(menuGroups[j].getDisplayName());
                         MenuItem[] menuItems = menuGroups[j].getMenuItems();
 
-                        assertNotNull(menuItems);
+                        Assert.assertNotNull(menuItems);
 
                         for (MenuItem item : menuItems) {
-                            assertNotNull(item);
+                            Assert.assertNotNull(item);
                             // System.out.println(item.getLinkValue());
                             // System.out.println(item.getDisplayName());
                         }

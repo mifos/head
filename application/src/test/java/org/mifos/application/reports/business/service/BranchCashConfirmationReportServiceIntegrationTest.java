@@ -29,6 +29,8 @@ import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
@@ -60,10 +62,10 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
         session.save(reportBO);
         List<BranchCashConfirmationInfoBO> centerIssues = ReportServiceFactory.getBranchCashConfirmationReportService(
                 null).getCenterIssues(BRANCH_ID, RUN_DATE_STR);
-        assertNotNull(centerIssues);
-        assertEquals(2, centerIssues.size());
-        assertTrue(centerIssues.contains(issueBO));
-        assertTrue(centerIssues.contains(anotherIssue));
+        Assert.assertNotNull(centerIssues);
+       Assert.assertEquals(2, centerIssues.size());
+       Assert.assertTrue(centerIssues.contains(issueBO));
+       Assert.assertTrue(centerIssues.contains(anotherIssue));
         transaction.rollback();
     }
 

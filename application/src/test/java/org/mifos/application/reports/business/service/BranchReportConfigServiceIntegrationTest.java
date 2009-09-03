@@ -20,6 +20,8 @@
 
 package org.mifos.application.reports.business.service;
 
+import junit.framework.Assert;
+
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -38,32 +40,32 @@ public class BranchReportConfigServiceIntegrationTest extends MifosIntegrationTe
 
     public void testGetDaysInArrears() throws ServiceException {
         Integer daysInArrears = branchReportConfigService.getGracePeriodDays();
-        assertNotNull(daysInArrears);
+        Assert.assertNotNull(daysInArrears);
     }
 
     public void testGetLoanCyclePeriod() throws Exception {
         Integer loanCyclePeriod = branchReportConfigService.getLoanCyclePeriod();
-        assertNotNull(loanCyclePeriod);
+        Assert.assertNotNull(loanCyclePeriod);
     }
 
     public void testGetReplacementFieldId() throws Exception {
         Short replacementFieldId = branchReportConfigService.getReplacementFieldId();
-        assertNotNull(replacementFieldId);
+        Assert.assertNotNull(replacementFieldId);
     }
 
     public void testGetReplacementFieldValue() throws Exception {
         String replacementFieldValue = branchReportConfigService.getReplacementFieldValue();
-        assertNotNull(replacementFieldValue);
+        Assert.assertNotNull(replacementFieldValue);
     }
 
     public void testGetCurrency() throws Exception {
         MifosCurrency currency = branchReportConfigService.getCurrency();
-        assertNotNull(currency);
+        Assert.assertNotNull(currency);
     }
 
     public void testGetDaysInArrearsForRisk() throws Exception {
         Integer daysInArrearsForRisk = branchReportConfigService.getDaysInArrearsForRisk();
-        assertNotNull(daysInArrearsForRisk);
+        Assert.assertNotNull(daysInArrearsForRisk);
     }
 
     @Override

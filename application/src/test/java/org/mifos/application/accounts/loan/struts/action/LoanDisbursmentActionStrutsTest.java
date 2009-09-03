@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import junit.framework.Assert;
+
 import org.junit.Ignore;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
@@ -124,11 +126,11 @@ public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(Constants.LOAD_SUCCESS);
-        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) request.getSession().getAttribute(
                 "loanDisbursmentActionForm");
-        assertEquals(actionForm.getAmount(), loanBO.getAmountTobePaidAtdisburtail());
-        assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
+       Assert.assertEquals(actionForm.getAmount(), loanBO.getAmountTobePaidAtdisburtail());
+       Assert.assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
     }
 
     public void testPreviewFailure_NomaadatoryFieds() {

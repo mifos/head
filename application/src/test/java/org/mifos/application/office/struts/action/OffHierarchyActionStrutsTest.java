@@ -22,6 +22,8 @@ package org.mifos.application.office.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.application.office.struts.actionforms.OffHierarchyActionForm;
@@ -78,18 +80,18 @@ public class OffHierarchyActionStrutsTest extends MifosMockStrutsTestCase {
 
         List<OfficeLevelEntity> officeLevels = (List<OfficeLevelEntity>) SessionUtils.getAttribute(
                 OfficeConstants.OFFICE_LEVELS, request);
-        assertEquals(OFFICE_LEVELS, officeLevels.size());
+       Assert.assertEquals(OFFICE_LEVELS, officeLevels.size());
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-            assertTrue(officeLevelEntity.isConfigured());
+           Assert.assertTrue(officeLevelEntity.isConfigured());
         }
 
         OffHierarchyActionForm offHierarchyActionForm = (OffHierarchyActionForm) request.getSession().getAttribute(
                 "offhierarchyactionform");
-        assertEquals(CONFIGURED, offHierarchyActionForm.getHeadOffice());
-        assertEquals(CONFIGURED, offHierarchyActionForm.getRegionalOffice());
-        assertEquals(CONFIGURED, offHierarchyActionForm.getSubRegionalOffice());
-        assertEquals(CONFIGURED, offHierarchyActionForm.getAreaOffice());
-        assertEquals(CONFIGURED, offHierarchyActionForm.getBranchOffice());
+       Assert.assertEquals(CONFIGURED, offHierarchyActionForm.getHeadOffice());
+       Assert.assertEquals(CONFIGURED, offHierarchyActionForm.getRegionalOffice());
+       Assert.assertEquals(CONFIGURED, offHierarchyActionForm.getSubRegionalOffice());
+       Assert.assertEquals(CONFIGURED, offHierarchyActionForm.getAreaOffice());
+       Assert.assertEquals(CONFIGURED, offHierarchyActionForm.getBranchOffice());
     }
 
     public void testUpdate() throws Exception {
@@ -113,12 +115,12 @@ public class OffHierarchyActionStrutsTest extends MifosMockStrutsTestCase {
         List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence().getOfficeLevels(userContext
                 .getLocaleId());
 
-        assertEquals(OFFICE_LEVELS, officeLevels.size());
+       Assert.assertEquals(OFFICE_LEVELS, officeLevels.size());
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
             if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE))
-                assertFalse(officeLevelEntity.isConfigured());
+                Assert.assertFalse(officeLevelEntity.isConfigured());
             else
-                assertTrue(officeLevelEntity.isConfigured());
+               Assert.assertTrue(officeLevelEntity.isConfigured());
         }
 
         resetData();

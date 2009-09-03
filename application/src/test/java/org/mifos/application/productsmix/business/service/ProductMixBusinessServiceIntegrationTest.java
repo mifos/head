@@ -30,6 +30,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -94,35 +96,35 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
     }
 
     public void testGetBusinessObject() throws ServiceException {
-        assertNull(service.getBusinessObject(null));
+        Assert.assertNull(service.getBusinessObject(null));
     }
 
     public void testGetAllPrdOfferingsByType_Success() throws ServiceException {
-        assertEquals(1, service.getAllPrdOfferingsByType(ProductType.SAVINGS.getValue().toString()).size());
+       Assert.assertEquals(1, service.getAllPrdOfferingsByType(ProductType.SAVINGS.getValue().toString()).size());
         StaticHibernateUtil.closeSession();
 
     }
 
     public void testGetAllowedPrdOfferingsForMixProduct_Success() throws ServiceException {
-        assertEquals(1, service.getAllowedPrdOfferingsForMixProduct(savingsOffering.getPrdOfferingId().toString(),
+       Assert.assertEquals(1, service.getAllowedPrdOfferingsForMixProduct(savingsOffering.getPrdOfferingId().toString(),
                 ProductType.SAVINGS.getValue().toString()).size());
         StaticHibernateUtil.closeSession();
     }
 
     public void testGetAllPrdOfferingsByType_failure() throws ServiceException {
-        assertEquals(0, service.getAllPrdOfferingsByType(ProductType.LOAN.getValue().toString()).size());
+       Assert.assertEquals(0, service.getAllPrdOfferingsByType(ProductType.LOAN.getValue().toString()).size());
         StaticHibernateUtil.closeSession();
     }
 
     public void testGetAllowedPrdOfferingsByType() throws ServiceException {
         createSecondSavingProduct();
-        assertEquals(2, service.getAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString(),
+       Assert.assertEquals(2, service.getAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString(),
                 ProductType.SAVINGS.getValue().toString()).size());
 
-        assertEquals("A_SavingPrd", service.getAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString(),
+       Assert.assertEquals("A_SavingPrd", service.getAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString(),
                 ProductType.SAVINGS.getValue().toString()).get(0).getPrdOfferingName());
 
-        assertTrue("Savings products should be in alphabitical order:", (service.getAllowedPrdOfferingsByType(
+       Assert.assertTrue("Savings products should be in alphabitical order:", (service.getAllowedPrdOfferingsByType(
                 savingsOffering.getPrdOfferingId().toString(), ProductType.SAVINGS.getValue().toString()).get(0)
                 .getPrdOfferingName().compareToIgnoreCase(service.getAllowedPrdOfferingsByType(
                 savingsOffering.getPrdOfferingId().toString(), ProductType.SAVINGS.getValue().toString()).get(1)
@@ -137,7 +139,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
         prdmix2 = createNotAllowedProductForAProductOffering(savingsOffering, savingsOffering);
         prdmix = createNotAllowedProductForAProductOffering(savingsOffering, secondSavingsOffering);
 
-        assertEquals(1, service.getNotAllowedPrdOfferingsForMixProduct(savingsOffering.getPrdOfferingId().toString(),
+       Assert.assertEquals(1, service.getNotAllowedPrdOfferingsForMixProduct(savingsOffering.getPrdOfferingId().toString(),
                 ProductType.SAVINGS.getValue().toString()).size());
 
     }
@@ -147,9 +149,9 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
         prdmix2 = createNotAllowedProductForAProductOffering(savingsOffering, savingsOffering);
         prdmix = createNotAllowedProductForAProductOffering(savingsOffering, secondSavingsOffering);
 
-        assertEquals(2, service.getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).size());
+       Assert.assertEquals(2, service.getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).size());
 
-        assertTrue("Savings products should be in alphabitical order:", (service.getNotAllowedPrdOfferingsByType(
+       Assert.assertTrue("Savings products should be in alphabitical order:", (service.getNotAllowedPrdOfferingsByType(
                 savingsOffering.getPrdOfferingId().toString()).get(0).getPrdOfferingName().compareToIgnoreCase(service
                 .getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).get(1)
                 .getPrdOfferingName())) < 0);
@@ -205,8 +207,8 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
         createLoanProductMixed();
         createsecondLoanProductMixed();
         prdmix = createNotAllowedProductForAProductOffering(loanOffering, loanOffering);
-        assertEquals(2, service.getPrdOfferingMix().size());
-        assertTrue("Products Mix should be in alphabitical order:", (service.getPrdOfferingMix().get(0)
+       Assert.assertEquals(2, service.getPrdOfferingMix().size());
+       Assert.assertTrue("Products Mix should be in alphabitical order:", (service.getPrdOfferingMix().get(0)
                 .getPrdOfferingName().compareToIgnoreCase(service.getPrdOfferingMix().get(1).getPrdOfferingName())) < 0);
         StaticHibernateUtil.closeSession();
 

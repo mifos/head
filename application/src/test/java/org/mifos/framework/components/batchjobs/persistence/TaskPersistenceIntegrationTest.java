@@ -24,6 +24,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
@@ -66,7 +68,7 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.closeSession();
         p = new TaskPersistence();
-        assertTrue(p.hasLoanArrearsTaskRunSuccessfully());
+       Assert.assertTrue(p.hasLoanArrearsTaskRunSuccessfully());
         Task task2 = new Task();
         task2.setCreatedBy((short) 1);
         task2.setCreatedDate(new Date(System.currentTimeMillis()));
@@ -78,7 +80,7 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
         new TaskPersistence().saveAndCommitTask(task2);
 
         StaticHibernateUtil.closeSession();
-        assertFalse(p.hasLoanArrearsTaskRunSuccessfully());
+        Assert.assertFalse(p.hasLoanArrearsTaskRunSuccessfully());
         TestObjectFactory.removeObject(task1);
         TestObjectFactory.removeObject(task2);
     }
@@ -96,12 +98,12 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
         List<Task> tasks = query.list();
-        assertNotNull(tasks);
-        assertEquals(1, tasks.size());
+        Assert.assertNotNull(tasks);
+       Assert.assertEquals(1, tasks.size());
         for (Task task1 : tasks) {
-            assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task1.getStatus());
-            assertEquals("ProductStatus", task1.getTask());
-            assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task1.getDescription());
+           Assert.assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task1.getStatus());
+           Assert.assertEquals("ProductStatus", task1.getTask());
+           Assert.assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task1.getDescription());
             TestObjectFactory.removeObject(task1);
         }
     }
@@ -118,16 +120,16 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
         task.setTask("ProductStatus");
         try {
             new TaskPersistence().saveAndCommitTask(task);
-            fail();
+            Assert.fail();
         } catch (PersistenceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
 
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
         List<Task> tasks = query.list();
-        assertNotNull(tasks);
-        assertEquals(0, tasks.size());
+        Assert.assertNotNull(tasks);
+       Assert.assertEquals(0, tasks.size());
     }
 
 }

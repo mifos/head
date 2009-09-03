@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -78,16 +79,16 @@ public class FiscalCalendarRulesTest extends TestCase {
         String configWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY";
         setNewWorkingDays(configWorkingDays);
         List<WeekDay> workingDays = FiscalCalendarRules.getWorkingDays();
-        assertEquals(workingDays.size(), 6);
+       Assert.assertEquals(workingDays.size(), 6);
         WeekDay[] weekDays = WeekDay.values();
         for (int i = 0; i < workingDays.size(); i++)
-            assertEquals(workingDays.get(i).toString(), weekDays[i + 1].name());
+           Assert.assertEquals(workingDays.get(i).toString(), weekDays[i + 1].name());
         configWorkingDays = "TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
         workingDays = FiscalCalendarRules.getWorkingDays();
-        assertEquals(workingDays.size(), 4);
+       Assert.assertEquals(workingDays.size(), 4);
         for (int i = 0; i < workingDays.size(); i++)
-            assertEquals(workingDays.get(i).toString().toUpperCase(), weekDays[i + 2].name().toUpperCase());
+           Assert.assertEquals(workingDays.get(i).toString().toUpperCase(), weekDays[i + 2].name().toUpperCase());
         // set it back
         setSavedConfig();
 
@@ -97,16 +98,16 @@ public class FiscalCalendarRulesTest extends TestCase {
         List<WeekDay> weekDaysFromFiscalCalendarRules = FiscalCalendarRules.getWeekDaysList();
         WeekDay[] weekDays = WeekDay.values();
         for (int i = 0; i < weekDays.length; i++)
-            assertEquals(weekDaysFromFiscalCalendarRules.get(i).toString(), weekDays[i].name());
+           Assert.assertEquals(weekDaysFromFiscalCalendarRules.get(i).toString(), weekDays[i].name());
     }
 
     public void testGetWeekDayOffList() {
         String configWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
         List<Short> list = FiscalCalendarRules.getWeekDayOffList();
-        assertEquals(list.size(), 2);
+       Assert.assertEquals(list.size(), 2);
         Short dayOff = 1;
-        assertEquals(list.get(0), dayOff);
+       Assert.assertEquals(list.get(0), dayOff);
         // set it back
         setSavedConfig();
     }
@@ -149,13 +150,13 @@ public class FiscalCalendarRulesTest extends TestCase {
 
         }
 
-        assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
         calendar.add(Calendar.DAY_OF_WEEK, 1); // Friday
-        assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
         calendar.add(Calendar.DAY_OF_WEEK, 1); // Sat
-        assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
         calendar.add(Calendar.DAY_OF_WEEK, 1); // Sunday
-        assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
         // set it back
         setSavedConfig();
     }
@@ -163,17 +164,17 @@ public class FiscalCalendarRulesTest extends TestCase {
     public void testGetStartOfWeek() {
         Short startOfWeekDay = FiscalCalendarRules.getStartOfWeek();
         Short start = 2;
-        assertEquals(startOfWeekDay, start);
+       Assert.assertEquals(startOfWeekDay, start);
     }
 
     public void testGetScheduleTypeForMeetingOnHoliday() {
         String scheduleType = FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday();
-        assertEquals(scheduleType.toUpperCase(), "same_day".toUpperCase());
+       Assert.assertEquals(scheduleType.toUpperCase(), "same_day".toUpperCase());
     }
 
     public void testGetDaysForCalDefinition() {
         Short days = FiscalCalendarRules.getDaysForCalendarDefinition();
-        assertEquals(days.shortValue(), 30);
+       Assert.assertEquals(days.shortValue(), 30);
     }
 
 }

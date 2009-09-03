@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -98,7 +100,7 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward("remove_success");
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     private AccountBO getLoanAccount() {
@@ -138,6 +140,6 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>) SessionUtils.getAttribute(
                 SavingsConstants.TRXN_HISTORY_LIST, request);
         for (TransactionHistoryView transactionHistoryView : trxnHistoryList)
-            assertEquals(accountBO.getUserContext().getName(), transactionHistoryView.getPostedBy());
+           Assert.assertEquals(accountBO.getUserContext().getName(), transactionHistoryView.getPostedBy());
     }
 }

@@ -23,6 +23,8 @@ package org.mifos.application.productdefinition.business.service;
 import java.sql.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
@@ -57,35 +59,35 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
     }
 
     public void testGetBusinessObject() {
-        assertNull(new LoanPrdBusinessService().getBusinessObject(null));
+        Assert.assertNull(new LoanPrdBusinessService().getBusinessObject(null));
     }
 
     public void testGetActiveLoanProductCategoriesForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
-            assertEquals(1, new LoanPrdBusinessService().getActiveLoanProductCategories().size());
-            assertTrue(false);
+           Assert.assertEquals(1, new LoanPrdBusinessService().getActiveLoanProductCategories().size());
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testGetActiveLoanProductCategories() throws ServiceException {
-        assertEquals(1, new LoanPrdBusinessService().getActiveLoanProductCategories().size());
+       Assert.assertEquals(1, new LoanPrdBusinessService().getActiveLoanProductCategories().size());
     }
 
     public void testGetLoanApplicableCustomerTypesForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new LoanPrdBusinessService().getLoanApplicableCustomerTypes((short) 1);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testGetLoanApplicableCustomerTypes() throws ServiceException {
-        assertEquals(2, new LoanPrdBusinessService().getLoanApplicableCustomerTypes((short) 1).size());
+       Assert.assertEquals(2, new LoanPrdBusinessService().getLoanApplicableCustomerTypes((short) 1).size());
     }
 
     public void testGetLoanOffering() throws ServiceException {
@@ -93,9 +95,9 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
 
         loanOffering = new LoanPrdBusinessService().getLoanOffering(loanOffering.getPrdOfferingId());
-        assertNotNull(loanOffering);
-        assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
-        assertEquals("Loan", loanOffering.getPrdOfferingShortName());
+        Assert.assertNotNull(loanOffering);
+       Assert.assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
+       Assert.assertEquals("Loan", loanOffering.getPrdOfferingShortName());
     }
 
     public void testGetLoanOfferingForInvalidConnection() {
@@ -105,9 +107,9 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             new LoanPrdBusinessService().getLoanOffering(loanOffering.getPrdOfferingId());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
     }
@@ -115,12 +117,12 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
     public void testGetApplicablePrdStatus() throws ServiceException {
         List<PrdStatusEntity> prdStatusList = new LoanPrdBusinessService().getApplicablePrdStatus((short) 1);
         StaticHibernateUtil.closeSession();
-        assertEquals(2, prdStatusList.size());
+       Assert.assertEquals(2, prdStatusList.size());
         for (PrdStatusEntity prdStatus : prdStatusList) {
             if (prdStatus.getPrdState().equals("1"))
-                assertEquals("Active", prdStatus.getPrdState().getName());
+               Assert.assertEquals("Active", prdStatus.getPrdState().getName());
             if (prdStatus.getPrdState().equals("2"))
-                assertEquals("InActive", prdStatus.getPrdState().getName());
+               Assert.assertEquals("InActive", prdStatus.getPrdState().getName());
         }
     }
 
@@ -128,7 +130,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             new LoanPrdBusinessService().getApplicablePrdStatus((short) 1);
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
         }
     }
@@ -139,15 +141,15 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
         short localeId = 1;
         loanOffering = new LoanPrdBusinessService().getLoanOffering(loanOffering.getPrdOfferingId(), localeId);
-        assertNotNull(loanOffering);
-        assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
-        assertEquals("Loan", loanOffering.getPrdOfferingShortName());
+        Assert.assertNotNull(loanOffering);
+       Assert.assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
+       Assert.assertEquals("Loan", loanOffering.getPrdOfferingShortName());
 
-        assertEquals("Other", loanOffering.getPrdCategory().getProductCategoryName());
-        assertEquals(ApplicableTo.GROUPS, loanOffering.getPrdApplicableMasterEnum());
-        assertEquals("Active", loanOffering.getPrdStatus().getPrdState().getName());
-        assertEquals("Grace on all repayments", loanOffering.getGracePeriodType().getName());
-        assertEquals("Flat", loanOffering.getInterestTypes().getName());
+       Assert.assertEquals("Other", loanOffering.getPrdCategory().getProductCategoryName());
+       Assert.assertEquals(ApplicableTo.GROUPS, loanOffering.getPrdApplicableMasterEnum());
+       Assert.assertEquals("Active", loanOffering.getPrdStatus().getPrdState().getName());
+       Assert.assertEquals("Grace on all repayments", loanOffering.getGracePeriodType().getName());
+       Assert.assertEquals("Flat", loanOffering.getInterestTypes().getName());
     }
 
     public void testGetLoanOfferingWithLocaleIdForInvalidConnection() {
@@ -157,9 +159,9 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             new LoanPrdBusinessService().getLoanOffering(loanOffering.getPrdOfferingId(), (short) 1);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
     }
@@ -170,12 +172,12 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
 
         List<LoanOfferingBO> loanOfferings = new LoanPrdBusinessService().getAllLoanOfferings((short) 1);
-        assertNotNull(loanOfferings);
-        assertEquals(2, loanOfferings.size());
+        Assert.assertNotNull(loanOfferings);
+       Assert.assertEquals(2, loanOfferings.size());
         for (LoanOfferingBO loanOfferingBO : loanOfferings) {
-            assertNotNull(loanOfferingBO.getPrdOfferingName());
-            assertNotNull(loanOfferingBO.getPrdOfferingId());
-            assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
+            Assert.assertNotNull(loanOfferingBO.getPrdOfferingName());
+            Assert.assertNotNull(loanOfferingBO.getPrdOfferingId());
+            Assert.assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
         }
         StaticHibernateUtil.closeSession();
         TestObjectFactory.removeObject(loanOffering1);
@@ -188,9 +190,9 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             new LoanPrdBusinessService().getAllLoanOfferings((short) 1);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
     }
@@ -198,9 +200,9 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
     public void testRetrieveLatenessForPrd() throws Exception {
         try {
             Short latenessDays = new LoanPrdBusinessService().retrieveLatenessForPrd();
-            assertEquals(latenessDays, Short.valueOf("10"));
+           Assert.assertEquals(latenessDays, Short.valueOf("10"));
         } catch (ServiceException e) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.closeSession();
 
@@ -210,9 +212,9 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             new LoanPrdBusinessService().retrieveLatenessForPrd();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
 

@@ -26,6 +26,8 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -55,12 +57,12 @@ public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testCreateCoa() throws Exception {
-        assertNotNull("error loading chart of accounts from " + "configuration file", coa);
+        Assert.assertNotNull("error loading chart of accounts from " + "configuration file", coa);
     }
 
     public void testGetAllAccounts() throws Exception {
         Set<GLAccount> glAccounts = coa.getGLAccounts();
-        assertEquals("default chart of accounts should have 56 " + "general ledger accounts", 56, glAccounts.size());
+       Assert.assertEquals("default chart of accounts should have 56 " + "general ledger accounts", 56, glAccounts.size());
         assert true;
     }
 
@@ -73,17 +75,17 @@ public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCa
      */
     public void testFirstIsTopLevelAccount() throws Exception {
         GLAccount first = coa.getGLAccounts().iterator().next();
-        assertNull(first.parentGlCode);
+        Assert.assertNull(first.parentGlCode);
     }
 
     public void testGetCategory() throws Exception {
         Node category = coa.getCategory(GLCategoryType.ASSET);
-        assertNotNull("failed to fetch a top-level GL account " + "(aka category)", category);
+        Assert.assertNotNull("failed to fetch a top-level GL account " + "(aka category)", category);
 
         // TODO: should this be a test? do this as a runtime check in
         // FinancialInitializer?
         String name = category.getAttributes().getNamedItem(ChartOfAccountsConfig.ACCOUNT_NAME_ATTR).getNodeValue();
-        assertEquals("assets category has unexpected name", "ASSETS", name);
+       Assert.assertEquals("assets category has unexpected name", "ASSETS", name);
     }
 
     public void testConfigWithDupes() throws Exception {
@@ -98,7 +100,7 @@ public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCa
             Document document = parser.parse(bstr);
     
             ChartOfAccountsConfig.traverse(document.getFirstChild(), null);
-            fail("Expected RuntimeException");
+            Assert.fail("Expected RuntimeException");
         } catch (RuntimeException e) {
             // expected
         }
@@ -115,29 +117,29 @@ public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCa
         Document document = parser.parse(bstr);
 
         Set<GLAccount> accounts = ChartOfAccountsConfig.traverse(document.getFirstChild(), null);
-        assertEquals(3, accounts.size());
+       Assert.assertEquals(3, accounts.size());
 
         GLAccount expected = new GLAccount();
         expected.glCode = "AB CD";
         expected.name = "Cash 1";
         expected.parentGlCode = "11100";
-        assertTrue(accounts.contains(expected));
+       Assert.assertTrue(accounts.contains(expected));
 
         expected = new GLAccount();
         expected.glCode = "11102";
         expected.name = "Cash 2";
         expected.parentGlCode = "11100";
-        assertTrue(accounts.contains(expected));
+       Assert.assertTrue(accounts.contains(expected));
 
         GLAccount unExpected = new GLAccount();
         unExpected.glCode = "11102";
         unExpected.name = "Cash 3";
         unExpected.parentGlCode = "11100";
-        assertFalse(accounts.contains(unExpected));
+        Assert.assertFalse(accounts.contains(unExpected));
 
         unExpected = new GLAccount();
         unExpected.glCode = "11199";
         unExpected.name = "Cash 2";
-        assertFalse(accounts.contains(unExpected));
+        Assert.assertFalse(accounts.contains(unExpected));
     }
 }

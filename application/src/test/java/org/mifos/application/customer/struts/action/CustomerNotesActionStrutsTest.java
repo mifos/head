@@ -20,6 +20,8 @@
 
 package org.mifos.application.customer.struts.action;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -96,8 +98,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         getRequest().getSession().setAttribute("security_param", "Center");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
         verifyInputForward();
     }
 
@@ -118,8 +120,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         getRequest().getSession().setAttribute("security_param", "Center");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MAXIMUM_LENGTH));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MAXIMUM_LENGTH));
         verifyInputForward();
     }
 
@@ -187,8 +189,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         getRequest().getSession().setAttribute("security_param", "Client");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
         verifyInputForward();
     }
 
@@ -261,8 +263,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         client = (ClientBO) (StaticHibernateUtil.getSessionTL()
                 .get(ClientBO.class, new Integer(client.getCustomerId())));
-        assertEquals(1, client.getRecentCustomerNotes().size());
-        assertEquals(1, client.getCustomerNotes().size());
+       Assert.assertEquals(1, client.getRecentCustomerNotes().size());
+       Assert.assertEquals(1, client.getCustomerNotes().size());
     }
 
     public void testSearch() throws Exception {
@@ -303,7 +305,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
 
-        assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
+       Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
         StaticHibernateUtil.closeSession();
 
@@ -335,8 +337,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         getRequest().getSession().setAttribute("security_param", "Group");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
         verifyInputForward();
     }
 
@@ -408,8 +410,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         group = (GroupBO) (StaticHibernateUtil.getSessionTL().get(GroupBO.class, new Integer(group.getCustomerId())));
-        assertEquals(1, group.getRecentCustomerNotes().size());
-        assertEquals(1, group.getCustomerNotes().size());
+       Assert.assertEquals(1, group.getRecentCustomerNotes().size());
+       Assert.assertEquals(1, group.getCustomerNotes().size());
     }
 
     public void testSearchForGroup() throws Exception {
@@ -449,7 +451,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
 
-        assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
+       Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
         StaticHibernateUtil.closeSession();
         getobjects();
@@ -481,7 +483,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         center = (CenterBO) (StaticHibernateUtil.getSessionTL()
                 .get(CenterBO.class, new Integer(center.getCustomerId())));
-        assertEquals(1, center.getCustomerNotes().size());
+       Assert.assertEquals(1, center.getCustomerNotes().size());
     }
     
     private void createInitialObjects() {

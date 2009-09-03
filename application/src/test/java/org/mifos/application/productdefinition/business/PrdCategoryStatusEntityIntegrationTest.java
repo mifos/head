@@ -22,6 +22,8 @@ package org.mifos.application.productdefinition.business;
 
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -55,27 +57,27 @@ public class PrdCategoryStatusEntityIntegrationTest extends MifosIntegrationTest
     public void testGetNameFailure() {
         prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("0"));
         String name = prdCategoryStatusEntity.getName();
-        assertFalse("This should fail, name is Inactive", !("Inactive".equals(name)));
+        Assert.assertFalse("This should fail, name is Inactive", !("Inactive".equals(name)));
     }
 
     public void testGetNameSuccess() {
         prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("1"));
         String name = prdCategoryStatusEntity.getName();
-        assertEquals("Active", name);
+       Assert.assertEquals("Active", name);
     }
 
     public void testGetNamesSuccess() {
         prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("1"));
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = prdCategoryStatusEntity.getNames();
         int size = lookUpValueLocaleEntitySet.size();
-        assertEquals(1, size);
+       Assert.assertEquals(1, size);
     }
 
     public void testGetNamesFailure() {
         prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("1"));
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = prdCategoryStatusEntity.getNames();
         int size = lookUpValueLocaleEntitySet.size();
-        assertFalse("This should fail, the size is 1", !(size == 1));
+        Assert.assertFalse("This should fail, the size is 1", !(size == 1));
     }
 
     private PrdCategoryStatusEntity getPrdCategoryStatus(Short id) {

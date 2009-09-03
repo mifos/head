@@ -22,6 +22,8 @@ package org.mifos.application.fees.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.RateFeeBO;
@@ -108,16 +110,16 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
 
-        assertEquals("The size of master data for categories", ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of master data for categories", ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 FeeConstants.CATEGORYLIST, request)).size(), 5);
-        assertEquals("The size of master data for loan time of charges for one time fees  : ",
+       Assert.assertEquals("The size of master data for loan time of charges for one time fees  : ",
                 ((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.TIMEOFCHARGES, request)).size(), 3);
-        assertEquals("The size of master data for customer  time of charges for one time fees master : ",
+       Assert.assertEquals("The size of master data for customer  time of charges for one time fees master : ",
                 ((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES, request))
                         .size(), 1);
-        assertEquals("The size of master data for loan formula : ", ((List<MasterDataEntity>) SessionUtils
+       Assert.assertEquals("The size of master data for loan formula : ", ((List<MasterDataEntity>) SessionUtils
                 .getAttribute(FeeConstants.FORMULALIST, request)).size(), 3);
-        assertEquals("The size of master data for GLCodes of fees : ", ((List<MasterDataEntity>) SessionUtils
+       Assert.assertEquals("The size of master data for GLCodes of fees : ", ((List<MasterDataEntity>) SessionUtils
                 .getAttribute(FeeConstants.GLCODE_LIST, request)).size(), 7);
 
     }
@@ -127,12 +129,12 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "preview");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(5, getErrorSize());
-        assertEquals("Fee Name", 1, getErrorSize("feeName"));
-        assertEquals("Fee Applies to Product/Customer", 1, getErrorSize("categoryType"));
-        assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
-        assertEquals("Fee Amount", 1, getErrorSize("amount"));
-        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+       Assert.assertEquals(5, getErrorSize());
+       Assert.assertEquals("Fee Name", 1, getErrorSize("feeName"));
+       Assert.assertEquals("Fee Applies to Product/Customer", 1, getErrorSize("categoryType"));
+       Assert.assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
+       Assert.assertEquals("Fee Amount", 1, getErrorSize("amount"));
+       Assert.assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
         verifyInputForward();
     }
 
@@ -143,12 +145,12 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        assertEquals(4, getErrorSize());
-        assertEquals("Fee Name", 0, getErrorSize("feeName"));
-        assertEquals("Fee Applies to Product/Customer", 1, getErrorSize("categoryType"));
-        assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
-        assertEquals("Fee Amount", 1, getErrorSize("amount"));
-        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+       Assert.assertEquals(4, getErrorSize());
+       Assert.assertEquals("Fee Name", 0, getErrorSize("feeName"));
+       Assert.assertEquals("Fee Applies to Product/Customer", 1, getErrorSize("categoryType"));
+       Assert.assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
+       Assert.assertEquals("Fee Amount", 1, getErrorSize("amount"));
+       Assert.assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
         verifyInputForward();
     }
 
@@ -160,10 +162,10 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
         actionPerform();
 
-        assertEquals(3, getErrorSize());
-        assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
-        assertEquals("Fee Amount", 1, getErrorSize("amount"));
-        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+       Assert.assertEquals(3, getErrorSize());
+       Assert.assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
+       Assert.assertEquals("Fee Amount", 1, getErrorSize("amount"));
+       Assert.assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
         verifyInputForward();
     }
 
@@ -177,9 +179,9 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        assertEquals(2, getErrorSize());
-        assertEquals("Fee Amount", 1, getErrorSize("amount"));
-        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("Fee Amount", 1, getErrorSize("amount"));
+       Assert.assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
         verifyInputForward();
     }
 
@@ -194,9 +196,9 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        assertEquals(2, getErrorSize());
-        assertEquals("Fee Amount", 1, getErrorSize("amount"));
-        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("Fee Amount", 1, getErrorSize("amount"));
+       Assert.assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
         verifyInputForward();
     }
 
@@ -212,9 +214,9 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        assertEquals(2, getErrorSize());
-        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-        assertEquals("Fee Rate or Formula", 1, getErrorSize("RateAndFormula"));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+       Assert.assertEquals("Fee Rate or Formula", 1, getErrorSize("RateAndFormula"));
         verifyInputForward();
     }
 
@@ -232,8 +234,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        assertEquals(1, getErrorSize());
-        assertEquals("Fee Rate or Formula", 1, getErrorSize(FeeConstants.RATE_OR_AMOUNT));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Fee Rate or Formula", 1, getErrorSize(FeeConstants.RATE_OR_AMOUNT));
         verifyInputForward();
     }
 
@@ -249,8 +251,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        assertEquals(1, getErrorSize());
-        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
         verifyInputForward();
     }
 
@@ -272,7 +274,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("glCode", GLOCDE_ID);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(0, getErrorSize());
+       Assert.assertEquals(0, getErrorSize());
         verifyForward(ActionForwards.preview_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
@@ -303,13 +305,13 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
-        assertEquals("Customer_One_time", fee.getFeeName());
-        assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
-        assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-        assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
-        assertTrue(fee.isOneTime());
-        assertFalse(fee.isCustomerDefaultFee());
-        assertTrue(fee.isActive());
+       Assert.assertEquals("Customer_One_time", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
+       Assert.assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+       Assert.assertTrue(fee.isOneTime());
+        Assert.assertFalse(fee.isCustomerDefaultFee());
+       Assert.assertTrue(fee.isActive());
     }
 
     public void testSuccessfulCreateOneTimeAdminFee() throws Exception {
@@ -341,13 +343,13 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
-        assertEquals("Customer_One_time_Default_Fee", fee.getFeeName());
-        assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
-        assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-        assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
-        assertTrue(fee.isOneTime());
-        assertTrue(fee.isCustomerDefaultFee());
-        assertTrue(fee.isActive());
+       Assert.assertEquals("Customer_One_time_Default_Fee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
+       Assert.assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+       Assert.assertTrue(fee.isOneTime());
+       Assert.assertTrue(fee.isCustomerDefaultFee());
+       Assert.assertTrue(fee.isActive());
     }
 
     public void testSuccessfulCreatePeriodicFee() throws Exception {
@@ -382,13 +384,13 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
 
-        assertEquals("Customer Periodic Fee", fee.getFeeName());
-        assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
-        assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-        assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
-        assertTrue(fee.isPeriodic());
-        assertTrue(fee.isCustomerDefaultFee());
-        assertTrue(fee.isActive());
+       Assert.assertEquals("Customer Periodic Fee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
+       Assert.assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+       Assert.assertTrue(fee.isPeriodic());
+       Assert.assertTrue(fee.isCustomerDefaultFee());
+       Assert.assertTrue(fee.isActive());
     }
 
     public void testSuccessfulCreatePeriodicFeeWithFormula() throws Exception {
@@ -425,13 +427,13 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
 
-        assertEquals("Loan_Periodic_Fee", fee.getFeeName());
-        assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType().getId());
-        assertEquals(RateAmountFlag.RATE, fee.getFeeType());
-        assertEquals(23.0, ((RateFeeBO) fee).getRate(), DELTA);
-        assertEquals(((RateFeeBO) fee).getFeeFormula().getId(), FeeFormula.AMOUNT.getValue(), DELTA);
-        assertTrue(fee.isPeriodic());
-        assertTrue(fee.isActive());
+       Assert.assertEquals("Loan_Periodic_Fee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals(RateAmountFlag.RATE, fee.getFeeType());
+       Assert.assertEquals(23.0, ((RateFeeBO) fee).getRate(), DELTA);
+       Assert.assertEquals(((RateFeeBO) fee).getFeeFormula().getId(), FeeFormula.AMOUNT.getValue(), DELTA);
+       Assert.assertTrue(fee.isPeriodic());
+       Assert.assertTrue(fee.isActive());
     }
 
     public void testSuccessfulManage_AmountFee() throws Exception {
@@ -448,11 +450,11 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.manage_success.toString());
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
-        assertEquals("100.0", actionForm.getAmount());
-        assertNull(actionForm.getRate());
-        assertNull(actionForm.getFeeFormula());
+       Assert.assertEquals("100.0", actionForm.getAmount());
+        Assert.assertNull(actionForm.getRate());
+        Assert.assertNull(actionForm.getFeeFormula());
 
-        assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 FeeConstants.STATUSLIST, request)).size());
     }
 
@@ -470,11 +472,11 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.manage_success.toString());
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
-        assertEquals("24.0", actionForm.getRate());
-        assertEquals(FeeFormula.AMOUNT.getValue().toString(), actionForm.getFeeFormula());
-        assertNull(actionForm.getAmount());
+       Assert.assertEquals("24.0", actionForm.getRate());
+       Assert.assertEquals(FeeFormula.AMOUNT.getValue().toString(), actionForm.getFeeFormula());
+        Assert.assertNull(actionForm.getAmount());
 
-        assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 FeeConstants.STATUSLIST, request)).size());
     }
 
@@ -492,8 +494,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("amount", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Fee Amount", 1, getErrorSize("amount"));
         verifyInputForward();
     }
 
@@ -511,8 +513,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("amount", "0");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Fee Amount", 1, getErrorSize("amount"));
         verifyInputForward();
     }
 
@@ -530,8 +532,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         addRequestParameter("rate", "");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("RateAndFormula", 1, getErrorSize("RateAndFormula"));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("RateAndFormula", 1, getErrorSize("RateAndFormula"));
         verifyInputForward();
     }
 
@@ -555,10 +557,10 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editpreview_success.toString());
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
-        assertEquals(new Money("200"), actionForm.getAmountValue());
-        assertEquals(FeeStatus.INACTIVE, actionForm.getFeeStatusValue());
-        assertNull(actionForm.getRate());
-        assertNull(actionForm.getFeeFormula());
+       Assert.assertEquals(new Money("200"), actionForm.getAmountValue());
+       Assert.assertEquals(FeeStatus.INACTIVE, actionForm.getFeeStatusValue());
+        Assert.assertNull(actionForm.getRate());
+        Assert.assertNull(actionForm.getFeeFormula());
     }
 
     public void testSuccessfulUpdate_AmountFee() throws Exception {
@@ -586,8 +588,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.update_success.toString());
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertFalse(fee.isActive());
-        assertEquals(new Money("200.0"), ((AmountFeeBO) fee).getFeeAmount());
+        Assert.assertFalse(fee.isActive());
+       Assert.assertEquals(new Money("200.0"), ((AmountFeeBO) fee).getFeeAmount());
     }
 
     public void testSuccessfulGetFee() throws Exception {
@@ -600,7 +602,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("feeId", fee.getFeeId().toString());
         actionPerform();
         fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        assertNotNull(fee);
+        Assert.assertNotNull(fee);
     }
 
     public void testSuccessfulUpdate_RateFee() throws Exception {
@@ -627,8 +629,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.update_success.toString());
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertTrue(fee.isActive());
-        assertEquals(30.0, ((RateFeeBO) fee).getRate(), DELTA);
+       Assert.assertTrue(fee.isActive());
+       Assert.assertEquals(30.0, ((RateFeeBO) fee).getRate(), DELTA);
     }
 
     public void testSuccessfulViewAllFees() throws Exception {
@@ -654,14 +656,14 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         List<FeeBO> customerFees = (List<FeeBO>) SessionUtils.getAttribute(FeeConstants.CUSTOMER_FEES, request);
         List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(FeeConstants.PRODUCT_FEES, request);
-        assertEquals(3, customerFees.size());
-        assertEquals(1, productFees.size());
+       Assert.assertEquals(3, customerFees.size());
+       Assert.assertEquals(1, productFees.size());
 
-        assertEquals("Center_Fee", customerFees.get(0).getFeeName());
-        assertEquals("Customer_Fee", customerFees.get(1).getFeeName());
-        assertEquals("Group_Fee", customerFees.get(2).getFeeName());
+       Assert.assertEquals("Center_Fee", customerFees.get(0).getFeeName());
+       Assert.assertEquals("Customer_Fee", customerFees.get(1).getFeeName());
+       Assert.assertEquals("Group_Fee", customerFees.get(2).getFeeName());
 
-        assertEquals("Loan_Fee1", productFees.get(0).getFeeName());
+       Assert.assertEquals("Loan_Fee1", productFees.get(0).getFeeName());
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
         fee1 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee1.getFeeId());
@@ -672,7 +674,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testFeeCategory() throws Exception {
         try {
             FeeCategory.getFeeCategory(Short.valueOf((short) 999));
-            fail();
+            Assert.fail();
         } catch (PropertyNotFoundException pnfe) {
         }
     }

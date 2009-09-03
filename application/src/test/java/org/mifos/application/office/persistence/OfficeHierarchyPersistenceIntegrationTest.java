@@ -22,6 +22,8 @@ package org.mifos.application.office.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -42,17 +44,17 @@ public class OfficeHierarchyPersistenceIntegrationTest extends MifosIntegrationT
     public void testGetOfficeLevels() throws Exception {
         List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence()
                 .getOfficeLevels(TestObjectFactory.TEST_LOCALE);
-        assertEquals(OFFICE_LEVELS, officeLevels.size());
+       Assert.assertEquals(OFFICE_LEVELS, officeLevels.size());
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-            assertTrue(officeLevelEntity.isConfigured());
+           Assert.assertTrue(officeLevelEntity.isConfigured());
         }
     }
 
     public void testIsOfficePresentForLevel() throws Exception {
         OfficeHierarchyPersistence persistence = new OfficeHierarchyPersistence();
-        assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.HEADOFFICE));
-        assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.BRANCHOFFICE));
-        assertFalse(persistence.isOfficePresentForLevel(OfficeLevel.REGIONALOFFICE));
+       Assert.assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.HEADOFFICE));
+       Assert.assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.BRANCHOFFICE));
+        Assert.assertFalse(persistence.isOfficePresentForLevel(OfficeLevel.REGIONALOFFICE));
 
     }
 
@@ -61,7 +63,7 @@ public class OfficeHierarchyPersistenceIntegrationTest extends MifosIntegrationT
         TestObjectFactory.simulateInvalidConnection();
         try {
             persistence.isOfficePresentForLevel(OfficeLevel.HEADOFFICE);
-            fail();
+            Assert.fail();
         } catch (PersistenceException expected) {
         } finally {
             StaticHibernateUtil.closeSession();

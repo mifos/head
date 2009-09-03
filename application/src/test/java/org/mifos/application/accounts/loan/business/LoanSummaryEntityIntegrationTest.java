@@ -22,6 +22,8 @@ package org.mifos.application.accounts.loan.business;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -57,10 +59,10 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
         Money originalFees = loanSummaryEntity.getOriginalFees();
         Money originalPenalty = loanSummaryEntity.getOriginalPenalty();
         loanSummaryEntity.decreaseBy(principal, interest, penalty, fees);
-        assertEquals(loanSummaryEntity.getOriginalPrincipal().add(principal), originalPrincipal);
-        assertEquals(loanSummaryEntity.getOriginalInterest().add(interest), originalInterest);
-        assertEquals(loanSummaryEntity.getOriginalFees().add(fees), originalFees);
-        assertEquals(loanSummaryEntity.getOriginalPenalty().add(penalty), originalPenalty);
+       Assert.assertEquals(loanSummaryEntity.getOriginalPrincipal().add(principal), originalPrincipal);
+       Assert.assertEquals(loanSummaryEntity.getOriginalInterest().add(interest), originalInterest);
+       Assert.assertEquals(loanSummaryEntity.getOriginalFees().add(fees), originalFees);
+       Assert.assertEquals(loanSummaryEntity.getOriginalPenalty().add(penalty), originalPenalty);
     }
 
     public void testUpdatePaymentDetails() {
@@ -71,10 +73,10 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
         Money penalty = TestObjectFactory.getMoneyForMFICurrency(20);
         Money fees = TestObjectFactory.getMoneyForMFICurrency(30);
         loanSummaryEntity.updatePaymentDetails(principal, interest, penalty, fees);
-        assertEquals(loanSummaryEntity.getPrincipalPaid(), principal);
-        assertEquals(loanSummaryEntity.getInterestPaid(), interest);
-        assertEquals(loanSummaryEntity.getFeesPaid(), fees);
-        assertEquals(loanSummaryEntity.getPenaltyPaid(), penalty);
+       Assert.assertEquals(loanSummaryEntity.getPrincipalPaid(), principal);
+       Assert.assertEquals(loanSummaryEntity.getInterestPaid(), interest);
+       Assert.assertEquals(loanSummaryEntity.getFeesPaid(), fees);
+       Assert.assertEquals(loanSummaryEntity.getPenaltyPaid(), penalty);
     }
 
     private AccountBO getLoanAccount() {

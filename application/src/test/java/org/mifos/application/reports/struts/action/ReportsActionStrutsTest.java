@@ -20,6 +20,8 @@
 
 package org.mifos.application.reports.struts.action;
 
+import junit.framework.Assert;
+
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -67,10 +69,10 @@ public class ReportsActionStrutsTest extends MifosMockStrutsTestCase {
         ActionMessage retrievedMessage = (ActionMessage) (errors).get(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED)
                 .next();
         ActionMessage expectedErrorMessage = new ActionMessage(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        assertEquals(expectedErrorMessage.toString(), retrievedMessage.toString());
+       Assert.assertEquals(expectedErrorMessage.toString(), retrievedMessage.toString());
     }
 
     public void testSkipConvertFormObjectToBusinessObjectReturnsTrueForAnyMethod() throws Exception {
-        assertTrue(new ReportsAction().skipActionFormToBusinessObjectConversion(null));
+       Assert.assertTrue(new ReportsAction().skipActionFormToBusinessObjectConversion(null));
     }
 }

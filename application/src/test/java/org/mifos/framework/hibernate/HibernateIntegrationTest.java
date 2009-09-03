@@ -20,6 +20,7 @@
 
 package org.mifos.framework.hibernate;
 
+import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -38,22 +39,22 @@ public class HibernateIntegrationTest extends MifosIntegrationTestCase {
     public void testHibernateSessionFactoryForNullConfig() {
         try {
             HibernateSessionFactory.setConfiguration(null);
-            fail();
+            Assert.fail();
         } catch (HibernateStartUpException outer) {
-            assertEquals("exception.framework.SystemException", outer.getKey());
+           Assert.assertEquals("exception.framework.SystemException", outer.getKey());
             ObjectAssert.assertInstanceOf(NullPointerException.class, outer.getCause());
         }
     }
 
     public void testHibernateUtilIsSessionOpen() {
         StaticHibernateUtil.getSessionTL();
-        assertTrue(StaticHibernateUtil.isSessionOpen());
+       Assert.assertTrue(StaticHibernateUtil.isSessionOpen());
         StaticHibernateUtil.closeSession();
     }
 
     public void testHibernateUtilIsSessionOpenForClosedSession() {
         StaticHibernateUtil.closeSession();
-        assertFalse(StaticHibernateUtil.isSessionOpen());
+        Assert.assertFalse(StaticHibernateUtil.isSessionOpen());
     }
 
 }

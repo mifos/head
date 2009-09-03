@@ -22,6 +22,8 @@ package org.mifos.application.productdefinition.business.service;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -65,14 +67,14 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         UserContext context = TestUtils.makeUser();
 
         List<ProductTypeEntity> productTypeList = productCategoryBusinessService.getProductTypes();
-        assertEquals(2, productTypeList.size());
+       Assert.assertEquals(2, productTypeList.size());
         for (ProductTypeEntity productTypeEntity : productTypeList) {
             productTypeEntity.setUserContext(context);
             if (productTypeEntity.getProductTypeID().equals(ProductType.LOAN.getValue()))
-                assertEquals("Loan", productTypeEntity.getName());
+               Assert.assertEquals("Loan", productTypeEntity.getName());
             else
-                // assertEquals("Margin Money",productTypeEntity.getName());
-                assertEquals("Savings", productTypeEntity.getName());
+                //Assert.assertEquals("Margin Money",productTypeEntity.getName());
+               Assert.assertEquals("Savings", productTypeEntity.getName());
         }
     }
 
@@ -80,15 +82,15 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getProductTypes();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testFindByGlobalNum() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
-        assertNotNull(productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
+        Assert.assertNotNull(productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
         deleteProductCategory(productCategoryBO);
     }
 
@@ -97,7 +99,7 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum());
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
             StaticHibernateUtil.closeSession();
             deleteProductCategory(productCategoryBO);
@@ -105,23 +107,23 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
     }
 
     public void testGetProductCategoryStatusList() throws Exception {
-        assertEquals(2, productCategoryBusinessService.getProductCategoryStatusList().size());
+       Assert.assertEquals(2, productCategoryBusinessService.getProductCategoryStatusList().size());
     }
 
     public void testGetProductCategoryStatusListFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getProductCategoryStatusList();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testGetAllCategories() throws Exception {
-        assertEquals(2, productCategoryBusinessService.getAllCategories().size());
+       Assert.assertEquals(2, productCategoryBusinessService.getAllCategories().size());
         ProductCategoryBO productCategoryBO = createProductCategory();
-        assertEquals(3, productCategoryBusinessService.getAllCategories().size());
+       Assert.assertEquals(3, productCategoryBusinessService.getAllCategories().size());
         deleteProductCategory(productCategoryBO);
     }
 
@@ -129,9 +131,9 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBusinessService.getAllCategories();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 

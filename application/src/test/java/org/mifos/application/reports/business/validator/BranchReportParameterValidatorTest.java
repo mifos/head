@@ -27,6 +27,7 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import java.util.ArrayList;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.reports.business.BranchReportParameterForm;
@@ -52,7 +53,7 @@ public class BranchReportParameterValidatorTest extends TestCase {
         Errors errors = new Errors(null);
         validator.validate(new BranchReportParameterForm(BRANCH_ID, VALID_RUN_DATE), errors);
         verify(branchReportServiceMock);
-        assertFalse(errors.hasErrors());
+        Assert.assertFalse(errors.hasErrors());
     }
 
     public void testValidatorAddsErrorIfServiceSaysNoDataFound() throws Exception {
@@ -61,10 +62,10 @@ public class BranchReportParameterValidatorTest extends TestCase {
         replay(branchReportServiceMock);
         validator.validate(validForm, errors);
         verify(branchReportServiceMock);
-        assertTrue(errors.hasErrors());
+       Assert.assertTrue(errors.hasErrors());
         ErrorEntry fieldError = errors.getFieldError(ReportValidationConstants.RUN_DATE_PARAM);
-        assertNotNull(fieldError);
-        assertEquals(ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG, fieldError.getErrorCode());
+        Assert.assertNotNull(fieldError);
+       Assert.assertEquals(ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG, fieldError.getErrorCode());
     }
 
     public void testValidatorDoesNotCheckDataPresenceIfErrorsExists() throws Exception {

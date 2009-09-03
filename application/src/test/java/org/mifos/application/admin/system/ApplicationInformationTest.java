@@ -20,6 +20,7 @@
 
 package org.mifos.application.admin.system;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.core.service.ApplicationInformationDto;
@@ -43,9 +44,9 @@ public class ApplicationInformationTest extends TestCase {
     }
 
     public void testGetApplicationInformation() {
-        assertEquals(applicationInfoService.getApplicationInformation().getBuildId(), BUILD_ID);
-        assertEquals(applicationInfoService.getApplicationInformation().getBuildTag(), BUILD_NUMBER);
-        assertEquals(applicationInfoService.getApplicationInformation().getSvnRevision(), SVN_REVISION);
+       Assert.assertEquals(applicationInfoService.getApplicationInformation().getBuildId(), BUILD_ID);
+       Assert.assertEquals(applicationInfoService.getApplicationInformation().getBuildTag(), BUILD_NUMBER);
+       Assert.assertEquals(applicationInfoService.getApplicationInformation().getSvnRevision(), SVN_REVISION);
     }
 
 }

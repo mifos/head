@@ -22,6 +22,7 @@ package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class BundleKeyTest extends TestCase {
@@ -35,15 +36,15 @@ public class BundleKeyTest extends TestCase {
     }
 
     public void testHashCode() {
-        assertEquals(905023, bundleKey.hashCode());
+       Assert.assertEquals(905023, bundleKey.hashCode());
     }
 
     public void testEqualsObject() {
-        assertTrue(bundleKey.equals(bundleKey));
-        assertFalse(bundleKey.equals(null));
+       Assert.assertTrue(bundleKey.equals(bundleKey));
+        Assert.assertFalse(bundleKey.equals(null));
         Locale locale = new Locale("EN");
-        assertFalse(bundleKey.equals(new BundleKey(locale, "wrongKey")));
+        Assert.assertFalse(bundleKey.equals(new BundleKey(locale, "wrongKey")));
         locale = new Locale("SP");
-        assertFalse(bundleKey.equals(new BundleKey(locale, "Key")));
+        Assert.assertFalse(bundleKey.equals(new BundleKey(locale, "Key")));
     }
 }

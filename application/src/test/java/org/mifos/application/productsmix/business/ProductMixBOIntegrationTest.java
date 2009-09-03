@@ -20,6 +20,8 @@
 
 package org.mifos.application.productsmix.business;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
@@ -60,14 +62,14 @@ public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
     public void testUpdate() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();
-        assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
-        assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingNotAllowedId().getPrdOfferingId());
+       Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
+       Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingNotAllowedId().getPrdOfferingId());
     }
 
     public void testDelete() throws PersistenceException, ProductDefinitionException {
         prdMix = new ProductMixBO(savingsOffering, savingsOffering);
         prdMix.update();
-        assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
+       Assert.assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
         prdMix.delete();
 
     }

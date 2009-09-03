@@ -20,6 +20,8 @@
 
 package org.mifos.application.rolesandpermission.business.service;
 
+import junit.framework.Assert;
+
 import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -44,46 +46,46 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
     }
 
     public void testGetRoles() throws Exception {
-        assertEquals(2, rolesPermissionsBusinessService.getRoles().size());
+       Assert.assertEquals(2, rolesPermissionsBusinessService.getRoles().size());
     }
 
     public void testGetRolesFailure() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             rolesPermissionsBusinessService.getRoles();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testGetActivities() throws Exception {
-        assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, rolesPermissionsBusinessService.getActivities().size());
+       Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, rolesPermissionsBusinessService.getActivities().size());
     }
 
     public void testGetActivitiesFailure() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             rolesPermissionsBusinessService.getActivities();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testGetRoleForGivenId() throws Exception {
         RoleBO role = rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
-        assertNotNull(role);
-        assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
+        Assert.assertNotNull(role);
+       Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
     }
 
     public void testGetRoleForGivenIdFailure() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 

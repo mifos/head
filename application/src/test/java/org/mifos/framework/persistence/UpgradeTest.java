@@ -20,6 +20,7 @@
 
 package org.mifos.framework.persistence;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 
@@ -31,24 +32,24 @@ public class UpgradeTest extends TestCase {
     public void testIncrementVersion() throws Exception {
         Database database = DummyUpgrade.databaseWithVersionTable(53);
         new DummyUpgrade(54).upgradeVersion(database.openConnection());
-        assertEquals(54, new DatabaseVersionPersistence(database.openConnection()).read());
+       Assert.assertEquals(54, new DatabaseVersionPersistence(database.openConnection()).read());
     }
 
     public void testNotReadyToIncrement() throws Exception {
         Database database = DummyUpgrade.databaseWithVersionTable(53);
         new DummyUpgrade(55).upgradeVersion(database.openConnection());
-        assertEquals(53, new DatabaseVersionPersistence(database.openConnection()).read());
+       Assert.assertEquals(53, new DatabaseVersionPersistence(database.openConnection()).read());
     }
 
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "Permissions-Groups-CanBlacklistAGroup";
         String format = "Permissions-";
-        assertTrue(DummyUpgrade.validateLookupValueKey(format, validKey));
+       Assert.assertTrue(DummyUpgrade.validateLookupValueKey(format, validKey));
         String invalidKey = "Groups-CanBlacklistAGroup";
-        assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
         invalidKey = null;
-        assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
         invalidKey = "";
-        assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
     }
 }

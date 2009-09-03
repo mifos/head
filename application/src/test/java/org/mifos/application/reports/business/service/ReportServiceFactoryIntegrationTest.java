@@ -20,6 +20,8 @@
 
 package org.mifos.application.reports.business.service;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -33,7 +35,7 @@ public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCas
         try {
             ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
         } catch (Exception e) {
-            fail("Failed to initiliaze ReportServiceFactory, Error : " + e.getMessage());
+            Assert.fail("Failed to initiliaze ReportServiceFactory, Error : " + e.getMessage());
         }
     }
 
@@ -42,7 +44,7 @@ public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCas
             ReportServiceFactory.getLoggingEnabledBranchReportService(Integer.valueOf(1));
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            fail("Failed to fetch BranchReportService");
+            Assert.fail("Failed to fetch BranchReportService");
         }
     }
 
@@ -51,7 +53,7 @@ public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCas
             ReportServiceFactory.getBranchCashConfirmationReportService(Integer.valueOf(0));
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            fail("Failed to fetch BranchCashConfirmationReportService");
+            Assert.fail("Failed to fetch BranchCashConfirmationReportService");
         }
     }
 }

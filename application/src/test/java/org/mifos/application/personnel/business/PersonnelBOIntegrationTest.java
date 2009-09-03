@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -114,9 +116,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
                     null, null, null, null, name, null, null, null, null, null, null, null,
                     PersonnelConstants.SYSTEM_USER);
-            fail();
+            Assert.fail();
         } catch (ValidationException e) {
-            assertEquals(PersonnelConstants.ERRORMANDATORY, e.getKey());
+           Assert.assertEquals(PersonnelConstants.ERRORMANDATORY, e.getKey());
         }
     }
 
@@ -127,9 +129,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
                     "mifos", null, null, null, name, null, null, null, null, null, null, null,
                     PersonnelConstants.SYSTEM_USER);
 
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ValidationException e) {
-            assertEquals(PersonnelConstants.DUPLICATE_USER, e.getKey());
+           Assert.assertEquals(PersonnelConstants.DUPLICATE_USER, e.getKey());
         }
     }
 
@@ -139,9 +141,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
                     "Raj", null, null, null, name, "123", null, null, null, null, null, null,
                     PersonnelConstants.SYSTEM_USER);
 
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ValidationException e) {
-            assertEquals(PersonnelConstants.DUPLICATE_GOVT_ID, e.getKey());
+           Assert.assertEquals(PersonnelConstants.DUPLICATE_GOVT_ID, e.getKey());
         }
     }
 
@@ -154,9 +156,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
                     "RAJ", null, null, null, name1, null, dateFormat.parse("1979-12-12"), null, null, null, null, null,
                     PersonnelConstants.SYSTEM_USER);
 
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ValidationException e) {
-            assertEquals(PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB, e.getKey());
+           Assert.assertEquals(PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB, e.getKey());
         }
     }
 
@@ -167,7 +169,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
                 .getInstance().getBusinessService(BusinessServiceName.Personnel)).getRoles(), getCustomFields(), name,
                 "111111", date, Integer.valueOf("1"), Integer.valueOf("1"), date, date, getAddress(),
                 PersonnelConstants.SYSTEM_USER);
-        assertEquals("0", personnel.getAge());
+       Assert.assertEquals("0", personnel.getAge());
 
     }
 
@@ -178,7 +180,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
                 .getInstance().getBusinessService(BusinessServiceName.Personnel)).getRoles(), getCustomFields(), name,
                 "111111", null, Integer.valueOf("1"), Integer.valueOf("1"), date, date, getAddress(),
                 PersonnelConstants.SYSTEM_USER);
-        assertEquals("", personnel.getAge());
+       Assert.assertEquals("", personnel.getAge());
 
     }
 
@@ -192,9 +194,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.getSessionTL().close();
         try {
             personnel.save();
-            assertEquals(true, false);
+           Assert.assertEquals(true, false);
         } catch (PersonnelException e) {
-            assertEquals(true, true);
+           Assert.assertEquals(true, true);
         }
     }
 
@@ -211,29 +213,29 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndCloseSession();
         PersonnelBO personnelSaved = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
                 personnel.getPersonnelId());
-        assertEquals("RAJ", personnelSaved.getUserName());
-        assertEquals("rajendersaini@yahoo.com", personnelSaved.getEmailId());
-        assertEquals("XYZ", personnelSaved.getPersonnelDetails().getName().getFirstName());
-        assertEquals(generateGlobalPersonnelNum(office.getGlobalOfficeNum(), personnel.getPersonnelId()),
+       Assert.assertEquals("RAJ", personnelSaved.getUserName());
+       Assert.assertEquals("rajendersaini@yahoo.com", personnelSaved.getEmailId());
+       Assert.assertEquals("XYZ", personnelSaved.getPersonnelDetails().getName().getFirstName());
+       Assert.assertEquals(generateGlobalPersonnelNum(office.getGlobalOfficeNum(), personnel.getPersonnelId()),
                 personnelSaved.getGlobalPersonnelNum());
-        assertEquals(PersonnelLevel.NON_LOAN_OFFICER, personnelSaved.getLevelEnum());
-        assertEquals(1, personnelSaved.getLevel().getParent().getId().intValue());
-        assertFalse(personnelSaved.getLevel().isInteractionFlag());
-        assertEquals(null, personnelSaved.getMaxChildCount());
-        assertEquals(office.getOfficeId(), personnelSaved.getOffice().getOfficeId());
-        assertFalse(personnelSaved.isPasswordChanged());
-        assertEquals(1, personnelSaved.getPreferredLocale().getLocaleId().intValue());
-        assertEquals(1, personnelSaved.getTitle().intValue());
-        assertEquals("XYZ", personnelSaved.getDisplayName());
-        assertFalse(personnelSaved.isLocked());
+       Assert.assertEquals(PersonnelLevel.NON_LOAN_OFFICER, personnelSaved.getLevelEnum());
+       Assert.assertEquals(1, personnelSaved.getLevel().getParent().getId().intValue());
+        Assert.assertFalse(personnelSaved.getLevel().isInteractionFlag());
+       Assert.assertEquals(null, personnelSaved.getMaxChildCount());
+       Assert.assertEquals(office.getOfficeId(), personnelSaved.getOffice().getOfficeId());
+        Assert.assertFalse(personnelSaved.isPasswordChanged());
+       Assert.assertEquals(1, personnelSaved.getPreferredLocale().getLocaleId().intValue());
+       Assert.assertEquals(1, personnelSaved.getTitle().intValue());
+       Assert.assertEquals("XYZ", personnelSaved.getDisplayName());
+        Assert.assertFalse(personnelSaved.isLocked());
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        assertEquals(dateFormat.parse(dateFormat.format(date)), personnelSaved.getPersonnelDetails().getDob());
-        assertEquals("XYZ", personnelSaved.getPersonnelDetails().getDisplayName());
-        assertEquals(personnel.getPersonnelId(), personnelSaved.getPersonnelDetails().getPersonnel().getPersonnelId());
+       Assert.assertEquals(dateFormat.parse(dateFormat.format(date)), personnelSaved.getPersonnelDetails().getDob());
+       Assert.assertEquals("XYZ", personnelSaved.getPersonnelDetails().getDisplayName());
+       Assert.assertEquals(personnel.getPersonnelId(), personnelSaved.getPersonnelDetails().getPersonnel().getPersonnelId());
         for (PersonnelCustomFieldEntity personnelCustomField : personnelSaved.getCustomFields()) {
-            assertEquals("123456", personnelCustomField.getFieldValue());
-            assertEquals(9, personnelCustomField.getFieldId().intValue());
+           Assert.assertEquals("123456", personnelCustomField.getFieldValue());
+           Assert.assertEquals(9, personnelCustomField.getFieldId().intValue());
         }
 
         TestObjectFactory.cleanUp(personnelSaved);
@@ -247,7 +249,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                 createdBranchOffice.getOfficeId());
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-        assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
+       Assert.assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
         createInitialObjects(branchOffice.getOfficeId(), personnel.getPersonnelId());
         client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
@@ -256,21 +258,21 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             personnel.update(PersonnelStatus.ACTIVE, PersonnelLevel.LOAN_OFFICER, createdBranchOffice, Integer
                     .valueOf("1"), Short.valueOf("1"), "ABCD", "rajendersaini@yahoo.com", null, getCustomFields(),
                     name, Integer.valueOf("1"), Integer.valueOf("1"), getAddress(), Short.valueOf("1"));
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (PersonnelException pe) {
             personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
                     personnel.getPersonnelId());
             createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                     createdBranchOffice.getOfficeId());
-            assertTrue(true);
-            assertEquals(pe.getKey(), PersonnelConstants.TRANSFER_NOT_POSSIBLE_EXCEPTION);
+           Assert.assertTrue(true);
+           Assert.assertEquals(pe.getKey(), PersonnelConstants.TRANSFER_NOT_POSSIBLE_EXCEPTION);
         }
     }
 
     public void testUpdateFailureForBranchTransferWithLoanOfficerInNonBranch() throws Exception {
 
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-        assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
+       Assert.assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
         createInitialObjects(branchOffice.getOfficeId(), personnel.getPersonnelId());
         client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
@@ -279,10 +281,10 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             personnel.update(PersonnelStatus.ACTIVE, PersonnelLevel.LOAN_OFFICER, office, Integer.valueOf("1"), Short
                     .valueOf("1"), "ABCD", "rajendersaini@yahoo.com", null, getCustomFields(), name, Integer
                     .valueOf("1"), Integer.valueOf("1"), getAddress(), Short.valueOf("1"));
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (PersonnelException pe) {
-            assertTrue(true);
-            assertEquals(pe.getKey(), PersonnelConstants.LO_ONLY_IN_BRANCHES);
+           Assert.assertTrue(true);
+           Assert.assertEquals(pe.getKey(), PersonnelConstants.LO_ONLY_IN_BRANCHES);
         }
     }
 
@@ -293,10 +295,10 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             personnel.update(PersonnelStatus.ACTIVE, PersonnelLevel.LOAN_OFFICER, office, Integer.valueOf("1"), Short
                     .valueOf("1"), "ABCD", "rajendersaini@yahoo.com", null, getCustomFields(), name, Integer
                     .valueOf("1"), Integer.valueOf("1"), getAddress(), Short.valueOf("1"));
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (PersonnelException pe) {
-            assertTrue(true);
-            assertEquals(pe.getKey(), PersonnelConstants.LO_ONLY_IN_BRANCHES);
+           Assert.assertTrue(true);
+           Assert.assertEquals(pe.getKey(), PersonnelConstants.LO_ONLY_IN_BRANCHES);
         }
     }
 
@@ -311,10 +313,10 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             personnel.update(PersonnelStatus.ACTIVE, PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"),
                     Short.valueOf("1"), "ABCD", "rajendersaini@yahoo.com", null, getCustomFields(), name, Integer
                             .valueOf("1"), Integer.valueOf("1"), getAddress(), Short.valueOf("1"));
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (PersonnelException pe) {
-            assertTrue(true);
-            assertEquals(pe.getKey(), PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION);
+           Assert.assertTrue(true);
+           Assert.assertEquals(pe.getKey(), PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION);
         }
     }
 
@@ -329,10 +331,10 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             personnel.update(PersonnelStatus.INACTIVE, PersonnelLevel.LOAN_OFFICER, branchOffice, Integer.valueOf("1"),
                     Short.valueOf("1"), "ABCD", "rajendersaini@yahoo.com", null, getCustomFields(), name, Integer
                             .valueOf("1"), Integer.valueOf("1"), getAddress(), Short.valueOf("1"));
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (PersonnelException pe) {
-            assertTrue(true);
-            assertEquals(pe.getKey(), PersonnelConstants.STATUS_CHANGE_EXCEPTION);
+           Assert.assertTrue(true);
+           Assert.assertEquals(pe.getKey(), PersonnelConstants.STATUS_CHANGE_EXCEPTION);
         }
     }
 
@@ -344,13 +346,13 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
                 createdBranchOffice.getOfficeId());
         createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
         Short noOfTries = personnel.getNoOfTries();
-        assertEquals(office.getOfficeId(), personnel.getOffice().getOfficeId());
-        assertEquals("XYZ", personnel.getPersonnelDetails().getName().getFirstName());
-        assertEquals(Integer.valueOf("1"), personnel.getPersonnelDetails().getGender());
-        assertEquals(Integer.valueOf("1"), personnel.getPersonnelDetails().getMaritalStatus());
-        assertEquals(PersonnelLevel.NON_LOAN_OFFICER, personnel.getLevelEnum());
-        assertTrue(personnel.isActive());
-        assertEquals(0, personnel.getPersonnelMovements().size());
+       Assert.assertEquals(office.getOfficeId(), personnel.getOffice().getOfficeId());
+       Assert.assertEquals("XYZ", personnel.getPersonnelDetails().getName().getFirstName());
+       Assert.assertEquals(Integer.valueOf("1"), personnel.getPersonnelDetails().getGender());
+       Assert.assertEquals(Integer.valueOf("1"), personnel.getPersonnelDetails().getMaritalStatus());
+       Assert.assertEquals(PersonnelLevel.NON_LOAN_OFFICER, personnel.getLevelEnum());
+       Assert.assertTrue(personnel.isActive());
+       Assert.assertEquals(0, personnel.getPersonnelMovements().size());
         personnel.update(PersonnelStatus.INACTIVE, PersonnelLevel.LOAN_OFFICER, createdBranchOffice, Integer
                 .valueOf("2"), Short.valueOf("1"), "ABCD", "abc@yahoo.com", getNewRoles(), getCustomFields(),
                 getPersonnelName(), Integer.valueOf("2"), Integer.valueOf("2"), getAddress(), Short.valueOf("1"));
@@ -359,23 +361,23 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                 createdBranchOffice.getOfficeId());
-        assertEquals(createdBranchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
-        assertEquals(getPersonnelName().getFirstName(), personnel.getPersonnelDetails().getName().getFirstName());
-        assertEquals(getPersonnelName().getLastName(), personnel.getPersonnelDetails().getName().getLastName());
-        assertEquals(getPersonnelName().getMiddleName(), personnel.getPersonnelDetails().getName().getMiddleName());
-        assertEquals(getPersonnelName().getSecondLastName(), personnel.getPersonnelDetails().getName()
+       Assert.assertEquals(createdBranchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
+       Assert.assertEquals(getPersonnelName().getFirstName(), personnel.getPersonnelDetails().getName().getFirstName());
+       Assert.assertEquals(getPersonnelName().getLastName(), personnel.getPersonnelDetails().getName().getLastName());
+       Assert.assertEquals(getPersonnelName().getMiddleName(), personnel.getPersonnelDetails().getName().getMiddleName());
+       Assert.assertEquals(getPersonnelName().getSecondLastName(), personnel.getPersonnelDetails().getName()
                 .getSecondLastName());
-        assertEquals(getPersonnelName().getDisplayName(), personnel.getDisplayName());
-        assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
-        assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
-        assertEquals("abc@yahoo.com", personnel.getEmailId());
-        assertFalse(personnel.isPasswordChanged());
-        assertEquals(2, personnel.getTitle().intValue());
-        assertEquals(PersonnelLevel.LOAN_OFFICER, personnel.getLevelEnum());
-        assertFalse(personnel.isActive());
-        assertEquals(2, personnel.getPersonnelMovements().size());
-        assertEquals(1, personnel.getPersonnelRoles().size());
-        assertEquals(noOfTries, personnel.getNoOfTries());
+       Assert.assertEquals(getPersonnelName().getDisplayName(), personnel.getDisplayName());
+       Assert.assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
+       Assert.assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
+       Assert.assertEquals("abc@yahoo.com", personnel.getEmailId());
+        Assert.assertFalse(personnel.isPasswordChanged());
+       Assert.assertEquals(2, personnel.getTitle().intValue());
+       Assert.assertEquals(PersonnelLevel.LOAN_OFFICER, personnel.getLevelEnum());
+        Assert.assertFalse(personnel.isActive());
+       Assert.assertEquals(2, personnel.getPersonnelMovements().size());
+       Assert.assertEquals(1, personnel.getPersonnelRoles().size());
+       Assert.assertEquals(noOfTries, personnel.getNoOfTries());
 
     }
 
@@ -393,21 +395,21 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                 createdBranchOffice.getOfficeId());
-        assertEquals(getPersonnelName().getFirstName(), personnel.getPersonnelDetails().getName().getFirstName());
-        assertEquals(getPersonnelName().getLastName(), personnel.getPersonnelDetails().getName().getLastName());
-        assertEquals(getPersonnelName().getMiddleName(), personnel.getPersonnelDetails().getName().getMiddleName());
-        assertEquals(getPersonnelName().getSecondLastName(), personnel.getPersonnelDetails().getName()
+       Assert.assertEquals(getPersonnelName().getFirstName(), personnel.getPersonnelDetails().getName().getFirstName());
+       Assert.assertEquals(getPersonnelName().getLastName(), personnel.getPersonnelDetails().getName().getLastName());
+       Assert.assertEquals(getPersonnelName().getMiddleName(), personnel.getPersonnelDetails().getName().getMiddleName());
+       Assert.assertEquals(getPersonnelName().getSecondLastName(), personnel.getPersonnelDetails().getName()
                 .getSecondLastName());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getCity());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getCountry());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine1());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine2());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine3());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getPhoneNumber());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getState());
-        assertEquals("changed", personnel.getPersonnelDetails().getAddress().getZip());
-        assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
-        assertEquals("xyz@aditi.com", personnel.getEmailId());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getCity());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getCountry());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine1());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine2());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine3());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getPhoneNumber());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getState());
+       Assert.assertEquals("changed", personnel.getPersonnelDetails().getAddress().getZip());
+       Assert.assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
+       Assert.assertEquals("xyz@aditi.com", personnel.getEmailId());
     }
 
     public void testAddNotes() throws Exception {
@@ -416,7 +418,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                 createdBranchOffice.getOfficeId());
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-        assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
+       Assert.assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
         createInitialObjects(branchOffice.getOfficeId(), personnel.getPersonnelId());
         personnel.addNotes(PersonnelConstants.SYSTEM_USER, createNotes("1.Personnel notes created"));
         personnel.addNotes(PersonnelConstants.SYSTEM_USER, createNotes("2.Personnel notes created"));
@@ -431,11 +433,11 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                 createdBranchOffice.getOfficeId());
-        assertEquals("Size of notes should be 5", 5, personnel.getPersonnelNotes().size());
-        assertEquals("Size of recent notes should be 3", 3, personnel.getRecentPersonnelNotes().size());
+       Assert.assertEquals("Size of notes should be 5", 5, personnel.getPersonnelNotes().size());
+       Assert.assertEquals("Size of recent notes should be 3", 3, personnel.getRecentPersonnelNotes().size());
         for (PersonnelNotesEntity notes : personnel.getPersonnelNotes()) {
-            assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), notes.getCommentDate());
-            assertEquals("The most recent note should be the last one added", "5.Personnel notes created", notes
+           Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), notes.getCommentDate());
+           Assert.assertEquals("The most recent note should be the last one added", "5.Personnel notes created", notes
                     .getComment());
             break;
         }
@@ -445,25 +447,25 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         personnel = createPersonnel();
         String password = "ABCD";
         UserContext userContext = personnel.login(password);
-        assertFalse(personnel.isLocked());
+        Assert.assertFalse(personnel.isLocked());
 
-        assertEquals(personnel.getPersonnelId(), userContext.getId());
-        assertEquals(personnel.getDisplayName(), userContext.getName());
-        assertEquals(personnel.getLevelEnum(), userContext.getLevel());
-        assertEquals(personnel.getLastLogin(), userContext.getLastLogin());
-        assertEquals(personnel.getPasswordChanged(), userContext.getPasswordChanged());
-        assertEquals(personnel.getPreferredLocale().getLocaleId(), userContext.getLocaleId());
-        assertEquals(Localization.getInstance().getLocaleId(), userContext.getMfiLocaleId());
-        assertEquals(personnel.getPreferredLocale().getLanguageName(), userContext.getPreferredLocale()
+       Assert.assertEquals(personnel.getPersonnelId(), userContext.getId());
+       Assert.assertEquals(personnel.getDisplayName(), userContext.getName());
+       Assert.assertEquals(personnel.getLevelEnum(), userContext.getLevel());
+       Assert.assertEquals(personnel.getLastLogin(), userContext.getLastLogin());
+       Assert.assertEquals(personnel.getPasswordChanged(), userContext.getPasswordChanged());
+       Assert.assertEquals(personnel.getPreferredLocale().getLocaleId(), userContext.getLocaleId());
+       Assert.assertEquals(Localization.getInstance().getLocaleId(), userContext.getMfiLocaleId());
+       Assert.assertEquals(personnel.getPreferredLocale().getLanguageName(), userContext.getPreferredLocale()
                 .getDisplayLanguage(userContext.getPreferredLocale()));
-        assertEquals(personnel.getPreferredLocale().getCountryName(), userContext.getPreferredLocale()
+       Assert.assertEquals(personnel.getPreferredLocale().getCountryName(), userContext.getPreferredLocale()
                 .getDisplayCountry(userContext.getPreferredLocale()));
-        assertEquals(personnel.getOffice().getOfficeId(), userContext.getBranchId());
-        assertEquals(personnel.getOffice().getGlobalOfficeNum(), userContext.getBranchGlobalNum());
-        assertEquals(0, personnel.getNoOfTries().intValue());
-        assertFalse(personnel.isPasswordChanged());
+       Assert.assertEquals(personnel.getOffice().getOfficeId(), userContext.getBranchId());
+       Assert.assertEquals(personnel.getOffice().getGlobalOfficeNum(), userContext.getBranchGlobalNum());
+       Assert.assertEquals(0, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isPasswordChanged());
         // There should be 2 roles
-        assertEquals(getRoles(personnel).size(), userContext.getRoles().size());
+       Assert.assertEquals(getRoles(personnel).size(), userContext.getRoles().size());
     }
 
     public void testLoginForInvalidPassword() throws Exception {
@@ -471,11 +473,11 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         String password = "WRONG_PASSWORD";
         try {
             personnel.login(password);
-            fail();
+            Assert.fail();
         } catch (PersonnelException e) {
-            assertEquals(1, personnel.getNoOfTries().intValue());
-            assertFalse(personnel.isLocked());
-            assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
+           Assert.assertEquals(1, personnel.getNoOfTries().intValue());
+            Assert.assertFalse(personnel.isLocked());
+           Assert.assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
         }
     }
 
@@ -493,11 +495,11 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             personnel.login(password);
             StaticHibernateUtil.commitTransaction();
-            fail();
+            Assert.fail();
         } catch (PersonnelException e) {
-            assertEquals(0, personnel.getNoOfTries().intValue());
-            assertFalse(personnel.isLocked());
-            assertEquals(LoginConstants.KEYUSERINACTIVE, e.getKey());
+           Assert.assertEquals(0, personnel.getNoOfTries().intValue());
+            Assert.assertFalse(personnel.isLocked());
+           Assert.assertEquals(LoginConstants.KEYUSERINACTIVE, e.getKey());
         }
     }
 
@@ -512,11 +514,11 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             StaticHibernateUtil.closeSession();
             personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
             personnel.login("WRONG_PASSWORD");
-            fail();
+            Assert.fail();
         } catch (PersonnelException e) {
-            assertEquals(5, personnel.getNoOfTries().intValue());
-            assertTrue(personnel.isLocked());
-            assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
+           Assert.assertEquals(5, personnel.getNoOfTries().intValue());
+           Assert.assertTrue(personnel.isLocked());
+           Assert.assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
         }
     }
 
@@ -533,8 +535,8 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-        assertFalse(personnel.isLocked());
-        assertEquals("No of tries should be reseted to 0", 0, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals("No of tries should be reseted to 0", 0, personnel.getNoOfTries().intValue());
     }
 
     public void testLoginForLockedPersonnel() throws Exception {
@@ -554,43 +556,43 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             StaticHibernateUtil.closeSession();
             personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
                     personnel.getPersonnelId());
-            fail();
+            Assert.fail();
         } catch (PersonnelException e) {
-            assertEquals(5, personnel.getNoOfTries().intValue());
-            assertTrue(personnel.isLocked());
-            assertEquals(LoginConstants.KEYUSERLOCKED, e.getKey());
+           Assert.assertEquals(5, personnel.getNoOfTries().intValue());
+           Assert.assertTrue(personnel.isLocked());
+           Assert.assertEquals(LoginConstants.KEYUSERLOCKED, e.getKey());
         }
     }
 
     public void testUpdatePasswordWithOldPassword() throws Exception {
         personnel = createPersonnel();
-        assertNull(personnel.getLastLogin());
+        Assert.assertNull(personnel.getLastLogin());
         personnel.updatePassword("ABCD", "NEW_PASSWORD", Short.valueOf("1"));
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-        assertTrue(personnel.isPasswordChanged());
-        assertNotNull(personnel.getLastLogin());
+       Assert.assertTrue(personnel.isPasswordChanged());
+        Assert.assertNotNull(personnel.getLastLogin());
     }
 
     public void testUpdatePassword() throws Exception {
         personnel = createPersonnel();
         Short mifosId = new Short((short) 1);
         personnel.updatePassword("testPassword", mifosId);
-        assertEquals(personnel.getUpdatedBy(), mifosId);
-        assertNotNull(personnel.getLastLogin());
-        assertEquals(personnel.getPasswordChanged(), LoginConstants.PASSWORDCHANGEDFLAG);
+       Assert.assertEquals(personnel.getUpdatedBy(), mifosId);
+        Assert.assertNotNull(personnel.getLastLogin());
+       Assert.assertEquals(personnel.getPasswordChanged(), LoginConstants.PASSWORDCHANGEDFLAG);
     }
 
     public void testUpdatePasswordWithWrongOldPassword() throws Exception {
         personnel = createPersonnel();
-        assertNull(personnel.getLastLogin());
+        Assert.assertNull(personnel.getLastLogin());
         try {
             personnel.updatePassword("WRONGOLD_PASSWORD", "NEW_PASSWORD", Short.valueOf("1"));
-            fail();
+            Assert.fail();
         } catch (PersonnelException e) {
-            assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
-            assertFalse(personnel.isPasswordChanged());
+           Assert.assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
+            Assert.assertFalse(personnel.isPasswordChanged());
         }
     }
 
@@ -604,14 +606,14 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-        assertTrue(personnel.isLocked());
+       Assert.assertTrue(personnel.isLocked());
         personnel.unlockPersonnel(Short.valueOf("1"));
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-        assertFalse(personnel.isLocked());
-        assertEquals(0, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(0, personnel.getNoOfTries().intValue());
     }
 
     public void testUnlockPersonnelFailure() throws Exception {
@@ -627,9 +629,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
             TestObjectFactory.simulateInvalidConnection();
             personnel.unlockPersonnel(Short.valueOf("1"));
-            fail();
+            Assert.fail();
         } catch (PersonnelException e) {
-            assertEquals(CustomerConstants.UPDATE_FAILED_EXCEPTION, e.getKey());
+           Assert.assertEquals(CustomerConstants.UPDATE_FAILED_EXCEPTION, e.getKey());
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -646,23 +648,23 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-        assertTrue(personnel.isLocked());
+       Assert.assertTrue(personnel.isLocked());
         personnel.unlockPersonnel(Short.valueOf("1"));
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-        assertFalse(personnel.isLocked());
-        assertEquals(0, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(0, personnel.getNoOfTries().intValue());
 
         personnel.login("ABCD");
-        assertEquals(0, personnel.getNoOfTries().intValue());
+       Assert.assertEquals(0, personnel.getNoOfTries().intValue());
     }
 
     public void testPersonnelView() throws Exception {
         PersonnelView personnelView = new PersonnelView(Short.valueOf("1"), "Raj");
-        assertEquals(Short.valueOf("1"), personnelView.getPersonnelId());
-        assertEquals("Raj", personnelView.getDisplayName());
+       Assert.assertEquals(Short.valueOf("1"), personnelView.getPersonnelId());
+       Assert.assertEquals("Raj", personnelView.getDisplayName());
     }
 
     public void testGetLocaleId() throws Exception {
@@ -670,7 +672,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         PersonnelBO personnel = new PersonnelBO();
         personnel.setPreferredLocale(new SupportedLocalesEntity(localeId));
 
-        assertEquals(localeId, personnel.getLocaleId());
+       Assert.assertEquals(localeId, personnel.getLocaleId());
     }
 
     public void testCreateFailureWithDuplicateUserName() throws Exception {
@@ -687,10 +689,10 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             person1.save();
             person2.save();
             StaticHibernateUtil.rollbackTransaction();
-            fail();
+            Assert.fail();
         } catch (PersonnelException e) {
-            assertEquals(PersistenceException.class, e.getCause().getClass());
-            assertEquals(ConstraintViolationException.class, e.getCause().getCause().getClass());
+           Assert.assertEquals(PersistenceException.class, e.getCause().getClass());
+           Assert.assertEquals(ConstraintViolationException.class, e.getCause().getCause().getClass());
             StaticHibernateUtil.rollbackTransaction();
         }
     }
@@ -771,9 +773,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
     private void loginWithWrongPassword() {
         try {
             personnel.login("WRONG_PASSWORD");
-            fail();
+            Assert.fail();
         } catch (PersonnelException expected) {
-            assertEquals(LoginConstants.INVALIDOLDPASSWORD, expected.getKey());
+           Assert.assertEquals(LoginConstants.INVALIDOLDPASSWORD, expected.getKey());
         }
     }
 

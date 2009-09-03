@@ -21,6 +21,7 @@
 package org.mifos.framework.util.helpers;
 
 import static org.junit.Assert.assertArrayEquals;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
@@ -47,7 +48,7 @@ public class ChapterNumSortTest extends TestCase {
     }
 
     public void testSimpleCompare() {
-        assertEquals(1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.0")));
-        assertEquals(-1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.10")));
+       Assert.assertEquals(1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.0")));
+       Assert.assertEquals(-1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.10")));
     }
 }

@@ -22,6 +22,7 @@ package org.mifos.application.ppi.helpers;
 
 import java.io.ByteArrayInputStream;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.ppi.business.PPIChoice;
@@ -56,30 +57,30 @@ public class XmlPPIParserTest extends TestCase {
 
         PPISurvey generatedSurvey = parser.parse(new ByteArrayInputStream(getMockXmlSurvey().getBytes("UTF-8")));
 
-        assertEquals(comparisonSurvey.toString(), generatedSurvey.toString());
+       Assert.assertEquals(comparisonSurvey.toString(), generatedSurvey.toString());
     }
 
     public void testParse() throws Exception {
         PPISurvey survey = parser.parse(new ByteArrayInputStream(getMockXmlSurvey().getBytes("UTF-8")));
 
-        assertEquals(Country.INDIA, survey.getCountryAsEnum());
-        assertEquals("Test PPI Survey", survey.getName());
-        assertEquals(1, survey.getQuestions().size());
-        assertEquals(2, survey.getQuestions().get(0).getQuestion().getChoices().size());
+       Assert.assertEquals(Country.INDIA, survey.getCountryAsEnum());
+       Assert.assertEquals("Test PPI Survey", survey.getName());
+       Assert.assertEquals(1, survey.getQuestions().size());
+       Assert.assertEquals(2, survey.getQuestions().get(0).getQuestion().getChoices().size());
 
-        assertEquals(80.0, survey.getLikelihood(1).getBelowPovertyLinePercent(), DELTA);
-        assertEquals(20.0, survey.getLikelihood(1).getAbovePovertyLinePercent(), DELTA);
-        assertEquals(69.0, survey.getLikelihood(17).getBelowPovertyLinePercent(), DELTA);
-        assertEquals(31.0, survey.getLikelihood(17).getAbovePovertyLinePercent(), DELTA);
+       Assert.assertEquals(80.0, survey.getLikelihood(1).getBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(20.0, survey.getLikelihood(1).getAbovePovertyLinePercent(), DELTA);
+       Assert.assertEquals(69.0, survey.getLikelihood(17).getBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(31.0, survey.getLikelihood(17).getAbovePovertyLinePercent(), DELTA);
     }
 
     public void testMaximumPoints() throws Exception {
         try {
             parser.parse(new ByteArrayInputStream(getInvalidXmlSurvey().getBytes("UTF-8")));
-            fail("should have thrown an exception");
+            Assert.fail("should have thrown an exception");
         } catch (IllegalStateException e) {
             int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
-            assertEquals("org.mifos.framework.exceptions.ValidationException: Question choices amount to more than "
+           Assert.assertEquals("org.mifos.framework.exceptions.ValidationException: Question choices amount to more than "
                     + nonPoorMax + " points.", e.getMessage());
         }
     }

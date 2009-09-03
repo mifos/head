@@ -24,6 +24,7 @@ import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_N
 
 import java.sql.ResultSet;
 
+import junit.framework.Assert;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
@@ -46,12 +47,12 @@ public class LatestTestFullBaseTest extends LatestBaseTestCase {
     public void testRealSchema() throws Exception {
         Database database = TestDatabase.makeDatabase();
         loadRealLatest(database);
-        assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, version(database));
+       Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, version(database));
         String latestDump = new SqlDumper(false).dump(database.dataStore());
 
         DataStore upgraded = applyRealUpgrades();
         String upgradeDump = new SqlDumper(false).dump(upgraded);
-        assertEquals(latestDump, upgradeDump);
+       Assert.assertEquals(latestDump, upgradeDump);
     }
 
     private DataStore applyRealUpgrades() throws Exception {
@@ -87,13 +88,13 @@ public class LatestTestFullBaseTest extends LatestBaseTestCase {
         // Assert that custom values have been retained
         ResultSet rs = database.query("select * from lookup_value where lookup_id=569");
         rs.next();
-        assertEquals(19, rs.getInt("entity_id"));
-        assertEquals(" ", rs.getString("lookup_name"));
+       Assert.assertEquals(19, rs.getInt("entity_id"));
+       Assert.assertEquals(" ", rs.getString("lookup_name"));
 
         rs = database.query("select * from lookup_value_locale where lookup_id=569");
         rs.next();
-        assertEquals(1, rs.getInt("locale_id"));
-        assertEquals("Martian", rs.getString("lookup_value"));
+       Assert.assertEquals(1, rs.getInt("locale_id"));
+       Assert.assertEquals("Martian", rs.getString("lookup_value"));
         rs.close();
     }
 

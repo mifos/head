@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
@@ -67,38 +69,38 @@ public class PPIPersistenceTest extends MifosInMemoryIntegrationTestCase {
     public void testLikelihoods() throws Exception {
         int surveyId = createSurveyWithLikelihoods("surveyName");
         PPISurvey retreivedSurvey = (PPISurvey) persistence.getSurvey(surveyId);
-        assertNotNull(retreivedSurvey);
+        Assert.assertNotNull(retreivedSurvey);
         PPILikelihood lh = retreivedSurvey.getLikelihood(17);
-        assertEquals(0, lh.getScoreFrom());
-        assertEquals(20, lh.getScoreTo());
-        assertEquals(80.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
-        assertEquals(20.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(0, lh.getScoreFrom());
+       Assert.assertEquals(20, lh.getScoreTo());
+       Assert.assertEquals(80.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(20.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
 
         lh = retreivedSurvey.getLikelihood(46);
-        assertEquals(21, lh.getScoreFrom());
-        assertEquals(100, lh.getScoreTo());
-        assertEquals(30.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
-        assertEquals(70.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(21, lh.getScoreFrom());
+       Assert.assertEquals(100, lh.getScoreTo());
+       Assert.assertEquals(30.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(70.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
     }
 
     public void testRetrieveActivePPISurvey() throws Exception {
         createSurveyWithLikelihoods("surveyName");
-        assertEquals("surveyName", persistence.retrieveActivePPISurvey().getName());
+       Assert.assertEquals("surveyName", persistence.retrieveActivePPISurvey().getName());
     }
 
     public void testRetrieveAllPPISurveys() throws Exception {
         createSurveyWithLikelihoods("survey1");
-        assertEquals(1, persistence.retrieveAllPPISurveys().size());
+       Assert.assertEquals(1, persistence.retrieveAllPPISurveys().size());
     }
 
     public void testRetrievePPISurveyByCountry() throws Exception {
         createSurveyWithLikelihoods("surveyForIndia");
-        assertEquals(Country.INDIA, persistence.retrievePPISurveyByCountry(Country.INDIA).getCountryAsEnum());
+       Assert.assertEquals(Country.INDIA, persistence.retrievePPISurveyByCountry(Country.INDIA).getCountryAsEnum());
     }
 
     public void testGetPPISurvey() throws Exception {
         createSurveyWithLikelihoods("surveyName");
-        assertEquals("surveyName", persistence.getPPISurvey(1).getName());
+       Assert.assertEquals("surveyName", persistence.getPPISurvey(1).getName());
     }
 
     public void testPersistPPISurveyInstance() throws Exception {
@@ -107,10 +109,10 @@ public class PPIPersistenceTest extends MifosInMemoryIntegrationTestCase {
         int instanceId = createSurveyInstance(survey);
 
         PPISurveyInstance retrievedInstance = (PPISurveyInstance) persistence.getInstance(instanceId);
-        assertEquals("surveyName", retrievedInstance.getSurvey().getName());
-        assertEquals(5, retrievedInstance.getScore());
-        assertEquals(80.0, retrievedInstance.getBottomHalfBelowPovertyLinePercent(), DELTA);
-        assertEquals(20.0, retrievedInstance.getTopHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals("surveyName", retrievedInstance.getSurvey().getName());
+       Assert.assertEquals(5, retrievedInstance.getScore());
+       Assert.assertEquals(80.0, retrievedInstance.getBottomHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(20.0, retrievedInstance.getTopHalfBelowPovertyLinePercent(), DELTA);
     }
 
     private int createSurveyInstance(PPISurvey survey) throws Exception {

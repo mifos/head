@@ -21,6 +21,7 @@
 package org.mifos.application.configuration.struts.tag;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
@@ -46,7 +47,7 @@ public class CustomFieldCategoryListTagTest extends TestCase {
         CustomFieldCategoryListTag tag = new CustomFieldCategoryListTag("action", "method", "flow");
         String categoryName = "Personnel";
         XmlBuilder link = tag.getCategoryRow(categoryName, categoryName);
-        assertEquals("<tr class=\"fontnormal\"><td width=\"1%\">"
+       Assert.assertEquals("<tr class=\"fontnormal\"><td width=\"1%\">"
                 + "<img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\" />" + "</td><td>"
                 + "<a href=\"action?method=method&amp;" + "category=" + categoryName + "&amp;categoryName="
                 + categoryName + "&amp;currentFlowKey=flow\">" + categoryName + "</a></td></tr>", link.getOutput());

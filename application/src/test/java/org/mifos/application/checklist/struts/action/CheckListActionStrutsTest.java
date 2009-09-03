@@ -22,6 +22,8 @@ package org.mifos.application.checklist.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
@@ -87,11 +89,11 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(ActionForwards.loadAllChecklist_success.toString());
 
-        assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.LOAN_CHECKLIST, request)).size());
-        assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.SAVINGS_CHECKLIST, request)).size());
-        assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.CENTER_CHECKLIST, request)).size());
-        assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.GROUP_CHECKLIST, request)).size());
-        assertEquals(0, ((List) SessionUtils.getAttribute(CheckListConstants.CLIENT_CHECKLIST, request)).size());
+       Assert.assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.LOAN_CHECKLIST, request)).size());
+       Assert.assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.SAVINGS_CHECKLIST, request)).size());
+       Assert.assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.CENTER_CHECKLIST, request)).size());
+       Assert.assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.GROUP_CHECKLIST, request)).size());
+       Assert.assertEquals(0, ((List) SessionUtils.getAttribute(CheckListConstants.CLIENT_CHECKLIST, request)).size());
 
         TestObjectFactory.cleanUp(checkList1);
         TestObjectFactory.cleanUp(checkList2);
@@ -110,10 +112,10 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(ActionForwards.get_success.toString());
 
-        assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
-        assertEquals(CheckListType.CUSTOMER_CHECKLIST.getValue(), SessionUtils.getAttribute(CheckListConstants.TYPE,
+        Assert.assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
+       Assert.assertEquals(CheckListType.CUSTOMER_CHECKLIST.getValue(), SessionUtils.getAttribute(CheckListConstants.TYPE,
                 request));
-        assertNotNull(SessionUtils.getAttribute(CheckListConstants.CREATED_BY_NAME, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.CREATED_BY_NAME, request));
 
         TestObjectFactory.cleanUp(checkList);
 
@@ -130,10 +132,10 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(ActionForwards.get_success.toString());
 
-        assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
-        assertEquals(CheckListType.ACCOUNT_CHECKLIST.getValue(), SessionUtils.getAttribute(CheckListConstants.TYPE,
+        Assert.assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
+       Assert.assertEquals(CheckListType.ACCOUNT_CHECKLIST.getValue(), SessionUtils.getAttribute(CheckListConstants.TYPE,
                 request));
-        assertNotNull(SessionUtils.getAttribute(CheckListConstants.CREATED_BY_NAME, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.CREATED_BY_NAME, request));
 
         TestObjectFactory.cleanUp(checkList);
 
@@ -145,7 +147,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(CheckListConstants.CHECKLIST_MASTERDATA, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.CHECKLIST_MASTERDATA, request));
     }
 
     public void testGetStates() throws Exception {
@@ -157,8 +159,8 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES, request));
-        assertEquals(5, ((List<CheckListStatesView>) SessionUtils.getAttribute(CheckListConstants.STATES, request))
+        Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES, request));
+       Assert.assertEquals(5, ((List<CheckListStatesView>) SessionUtils.getAttribute(CheckListConstants.STATES, request))
                 .size());
     }
 
@@ -182,7 +184,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.preview_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testPrevious() throws Exception {
@@ -192,7 +194,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.previous_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testCreate_customer() throws Exception {
@@ -211,15 +213,15 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_success.toString());
 
         List<CustomerCheckListBO> customerCheckLists = new CheckListPersistence().retreiveAllCustomerCheckLists();
-        assertNotNull(customerCheckLists);
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        assertEquals(1, customerCheckLists.size());
+        Assert.assertNotNull(customerCheckLists);
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+       Assert.assertEquals(1, customerCheckLists.size());
         for (CustomerCheckListBO checkList : customerCheckLists) {
-            assertEquals("new checklistName", checkList.getChecklistName());
-            assertEquals("1", checkList.getCustomerLevel().getId().toString());
-            assertEquals("13", checkList.getCustomerStatus().getId().toString());
-            assertEquals("1", checkList.getChecklistStatus().toString());
-            assertEquals(1, checkList.getChecklistDetails().size());
+           Assert.assertEquals("new checklistName", checkList.getChecklistName());
+           Assert.assertEquals("1", checkList.getCustomerLevel().getId().toString());
+           Assert.assertEquals("13", checkList.getCustomerStatus().getId().toString());
+           Assert.assertEquals("1", checkList.getChecklistStatus().toString());
+           Assert.assertEquals(1, checkList.getChecklistDetails().size());
             TestObjectFactory.cleanUp(checkList);
         }
     }
@@ -237,14 +239,14 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_success.toString());
 
         List<AccountCheckListBO> accountCheckLists = new CheckListPersistence().retreiveAllAccountCheckLists();
-        assertNotNull(accountCheckLists);
-        assertEquals(1, accountCheckLists.size());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(accountCheckLists);
+       Assert.assertEquals(1, accountCheckLists.size());
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         for (AccountCheckListBO checkList : accountCheckLists) {
-            assertEquals("new checklistName", checkList.getChecklistName());
-            assertEquals("1", checkList.getProductTypeEntity().getProductTypeID().toString());
-            assertEquals("1", checkList.getChecklistStatus().toString());
-            assertEquals(1, checkList.getChecklistDetails().size());
+           Assert.assertEquals("new checklistName", checkList.getChecklistName());
+           Assert.assertEquals("1", checkList.getProductTypeEntity().getProductTypeID().toString());
+           Assert.assertEquals("1", checkList.getChecklistStatus().toString());
+           Assert.assertEquals(1, checkList.getChecklistDetails().size());
             TestObjectFactory.cleanUp(checkList);
         }
     }
@@ -255,7 +257,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.cancelCreate_success.toString());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testManage_customerCenter() throws Exception {
@@ -269,7 +271,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.closeSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
         TestObjectFactory.cleanUp(checkList);
@@ -286,7 +288,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.closeSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
         TestObjectFactory.cleanUp(checkList);
@@ -303,7 +305,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.closeSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
         TestObjectFactory.cleanUp(checkList);
@@ -320,7 +322,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.closeSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, checkList.getChecklistId());
         TestObjectFactory.cleanUp(checkList);
@@ -337,7 +339,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.closeSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, checkList.getChecklistId());
         TestObjectFactory.cleanUp(checkList);
@@ -352,9 +354,9 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES, request));
-        assertEquals(6, ((List<CheckListStatesView>) SessionUtils.getAttribute(CheckListConstants.STATES, request))
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES, request));
+       Assert.assertEquals(6, ((List<CheckListStatesView>) SessionUtils.getAttribute(CheckListConstants.STATES, request))
                 .size());
     }
 
@@ -384,7 +386,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.managepreview_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testManagePrevious() {
@@ -394,7 +396,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manageprevious_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testUpdate_customer() throws Exception {
@@ -418,10 +420,10 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.update_success.toString());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.closeSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
-        assertEquals(1, checkList.getChecklistDetails().size());
+       Assert.assertEquals(1, checkList.getChecklistDetails().size());
         TestObjectFactory.cleanUp(checkList);
     }
 
@@ -447,10 +449,10 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.update_success.toString());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.closeSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, checkList.getChecklistId());
-        assertEquals(1, checkList.getChecklistDetails().size());
+       Assert.assertEquals(1, checkList.getChecklistDetails().size());
         TestObjectFactory.cleanUp(checkList);
     }
 
@@ -461,6 +463,6 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.cancelEdit_success.toString());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 }

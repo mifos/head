@@ -20,6 +20,7 @@
 
 package org.mifos.application.fees.struts.actionforms;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class FeeActionFormTest extends TestCase {
@@ -27,6 +28,6 @@ public class FeeActionFormTest extends TestCase {
     public void testIsAmountValidWithInvalidString() {
         FeeActionForm form = new FeeActionForm();
         form.setAmount("aaa");
-        assertFalse(form.isAmountValid());
+        Assert.assertFalse(form.isAmountValid());
     }
 }

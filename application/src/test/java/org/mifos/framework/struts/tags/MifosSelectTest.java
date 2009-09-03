@@ -23,6 +23,7 @@ package org.mifos.framework.struts.tags;
 import java.util.Collections;
 import java.util.Map;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
@@ -50,25 +51,25 @@ public class MifosSelectTest extends TestCase {
         mifosSelect.setSelectStyle("selectStyle");
         mifosSelect.setSize("1");
         mifosSelect.setValue("key", "value");
-        assertEquals("id", mifosSelect.getId());
-        assertEquals("input", mifosSelect.getInput());
-        assertEquals("label", mifosSelect.getLabel());
-        assertEquals("multiple", mifosSelect.getMultiple());
-        assertEquals("name", mifosSelect.getName());
-        assertEquals("output", mifosSelect.getOutput());
-        assertEquals("property", mifosSelect.getProperty());
-        assertEquals("property1", mifosSelect.getProperty1());
-        assertEquals("property2", mifosSelect.getProperty2());
-        assertEquals("selectStyle", mifosSelect.getSelectStyle());
-        assertEquals("1", mifosSelect.getSize());
+       Assert.assertEquals("id", mifosSelect.getId());
+       Assert.assertEquals("input", mifosSelect.getInput());
+       Assert.assertEquals("label", mifosSelect.getLabel());
+       Assert.assertEquals("multiple", mifosSelect.getMultiple());
+       Assert.assertEquals("name", mifosSelect.getName());
+       Assert.assertEquals("output", mifosSelect.getOutput());
+       Assert.assertEquals("property", mifosSelect.getProperty());
+       Assert.assertEquals("property1", mifosSelect.getProperty1());
+       Assert.assertEquals("property2", mifosSelect.getProperty2());
+       Assert.assertEquals("selectStyle", mifosSelect.getSelectStyle());
+       Assert.assertEquals("1", mifosSelect.getSize());
         mifosSelect = new MifosSelect("newlabel");
-        assertEquals("newlabel", mifosSelect.getLabel());
+       Assert.assertEquals("newlabel", mifosSelect.getLabel());
     }
 
     public void testRenderEmpty() throws Exception {
         String output = new MifosSelect().render(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
         // TestUtils.assertWellFormedFragment(output);
-        assertEquals(INTRODUCTORY_STYLES_AND_SCRIPT + "<table >" + "<tr> " + "<td>" + selectTheItem(true) + "</td>"
+       Assert.assertEquals(INTRODUCTORY_STYLES_AND_SCRIPT + "<table >" + "<tr> " + "<td>" + selectTheItem(true) + "</td>"
                 + "<td>" + "<table width=\"50%\" border=\"0\" " + "cellspacing=\"0\" cellpadding=\"3\"> " + "<tr>"
                 + "<td align=\"center\">" + "<INPUT  name=\"MoveRight\" type=\"button\" value=\"Add >>\" "
                 + "style=\"width:65px\" class=\"insidebuttn\" " + "id=\"null.button.add\" "
@@ -94,7 +95,7 @@ public class MifosSelectTest extends TestCase {
 
     public void testHelperEmpty() throws Exception {
         Map<?, ?> map = new MifosSelect().helper(Collections.EMPTY_LIST);
-        assertEquals(null, map);
+       Assert.assertEquals(null, map);
     }
 
     public void testHelperSameClass() throws Exception {
@@ -102,9 +103,9 @@ public class MifosSelectTest extends TestCase {
         select.setProperty1("propertyOne");
         select.setProperty2("propertyTwo");
         Map<?, ?> map = select.helper(Collections.singletonList(new Foo()));
-        assertEquals(1, map.size());
-        assertEquals(new Integer(5), map.keySet().iterator().next());
-        assertEquals("Acorn", map.get(5));
+       Assert.assertEquals(1, map.size());
+       Assert.assertEquals(new Integer(5), map.keySet().iterator().next());
+       Assert.assertEquals("Acorn", map.get(5));
     }
 
     public void testHelperPrivate() throws Exception {
@@ -113,7 +114,7 @@ public class MifosSelectTest extends TestCase {
         select.setProperty2("privateProperty");
         try {
         select.helper(Collections.singletonList(new Foo()));
-        fail("NoSuchMethodException was expected !!!");
+        Assert.fail("NoSuchMethodException was expected !!!");
         } catch (NoSuchMethodException e){}
         }
 
@@ -122,9 +123,9 @@ public class MifosSelectTest extends TestCase {
         select.setProperty1("parentPropertyOne");
         select.setProperty2("parentPropertyTwo");
         Map<?, ?> map = select.helper(Collections.singletonList(new Foo()));
-        assertEquals(1, map.size());
-        assertEquals(new Integer(55), map.keySet().iterator().next());
-        assertEquals("Oak", map.get(55));
+       Assert.assertEquals(1, map.size());
+       Assert.assertEquals(new Integer(55), map.keySet().iterator().next());
+       Assert.assertEquals("Oak", map.get(55));
     }
 
     class Foo extends ParentFoo {

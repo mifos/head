@@ -22,6 +22,7 @@ package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.exceptions.ValueObjectConversionException;
@@ -36,16 +37,16 @@ public class ConvertionUtilTest extends TestCase {
         try {
             BaseActionForm baseActionForm = new BaseActionForm();
             ConversionUtil.populateBusinessObject(baseActionForm, null, new Locale("EN"));
-            fail();
+            Assert.fail();
         } catch (ValueObjectConversionException e) {
-            assertEquals("exception.framework.SystemException.ValueObjectConversionException", e.getKey());
+           Assert.assertEquals("exception.framework.SystemException.ValueObjectConversionException", e.getKey());
         }
 
         try {
             ConversionUtil.populateBusinessObject(null, null, new Locale("EN"));
-            fail();
+            Assert.fail();
         } catch (ValueObjectConversionException e) {
-            assertEquals("exception.framework.SystemException.ValueObjectConversionException", e.getKey());
+           Assert.assertEquals("exception.framework.SystemException.ValueObjectConversionException", e.getKey());
         }
     }
 }

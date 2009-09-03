@@ -22,6 +22,8 @@ package org.mifos.application.master;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -50,17 +52,17 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
     
     public void testWeekDayLookup() {
         // default locale
-        assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY, Locale.US));
-        assertEquals("Tuesday", messageLookup.lookup(WeekDay.TUESDAY, Locale.US));
-        assertEquals("Wednesday", messageLookup.lookup(WeekDay.WEDNESDAY, Locale.US));
-        assertEquals("Thursday", messageLookup.lookup(WeekDay.THURSDAY, Locale.US));
-        assertEquals("Friday", messageLookup.lookup(WeekDay.FRIDAY, Locale.US));
-        assertEquals("Saturday", messageLookup.lookup(WeekDay.SATURDAY, Locale.US));
-        assertEquals("Sunday", messageLookup.lookup(WeekDay.SUNDAY, Locale.US));
+       Assert.assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY, Locale.US));
+       Assert.assertEquals("Tuesday", messageLookup.lookup(WeekDay.TUESDAY, Locale.US));
+       Assert.assertEquals("Wednesday", messageLookup.lookup(WeekDay.WEDNESDAY, Locale.US));
+       Assert.assertEquals("Thursday", messageLookup.lookup(WeekDay.THURSDAY, Locale.US));
+       Assert.assertEquals("Friday", messageLookup.lookup(WeekDay.FRIDAY, Locale.US));
+       Assert.assertEquals("Saturday", messageLookup.lookup(WeekDay.SATURDAY, Locale.US));
+       Assert.assertEquals("Sunday", messageLookup.lookup(WeekDay.SUNDAY, Locale.US));
         // Spanish locale
-        assertEquals("lunes", messageLookup.lookup(WeekDay.MONDAY, new Locale("es")));
+       Assert.assertEquals("lunes", messageLookup.lookup(WeekDay.MONDAY, new Locale("es")));
         // French locale
-        assertEquals("lundi", messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
+       Assert.assertEquals("lundi", messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
     }
 
     private void ChangeLocale(ConfigLocale newLocale) {
@@ -84,41 +86,41 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
             messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
 
             // Get the default label from the English resource bundle
-            assertEquals("Group", messageLookup.lookupLabel(ConfigurationConstants.GROUP, Locale.US));
+           Assert.assertEquals("Group", messageLookup.lookupLabel(ConfigurationConstants.GROUP, Locale.US));
 
             // Get the label from the Spanish resource bundle
             ChangeLocale(new ConfigLocale("es", "ES"));
-            assertEquals("Grupo", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
+           Assert.assertEquals("Grupo", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
 
             // Get the label from the French resource bundle
             ChangeLocale(new ConfigLocale("fr", "FR"));
-            assertEquals("Groupe", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
+           Assert.assertEquals("Groupe", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
 
             // Override the resource bundle text with a custom label
             String TEST_GROUP_NAME = "TestGroup";
             messageLookup.setCustomLabel(ConfigurationConstants.GROUP, TEST_GROUP_NAME, userContext);
 
             // The custom label should come back for each locale
-            assertEquals(TEST_GROUP_NAME, messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
+           Assert.assertEquals(TEST_GROUP_NAME, messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
             ChangeLocale(new ConfigLocale("es", "ES"));
-            assertEquals(TEST_GROUP_NAME, messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
+           Assert.assertEquals(TEST_GROUP_NAME, messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
 
             // Reset the custom label and then we should get the locale
             // specific label again
             messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
-            assertEquals("Grupo", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
+           Assert.assertEquals("Grupo", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
 
-            assertEquals("Replacement Status", messageLookup.lookup("ReplacementStatus", new Locale("us")));
+           Assert.assertEquals("Replacement Status", messageLookup.lookup("ReplacementStatus", new Locale("us")));
 
-            assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter", new Locale("us")));
-            assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter.Label", new Locale(
+           Assert.assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter", new Locale("us")));
+           Assert.assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter.Label", new Locale(
                     "us")));
-            assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup", new Locale("us")));
-            assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup.Label", new Locale(
+           Assert.assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup", new Locale("us")));
+           Assert.assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup.Label", new Locale(
                     "us")));
-            assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO", new Locale(
+           Assert.assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO", new Locale(
                     "us")));
-            assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO.Label",
+           Assert.assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO.Label",
                     new Locale("us")));
 
         } finally {

@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountBOIntegrationTest;
@@ -182,15 +184,15 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(userContext);
         for (AccountStatusChangeHistoryEntity accountStatus : loan.getAccountStatusChangeHistory()) {
-            assertEquals(loan.getAccountId(), accountStatus.getAccount().getAccountId());
-            assertNotNull(accountStatus.getAccountStatusChangeId());
-            assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue(), accountStatus.getNewStatus().getId());
-            assertEquals(personnel.getPersonnelId(), accountStatus.getPersonnel().getPersonnelId());
-            assertEquals(personnel.getDisplayName(), accountStatus.getPersonnel().getDisplayName());
-            assertEquals("-", accountStatus.getOldStatusName());
-            assertNotNull(accountStatus.getNewStatusName());
-            assertNull(accountStatus.getLocale());
-            assertNotNull(accountStatus.getUserPrefferedTransactionDate());
+           Assert.assertEquals(loan.getAccountId(), accountStatus.getAccount().getAccountId());
+            Assert.assertNotNull(accountStatus.getAccountStatusChangeId());
+           Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue(), accountStatus.getNewStatus().getId());
+           Assert.assertEquals(personnel.getPersonnelId(), accountStatus.getPersonnel().getPersonnelId());
+           Assert.assertEquals(personnel.getDisplayName(), accountStatus.getPersonnel().getDisplayName());
+           Assert.assertEquals("-", accountStatus.getOldStatusName());
+            Assert.assertNotNull(accountStatus.getNewStatusName());
+            Assert.assertNull(accountStatus.getLocale());
+            Assert.assertNotNull(accountStatus.getUserPrefferedTransactionDate());
         }
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
@@ -238,7 +240,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
         actionPerform();
         loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
-        assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), loan.getAccountState().getId());
+       Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), loan.getAccountState().getId());
         verifyForward("applyadj_success");
     }
 

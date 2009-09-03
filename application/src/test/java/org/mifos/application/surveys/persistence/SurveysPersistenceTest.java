@@ -22,6 +22,8 @@ package org.mifos.application.surveys.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
@@ -48,22 +50,22 @@ public class SurveysPersistenceTest extends MifosInMemoryIntegrationTestCase {
         SurveysPersistence persistence = new SurveysPersistence();
 
         Question question = persistence.getQuestion(question1.getQuestionId());
-        assertEquals(SurveysConstants.QUESTION_TYPE_GENERAL, question.getQuestionType());
-        assertEquals("question1", question.getShortName());
+       Assert.assertEquals(SurveysConstants.QUESTION_TYPE_GENERAL, question.getQuestionType());
+       Assert.assertEquals("question1", question.getShortName());
 
         question = persistence.getQuestion(question2.getQuestionId());
-        assertEquals(SurveysConstants.QUESTION_TYPE_PPI, question.getQuestionType());
-        assertEquals("this is a ppi question", question.getQuestionText());
+       Assert.assertEquals(SurveysConstants.QUESTION_TYPE_PPI, question.getQuestionType());
+       Assert.assertEquals("this is a ppi question", question.getQuestionText());
 
         List<Question> allQuestions = persistence.retrieveAllQuestions();
-        assertEquals(3, allQuestions.size());
+       Assert.assertEquals(3, allQuestions.size());
 
         List<Question> ppiQuestions = persistence.getQuestionsByQuestionType(SurveysConstants.QUESTION_TYPE_PPI);
-        assertEquals(2, ppiQuestions.size());
+       Assert.assertEquals(2, ppiQuestions.size());
 
         List<Question> generalQuestions = persistence
                 .getQuestionsByQuestionType(SurveysConstants.QUESTION_TYPE_GENERAL);
-        assertEquals(1, generalQuestions.size());
+       Assert.assertEquals(1, generalQuestions.size());
     }
 
     private void createQuestions() throws PersistenceException {

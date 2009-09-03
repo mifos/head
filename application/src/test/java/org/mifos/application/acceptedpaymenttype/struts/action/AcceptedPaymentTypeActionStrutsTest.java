@@ -26,6 +26,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import junit.framework.Assert;
+
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm;
@@ -97,9 +99,9 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
 
     private boolean compareLists(List<PaymentTypeData> first, String[] second, int expectedLength) {
 
-        assertEquals(expectedLength, first.size());
+       Assert.assertEquals(expectedLength, first.size());
         for (int index = 0; index < second.length; ++index) {
-            assertTrue(FindPaymentType(first, second[index]));
+           Assert.assertTrue(FindPaymentType(first, second[index]));
 
         }
         return true;
@@ -136,7 +138,7 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
         // for default locale all the payment types are Cash, Checque and
         // Voucher
         List<PaymentTypeData> list = getAllPaymentTypes(DEFAULT_LOCALE);
-        assertTrue(compareLists(list, EXPECTED_ALL_PAYMENT_TYPES, 3));
+       Assert.assertTrue(compareLists(list, EXPECTED_ALL_PAYMENT_TYPES, 3));
 
         // the data on the left list box and the right list box always add up to
         // the all payment types
@@ -148,33 +150,33 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
         outList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_REPAYMENT_LIST,
                 request);
         String[] totalList = TotalList(inList, outList);
-        assertTrue(compareLists(list, totalList, 3));
+       Assert.assertTrue(compareLists(list, totalList, 3));
 
         inList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.IN_FEE_LIST, request);
         outList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_FEE_LIST, request);
         totalList = TotalList(inList, outList);
-        assertTrue(compareLists(list, totalList, 3));
+       Assert.assertTrue(compareLists(list, totalList, 3));
 
         inList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.IN_DISBURSEMENT_LIST,
                 request);
         outList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_DISBURSEMENT_LIST,
                 request);
         totalList = TotalList(inList, outList);
-        assertTrue(compareLists(list, totalList, 3));
+       Assert.assertTrue(compareLists(list, totalList, 3));
 
         inList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.IN_DEPOSIT_LIST,
                 request);
         inList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_DEPOSIT_LIST,
                 request);
         totalList = TotalList(inList, outList);
-        assertTrue(compareLists(list, totalList, 3));
+       Assert.assertTrue(compareLists(list, totalList, 3));
 
         inList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.IN_WITHDRAWAL_LIST,
                 request);
         inList = (List<PaymentTypeData>) SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_WITHDRAWAL_LIST,
                 request);
         totalList = TotalList(inList, outList);
-        assertTrue(compareLists(list, totalList, 3));
+       Assert.assertTrue(compareLists(list, totalList, 3));
 
     }
 
@@ -393,11 +395,11 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
         } else if (transactionType == TrxnTypes.savings_withdrawal) {
             savedPaymentTypes = withdrawalAcceptedPaymentTypes;
         }
-        assertTrue(savedPaymentTypes.length == paymentFromDB.size());
+       Assert.assertTrue(savedPaymentTypes.length == paymentFromDB.size());
         for (AcceptedPaymentType paymentType : paymentFromDB) {
             Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
             // String payment = GetPaymentTypeName(paymentTypeId, allPayments);
-            assertTrue(Find(paymentTypeId, savedPaymentTypes));
+           Assert.assertTrue(Find(paymentTypeId, savedPaymentTypes));
         }
 
     }

@@ -27,6 +27,7 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.hibernate.helper.QueryResultDTOImpl;
@@ -53,14 +54,14 @@ public class CacheTest extends TestCase {
     public void testGetCache() throws Exception {
         List<?> list = cache.getList(1, "newMethod");
         list = cache.getList(3, "previous");
-        assertNull(list);
+        Assert.assertNull(list);
         list = cache.getList(4, "previous");
-        assertNull(list);
-        assertEquals(0, cache.getSize());
-        assertEquals(1, cache.getCacheMap().size());
+        Assert.assertNull(list);
+       Assert.assertEquals(0, cache.getSize());
+       Assert.assertEquals(1, cache.getCacheMap().size());
 
         list = cache.getList(4, "next");
         cache.setSize(2);
-        assertEquals(2, cache.getSize());
+       Assert.assertEquals(2, cache.getSize());
     }
 }

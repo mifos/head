@@ -22,6 +22,8 @@ package org.mifos.application.office.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.struts.actionforms.OffActionForm;
@@ -73,12 +75,12 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.search_success.toString());
-        assertEquals(1, ((List<OfficeBO>) SessionUtils.getAttribute(OfficeConstants.GET_HEADOFFICE, request)).size());
-        assertNull(SessionUtils.getAttribute(OfficeConstants.GET_REGIONALOFFICE, request));
-        assertNull(SessionUtils.getAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, request));
-        assertEquals(1, ((List) SessionUtils.getAttribute(OfficeConstants.GET_BRANCHOFFICE, request)).size());
-        assertEquals(1, ((List) SessionUtils.getAttribute(OfficeConstants.GET_AREAOFFICE, request)).size());
-        assertEquals(4, ((List) SessionUtils.getAttribute(OfficeConstants.OFFICELEVELLIST, request)).size());
+       Assert.assertEquals(1, ((List<OfficeBO>) SessionUtils.getAttribute(OfficeConstants.GET_HEADOFFICE, request)).size());
+        Assert.assertNull(SessionUtils.getAttribute(OfficeConstants.GET_REGIONALOFFICE, request));
+        Assert.assertNull(SessionUtils.getAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, request));
+       Assert.assertEquals(1, ((List) SessionUtils.getAttribute(OfficeConstants.GET_BRANCHOFFICE, request)).size());
+       Assert.assertEquals(1, ((List) SessionUtils.getAttribute(OfficeConstants.GET_AREAOFFICE, request)).size());
+       Assert.assertEquals(4, ((List) SessionUtils.getAttribute(OfficeConstants.OFFICELEVELLIST, request)).size());
     }
 
     public void testLoad() throws Exception {
@@ -89,10 +91,10 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.load_success.toString());
         List<OfficeView> parents = (List<OfficeView>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
-        assertEquals(2, parents.size());
+       Assert.assertEquals(2, parents.size());
         List<OfficeView> levels = (List<OfficeView>) SessionUtils
                 .getAttribute(OfficeConstants.OFFICELEVELLIST, request);
-        assertEquals(4, levels.size());
+       Assert.assertEquals(4, levels.size());
     }
 
     public void testLoadLevel() throws Exception {
@@ -103,13 +105,13 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.load_success.toString());
         List<OfficeView> parents = (List<OfficeView>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
-        assertEquals(2, parents.size());
+       Assert.assertEquals(2, parents.size());
         List<OfficeView> levels = (List<OfficeView>) SessionUtils
                 .getAttribute(OfficeConstants.OFFICELEVELLIST, request);
-        assertEquals(4, levels.size());
+       Assert.assertEquals(4, levels.size());
         OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
-        assertNotNull(offActionForm);
-        assertEquals("5", offActionForm.getOfficeLevel());
+        Assert.assertNotNull(offActionForm);
+       Assert.assertEquals("5", offActionForm.getOfficeLevel());
     }
 
     public void testLoadParent() throws Exception {
@@ -120,7 +122,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.load_success.toString());
         List<OfficeView> parents = (List<OfficeView>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
-        assertEquals(1, parents.size());
+       Assert.assertEquals(1, parents.size());
     }
 
     public void testPreview() {
@@ -140,10 +142,10 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Office Name", 1, getErrorSize(OfficeConstants.OFFICE_NAME));
-        assertEquals("Office Short  Name", 1, getErrorSize(OfficeConstants.OFFICESHORTNAME));
-        assertEquals("Office level", 1, getErrorSize(OfficeConstants.OFFICETYPE));
-        assertEquals("Office parent", 1, getErrorSize(OfficeConstants.PARENTOFFICE));
+       Assert.assertEquals("Office Name", 1, getErrorSize(OfficeConstants.OFFICE_NAME));
+       Assert.assertEquals("Office Short  Name", 1, getErrorSize(OfficeConstants.OFFICESHORTNAME));
+       Assert.assertEquals("Office level", 1, getErrorSize(OfficeConstants.OFFICETYPE));
+       Assert.assertEquals("Office parent", 1, getErrorSize(OfficeConstants.PARENTOFFICE));
         verifyInputForward();
     }
 
@@ -167,9 +169,9 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.create_success.toString());
         OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
-        assertEquals("abcd", offActionForm.getOfficeName());
-        assertEquals("abcd", offActionForm.getShortName());
-        assertEquals("123", offActionForm.getAddress().getLine1());
+       Assert.assertEquals("abcd", offActionForm.getOfficeName());
+       Assert.assertEquals("abcd", offActionForm.getShortName());
+       Assert.assertEquals("123", offActionForm.getAddress().getLine1());
         OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf(offActionForm.getOfficeId()));
         TestObjectFactory.cleanUp(officeBO);
     }
@@ -181,8 +183,8 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        assertNotNull(office);
-        assertEquals(1, office.getOfficeId().intValue());
+        Assert.assertNotNull(office);
+       Assert.assertEquals(1, office.getOfficeId().intValue());
 
     }
 
@@ -231,8 +233,8 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.update_success.toString());
         TestObjectFactory.flushandCloseSession();
         officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
-        assertEquals("RAJOFFICE", officeBO.getOfficeName());
-        assertEquals("OFFI", officeBO.getShortName());
+       Assert.assertEquals("RAJOFFICE", officeBO.getOfficeName());
+       Assert.assertEquals("OFFI", officeBO.getShortName());
         TestObjectFactory.cleanUp(officeBO);
     }
 
@@ -278,7 +280,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.load_success.toString());
         flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
         FlowManager fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.preview.toString());
@@ -290,7 +292,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyInputForward();
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.create.toString());
@@ -305,7 +307,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_success.toString());
         OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        assertEquals(false, fm.isFlowValid(flowKey));
+       Assert.assertEquals(false, fm.isFlowValid(flowKey));
 
         OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf(offActionForm.getOfficeId()));
         TestObjectFactory.cleanUp(officeBO);
@@ -320,7 +322,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.load_success.toString());
         flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
         FlowManager fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.preview.toString());
@@ -332,7 +334,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyInputForward();
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.create.toString());
@@ -348,7 +350,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_success.toString());
         OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        assertEquals(false, fm.isFlowValid(flowKey));
+       Assert.assertEquals(false, fm.isFlowValid(flowKey));
 
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.create.toString());

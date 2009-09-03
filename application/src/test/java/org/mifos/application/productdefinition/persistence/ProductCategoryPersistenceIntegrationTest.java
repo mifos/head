@@ -22,6 +22,8 @@ package org.mifos.application.productdefinition.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -58,63 +60,63 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
     }
 
     public void testGetMaxPrdCategoryId() throws Exception {
-        assertEquals(Short.valueOf("2"), productCategoryPersistence.getMaxPrdCategoryId());
+       Assert.assertEquals(Short.valueOf("2"), productCategoryPersistence.getMaxPrdCategoryId());
     }
 
     public void testGetProductCategory() throws Exception {
-        assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product"));
+       Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product"));
     }
 
 
     public void testGetProductTypes() throws Exception {
         List<ProductTypeEntity> productTypeList = productCategoryPersistence.getProductTypes();
-        assertEquals(2, productTypeList.size());
+       Assert.assertEquals(2, productTypeList.size());
         for (ProductTypeEntity productTypeEntity : productTypeList) {
             productTypeEntity.setUserContext(TestUtils.makeUser());
             if (productTypeEntity.getType() == ProductType.LOAN) {
-                assertEquals("Loan", productTypeEntity.getName());
+               Assert.assertEquals("Loan", productTypeEntity.getName());
             } else {
-                // assertEquals("Margin Money",productTypeEntity.getName());
-                assertEquals("Savings", productTypeEntity.getName());
+                //Assert.assertEquals("Margin Money",productTypeEntity.getName());
+               Assert.assertEquals("Savings", productTypeEntity.getName());
             }
         }
     }
 
     public void testGetProductTypesByType() throws Exception {
         ProductTypeEntity productTypeEntity = productCategoryPersistence.getProductTypes(ProductType.LOAN.getValue());
-        assertNotNull(productTypeEntity);
+        Assert.assertNotNull(productTypeEntity);
         if (productTypeEntity.getType() == ProductType.LOAN) {
-            assertEquals("Loan", productTypeEntity.getName());
+           Assert.assertEquals("Loan", productTypeEntity.getName());
         } else {
-            assertEquals("", productTypeEntity.getName());
+           Assert.assertEquals("", productTypeEntity.getName());
         }
     }
 
     public void testGetPrdCategory() throws Exception {
-        assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product category",
+       Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product category",
                 getProductCategory().get(0).getProductCategoryID()));
         ProductCategoryBO productCategoryBO = createProductCategory();
-        assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product category",
+       Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product category",
                 getProductCategory().get(2).getProductCategoryID()));
-        assertEquals(Integer.valueOf("1"), productCategoryPersistence.getProductCategory("product category",
+       Assert.assertEquals(Integer.valueOf("1"), productCategoryPersistence.getProductCategory("product category",
                 getProductCategory().get(1).getProductCategoryID()));
         deleteProductCategory(productCategoryBO);
     }
 
     public void testFindByGlobalNum() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
-        assertNotNull(productCategoryPersistence.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
+        Assert.assertNotNull(productCategoryPersistence.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
         deleteProductCategory(productCategoryBO);
     }
 
     public void testGetProductCategoryStatusList() throws Exception {
-        assertEquals(2, productCategoryPersistence.getProductCategoryStatusList().size());
+       Assert.assertEquals(2, productCategoryPersistence.getProductCategoryStatusList().size());
     }
 
     public void testGetAllCategories() throws Exception {
-        assertEquals(2, productCategoryPersistence.getAllCategories().size());
+       Assert.assertEquals(2, productCategoryPersistence.getAllCategories().size());
         ProductCategoryBO productCategoryBO = createProductCategory();
-        assertEquals(3, productCategoryPersistence.getAllCategories().size());
+       Assert.assertEquals(3, productCategoryPersistence.getAllCategories().size());
         deleteProductCategory(productCategoryBO);
     }
 

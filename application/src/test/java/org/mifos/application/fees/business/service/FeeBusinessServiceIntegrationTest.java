@@ -22,6 +22,8 @@ package org.mifos.application.fees.business.service;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -56,8 +58,8 @@ public class FeeBusinessServiceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.commitTransaction();
 
         FeeBO dbFee = new FeeBusinessService().getFee(fee1.getFeeId());
-        assertNotNull(dbFee);
-        assertEquals(dbFee.getFeeName(), fee1.getFeeName());
+        Assert.assertNotNull(dbFee);
+       Assert.assertEquals(dbFee.getFeeName(), fee1.getFeeName());
         fee1 = dbFee;
     }
 
@@ -69,18 +71,18 @@ public class FeeBusinessServiceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.commitTransaction();
 
         List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFees();
-        assertNotNull(feeList);
-        assertEquals(1, feeList.size());
-        assertEquals("CustomerFee1", feeList.get(0).getFeeName());
+        Assert.assertNotNull(feeList);
+       Assert.assertEquals(1, feeList.size());
+       Assert.assertEquals("CustomerFee1", feeList.get(0).getFeeName());
     }
 
     public void testRetrieveFeesForCustomerFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new FeeBusinessService().retrieveCustomerFees();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -92,18 +94,18 @@ public class FeeBusinessServiceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.commitTransaction();
 
         List<FeeBO> feeList = new FeeBusinessService().retrieveProductFees();
-        assertNotNull(feeList);
-        assertEquals(1, feeList.size());
-        assertEquals("ProductFee1", feeList.get(0).getFeeName());
+        Assert.assertNotNull(feeList);
+       Assert.assertEquals(1, feeList.size());
+       Assert.assertEquals("ProductFee1", feeList.get(0).getFeeName());
     }
 
     public void testRetrieveFeesForProductFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new FeeBusinessService().retrieveProductFees();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -113,18 +115,18 @@ public class FeeBusinessServiceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.commitTransaction();
 
         List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFeesByCategaroyType(FeeCategory.CENTER);
-        assertNotNull(feeList);
-        assertEquals(1, feeList.size());
-        assertEquals("CustomerFee1", feeList.get(0).getFeeName());
+        Assert.assertNotNull(feeList);
+       Assert.assertEquals(1, feeList.size());
+       Assert.assertEquals("CustomerFee1", feeList.get(0).getFeeName());
     }
 
     public void testRetrieveCustomerFeesByCategaroyTypeFailure() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new FeeBusinessService().retrieveCustomerFeesByCategaroyType(FeeCategory.ALLCUSTOMERS);
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 }

@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.NamedQueryConstants;
@@ -72,7 +73,7 @@ public class CollectionSheetBOTest extends TestCase {
         queryParameters.put("MEETING_DATE", year2010);
         List<?> matchingCollectionSheets = collectionSheetPersistenceMock.executeNamedQuery(
                 NamedQueryConstants.COLLECTION_SHEETS_FOR_MEETING_DATE, queryParameters);
-        assertEquals(1, matchingCollectionSheets.size());
-        assertEquals(collectionSheet, matchingCollectionSheets.get(0));
+       Assert.assertEquals(1, matchingCollectionSheets.size());
+       Assert.assertEquals(collectionSheet, matchingCollectionSheets.get(0));
     }
 }

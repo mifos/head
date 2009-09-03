@@ -23,6 +23,8 @@ package org.mifos.application.holiday.business;
 import java.util.Calendar;
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.joda.time.DateMidnight;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -65,9 +67,9 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
-        assertEquals("Test Holiday", holidayEntity.getHolidayName());
-        assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
-        assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
+       Assert.assertEquals("Test Holiday", holidayEntity.getHolidayName());
+       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
+       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
     }
 
     /**
@@ -84,7 +86,7 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
             StaticHibernateUtil.closeSession();
             // If it succedded to create this holiday
             // Asssert false as it shouldn't by validations.
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ApplicationException e) {
             holidayEntity = null;
         }
@@ -110,10 +112,10 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
-        assertEquals("Test Holiday", holidayEntity.getHolidayName());
-        assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
+       Assert.assertEquals("Test Holiday", holidayEntity.getHolidayName());
+       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
         // automatically Fromdate is copied into thruDate if thrudate is null.
-        assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
+       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
     }
 
     /**
@@ -134,7 +136,7 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
             // If it succedded to create this holiday
             // Asssert false as it shouldn't by validation rules.
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ApplicationException e) {
             holidayEntity = null;
         }
@@ -166,9 +168,9 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
-        assertEquals("Test Holiday", holidayEntity.getHolidayName());
-        assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
-        assertEquals(thruDateMillis, holidayEntity.getHolidayThruDate().getTime());
+       Assert.assertEquals("Test Holiday", holidayEntity.getHolidayName());
+       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
+       Assert.assertEquals(thruDateMillis, holidayEntity.getHolidayThruDate().getTime());
     }
 
     /*
@@ -185,7 +187,7 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
         holiday.setValidationEnabled(false);
 
         holiday.save();
-        assertEquals(startDate, holiday.getHolidayThruDate().getTime());
+       Assert.assertEquals(startDate, holiday.getHolidayThruDate().getTime());
     }
 
     public void testUpdateSuppliesThruDate() throws Exception {
@@ -197,6 +199,6 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
         holiday.setValidationEnabled(false);
 
         holiday.update(holiday.getHolidayPK(), null, "New Name");
-        assertEquals(startDate, holiday.getHolidayThruDate().getTime());
+       Assert.assertEquals(startDate, holiday.getHolidayThruDate().getTime());
     }
 }

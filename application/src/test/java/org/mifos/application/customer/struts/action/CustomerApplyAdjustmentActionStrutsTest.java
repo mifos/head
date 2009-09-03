@@ -22,6 +22,8 @@ package org.mifos.application.customer.struts.action;
 
 import java.sql.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -107,7 +109,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         verifyForward("loadAdjustment_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testPreviewAdjustment() throws Exception {
@@ -125,7 +127,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         verifyForward("previewAdjustment_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testApplyAdjustment() throws Exception {
@@ -142,7 +144,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         verifyForward("applyAdjustment_client_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testCancelAdjustment() throws Exception {
@@ -153,7 +155,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         getRequest().getSession().setAttribute("security_param", "Client");
         actionPerform();
         verifyForward("canceladj_client_success");
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testValidation_AdjustmentCheckbox() throws Exception {
@@ -168,7 +170,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyActionErrors(new String[] { "errors.mandatorycheckbox" });
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testValidation_AdjustmentNoteSize() throws Exception {
@@ -185,7 +187,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyActionErrors(new String[] { "errors.adjustmentNoteTooBig" });
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testValidation_AdjustmentNoteMandatory() throws Exception {
@@ -199,7 +201,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyActionErrors(new String[] { "errors.mandatorytextarea" });
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     private void createInitialObjects() {

@@ -20,6 +20,8 @@
 
 package org.mifos.application.customer.persistence;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -47,7 +49,7 @@ public class CustomerLoanCycleFetchIntegrationTest extends MifosIntegrationTestC
             });
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Exception fetching customer loan counters");
+            Assert.fail("Exception fetching customer loan counters");
         }
     }
 
@@ -71,7 +73,7 @@ public class CustomerLoanCycleFetchIntegrationTest extends MifosIntegrationTestC
             });
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Exception fetching customer loan counters");
+            Assert.fail("Exception fetching customer loan counters");
         }
     }
 }

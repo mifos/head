@@ -20,6 +20,8 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -46,7 +48,7 @@ public class FinancialActionConstantsIntegrationTest extends MifosIntegrationTes
         // FIN_ACTION_ID = 17 (Customer_Adjustment)
         // The (-2) adjustment to the assert compensates for this difference
 
-        assertEquals(FinancialActionConstants.values().length, queryFinancialAction.list().size() - 2);
+       Assert.assertEquals(FinancialActionConstants.values().length, queryFinancialAction.list().size() - 2);
     }
 
 }

@@ -27,6 +27,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
@@ -58,7 +60,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         Set<AccountActionDateEntity> accountActionDates = accountBO.getAccountActionDates();
         for (AccountActionDateEntity accountActionDate : accountActionDates) {
             Money principal = ((LoanScheduleEntity) accountActionDate).getPrincipal();
-            assertEquals(100.0, principal.getAmount().doubleValue(), DELTA);
+           Assert.assertEquals(100.0, principal.getAmount().doubleValue(), DELTA);
         }
     }
 
@@ -70,12 +72,12 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
                 .getAccountActionDates().toArray()[0];
         CustomerAccountBOIntegrationTest.setMiscFee(accountActionDate, new Money("20"));
         Money chargeWaived = CustomerAccountBOIntegrationTest.waiveCharges(accountActionDate);
-        assertEquals(new Money(), accountActionDate.getMiscFee());
+       Assert.assertEquals(new Money(), accountActionDate.getMiscFee());
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDate
                 .getAccountFeesActionDetails()) {
-            assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
+           Assert.assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
         }
-        assertEquals(new Money("120.0"), chargeWaived);
+       Assert.assertEquals(new Money("120.0"), chargeWaived);
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -120,7 +122,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : firstInstallment
                 .getAccountFeesActionDetails()) {
             if (!feeList.contains(accountFeesActionDetailEntity.getAccountFeesActionDetailId())) {
-                assertEquals("Periodic Fee", accountFeesActionDetailEntity.getFee().getFeeName());
+               Assert.assertEquals("Periodic Fee", accountFeesActionDetailEntity.getFee().getFeeName());
                 break;
             }
         }

@@ -22,6 +22,8 @@ package org.mifos.application.fund.business.service;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -51,10 +53,10 @@ public class FundBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     public void testGetFundCodesForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
-            assertEquals(5, new FundBusinessService().getFundCodes().size());
-            assertTrue(false);
+           Assert.assertEquals(5, new FundBusinessService().getFundCodes().size());
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -62,22 +64,22 @@ public class FundBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     public void testGetFundCodes() throws Exception {
         List<FundCodeEntity> funds = new FundBusinessService().getFundCodes();
-        assertEquals(5, funds.size());
+       Assert.assertEquals(5, funds.size());
     }
 
     public void testGetSourcesOfFund() throws Exception {
         List<FundBO> funds = new FundBusinessService().getSourcesOfFund();
-        assertNotNull(funds);
-        assertEquals(5, funds.size());
+        Assert.assertNotNull(funds);
+       Assert.assertEquals(5, funds.size());
     }
 
     public void testGetSourcesOfFundForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new FundBusinessService().getSourcesOfFund();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -87,7 +89,7 @@ public class FundBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
                 (short) 1);
         FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
-        assertEquals("Fund1", new FundBusinessService().getFund("Fund1").getFundName());
+       Assert.assertEquals("Fund1", new FundBusinessService().getFund("Fund1").getFundName());
         TestObjectFactory.removeObject(fund);
     }
 
@@ -98,9 +100,9 @@ public class FundBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.simulateInvalidConnection();
         try {
             new FundBusinessService().getFund("Fund1").getFundName();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -114,9 +116,9 @@ public class FundBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.closeSession();
 
         fund = new FundBusinessService().getFund(fund.getFundId());
-        assertNotNull(fund);
-        assertEquals("Fund1", fund.getFundName());
-        assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
+        Assert.assertNotNull(fund);
+       Assert.assertEquals("Fund1", fund.getFundName());
+       Assert.assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
         TestObjectFactory.removeObject(fund);
     }
 
@@ -127,9 +129,9 @@ public class FundBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.simulateInvalidConnection();
         try {
             new FundBusinessService().getFund(fund.getFundId());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }

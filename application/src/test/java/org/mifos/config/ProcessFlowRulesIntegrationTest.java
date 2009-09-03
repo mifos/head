@@ -20,6 +20,8 @@
 
 package org.mifos.config;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -52,25 +54,25 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testOverrideNeeded() throws Exception {
-        assertTrue(ProcessFlowRules.needsOverride(false, true));
+       Assert.assertTrue(ProcessFlowRules.needsOverride(false, true));
     }
 
     public void testOverrideNotNecessary() throws Exception {
-        assertFalse(ProcessFlowRules.needsOverride(false, false));
-        assertFalse(ProcessFlowRules.needsOverride(true, true));
+        Assert.assertFalse(ProcessFlowRules.needsOverride(false, false));
+        Assert.assertFalse(ProcessFlowRules.needsOverride(true, true));
     }
 
     public void testOverrideValidation() throws Exception {
-        assertTrue(ProcessFlowRules.isValidOverride(true, true));
-        assertTrue(ProcessFlowRules.isValidOverride(false, true));
-        assertTrue(ProcessFlowRules.isValidOverride(false, false));
-        assertFalse(ProcessFlowRules.isValidOverride(true, false));
+       Assert.assertTrue(ProcessFlowRules.isValidOverride(true, true));
+       Assert.assertTrue(ProcessFlowRules.isValidOverride(false, true));
+       Assert.assertTrue(ProcessFlowRules.isValidOverride(false, false));
+        Assert.assertFalse(ProcessFlowRules.isValidOverride(true, false));
     }
 
     public void testInvalidOverride() throws Exception {
         try {
             ProcessFlowRules.needsOverride(true, false);
-            fail("Expected ConfigurationException");
+            Assert.fail("Expected ConfigurationException");
         } catch (ConfigurationException e){
             // expected
         }
@@ -80,13 +82,13 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
         CustomerPersistence cp = new CustomerPersistence();
         CustomerStatusEntity cse = (CustomerStatusEntity) cp.loadPersistentObject(CustomerStatusEntity.class,
                 CustomerStatus.CLIENT_PENDING.getValue());
-        assertTrue(cse.getIsOptional());
+       Assert.assertTrue(cse.getIsOptional());
         cse.setIsOptional(false);
         StaticHibernateUtil.commitTransaction();
-        assertFalse(cse.getIsOptional());
-        assertTrue(ProcessFlowRules.isClientPendingApprovalStateEnabled());
+        Assert.assertFalse(cse.getIsOptional());
+       Assert.assertTrue(ProcessFlowRules.isClientPendingApprovalStateEnabled());
         ProcessFlowRules.init();
-        assertTrue(cse.getIsOptional());
+       Assert.assertTrue(cse.getIsOptional());
     }
 
     public void testInvalidOverrideAgainstDb() throws Exception {
@@ -96,10 +98,10 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
                     AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
             ase.setIsOptional(true);
             StaticHibernateUtil.commitTransaction();
-            assertTrue(ase.getIsOptional());
-            assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
+           Assert.assertTrue(ase.getIsOptional());
+            Assert.assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
             ProcessFlowRules.init();
-            fail("Expected ConfigurationException");
+            Assert.fail("Expected ConfigurationException");
         } catch (ConfigurationException e){
             // expected
         }

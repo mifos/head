@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -66,19 +68,19 @@ public class HolidayBusinessServiceIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
 
         List<HolidayBO> holidays = new HolidayBusinessService().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
-        assertNotNull(holidays);
-        assertEquals(1, holidays.size());
+        Assert.assertNotNull(holidays);
+       Assert.assertEquals(1, holidays.size());
     }
 
     public void testGetRepaymentRuleTypes() throws Exception {
         List<RepaymentRuleEntity> repaymentRules = new HolidayBusinessService().getRepaymentRuleTypes();
-        assertNotNull(repaymentRules);
-        assertEquals(3, repaymentRules.size());
+        Assert.assertNotNull(repaymentRules);
+       Assert.assertEquals(3, repaymentRules.size());
     }
 
     public void testGetDistinctYears() throws Exception {
         List<HolidayBO> distinctYears = new HolidayBusinessService().getDistinctYears();
-        assertNotNull(distinctYears);
+        Assert.assertNotNull(distinctYears);
     }
 
 }

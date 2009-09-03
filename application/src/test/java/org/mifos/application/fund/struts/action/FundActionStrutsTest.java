@@ -22,6 +22,8 @@ package org.mifos.application.fund.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.fund.persistence.FundPersistence;
 import org.mifos.application.fund.util.helpers.FundConstants;
@@ -89,7 +91,7 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.load_success.toString());
         List<FundCodeEntity> fundCodeList = (List<FundCodeEntity>) SessionUtils.getAttribute(
                 FundConstants.ALL_FUNDLIST, request);
-        assertEquals("The size of master data for funds should be 5", 5, fundCodeList.size());
+       Assert.assertEquals("The size of master data for funds should be 5", 5, fundCodeList.size());
     }
 
     public void testPreviewWithOutData() throws Exception {
@@ -137,7 +139,7 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.cancelCreate_success.toString());
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
 
     public void testCreate() throws Exception {
@@ -162,7 +164,7 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_success.toString());
         fund = new FundPersistence().getFund("Fund-2");
 
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
 
     public void testViewAllFunds() throws Exception {
@@ -175,7 +177,7 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(ActionForwards.viewAllFunds_success.toString());
         List<FundBO> fundList = (List<FundBO>) SessionUtils.getAttribute(FundConstants.FUNDLIST, request);
-        assertEquals("The size of master data for funds should be 6", 6, fundList.size());
+       Assert.assertEquals("The size of master data for funds should be 6", 6, fundList.size());
     }
 
     public void testManage() throws Exception {
@@ -191,9 +193,9 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.manage_success.toString());
         StaticHibernateUtil.closeSession();
         fund = (FundBO) TestObjectFactory.getObject(FundBO.class, fund.getFundId());
-        assertNotNull(fund);
-        assertEquals("Fund-1", fund.getFundName());
-        assertEquals("Fund-1", SessionUtils.getAttribute(FundConstants.OLDFUNDNAME, request));
+        Assert.assertNotNull(fund);
+       Assert.assertEquals("Fund-1", fund.getFundName());
+       Assert.assertEquals("Fund-1", SessionUtils.getAttribute(FundConstants.OLDFUNDNAME, request));
     }
 
     public void testPreviewManageWithNullFundName() throws Exception {
@@ -231,7 +233,7 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.cancelManage_success.toString());
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
 
     public void testUpdateForNullFundName() throws Exception {
@@ -314,11 +316,11 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.update_success.toString());
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
         StaticHibernateUtil.closeSession();
         fund = (FundBO) TestObjectFactory.getObject(FundBO.class, fund.getFundId());
-        assertNotNull(fund);
-        assertEquals("Fund-2", fund.getFundName());
+        Assert.assertNotNull(fund);
+       Assert.assertEquals("Fund-2", fund.getFundName());
     }
 
     public void testValidateForPreview() throws Exception {

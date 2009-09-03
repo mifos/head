@@ -23,6 +23,7 @@ package org.mifos.application.accounts.financial.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class FinancialRulesTest extends TestCase {
@@ -44,8 +45,8 @@ public class FinancialRulesTest extends TestCase {
     }
     
     public void testSupportedActions() throws Exception {
-        assertEquals("11201", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.DEBIT));
-        assertEquals("13100", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.CREDIT));
+       Assert.assertEquals("11201", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.DEBIT));
+       Assert.assertEquals("13100", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.CREDIT));
     }
 
     /**
@@ -54,7 +55,7 @@ public class FinancialRulesTest extends TestCase {
     public void testUnsupportedAction01() throws Exception {
         try {
             mock.getGLAccountForAction((short) -1, FinancialConstants.DEBIT);
-            fail("Expected RuntimeException.");
+            Assert.fail("Expected RuntimeException.");
         } catch (RuntimeException e) {
             // do nothing
         }
@@ -66,7 +67,7 @@ public class FinancialRulesTest extends TestCase {
      * {@link FinancialRules}.
      */
     public void testUnsupportedAction02() throws Exception {
-        assertNull(mock.getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT, FinancialConstants.CREDIT));
+        Assert.assertNull(mock.getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT, FinancialConstants.CREDIT));
     }
 
     /**
@@ -75,7 +76,7 @@ public class FinancialRulesTest extends TestCase {
      * {@link FinancialRules}
      */
     public void testUnsupportedAction03() throws Exception {
-        assertNull(mock.getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT, FinancialConstants.DEBIT));
+        Assert.assertNull(mock.getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT, FinancialConstants.DEBIT));
     }
 
     // TODO: test override functionality of FinancialRules Spring bean config

@@ -25,6 +25,7 @@ import static org.mifos.framework.TestUtils.RUPEE;
 
 import java.math.BigDecimal;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
@@ -37,7 +38,7 @@ public class MoneyTest extends TestCase {
     public void testAdd() {
         Money money = new Money(RUPEE, "100.0");
         Money addendend = new Money(RUPEE, "200.0");
-        assertEquals("testing Add, should succeed", new Money(RUPEE, "300.0"), money.add(addendend));
+       Assert.assertEquals("testing Add, should succeed", new Money(RUPEE, "300.0"), money.add(addendend));
     }
 
     public void testAddMultipleDecimalAmounts() {
@@ -46,7 +47,7 @@ public class MoneyTest extends TestCase {
         Money money2 = money1.add(new Money(RUPEE, "0.1"));
         Money money3 = money2.add(new Money(RUPEE, "0.1"));
         Money money4 = money3.add(new Money(RUPEE, "0.1"));
-        assertEquals("testing addMultipleDecimalAmounts, should succeed", new Money(RUPEE, "0.5"), money4);
+       Assert.assertEquals("testing addMultipleDecimalAmounts, should succeed", new Money(RUPEE, "0.5"), money4);
     }
 
     public void testAddWithDiffCurrencies() {
@@ -54,7 +55,7 @@ public class MoneyTest extends TestCase {
         try {
             Money addendendWithDiffCurrecny = new Money(EURO, "200");
             money.add(addendendWithDiffCurrecny);
-            fail("testing Add with different currencies should throw an exception.");
+            Assert.fail("testing Add with different currencies should throw an exception.");
         } catch (IllegalArgumentException e) {
         }
     }
@@ -62,7 +63,7 @@ public class MoneyTest extends TestCase {
     public void testSubtract() {
         Money subtrahend = new Money(RUPEE, "100.0");
         Money money = new Money(RUPEE, "200.0");
-        assertEquals("testing subtract, should succeed", new Money(RUPEE, "100.0"), money.subtract(subtrahend));
+       Assert.assertEquals("testing subtract, should succeed", new Money(RUPEE, "100.0"), money.subtract(subtrahend));
     }
 
     public void testSubtractWithDiffCurrencies() {
@@ -70,7 +71,7 @@ public class MoneyTest extends TestCase {
         try {
             Money subtrahendWithDiffCurrecny = new Money(EURO, "100");
             money.subtract(subtrahendWithDiffCurrecny);
-            fail("testing subtract with different currencies should throw an exception.");
+            Assert.fail("testing subtract with different currencies should throw an exception.");
         } catch (IllegalArgumentException e) {
         }
     }
@@ -78,13 +79,13 @@ public class MoneyTest extends TestCase {
     public void testMultiply() {
         Money multiplicand = new Money(RUPEE, "10.0");
         Money money = new Money(RUPEE, "20.0");
-        assertEquals("testing multiply, should succeed", new Money(RUPEE, "200.0"), money.multiply(multiplicand));
+       Assert.assertEquals("testing multiply, should succeed", new Money(RUPEE, "200.0"), money.multiply(multiplicand));
     }
 
     public void testFactorMultiply() {
         Money money = new Money(RUPEE, "100.0");
         Double factor = new Double(1 + (24 / 100.0));
-        assertEquals("testing multiply with a factor, should succeed", new Money(RUPEE, "124.0"), money
+       Assert.assertEquals("testing multiply with a factor, should succeed", new Money(RUPEE, "124.0"), money
                 .multiply(factor));
     }
 
@@ -93,7 +94,7 @@ public class MoneyTest extends TestCase {
         try {
             Money multiplicandWithDiffCurrecny = new Money(EURO, "10");
             money.multiply(multiplicandWithDiffCurrecny);
-            fail("testing multiply with different currencies should throw an exception.");
+            Assert.fail("testing multiply with different currencies should throw an exception.");
         } catch (IllegalArgumentException e) {
         }
     }
@@ -101,19 +102,19 @@ public class MoneyTest extends TestCase {
     public void testDivideByMoney() {
         Money dividend = new Money(RUPEE, "10.0");
         Money money = new Money(RUPEE, "20.0");
-        assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
     }
 
     public void testDivide() {
         BigDecimal dividend = new BigDecimal("10.0", Money.getInternalPrecisionAndRounding());
         Money money = new Money(RUPEE, "20.0");
-        assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
     }
 
     public void testDivideRepeating() {
         BigDecimal dividend = new BigDecimal("3.0", Money.getInternalPrecisionAndRounding());
         Money money = new Money(RUPEE, "10.0");
-        assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"), money.divide(dividend));
     }
 
     public void testDivideWithDiffCurrencies() {
@@ -121,81 +122,81 @@ public class MoneyTest extends TestCase {
         try {
             Money dividendWithDiffCurrecny = new Money(EURO, "10");
             money.divide(dividendWithDiffCurrecny);
-            fail("testing divide with different currencies should throw an exception.");
+            Assert.fail("testing divide with different currencies should throw an exception.");
         } catch (IllegalArgumentException e) {
         }
     }
 
     public void testNegate() {
         Money money = new Money(RUPEE, "20.0");
-        assertEquals(new Money(RUPEE, "-20.0"), money.negate());
+       Assert.assertEquals(new Money(RUPEE, "-20.0"), money.negate());
     }
 
     public void testRoundUp() {
         Money money = new Money(RUPEE, "142.34");
-        assertEquals(new Money(RUPEE, "143.00"), Money.round(money));
+       Assert.assertEquals(new Money(RUPEE, "143.00"), Money.round(money));
     }
 
     public void testRoundDown() {
         Money money = new Money(EURO, "142.34");
-        assertEquals(new Money(EURO, "142.00"), Money.round(money));
+       Assert.assertEquals(new Money(EURO, "142.00"), Money.round(money));
     }
 
     public void testRoundRepeating() {
         MifosCurrency currency = new MifosCurrency((short) 1, "test", "$", MifosCurrency.CEILING_MODE, (float) 3.0,
                 (short) 1, (short) 1, "USD");
         Money money = new Money(currency, "1");
-        assertEquals(new Money(currency, "3"), Money.round(money));
+       Assert.assertEquals(new Money(currency, "3"), Money.round(money));
     }
 
     public void testIsRoundedAmount() {
-        assertTrue((new Money(EURO, "1")).isRoundedAmount());
-        assertFalse((new Money(EURO, "1.1")).isRoundedAmount());
+       Assert.assertTrue((new Money(EURO, "1")).isRoundedAmount());
+        Assert.assertFalse((new Money(EURO, "1.1")).isRoundedAmount());
     }
 
     public void testDivideMoneyRepeating() {
         Money dividend = new Money(RUPEE, "3.0");
         Money money = new Money(RUPEE, "10.0");
-        assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"), money.divide(dividend));
     }
 
     public void testHashCode() {
         Money money = new Money(RUPEE, "142.34");
         BigDecimal amnt = new BigDecimal(142.34);
-        assertEquals((money.getCurrency().getCurrencyId() * 100 + amnt.intValue()), money.hashCode());
+       Assert.assertEquals((money.getCurrency().getCurrencyId() * 100 + amnt.intValue()), money.hashCode());
     }
 
     public void testHashCodeForNullAmnt() {
         Money money = new Money(RUPEE, "");
-        assertEquals(0, money.hashCode());
+       Assert.assertEquals(0, money.hashCode());
     }
 
     public void testSetScaleNewMoney() {
-        assertEquals(142.344, new Money(RUPEE, "142.344").getAmountDoubleValue(), DELTA);
-        assertEquals(142.356, new Money(RUPEE, "142.356").getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(142.344, new Money(RUPEE, "142.344").getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(142.356, new Money(RUPEE, "142.356").getAmountDoubleValue(), DELTA);
     }
 
     public void testToString() {
         Money money = new Money(RUPEE, "4456456456.6");
-        assertEquals("The toString of money returns : ", "4456456456.6", money.toString());
+       Assert.assertEquals("The toString of money returns : ", "4456456456.6", money.toString());
     }
 
     public void testIsGreaterThan() {
         Money large = new Money(RUPEE, "10.0");
         Money small = new Money(RUPEE, "1.0");
 
-        assertTrue("large should be greater than small", large.isGreaterThan(small));
-        assertFalse("large should not be greater than itself", large.isGreaterThan(large));
-        assertFalse("small should not be greater than large", small.isGreaterThan(large));
+       Assert.assertTrue("large should be greater than small", large.isGreaterThan(small));
+        Assert.assertFalse("large should not be greater than itself", large.isGreaterThan(large));
+        Assert.assertFalse("small should not be greater than large", small.isGreaterThan(large));
     }
 
     public void testIsLessThan() {
         Money large = new Money(EURO, "10.0");
         Money small = new Money(EURO, "1.0");
 
-        assertTrue("small should be less than large", small.isLessThan(large));
-        assertFalse("small should not be less than itself", small.isLessThan(small));
-        assertFalse("large should not be less than small", large.isLessThan(small));
+       Assert.assertTrue("small should be less than large", small.isLessThan(large));
+        Assert.assertFalse("small should not be less than itself", small.isLessThan(small));
+        Assert.assertFalse("large should not be less than small", large.isLessThan(small));
     }
 
     public void testIsLessThanForDifferentCurrencies() {
@@ -203,8 +204,8 @@ public class MoneyTest extends TestCase {
         Money small = new Money(EURO, "1.0");
 
         try {
-            assertFalse("large should not be less than small", large.isLessThan(small));
-            fail("Comparing two different currencies should throw and exceeption");
+            Assert.assertFalse("large should not be less than small", large.isLessThan(small));
+            Assert.fail("Comparing two different currencies should throw and exceeption");
         } catch (RuntimeException e) {
         }
     }
@@ -214,8 +215,8 @@ public class MoneyTest extends TestCase {
         Money small = new Money(EURO, "1.0");
 
         try {
-            assertFalse("large should not be less than small", large.isGreaterThan(small));
-            fail("Comparing two different currencies should throw and exceeption");
+            Assert.assertFalse("large should not be less than small", large.isGreaterThan(small));
+            Assert.fail("Comparing two different currencies should throw and exceeption");
         } catch (RuntimeException e) {
         }
     }

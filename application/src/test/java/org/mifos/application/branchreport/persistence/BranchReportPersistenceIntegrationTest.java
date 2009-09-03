@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
@@ -139,7 +141,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     public void testExtractStaffSummaryActiveBorrowersCountReturnsEmptyListIfNoDataPresent() throws Exception {
         List<BranchReportStaffSummaryBO> staffSummary = branchReportPersistence.extractBranchReportStaffSummary(Short
                 .valueOf("2"), Integer.valueOf(1), DEFAULT_CURRENCY);
-        assertTrue(staffSummary.isEmpty());
+       Assert.assertTrue(staffSummary.isEmpty());
     }
 
     public void testPopulateCustomersFormedByLoanOfficerReturnsIfSummaryListIsEmpty() throws Exception {
@@ -173,7 +175,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     public void testPopulateCustomersFormedBySetsTotalClientsEnrolledBy() throws Exception {
         Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
         branchReportPersistence.populateTotalClientsEnrolledByPersonnel(staffSummaries);
-        assertNull(org.apache.commons.collections.CollectionUtils.find(staffSummaries.values(), new Predicate() {
+        Assert.assertNull(org.apache.commons.collections.CollectionUtils.find(staffSummaries.values(), new Predicate() {
             public boolean evaluate(Object object) {
                 return !Integer.valueOf(0).equals(((BranchReportStaffSummaryBO) object).getTotalClientsEnrolled());
             }
@@ -221,7 +223,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     public void testPopulateLoanArrearsAmountSetsLoanArrearsAmount() throws Exception {
         Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
         branchReportPersistence.populateLoanArrearsAmountForPersonnel(staffSummaries, DEFAULT_CURRENCY);
-        assertNull(org.apache.commons.collections.CollectionUtils.find(staffSummaries.values(), new Predicate() {
+        Assert.assertNull(org.apache.commons.collections.CollectionUtils.find(staffSummaries.values(), new Predicate() {
             public boolean evaluate(Object object) {
                 return !BigDecimal.ZERO.setScale(DEFAULT_CURRENCY.getDefaultDigitsAfterDecimal()).equals(
                         ((BranchReportStaffSummaryBO) object).getLoanArrearsAmount());
@@ -232,7 +234,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     public void testRetrieveLoanArrearsAging() throws Exception {
         BranchReportLoanArrearsAgingBO loanArrears = branchReportPersistence.extractLoanArrearsAgingInfoInPeriod(
                 LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Short.valueOf("2"), DEFAULT_CURRENCY);
-        assertNotNull(loanArrears);
+        Assert.assertNotNull(loanArrears);
     }
 
     public void testSaveLoanArrearsBOWithLargeValueForAmountOutstanding() throws Exception {
@@ -249,21 +251,21 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
             deleteBranchReport(branchReport.getBranchReportId());
         } catch (Exception e) {
             e.printStackTrace(System.out);
-            fail("Should not throw error when saving: " + e);
+            Assert.fail("Should not throw error when saving: " + e);
         }
     }
 
     public void testExtractingLoanArrears() throws Exception {
         BranchReportLoanArrearsAgingBO result = branchReportPersistence.extractLoanArrearsAgingInfoInPeriod(
                 LoanArrearsAgingPeriod.ONE_WEEK, Short.valueOf("2"), DEFAULT_CURRENCY);
-        assertNotNull(result);
+        Assert.assertNotNull(result);
     }
 
     public void testExtractStaffingSummaryLevels() throws Exception {
         List<BranchReportStaffingLevelSummaryBO> staffingLevels = branchReportPersistence
                 .extractBranchReportStaffingLevelSummary(LOAN_OFFICER_ID_SHORT);
-        assertEquals(2, staffingLevels.size());
-        assertNull("Should not extract roles with zero personnel count", org.apache.commons.collections.CollectionUtils
+       Assert.assertEquals(2, staffingLevels.size());
+        Assert.assertNull("Should not extract roles with zero personnel count", org.apache.commons.collections.CollectionUtils
                 .find(staffingLevels, new Predicate() {
                     public boolean evaluate(Object arg0) {
                         BranchReportStaffingLevelSummaryBO summary = (BranchReportStaffingLevelSummaryBO) arg0;
@@ -273,7 +275,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
                 }));
         for (BranchReportStaffingLevelSummaryBO summaryBO : staffingLevels) {
             if (TOTAL_STAFF_ROLENAME_STR.equals(summaryBO.getRolename())) {
-                assertEquals(Integer.valueOf(2), summaryBO.getPersonnelCount());
+               Assert.assertEquals(Integer.valueOf(2), summaryBO.getPersonnelCount());
             }
         }
     }
@@ -284,7 +286,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         for (BranchReportStaffSummaryBO summaryBO : staffSummaries) {
             PersonnelLevel retrievedPersonnelLevel = new PersonnelBusinessService().getPersonnel(
                     summaryBO.getPersonnelId()).getLevelEnum();
-            assertEquals(PersonnelLevel.LOAN_OFFICER, retrievedPersonnelLevel);
+           Assert.assertEquals(PersonnelLevel.LOAN_OFFICER, retrievedPersonnelLevel);
         }
     }
 
@@ -316,8 +318,8 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     }
 
     private void assertListSizeAndTrueCondition(int resultCount, List retrievedReports, Predicate mustBeTrue) {
-        assertEquals(resultCount, retrievedReports.size());
-        assertTrue(mustBeTrue.evaluate(CollectionUtils.first(retrievedReports)));
+       Assert.assertEquals(resultCount, retrievedReports.size());
+       Assert.assertTrue(mustBeTrue.evaluate(CollectionUtils.first(retrievedReports)));
     }
 
     @Override

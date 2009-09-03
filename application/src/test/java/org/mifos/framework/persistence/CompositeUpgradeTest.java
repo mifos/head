@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 
@@ -36,13 +37,13 @@ public class CompositeUpgradeTest extends TestCase {
         DummyUpgrade upgradeOne = new DummyUpgrade(53);
         DummyUpgrade upgradeTwo = new DummyUpgrade(53);
         Upgrade composite = new CompositeUpgrade(upgradeOne, upgradeTwo);
-        assertEquals(53, composite.higherVersion());
+       Assert.assertEquals(53, composite.higherVersion());
         Connection data = simpleDatabase(52);
         composite.upgrade(data);
-        assertEquals("upgrade to 53\n", upgradeOne.getLog());
-        assertEquals("upgrade to 53\n", upgradeTwo.getLog());
+       Assert.assertEquals("upgrade to 53\n", upgradeOne.getLog());
+       Assert.assertEquals("upgrade to 53\n", upgradeTwo.getLog());
 
-        assertEquals(53, new DatabaseVersionPersistence(data).read());
+       Assert.assertEquals(53, new DatabaseVersionPersistence(data).read());
     }
 
     public void testMismatch() throws Exception {
@@ -50,18 +51,18 @@ public class CompositeUpgradeTest extends TestCase {
         DummyUpgrade upgradeTwo = new DummyUpgrade(112);
         try {
             new CompositeUpgrade(upgradeOne, upgradeTwo);
-            fail();
+            Assert.fail();
         } catch (RuntimeException e) {
-            assertEquals("got upgrades to 111 and 112 but expected matching versions", e.getMessage());
+           Assert.assertEquals("got upgrades to 111 and 112 but expected matching versions", e.getMessage());
         }
     }
 
     public void testEmpty() throws Exception {
         try {
             new CompositeUpgrade();
-            fail();
+            Assert.fail();
         } catch (RuntimeException e) {
-            assertEquals("must specify at least one upgrade", e.getMessage());
+           Assert.assertEquals("must specify at least one upgrade", e.getMessage());
         }
     }
 
@@ -75,9 +76,9 @@ public class CompositeUpgradeTest extends TestCase {
         Connection data = simpleDatabase(52);
         composite.upgrade(data);
 
-        assertEquals("upgrading first\n" + "upgrading second\n" + "upgrading third\n", log.toString());
+       Assert.assertEquals("upgrading first\n" + "upgrading second\n" + "upgrading third\n", log.toString());
 
-        assertEquals(52, new DatabaseVersionPersistence(data).read());
+       Assert.assertEquals(52, new DatabaseVersionPersistence(data).read());
     }
 
     class MyUpgrade extends Upgrade {

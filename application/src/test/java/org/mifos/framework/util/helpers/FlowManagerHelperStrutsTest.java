@@ -20,6 +20,8 @@
 
 package org.mifos.framework.util.helpers;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -62,13 +64,13 @@ public class FlowManagerHelperStrutsTest extends MifosMockStrutsTestCase {
     public void testGetFlow() {
         FlowManager manager = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         Flow flow = (Flow) flowManagerHelper.getFlow(manager, flowKey);
-        assertEquals("test", (String) flow.getObjectFromSession("test"));
+       Assert.assertEquals("test", (String) flow.getObjectFromSession("test"));
     }
 
     public void testGetFlowFlowManagerString() {
         FlowManager manager = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        assertEquals("test", (String) flowManagerHelper.getFromSession(manager, flowKey, "test"));
+       Assert.assertEquals("test", (String) flowManagerHelper.getFromSession(manager, flowKey, "test"));
         addRequestParameter(Constants.CURRENTFLOWKEY, "");
-        assertNull(flowManagerHelper.getFromSession(manager, null, "test"));
+        Assert.assertNull(flowManagerHelper.getFromSession(manager, null, "test"));
     }
 }

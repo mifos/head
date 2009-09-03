@@ -26,6 +26,7 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.junit.Ignore;
@@ -56,9 +57,9 @@ public class JdbcBranchCashConfirmationReportParameterFormTest extends TestCase 
 
         form.validate(errors);
 
-        assertTrue(errors.hasErrors());
-        assertEquals(ReportValidationConstants.BRANCH_ID_INVALID_MSG, branchInvalidErrorCode);
-        assertEquals(ReportValidationConstants.RUN_DATE_INVALID_MSG, dateInvalidErrorCode);
+       Assert.assertTrue(errors.hasErrors());
+       Assert.assertEquals(ReportValidationConstants.BRANCH_ID_INVALID_MSG, branchInvalidErrorCode);
+       Assert.assertEquals(ReportValidationConstants.RUN_DATE_INVALID_MSG, dateInvalidErrorCode);
 
     }
 

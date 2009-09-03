@@ -22,6 +22,8 @@ package org.mifos.application.customer.center.business.service;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -89,12 +91,12 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         savingsBO = getSavingsAccount(center, "fsaf6", "ads6");
         StaticHibernateUtil.closeSession();
         center = service.getCenter(center.getCustomerId());
-        assertNotNull(center);
-        assertEquals("center1", center.getDisplayName());
-        assertEquals(2, center.getAccounts().size());
-        assertEquals(0, center.getOpenLoanAccounts().size());
-        assertEquals(1, center.getOpenSavingAccounts().size());
-        assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
+        Assert.assertNotNull(center);
+       Assert.assertEquals("center1", center.getDisplayName());
+       Assert.assertEquals(2, center.getAccounts().size());
+       Assert.assertEquals(0, center.getOpenLoanAccounts().size());
+       Assert.assertEquals(1, center.getOpenSavingAccounts().size());
+       Assert.assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
         StaticHibernateUtil.closeSession();
         retrieveAccountsToDelete();
     }
@@ -105,12 +107,12 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         savingsBO = getSavingsAccount(center, "fsaf6", "ads6");
         StaticHibernateUtil.closeSession();
         center = service.getCenter(center.getCustomerId());
-        assertNotNull(center);
-        assertEquals("Center2", center.getDisplayName());
-        assertEquals(2, center.getAccounts().size());
-        assertEquals(0, center.getOpenLoanAccounts().size());
-        assertEquals(1, center.getOpenSavingAccounts().size());
-        assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
+        Assert.assertNotNull(center);
+       Assert.assertEquals("Center2", center.getDisplayName());
+       Assert.assertEquals(2, center.getAccounts().size());
+       Assert.assertEquals(0, center.getOpenLoanAccounts().size());
+       Assert.assertEquals(1, center.getOpenSavingAccounts().size());
+       Assert.assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
         StaticHibernateUtil.closeSession();
         retrieveAccountsToDelete();
     }
@@ -121,9 +123,9 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.getCenter(center.getCustomerId());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -135,9 +137,9 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.findBySystemId(center.getGlobalCustNum());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -146,8 +148,8 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     public void testSearch() throws Exception {
         center = createCenter("center1");
         QueryResult queryResult = service.search("center1", Short.valueOf("1"));
-        assertEquals(1, queryResult.getSize());
-        assertEquals(1, queryResult.get(0, 10).size());
+       Assert.assertEquals(1, queryResult.getSize());
+       Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
     public void testFailureSearch() throws Exception {
@@ -155,9 +157,9 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.search("center1", Short.valueOf("1"));
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }

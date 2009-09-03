@@ -32,12 +32,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import junit.framework.Assert;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
 import org.hibernate.Interceptor;
 import org.hibernate.classic.Session;
-import org.junit.Assert;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.SessionHolder;

@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -104,7 +106,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         System.out.println(center.getCustomerAccount().getAccountActionDates().size());
-        assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
+       Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
     }
 
     public void testExecuteForSavingsAccount() throws Exception {
@@ -123,7 +125,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
             savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
             new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
             savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
-            assertEquals(noOfInstallments+20,savings.getAccountActionDates().size());
+           Assert.assertEquals(noOfInstallments+20,savings.getAccountActionDates().size());
         } finally {
             // restore original output interval value
             configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, configuredValue);
@@ -149,8 +151,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
-        assertEquals(noOfInstallments + 10, savings.getAccountActionDates().size());
-        assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(meetingStartDate.getTime()).getTime())
+       Assert.assertEquals(noOfInstallments + 10, savings.getAccountActionDates().size());
+       Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(meetingStartDate.getTime()).getTime())
                 .toString(), group.getCustomerMeeting().getMeeting().getStartDate().toString());
     }
 

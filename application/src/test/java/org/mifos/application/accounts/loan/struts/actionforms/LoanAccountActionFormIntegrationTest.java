@@ -40,6 +40,8 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import junit.framework.Assert;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
@@ -97,7 +99,7 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
         ActionErrors errors = new ActionErrors();
         form.validateTransactionDate(errors, paymentMock, DateUtils.getDateFromToday(-1));
         verify(paymentMock);
-        assertTrue(errors.isEmpty());
+       Assert.assertTrue(errors.isEmpty());
     }
 
     @Override
@@ -116,12 +118,12 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
             ActionErrors errors = new ActionErrors();
             form.validateTransactionDate(errors, paymentMock, DateUtils.getDateFromToday(-3));
             verify(paymentMock);
-            assertTrue(errors.isEmpty());
+           Assert.assertTrue(errors.isEmpty());
     }
 
     private void assertErrorKey(ActionErrors errors, String expectedErrorKey) {
-        assertEquals(1, errors.size());
-        assertEquals(expectedErrorKey, ((ActionMessage) errors.get().next()).getKey());
+       Assert.assertEquals(1, errors.size());
+       Assert.assertEquals(expectedErrorKey, ((ActionMessage) errors.get().next()).getKey());
     }
 
     private void validateWhenTransactionDateInvalidForDisbursementDate(Date disbursementDate) throws InvalidDateException {
@@ -148,16 +150,16 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
     private void assertForInterestError(String inputValue) {
         new LoanAccountActionForm().checkForMinMax(actionErrors, inputValue, new NoOfInstallSameForAllLoanBO((short) 1,
                 (short) 3, (short) 2, null), INTEREST_ERROR_KEY);
-        assertEquals(1, actionErrors.size());
+       Assert.assertEquals(1, actionErrors.size());
         ActionMessage message = (ActionMessage) actionErrors.get(INTEREST_ERROR_KEY).next();
-        assertNotNull(message);
-        assertEquals(LoanExceptionConstants.INVALIDMINMAX, message.getKey());
+        Assert.assertNotNull(message);
+       Assert.assertEquals(LoanExceptionConstants.INVALIDMINMAX, message.getKey());
     }
 
     public void testShouldNotErrorIfInstallmentBetweenSpecifiedValues() throws Exception {
         new LoanAccountActionForm().checkForMinMax(actionErrors, "2", new NoOfInstallSameForAllLoanBO((short) 1,
                 (short) 3, (short) 2, null), INTEREST_ERROR_KEY);
-        assertEquals(0, actionErrors.size());
+       Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldAddErrorIfAmountNotBetweenSpecifiedLoanAmountRanges() throws Exception {
@@ -175,34 +177,34 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
     private void assertForAmountError(String inputValue) {
         new LoanAccountActionForm().checkForMinMax(actionErrors, inputValue, new LoanAmountSameForAllLoanBO((double) 1,
                 (double) 3, (double) 2, null), AMOUNT_ERROR_KEY);
-        assertEquals(1, actionErrors.size());
+       Assert.assertEquals(1, actionErrors.size());
         ActionMessage message = (ActionMessage) actionErrors.get(AMOUNT_ERROR_KEY).next();
-        assertNotNull(message);
-        assertEquals(LoanExceptionConstants.INVALIDMINMAX, message.getKey());
+        Assert.assertNotNull(message);
+       Assert.assertEquals(LoanExceptionConstants.INVALIDMINMAX, message.getKey());
     }
 
     public void testShouldNotErrorIfAmountBetweenSpecifiedValues() throws Exception {
         new LoanAccountActionForm().checkForMinMax(actionErrors, "2", new LoanAmountSameForAllLoanBO((double) 1,
                 (double) 3, (double) 2, null), AMOUNT_ERROR_KEY);
-        assertEquals(0, actionErrors.size());
+       Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldAddErrorIfNoMembersSelected() throws Exception {
         form.validateSelectedClients(actionErrors);
-        assertEquals(1, actionErrors.size());
+       Assert.assertEquals(1, actionErrors.size());
     }
 
     public void testShouldValidateIfMembersSelected() throws Exception {
         form.setClients(Arrays.asList("1", "2"));
         form.validateSelectedClients(actionErrors);
-        assertEquals(0, actionErrors.size());
+       Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldAddErrorIfIndividualLoanAmountIsNull() throws Exception {
         form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL));
         form.setClients(Arrays.asList("1"));
         form.validateSumOfTheAmountsSpecified(actionErrors);
-        assertEquals(1, actionErrors.size());
+       Assert.assertEquals(1, actionErrors.size());
     }
 
     public void testShouldValidateIfIndividualLoanAmountIsNotZero() throws Exception {
@@ -213,21 +215,21 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
         form.setLoanAmountRange(loanAmountRange);
         form.setClients(Arrays.asList("1"));
         form.validateSumOfTheAmountsSpecified(actionErrors);
-        assertEquals(0, actionErrors.size());
+       Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldAddErrorIfIndividualLoanAmountIsZero() throws Exception {
         form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO));
         form.setClients(Arrays.asList("1"));
         form.validateSumOfTheAmountsSpecified(actionErrors);
-        assertEquals(1, actionErrors.size());
+       Assert.assertEquals(1, actionErrors.size());
     }
 
     public void testShouldAddErrorIfPurposeOfLoanIsNull() throws Exception {
         form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL));
         form.setClients(Arrays.asList("1"));
         form.validatePurposeOfLoanForGlim(actionErrors);
-        assertEquals(1, actionErrors.size());
+       Assert.assertEquals(1, actionErrors.size());
     }
 
     public void testShouldAddErrorIfPurposeOfLoanIsEmpty() throws Exception {
@@ -235,14 +237,14 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
                 LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY));
         form.setClients(Arrays.asList("1"));
         form.validatePurposeOfLoanForGlim(actionErrors);
-        assertEquals(1, actionErrors.size());
+       Assert.assertEquals(1, actionErrors.size());
     }
 
     public void testShouldValidateIfPurposeOfLoanIsValid() throws Exception {
         form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE));
         form.setClients(Arrays.asList("1"));
         form.validatePurposeOfLoanForGlim(actionErrors);
-        assertEquals(0, actionErrors.size());
+       Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldRemoveClientDetailsIfNoMatchingEntryFoundInClients() throws Exception {
@@ -251,7 +253,7 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
                 LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2));
         form.setClients(Arrays.asList("1"));
         form.removeClientDetailsWithNoMatchingClients();
-        assertEquals(1, form.getClientDetails().size());
+       Assert.assertEquals(1, form.getClientDetails().size());
     }
 
     public void testShouldGetSelectedClientIdsFromRequest() throws Exception {
@@ -262,13 +264,13 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCa
         expect(requestMock.getParameter("clients[1]")).andReturn("2");
         expect(requestMock.getParameter("clients[2]")).andReturn("3");
         replay(requestMock);
-        assertEquals(Arrays.asList("1", "2", "3"), form.getSelectedClientIdsFromRequest(requestMock));
+       Assert.assertEquals(Arrays.asList("1", "2", "3"), form.getSelectedClientIdsFromRequest(requestMock));
         verify(requestMock);
     }
 
     public void testSetsEmptyStringForClientsNotMatchingInput() throws Exception {
         form.setClients(Arrays.asList("1", "2", "3", "4"));
         form.setClientsNotPresentInInputToEmptyString(Arrays.asList("1", "2", "3"));
-        assertEquals(Arrays.asList("1", "2", "3", ""), form.getClients());
+       Assert.assertEquals(Arrays.asList("1", "2", "3", ""), form.getClients());
     }
 }

@@ -22,6 +22,8 @@ package org.mifos.application.accounts.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -35,7 +37,7 @@ public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestC
 
     public void testSelectCoSigningClients() throws Exception {
         List<CustomerBO> coSigningClients = new AccountPersistence().getCoSigningClientsForGlim(1);
-        assertNotNull(coSigningClients);
-        assertEquals(0, coSigningClients.size());
+        Assert.assertNotNull(coSigningClients);
+       Assert.assertEquals(0, coSigningClients.size());
     }
 }

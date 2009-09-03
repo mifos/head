@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
+import junit.framework.Assert;
+
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -48,20 +50,20 @@ public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTes
     public void testGetConfiguredFieldName() throws Exception {
         String fieldName = FieldConfigurationHelper.getConfiguredFieldName("Center.Address3", TestUtils
                 .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-        assertEquals("Village", fieldName);
+       Assert.assertEquals("Village", fieldName);
         fieldName = FieldConfigurationHelper.getConfiguredFieldName("Center.SomeField", TestUtils
                 .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-        assertEquals(null, fieldName);
+       Assert.assertEquals(null, fieldName);
     }
 
     public void testGetLocalSpecificFieldNames() throws Exception {
         String fieldName = FieldConfigurationHelper.getLocalSpecificFieldNames("Center.Address3", TestUtils
                 .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-        assertEquals("Village", fieldName);
+       Assert.assertEquals("Village", fieldName);
 
         fieldName = FieldConfigurationHelper.getLocalSpecificFieldNames("Center.SomeField", TestUtils
                 .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-        assertEquals("Center.SomeField", fieldName);
+       Assert.assertEquals("Center.SomeField", fieldName);
     }
 
 }

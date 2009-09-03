@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
@@ -149,17 +151,17 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
 
         List<AccountActionEntity> trxnTypes = (List<AccountActionEntity>) SessionUtils.getAttribute(
                 AccountConstants.TRXN_TYPES, request);
-        assertNotNull(trxnTypes);
-        assertEquals(2, trxnTypes.size());
+        Assert.assertNotNull(trxnTypes);
+       Assert.assertEquals(2, trxnTypes.size());
 
         List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
                 request);
-        assertNull(clientList);
+        Assert.assertNull(clientList);
 
         Boolean isBackDatedAllowed = (Boolean) SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,
                 request);
-        assertNotNull(isBackDatedAllowed);
-        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        Assert.assertNotNull(isBackDatedAllowed);
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         group = new CustomerPersistence().getCustomer(group.getCustomerId());
         center = new CustomerPersistence().getCustomer(center.getCustomerId());
         client1 = new CustomerPersistence().getCustomer(client1.getCustomerId());
@@ -185,17 +187,17 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
 
         List<AccountActionEntity> trxnTypes = (List<AccountActionEntity>) SessionUtils.getAttribute(
                 AccountConstants.TRXN_TYPES, request);
-        assertNotNull(trxnTypes);
-        assertEquals(2, trxnTypes.size());
+        Assert.assertNotNull(trxnTypes);
+       Assert.assertEquals(2, trxnTypes.size());
 
         List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
                 request);
-        assertNotNull(clientList);
-        assertEquals(2, clientList.size());
+        Assert.assertNotNull(clientList);
+       Assert.assertEquals(2, clientList.size());
         Boolean isBackDatedAllowed = (Boolean) SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,
                 request);
-        assertNotNull(isBackDatedAllowed);
-        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        Assert.assertNotNull(isBackDatedAllowed);
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
     }
 
     public void testSuccessfullReLoad() throws Exception {
@@ -262,8 +264,8 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         addRequestParameter("paymentTypeId", "1");
         addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
         actionPerform();
-        assertEquals(3, getErrorSize());
-        assertEquals(3, getErrorSize(AccountConstants.ERROR_MANDATORY));
+       Assert.assertEquals(3, getErrorSize());
+       Assert.assertEquals(3, getErrorSize(AccountConstants.ERROR_MANDATORY));
     }
 
     public void testPreviewDateValidation() throws Exception {
@@ -332,7 +334,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward(ActionForwards.account_details_page.toString());
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-        assertEquals(new Money("200"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money("200"), savings.getSavingsBalance());
     }
 
     public void testSuccessfulMakePayment_Withdrawal() throws Exception {
@@ -371,7 +373,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward(ActionForwards.account_details_page.toString());
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-        assertEquals(new Money("470"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money("470"), savings.getSavingsBalance());
     }
 
     public void testSuccessfullPrevious() throws Exception {

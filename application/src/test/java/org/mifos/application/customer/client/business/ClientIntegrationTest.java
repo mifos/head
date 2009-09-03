@@ -26,6 +26,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -150,8 +152,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Integer clientId = client.getCustomerId();
         ClientBO retrievedClient = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
                 client.getCustomerId());
-        assertEquals(hd, retrievedClient.getCustomerDetail().getHandicappedDetails());
-        assertEquals(pct, retrievedClient.getPovertyLikelihoodPercent());
+       Assert.assertEquals(hd, retrievedClient.getCustomerDetail().getHandicappedDetails());
+       Assert.assertEquals(pct, retrievedClient.getPovertyLikelihoodPercent());
 
     }
 
@@ -166,22 +168,22 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testSuccessfulAddClientToGroupWithMeeting() throws Exception {
         createObjectsForTransferToGroup_WithMeeting();
-        assertEquals(0, group1.getMaxChildCount().intValue());
+       Assert.assertEquals(0, group1.getMaxChildCount().intValue());
 
         client.addClientToGroup(group1);
 
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-        assertNotNull(client.getParentCustomer());
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+        Assert.assertNotNull(client.getParentCustomer());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
 
-        assertEquals(1, group1.getMaxChildCount().intValue());
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        assertEquals(true, client.isClientUnderGroup());
+       Assert.assertEquals(1, group1.getMaxChildCount().intValue());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+       Assert.assertEquals(true, client.isClientUnderGroup());
     }
 
     public void testSuccessfulValidateBeforeAddingClientToGroup_Client() throws Exception {
@@ -192,8 +194,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         try {
             client.validateBeforeAddingClientToGroup();
         } catch (CustomerException expected) {
-            assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
-            assertTrue(true);
+           Assert.assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
+           Assert.assertTrue(true);
         }
 
     }
@@ -206,10 +208,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
         try {
             client.validateBeforeAddingClientToGroup();
-            fail();
+            Assert.fail();
         } catch (CustomerException expected) {
             assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
 
     }
@@ -228,12 +230,12 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
 
-        assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
 
-        assertEquals(YesNoFlag.YES.getValue(), client.getCustomerMeeting().getUpdatedFlag());
-        assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(YesNoFlag.YES.getValue(), client.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
     }
 
     public void testGenerateScheduleForClient_CenterSavingsAccount_OnChangeStatus() throws Exception {
@@ -245,7 +247,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client = createClient(CustomerStatus.CLIENT_PENDING);
         StaticHibernateUtil.closeSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        assertEquals(0, accountBO.getAccountActionDates().size());
+       Assert.assertEquals(0, accountBO.getAccountActionDates().size());
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         client.setUserContext(TestObjectFactory.getContext());
@@ -253,13 +255,13 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        assertNotNull(accountBO.getAccountActionDates());
+        Assert.assertNotNull(accountBO.getAccountActionDates());
 
-        assertEquals(10, accountBO.getAccountActionDates().size());
-        assertEquals(1, accountBO.getAccountCustomFields().size());
+       Assert.assertEquals(10, accountBO.getAccountActionDates().size());
+       Assert.assertEquals(1, accountBO.getAccountCustomFields().size());
         for (AccountActionDateEntity actionDate : accountBO.getAccountActionDates()) {
-            assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
-            assertTrue(true);
+           Assert.assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
+           Assert.assertTrue(true);
         }
 
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -276,7 +278,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client = createClient(CustomerStatus.CLIENT_PENDING);
         StaticHibernateUtil.closeSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        assertEquals(0, accountBO.getAccountActionDates().size());
+       Assert.assertEquals(0, accountBO.getAccountActionDates().size());
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         client.setUserContext(TestObjectFactory.getContext());
@@ -284,12 +286,12 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        assertNotNull(accountBO.getAccountActionDates());
-        assertEquals(1, accountBO.getAccountCustomFields().size());
-        assertEquals(10, accountBO.getAccountActionDates().size());
+        Assert.assertNotNull(accountBO.getAccountActionDates());
+       Assert.assertEquals(1, accountBO.getAccountCustomFields().size());
+       Assert.assertEquals(10, accountBO.getAccountActionDates().size());
         for (AccountActionDateEntity actionDate : accountBO.getAccountActionDates()) {
-            assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
-            assertTrue(true);
+           Assert.assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
+           Assert.assertTrue(true);
         }
 
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -303,16 +305,16 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createParentObjects(CustomerStatus.GROUP_ACTIVE);
         accountBO = TestObjectFactory.createSavingsAccount("globalNum", center, AccountState.SAVINGS_ACTIVE,
                 new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
-        assertEquals(0, accountBO.getAccountActionDates().size());
+       Assert.assertEquals(0, accountBO.getAccountActionDates().size());
         client = createClient(CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.closeSession();
 
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        assertEquals(1, accountBO.getAccountCustomFields().size());
-        assertEquals(10, accountBO.getAccountActionDates().size());
+       Assert.assertEquals(1, accountBO.getAccountCustomFields().size());
+       Assert.assertEquals(10, accountBO.getAccountActionDates().size());
         for (AccountActionDateEntity actionDate : accountBO.getAccountActionDates()) {
-            assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
-            assertTrue(true);
+           Assert.assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
+           Assert.assertTrue(true);
         }
 
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -337,8 +339,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeBo, null,
                     null, null, null, null, YesNoFlag.NO.getValue(), clientView, spouseView, clientDetailView, null);
         } catch (CustomerException ce) {
-            assertEquals(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, ce.getKey());
-            assertTrue(true);
+           Assert.assertEquals(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, ce.getKey());
+           Assert.assertTrue(true);
         }
         savingsOffering1 = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering1
                 .getPrdOfferingId());
@@ -367,12 +369,12 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         client = new ClientPersistence().getClient(client.getCustomerId());
-        assertEquals(offerings.size(), client.getOfferingsAssociatedInCreate().size());
+       Assert.assertEquals(offerings.size(), client.getOfferingsAssociatedInCreate().size());
         for (ClientInitialSavingsOfferingEntity clientOffering : client.getOfferingsAssociatedInCreate()) {
             if (clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId()))
-                assertTrue(true);
+               Assert.assertTrue(true);
             if (clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId()))
-                assertTrue(true);
+               Assert.assertTrue(true);
         }
         savingsOffering1 = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering1
                 .getPrdOfferingId());
@@ -391,10 +393,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             client = new ClientBO(TestUtils.makeUser(), "", CustomerStatus.fromInt(new Short("1")), null, null, null,
                     null, null, null, personnel, officeBo, null, null, null, null, null, YesNoFlag.YES.getValue(),
                     clientNameDetailView, spouseNameDetailView, clientDetailView, null);
-            fail("Client Created");
+            Assert.fail("Client Created");
         } catch (CustomerException ce) {
-            assertNull(client);
-            assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
+            Assert.assertNull(client);
+           Assert.assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
         }
     }
 
@@ -410,10 +412,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     .fromInt(new Short("1")), null, null, null, null, null, null, personnel, null, null, null, null,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView,
                     null);
-            fail("Client Created");
+            Assert.fail("Client Created");
         } catch (CustomerException ce) {
-            assertNull(client);
-            assertEquals(ce.getKey(), CustomerConstants.INVALID_OFFICE);
+            Assert.assertNull(client);
+           Assert.assertEquals(ce.getKey(), CustomerConstants.INVALID_OFFICE);
         }
     }
 
@@ -434,9 +436,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(name, client.getDisplayName());
-        assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
-        assertEquals(officeId, client.getOffice().getOfficeId());
+       Assert.assertEquals(name, client.getDisplayName());
+       Assert.assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
+       Assert.assertEquals(officeId, client.getOffice().getOfficeId());
     }
 
     public void testSuccessfulCreateInActiveState_WithAssociatedSavingsOffering() throws Exception {
@@ -463,15 +465,15 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(name, client.getDisplayName());
-        assertEquals(1, client.getOfferingsAssociatedInCreate().size());
-        assertEquals(2, client.getAccounts().size());
+       Assert.assertEquals(name, client.getDisplayName());
+       Assert.assertEquals(1, client.getOfferingsAssociatedInCreate().size());
+       Assert.assertEquals(2, client.getAccounts().size());
         for (AccountBO account : client.getAccounts()) {
             if (account instanceof SavingsBO) {
-                assertEquals(savingsOffering1.getPrdOfferingId(), ((SavingsBO) account).getSavingsOffering()
+               Assert.assertEquals(savingsOffering1.getPrdOfferingId(), ((SavingsBO) account).getSavingsOffering()
                         .getPrdOfferingId());
-                assertNotNull(account.getGlobalAccountNum());
-                assertTrue(true);
+                Assert.assertNotNull(account.getGlobalAccountNum());
+               Assert.assertTrue(true);
             }
         }
         StaticHibernateUtil.closeSession();
@@ -505,8 +507,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(2, client.getOfferingsAssociatedInCreate().size());
-        assertEquals(1, client.getAccounts().size());
+       Assert.assertEquals(2, client.getOfferingsAssociatedInCreate().size());
+       Assert.assertEquals(1, client.getAccounts().size());
 
         client.setUserContext(TestObjectFactory.getContext());
         client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Client Made Active");
@@ -514,12 +516,12 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(3, client.getAccounts().size());
+       Assert.assertEquals(3, client.getAccounts().size());
 
         for (AccountBO account : client.getAccounts()) {
             if (account instanceof SavingsBO) {
-                assertNotNull(account.getGlobalAccountNum());
-                assertTrue(true);
+                Assert.assertNotNull(account.getGlobalAccountNum());
+               Assert.assertTrue(true);
             }
         }
         savingsOffering1 = null;
@@ -543,8 +545,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(name, client.getDisplayName());
-        assertEquals(client.getOffice().getOfficeId(), group.getOffice().getOfficeId());
+       Assert.assertEquals(name, client.getDisplayName());
+       Assert.assertEquals(client.getOffice().getOfficeId(), group.getOffice().getOfficeId());
     }
 
     public void testFailureCreatePendingClientWithParentGroupInLowerStatus() throws Exception {
@@ -560,10 +562,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     CustomerStatus.CLIENT_PENDING, null, null, null, null, null, null, personnel, group.getOffice(),
                     group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
                     spouseNameDetailView, clientDetailView, null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertNull(client);
-            assertEquals(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, e.getKey());
+            Assert.assertNull(client);
+           Assert.assertEquals(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, e.getKey());
         }
     }
 
@@ -580,10 +582,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, null, personnel, group.getOffice(),
                     group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
                     spouseNameDetailView, clientDetailView, null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertNull(client);
-            assertEquals(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, e.getKey());
+            Assert.assertNull(client);
+           Assert.assertEquals(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, e.getKey());
         }
     }
 
@@ -601,10 +603,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     .fromInt(new Short("3")), null, null, null, null, fees, null, personnel, officeBo, meeting, null,
                     null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView,
                     clientDetailView, null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertNull(client);
-            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
+            Assert.assertNull(client);
+           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
         }
         removeFees(fees);
     }
@@ -621,10 +623,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     .fromInt(new Short("3")), null, null, null, null, null, null, personnel, officeBo, null, personnel,
                     null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView,
                     clientDetailView, null);
-            fail();
+            Assert.fail();
         } catch (CustomerException ce) {
-            assertNull(client);
-            assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
+            Assert.assertNull(client);
+           Assert.assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
         }
 
     }
@@ -649,9 +651,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short(
                     "1")), null, null, null, null, null, null, personnel, officeBo, null, personnel, date, null, null,
                     null, YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView, null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, e.getKey());
+           Assert.assertEquals(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, e.getKey());
         }
 
     }
@@ -676,9 +678,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, null, personnel, officeBo, null,
                     personnel, new java.util.Date(), "1", null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
                     spouseNameDetailView, clientDetailView, null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, e.getKey());
+           Assert.assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, e.getKey());
         }
 
     }
@@ -702,19 +704,19 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(displayName, client.getDisplayName());
-        assertEquals(firstName, client.getFirstName());
-        assertEquals(lastName, client.getLastName());
-        assertEquals(officeId, client.getOffice().getOfficeId());
+       Assert.assertEquals(displayName, client.getDisplayName());
+       Assert.assertEquals(firstName, client.getFirstName());
+       Assert.assertEquals(lastName, client.getLastName());
+       Assert.assertEquals(officeId, client.getOffice().getOfficeId());
     }
 
     public void testUpdateGroupFailure_GroupNULL() throws Exception {
         createInitialObjects();
         try {
             client.transferToGroup(null);
-            fail();
+            Assert.fail();
         } catch (CustomerException ce) {
-            assertEquals(CustomerConstants.INVALID_PARENT, ce.getKey());
+           Assert.assertEquals(CustomerConstants.INVALID_PARENT, ce.getKey());
         }
     }
 
@@ -722,9 +724,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         try {
             client.transferToGroup((GroupBO) client.getParentCustomer());
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER, e.getKey());
+           Assert.assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER, e.getKey());
         }
     }
 
@@ -735,9 +737,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         try {
             client.transferToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, e.getKey());
+           Assert.assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, e.getKey());
         }
     }
 
@@ -753,9 +755,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         try {
             client.transferToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException expected) {
-            assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, expected.getKey());
+           Assert.assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, expected.getKey());
         }
     }
 
@@ -763,9 +765,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);
         try {
             client.transferToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException expected) {
-            assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS, expected.getKey());
+           Assert.assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS, expected.getKey());
         }
     }
 
@@ -776,9 +778,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client.changeStatus(CustomerStatus.CLIENT_HOLD, null, "client on hold");
         try {
             client.transferToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS, e.getKey());
+           Assert.assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS, e.getKey());
         }
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -792,9 +794,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client.setUserContext(TestUtils.makeUserWithLocales());
         try {
             client.transferToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException ce) {
-            assertEquals(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, ce.getKey());
+           Assert.assertEquals(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, ce.getKey());
         }
         StaticHibernateUtil.closeSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
@@ -812,9 +814,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client.setUserContext(TestUtils.makeUser());
         try {
             client.transferToGroup(group1);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH, e.getKey());
+           Assert.assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH, e.getKey());
         }
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -834,14 +836,14 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        assertEquals(group1.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting()
+       Assert.assertEquals(group1.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting()
                 .getUpdatedMeeting().getMeetingId());
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        assertEquals(0, group.getMaxChildCount().intValue());
-        assertEquals(1, group1.getMaxChildCount().intValue());
-        assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+       Assert.assertEquals(0, group.getMaxChildCount().intValue());
+       Assert.assertEquals(1, group1.getMaxChildCount().intValue());
+       Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
     }
 
     public void testSuccessfulTransferToGroup_WithMeeting() throws Exception {
@@ -851,19 +853,19 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertNull(client.getCustomerMeeting().getUpdatedMeeting());
+       Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        Assert.assertNull(client.getCustomerMeeting().getUpdatedMeeting());
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
 
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        assertEquals(0, group.getMaxChildCount().intValue());
-        assertEquals(1, group1.getMaxChildCount().intValue());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+       Assert.assertEquals(0, group.getMaxChildCount().intValue());
+       Assert.assertEquals(1, group1.getMaxChildCount().intValue());
 
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
 
     }
 
@@ -884,11 +886,11 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        assertEquals(1, group.getMaxChildCount().intValue());
+       Assert.assertEquals(1, group.getMaxChildCount().intValue());
 
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        assertNotNull("Adding client to group should also create hierarchy entities.", currentHierarchy);
-        assertEquals(group.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+        Assert.assertNotNull("Adding client to group should also create hierarchy entities.", currentHierarchy);
+       Assert.assertEquals(group.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
 
         // this "normal" group transfer is tested elsewhere, but I added this
         // specifically because
@@ -902,13 +904,13 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         currentHierarchy = client.getActiveCustomerHierarchy();
-        assertNotNull(currentHierarchy);
-        assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+        Assert.assertNotNull(currentHierarchy);
+       Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
     }
 
     public void testSuccessfulTransferToGroup_WithOutMeeting() throws Exception {
         createObjectsForTransferToGroup_WithoutMeeting();
-        assertNotNull(client.getCustomerMeeting());
+        Assert.assertNotNull(client.getCustomerMeeting());
 
         client.transferToGroup(group1);
         StaticHibernateUtil.commitTransaction();
@@ -918,8 +920,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
 
-        assertNull(client.getCustomerMeeting());
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+        Assert.assertNull(client.getCustomerMeeting());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
     }
 
     public void testSuccessfulTransferToGroupInDifferentBranch() throws Exception {
@@ -937,15 +939,15 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        assertEquals(0, group.getMaxChildCount().intValue());
-        assertEquals(1, group1.getMaxChildCount().intValue());
-        assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
+       Assert.assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+       Assert.assertEquals(0, group.getMaxChildCount().intValue());
+       Assert.assertEquals(1, group1.getMaxChildCount().intValue());
+       Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
         CustomerMovementEntity customerMovementEntity = client.getActiveCustomerMovement();
-        assertEquals(office.getOfficeId(), customerMovementEntity.getOffice().getOfficeId());
+       Assert.assertEquals(office.getOfficeId(), customerMovementEntity.getOffice().getOfficeId());
 
         client.setUserContext(TestObjectFactory.getContext());
         client.transferToGroup((GroupBO) group);
@@ -965,9 +967,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         try {
             client.transferToBranch(null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.INVALID_OFFICE, e.getKey());
+           Assert.assertEquals(CustomerConstants.INVALID_OFFICE, e.getKey());
         }
     }
 
@@ -975,9 +977,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         try {
             client.transferToBranch(client.getOffice());
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER, e.getKey());
+           Assert.assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER, e.getKey());
         }
     }
 
@@ -989,30 +991,30 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         try {
             client.transferToBranch(office);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE, e.getKey());
+           Assert.assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE, e.getKey());
         }
     }
 
     public void testUpdateBranchFirstTime() throws Exception {
         createObjectsForClientTransfer();
-        assertNull(client.getActiveCustomerMovement());
+        Assert.assertNull(client.getActiveCustomerMovement());
 
         client.transferToBranch(office);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertNotNull(client.getActiveCustomerMovement());
-        assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
-        assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
+        Assert.assertNotNull(client.getActiveCustomerMovement());
+       Assert.assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
+       Assert.assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
         office = client.getOffice();
     }
 
     public void testUpdateBranchSecondTime() throws Exception {
         createObjectsForClientTransfer();
-        assertNull(client.getActiveCustomerMovement());
+        Assert.assertNull(client.getActiveCustomerMovement());
         OfficeBO oldOffice = client.getOffice();
 
         client.transferToBranch(office);
@@ -1022,9 +1024,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getClient(client.getCustomerId());
         client.setUserContext(TestUtils.makeUser());
         CustomerMovementEntity currentMovement = client.getActiveCustomerMovement();
-        assertNotNull(currentMovement);
-        assertEquals(office.getOfficeId(), currentMovement.getOffice().getOfficeId());
-        assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
+        Assert.assertNotNull(currentMovement);
+       Assert.assertEquals(office.getOfficeId(), currentMovement.getOffice().getOfficeId());
+       Assert.assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
 
         client.transferToBranch(oldOffice);
         StaticHibernateUtil.commitTransaction();
@@ -1032,17 +1034,17 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         currentMovement = client.getActiveCustomerMovement();
-        assertNotNull(currentMovement);
-        assertEquals(oldOffice.getOfficeId(), currentMovement.getOffice().getOfficeId());
-        assertEquals(oldOffice.getOfficeId(), client.getOffice().getOfficeId());
+        Assert.assertNotNull(currentMovement);
+       Assert.assertEquals(oldOffice.getOfficeId(), currentMovement.getOffice().getOfficeId());
+       Assert.assertEquals(oldOffice.getOfficeId(), client.getOffice().getOfficeId());
 
         office = new OfficePersistence().getOffice(office.getOfficeId());
     }
 
     public void testGetClientAndSpouseName() throws Exception {
         createObjectsForClient("Client 1", CustomerStatus.CLIENT_ACTIVE);
-        assertEquals(client.getClientName().getName().getFirstName(), "Client 1");
-        assertEquals(client.getSpouseName().getName().getFirstName(), "Client 1");
+       Assert.assertEquals(client.getClientName().getName().getFirstName(), "Client 1");
+       Assert.assertEquals(client.getSpouseName().getName().getFirstName(), "Client 1");
         client = TestObjectFactory.getClient(client.getCustomerId());
         office = new OfficePersistence().getOffice(office.getOfficeId());
     }
@@ -1050,16 +1052,16 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     public void testUpdateClientDetails() throws Exception {
         createObjectsForClient("Client 1", CustomerStatus.CLIENT_ACTIVE);
         Short povertyStatus = Short.valueOf("41");
-        assertEquals(1, client.getCustomerDetail().getEthinicity().intValue());
-        assertEquals(1, client.getCustomerDetail().getCitizenship().intValue());
-        assertEquals(1, client.getCustomerDetail().getHandicapped().intValue());
+       Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().intValue());
+       Assert.assertEquals(1, client.getCustomerDetail().getCitizenship().intValue());
+       Assert.assertEquals(1, client.getCustomerDetail().getHandicapped().intValue());
         ClientDetailView clientDetailView = new ClientDetailView(2, 2, 2, 2, 2, 2, Short.valueOf("1"), Short
                 .valueOf("1"), povertyStatus);
         client.updateClientDetails(clientDetailView);
-        assertEquals(2, client.getCustomerDetail().getEthinicity().intValue());
-        assertEquals(2, client.getCustomerDetail().getCitizenship().intValue());
-        assertEquals(2, client.getCustomerDetail().getHandicapped().intValue());
-        assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
+       Assert.assertEquals(2, client.getCustomerDetail().getEthinicity().intValue());
+       Assert.assertEquals(2, client.getCustomerDetail().getCitizenship().intValue());
+       Assert.assertEquals(2, client.getCustomerDetail().getHandicapped().intValue());
+       Assert.assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
         client = TestObjectFactory.getClient(client.getCustomerId());
         office = new OfficePersistence().getOffice(office.getOfficeId());
     }
@@ -1068,9 +1070,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createObjectsForClient("Client 1", CustomerStatus.CLIENT_ACTIVE);
         try {
             client.updateMfiInfo(null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
+           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
         }
         client = TestObjectFactory.getClient(client.getCustomerId());
     }
@@ -1079,9 +1081,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createObjectsForClient("Client 1", CustomerStatus.CLIENT_HOLD);
         try {
             client.updateMfiInfo(null);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
+           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
         }
         client = TestObjectFactory.getClient(client.getCustomerId());
     }
@@ -1097,8 +1099,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
 
-        assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
     }
 
     public void testUpdateMonthlyMeeting() throws Exception {
@@ -1113,8 +1115,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
     }
 
     public void testUpdateMonthlyMeetingOnDate() throws Exception {
@@ -1129,7 +1131,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
     }
 
     public void testCreateMeeting() throws Exception {
@@ -1144,9 +1146,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
         client = TestObjectFactory.getClient(client.getCustomerId());
 
-        assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
-        assertEquals(recurAfter, client.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(recurAfter, client.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
     }
 
     private void createObjectsForClientTransfer() throws Exception {

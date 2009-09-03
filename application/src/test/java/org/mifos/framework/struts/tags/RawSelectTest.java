@@ -23,6 +23,7 @@ package org.mifos.framework.struts.tags;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.exceptions.ApplicationException;
@@ -44,11 +45,11 @@ public class RawSelectTest extends TestCase {
         rawSelect.setName("name");
         rawSelect.setSize("1");
         rawSelect.setStyle("style");
-        assertEquals(2, rawSelect.getData().size());
-        assertEquals("multiple", rawSelect.getMultiple());
-        assertEquals("name", rawSelect.getName());
-        assertEquals("1", rawSelect.getSize());
-        assertEquals("style", rawSelect.getStyle());
-        assertTrue(rawSelect.toString().contains("Select the item"));
+       Assert.assertEquals(2, rawSelect.getData().size());
+       Assert.assertEquals("multiple", rawSelect.getMultiple());
+       Assert.assertEquals("name", rawSelect.getName());
+       Assert.assertEquals("1", rawSelect.getSize());
+       Assert.assertEquals("style", rawSelect.getStyle());
+       Assert.assertTrue(rawSelect.toString().contains("Select the item"));
     }
 }

@@ -23,6 +23,7 @@ package org.mifos.application.accounts.financial.util.helpers;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.accounts.financial.business.COABO;
@@ -80,16 +81,16 @@ public class ChartOfAccountsCacheTest extends TestCase {
 
     public void testAddAndGet() throws FinancialException {
         COABO cachedAccount = ChartOfAccountsCache.get(GL_CODE);
-        assertEquals(GL_CODE, cachedAccount.getGlCode());
-        assertEquals(ACCOUNT_NAME, cachedAccount.getAccountName());
-        assertEquals(testAccount, cachedAccount);
+       Assert.assertEquals(GL_CODE, cachedAccount.getGlCode());
+       Assert.assertEquals(ACCOUNT_NAME, cachedAccount.getAccountName());
+       Assert.assertEquals(testAccount, cachedAccount);
     }
 
     public void testTopLevelAccountCached() throws Exception {
         AccountPersistence ap = createMockAccountPersistance();
         COABO income = ap.getCategory(GLCategoryType.INCOME);
         COABO cachedIncome = ChartOfAccountsCache.get(INCOME_GL_ACCOUNT_CODE);
-        assertEquals(income, cachedIncome);
+       Assert.assertEquals(income, cachedIncome);
     }
 
     private AccountPersistence createMockAccountPersistance() {

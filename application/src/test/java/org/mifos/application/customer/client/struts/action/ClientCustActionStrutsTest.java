@@ -27,6 +27,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -155,24 +157,24 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        assertNotNull(povertyStatusList);
+        Assert.assertNotNull(povertyStatusList);
         List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
                 ClientConstants.SAVINGS_OFFERING_LIST, request);
-        assertNotNull(savingsOfferingList);
-        assertEquals(1, savingsOfferingList.size());
+        Assert.assertNotNull(savingsOfferingList);
+       Assert.assertEquals(1, savingsOfferingList.size());
         StaticHibernateUtil.closeSession();
     }
 
@@ -190,27 +192,27 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        assertNotNull(povertyStatusList);
+        Assert.assertNotNull(povertyStatusList);
         List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
                 ClientConstants.SAVINGS_OFFERING_LIST, request);
-        assertNotNull(savingsOfferingList);
-        assertEquals(1, savingsOfferingList.size());
+        Assert.assertNotNull(savingsOfferingList);
+       Assert.assertEquals(1, savingsOfferingList.size());
         ClientCustActionForm actionForm = (ClientCustActionForm) request.getSession().getAttribute(
                 "clientCustActionForm");
-        assertNull(actionForm.getFormedByPersonnelValue());
+        Assert.assertNull(actionForm.getFormedByPersonnelValue());
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
         StaticHibernateUtil.closeSession();
     }
@@ -231,11 +233,11 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) request.getSession().getAttribute(
                 "clientCustActionForm");
-        assertEquals(actionForm.getFormedByPersonnelValue(), group.getCustomerFormedByPersonnel().getPersonnelId());
+       Assert.assertEquals(actionForm.getFormedByPersonnelValue(), group.getCustomerFormedByPersonnel().getPersonnelId());
 
         List<FeeView> additionalFees = (List<FeeView>) SessionUtils.getAttribute(
                 CustomerConstants.ADDITIONAL_FEES_LIST, request);
-        assertEquals(0, additionalFees.size());
+       Assert.assertEquals(0, additionalFees.size());
 
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
         removeFees(fees);
@@ -257,12 +259,12 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) request.getSession().getAttribute(
                 "clientCustActionForm");
-        assertEquals(actionForm.getFormedByPersonnelValue(), group.getCustomerFormedByPersonnel().getPersonnelId());
+       Assert.assertEquals(actionForm.getFormedByPersonnelValue(), group.getCustomerFormedByPersonnel().getPersonnelId());
 
         List<FeeView> additionalFees = (List<FeeView>) SessionUtils.getAttribute(
                 CustomerConstants.ADDITIONAL_FEES_LIST, request);
-        assertNotNull(additionalFees);
-        assertEquals(1, additionalFees.size());
+        Assert.assertNotNull(additionalFees);
+       Assert.assertEquals(1, additionalFees.size());
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
         removeFees(fees);
     }
@@ -281,14 +283,14 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter("input", "personalInfo");
         actionPerform();
-        assertEquals("Client salutation", 1, getErrorSize(CustomerConstants.SALUTATION));
-        assertEquals("Client first Name", 1, getErrorSize(CustomerConstants.FIRST_NAME));
-        assertEquals("Client last Name", 1, getErrorSize(CustomerConstants.LAST_NAME));
-        assertEquals("spouse first Name", 1, getErrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
-        assertEquals("spouse last Name", 1, getErrorSize(CustomerConstants.SPOUSE_LAST_NAME));
-        assertEquals("spouse type", 1, getErrorSize(CustomerConstants.SPOUSE_TYPE));
-        assertEquals("Gender", 1, getErrorSize(CustomerConstants.GENDER));
-        assertEquals("DOB", 1, getErrorSize(CustomerConstants.DOB));
+       Assert.assertEquals("Client salutation", 1, getErrorSize(CustomerConstants.SALUTATION));
+       Assert.assertEquals("Client first Name", 1, getErrorSize(CustomerConstants.FIRST_NAME));
+       Assert.assertEquals("Client last Name", 1, getErrorSize(CustomerConstants.LAST_NAME));
+       Assert.assertEquals("spouse first Name", 1, getErrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
+       Assert.assertEquals("spouse last Name", 1, getErrorSize(CustomerConstants.SPOUSE_LAST_NAME));
+       Assert.assertEquals("spouse type", 1, getErrorSize(CustomerConstants.SPOUSE_TYPE));
+       Assert.assertEquals("Gender", 1, getErrorSize(CustomerConstants.GENDER));
+       Assert.assertEquals("DOB", 1, getErrorSize(CustomerConstants.DOB));
         verifyInputForward();
     }
 
@@ -331,9 +333,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
 
         if (isCustomFieldMandatory)
-            assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+           Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
         else
-            assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+           Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
 
     }
 
@@ -409,8 +411,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("trained", "1");
         addRequestParameter("input", "mfiInfo");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Client Trained date not present", 1, getErrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Client Trained date not present", 1, getErrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
 
     }
 
@@ -449,8 +451,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "mfiInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Client formed by not present", 1, getErrorSize(CustomerConstants.FORMED_BY_LOANOFFICER));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Client formed by not present", 1, getErrorSize(CustomerConstants.FORMED_BY_LOANOFFICER));
 
     }
 
@@ -488,7 +490,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[1].amount", "150");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
+       Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
         removeFees(feesToRemove);
     }
 
@@ -537,7 +539,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         // Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Fee", 1, getErrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
+       Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
         removeFees(feesToRemove);
     }
 
@@ -573,7 +575,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[0].amount", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
+       Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
         removeFees(feesToRemove);
     }
 
@@ -628,7 +630,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 .valueOf("2"), new Date(), MeetingType.CUSTOMER_MEETING), request);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Duplicate Offerings", 1, getErrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));
+       Assert.assertEquals("Duplicate Offerings", 1, getErrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));
     }
 
     public void testFailurePreview_FeeFrequencyMismatch() throws Exception {
@@ -649,7 +651,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 ClientConstants.POVERTY_STATUS, request);
         List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
-        assertEquals(1, feeList.size());
+       Assert.assertEquals(1, feeList.size());
         FeeView fee = feeList.get(0);
 
         setRequestPathInfo("/clientCustAction.do");
@@ -685,7 +687,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 new Date(), MeetingType.CUSTOMER_MEETING), request);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+       Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
         removeFees(feesToRemove);
     }
 
@@ -881,12 +883,12 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         ClientCustActionForm actionForm = (ClientCustActionForm) request.getSession().getAttribute(
                 "clientCustActionForm");
         client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
-        assertNotNull(client);
-        assertNotNull(client.getOfferingsAssociatedInCreate());
-        assertEquals(1, client.getOfferingsAssociatedInCreate().size());
+        Assert.assertNotNull(client);
+        Assert.assertNotNull(client.getOfferingsAssociatedInCreate());
+       Assert.assertEquals(1, client.getOfferingsAssociatedInCreate().size());
         for (ClientInitialSavingsOfferingEntity offering : client.getOfferingsAssociatedInCreate()) {
-            assertEquals(savingsOffering1.getPrdOfferingId(), offering.getSavingsOffering().getPrdOfferingId());
-            assertTrue(true);
+           Assert.assertEquals(savingsOffering1.getPrdOfferingId(), offering.getSavingsOffering().getPrdOfferingId());
+           Assert.assertTrue(true);
         }
 
         removeFees(feesToRemove);
@@ -1031,10 +1033,10 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.get_success.toString());
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        assertNotNull(povertyStatusList);
-        assertEquals("Age of customer should be 50 years", 50, SessionUtils.getAttribute(ClientConstants.AGE, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-        // assertEquals("No of active loan accounts should be
+        Assert.assertNotNull(povertyStatusList);
+       Assert.assertEquals("Age of customer should be 50 years", 50, SessionUtils.getAttribute(ClientConstants.AGE, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        //Assert.assertEquals("No of active loan accounts should be
         // 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request)).size());
         StaticHibernateUtil.closeSession();
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
@@ -1054,20 +1056,20 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.editPersonalInfo_success.toString());
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        assertNotNull(povertyStatusList);
+        Assert.assertNotNull(povertyStatusList);
 
     }
 
@@ -1100,11 +1102,11 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("customerDetail.povertyStatus", povertyStatusList.get(0).getId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Client first Name", 1, getErrorSize(CustomerConstants.FIRST_NAME));
-        assertEquals("Client last Name", 1, getErrorSize(CustomerConstants.LAST_NAME));
-        assertEquals("spouse first Name", 1, getErrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
-        assertEquals("spouse last Name", 1, getErrorSize(CustomerConstants.SPOUSE_LAST_NAME));
-        assertEquals("DOB", 1, getErrorSize(CustomerConstants.DOB));
+       Assert.assertEquals("Client first Name", 1, getErrorSize(CustomerConstants.FIRST_NAME));
+       Assert.assertEquals("Client last Name", 1, getErrorSize(CustomerConstants.LAST_NAME));
+       Assert.assertEquals("spouse first Name", 1, getErrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
+       Assert.assertEquals("spouse last Name", 1, getErrorSize(CustomerConstants.SPOUSE_LAST_NAME));
+       Assert.assertEquals("DOB", 1, getErrorSize(CustomerConstants.DOB));
         verifyInputForward();
     }
 
@@ -1164,7 +1166,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.updatePersonalInfo_success.toString());
-        assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
+       Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
         client = TestObjectFactory.getClient(client.getCustomerId());
 
     }
@@ -1221,12 +1223,12 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.updatePersonalInfo_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue(), DELTA);
+       Assert.assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue(), DELTA);
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
 
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Gender")) {
@@ -1309,14 +1311,14 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.updateMfiInfo_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals("123", client.getExternalId());
+       Assert.assertEquals("123", client.getExternalId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
 
-        assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
 
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")) {
@@ -1324,7 +1326,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("External Id")) {
                 matchValues(auditLogRecord, "-", "123");
             } else {
-                fail("did not expect record " + auditLogRecord.getFieldName());
+                Assert.fail("did not expect record " + auditLogRecord.getFieldName());
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -1341,7 +1343,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.editMfiInfo_success.toString());
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
 
     }
 
@@ -1356,7 +1358,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.editMfiInfo_success.toString());
-        assertNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
+        Assert.assertNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
 
     }
 
@@ -1411,8 +1413,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.updateMfiInfo_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals("3", client.getExternalId());
-        assertEquals(group.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
+       Assert.assertEquals("3", client.getExternalId());
+       Assert.assertEquals(group.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
     }
 
     public void testUpdateMfiInfoWithoutTrained_ClientInBranch() throws Exception {
@@ -1436,8 +1438,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.updateMfiInfo_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals("3", client.getExternalId());
-        assertFalse(client.isTrained());
+       Assert.assertEquals("3", client.getExternalId());
+        Assert.assertFalse(client.isTrained());
     }
 
     public void testUpdateMfiInfoWithTrained() throws Exception {
@@ -1463,8 +1465,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.updateMfiInfo_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals("3", client.getExternalId());
-        assertTrue(client.isTrained());
+       Assert.assertEquals("3", client.getExternalId());
+       Assert.assertTrue(client.isTrained());
     }
 
     public void testUpdateMfiInfoWithTrainedDateValidation() throws Exception {
@@ -1516,9 +1518,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.updateMfiInfo_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals("3", client.getExternalId());
-        assertTrue(client.isTrained());
-        assertEquals(3, client.getPersonnel().getPersonnelId().shortValue());
+       Assert.assertEquals("3", client.getExternalId());
+       Assert.assertTrue(client.isTrained());
+       Assert.assertEquals(3, client.getPersonnel().getPersonnelId().shortValue());
     }
 
     public void testCreateSuccessUnderGroupInBranch() throws Exception {

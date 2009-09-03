@@ -20,6 +20,8 @@
 
 package org.mifos.application.productsmix.persistence;
 
+import junit.framework.Assert;
+
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productsmix.business.ProductMixBO;
@@ -66,7 +68,7 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
         saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2", meeting1, meeting1);
         prdmix = TestObjectFactory.createAllowedProductsMix(saving1, saving2);
-        assertEquals(1, (productMixPersistence.getAllProductMix()).size());
+       Assert.assertEquals(1, (productMixPersistence.getAllProductMix()).size());
 
     }
 
@@ -76,7 +78,7 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
         saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2", meeting1, meeting1);
         prdmix = TestObjectFactory.createAllowedProductsMix(saving1, saving2);
-        assertEquals(1, (productMixPersistence.getNotAllowedProducts(saving1.getPrdOfferingId())).size());
+       Assert.assertEquals(1, (productMixPersistence.getNotAllowedProducts(saving1.getPrdOfferingId())).size());
 
     }
 }

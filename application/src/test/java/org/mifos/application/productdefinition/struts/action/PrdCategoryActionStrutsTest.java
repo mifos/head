@@ -22,6 +22,8 @@ package org.mifos.application.productdefinition.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.PrdCategoryStatusEntity;
@@ -89,7 +91,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("load_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals(2, ((List<ProductTypeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals(2, ((List<ProductTypeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTTYPELIST, request)).size());
     }
 
@@ -107,7 +109,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("preview_success");
         List<ProductTypeEntity> productTypes = (List<ProductTypeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTTYPELIST, request);
-        assertEquals(2, productTypes.size());
+       Assert.assertEquals(2, productTypes.size());
     }
 
     public void testCreatePrevious() throws PersistenceException, PageExpiredException {
@@ -124,7 +126,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("previous_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals(2, ((List<ProductTypeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals(2, ((List<ProductTypeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTTYPELIST, request)).size());
     }
 
@@ -141,8 +143,8 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         performNoErrors();
         verifyForward("create_success");
         ProductCategoryBO productCategoryBO = getProductCategory().get(2);
-        assertEquals("product category", productCategoryBO.getProductCategoryName());
-        assertEquals("created a category", productCategoryBO.getProductCategoryDesc());
+       Assert.assertEquals("product category", productCategoryBO.getProductCategoryName());
+       Assert.assertEquals("created a category", productCategoryBO.getProductCategoryDesc());
         deleteProductCategory(productCategoryBO);
     }
 
@@ -158,7 +160,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("get_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals(2, ((List<ProductTypeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals(2, ((List<ProductTypeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTTYPELIST, request)).size());
         productCategoryBO = getProductCategory().get(2);
         deleteProductCategory(productCategoryBO);
@@ -176,11 +178,11 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("manage_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals(2, ((List<PrdCategoryStatusEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals(2, ((List<PrdCategoryStatusEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRDCATEGORYSTATUSLIST, request)).size());
         productCategoryBO = getProductCategory().get(2);
-        assertEquals("product category", ((PrdCategoryActionForm) getActionForm()).getProductCategoryName());
-        assertEquals("created a category", ((PrdCategoryActionForm) getActionForm()).getProductCategoryDesc());
+       Assert.assertEquals("product category", ((PrdCategoryActionForm) getActionForm()).getProductCategoryName());
+       Assert.assertEquals("created a category", ((PrdCategoryActionForm) getActionForm()).getProductCategoryDesc());
         deleteProductCategory(productCategoryBO);
     }
 
@@ -201,8 +203,8 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         productCategoryBO = getProductCategory().get(2);
-        assertEquals("product category 1", ((PrdCategoryActionForm) getActionForm()).getProductCategoryName());
-        assertEquals("created a category 1", ((PrdCategoryActionForm) getActionForm()).getProductCategoryDesc());
+       Assert.assertEquals("product category 1", ((PrdCategoryActionForm) getActionForm()).getProductCategoryName());
+       Assert.assertEquals("created a category 1", ((PrdCategoryActionForm) getActionForm()).getProductCategoryDesc());
         deleteProductCategory(productCategoryBO);
     }
 
@@ -241,8 +243,8 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         productCategoryBO = getProductCategory().get(2);
-        assertEquals("product category 1", productCategoryBO.getProductCategoryName());
-        assertEquals("created a category 1", productCategoryBO.getProductCategoryDesc());
+       Assert.assertEquals("product category 1", productCategoryBO.getProductCategoryName());
+       Assert.assertEquals("created a category 1", productCategoryBO.getProductCategoryDesc());
         deleteProductCategory(productCategoryBO);
     }
 
@@ -258,7 +260,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         productCategoryBO = getProductCategory().get(2);
-        assertEquals(3, ((List<ProductCategoryBO>) SessionUtils.getAttribute(
+       Assert.assertEquals(3, ((List<ProductCategoryBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRODUCTCATEGORYLIST, request)).size());
         deleteProductCategory(productCategoryBO);
     }
@@ -269,7 +271,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         TestObjectFactory.simulateInvalidConnection();
         try {
             productCategoryBO.save();
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException pde) {
         }
     }

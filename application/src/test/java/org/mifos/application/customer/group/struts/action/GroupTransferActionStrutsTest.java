@@ -23,6 +23,8 @@ package org.mifos.application.customer.group.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -160,22 +162,22 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.update_success.toString());
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(office.getOfficeId(), group.getOffice().getOfficeId());
-        assertEquals(CustomerStatus.GROUP_HOLD, group.getStatus());
+       Assert.assertEquals(office.getOfficeId(), group.getOffice().getOfficeId());
+       Assert.assertEquals(CustomerStatus.GROUP_HOLD, group.getStatus());
 
         CustomerMovementEntity customerMovement = group.getActiveCustomerMovement();
-        assertNotNull(customerMovement);
-        assertEquals(office.getOfficeId(), customerMovement.getOffice().getOfficeId());
+        Assert.assertNotNull(customerMovement);
+       Assert.assertEquals(office.getOfficeId(), customerMovement.getOffice().getOfficeId());
         office = group.getOffice();
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, group.getCustomerId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Branch Office Name")) {
-                assertEquals("TestBranchOffice", auditLogRecord.getOldValue());
-                assertEquals("customer_office", auditLogRecord.getNewValue());
+               Assert.assertEquals("TestBranchOffice", auditLogRecord.getOldValue());
+               Assert.assertEquals("customer_office", auditLogRecord.getNewValue());
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -188,8 +190,8 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         CenterSearchInput centerSearchInput = (CenterSearchInput) SessionUtils.getAttribute(
                 GroupConstants.CENTER_SEARCH_INPUT, request.getSession());
-        assertNotNull(centerSearchInput);
-        assertEquals(TestObjectFactory.HEAD_OFFICE, centerSearchInput.getOfficeId());
+        Assert.assertNotNull(centerSearchInput);
+       Assert.assertEquals(TestObjectFactory.HEAD_OFFICE, centerSearchInput.getOfficeId());
     }
 
     public void testSuccessfulPreview_transferToCenter() throws Exception {
@@ -257,21 +259,21 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
         center1 = TestObjectFactory.getCenter(center1.getCustomerId());
         office = TestObjectFactory.getOffice(office.getOfficeId());
 
-        assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());
+       Assert.assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());
 
         CustomerHierarchyEntity customerHierarchy = group.getActiveCustomerHierarchy();
-        assertEquals(center1.getCustomerId(), customerHierarchy.getParentCustomer().getCustomerId());
-        assertEquals(group.getCustomerId(), customerHierarchy.getCustomer().getCustomerId());
+       Assert.assertEquals(center1.getCustomerId(), customerHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(group.getCustomerId(), customerHierarchy.getCustomer().getCustomerId());
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, new Integer(group
                 .getCustomerId().toString()));
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name")) {
                 matchValues(auditLogRecord, "Center", "MyCenter");
             } else {
                 // TODO: Kendra versus Center?
-                // fail();
+                // Assert.fail();
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -292,7 +294,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "removeGroupMemberShip");
         addRequestParameter("assignedLoanOfficerId", "7");
         addRequestParameter("comment", "My notes");
-        assertNotNull(client);
+        Assert.assertNotNull(client);
 
         actionPerform();
         verifyNoActionErrors();
@@ -321,7 +323,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         setRequestPathInfo("/groupTransferAction.do");
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
-        assertNotNull(client);
+        Assert.assertNotNull(client);
 
         addRequestParameter("method", "loadGrpMemberShip");
         actionPerform();

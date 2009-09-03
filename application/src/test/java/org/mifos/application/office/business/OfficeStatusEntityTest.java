@@ -20,6 +20,7 @@
 
 package org.mifos.application.office.business;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.office.util.helpers.OfficeStatus;
@@ -28,6 +29,6 @@ public class OfficeStatusEntityTest extends TestCase {
 
     public void testGetOfficeStatus() throws Exception {
         OfficeStatusEntity officeStatus = new OfficeStatusEntity(OfficeStatus.ACTIVE);
-        assertEquals(OfficeStatus.ACTIVE, officeStatus.getStatus());
+       Assert.assertEquals(OfficeStatus.ACTIVE, officeStatus.getStatus());
     }
 }

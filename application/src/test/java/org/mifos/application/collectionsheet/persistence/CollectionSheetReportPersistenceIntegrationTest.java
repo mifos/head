@@ -26,6 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -47,7 +49,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
         try {
             new CollectionSheetReportPersistence().extractReportData(BRANCH_ID, MEETING_DATE, PERSONNEL_ID, CENTER_ID);
         } catch (Exception e) {
-            fail("Collection Sheet Report Query should not throw exception");
+            Assert.fail("Collection Sheet Report Query should not throw exception");
         }
     }
 
@@ -60,7 +62,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
                 "group-199", 833, "client-833", "GL:11550||EL:200||SPL:4200", BigDecimal.valueOf(15950.0), "0",
                 BigDecimal.ZERO, "0", BigDecimal.ZERO, "0", BigDecimal.ZERO });
         List<CollectionSheetReportData> reportData = new CollectionSheetReportPersistence().convertResultToDTO(results);
-        assertEquals(2, reportData.size());
+       Assert.assertEquals(2, reportData.size());
     }
 
 }

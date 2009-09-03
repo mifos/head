@@ -22,6 +22,8 @@ package org.mifos.application.customer.client.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -140,8 +142,8 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
-        assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
+       Assert.assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
+       Assert.assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
         office = client.getOffice();
     }
 
@@ -165,8 +167,8 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         CustomerSearchInputView clientSearchInput = (CustomerSearchInputView) SessionUtils.getAttribute(
                 CustomerConstants.CUSTOMER_SEARCH_INPUT, request.getSession());
-        assertNotNull(clientSearchInput);
-        assertEquals(TestObjectFactory.HEAD_OFFICE, clientSearchInput.getOfficeId());
+        Assert.assertNotNull(clientSearchInput);
+       Assert.assertEquals(TestObjectFactory.HEAD_OFFICE, clientSearchInput.getOfficeId());
     }
 
     public void testPreview_transferToParent() throws Exception {
@@ -214,12 +216,12 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        assertEquals(0, group.getMaxChildCount().intValue());
-        assertEquals(1, group1.getMaxChildCount().intValue());
-        assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+       Assert.assertEquals(0, group.getMaxChildCount().intValue());
+       Assert.assertEquals(1, group1.getMaxChildCount().intValue());
+       Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
     }
 
     public void testSuccessful_transferToParent_AuditLog() throws Exception {
@@ -237,18 +239,18 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        assertEquals(0, group.getMaxChildCount().intValue());
-        assertEquals(1, group1.getMaxChildCount().intValue());
-        assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
+       Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+       Assert.assertEquals(0, group.getMaxChildCount().intValue());
+       Assert.assertEquals(1, group1.getMaxChildCount().intValue());
+       Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
-        assertEquals(1, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
+       Assert.assertEquals(1, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Group Name"))
                 matchValues(auditLogRecord, "Group", "Group2");
@@ -270,15 +272,15 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
-        assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
+       Assert.assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
+       Assert.assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
         office = client.getOffice();
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
 
-        assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
 
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned"))

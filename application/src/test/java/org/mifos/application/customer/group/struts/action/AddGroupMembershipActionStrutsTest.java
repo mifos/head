@@ -23,6 +23,8 @@ package org.mifos.application.customer.group.struts.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
@@ -132,7 +134,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
     public void testSuccessfulUpdateParent() throws Exception {
         createAndSetClientInSession();
         createParentGroup();
-        assertEquals(false, client.isClientUnderGroup());
+       Assert.assertEquals(false, client.isClientUnderGroup());
         assertNotSame(group.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting().getMeeting()
                 .getMeetingId());
 
@@ -142,11 +144,11 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("parentGroupId", group.getCustomerId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertNotNull(client);
-        assertEquals(client.getCustomerMeeting().getMeeting().getMeetingId(), group.getCustomerMeeting().getMeeting()
+        Assert.assertNotNull(client);
+       Assert.assertEquals(client.getCustomerMeeting().getMeeting().getMeetingId(), group.getCustomerMeeting().getMeeting()
                 .getMeetingId());
 
-        assertEquals(true, client.isClientUnderGroup());
+       Assert.assertEquals(true, client.isClientUnderGroup());
         verifyNoActionMessages();
         verifyForward(ActionForwards.view_client_details_page.toString());
         verifyNoActionErrors();

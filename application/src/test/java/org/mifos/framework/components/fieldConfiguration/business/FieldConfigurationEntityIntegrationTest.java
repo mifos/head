@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.fieldConfiguration.business;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -34,6 +36,6 @@ public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTes
     public void testGetFieldConfigurationEntity() {
         FieldConfigurationEntity fieldConfigurationEntity = (FieldConfigurationEntity) StaticHibernateUtil
                 .getSessionTL().get(FieldConfigurationEntity.class, Integer.valueOf("1"));
-        assertEquals(fieldConfigurationEntity.getFieldName(), "SecondLastName");
+       Assert.assertEquals(fieldConfigurationEntity.getFieldName(), "SecondLastName");
     }
 }

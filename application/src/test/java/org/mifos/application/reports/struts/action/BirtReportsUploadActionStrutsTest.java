@@ -22,6 +22,8 @@ package org.mifos.application.reports.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.struts.upload.FormFile;
 import org.junit.Ignore;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -74,7 +76,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("reportId", "1");
         actionPerform();
         ReportsBO report = (ReportsBO) request.getAttribute(Constants.BUSINESS_KEY);
-        assertEquals("1", report.getReportId().toString());
+       Assert.assertEquals("1", report.getReportId().toString());
         verifyNoActionErrors();
         verifyForward(ActionForwards.edit_success.toString());
     }
@@ -125,9 +127,9 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         actionForm.setIsActive("1");
         setActionForm(actionForm);
         actionPerform();
-        assertEquals(0, getErrorSize());
+       Assert.assertEquals(0, getErrorSize());
 
-        assertNotNull(request.getAttribute("report"));
+        Assert.assertNotNull(request.getAttribute("report"));
 
         // Simulate an future activities upgrade
         AddActivity activity = null;
@@ -217,11 +219,11 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
 
         ReportsBO report = (ReportsBO) request.getAttribute("report");
-        assertNotNull(report);
+        Assert.assertNotNull(report);
         ReportsPersistence rp = new ReportsPersistence();
         ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(ReportsJasperMap.class, report
                 .getReportId());
-        assertNotNull(jasper);
+        Assert.assertNotNull(jasper);
 
         verifyNoActionErrors();
         verifyForward("create_success");
@@ -263,11 +265,11 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         ReportsJasperMap jasper = (ReportsJasperMap) persistence.getPersistentObject(ReportsJasperMap.class, report
                 .getReportId());
 
-        assertEquals("newTestShouldSubmitSuccessAfterEdit", newReport.getReportName());
-        assertEquals(2, newReport.getReportsCategoryBO().getReportCategoryId().shortValue());
-        assertEquals(0, newReport.getIsActive().shortValue());
-        assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", newReport.getReportsJasperMap().getReportJasper());
-        assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", jasper.getReportJasper());
+       Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit", newReport.getReportName());
+       Assert.assertEquals(2, newReport.getReportsCategoryBO().getReportCategoryId().shortValue());
+       Assert.assertEquals(0, newReport.getIsActive().shortValue());
+       Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", newReport.getReportsJasperMap().getReportJasper());
+       Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", jasper.getReportJasper());
 
         removeReport(newReport.getReportId());
 

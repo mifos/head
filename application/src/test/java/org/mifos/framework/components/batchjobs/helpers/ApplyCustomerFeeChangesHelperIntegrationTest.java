@@ -27,6 +27,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -122,7 +124,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = installment.getAccountFeesAction(accountPeriodicFee
                 .getAccountFeeId());
-        assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
         StaticHibernateUtil.closeSession();
         center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
         group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
@@ -169,7 +171,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
                 .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-        assertNull(accountFeesAction);
+        Assert.assertNull(accountFeesAction);
     }
 
     public void testExecuteStatusInactiveAndAmountUpdated() throws Exception {
@@ -215,12 +217,12 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
                 .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-        assertNull(accountFeesAction);
+        Assert.assertNull(accountFeesAction);
 
         AccountFeesEntity accountFee = center.getCustomerAccount().getAccountFees(trainingFee.getFeeId());
 
-        assertNotNull(accountFee);
-        assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
+        Assert.assertNotNull(accountFee);
+       Assert.assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
     }
 
     public void testExecuteStatusInactiveToActive() throws Exception {
@@ -253,8 +255,8 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
                 .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-        assertNotNull(accountFeesAction);
-        assertEquals(2, ((CustomerScheduleEntity) installment).getAccountFeesActionDetails().size());
+        Assert.assertNotNull(accountFeesAction);
+       Assert.assertEquals(2, ((CustomerScheduleEntity) installment).getAccountFeesActionDetails().size());
     }
 
     public void testExecuteStatusInactiveToActiveAndAmountChanged() throws Exception {
@@ -286,12 +288,12 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
                 .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-        assertNotNull(accountFeesAction);
-        assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
-        assertEquals(2, ((CustomerScheduleEntity) installment).getAccountFeesActionDetails().size());
+        Assert.assertNotNull(accountFeesAction);
+       Assert.assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(2, ((CustomerScheduleEntity) installment).getAccountFeesActionDetails().size());
         AccountFeesEntity accountFee = center.getCustomerAccount().getAccountFees(trainingFee.getFeeId());
-        assertNotNull(accountFee);
-        assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
+        Assert.assertNotNull(accountFee);
+       Assert.assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
     }
 
     public void testExecuteAmountUpdatedForMultipleAccount() throws Exception {
@@ -341,13 +343,13 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
                 .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-        assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
 
         AccountActionDateEntity groupinstallment = group.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
 
         AccountFeesActionDetailEntity groupaccountFeesAction = ((CustomerScheduleEntity) groupinstallment)
                 .getAccountFeesAction(groupaccountPeriodicFee.getAccountFeeId());
-        assertEquals(5.0, groupaccountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(5.0, groupaccountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
     }
 
     public void testBatchJobException() {
@@ -355,8 +357,8 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         error.add("error1");
         error.add("error2");
         BatchJobException batchJobException = new BatchJobException("error.invailddata", error);
-        assertEquals("error.invailddata", batchJobException.getKey());
-        assertEquals("error1,error2", batchJobException.getErrorMessage());
+       Assert.assertEquals("error.invailddata", batchJobException.getKey());
+       Assert.assertEquals("error1,error2", batchJobException.getErrorMessage());
     }
 
     private java.sql.Date offSetDate(Date date, int noOfDays) {

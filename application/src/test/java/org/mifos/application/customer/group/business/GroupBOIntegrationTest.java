@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
@@ -177,7 +179,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }
         group.getGroupPerformanceHistory().generatePortfolioAtRisk();
-        assertEquals(new Money("1.0"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
+       Assert.assertEquals(new Money("1.0"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -217,14 +219,14 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-        assertEquals(WeekDay.FRIDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.FRIDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.FRIDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-        assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
 
         Integer updatedMeetingId = group.getCustomerMeeting().getUpdatedMeeting().getMeetingId();
@@ -239,16 +241,16 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-        assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-        assertNull(group.getCustomerMeeting().getUpdatedMeeting());
-        assertNull(client1.getCustomerMeeting().getUpdatedMeeting());
-        assertNull(client2.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNull(group.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNull(client1.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNull(client2.getCustomerMeeting().getUpdatedMeeting());
 
         MeetingBO meeting = new MeetingPersistence().getMeeting(updatedMeetingId);
-        assertNull(meeting);
+        Assert.assertNull(meeting);
     }
 
     public void testChangeStatus_UpdatePendingClientToPartial_OnGroupCancelled() throws Exception {
@@ -268,9 +270,9 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-        assertEquals(CustomerStatus.GROUP_CANCELLED, group.getStatus());
-        assertEquals(CustomerStatus.CLIENT_PARTIAL, client1.getStatus());
-        assertEquals(CustomerStatus.CLIENT_PARTIAL, client2.getStatus());
+       Assert.assertEquals(CustomerStatus.GROUP_CANCELLED, group.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_PARTIAL, client1.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_PARTIAL, client2.getStatus());
     }
 
     public void testSuccessfulUpdate_Group_UnderBranchForLoggig() throws Exception {
@@ -291,19 +293,19 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, group.getCustomerId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(8, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(8, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("City/District")) {
-                assertEquals("-", auditLogRecord.getOldValue());
-                assertEquals("city", auditLogRecord.getNewValue());
+               Assert.assertEquals("-", auditLogRecord.getOldValue());
+               Assert.assertEquals("city", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Trained")) {
-                assertEquals("0", auditLogRecord.getOldValue());
-                assertEquals("1", auditLogRecord.getNewValue());
+               Assert.assertEquals("0", auditLogRecord.getOldValue());
+               Assert.assertEquals("1", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Name")) {
-                assertEquals("Group_underBranch", auditLogRecord.getOldValue());
-                assertEquals("changed group name", auditLogRecord.getNewValue());
+               Assert.assertEquals("Group_underBranch", auditLogRecord.getOldValue());
+               Assert.assertEquals("changed group name", auditLogRecord.getNewValue());
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -332,15 +334,15 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, group.getCustomerId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name")) {
-                assertEquals("Center", auditLogRecord.getOldValue());
-                assertEquals("toTransfer", auditLogRecord.getNewValue());
+               Assert.assertEquals("Center", auditLogRecord.getOldValue());
+               Assert.assertEquals("toTransfer", auditLogRecord.getNewValue());
             } else {
                 // TODO: Kendra versus Center?
-                // fail();
+                // Assert.fail();
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -350,10 +352,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             group = new GroupBO(TestUtils.makeUser(), "", CustomerStatus.GROUP_PARTIAL, null, false, null, null, null,
                     null, personnelBo, officeBo1, meeting, personnelBo, new GroupPersistence(), new OfficePersistence());
-            assertFalse("Group Created", true);
+            Assert.assertFalse("Group Created", true);
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
         }
     }
 
@@ -361,10 +363,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", null, null, false, null, null, null, null,
                     personnelBo, officeBo1, meeting, personnelBo, new GroupPersistence(), new OfficePersistence());
-            assertFalse("Group Created", true);
+            Assert.assertFalse("Group Created", true);
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_STATUS, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_STATUS, ce.getKey());
         }
     }
 
@@ -373,10 +375,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, false, null,
                     null, null, null, personnelBo, null, meeting, personnelBo, new GroupPersistence(),
                     new OfficePersistence());
-            assertFalse("Group Created", true);
+            Assert.assertFalse("Group Created", true);
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
         }
     }
 
@@ -385,10 +387,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_ACTIVE, null, false, null,
                     null, null, null, personnelBo, officeBo1, meeting, null, new GroupPersistence(),
                     new OfficePersistence());
-            assertFalse("Group Created", true);
+            Assert.assertFalse("Group Created", true);
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
         }
     }
 
@@ -397,10 +399,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_ACTIVE, null, false, null,
                     null, null, null, personnelBo, officeBo1, null, personnelBo, new GroupPersistence(),
                     new OfficePersistence());
-            assertFalse("Group Created", true);
+            Assert.assertFalse("Group Created", true);
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
         }
     }
 
@@ -409,10 +411,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             meeting = getMeeting();
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, false, null,
                     null, null, null, personnelBo, null, new GroupPersistence(), new OfficePersistence());
-            assertFalse("Group Created", true);
+            Assert.assertFalse("Group Created", true);
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_PARENT, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_PARENT, ce.getKey());
         }
     }
 
@@ -422,10 +424,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             meeting = getMeeting();
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, false, null,
                     null, null, null, null, center, new GroupPersistence(), new OfficePersistence());
-            fail();
+            Assert.fail();
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_FORMED_BY, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_FORMED_BY, ce.getKey());
         }
     }
 
@@ -435,10 +437,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             meeting = getMeeting();
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, true, null,
                     null, null, null, personnelBo, center, new GroupPersistence(), new OfficePersistence());
-            assertFalse("Group Created", true);
+            Assert.assertFalse("Group Created", true);
         } catch (CustomerException ce) {
-            assertNull(group);
-            assertEquals(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE, ce.getKey());
+            Assert.assertNull(group);
+           Assert.assertEquals(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE, ce.getKey());
         }
         TestObjectFactory.removeObject(meeting);
     }
@@ -453,11 +455,11 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             group1 = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, null, false, null, null,
                     null, fees, personnelBo, center, new GroupPersistence(), new OfficePersistence());
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (CustomerException e) {
-            assertTrue(true);
-            assertNull(group1);
-            assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e.getKey());
+           Assert.assertTrue(true);
+            Assert.assertNull(group1);
+           Assert.assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e.getKey());
         }
         removeFees(fees);
     }
@@ -468,7 +470,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         Date trainedDate = getDate("11/12/2005");
         String externalId = "1234";
         StaticHibernateUtil.closeSession();
-        assertEquals(0, center.getMaxChildCount().intValue());
+       Assert.assertEquals(0, center.getMaxChildCount().intValue());
 
         group = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
                 getAddress(), getCustomFields(), getFees(), personnelBo, center, new GroupPersistence(),
@@ -480,22 +482,22 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
 
-        assertEquals(name, group.getDisplayName());
-        assertEquals(externalId, group.getExternalId());
-        assertTrue(group.isTrained());
-        assertEquals(trainedDate, DateUtils.getDateWithoutTimeStamp(group.getTrainedDate().getTime()));
-        assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
+       Assert.assertEquals(name, group.getDisplayName());
+       Assert.assertEquals(externalId, group.getExternalId());
+       Assert.assertTrue(group.isTrained());
+       Assert.assertEquals(trainedDate, DateUtils.getDateWithoutTimeStamp(group.getTrainedDate().getTime()));
+       Assert.assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
         Address address = group.getCustomerAddressDetail().getAddress();
-        assertEquals("Aditi", address.getLine1());
-        assertEquals("Bangalore", address.getCity());
-        assertEquals(getCustomFields().size(), group.getCustomFields().size());
-        assertEquals(1, center.getMaxChildCount().intValue());
-        assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
-        assertEquals("1.1.1", group.getSearchId());
-        assertEquals(group.getCustomerId(), group.getGroupPerformanceHistory().getGroup().getCustomerId());
+       Assert.assertEquals("Aditi", address.getLine1());
+       Assert.assertEquals("Bangalore", address.getCity());
+       Assert.assertEquals(getCustomFields().size(), group.getCustomFields().size());
+       Assert.assertEquals(1, center.getMaxChildCount().intValue());
+       Assert.assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
+       Assert.assertEquals("1.1.1", group.getSearchId());
+       Assert.assertEquals(group.getCustomerId(), group.getGroupPerformanceHistory().getGroup().getCustomerId());
         client = TestObjectFactory
                 .createClient("new client", CustomerStatus.CLIENT_ACTIVE, group, new java.util.Date());
-        assertEquals(1, group.getGroupPerformanceHistory().getActiveClientCount().intValue());
+       Assert.assertEquals(1, group.getGroupPerformanceHistory().getActiveClientCount().intValue());
     }
 
     public void testSuccessfulCreate_Group_UnderBranch() throws Exception {
@@ -510,20 +512,20 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
-        assertEquals(name, group.getDisplayName());
-        assertEquals(externalId, group.getExternalId());
-        assertFalse(group.isTrained());
-        assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
+       Assert.assertEquals(name, group.getDisplayName());
+       Assert.assertEquals(externalId, group.getExternalId());
+        Assert.assertFalse(group.isTrained());
+       Assert.assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
         Address address = group.getCustomerAddressDetail().getAddress();
-        assertEquals("Aditi", address.getLine1());
-        assertEquals("Bangalore", address.getCity());
-        assertEquals(getCustomFields().size(), group.getCustomFields().size());
+       Assert.assertEquals("Aditi", address.getLine1());
+       Assert.assertEquals("Bangalore", address.getCity());
+       Assert.assertEquals(getCustomFields().size(), group.getCustomFields().size());
 
-        assertEquals(personnelId, group.getCustomerFormedByPersonnel().getPersonnelId());
-        assertEquals(personnelId, group.getPersonnel().getPersonnelId());
-        assertEquals(officeId1, group.getOffice().getOfficeId());
-        assertNotNull(group.getCustomerMeeting().getMeeting());
-        assertEquals("1.1", group.getSearchId());
+       Assert.assertEquals(personnelId, group.getCustomerFormedByPersonnel().getPersonnelId());
+       Assert.assertEquals(personnelId, group.getPersonnel().getPersonnelId());
+       Assert.assertEquals(officeId1, group.getOffice().getOfficeId());
+        Assert.assertNotNull(group.getCustomerMeeting().getMeeting());
+       Assert.assertEquals("1.1", group.getSearchId());
     }
 
     public void testSuccessfulUpdate_Group_UnderBranch() throws Exception {
@@ -531,12 +533,12 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         String newName = "Group_NameChanged";
         group = createGroupUnderBranch(name, CustomerStatus.GROUP_ACTIVE);
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(name, group.getDisplayName());
+       Assert.assertEquals(name, group.getDisplayName());
         group.update(TestUtils.makeUser(), newName, personnelId, " ", Short.valueOf("1"), new Date(), TestObjectFactory
                 .getAddressHelper(), getCustomFields(), new ArrayList<CustomerPositionView>());
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(newName, group.getDisplayName());
-        assertTrue(group.isTrained());
+       Assert.assertEquals(newName, group.getDisplayName());
+       Assert.assertTrue(group.isTrained());
 
     }
 
@@ -546,12 +548,12 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         createCenter();
         createGroup(name);
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(name, group.getDisplayName());
+       Assert.assertEquals(name, group.getDisplayName());
         group.update(TestUtils.makeUser(), newName, personnelId, " ", Short.valueOf("1"), new Date(), TestObjectFactory
                 .getAddressHelper(), getCustomFields(), new ArrayList<CustomerPositionView>());
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(newName, group.getDisplayName());
-        assertTrue(group.isTrained());
+       Assert.assertEquals(newName, group.getDisplayName());
+       Assert.assertTrue(group.isTrained());
 
     }
 
@@ -560,14 +562,14 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         String newName = "Group_NameChanged";
         group = createGroupUnderBranch(name, CustomerStatus.GROUP_ACTIVE);
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(name, group.getDisplayName());
+       Assert.assertEquals(name, group.getDisplayName());
         try {
             group.update(TestUtils.makeUser(), newName, null, " ", Short.valueOf("1"), new Date(), TestObjectFactory
                     .getAddressHelper(), getCustomFields(), new ArrayList<CustomerPositionView>());
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
         }
 
     }
@@ -577,14 +579,14 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         String newName = "Group_NameChanged";
         group = createGroupUnderBranch(name, CustomerStatus.GROUP_HOLD);
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(name, group.getDisplayName());
+       Assert.assertEquals(name, group.getDisplayName());
         try {
             group.update(TestUtils.makeUser(), newName, null, " ", Short.valueOf("1"), new Date(), TestObjectFactory
                     .getAddressHelper(), getCustomFields(), new ArrayList<CustomerPositionView>());
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
         }
 
     }
@@ -596,15 +598,15 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = createGroupUnderBranch(newName, CustomerStatus.GROUP_ACTIVE);
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-        assertEquals(name, group.getDisplayName());
-        assertEquals(newName, group1.getDisplayName());
+       Assert.assertEquals(name, group.getDisplayName());
+       Assert.assertEquals(newName, group1.getDisplayName());
         try {
             group1.update(TestUtils.makeUser(), name, personnelId, " ", Short.valueOf("1"), new Date(),
                     TestObjectFactory.getAddressHelper(), getCustomFields(), new ArrayList<CustomerPositionView>());
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, ce.getKey());
         }
 
     }
@@ -613,8 +615,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(new Money("600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
-        assertEquals(new Money("600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
+       Assert.assertEquals(new Money("600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
+       Assert.assertEquals(new Money("600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -627,7 +629,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(new Money("300.0"), group.getGroupPerformanceHistory().getAvgLoanAmountForMember());
+       Assert.assertEquals(new Money("300.0"), group.getGroupPerformanceHistory().getAvgLoanAmountForMember());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -651,10 +653,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         savings2 = TestObjectFactory.getObject(SavingsBO.class, savings2.getAccountId());
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(new Money("1000.0"), savings1.getSavingsBalance());
-        assertEquals(new Money("2000.0"), savings2.getSavingsBalance());
-        assertEquals(new Money("2000.0"), client.getSavingsBalance());
-        assertEquals(new Money("3000.0"), group.getGroupPerformanceHistory().getTotalSavingsAmount());
+       Assert.assertEquals(new Money("1000.0"), savings1.getSavingsBalance());
+       Assert.assertEquals(new Money("2000.0"), savings2.getSavingsBalance());
+       Assert.assertEquals(new Money("2000.0"), client.getSavingsBalance());
+       Assert.assertEquals(new Money("3000.0"), group.getGroupPerformanceHistory().getTotalSavingsAmount());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -672,7 +674,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         client1 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_HOLD, group);
         client2 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group);
-        assertEquals(Integer.valueOf("2"), group.getGroupPerformanceHistory().getActiveClientCount());
+       Assert.assertEquals(Integer.valueOf("2"), group.getGroupPerformanceHistory().getActiveClientCount());
     }
 
     public void testUpdateBranchFailure_OfficeNULL() throws Exception {
@@ -680,10 +682,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
         try {
             group.transferToBranch(null);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
         }
     }
 
@@ -692,10 +694,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
         try {
             group.transferToBranch(group.getOffice());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER, ce.getKey());
         }
     }
 
@@ -709,10 +711,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         try {
             group.transferToBranch(officeBO);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE, ce.getKey());
         }
     }
 
@@ -727,10 +729,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group1 = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE, officeBO.getOfficeId());
         try {
             group.transferToBranch(officeBO);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, ce.getKey());
         }
     }
 
@@ -747,7 +749,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group.setUserContext(TestUtils.makeUser());
-        assertNull(client.getActiveCustomerMovement());
+        Assert.assertNull(client.getActiveCustomerMovement());
 
         group.transferToBranch(officeBO);
         StaticHibernateUtil.commitTransaction();
@@ -758,35 +760,35 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
         officeBO = new OfficePersistence().getOffice(officeBO.getOfficeId());
-        assertNotNull(group.getActiveCustomerMovement());
-        assertNotNull(client.getActiveCustomerMovement());
-        assertNotNull(client1.getActiveCustomerMovement());
-        assertNotNull(client2.getActiveCustomerMovement());
+        Assert.assertNotNull(group.getActiveCustomerMovement());
+        Assert.assertNotNull(client.getActiveCustomerMovement());
+        Assert.assertNotNull(client1.getActiveCustomerMovement());
+        Assert.assertNotNull(client2.getActiveCustomerMovement());
 
-        assertEquals(officeBO.getOfficeId(), group.getOffice().getOfficeId());
-        assertEquals(officeBO.getOfficeId(), client.getOffice().getOfficeId());
-        assertEquals(officeBO.getOfficeId(), client1.getOffice().getOfficeId());
-        assertEquals(officeBO.getOfficeId(), client2.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), group.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client1.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client2.getOffice().getOfficeId());
 
-        assertEquals(CustomerStatus.GROUP_HOLD, group.getStatus());
-        assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
-        assertEquals(CustomerStatus.CLIENT_PARTIAL, client1.getStatus());
-        assertEquals(CustomerStatus.CLIENT_CLOSED, client2.getStatus());
+       Assert.assertEquals(CustomerStatus.GROUP_HOLD, group.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_PARTIAL, client1.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_CLOSED, client2.getStatus());
 
-        assertNull(group.getPersonnel());
-        assertNull(client.getPersonnel());
-        assertNull(client1.getPersonnel());
-        assertNull(client2.getPersonnel());
+        Assert.assertNull(group.getPersonnel());
+        Assert.assertNull(client.getPersonnel());
+        Assert.assertNull(client1.getPersonnel());
+        Assert.assertNull(client2.getPersonnel());
     }
 
     public void testUpdateCenterFailure_CenterNULL() throws Exception {
         createInitialObjects();
         try {
             group.transferToCenter(null);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.INVALID_PARENT, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.INVALID_PARENT, ce.getKey());
         }
     }
 
@@ -794,10 +796,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         try {
             group.transferToCenter((CenterBO) group.getParentCustomer());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER, ce.getKey());
         }
     }
 
@@ -808,9 +810,9 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         try {
             group.transferToCenter(center1);
-            fail();
+            Assert.fail();
         } catch (CustomerException e) {
-            assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, e.getKey());
+           Assert.assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, e.getKey());
         }
     }
 
@@ -822,10 +824,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         try {
             group.transferToCenter(center1);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT, ce.getKey());
         }
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -841,10 +843,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getClient(client.getCustomerId());
         try {
             group.transferToCenter(center1);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT, ce.getKey());
         }
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -861,10 +863,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getClient(client.getCustomerId());
         try {
             group.transferToCenter(center1);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (CustomerException ce) {
-            assertTrue(true);
-            assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH, ce.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH, ce.getKey());
         }
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -888,10 +890,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
 
-        assertNotNull(group.getCustomerMeeting().getUpdatedMeeting());
-        assertNotNull(client.getCustomerMeeting().getUpdatedMeeting());
-        assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+        Assert.assertNotNull(group.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNotNull(client.getCustomerMeeting().getUpdatedMeeting());
+       Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
 
         group.changeUpdatedMeeting();
         client.changeUpdatedMeeting();
@@ -901,11 +903,11 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
-        assertNull(group.getCustomerMeeting().getUpdatedMeeting());
-        assertNull(client.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNull(group.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNull(client.getCustomerMeeting().getUpdatedMeeting());
 
-        assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -931,35 +933,35 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-        assertNotNull(group.getCustomerMeeting().getUpdatedMeeting());
-        assertNotNull(client.getCustomerMeeting().getUpdatedMeeting());
-        assertNotNull(client1.getCustomerMeeting().getUpdatedMeeting());
-        assertNotNull(client2.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNotNull(group.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNotNull(client.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNotNull(client1.getCustomerMeeting().getUpdatedMeeting());
+        Assert.assertNotNull(client2.getCustomerMeeting().getUpdatedMeeting());
 
-        assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
 
-        assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());
-        assertEquals(0, center.getMaxChildCount().intValue());
-        assertEquals(2, center1.getMaxChildCount().intValue());
-        assertEquals(3, group.getMaxChildCount().intValue());
+       Assert.assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());
+       Assert.assertEquals(0, center.getMaxChildCount().intValue());
+       Assert.assertEquals(2, center1.getMaxChildCount().intValue());
+       Assert.assertEquals(3, group.getMaxChildCount().intValue());
 
-        assertEquals(newCenterSearchId + ".2", group.getSearchId());
-        assertEquals(group.getSearchId() + ".1", client.getSearchId());
-        assertEquals(group.getSearchId() + ".2", client1.getSearchId());
-        assertEquals(group.getSearchId() + ".3", client2.getSearchId());
+       Assert.assertEquals(newCenterSearchId + ".2", group.getSearchId());
+       Assert.assertEquals(group.getSearchId() + ".1", client.getSearchId());
+       Assert.assertEquals(group.getSearchId() + ".2", client1.getSearchId());
+       Assert.assertEquals(group.getSearchId() + ".3", client2.getSearchId());
 
-        assertNull(group.getActiveCustomerMovement());
-        assertNull(client.getActiveCustomerMovement());
-        assertNull(client1.getActiveCustomerMovement());
-        assertNull(client2.getActiveCustomerMovement());
+        Assert.assertNull(group.getActiveCustomerMovement());
+        Assert.assertNull(client.getActiveCustomerMovement());
+        Assert.assertNull(client1.getActiveCustomerMovement());
+        Assert.assertNull(client2.getActiveCustomerMovement());
 
         CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
-        assertEquals(center1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(center1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
     }
 
     public void testSuccessfulTransferToCenterInDifferentBranch() throws Exception {
@@ -982,37 +984,37 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
         officeBO = new OfficePersistence().getOffice(officeBO.getOfficeId());
 
-        assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());
-        assertEquals(0, center.getMaxChildCount().intValue());
-        assertEquals(2, center1.getMaxChildCount().intValue());
-        assertEquals(3, group.getMaxChildCount().intValue());
+       Assert.assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());
+       Assert.assertEquals(0, center.getMaxChildCount().intValue());
+       Assert.assertEquals(2, center1.getMaxChildCount().intValue());
+       Assert.assertEquals(3, group.getMaxChildCount().intValue());
 
-        assertEquals(newCenterSearchId + ".2", group.getSearchId());
-        assertEquals(group.getSearchId() + ".1", client.getSearchId());
-        assertEquals(group.getSearchId() + ".2", client1.getSearchId());
-        assertEquals(group.getSearchId() + ".3", client2.getSearchId());
+       Assert.assertEquals(newCenterSearchId + ".2", group.getSearchId());
+       Assert.assertEquals(group.getSearchId() + ".1", client.getSearchId());
+       Assert.assertEquals(group.getSearchId() + ".2", client1.getSearchId());
+       Assert.assertEquals(group.getSearchId() + ".3", client2.getSearchId());
 
-        assertEquals(CustomerStatus.GROUP_HOLD.getValue(), group.getCustomerStatus().getId());
-        assertEquals(CustomerStatus.CLIENT_HOLD.getValue(), client.getCustomerStatus().getId());
-        assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(), client1.getCustomerStatus().getId());
-        assertEquals(CustomerStatus.CLIENT_CANCELLED.getValue(), client2.getCustomerStatus().getId());
+       Assert.assertEquals(CustomerStatus.GROUP_HOLD.getValue(), group.getCustomerStatus().getId());
+       Assert.assertEquals(CustomerStatus.CLIENT_HOLD.getValue(), client.getCustomerStatus().getId());
+       Assert.assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(), client1.getCustomerStatus().getId());
+       Assert.assertEquals(CustomerStatus.CLIENT_CANCELLED.getValue(), client2.getCustomerStatus().getId());
 
         CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
-        assertEquals(center1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+       Assert.assertEquals(center1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
 
-        assertNotNull(group.getActiveCustomerMovement());
-        assertNotNull(client.getActiveCustomerMovement());
-        assertNotNull(client1.getActiveCustomerMovement());
-        assertNotNull(client2.getActiveCustomerMovement());
+        Assert.assertNotNull(group.getActiveCustomerMovement());
+        Assert.assertNotNull(client.getActiveCustomerMovement());
+        Assert.assertNotNull(client1.getActiveCustomerMovement());
+        Assert.assertNotNull(client2.getActiveCustomerMovement());
 
         CustomerMovementEntity customerMovement = group.getActiveCustomerMovement();
-        assertEquals(officeBO.getOfficeId(), customerMovement.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), customerMovement.getOffice().getOfficeId());
 
-        assertEquals(officeBO.getOfficeId(), center1.getOffice().getOfficeId());
-        assertEquals(officeBO.getOfficeId(), group.getOffice().getOfficeId());
-        assertEquals(officeBO.getOfficeId(), client.getOffice().getOfficeId());
-        assertEquals(officeBO.getOfficeId(), client1.getOffice().getOfficeId());
-        assertEquals(officeBO.getOfficeId(), client2.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), center1.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), group.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client1.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client2.getOffice().getOfficeId());
     }
 
     public void testSuccessfulTransferToCenterInDifferentBranch_SecondTransfer() throws Exception {
@@ -1042,10 +1044,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
         officeBO = new OfficePersistence().getOffice(officeBO.getOfficeId());
 
-        assertEquals(center.getCustomerId(), group.getParentCustomer().getCustomerId());
-        assertEquals(1, center.getMaxChildCount().intValue());
-        assertEquals(1, center1.getMaxChildCount().intValue());
-        assertEquals(3, group.getMaxChildCount().intValue());
+       Assert.assertEquals(center.getCustomerId(), group.getParentCustomer().getCustomerId());
+       Assert.assertEquals(1, center.getMaxChildCount().intValue());
+       Assert.assertEquals(1, center1.getMaxChildCount().intValue());
+       Assert.assertEquals(3, group.getMaxChildCount().intValue());
     }
 
     public void testUpdateMeeting_SavedToUpdateLater() throws Exception {
@@ -1074,31 +1076,31 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-        assertEquals(WeekDay.FRIDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.FRIDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.FRIDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-        assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
 
-        assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
-        assertEquals(oldMeetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
-        assertEquals(oldMeetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(oldMeetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(oldMeetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
 
-        assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-        assertEquals(meetingPlace, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-        assertEquals(meetingPlace, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
 
-        assertEquals(YesNoFlag.YES.getValue(), group.getCustomerMeeting().getUpdatedFlag());
-        assertEquals(YesNoFlag.YES.getValue(), client1.getCustomerMeeting().getUpdatedFlag());
-        assertEquals(YesNoFlag.YES.getValue(), client2.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(YesNoFlag.YES.getValue(), group.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(YesNoFlag.YES.getValue(), client1.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(YesNoFlag.YES.getValue(), client2.getCustomerMeeting().getUpdatedFlag());
 
         Integer groupUpdateMeetingId = group.getCustomerMeeting().getUpdatedMeeting().getMeetingId();
-        assertEquals(groupUpdateMeetingId, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingId());
-        assertEquals(groupUpdateMeetingId, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingId());
+       Assert.assertEquals(groupUpdateMeetingId, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingId());
+       Assert.assertEquals(groupUpdateMeetingId, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingId());
     }
 
     public void testUpdateMeeting() throws Exception {
@@ -1123,23 +1125,23 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-        assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-        assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
-        assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+       Assert.assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
 
-        assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
-        assertEquals(oldMeetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
-        assertEquals(oldMeetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(oldMeetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(oldMeetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
 
-        assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-        assertEquals(meetingPlace, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-        assertEquals(meetingPlace, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
     }
 
     public void testCreateMeeting() throws Exception {
@@ -1161,17 +1163,17 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-        assertEquals(WeekDay.FRIDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.FRIDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        assertEquals(WeekDay.FRIDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+       Assert.assertEquals(WeekDay.FRIDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-        assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
-        assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
-        assertEquals(meetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals(meetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
 
-        assertEquals(recurAfter, group.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
-        assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
-        assertEquals(recurAfter, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(recurAfter, group.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(recurAfter, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
     }
 
     public void testFailureCreate_Group_UnderCenter() throws Exception {
@@ -1186,9 +1188,9 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
                     getAddress(), null, null, personnelBo, center, new GroupPersistence(), new OfficePersistence());
             TestObjectFactory.simulateInvalidConnection();
             new GroupPersistence().saveGroup(group);
-            fail();
+            Assert.fail();
         } catch (CustomerException ce) {
-            assertEquals("Customer.CreateFailed", ce.getKey());
+           Assert.assertEquals("Customer.CreateFailed", ce.getKey());
         } finally {
             group = null;
             StaticHibernateUtil.closeSession();

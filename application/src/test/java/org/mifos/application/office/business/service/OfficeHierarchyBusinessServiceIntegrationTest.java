@@ -22,6 +22,8 @@ package org.mifos.application.office.business.service;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -41,9 +43,9 @@ public class OfficeHierarchyBusinessServiceIntegrationTest extends MifosIntegrat
     public void testGetOfficeLevels() throws Exception {
         List<OfficeLevelEntity> officeLevels = new OfficeHierarchyBusinessService()
                 .getOfficeLevels(TestObjectFactory.TEST_LOCALE);
-        assertEquals(OFFICE_LEVELS, officeLevels.size());
+       Assert.assertEquals(OFFICE_LEVELS, officeLevels.size());
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-            assertTrue(officeLevelEntity.isConfigured());
+           Assert.assertTrue(officeLevelEntity.isConfigured());
         }
     }
 
@@ -56,9 +58,9 @@ public class OfficeHierarchyBusinessServiceIntegrationTest extends MifosIntegrat
         TestObjectFactory.simulateInvalidConnection();
         try {
             new OfficeHierarchyBusinessService().getOfficeLevels(TestObjectFactory.TEST_LOCALE);
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertEquals("exception.framework.ApplicationException", e.getKey());
+           Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
         } finally {
             StaticHibernateUtil.closeSession();
         }

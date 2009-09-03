@@ -22,6 +22,8 @@ package org.mifos.application.fees.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -79,14 +81,14 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
         StaticHibernateUtil.commitTransaction();
 
-        assertEquals(0, feePersistence.getUpdatedFeesForCustomer().size());
+       Assert.assertEquals(0, feePersistence.getUpdatedFeesForCustomer().size());
 
         // get fee from db
         periodicFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, periodicFee.getFeeId());
         periodicFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
         periodicFee.save();
         StaticHibernateUtil.commitTransaction();
-        assertEquals(1, feePersistence.getUpdatedFeesForCustomer().size());
+       Assert.assertEquals(1, feePersistence.getUpdatedFeesForCustomer().size());
 
         // cleanup
         periodicFee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, periodicFee.getFeeId());
@@ -95,7 +97,7 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
     // Tests behavior which seems not to be used by anything.
     public void testGetUpdateTypeEntity() throws NumberFormatException, PersistenceException {
         ApplicableAccountsTypeEntity feeUpdateType = feePersistence.getUpdateTypeEntity(Short.valueOf("1"));
-        assertEquals(1, feeUpdateType.getId().intValue());
+       Assert.assertEquals(1, feeUpdateType.getId().intValue());
     }
 
     public void testRetrieveFeesForCustomer() throws Exception {
@@ -107,8 +109,8 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         List<FeeBO> feeList = feePersistence.retrieveCustomerFees();
-        assertEquals(1, feeList.size());
-        assertEquals("CustomerFee1", feeList.get(0).getFeeName());
+       Assert.assertEquals(1, feeList.size());
+       Assert.assertEquals("CustomerFee1", feeList.get(0).getFeeName());
     }
 
     public void testRetrieveFeesForProduct() throws Exception {
@@ -117,8 +119,8 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
         fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400",
                 RecurrenceType.MONTHLY, Short.valueOf("2"));
         List<FeeBO> feeList = feePersistence.retrieveProductFees();
-        assertEquals(1, feeList.size());
-        assertEquals("ProductFee1", feeList.get(0).getFeeName());
+       Assert.assertEquals(1, feeList.size());
+       Assert.assertEquals("ProductFee1", feeList.get(0).getFeeName());
     }
 
     public void testGetFee() throws Exception {
@@ -127,7 +129,7 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
         Short feeId = fee2.getFeeId();
         StaticHibernateUtil.commitTransaction();
         fee2 = feePersistence.getFee(fee2.getFeeId(), fee2.getFeeType());
-        assertEquals(feeId.shortValue(), fee2.getFeeId().shortValue());
+       Assert.assertEquals(feeId.shortValue(), fee2.getFeeId().shortValue());
 
     }
 
@@ -138,7 +140,7 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
         Short feeId = fee1.getFeeId();
         StaticHibernateUtil.commitTransaction();
         fee1 = feePersistence.getFee(fee1.getFeeId(), RateAmountFlag.RATE);
-        assertEquals(feeId.shortValue(), fee1.getFeeId().shortValue());
+       Assert.assertEquals(feeId.shortValue(), fee1.getFeeId().shortValue());
 
     }
 }

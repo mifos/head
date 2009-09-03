@@ -23,6 +23,8 @@ package org.mifos.application.fees.business;
 import java.util.Date;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -66,10 +68,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             fee = new AmountFeeBO(TestUtils.makeUser(), "", new CategoryTypeEntity(FeeCategory.CENTER),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"), TestObjectFactory
                             .getMoneyForMFICurrency("100"), false, new FeePaymentEntity(FeePayment.UPFRONT));
-            assertFalse("Fee is created without fee name", true);
+            Assert.assertFalse("Fee is created without fee name", true);
         } catch (FeeException e) {
-            assertNull(fee);
-            assertEquals(e.getKey(), FeeConstants.INVALID_FEE_NAME);
+            Assert.assertNull(fee);
+           Assert.assertEquals(e.getKey(), FeeConstants.INVALID_FEE_NAME);
         }
     }
 
@@ -78,10 +80,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             fee = new AmountFeeBO(TestUtils.makeUser(), "Customer Fee", null, new FeeFrequencyTypeEntity(
                     FeeFrequencyType.ONETIME), getGLCode("7"), TestObjectFactory.getMoneyForMFICurrency("100"), false,
                     new FeePaymentEntity(FeePayment.UPFRONT));
-            assertFalse("Fee is created without fee category", true);
+            Assert.assertFalse("Fee is created without fee category", true);
         } catch (FeeException e) {
-            assertNull(fee);
-            assertEquals(e.getKey(), FeeConstants.INVALID_FEE_CATEGORY);
+            Assert.assertNull(fee);
+           Assert.assertEquals(e.getKey(), FeeConstants.INVALID_FEE_CATEGORY);
         }
     }
 
@@ -90,10 +92,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             fee = new AmountFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
                     null, getGLCode("7"), TestObjectFactory.getMoneyForMFICurrency("100"), false, new FeePaymentEntity(
                             FeePayment.UPFRONT));
-            assertFalse("Fee is created without frequency type", true);
+            Assert.assertFalse("Fee is created without frequency type", true);
         } catch (FeeException e) {
-            assertNull(fee);
-            assertEquals(e.getKey(), FeeConstants.INVALID_FEE_FREQUENCY_TYPE);
+            Assert.assertNull(fee);
+           Assert.assertEquals(e.getKey(), FeeConstants.INVALID_FEE_FREQUENCY_TYPE);
         }
     }
 
@@ -102,10 +104,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             fee = new AmountFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"), null, false,
                     new FeePaymentEntity(FeePayment.UPFRONT));
-            assertFalse("Fee is created without Amount", true);
+            Assert.assertFalse("Fee is created without Amount", true);
         } catch (FeeException e) {
-            assertNull(fee);
-            assertEquals(e.getKey(), FeeConstants.INVALID_FEE_AMOUNT);
+            Assert.assertNull(fee);
+           Assert.assertEquals(e.getKey(), FeeConstants.INVALID_FEE_AMOUNT);
         }
     }
 
@@ -115,10 +117,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             fee = new RateFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"), null, feeFormula, false,
                     new FeePaymentEntity(FeePayment.UPFRONT));
-            assertFalse("Fee is created without Rate", true);
+            Assert.assertFalse("Fee is created without Rate", true);
         } catch (FeeException e) {
-            assertNull(fee);
-            assertEquals(e.getKey(), FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
+            Assert.assertNull(fee);
+           Assert.assertEquals(e.getKey(), FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
         }
     }
 
@@ -127,10 +129,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             fee = new RateFeeBO(TestUtils.makeUser(), "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"), 2.0, null, false,
                     new FeePaymentEntity(FeePayment.UPFRONT));
-            assertFalse("Fee is created without Formula", true);
+            Assert.assertFalse("Fee is created without Formula", true);
         } catch (FeeException e) {
-            assertNull(fee);
-            assertEquals(e.getKey(), FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
+            Assert.assertNull(fee);
+           Assert.assertEquals(e.getKey(), FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
         }
     }
 
@@ -141,8 +143,8 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertEquals(name, fee.getFeeName());
-        assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals(name, fee.getFeeName());
+       Assert.assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
         StaticHibernateUtil.closeSession();
     }
 
@@ -154,7 +156,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 
-        assertFalse(fee.doesFeeInvolveFractionalAmounts());
+        Assert.assertFalse(fee.doesFeeInvolveFractionalAmounts());
 
         StaticHibernateUtil.closeSession();
     }
@@ -167,7 +169,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 
-        assertTrue(fee.doesFeeInvolveFractionalAmounts());
+       Assert.assertTrue(fee.doesFeeInvolveFractionalAmounts());
 
         StaticHibernateUtil.closeSession();
     }
@@ -179,7 +181,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertTrue(fee.doesFeeInvolveFractionalAmounts());
+       Assert.assertTrue(fee.doesFeeInvolveFractionalAmounts());
         StaticHibernateUtil.closeSession();
     }
 
@@ -190,8 +192,8 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertEquals("Customer_OneTime_RateFee", fee.getFeeName());
-        assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals("Customer_OneTime_RateFee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
         StaticHibernateUtil.closeSession();
     }
 
@@ -203,8 +205,8 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertEquals("Customer_Periodic_AmountFee", fee.getFeeName());
-        assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals("Customer_Periodic_AmountFee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
         StaticHibernateUtil.closeSession();
     }
 
@@ -217,8 +219,8 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertEquals("Customer_Periodic_RateFee", fee.getFeeName());
-        assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals("Customer_Periodic_RateFee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
         StaticHibernateUtil.closeSession();
     }
 
@@ -228,10 +230,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertEquals("Customer_OneTime_DefaultFee", fee.getFeeName());
-        assertEquals(FeeCategory.GROUP.getValue(), fee.getCategoryType().getId());
-        assertTrue(fee.isCustomerDefaultFee());
-        assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
+       Assert.assertEquals("Customer_OneTime_DefaultFee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.GROUP.getValue(), fee.getCategoryType().getId());
+       Assert.assertTrue(fee.isCustomerDefaultFee());
+       Assert.assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
         StaticHibernateUtil.closeSession();
     }
 
@@ -244,10 +246,10 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-        assertEquals("Customer_Periodic_DefaultFee", fee.getFeeName());
-        assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
-        assertEquals(true, fee.isCustomerDefaultFee());
-        assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
+       Assert.assertEquals("Customer_Periodic_DefaultFee", fee.getFeeName());
+       Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+       Assert.assertEquals(true, fee.isCustomerDefaultFee());
+       Assert.assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
         StaticHibernateUtil.closeSession();
     }
 
@@ -262,9 +264,9 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             ;
             TestObjectFactory.simulateInvalidConnection();
             fees.save();
-            fail();
+            Assert.fail();
         } catch (FeeException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -277,15 +279,15 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
             TestObjectFactory.simulateInvalidConnection();
             new RateFeeBO(uc, "Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER), new FeeFrequencyTypeEntity(
                     FeeFrequencyType.ONETIME), glcode, 2.0, feeFormula, false, new FeePaymentEntity(FeePayment.UPFRONT));
-            fail();
+            Assert.fail();
         } catch (FeeException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testFeeLevel() {
-        assertEquals(FeeLevel.CENTERLEVEL, FeeLevel.getFeeLevel(FeeLevel.CENTERLEVEL.getValue()));
-        assertEquals(null, FeeLevel.getFeeLevel(Short.valueOf("99")));
+       Assert.assertEquals(FeeLevel.CENTERLEVEL, FeeLevel.getFeeLevel(FeeLevel.CENTERLEVEL.getValue()));
+       Assert.assertEquals(null, FeeLevel.getFeeLevel(Short.valueOf("99")));
     }
 
     private boolean vaidateDefaultCustomerFee(Set<FeeLevelEntity> defaultCustomers, FeeCategory feeCategory) {
@@ -420,7 +422,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void assertFeeChangeType(FeeChangeType feeChangeType, FeeBO feeToChange) throws PropertyNotFoundException {
-        assertEquals(feeChangeType, feeToChange.getFeeChangeType());
+       Assert.assertEquals(feeChangeType, feeToChange.getFeeChangeType());
     }
 
     private AmountFeeBO createAmountFeeToTestChangeFeeType() throws Exception, MeetingException {

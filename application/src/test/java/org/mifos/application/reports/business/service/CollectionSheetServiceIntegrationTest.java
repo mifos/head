@@ -31,6 +31,8 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
@@ -60,22 +62,22 @@ public class CollectionSheetServiceIntegrationTest extends AbstractCollectionShe
         List<CollSheetCustBO> retrievedCenterCollectionSheets = collectionSheetService
                 .getCollectionSheetForCustomerOnMeetingDate(meetingDate, CENTER_ID, LOAN_OFFICER_SHORT_ID,
                         CustomerLevel.CENTER);
-        assertEquals(1, retrievedCenterCollectionSheets.size());
-        assertEquals(centerCollectionSheet, retrievedCenterCollectionSheets.get(0));
+       Assert.assertEquals(1, retrievedCenterCollectionSheets.size());
+       Assert.assertEquals(centerCollectionSheet, retrievedCenterCollectionSheets.get(0));
     }
 
     public void testReturnsCollectionSheetsForGroup() throws Exception {
         List<CollSheetCustBO> meetingsForGroups = collectionSheetService.getCollectionSheetForGroups(meetingDate,
                 centerCollectionSheet, LOAN_OFFICER_SHORT_ID);
-        assertEquals(2, meetingsForGroups.size());
-        assertTrue(meetingsForGroups.contains(groupCollectionSheet));
-        assertTrue(meetingsForGroups.contains(anotherGroup));
+       Assert.assertEquals(2, meetingsForGroups.size());
+       Assert.assertTrue(meetingsForGroups.contains(groupCollectionSheet));
+       Assert.assertTrue(meetingsForGroups.contains(anotherGroup));
     }
 
     public void testCollectionSheetForIndividualCustomer() throws Exception {
         List<CollSheetCustBO> collectionSheet = collectionSheetService.getCollectionSheetForCustomers(meetingDate,
                 groupCollectionSheet, LOAN_OFFICER_SHORT_ID);
-        assertEquals(2, collectionSheet.size());
+       Assert.assertEquals(2, collectionSheet.size());
     }
 
     @Override

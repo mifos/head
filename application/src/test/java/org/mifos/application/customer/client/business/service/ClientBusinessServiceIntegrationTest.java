@@ -23,6 +23,8 @@ package org.mifos.application.customer.client.business.service;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -79,9 +81,9 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         client = createClient(this.getClass().getSimpleName() + " abc");
         StaticHibernateUtil.closeSession();
         client = service.getClient(client.getCustomerId());
-        assertNotNull(client);
-        assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getFirstName());
-        assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getLastName());
+        Assert.assertNotNull(client);
+       Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getFirstName());
+       Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getLastName());
     }
 
     public void testFailureGetClient() throws Exception {
@@ -90,9 +92,9 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.simulateInvalidConnection();
         try {
             client = service.getClient(client.getCustomerId());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
     }
@@ -104,9 +106,9 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.retrieveOfferingsApplicableToClient();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
     }
@@ -122,12 +124,12 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
                 ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
         StaticHibernateUtil.closeSession();
         List<SavingsOfferingBO> offerings = service.retrieveOfferingsApplicableToClient();
-        assertEquals(2, offerings.size());
+       Assert.assertEquals(2, offerings.size());
         for (SavingsOfferingBO offering : offerings) {
             if (offering.getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId()))
-                assertTrue(true);
+               Assert.assertTrue(true);
             if (offering.getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId()))
-                assertTrue(true);
+               Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
     }
@@ -139,7 +141,7 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
         ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderGroup(group.getCustomerId());
-        assertEquals(2, clients.size());
+       Assert.assertEquals(2, clients.size());
 
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(client1);
@@ -155,7 +157,7 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderParent(center.getSearchId(), center
                 .getOffice().getOfficeId());
-        assertEquals(2, clients.size());
+       Assert.assertEquals(2, clients.size());
 
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(client1);
@@ -174,9 +176,9 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         try {
             new ClientBusinessService().getActiveClientsUnderParent(center.getSearchId(), center.getOffice()
                     .getOfficeId());
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertEquals("exception.framework.ApplicationException", e.getKey());
+           Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
         }
         StaticHibernateUtil.closeSession();
         TestObjectFactory.cleanUp(client);

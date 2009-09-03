@@ -23,6 +23,8 @@ package org.mifos.application.accounts.struts.action;
 import java.sql.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -98,8 +100,8 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
 
-        assertNotNull(SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, request));
-        assertEquals("Size of the list should be 2", 2, ((List<ApplicableCharge>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, request));
+       Assert.assertEquals("Size of the list should be 2", 2, ((List<ApplicableCharge>) SessionUtils.getAttribute(
                 AccountConstants.APPLICABLE_CHARGE_LIST, request)).size());
     }
 
@@ -148,7 +150,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("accountId", accountBO.getAccountId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals("Rate", 1, getErrorSize(AccountConstants.RATE));
+       Assert.assertEquals("Rate", 1, getErrorSize(AccountConstants.RATE));
 
     }
 

@@ -22,6 +22,8 @@ package org.mifos.framework.components.configuration.business;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.config.AccountingRules;
@@ -59,9 +61,9 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
 
     public void testSystemConfiguration() throws Exception {
         SystemConfiguration systemConfig = configuration.getSystemConfig();
-        assertNotNull(systemConfig);
-        assertNotNull(systemConfig.getCurrency());
-        assertNotNull(systemConfig.getMifosTimeZone());
+        Assert.assertNotNull(systemConfig);
+        Assert.assertNotNull(systemConfig.getCurrency());
+        Assert.assertNotNull(systemConfig.getMifosTimeZone());
     }
 
     public void testHeadOfficeConfiguration() throws Exception {
@@ -83,22 +85,22 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testClientRules() throws Exception {
-        assertEquals(true, ClientRules.getCenterHierarchyExists().booleanValue());
-        assertEquals(true, ClientRules.getClientCanExistOutsideGroup().booleanValue());
-        assertEquals(true, ClientRules.getGroupCanApplyLoans().booleanValue());
+       Assert.assertEquals(true, ClientRules.getCenterHierarchyExists().booleanValue());
+       Assert.assertEquals(true, ClientRules.getClientCanExistOutsideGroup().booleanValue());
+       Assert.assertEquals(true, ClientRules.getGroupCanApplyLoans().booleanValue());
     }
 
     private void assertForAccountConfig(AccountConfig accountConfig) {
-        assertEquals(Short.valueOf("10"), accountConfig.getLatenessDays());
-        assertEquals(Short.valueOf("30"), accountConfig.getDormancyDays());
-        assertEquals(true, AccountingRules.isBackDatedTxnAllowed());
+       Assert.assertEquals(Short.valueOf("10"), accountConfig.getLatenessDays());
+       Assert.assertEquals(Short.valueOf("30"), accountConfig.getDormancyDays());
+       Assert.assertEquals(true, AccountingRules.isBackDatedTxnAllowed());
     }
 
     public void testFiscalCalendarRules() {
-        assertEquals(Short.valueOf("2"), FiscalCalendarRules.getStartOfWeek());
-        assertEquals("same_day", FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday());
-        assertEquals(Short.valueOf("30"), FiscalCalendarRules.getDaysForCalendarDefinition());
+       Assert.assertEquals(Short.valueOf("2"), FiscalCalendarRules.getStartOfWeek());
+       Assert.assertEquals("same_day", FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday());
+       Assert.assertEquals(Short.valueOf("30"), FiscalCalendarRules.getDaysForCalendarDefinition());
         List<Short> weekOffs = FiscalCalendarRules.getWeekDayOffList();
-        assertEquals(weekOffs.size(), 0);
+       Assert.assertEquals(weekOffs.size(), 0);
     }
 }

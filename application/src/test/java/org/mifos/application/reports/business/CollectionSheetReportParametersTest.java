@@ -30,6 +30,8 @@ import static org.mifos.application.reports.ui.SelectionItem.SELECT_LOAN_OFFICER
 
 import java.text.ParseException;
 
+import junit.framework.Assert;
+
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -110,7 +112,7 @@ public class CollectionSheetReportParametersTest extends AbstractReportParameter
         try {
             AbstractReportParameterForm.REPORT_DATE_PARAM_FORMAT.parse("01/01/1970 05:30:00 AM");
         } catch (ParseException e) {
-            fail("Should be parsing given date");
+            Assert.fail("Should be parsing given date");
         }
     }
 }

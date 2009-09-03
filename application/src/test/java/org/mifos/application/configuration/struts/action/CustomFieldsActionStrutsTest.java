@@ -26,6 +26,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import junit.framework.Assert;
+
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -122,16 +124,16 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         // verify datatypes
         List<CustomFieldsListBoxData> listboxDataTypes = (List<CustomFieldsListBoxData>) SessionUtils.getAttribute(
                 ConfigurationConstants.ALL_DATA_TYPES, request);
-        assertTrue(listboxDataTypes.size() == CustomFieldType.values().length);
+       Assert.assertTrue(listboxDataTypes.size() == CustomFieldType.values().length);
         Locale locale = getUserLocale(request);
         for (CustomFieldType dataType : CustomFieldType.values()) {
-            assertTrue(findDataType(dataType, listboxDataTypes, locale));
+           Assert.assertTrue(findDataType(dataType, listboxDataTypes, locale));
         }
         List<CustomFieldsListBoxData> allCategories = (List<CustomFieldsListBoxData>) SessionUtils.getAttribute(
                 ConfigurationConstants.ALL_CATEGORIES, request);
-        assertTrue(allCategories.size() == CustomFieldCategory.values().length);
+       Assert.assertTrue(allCategories.size() == CustomFieldCategory.values().length);
         for (CustomFieldCategory category : CustomFieldCategory.values()) {
-            assertTrue(findCategory(category, allCategories));
+           Assert.assertTrue(findCategory(category, allCategories));
         }
 
     }
@@ -140,11 +142,11 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "preview");
         actionPerform();
-        assertEquals(3, getErrorSize());
-        assertEquals("Category Type null value error", 1, getErrorSize("categoryType"));
-        assertEquals("Data Type null value error", 1, getErrorSize("dataType"));
+       Assert.assertEquals(3, getErrorSize());
+       Assert.assertEquals("Category Type null value error", 1, getErrorSize("categoryType"));
+       Assert.assertEquals("Data Type null value error", 1, getErrorSize("dataType"));
 
-        assertEquals("Label null value error", 1, getErrorSize("labelName"));
+       Assert.assertEquals("Label null value error", 1, getErrorSize("labelName"));
         verifyInputForward();
     }
 
@@ -156,7 +158,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString());
         addRequestParameter("defaultValue", "Client Default Value");
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
     }
 
@@ -179,7 +181,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString());
         addRequestParameter("defaultValue", "Saving Default Value");
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
     }
 
@@ -211,8 +213,8 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Center));
         addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString());
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Label null value error", 1, getErrorSize("labelName"));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Label null value error", 1, getErrorSize("labelName"));
         verifyInputForward();
     }
 
@@ -224,7 +226,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("labelName", tooLong);
         addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
     }
 
@@ -237,7 +239,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
         addRequestParameter("defaultValue", tooLong);
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
     }
 
@@ -262,7 +264,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("defaultValue", "Personnel");
         addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
     }
 
@@ -382,9 +384,9 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.update_success.toString());
         customField = masterPersistence.retrieveOneCustomFieldDefinition(editedCustomFieldId);
-        assertTrue(customField.getDefaultValue().equals(newDefaultValue));
-        assertTrue(customField.isMandatory() == true);
-        assertTrue(customField.getLabel().equals(newLabelName));
+       Assert.assertTrue(customField.getDefaultValue().equals(newDefaultValue));
+       Assert.assertTrue(customField.isMandatory() == true);
+       Assert.assertTrue(customField.getLabel().equals(newLabelName));
     }
 
     public void testCreateForClientCategory() throws Exception {

@@ -22,6 +22,8 @@ package org.mifos.application.customer.center.persistence;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.CenterTemplateImpl;
@@ -82,34 +84,34 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTestCase {
             CenterTemplate centerTemplate = new CenterTemplateImpl(meeting, office.getOfficeId());
             CenterBO center = getCenterPersistence().createCenter(userContext, centerTemplate);
 
-            assertNotNull(center.getCustomerId());
-            assertTrue(center.isActive());
+            Assert.assertNotNull(center.getCustomerId());
+           Assert.assertTrue(center.isActive());
         } finally {
             StaticHibernateUtil.rollbackTransaction();
         }
         long afterTransactionCount = getStatisticsService().getSuccessfulTransactionCount();
-        assertEquals(beforeTransactionCount, afterTransactionCount);
+       Assert.assertEquals(beforeTransactionCount, afterTransactionCount);
     }
 
     public void testIsCenterExists_true() throws Exception {
         String centerName = "NewCenter";
         center = TestObjectFactory.createCenter(centerName, getMeeting());
         StaticHibernateUtil.closeSession();
-        assertTrue(new CenterPersistence().isCenterExists(centerName));
+       Assert.assertTrue(new CenterPersistence().isCenterExists(centerName));
     }
 
     public void testIsCenterExists_false() throws PersistenceException {
         String centerName = "NewCenter";
         center = TestObjectFactory.createCenter(centerName, getMeeting());
         StaticHibernateUtil.closeSession();
-        assertFalse(new CenterPersistence().isCenterExists("NewCenter11"));
+        Assert.assertFalse(new CenterPersistence().isCenterExists("NewCenter11"));
     }
 
     public void testGetCenter() throws Exception {
         String centerName = "NewCenter";
         center = TestObjectFactory.createCenter(centerName, getMeeting());
         center = new CenterPersistence().getCenter(center.getCustomerId());
-        assertEquals(centerName, center.getDisplayName());
+       Assert.assertEquals(centerName, center.getDisplayName());
     }
 
     private MeetingBO getMeeting() {
@@ -122,9 +124,9 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         String centerName = "NewCenter";
         center = TestObjectFactory.createCenter(centerName, getMeeting());
         QueryResult queryResult = new CenterPersistence().search(center.getDisplayName(), Short.valueOf("1"));
-        assertNotNull(queryResult);
-        assertEquals(1, queryResult.getSize());
-        assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertNotNull(queryResult);
+       Assert.assertEquals(1, queryResult.getSize());
+       Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
     OfficePersistence getOfficePersistence() {

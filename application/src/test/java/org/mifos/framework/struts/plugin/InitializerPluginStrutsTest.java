@@ -22,6 +22,8 @@ package org.mifos.framework.struts.plugin;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -67,7 +69,7 @@ public class InitializerPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordOfficeId", "0");
         addRequestParameter("recordLoanOfficerId", "0");
         performNoErrors();
-        assertEquals(ConfigurationConstants.BRANCHOFFICE, (String) context.getAttribute("LABEL_"
+       Assert.assertEquals(ConfigurationConstants.BRANCHOFFICE, (String) context.getAttribute("LABEL_"
                 + ConfigurationConstants.BRANCHOFFICE.toUpperCase()));
     }
 

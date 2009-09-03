@@ -23,6 +23,8 @@ package org.mifos.application.configuration;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.master.business.LookUpLabelEntity;
@@ -52,26 +54,26 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      */
     public void testGetLookupEntities() {
         List<MifosLookUpEntity> entities = configurationPersistence.getLookupEntities();
-        assertNotNull(entities);
+        Assert.assertNotNull(entities);
 
         // Enforce that no entity names contain whitespace
         for (MifosLookUpEntity entity : entities) {
-            assertEquals(StringUtils.deleteWhitespace(entity.getEntityType()), entity.getEntityType());
+           Assert.assertEquals(StringUtils.deleteWhitespace(entity.getEntityType()), entity.getEntityType());
 
             Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
 
             // Enforce that each entity has 0 or 1 labels and not more
-            assertTrue(labels.size() <= 1);
+           Assert.assertTrue(labels.size() <= 1);
             for (LookUpLabelEntity label : labels) {
                 if (entity.getEntityType().equals("Client"))
-                    assertEquals("Client", label.getLabelText());
+                   Assert.assertEquals("Client", label.getLabelText());
             }
         }
 
     }
 
     public void testGetLookupValues() {
-        assertNotNull(configurationPersistence.getLookupValues());
+        Assert.assertNotNull(configurationPersistence.getLookupValues());
     }
 
     /*

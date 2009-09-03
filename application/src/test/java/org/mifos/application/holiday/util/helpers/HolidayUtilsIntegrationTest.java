@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
@@ -180,7 +182,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
 
         Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(testDate), meeting);
 
-        assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
+       Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
                 .getDateWithoutTimeStamp(getDate("19/08/2007").getTime()).getTime());
 
     }
@@ -213,11 +215,11 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
         // assert that the holiday is created
-        assertEquals("Same Day Holiday", holidayEntity.getHolidayName());
+       Assert.assertEquals("Same Day Holiday", holidayEntity.getHolidayName());
 
         Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(testDate), meeting);
 
-        assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
+       Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
                 .getDateWithoutTimeStamp(testDate.getTime()).getTime());
 
         // Clean up the Holiday that was created
@@ -252,11 +254,11 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
         // assert that the holiday is created
-        assertEquals("Next Meeting Or Repayment Holiday", holidayEntity.getHolidayName());
+       Assert.assertEquals("Next Meeting Or Repayment Holiday", holidayEntity.getHolidayName());
 
         Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(testDate.getTime()), meeting);
 
-        assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
+       Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
                 .getDateWithoutTimeStamp(getDate("30/08/2007").getTime()).getTime()); // was
         // 25/08/2006
 
@@ -277,11 +279,11 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
         // assert that the holiday is created
-        assertEquals("Next Working Day Holiday", holidayEntity.getHolidayName());
+       Assert.assertEquals("Next Working Day Holiday", holidayEntity.getHolidayName());
 
         Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(testDate.getTime()), meeting);
 
-        assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
+       Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
                 .getDateWithoutTimeStamp(getDate("23/08/2007").getTime()).getTime());
 
         // Clean up the Holiday that was created
@@ -312,7 +314,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
             Calendar adjustedCalendar = HolidayUtils
                     .adjustDate(DateUtils.getCalendarDate(inputDate.getTime()), meeting);
 
-            assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
+           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), DateUtils
                     .getDateWithoutTimeStamp(outputDate.getTime()).getTime());
 
             // Clean up the Holiday that was created
@@ -344,7 +346,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < loanRepaymentSchedule.length; i++) {
             // System.out.println("[DATE] ActionDate     = " +
             // loanRepaymentSchedule[i].getActionDate().toLocaleString());
-            assertEquals(startDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
+           Assert.assertEquals(startDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
 
             startDate.add(Calendar.DAY_OF_MONTH, 7);
         }
@@ -364,7 +366,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         holiday = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holiday.getHolidayPK());
 
         // assert that the holiday is created
-        assertEquals("testRescheduleLoanRepaymentDates", holiday.getHolidayName());
+       Assert.assertEquals("testRescheduleLoanRepaymentDates", holiday.getHolidayName());
         // /////////////////////////////////////////////////////////////
         HolidayUtils.rescheduleLoanRepaymentDates(holiday);
         // ///////////////////////////////////////////////////////////
@@ -389,12 +391,12 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
                 adjustedDate.add(Calendar.DAY_OF_MONTH, 4);
                 // System.out.println("[RE_DATE] CalculatedDate = " +
                 // adjustedDate.getTime().toLocaleString());
-                assertEquals(adjustedDate, DateUtils
+               Assert.assertEquals(adjustedDate, DateUtils
                         .getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
             } else {
                 // System.out.println("[RE_DATE] CalculatedDate = " +
                 // startDate.getTime().toLocaleString());
-                assertEquals(startDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
+               Assert.assertEquals(startDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
             }
 
             startDate.add(Calendar.DAY_OF_MONTH, 7);
@@ -434,7 +436,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < savingSchedule.length; i++) {
             // System.out.println("[SAVING] ActionDate = " +
             // savingSchedule[i].getActionDate().toLocaleString());
-            assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
+           Assert.assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
             startDate.add(Calendar.DAY_OF_MONTH, 7);
         }
         // ///////////////////////////////////////////////////////////
@@ -453,7 +455,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         holiday = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holiday.getHolidayPK());
 
         // assert that the holiday is created
-        assertEquals("testRescheduleSavingDates", holiday.getHolidayName());
+       Assert.assertEquals("testRescheduleSavingDates", holiday.getHolidayName());
         // /////////////////////////////////////////////////////////////
 
         HolidayUtils.rescheduleSavingDates(holiday);
@@ -483,11 +485,11 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
 
                 // System.out.println("[RE_SAVING] CalculatedDate = " +
                 // adjustedDate.getTime().toLocaleString());
-                assertEquals(adjustedDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
+               Assert.assertEquals(adjustedDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
             } else {
                 // System.out.println("[RE_SAVING] CalculatedDate = " +
                 // startDate.getTime().toLocaleString());
-                assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
+               Assert.assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
             }
 
             startDate.add(Calendar.DAY_OF_MONTH, 7);
@@ -522,7 +524,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
             holidays[i] = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidays[i].getHolidayPK());
 
             // assert that the holiday is created
-            assertEquals("testHolidayCombination_1", holidays[i].getHolidayName());
+           Assert.assertEquals("testHolidayCombination_1", holidays[i].getHolidayName());
         }
 
         return holidays;
@@ -589,7 +591,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         holidays.add(new HolidayBO(new HolidayPK(branchId, holidayFromDate), null, "TestHoliday", repaymentRuleEntity));
         try {
             HolidayUtils.inHoliday(DateUtils.getCalendar(DateUtils.getDate(2008, Calendar.MAY, 23)), holidays);
-            fail("Should throw null pointer exception");
+            Assert.fail("Should throw null pointer exception");
         } catch (NullPointerException e) {
         }
 

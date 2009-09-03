@@ -23,6 +23,8 @@ package org.mifos.application.customer.struts.action;
 import java.sql.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -106,8 +108,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.loadStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 1, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 1, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
         cleanInitialObjects();
 
@@ -117,9 +119,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
         actionPerform();
-        assertEquals(2, getErrorSize());
-        assertEquals("Status id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("Status id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
     }
 
@@ -128,9 +130,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.previewStatus.toString());
         addRequestParameter("newStatusId", "11");
         actionPerform();
-        assertEquals(2, getErrorSize());
-        assertEquals("flag id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("flag id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
     }
 
@@ -140,8 +142,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("newStatusId", "11");
         addRequestParameter("flagId", "1");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
     }
 
@@ -162,8 +164,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
                 + "Testing for comment length exceeding by 500 characters"
                 + "Testing for comment length exceeding by 500 characters");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MAXIMUM_LENGTH));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MAXIMUM_LENGTH));
         verifyInputForward();
     }
 
@@ -176,8 +178,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", center.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 1, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 1, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -190,8 +192,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not cancel,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNull("Since new Status is not cancel,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
         cleanInitialObjects();
     }
@@ -205,8 +207,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", center.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 1, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 1, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -219,8 +221,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not cancel,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNull("Since new Status is not cancel,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -228,7 +230,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionErrors();
         verifyForward(ActionForwards.center_detail_page.toString());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
-        assertFalse(center.isActive());
+        Assert.assertFalse(center.isActive());
         TestDatabase.resetMySQLDatabase();
     }
 
@@ -242,8 +244,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.loadStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
         cleanInitialObjects();
     }
@@ -252,9 +254,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
         actionPerform();
-        assertEquals(2, getErrorSize());
-        assertEquals("Status id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("Status id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
     }
 
@@ -263,9 +265,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.previewStatus.toString());
         addRequestParameter("newStatusId", "6");
         actionPerform();
-        assertEquals(2, getErrorSize());
-        assertEquals("flag id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("flag id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
     }
 
@@ -275,8 +277,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("newStatusId", "6");
         addRequestParameter("flagId", "10");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
     }
 
@@ -288,8 +290,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -302,8 +304,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNotNull("Since new Status is Closed,so flag should not be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNotNull("Since new Status is Closed,so flag should not be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         cleanInitialObjects();
     }
@@ -342,8 +344,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -356,8 +358,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -365,21 +367,21 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionErrors();
         verifyForward(ActionForwards.client_detail_page.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
-        assertFalse(client.isActive());
+        Assert.assertFalse(client.isActive());
         cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
     public void testUpdateStatusForClientForFirstTimeActive() throws PageExpiredException {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_PARTIAL);
-        assertTrue(((ClientBO) client).getCustomerAccount().getAccountActionDates().isEmpty());
+       Assert.assertTrue(((ClientBO) client).getCustomerAccount().getAccountActionDates().isEmpty());
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -392,8 +394,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -401,9 +403,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionErrors();
         verifyForward(ActionForwards.client_detail_page.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
-        assertTrue(client.isActive());
-        assertFalse(((ClientBO) client).getCustomerAccount().getAccountActionDates().isEmpty());
-        assertEquals("ActivationDate should be the current date.", DateUtils
+       Assert.assertTrue(client.isActive());
+        Assert.assertFalse(((ClientBO) client).getCustomerAccount().getAccountActionDates().isEmpty());
+       Assert.assertEquals("ActivationDate should be the current date.", DateUtils
                 .getDateWithoutTimeStamp(new java.util.Date().getTime()), DateUtils.getDateWithoutTimeStamp(client
                 .getCustomerActivationDate().getTime()));
         cleanInitialObjects();
@@ -423,8 +425,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -437,8 +439,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -446,7 +448,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionErrors();
         verifyForward(ActionForwards.client_detail_page.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
-        assertTrue(client.isActive());
+       Assert.assertTrue(client.isActive());
         cleanInitialObjects();
     }
 
@@ -458,8 +460,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -472,8 +474,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         setRequestPathInfo("/editCustomerStatusAction");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -481,7 +483,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyActionErrors(new String[] { ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION });
         verifyForward(ActionForwards.updateStatus_failure.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
-        assertFalse(client.isActive());
+        Assert.assertFalse(client.isActive());
         cleanInitialObjects();
     }
 
@@ -498,8 +500,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -512,8 +514,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -542,8 +544,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -556,11 +558,11 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            assertNotNull(customerPosition.getCustomer());
+            Assert.assertNotNull(customerPosition.getCustomer());
             break;
         }
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -569,14 +571,14 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionErrors();
         verifyForward(ActionForwards.client_detail_page.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
-        assertFalse(client.isActive());
+        Assert.assertFalse(client.isActive());
         for (CustomerFlagDetailEntity customerFlagDetailEntity : client.getCustomerFlags()) {
-            assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
+            Assert.assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
             break;
         }
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            assertNull(customerPosition.getCustomer());
+            Assert.assertNull(customerPosition.getCustomer());
             break;
         }
         cleanInitialObjects();
@@ -592,8 +594,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -606,8 +608,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -625,8 +627,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -657,8 +659,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.loadStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
         cleanInitialObjects();
     }
@@ -676,9 +678,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals(getStatusName(CustomerStatus.fromInt(Short.valueOf("10"))), (String) SessionUtils.getAttribute(
+       Assert.assertEquals(getStatusName(CustomerStatus.fromInt(Short.valueOf("10"))), (String) SessionUtils.getAttribute(
                 SavingsConstants.NEW_STATUS_NAME, request));
-        assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         cleanInitialObjects();
     }
@@ -691,9 +693,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("levelId", group.getCustomerLevel().getId().toString());
         addRequestParameter("flagId", "20");
         actionPerform();
-        assertEquals(2, getErrorSize());
-        assertEquals("Status id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals("Status id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
         cleanInitialObjects();
     }
@@ -707,8 +709,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("levelId", group.getCustomerLevel().getId().toString());
         addRequestParameter("newStatusId", "12");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("flag id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("flag id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
         verifyInputForward();
         cleanInitialObjects();
     }
@@ -722,8 +724,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("flagId", "20");
         addRequestParameter("notes", "Test");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Status", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Status", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
         verifyInputForward();
         cleanInitialObjects();
     }
@@ -737,8 +739,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("newStatusId", "12");
         addRequestParameter("flagId", "20");
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
         cleanInitialObjects();
     }
@@ -779,9 +781,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.group_detail_page.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNull(request.getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNull(request.getAttribute(Constants.FLOWMANAGER));
         group = TestObjectFactory.getCustomer(group.getCustomerId());
-        assertTrue(group.isBlackListed());
+       Assert.assertTrue(group.isBlackListed());
         cleanInitialObjects();
     }
 
@@ -795,9 +797,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.group_detail_page.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNull(request.getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNull(request.getAttribute(Constants.FLOWMANAGER));
         group = TestObjectFactory.getCustomer(group.getCustomerId());
-        assertEquals("ActivationDate should be the current date.", DateUtils
+       Assert.assertEquals("ActivationDate should be the current date.", DateUtils
                 .getDateWithoutTimeStamp(new java.util.Date().getTime()), DateUtils.getDateWithoutTimeStamp(group
                 .getCustomerActivationDate().getTime()));
         cleanInitialObjects();
@@ -814,7 +816,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
         actionPerform();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION });
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -832,7 +834,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
         actionPerform();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION });
         cleanInitialObjects();
     }
@@ -849,7 +851,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
         actionPerform();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.BRANCH_INACTIVE });
         office = (OfficeBO) TestObjectFactory.getObject(OfficeBO.class, office.getOfficeId());
         cleanInitialObjectsOfficeInactive();
@@ -865,7 +867,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
         actionPerform();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.CENTER_INACTIVE });
         cleanInitialObjects();
     }
@@ -877,7 +879,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
         actionPerform();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.LOANOFFICER_INACTIVE });
         cleanInitialObjectsWhenCenterHierarchyNotExist();
     }
@@ -890,7 +892,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
         actionPerform();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED });
         cleanInitialObjectsWhenCenterHierarchyNotExist();
     }
@@ -903,7 +905,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
         actionPerform();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.MEETING_NOT_ASSIGNED });
         cleanInitialObjectsWhenCenterHierarchyNotExist();
     }

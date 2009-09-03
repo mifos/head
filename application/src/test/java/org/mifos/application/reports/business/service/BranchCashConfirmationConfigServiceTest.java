@@ -20,6 +20,7 @@
 
 package org.mifos.application.reports.business.service;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.exceptions.ServiceException;
@@ -34,21 +35,21 @@ public class BranchCashConfirmationConfigServiceTest extends TestCase {
     private HOCashConfirmationConfigService hOCashConfirmationConfigService;
 
     public void testGetActionDate() {
-        assertEquals(DateUtils.currentDate(), hOCashConfirmationConfigService.getActionDate());
+       Assert.assertEquals(DateUtils.currentDate(), hOCashConfirmationConfigService.getActionDate());
     }
 
     public void testGetProductOfferingsForRecoveries() throws ServiceException {
-        assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2"), Short.valueOf("3")),
+       Assert.assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2"), Short.valueOf("3")),
                 hOCashConfirmationConfigService.getProductOfferingsForRecoveries());
     }
 
     public void testGetProductOfferingsForIssues() throws Exception {
-        assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2"), Short.valueOf("3")),
+       Assert.assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2"), Short.valueOf("3")),
                 hOCashConfirmationConfigService.getProductOfferingsForIssues());
     }
 
     public void testGetProductOfferingsForDisbursements() throws Exception {
-        assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2")), hOCashConfirmationConfigService
+       Assert.assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2")), hOCashConfirmationConfigService
                 .getProductOfferingsForDisbursements());
     }
 

@@ -29,6 +29,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import java.util.Calendar;
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -192,14 +194,14 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
         savings1 = persistence.findById(savings1.getAccountId());
         savings4 = persistence.findById(savings4.getAccountId());
 
-        assertEquals(helper.getDate("31/05/2006"), savings1.getNextIntCalcDate());
+       Assert.assertEquals(helper.getDate("31/05/2006"), savings1.getNextIntCalcDate());
 
         // using the old money class the result here was 15.4
-        assertEquals(15.387, savings1.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(15.387, savings1.getInterestToBePosted().getAmountDoubleValue(), DELTA);
 
         // using the old money class the result here was 4.3
-        assertEquals(4.274, savings4.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(helper.getDate("31/05/2006"), savings4.getNextIntCalcDate());
+       Assert.assertEquals(4.274, savings4.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(helper.getDate("31/05/2006"), savings4.getNextIntCalcDate());
         AccountingRules.setDigitsAfterDecimal(savedDigits);
 
     }

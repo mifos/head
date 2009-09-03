@@ -23,6 +23,8 @@ package org.mifos.application.productdefinition.persistence;
 import java.sql.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -62,18 +64,18 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void testretrieveLatenessForPrd() throws Exception {
         Short latenessDays = null;
         latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
-        assertNotNull(latenessDays);
-        assertEquals(Short.valueOf("10"), latenessDays);
+        Assert.assertNotNull(latenessDays);
+       Assert.assertEquals(Short.valueOf("10"), latenessDays);
     }
 
     public void testGetAllActiveLoanOfferings() throws PersistenceException {
         List<LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getAllActiveLoanOfferings(Short.valueOf("1"));
-        assertNotNull(loanOfferingList);
+        Assert.assertNotNull(loanOfferingList);
     }
 
     public void testGetLoanOfferingsNotMixed() throws PersistenceException {
         List<LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getLoanOfferingsNotMixed(Short.valueOf("1"));
-        assertNotNull(loanOfferingList);
+        Assert.assertNotNull(loanOfferingList);
     }
 
     public void testGetLoanOffering() throws PersistenceException {
@@ -81,9 +83,9 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.closeSession();
 
         loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1.getPrdOfferingId());
-        assertNotNull(loanOffering1);
-        assertEquals("Loan Offering", loanOffering1.getPrdOfferingName());
-        assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
+        Assert.assertNotNull(loanOffering1);
+       Assert.assertEquals("Loan Offering", loanOffering1.getPrdOfferingName());
+       Assert.assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
     }
 
     public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
@@ -92,15 +94,15 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
         short localeId = 1;
         loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1.getPrdOfferingId(), localeId);
-        assertNotNull(loanOffering1);
-        assertEquals("Loan Offering", loanOffering1.getPrdOfferingName());
-        assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
+        Assert.assertNotNull(loanOffering1);
+       Assert.assertEquals("Loan Offering", loanOffering1.getPrdOfferingName());
+       Assert.assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
 
-        assertEquals("Other", loanOffering1.getPrdCategory().getProductCategoryName());
-        assertEquals(ApplicableTo.GROUPS, loanOffering1.getPrdApplicableMasterEnum());
-        assertEquals("Active", loanOffering1.getPrdStatus().getPrdState().getName());
-        assertEquals("Grace on all repayments", loanOffering1.getGracePeriodType().getName());
-        assertEquals("Flat", loanOffering1.getInterestTypes().getName());
+       Assert.assertEquals("Other", loanOffering1.getPrdCategory().getProductCategoryName());
+       Assert.assertEquals(ApplicableTo.GROUPS, loanOffering1.getPrdApplicableMasterEnum());
+       Assert.assertEquals("Active", loanOffering1.getPrdStatus().getPrdState().getName());
+       Assert.assertEquals("Grace on all repayments", loanOffering1.getGracePeriodType().getName());
+       Assert.assertEquals("Flat", loanOffering1.getInterestTypes().getName());
     }
 
     public void testGetAllLoanOfferingsShouldReturnLoanOfferingListSortedByName() throws PersistenceException {
@@ -112,13 +114,13 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.closeSession();
 
         List<LoanOfferingBO> loanOfferings = new LoanPrdPersistence().getAllLoanOfferings((short) 1);
-        assertNotNull(loanOfferings);
-        assertEquals(3, loanOfferings.size());
+        Assert.assertNotNull(loanOfferings);
+       Assert.assertEquals(3, loanOfferings.size());
         int i = 0;
         for (LoanOfferingBO loanOfferingBO : loanOfferings) {
-            assertEquals(loanPrdNamesSortedByName[i++], loanOfferingBO.getPrdOfferingName());
-            assertNotNull(loanOfferingBO.getPrdOfferingId());
-            assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
+           Assert.assertEquals(loanPrdNamesSortedByName[i++], loanOfferingBO.getPrdOfferingName());
+            Assert.assertNotNull(loanOfferingBO.getPrdOfferingId());
+            Assert.assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
         }
         StaticHibernateUtil.closeSession();
     }

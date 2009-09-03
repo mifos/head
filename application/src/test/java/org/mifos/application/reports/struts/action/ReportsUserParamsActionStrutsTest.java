@@ -20,6 +20,8 @@
 
 package org.mifos.application.reports.struts.action;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -68,46 +70,46 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
     public void testGetSecurityShouldGetReportSecurityConstantsCorrespondingReportId() {
 
         ActionSecurity security = ReportsUserParamsAction.getSecurity();
-        assertEquals(ReportSecurityConstants.COLLECTION_SHEET_REPORT, security.get("loadAddList-1").shortValue());
-        assertEquals(ReportSecurityConstants.BRANCH_CASH_CONFIRMATION_REPORT, security.get("loadAddList-2")
+       Assert.assertEquals(ReportSecurityConstants.COLLECTION_SHEET_REPORT, security.get("loadAddList-1").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.BRANCH_CASH_CONFIRMATION_REPORT, security.get("loadAddList-2")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.BRANCH_PROGRESS_REPORT, security.get("loadAddList-3").shortValue());
-        assertEquals(ReportSecurityConstants.CLIENT_LOAN_REPAYMENT_SCHEDULE, security.get("loadAddList-4").shortValue());
-        assertEquals(ReportSecurityConstants.CLIENT_FEES_CHARGES_AND_PENALTIES_REPORT, security.get("loadAddList-5")
+       Assert.assertEquals(ReportSecurityConstants.BRANCH_PROGRESS_REPORT, security.get("loadAddList-3").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.CLIENT_LOAN_REPAYMENT_SCHEDULE, security.get("loadAddList-4").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.CLIENT_FEES_CHARGES_AND_PENALTIES_REPORT, security.get("loadAddList-5")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.CLIENT_PENDING_APPROVAL_REPORT, security.get("loadAddList-6").shortValue());
-        assertEquals(ReportSecurityConstants.CLIENTS_WITHOUT_SAVINGS_ACCOUNT, security.get("loadAddList-7")
+       Assert.assertEquals(ReportSecurityConstants.CLIENT_PENDING_APPROVAL_REPORT, security.get("loadAddList-6").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.CLIENTS_WITHOUT_SAVINGS_ACCOUNT, security.get("loadAddList-7")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.BRANCH_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-8")
+       Assert.assertEquals(ReportSecurityConstants.BRANCH_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-8")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.AREA_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-9").shortValue());
-        assertEquals(ReportSecurityConstants.DIVISION_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-10")
+       Assert.assertEquals(ReportSecurityConstants.AREA_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-9").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.DIVISION_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-10")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.REGION_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-11")
+       Assert.assertEquals(ReportSecurityConstants.REGION_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-11")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.GRAMEEN_KOOTA_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-12")
+       Assert.assertEquals(ReportSecurityConstants.GRAMEEN_KOOTA_PERFORMANCE_STATUS_REPORT, security.get("loadAddList-12")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.STAFF_PERFORMANCE_REPORT, security.get("loadAddList-13").shortValue());
-        assertEquals(ReportSecurityConstants.OUTREACH_REPORT, security.get("loadAddList-14").shortValue());
-        assertEquals(ReportSecurityConstants.CENTER_SUMMARY_REPORT, security.get("loadAddList-15").shortValue());
-        assertEquals(ReportSecurityConstants.COLLECTION_SHEET, security.get("loadAddList-16").shortValue());
-        assertEquals(ReportSecurityConstants.LOAN_PRODUCT_DISTRIBUTION, security.get("loadAddList-17").shortValue());
-        assertEquals(ReportSecurityConstants.BRANCH_DUE_DISBURSEMENT_REPORT, security.get("loadAddList-18")
+       Assert.assertEquals(ReportSecurityConstants.STAFF_PERFORMANCE_REPORT, security.get("loadAddList-13").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.OUTREACH_REPORT, security.get("loadAddList-14").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.CENTER_SUMMARY_REPORT, security.get("loadAddList-15").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.COLLECTION_SHEET, security.get("loadAddList-16").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.LOAN_PRODUCT_DISTRIBUTION, security.get("loadAddList-17").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.BRANCH_DUE_DISBURSEMENT_REPORT, security.get("loadAddList-18")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.LOANS_PENDING_APPROVAL_REPORT, security.get("loadAddList-19").shortValue());
-        assertEquals(ReportSecurityConstants.LOAN_ACCOUNTS_REPORTS, security.get("loadAddList-20").shortValue());
-        assertEquals(ReportSecurityConstants.DAILY_CASH_CONFIRMATION_REPORT_STAFF_WISE, security.get("loadAddList-21")
+       Assert.assertEquals(ReportSecurityConstants.LOANS_PENDING_APPROVAL_REPORT, security.get("loadAddList-19").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.LOAN_ACCOUNTS_REPORTS, security.get("loadAddList-20").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.DAILY_CASH_CONFIRMATION_REPORT_STAFF_WISE, security.get("loadAddList-21")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.DAILY_CASH_FLOW_REPORT_BRANCH, security.get("loadAddList-22").shortValue());
-        assertEquals(ReportSecurityConstants.FUND_REQUIREMENT_REPORT, security.get("loadAddList-23").shortValue());
-        assertEquals(ReportSecurityConstants.DAILY_TRANSACTION_SUMMARY_REPORT, security.get("loadAddList-24")
+       Assert.assertEquals(ReportSecurityConstants.DAILY_CASH_FLOW_REPORT_BRANCH, security.get("loadAddList-22").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.FUND_REQUIREMENT_REPORT, security.get("loadAddList-23").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.DAILY_TRANSACTION_SUMMARY_REPORT, security.get("loadAddList-24")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.DAILY_PORTFOLIO_QUALITY_DATA_REPORT, security.get("loadAddList-25")
+       Assert.assertEquals(ReportSecurityConstants.DAILY_PORTFOLIO_QUALITY_DATA_REPORT, security.get("loadAddList-25")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.CENTER_MEETING_SCHEDULE, security.get("loadAddList-26").shortValue());
-        assertEquals(ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK, security.get("loadAddList-28")
+       Assert.assertEquals(ReportSecurityConstants.CENTER_MEETING_SCHEDULE, security.get("loadAddList-26").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK, security.get("loadAddList-28")
                 .shortValue());
-        assertEquals(ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER, security.get("loadAddList-29").shortValue());
+       Assert.assertEquals(ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER, security.get("loadAddList-29").shortValue());
     }
 
 }

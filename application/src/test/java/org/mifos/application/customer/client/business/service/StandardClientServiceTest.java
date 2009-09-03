@@ -21,14 +21,14 @@
 package org.mifos.application.customer.client.business.service;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -84,9 +84,9 @@ public class StandardClientServiceTest {
         
         assertThat(clientAttendance.size(), is(1));
         ClientAttendanceDto clientAttendanceDto = clientAttendance.get(client1Id);
-        assertNotNull(clientAttendanceDto);
-        assertEquals(client1Id, (int) clientAttendanceDto.getClientId());
-        assertEquals(AttendanceType.PRESENT, clientAttendanceDto.getAttendance());
+        Assert.assertNotNull(clientAttendanceDto);
+       Assert.assertEquals(client1Id, (int) clientAttendanceDto.getClientId());
+       Assert.assertEquals(AttendanceType.PRESENT, clientAttendanceDto.getAttendance());
     }
 
     @Test
@@ -103,13 +103,13 @@ public class StandardClientServiceTest {
                 .getClientAttendance(clientAttendanceDtos);
         
         assertThat(clientAttendance.size(), is(2));
-        assertNotNull(clientAttendance.get(client1Id));
-        assertEquals(client1Id, (int) clientAttendance.get(client1Id).getClientId());
-        assertEquals(AttendanceType.PRESENT, clientAttendance.get(client1Id).getAttendance());
+        Assert.assertNotNull(clientAttendance.get(client1Id));
+       Assert.assertEquals(client1Id, (int) clientAttendance.get(client1Id).getClientId());
+       Assert.assertEquals(AttendanceType.PRESENT, clientAttendance.get(client1Id).getAttendance());
         
-        assertNotNull(clientAttendance.get(client2Id));
-        assertEquals(client2Id, (int) clientAttendance.get(client2Id).getClientId());
-        assertEquals(AttendanceType.ABSENT, clientAttendance.get(client2Id).getAttendance());
+        Assert.assertNotNull(clientAttendance.get(client2Id));
+       Assert.assertEquals(client2Id, (int) clientAttendance.get(client2Id).getClientId());
+       Assert.assertEquals(AttendanceType.ABSENT, clientAttendance.get(client2Id).getAttendance());
     }
 
     private ClientAttendanceDto createNewClientAttendanceDto(int clientId, LocalDate meetingDate, AttendanceType attendance) {

@@ -22,6 +22,7 @@ package org.mifos.config;
 
 import java.util.NoSuchElementException;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.Configuration;
@@ -56,7 +57,7 @@ public class ConfigurationManagerTest extends TestCase {
     public void testGetUndefinedProperty() {
         try {
             configuration.getShort(badKey);
-            fail("Expected NoSuchElementException.");
+            Assert.fail("Expected NoSuchElementException.");
         } catch (NoSuchElementException e) {
             // expected
         }

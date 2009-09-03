@@ -33,6 +33,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -161,22 +163,22 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
 
         for (AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
             if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
         }
 
         for (AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()) {
             if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
         }
-        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
         TestObjectFactory.cleanUp(client3);
         TestObjectFactory.cleanUp(client2);
         TestObjectFactory.cleanUp(group1);
@@ -212,24 +214,24 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         for (AccountBO account : center.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
         for (AccountBO account : group.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
-        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
 
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -272,24 +274,24 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         for (AccountBO account : center.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
         for (AccountBO account : group.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
-        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
 
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -332,30 +334,30 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         for (AccountBO account : center.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
         for (AccountBO account : group.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
         for (AccountBO account : client1.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
@@ -363,15 +365,15 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         for (AccountBO account : client2.getAccounts()) {
             for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
                 if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
                 else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                   Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
 
-        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
+       Assert.assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
 
         TestObjectFactory.flushandCloseSession();
 

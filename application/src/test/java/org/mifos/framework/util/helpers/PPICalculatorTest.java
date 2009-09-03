@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.junit.Ignore;
@@ -55,7 +56,7 @@ public class PPICalculatorTest extends TestCase {
         survey.setNonPoorMin(76);
         survey.setNonPoorMax(100);
 
-        assertTrue(PPICalculator.scoreLimitsAreValid(survey));
+       Assert.assertTrue(PPICalculator.scoreLimitsAreValid(survey));
 
         survey.setVeryPoorMin(0);
         survey.setVeryPoorMax(26);
@@ -66,7 +67,7 @@ public class PPICalculatorTest extends TestCase {
         survey.setNonPoorMin(97);
         survey.setNonPoorMax(98);
 
-        assertFalse(PPICalculator.scoreLimitsAreValid(survey));
+        Assert.assertFalse(PPICalculator.scoreLimitsAreValid(survey));
     }
 
     public void testCalculateScore() throws Exception {
@@ -124,7 +125,7 @@ public class PPICalculatorTest extends TestCase {
 
         int score = PPICalculator.calculateScore(instance);
 
-        assertEquals(38, score);
+       Assert.assertEquals(38, score);
     }
 
 }

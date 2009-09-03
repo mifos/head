@@ -25,32 +25,33 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class CollectionUtilsTest extends TestCase {
 
     public void testAsListReturnsOneElementPassed() {
         List<Integer> list = CollectionUtils.asList(Integer.valueOf(0));
-        assertEquals(1, list.size());
-        assertEquals(Integer.valueOf(0), list.get(0));
+       Assert.assertEquals(1, list.size());
+       Assert.assertEquals(Integer.valueOf(0), list.get(0));
     }
 
     public void testAsListReturnsListFormedOfMultipleElements() throws Exception {
         List<Integer> list = CollectionUtils.asList(Integer.valueOf(0), Integer.valueOf(1), Integer.valueOf(2));
-        assertEquals(3, list.size());
-        assertEquals(Integer.valueOf(0), list.get(0));
-        assertEquals(Integer.valueOf(1), list.get(1));
-        assertEquals(Integer.valueOf(2), list.get(2));
+       Assert.assertEquals(3, list.size());
+       Assert.assertEquals(Integer.valueOf(0), list.get(0));
+       Assert.assertEquals(Integer.valueOf(1), list.get(1));
+       Assert.assertEquals(Integer.valueOf(2), list.get(2));
     }
 
     public void testSplitListReturnsEmptyListForEmptyList() throws Exception {
-        assertEquals(Collections.EMPTY_LIST, CollectionUtils.splitListIntoParts(new ArrayList(), 10));
+       Assert.assertEquals(Collections.EMPTY_LIST, CollectionUtils.splitListIntoParts(new ArrayList(), 10));
     }
 
     public void testSplitListThrowsExceptionIfSizeOfPartsIsZero() throws Exception {
         try {
             CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3), 0);
-            fail("Split list should throw exception if size of each part is zero");
+            Assert.fail("Split list should throw exception if size of each part is zero");
         } catch (IllegalArgumentException e) {
         }
     }
@@ -58,20 +59,20 @@ public class CollectionUtilsTest extends TestCase {
     public void testSplitReturnsSameListIfSizeOfEachPartIsGreaterThanListSize() throws Exception {
         List expected = new ArrayList();
         expected.add(Arrays.asList(1, 2, 3));
-        assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3), 4));
+       Assert.assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3), 4));
     }
 
     public void testSplitListEvenlyIfListSizeIsMultipleOfSizeOfEachPart() throws Exception {
         List expected = new ArrayList();
         expected.add(Arrays.asList(1, 2));
         expected.add(Arrays.asList(3, 4));
-        assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3, 4), 2));
+       Assert.assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3, 4), 2));
     }
 
     public void testSplitReturnsOneSublistIfListSizeEqualsSizeOfEachPart() throws Exception {
         List expected = new ArrayList();
         expected.add(Arrays.asList(1, 2, 3));
-        assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3), 3));
+       Assert.assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3), 3));
     }
 
     public void testSplitListIntoPartsAndARemainderIfListSizeIsNotMultipleOfSizeOfEachPart() throws Exception {
@@ -79,6 +80,6 @@ public class CollectionUtilsTest extends TestCase {
         expected.add(Arrays.asList(1, 2));
         expected.add(Arrays.asList(3, 4));
         expected.add(Arrays.asList(5));
-        assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3, 4, 5), 2));
+       Assert.assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3, 4, 5), 2));
     }
 }

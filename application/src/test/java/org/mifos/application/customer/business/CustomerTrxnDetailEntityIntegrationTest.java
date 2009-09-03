@@ -22,6 +22,8 @@ package org.mifos.application.customer.business;
 
 import java.sql.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -124,8 +126,8 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         for (AccountTrxnEntity accntTrxn : customerAccountBO.getLastPmnt().getAccountTrxns()) {
             AccountTrxnEntity reverseAccntTrxn = ((CustomerTrxnDetailEntity) accntTrxn).generateReverseTrxn(
                     loggedInUser, "adjustment");
-            assertEquals(reverseAccntTrxn.getAmount(), accntTrxn.getAmount().negate());
-            assertEquals(loggedInUser.getPersonnelId(), reverseAccntTrxn.getPersonnel().getPersonnelId());
+           Assert.assertEquals(reverseAccntTrxn.getAmount(), accntTrxn.getAmount().negate());
+           Assert.assertEquals(loggedInUser.getPersonnelId(), reverseAccntTrxn.getPersonnel().getPersonnelId());
         }
 
     }

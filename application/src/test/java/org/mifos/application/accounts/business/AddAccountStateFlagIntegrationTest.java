@@ -21,6 +21,7 @@
 package org.mifos.application.accounts.business;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -78,20 +79,20 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
                 FLAG_FEET_TOO_BIG);
         flag.setLocaleId(TEST_LOCALE);
 
-        assertEquals((Object) FLAG_FEET_TOO_BIG, (Object) flag.getId());
-        assertEquals(10, (short) flag.getStatusId());
-        assertEquals(false, flag.isFlagRetained());
-        assertEquals("Feet too big", flag.getFlagDescription());
+       Assert.assertEquals((Object) FLAG_FEET_TOO_BIG, (Object) flag.getId());
+       Assert.assertEquals(10, (short) flag.getStatusId());
+       Assert.assertEquals(false, flag.isFlagRetained());
+       Assert.assertEquals("Feet too big", flag.getFlagDescription());
 
-        assertEquals("Rejected because feet are too big", flag.getName());
+       Assert.assertEquals("Rejected because feet are too big", flag.getName());
     }
 
     public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "AccountFlags-Withdraw";
         String format = "AccountFlags-";
-        assertTrue(AddAccountStateFlag.validateLookupValueKey(format, validKey));
+       Assert.assertTrue(AddAccountStateFlag.validateLookupValueKey(format, validKey));
         String invalidKey = "Withdraw";
-        assertFalse(AddAccountStateFlag.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(AddAccountStateFlag.validateLookupValueKey(format, invalidKey));
     }
 
     public void testConstructor() throws Exception {
@@ -103,7 +104,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
             upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
                     "NewAccountStateFlag", TEST_LOCALE, "NewAccountStateFlag");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddAccountStateFlag.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddAccountStateFlag.wrongConstructor);
         }
         String invalidKey = "NewAccountStateFlag";
 
@@ -112,7 +113,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
             upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, invalidKey,
                     invalidKey);
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddAccountStateFlag.wrongLookupValueKeyFormat);
+           Assert.assertEquals(e.getMessage(), AddAccountStateFlag.wrongLookupValueKeyFormat);
         }
         String goodKey = "AccountFlags-NewAccountStateFlag";
         // use valid construtor and valid key
@@ -120,7 +121,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         upgrade.upgrade(database.openConnection());
         Session session = database.openSession();
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
-        assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
+       Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
         MifosConfiguration.getInstance().init();
 
     }

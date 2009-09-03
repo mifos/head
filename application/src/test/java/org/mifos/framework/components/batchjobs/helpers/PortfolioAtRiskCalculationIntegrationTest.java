@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -175,7 +177,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         group = TestObjectFactory.getGroup(group.getCustomerId());
         double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
                 .getOffice().getOfficeId(), group.getOffice().getSearchId());
-        assertEquals(1.0, portfolioAtRisk, DELTA);
+       Assert.assertEquals(1.0, portfolioAtRisk, DELTA);
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -208,7 +210,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         group = TestObjectFactory.getGroup(group.getCustomerId());
         double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
                 .getOffice().getOfficeId(), group.getOffice().getSearchId());
-        assertEquals(0.5, portfolioAtRisk, DELTA);
+       Assert.assertEquals(0.5, portfolioAtRisk, DELTA);
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());

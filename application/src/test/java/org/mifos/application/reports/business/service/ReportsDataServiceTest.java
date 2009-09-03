@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -111,11 +112,11 @@ public class ReportsDataServiceTest extends TestCase {
         replay(personnelBusinessServiceMock);
         try {
             reportsDataService.initialize(userId.intValue());
-            fail("exception expected");
+            Assert.fail("exception expected");
         } catch (ServiceException e) {
             assertSame(expectedException, e);
         }
-        assertNull(reportsDataService.getPersonnel());
+        Assert.assertNull(reportsDataService.getPersonnel());
         verify(personnelBusinessServiceMock);
     }
 
@@ -135,7 +136,7 @@ public class ReportsDataServiceTest extends TestCase {
         replay(personnelBusinessServiceMock, personnelMock, loanPrdBusinessServiceMock);
         try {
             reportsDataService.getAllLoanProducts();
-            fail("exception expected");
+            Assert.fail("exception expected");
         } catch (ServiceException e) {
             assertSame(expectedException, e);
         }
@@ -156,7 +157,7 @@ public class ReportsDataServiceTest extends TestCase {
         replay(personnelBusinessServiceMock, personnelMock, officeBusinessServiceMock);
         try {
             reportsDataService.getActiveBranchesUnderUser();
-            fail("exception expected");
+            Assert.fail("exception expected");
         } catch (ServiceException e) {
             assertSame(expectedException, e);
         }
@@ -169,7 +170,7 @@ public class ReportsDataServiceTest extends TestCase {
 
         expect(personnelMock.isLoanOfficer()).andReturn(true);
         replay(personnelBusinessServiceMock, personnelMock);
-        assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(branchId.intValue()));
+       Assert.assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(branchId.intValue()));
         verify(personnelBusinessServiceMock, personnelMock);
     }
 
@@ -180,7 +181,7 @@ public class ReportsDataServiceTest extends TestCase {
         expect(personnelMock.isLoanOfficer()).andReturn(false);
         expect(personnelBusinessServiceMock.getActiveLoanOfficersUnderOffice(branchId)).andReturn(expectedLoanOfficer);
         replay(personnelBusinessServiceMock, personnelMock);
-        assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(branchId.intValue()));
+       Assert.assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(branchId.intValue()));
         verify(personnelBusinessServiceMock, personnelMock);
     }
 

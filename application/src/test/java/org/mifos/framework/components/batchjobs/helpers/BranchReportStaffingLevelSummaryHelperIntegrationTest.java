@@ -23,6 +23,8 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.Collection;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.mifos.application.branchreport.BranchReportBO;
@@ -53,13 +55,13 @@ public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends Mifos
 
     private void assertStaffingLevelSummaries(BranchReportBO branchReport) throws ServiceException {
         Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = branchReport.getStaffingLevelSummaries();
-        assertEquals(1, staffingLevelSummaries.size());
+       Assert.assertEquals(1, staffingLevelSummaries.size());
         Collection retrievedRolenames = CollectionUtils.collect(staffingLevelSummaries, new Transformer() {
             public Object transform(Object input) {
                 return ((BranchReportStaffingLevelSummaryBO) input).getRolename();
             }
         });
-        assertEquals(1, retrievedRolenames.size());
-        assertTrue(retrievedRolenames.contains(BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME));
+       Assert.assertEquals(1, retrievedRolenames.size());
+       Assert.assertTrue(retrievedRolenames.contains(BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME));
     }
 }

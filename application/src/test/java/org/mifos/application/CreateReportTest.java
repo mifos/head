@@ -25,6 +25,7 @@ import static junitx.framework.StringAssert.assertNotContains;
 import static org.mifos.application.ui.DispatchTestUtil.dispatch;
 import static org.mifos.application.ui.DispatchTestUtil.getSuccessfulDocument;
 import static org.mifos.application.ui.DispatchTestUtil.makeRequest;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.ui.DispatchTestUtil;
@@ -50,8 +51,8 @@ public class CreateReportTest extends TestCase {
         HttpServletRequestSimulator request = makeRequest("/reports/create", HttpServletRequestSimulator.POST);
         request.addParameter("name", "newReport");
         new Dispatcher().service(request, response);
-        assertEquals(Dispatcher.CREATED, response.getStatusCode());
-        assertEquals("https://test-server:123/context/developer/reports/1", response.getHeader("Location"));
+       Assert.assertEquals(Dispatcher.CREATED, response.getStatusCode());
+       Assert.assertEquals("https://test-server:123/context/developer/reports/1", response.getHeader("Location"));
     }
 
     public void testRunReportPage() throws Exception {
@@ -60,8 +61,8 @@ public class CreateReportTest extends TestCase {
          * A forward might make more sense, but we'll stick with the redirect
          * for now (not sure how to forward to a jsp and all).
          */
-        assertEquals(303, response.getStatusCode());
-        assertEquals("https://test-server:123/context/reportsUserParamsAction.do" + "?method=loadAddList&reportId=53",
+       Assert.assertEquals(303, response.getStatusCode());
+       Assert.assertEquals("https://test-server:123/context/reportsUserParamsAction.do" + "?method=loadAddList&reportId=53",
                 response.getHeader("Location"));
     }
 

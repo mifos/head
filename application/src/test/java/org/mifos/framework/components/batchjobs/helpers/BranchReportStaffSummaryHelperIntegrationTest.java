@@ -23,6 +23,8 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.Date;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.master.business.MifosCurrency;
@@ -52,7 +54,7 @@ public class BranchReportStaffSummaryHelperIntegrationTest extends MifosIntegrat
                 new BranchReportService(), getConfigServiceStub());
         staffSummaryHelper.populateStaffSummary();
         Set<BranchReportStaffSummaryBO> staffSummaries = branchReportBO.getStaffSummaries();
-        assertNotNull(staffSummaries);
+        Assert.assertNotNull(staffSummaries);
     }
 
     private BranchReportConfigService getConfigServiceStub() {

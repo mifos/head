@@ -27,6 +27,7 @@ import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.CLI
 import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
 import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CLOSED_BLACKLISTED;
 import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CLOSED_LEFTPROGRAM;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
@@ -35,13 +36,13 @@ import org.testng.annotations.Test;
 public class CustomerStatusFlagTest extends TestCase {
 
     public void testIsBlacklisted() throws Exception {
-        assertTrue(CLIENT_CANCEL_BLACKLISTED.isBlacklisted());
-        assertTrue(CLIENT_CLOSED_BLACKLISTED.isBlacklisted());
-        assertTrue(GROUP_CANCEL_BLACKLISTED.isBlacklisted());
-        assertTrue(GROUP_CLOSED_BLACKLISTED.isBlacklisted());
-        assertFalse(CLIENT_CANCEL_WITHDRAW.isBlacklisted());
-        assertFalse(CLIENT_CLOSED_OTHER.isBlacklisted());
-        assertFalse(GROUP_CLOSED_LEFTPROGRAM.isBlacklisted());
+       Assert.assertTrue(CLIENT_CANCEL_BLACKLISTED.isBlacklisted());
+       Assert.assertTrue(CLIENT_CLOSED_BLACKLISTED.isBlacklisted());
+       Assert.assertTrue(GROUP_CANCEL_BLACKLISTED.isBlacklisted());
+       Assert.assertTrue(GROUP_CLOSED_BLACKLISTED.isBlacklisted());
+        Assert.assertFalse(CLIENT_CANCEL_WITHDRAW.isBlacklisted());
+        Assert.assertFalse(CLIENT_CLOSED_OTHER.isBlacklisted());
+        Assert.assertFalse(GROUP_CLOSED_LEFTPROGRAM.isBlacklisted());
     }
 
 }

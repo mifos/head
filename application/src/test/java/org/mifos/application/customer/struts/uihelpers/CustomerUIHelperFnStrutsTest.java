@@ -22,6 +22,8 @@ package org.mifos.application.customer.struts.uihelpers;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerBO;
@@ -102,14 +104,14 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
             customerPositionEntity2.getPosition().setLocaleId(TestObjectFactory.getContext().getLocaleId());
         }
         String positionName = CustomerUIHelperFn.getClientPosition(group.getCustomerPositions(), client);
-        assertEquals("(Center Leader)", positionName);
+       Assert.assertEquals("(Center Leader)", positionName);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -122,11 +124,11 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            assertNotNull(customerPosition.getCustomer());
+            Assert.assertNotNull(customerPosition.getCustomer());
             break;
         }
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -136,13 +138,13 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.client_detail_page.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
-        assertFalse(client.isActive());
+        Assert.assertFalse(client.isActive());
         for (CustomerFlagDetailEntity customerFlagDetailEntity : client.getCustomerFlags()) {
-            assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
+            Assert.assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
             break;
         }
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            assertNull(customerPosition.getCustomer());
+            Assert.assertNull(customerPosition.getCustomer());
             break;
         }
     }
@@ -162,14 +164,14 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group.setUserContext(TestObjectFactory.getContext());
         String positionName = CustomerUIHelperFn.getClientPosition(group.getCustomerPositions(), client);
-        assertEquals("(Center Leader)", positionName);
+       Assert.assertEquals("(Center Leader)", positionName);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-        assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
+       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -182,11 +184,11 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previewStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+        Assert.assertNotNull("Since new Status is Closed,so flag should be Duplicate.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            assertNotNull(customerPosition.getCustomer());
+            Assert.assertNotNull(customerPosition.getCustomer());
             break;
         }
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -197,13 +199,13 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
-        assertFalse(client.isActive());
+        Assert.assertFalse(client.isActive());
         for (CustomerFlagDetailEntity customerFlagDetailEntity : client.getCustomerFlags()) {
-            assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
+            Assert.assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
             break;
         }
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            assertNull(customerPosition.getCustomer());
+            Assert.assertNull(customerPosition.getCustomer());
             break;
         }
     }

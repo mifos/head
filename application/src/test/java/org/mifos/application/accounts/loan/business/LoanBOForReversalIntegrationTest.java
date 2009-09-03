@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -95,7 +97,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         long numberOfTransactions = getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
         // TODO: numberOfTransactions needs to be 0
-        assertTrue("numberOfTransactions=" + numberOfTransactions + " should be less than: " + 5,
+       Assert.assertTrue("numberOfTransactions=" + numberOfTransactions + " should be less than: " + 5,
                 numberOfTransactions <= 5);
     }
 
@@ -109,7 +111,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
                 loanOffering);
         long numberOfTransactions = getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
         // TODO: numberOfTransactions needs to be 0, but is 8
-        assertTrue("numberOfTransactions=" + numberOfTransactions + " should be less than: " + 8,
+       Assert.assertTrue("numberOfTransactions=" + numberOfTransactions + " should be less than: " + 8,
                 numberOfTransactions <= 8);
     }
 
@@ -118,7 +120,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         loan.setUserContext(userContext);
         loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"));
         long numberOfTransactions = getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
-        assertTrue("numberOfTransactions=" + numberOfTransactions + " should be: " + 0, numberOfTransactions == 0);
+       Assert.assertTrue("numberOfTransactions=" + numberOfTransactions + " should be: " + 0, numberOfTransactions == 0);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
     }
@@ -181,25 +183,25 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      * noOfFinancialTransactions += accountTrxn
      * .getFinancialTransactions().size(); } }
      * 
-     * reverseLoan(); loan = retrieveLoanAccount(); assertEquals(noOfPayments,
+     * reverseLoan(); loan = retrieveLoanAccount();Assert.assertEquals(noOfPayments,
      * loan.getAccountPayments().size()); int noOfTransactionsAfterReversal = 0;
      * int noOfFinancialTransactionsAfterReversal = 0; for (AccountPaymentEntity
-     * accountPayment : loan.getAccountPayments()) { assertEquals(new Money(),
+     * accountPayment : loan.getAccountPayments()) {Assert.assertEquals(new Money(),
      * accountPayment.getAmount()); noOfTransactionsAfterReversal +=
      * accountPayment.getAccountTrxns() .size(); for (AccountTrxnEntity
      * accountTrxn : accountPayment .getAccountTrxns()) {
      * noOfFinancialTransactionsAfterReversal += accountTrxn
-     * .getFinancialTransactions().size(); } } assertEquals(2 *
+     * .getFinancialTransactions().size(); } }Assert.assertEquals(2 *
      * noOfFinancialTransactions, noOfFinancialTransactionsAfterReversal);
-     * assertEquals(2 * noOfTransactions, noOfTransactionsAfterReversal);
-     * assertEquals(2 * noOfActivities, loan.getLoanActivityDetails().size());
-     * assertEquals(AccountState.LOAN_CANCELLED, loan.getState());
-     * assertEquals(1, loan.getAccountFlags().size()); for (AccountFlagMapping
+     *Assert.assertEquals(2 * noOfTransactions, noOfTransactionsAfterReversal);
+     *Assert.assertEquals(2 * noOfActivities, loan.getLoanActivityDetails().size());
+     *Assert.assertEquals(AccountState.LOAN_CANCELLED, loan.getState());
+     *Assert.assertEquals(1, loan.getAccountFlags().size()); for (AccountFlagMapping
      * accountFlagMapping : loan.getAccountFlags()) {
-     * assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),
-     * accountFlagMapping.getFlag().getId()); } assertEquals(noOfNotes + 1,
-     * loan.getAccountNotes().size()); assertEquals(loan.getLoanAmount(),
-     * loan.getLoanSummary() .getPrincipalDue()); assertEquals(new Money(),
+     *Assert.assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),
+     * accountFlagMapping.getFlag().getId()); }Assert.assertEquals(noOfNotes + 1,
+     * loan.getAccountNotes().size());Assert.assertEquals(loan.getLoanAmount(),
+     * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(),
      * loan.getLoanSummary().getTotalAmntPaid());
      * StaticHibernateUtil.closeSession(); }
      */
@@ -221,25 +223,25 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      * noOfFinancialTransactions += accountTrxn
      * .getFinancialTransactions().size(); } } adjustLastPayment();
      * applyPaymentForLoan(); reverseLoan(); loan = retrieveLoanAccount();
-     * assertEquals(noOfPayments + 1, loan.getAccountPayments().size()); int
+     *Assert.assertEquals(noOfPayments + 1, loan.getAccountPayments().size()); int
      * noOfTransactionsAfterReversal = 0; int
      * noOfFinancialTransactionsAfterReversal = 0; for (AccountPaymentEntity
-     * accountPayment : loan.getAccountPayments()) { assertEquals(new Money(),
+     * accountPayment : loan.getAccountPayments()) {Assert.assertEquals(new Money(),
      * accountPayment.getAmount()); noOfTransactionsAfterReversal +=
      * accountPayment.getAccountTrxns() .size(); for (AccountTrxnEntity
      * accountTrxn : accountPayment .getAccountTrxns()) {
      * noOfFinancialTransactionsAfterReversal += accountTrxn
-     * .getFinancialTransactions().size(); } } assertEquals((3 *
+     * .getFinancialTransactions().size(); } }Assert.assertEquals((3 *
      * noOfFinancialTransactions) - 2, noOfFinancialTransactionsAfterReversal);
-     * assertEquals((3 * noOfTransactions) - 1, noOfTransactionsAfterReversal);
-     * assertEquals((3 * noOfActivities) - 1, loan.getLoanActivityDetails()
-     * .size()); assertEquals(AccountState.LOAN_CANCELLED, loan.getState());
-     * assertEquals(1, loan.getAccountFlags().size()); for (AccountFlagMapping
+     *Assert.assertEquals((3 * noOfTransactions) - 1, noOfTransactionsAfterReversal);
+     *Assert.assertEquals((3 * noOfActivities) - 1, loan.getLoanActivityDetails()
+     * .size());Assert.assertEquals(AccountState.LOAN_CANCELLED, loan.getState());
+     *Assert.assertEquals(1, loan.getAccountFlags().size()); for (AccountFlagMapping
      * accountFlagMapping : loan.getAccountFlags()) {
-     * assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),
-     * accountFlagMapping.getFlag().getId()); } assertEquals(noOfNotes + 1,
-     * loan.getAccountNotes().size()); assertEquals(loan.getLoanAmount(),
-     * loan.getLoanSummary() .getPrincipalDue()); assertEquals(new Money(),
+     *Assert.assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),
+     * accountFlagMapping.getFlag().getId()); }Assert.assertEquals(noOfNotes + 1,
+     * loan.getAccountNotes().size());Assert.assertEquals(loan.getLoanAmount(),
+     * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(),
      * loan.getLoanSummary().getTotalAmntPaid());
      * StaticHibernateUtil.closeSession(); }
      */

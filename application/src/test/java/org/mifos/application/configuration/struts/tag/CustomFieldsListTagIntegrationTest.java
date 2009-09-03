@@ -21,6 +21,7 @@
 package org.mifos.application.configuration.struts.tag;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junitx.framework.StringAssert;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -61,7 +62,7 @@ public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase
         String mandatory = "No";
         String fieldId = "7";
 
-        assertEquals("<tr>\n" + "<td width=\"11%\" class=\"drawtablerow\">" + sequenceNum + "</td>\n"
+       Assert.assertEquals("<tr>\n" + "<td width=\"11%\" class=\"drawtablerow\">" + sequenceNum + "</td>\n"
                 + "<td width=\"22%\" class=\"drawtablerow\">" + label + "</td>\n"
                 + "<td width=\"21%\" class=\"drawtablerow\">" + dataType + "</td>\n"
                 + "<td width=\"21%\" class=\"drawtablerow\">" + defaultValue + "</td>\n"

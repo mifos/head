@@ -24,7 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.junit.Assert;
+import junit.framework.Assert;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.framework.util.helpers.DateUtils;

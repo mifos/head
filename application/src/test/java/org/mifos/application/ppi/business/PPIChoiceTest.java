@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.joda.time.DateMidnight;
@@ -64,7 +65,7 @@ public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
         database.installInThreadLocal();
 
         PPIChoice retrievedChoice = new PPIPersistence().getPPIChoice(choiceId);
-        assertEquals("Hello World", retrievedChoice.getChoiceText());
+       Assert.assertEquals("Hello World", retrievedChoice.getChoiceText());
     }
 
     public void testRetrieveRegularChoice() throws Exception {
@@ -78,15 +79,15 @@ public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
 
         QuestionChoice retrievedChoice = (QuestionChoice) new SurveysPersistence().getPersistentObject(
                 QuestionChoice.class, choiceId);
-        assertEquals("Hello World", retrievedChoice.getChoiceText());
-        assertFalse(retrievedChoice instanceof PPIChoice);
+       Assert.assertEquals("Hello World", retrievedChoice.getChoiceText());
+        Assert.assertFalse(retrievedChoice instanceof PPIChoice);
 
-        assertEquals(null, new PPIPersistence().getPPIChoice(choiceId));
+       Assert.assertEquals(null, new PPIPersistence().getPPIChoice(choiceId));
     }
 
     public void testNotFound() throws Exception {
         QuestionChoice retrieved = new PPIPersistence().getPPIChoice(123456);
-        assertEquals(null, retrieved);
+       Assert.assertEquals(null, retrieved);
     }
 
     /*
@@ -114,7 +115,7 @@ public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
         surveyResponse.setChoiceValue(ppiChoice);
         surveyResponses.add(surveyResponse);
         instance.setSurveyResponses(surveyResponses);
-        assertEquals(1, instance.getSurveyResponses().size());
+       Assert.assertEquals(1, instance.getSurveyResponses().size());
 
         new SurveysPersistence().createOrUpdate(instance);
         new SurveysPersistence().createOrUpdate(surveyResponse);
@@ -123,9 +124,9 @@ public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
 
         PPIPersistence ppiPersistence = new PPIPersistence();
         SurveyInstance retrievedInstance = ppiPersistence.getInstance(instanceId);
-        assertFalse(null == retrievedInstance);
-        assertFalse(null == retrievedInstance.getSurveyResponses());
-        assertEquals(1, retrievedInstance.getSurveyResponses().size());
+        Assert.assertFalse(null == retrievedInstance);
+        Assert.assertFalse(null == retrievedInstance.getSurveyResponses());
+       Assert.assertEquals(1, retrievedInstance.getSurveyResponses().size());
         // List<SurveyResponse> responseList =
         // ppiPersistence.retrieveResponsesByInstance(retrievedInstance);
         QuestionChoice retrievedChoice = ((SurveyResponse) retrievedInstance.getSurveyResponses().toArray()[0])

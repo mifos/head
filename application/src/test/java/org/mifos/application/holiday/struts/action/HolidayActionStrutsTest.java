@@ -20,6 +20,8 @@
 
 package org.mifos.application.holiday.struts.action;
 
+import junit.framework.Assert;
+
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -64,7 +66,7 @@ public class HolidayActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(HolidayConstants.REPAYMENTRULETYPES, request)); // HOLIDAY_MASTERDATA
+        Assert.assertNotNull(SessionUtils.getAttribute(HolidayConstants.REPAYMENTRULETYPES, request)); // HOLIDAY_MASTERDATA
     }
 
     public void testGetHolidays() throws Exception {
@@ -74,7 +76,7 @@ public class HolidayActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.get_success.toString());
-        assertNull(SessionUtils.getAttribute("noOfYears", request));
+        Assert.assertNull(SessionUtils.getAttribute("noOfYears", request));
     }
 
 }

@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
@@ -115,10 +117,10 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         collectionSheetCustomer.setCustId(Integer.valueOf("1"));
 
         CollectionSheetBO collSheet = new CollectionSheetBO();
-        assertNull(collSheet.getCollectionSheetCustomerForCustomerId(Integer.valueOf("1")));
+        Assert.assertNull(collSheet.getCollectionSheetCustomerForCustomerId(Integer.valueOf("1")));
         collSheet.addCollectionSheetCustomer(collectionSheetCustomer);
 
-        assertEquals(collSheet.getCollectionSheetCustomerForCustomerId(Integer.valueOf("1")).getCustId(), Integer
+       Assert.assertEquals(collSheet.getCollectionSheetCustomerForCustomerId(Integer.valueOf("1")).getCustId(), Integer
                 .valueOf("1"));
 
     }
@@ -137,7 +139,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         Money disbursedAmount = collectionSheet.getCollectionSheetCustomerForCustomerId(group.getCustomerId())
                 .getLoanDetailsForAccntId(loan.getAccountId()).getAmntToBeDisbursed();
-        assertEquals(300.00, disbursedAmount.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(300.00, disbursedAmount.getAmountDoubleValue(), DELTA);
 
     }
 
@@ -145,7 +147,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         CollectionSheetBO collSheet = new CollectionSheetBO();
         List<AccountActionDateEntity> accountActionDates = getCustomerAccntDetails();
         collSheet.populateCustomerLoanAndSavingsDetails(accountActionDates);
-        assertEquals(collSheet.getCollectionSheetCustomers().size(), 3);
+       Assert.assertEquals(collSheet.getCollectionSheetCustomers().size(), 3);
         for (AccountActionDateEntity entity : accountActionDates) {
             TestObjectFactory.cleanUp(entity.getCustomer());
         }
@@ -156,7 +158,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
         CollectionSheetBO collectionSheetBO = (CollectionSheetBO) session.get(CollectionSheetBO.class, collectionSheet
                 .getCollSheetID());
-        assertNotNull(collectionSheetBO);
+        Assert.assertNotNull(collectionSheetBO);
     }
 
     public void testCreateFailure() throws Exception {
@@ -166,11 +168,11 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.startTransaction();
         try {
             collSheet.create();
-            fail();
+            Assert.fail();
         } catch (PersistenceException expected) {
         }
 
-        assertNull(collSheet.getCollSheetID());
+        Assert.assertNull(collSheet.getCollSheetID());
     }
 
     public void testUpdate() throws Exception {
@@ -184,7 +186,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         collectionSheet.update(Short.valueOf("2"));
         StaticHibernateUtil.getTransaction().commit();
         StaticHibernateUtil.closeSession();
-        assertEquals(Short.valueOf("2"), collectionSheet.getStatusFlag());
+       Assert.assertEquals(Short.valueOf("2"), collectionSheet.getStatusFlag());
     }
 
     private CollectionSheetBO createCollectionSheet() throws Exception {
@@ -410,8 +412,8 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         queryParameters.put("MEETING_DATE", year2010);
         List matchingCollectionSheets = new CollectionSheetPersistence().executeNamedQuery(
                 NamedQueryConstants.COLLECTION_SHEETS_FOR_MEETING_DATE, queryParameters);
-        assertEquals(1, matchingCollectionSheets.size());
-        assertEquals(collectionSheet, matchingCollectionSheets.get(0));
+       Assert.assertEquals(1, matchingCollectionSheets.size());
+       Assert.assertEquals(collectionSheet, matchingCollectionSheets.get(0));
         transaction.rollback();
         session.close();
     }

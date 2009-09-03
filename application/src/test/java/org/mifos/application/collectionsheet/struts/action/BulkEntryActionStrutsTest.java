@@ -36,6 +36,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -199,8 +201,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
         performNoErrors();
         verifyForward("create_success");
-        assertNotNull(request.getAttribute(CollectionSheetEntryConstants.CENTER));
-        assertEquals(request.getAttribute(CollectionSheetEntryConstants.CENTER), center.getDisplayName());
+        Assert.assertNotNull(request.getAttribute(CollectionSheetEntryConstants.CENTER));
+       Assert.assertEquals(request.getAttribute(CollectionSheetEntryConstants.CENTER), center.getDisplayName());
 
         groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount.getAccountId());
         clientAccount = TestObjectFactory.getObject(LoanBO.class, clientAccount.getAccountId());
@@ -211,8 +213,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
 
-        assertEquals(1, client.getClientAttendances().size());
-        assertEquals(AttendanceType.ABSENT, client.getClientAttendanceForMeeting(
+       Assert.assertEquals(1, client.getClientAttendances().size());
+       Assert.assertEquals(AttendanceType.ABSENT, client.getClientAttendanceForMeeting(
                 new java.sql.Date(meetingDateCalendar.getTimeInMillis())).getAttendanceAsEnum());
     }
 
@@ -274,9 +276,9 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward("load_success");
-        assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
+       Assert.assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.NO);
-        assertEquals("The value for isCenter Hierarchy Exists", SessionUtils.getAttribute(
+       Assert.assertEquals("The value for isCenter Hierarchy Exists", SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request), Constants.YES);
     }
 
@@ -294,7 +296,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("load_success");
         List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils.getAttribute(
                 CustomerConstants.LOAN_OFFICER_LIST, request);
-        assertEquals(1, loanOfficerList.size());
+       Assert.assertEquals(1, loanOfficerList.size());
     }
 
     @SuppressWarnings("unchecked")
@@ -318,8 +320,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.CUSTOMERSLIST, request);
         
-        assertEquals(1, parentCustomerList.size());
-        assertEquals("The value for isCenter Hierarchy Exists", SessionUtils.getAttribute(
+       Assert.assertEquals(1, parentCustomerList.size());
+       Assert.assertEquals("The value for isCenter Hierarchy Exists", SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request), Constants.YES);
     }
 
@@ -345,19 +347,19 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("load_success");
         
         if (AccountingRules.isBackDatedTxnAllowed()) {
-            assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
+           Assert.assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                     CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.YES);
-            assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
+           Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
                     .getTime()).toString(), SessionUtils.getAttribute("LastMeetingDate", request).toString());
-            assertEquals(new java.util.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
+           Assert.assertEquals(new java.util.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
                     .getTime()), DateUtils.getDate(((BulkEntryActionForm) request.getSession().getAttribute(
                     CollectionSheetEntryConstants.BULKENTRYACTIONFORM)).getTransactionDate()));
         } else {
-            assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
+           Assert.assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                     CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.NO);
-            assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
+           Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
                     .getTime()).toString(), SessionUtils.getAttribute("LastMeetingDate", request).toString());
-            assertEquals(DateUtils.getUserLocaleDate(getUserLocale(request), new java.sql.Date(DateUtils
+           Assert.assertEquals(DateUtils.getUserLocaleDate(getUserLocale(request), new java.sql.Date(DateUtils
                     .getCurrentDateWithoutTimeStamp().getTime()).toString()), ((BulkEntryActionForm) request
                     .getSession().getAttribute(CollectionSheetEntryConstants.BULKENTRYACTIONFORM)).getTransactionDate());
         }

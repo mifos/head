@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -34,7 +35,7 @@ public class MifosAlphaNumTextTagTest extends TestCase {
         StringBuffer inputsForhidden = new StringBuffer();
         inputsForhidden.append("<input type=\"hidden\" name=\"" + "test1" + "\" value=\"" + "test2" + "\" />");
         assertWellFormedFragment(mifosAlphaNumTextTag.renderFieldHiddenMandatory());
-        assertEquals(inputsForhidden.toString(), mifosAlphaNumTextTag.renderFieldHiddenMandatory());
+       Assert.assertEquals(inputsForhidden.toString(), mifosAlphaNumTextTag.renderFieldHiddenMandatory());
     }
 
     public void testRenderDoStartTag() throws DocumentException {
@@ -45,6 +46,6 @@ public class MifosAlphaNumTextTagTest extends TestCase {
         inputsForhidden.append("<script src=" + "\"pages/framework/js/func_test.js\"" + ">");
         inputsForhidden.append("</script>");
         assertWellFormedFragment(mifosAlphaNumTextTag.renderDoStartTag("test"));
-        assertEquals(inputsForhidden.toString(), mifosAlphaNumTextTag.renderDoStartTag("test"));
+       Assert.assertEquals(inputsForhidden.toString(), mifosAlphaNumTextTag.renderDoStartTag("test"));
     }
 }

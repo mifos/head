@@ -23,6 +23,8 @@ package org.mifos.application.accounts.business;
 import java.sql.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
@@ -139,11 +141,11 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
             CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) customerAccountBO
                     .getAccountActionDate(custTrxn.getInstallmentId());
-            assertEquals(custTrxn.getMiscFeeAmount().getAmountDoubleValue(), accntActionDate.getMiscFeePaid().negate()
+           Assert.assertEquals(custTrxn.getMiscFeeAmount().getAmountDoubleValue(), accntActionDate.getMiscFeePaid().negate()
                     .getAmountDoubleValue());
-            assertEquals(custTrxn.getMiscPenaltyAmount().getAmountDoubleValue(), accntActionDate.getMiscPenaltyPaid()
+           Assert.assertEquals(custTrxn.getMiscPenaltyAmount().getAmountDoubleValue(), accntActionDate.getMiscPenaltyPaid()
                     .negate().getAmountDoubleValue());
-            assertEquals(loggedInUser.getPersonnelId(), custTrxn.getPersonnel().getPersonnelId());
+           Assert.assertEquals(loggedInUser.getPersonnelId(), custTrxn.getPersonnel().getPersonnelId());
         }
 
     }

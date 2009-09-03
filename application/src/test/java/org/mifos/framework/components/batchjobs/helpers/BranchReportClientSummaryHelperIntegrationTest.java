@@ -23,6 +23,8 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.apache.commons.collections.Predicate;
 import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportBOFixture;
@@ -64,14 +66,14 @@ public class BranchReportClientSummaryHelperIntegrationTest extends MifosIntegra
     }
 
     private void assertClientSummary(BranchReportBO branchReport) throws PersistenceException {
-        assertNotNull(branchReport.getBranchReportId());
+        Assert.assertNotNull(branchReport.getBranchReportId());
         Set<BranchReportClientSummaryBO> branchReportClientSummaries = branchReport.getClientSummaries();
-        assertNotNull(branchReportClientSummaries);
-        assertEquals(12, branchReportClientSummaries.size());
+        Assert.assertNotNull(branchReportClientSummaries);
+       Assert.assertEquals(12, branchReportClientSummaries.size());
 
         Predicate predicate = new BranchReportClientSummaryBatchBOExtractor()
                 .matchAllPredicates(branchReportClientSummaries);
-        assertNull(predicate + " not found in summaries", predicate);
+        Assert.assertNull(predicate + " not found in summaries", predicate);
     }
 
     private IBranchReportService getBranchReportServiceStub() {

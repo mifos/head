@@ -27,6 +27,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import junit.framework.Assert;
+
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -62,9 +64,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createDailyMeeting(TEN, startDate);
         try {
             meeting.getAllDates(null);
-            fail("Should have thrown exception while validating endDate");
+            Assert.fail("Should have thrown exception while validating endDate");
         } catch (MeetingException e) {
-            assertEquals(MeetingConstants.INVALID_ENDDATE, e.getKey());
+           Assert.assertEquals(MeetingConstants.INVALID_ENDDATE, e.getKey());
         }
     }
 
@@ -287,7 +289,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         // Assert getFirstDateForWeek works as expected for meeting with given
         // weekDay
         MeetingBO meeting = createWeeklyMeeting(weekDay, ONE, new Date());
-        assertTrue(meeting.getFirstDateForWeek(startDate).compareTo(expectedDate) == 0);
+       Assert.assertTrue(meeting.getFirstDateForWeek(startDate).compareTo(expectedDate) == 0);
     }
 
     public void testGetAllDatesWeeklyWithRepaymentIndepOfMeetingEnabled() throws Exception {
@@ -315,9 +317,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createDailyMeeting(TEN, startDate);
         try {
             meeting.getAllDates(endDate);
-            fail("Should throw exception if endDate is before startDate");
+            Assert.fail("Should throw exception if endDate is before startDate");
         } catch (MeetingException e) {
-            assertEquals(MeetingConstants.INVALID_ENDDATE, e.getKey());
+           Assert.assertEquals(MeetingConstants.INVALID_ENDDATE, e.getKey());
         }
     }
 
@@ -325,7 +327,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("18/08/2006");
         endDate = getDate("18/08/2006");
         meeting = createDailyMeeting(ONE, startDate);
-        assertTrue(meeting.getAllDates(endDate).isEmpty());
+       Assert.assertTrue(meeting.getAllDates(endDate).isEmpty());
     }
 
     public void testSuccessfulGetAllDates_Day() throws Exception {
@@ -344,9 +346,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         endDate = getDate("02/10/2006");
         meeting = createDailyMeeting(ONE, startDate);
         list = meeting.getAllDates(endDate);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("29/09/2006,30/09/2006,01/10/2006,02/10/2006");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -357,9 +359,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         endDate = getDate("02/09/2006");
         meeting = createDailyMeeting(ONE, startDate);
         list = meeting.getAllDates(endDate);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("29/08/2006,30/08/2006,31/08/2006,01/09/2006,02/09/2006");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -370,9 +372,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         endDate = getDate("02/03/2006");
         meeting = createDailyMeeting(ONE, startDate);
         list = meeting.getAllDates(endDate);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("26/02/2006,27/02/2006,28/02/2006,01/03/2006,02/03/2006");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -383,9 +385,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         endDate = getDate("02/03/2004");
         meeting = createDailyMeeting(ONE, startDate);
         list = meeting.getAllDates(endDate);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("27/02/2004,28/02/2004,29/02/2004,01/03/2004,02/03/2004");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -397,8 +399,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         List expectedList = createExpectedList("17/11/2005,24/11/2005,1/12/2005,08/12/2005,15/12/2005,"
                 + "22/12/2005,29/12/2005,05/01/2006,12/01/2006,19/01/2006,26/01/2006,02/02/2006,09/02/2006,"
                 + "16/02/2006,23/02/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -410,8 +412,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createWeeklyMeeting(WeekDay.FRIDAY, THREE, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("18/11/2005,09/12/2005,30/12/2005,20/01/2006,10/02/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -423,8 +425,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createWeeklyMeeting(WeekDay.TUESDAY, SIX, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("15/11/2005,27/12/2005,07/02/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -437,8 +439,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, ONE, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("12/12/2005,09/01/2006,13/02/2006,13/03/2006,10/04/2006,08/05/2006,12/06/2006,10/07/2006,14/08/2006,11/09/2006,09/10/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -451,8 +453,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankType.LAST, TWO, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("25/11/2005,27/01/2006,31/03/2006,26/05/2006,28/07/2006,29/09/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -466,8 +468,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, THREE, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("05/12/2005,05/03/2006,05/06/2006,05/09/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -481,8 +483,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("30/11/2005,30/12/2005,30/01/2006,28/02/2006,30/03/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -496,8 +498,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("30/11/2005,31/12/2005,31/01/2006,28/02/2006,31/03/2006,30/04/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -511,8 +513,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("28/11/2003,28/12/2003,28/01/2004,28/02/2004,28/03/2004");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -526,8 +528,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(endDate);
         expectedList = createExpectedList("29/11/2003,29/12/2003,29/01/2004,29/02/2004,29/03/2004");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -537,9 +539,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
             occurrences = 0;
             meeting = createDailyMeeting(TEN, startDate);
             meeting.getAllDates(occurrences);
-            fail();
+            Assert.fail();
         } catch (MeetingException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -550,9 +552,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         occurrences = 3;
         meeting = createDailyMeeting(TEN, startDate);
         list = meeting.getAllDates(occurrences);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("28/08/2005,07/09/2005,17/09/2005");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -563,9 +565,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         occurrences = 4;
         meeting = createDailyMeeting(ONE, startDate);
         list = meeting.getAllDates(occurrences);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("29/09/2006,30/09/2006,01/10/2006,02/10/2006");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -576,9 +578,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         occurrences = 5;
         meeting = createDailyMeeting(ONE, startDate);
         list = meeting.getAllDates(occurrences);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("29/08/2006,30/08/2006,31/08/2006,01/09/2006,02/09/2006");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -587,7 +589,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         occurrences = 5;
         meeting = createDailyMeeting(ONE, startDate);
         List list = meeting.getAllDates(occurrences);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         List expectedList = createExpectedList("26/02/2006,27/02/2006,28/02/2006,01/03/2006,02/03/2006");
         matchDateLists(expectedList, list);
     }
@@ -599,9 +601,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         occurrences = 6;
         meeting = createDailyMeeting(ONE, startDate);
         list = meeting.getAllDates(occurrences);
-        assertNotNull(list);
+        Assert.assertNotNull(list);
         expectedList = createExpectedList("27/02/2004,28/02/2004,29/02/2004,01/03/2004,02/03/2004,03/03/2004");
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -613,8 +615,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createWeeklyMeeting(WeekDay.THURSDAY, ONE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("17/11/2005,24/11/2005,1/12/2005,08/12/2005,15/12/2005,22/12/2005,29/12/2005,05/01/2006,12/01/2006,19/01/2006,26/01/2006,02/02/2006,09/02/2006,16/02/2006,23/02/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -626,8 +628,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createWeeklyMeeting(WeekDay.FRIDAY, THREE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("18/11/2005,09/12/2005,30/12/2005,20/01/2006,10/02/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -639,8 +641,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createWeeklyMeeting(WeekDay.TUESDAY, SIX, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("15/11/2005,27/12/2005,07/02/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -653,8 +655,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, ONE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("12/12/2005,09/01/2006,13/02/2006,13/03/2006,10/04/2006,08/05/2006,12/06/2006,10/07/2006,14/08/2006,11/09/2006,09/10/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -667,8 +669,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankType.LAST, TWO, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("25/11/2005,27/01/2006,31/03/2006,26/05/2006,28/07/2006,29/09/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -682,8 +684,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, THREE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("05/12/2005,05/03/2006,05/06/2006,05/09/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -697,8 +699,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("30/11/2005,30/12/2005,30/01/2006,28/02/2006,30/03/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -712,8 +714,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("30/11/2005,31/12/2005,31/01/2006,28/02/2006,31/03/2006,30/04/2006");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -727,8 +729,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("28/11/2003,28/12/2003,28/01/2004,28/02/2004,28/03/2004");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -742,8 +744,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         list = meeting.getAllDates(occurrences);
         expectedList = createExpectedList("29/11/2003,29/12/2003,29/01/2004,29/02/2004,29/03/2004");
-        assertNotNull(list);
-        assertEquals(expectedList.size(), list.size());
+        Assert.assertNotNull(list);
+       Assert.assertEquals(expectedList.size(), list.size());
         matchDateLists(expectedList, list);
     }
 
@@ -755,8 +757,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             meeting.isValidMeetingDate(null, occurrences);
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
         }
     }
 
@@ -767,10 +769,10 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         try {
             meeting.isValidMeetingDate(getDate("29/02/2004"), 0);
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_OCCURENCES, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_OCCURENCES, me.getKey());
         }
     }
 
@@ -780,8 +782,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         occurrences = 5;
         dayNumber = Short.valueOf("29");
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
-        assertTrue(meeting.isValidMeetingDate(getDate("29/02/2004"), occurrences));
-        assertFalse(meeting.isValidMeetingDate(getDate("28/02/2004"), occurrences));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("29/02/2004"), occurrences));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("28/02/2004"), occurrences));
     }
 
     // ExpectedList("25/11/2005,27/01/2006,31/03/2006,26/05/2006,28/07/2006,29/09/2006");
@@ -790,8 +792,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("15/11/2005");
         occurrences = 6;
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankType.LAST, TWO, startDate);
-        assertTrue(meeting.isValidMeetingDate(getDate("31/03/2006"), occurrences));
-        assertFalse(meeting.isValidMeetingDate(getDate("27/10/2006"), occurrences));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("31/03/2006"), occurrences));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("27/10/2006"), occurrences));
     }
 
     // ExpectedList("15/11/2005,27/12/2005,07/02/2006");
@@ -800,8 +802,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         occurrences = 3;
         meeting = createWeeklyMeeting(WeekDay.TUESDAY, SIX, startDate);
 
-        assertTrue(meeting.isValidMeetingDate(getDate("27/12/2005"), occurrences));
-        assertFalse(meeting.isValidMeetingDate(getDate("26/12/2006"), occurrences));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("27/12/2005"), occurrences));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("26/12/2006"), occurrences));
     }
 
     // ExpectedList("28/08/2005,07/09/2005,17/09/2005");
@@ -809,8 +811,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("18/08/2005");
         occurrences = 3;
         meeting = createDailyMeeting(TEN, startDate);
-        assertTrue(meeting.isValidMeetingDate(getDate("07/09/2005"), occurrences));
-        assertFalse(meeting.isValidMeetingDate(getDate("27/09/2006"), occurrences));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("07/09/2005"), occurrences));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("27/09/2006"), occurrences));
     }
 
     public void testFailureIsValidScheduleDate_WhenMeetingDateNull() throws Exception {
@@ -820,10 +822,10 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         try {
             meeting.isValidMeetingDate(null, endDate);
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
         }
     }
 
@@ -834,10 +836,10 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, ONE, startDate);
         try {
             meeting.isValidMeetingDate(getDate("29/02/2004"), null);
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_ENDDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_ENDDATE, me.getKey());
         }
     }
 
@@ -849,8 +851,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         dayNumber = FIVE;
         meeting = createMonthlyMeetingOnDate(dayNumber, THREE, startDate);
 
-        assertTrue(meeting.isValidMeetingDate(getDate("05/09/2006"), endDate));
-        assertFalse(meeting.isValidMeetingDate(getDate("05/12/2006"), endDate));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("05/09/2006"), endDate));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("05/12/2006"), endDate));
     }
 
     // ExpectedList("29/08/2006,30/08/2006,31/08/2006,01/09/2006,02/09/2006");
@@ -858,8 +860,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("28/08/2006");
         endDate = getDate("02/09/2006");
         meeting = createDailyMeeting(ONE, startDate);
-        assertTrue(meeting.isValidMeetingDate(getDate("29/08/2006"), endDate));
-        assertFalse(meeting.isValidMeetingDate(getDate("01/19/2006"), endDate));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("29/08/2006"), endDate));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("01/19/2006"), endDate));
     }
 
     // ExpectedList("12/12/2005,09/01/2006,13/02/2006,13/03/2006,10/04/2006,08/05/2006,12/06/2006,10/07/2006,14/08/2006,11/09/2006,09/10/2006");
@@ -868,8 +870,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("15/11/2005");
         endDate = getDate("15/10/2006");
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, ONE, startDate);
-        assertTrue(meeting.isValidMeetingDate(getDate("13/03/2006"), endDate));
-        assertFalse(meeting.isValidMeetingDate(getDate("15/10/2006"), endDate));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("13/03/2006"), endDate));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("15/10/2006"), endDate));
     }
 
     // ExpectedList("18/11/2005,09/12/2005,30/12/2005,20/01/2006,10/02/2006");
@@ -877,8 +879,8 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("15/11/2005");
         endDate = getDate("01/03/2006");
         meeting = createWeeklyMeeting(WeekDay.FRIDAY, THREE, startDate);
-        assertTrue(meeting.isValidMeetingDate(getDate("18/11/2005"), endDate));
-        assertFalse(meeting.isValidMeetingDate(getDate("03/03/2006"), endDate));
+       Assert.assertTrue(meeting.isValidMeetingDate(getDate("18/11/2005"), endDate));
+        Assert.assertFalse(meeting.isValidMeetingDate(getDate("03/03/2006"), endDate));
     }
 
     public void testGetFailureNextScheduleDate() throws Exception {
@@ -887,10 +889,10 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, TWO, startDate);
         try {
             meeting.getNextScheduleDateAfterRecurrence(null);
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
         }
     }
 
@@ -899,7 +901,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         dayNumber = ONE;
         meeting = createMonthlyMeetingOnDate(dayNumber, TWO, startDate);
         Date resultDate = meeting.getNextScheduleDateAfterRecurrence(getDate("01/01/2006"));
-        assertEquals(getDate("01/03/2006"), resultDate);
+       Assert.assertEquals(getDate("01/03/2006"), resultDate);
     }
 
     public void testGetNextScheduleDateAfterRecurrenceOnEndofMonth() throws Exception {
@@ -907,7 +909,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         dayNumber = Short.valueOf("31");
         meeting = createMonthlyMeetingOnDate(dayNumber, TWO, startDate);
         Date resultDate = meeting.getNextScheduleDateAfterRecurrence(getDate("01/01/2006"));
-        assertEquals(getDate("31/03/2006"), resultDate);
+       Assert.assertEquals(getDate("31/03/2006"), resultDate);
     }
 
     /**
@@ -920,10 +922,10 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(dayNumber, TWO, startDate);
         try {
             meeting.getNextScheduleDateAfterRecurrence(getDate("01/01/2006"));
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_MEETINGDATE, me.getKey());
         }
     }
 
@@ -932,7 +934,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         dayNumber = ONE;
         meeting = createMonthlyMeetingOnDate(dayNumber, TWO, startDate);
         Date resultDate = meeting.getPrevScheduleDateAfterRecurrence(getDate("01/05/2006"));
-        assertEquals(getDate("01/03/2006"), resultDate);
+       Assert.assertEquals(getDate("01/03/2006"), resultDate);
     }
 
     public void testGetPrevScheduleDateAfterRecurrenceOnEndofMonth() throws Exception {
@@ -940,39 +942,39 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         dayNumber = Short.valueOf("31");
         meeting = createMonthlyMeetingOnDate(dayNumber, TWO, startDate);
         Date resultDate = meeting.getPrevScheduleDateAfterRecurrence(getDate("31/05/2006"));
-        assertEquals(getDate("31/03/2006"), resultDate);
+       Assert.assertEquals(getDate("31/03/2006"), resultDate);
     }
 
     public void testFailureCreateDailyMeeting_recurAfterIsNull() {
         try {
             meeting = createDailyMeeting(null, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
         }
     }
 
     public void testFailureCreateDailyMeeting_recurAfterInvalid() {
         try {
             meeting = createDailyMeeting((short) -1, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
         }
     }
 
     public void testFailureCreateDailyMeeting_startDateIsNull() {
         try {
             meeting = createDailyMeeting(ONE, null);
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
         }
     }
 
@@ -982,52 +984,52 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         meeting = (MeetingBO) StaticHibernateUtil.getSessionTL().get(MeetingBO.class, meeting.getMeetingId());
-        assertNotNull(meeting);
-        assertEquals(ONE, meeting.getMeetingDetails().getRecurAfter());
-        assertEquals(RecurrenceType.DAILY, meeting.getMeetingDetails().getRecurrenceTypeEnum());
+        Assert.assertNotNull(meeting);
+       Assert.assertEquals(ONE, meeting.getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(RecurrenceType.DAILY, meeting.getMeetingDetails().getRecurrenceTypeEnum());
     }
 
     public void testFailureCreateWeeklyMeeting_weekDayIsNull() {
         try {
             meeting = createWeeklyMeeting(null, ONE, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_WEEKDAY, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_WEEKDAY, me.getKey());
         }
     }
 
     public void testFailureCreateWeeklyMeeting_recurAfterIsNull() {
         try {
             meeting = createWeeklyMeeting(WeekDay.MONDAY, null, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
         }
     }
 
     public void testFailureCreateWeeklyMeeting_startDateIsNull() {
         try {
             meeting = createWeeklyMeeting(WeekDay.MONDAY, ONE, null);
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
         }
     }
 
     public void testFailureCreateWeeklyMeeting_meetingPlaceIsNull() {
         try {
             meeting = new MeetingBO(WeekDay.MONDAY, ONE, new Date(), MeetingType.CUSTOMER_MEETING, "");
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
         }
     }
 
@@ -1037,20 +1039,20 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         meeting = (MeetingBO) StaticHibernateUtil.getSessionTL().get(MeetingBO.class, meeting.getMeetingId());
-        assertNotNull(meeting);
-        assertEquals(TWO, meeting.getMeetingDetails().getRecurAfter());
-        assertTrue(meeting.isWeekly());
-        assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+        Assert.assertNotNull(meeting);
+       Assert.assertEquals(TWO, meeting.getMeetingDetails().getRecurAfter());
+       Assert.assertTrue(meeting.isWeekly());
+       Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
     }
 
     public void testFailureCreateMonthlyMeetingOnDate_dayNumberIsNull() {
         try {
             meeting = createMonthlyMeetingOnDate(null, ONE, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_DAYNUMBER_OR_WEEK, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_DAYNUMBER_OR_WEEK, me.getKey());
         }
     }
 
@@ -1058,11 +1060,11 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             dayNumber = Short.valueOf("32");
             meeting = createMonthlyMeetingOnDate(dayNumber, ONE, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_DAYNUMBER, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_DAYNUMBER, me.getKey());
         }
     }
 
@@ -1070,11 +1072,11 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             dayNumber = FIVE;
             meeting = createMonthlyMeetingOnDate(dayNumber, null, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
         }
     }
 
@@ -1082,11 +1084,11 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             dayNumber = FIVE;
             meeting = createMonthlyMeetingOnDate(dayNumber, ONE, null);
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
         }
     }
 
@@ -1097,42 +1099,42 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         meeting = (MeetingBO) StaticHibernateUtil.getSessionTL().get(MeetingBO.class, meeting.getMeetingId());
-        assertNotNull(meeting);
-        assertEquals(ONE, meeting.getMeetingDetails().getRecurAfter());
-        assertTrue(meeting.isMonthlyOnDate());
-        assertEquals(dayNumber, meeting.getMeetingDetails().getDayNumber());
+        Assert.assertNotNull(meeting);
+       Assert.assertEquals(ONE, meeting.getMeetingDetails().getRecurAfter());
+       Assert.assertTrue(meeting.isMonthlyOnDate());
+       Assert.assertEquals(dayNumber, meeting.getMeetingDetails().getDayNumber());
     }
 
     public void testFailureCreateMonthlyMeetingOnWeekDay_weekDayIsNull() {
         try {
             meeting = createMonthlyMeetingOnWeekDay(null, RankType.FIRST, ONE, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
         }
     }
 
     public void testFailureCreateMonthlyMeetingOnWeekDay_weekRankIsNull() {
         try {
             meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, null, ONE, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
         }
     }
 
     public void testFailureCreateMonthlyMeetingOnWeekDay_recurAfterIsNull() {
         try {
             meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, null, new Date());
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
         }
     }
 
@@ -1140,11 +1142,11 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             dayNumber = FIVE;
             meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, ONE, null);
-            assertNull(meeting);
-            fail();
+            Assert.assertNull(meeting);
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
         }
     }
 
@@ -1154,41 +1156,41 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         meeting = (MeetingBO) StaticHibernateUtil.getSessionTL().get(MeetingBO.class, meeting.getMeetingId());
-        assertNotNull(meeting);
-        assertEquals(ONE, meeting.getMeetingDetails().getRecurAfter());
-        assertTrue(meeting.isMonthly());
-        assertFalse(meeting.isMonthlyOnDate());
-        assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
-        assertEquals(RankType.FIRST, meeting.getMeetingDetails().getWeekRank());
+        Assert.assertNotNull(meeting);
+       Assert.assertEquals(ONE, meeting.getMeetingDetails().getRecurAfter());
+       Assert.assertTrue(meeting.isMonthly());
+        Assert.assertFalse(meeting.isMonthlyOnDate());
+       Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+       Assert.assertEquals(RankType.FIRST, meeting.getMeetingDetails().getWeekRank());
     }
 
     public void testFailureUpdateWeeklyMeeting_MeetingPlace_Null() throws MeetingException {
         meeting = createWeeklyMeeting(WeekDay.MONDAY, FIVE, new Date());
         try {
             meeting.update(WeekDay.WEDNESDAY, "");
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
         }
     }
 
     public void testSuccessfulUpdateWeeklyMeeting() throws MeetingException {
         meeting = createWeeklyMeeting(WeekDay.MONDAY, FIVE, new Date());
         meeting.update(WeekDay.WEDNESDAY, "Delhi");
-        assertEquals("Delhi", meeting.getMeetingPlace());
-        assertEquals(FIVE, meeting.getMeetingDetails().getRecurAfter());
-        assertEquals(WeekDay.WEDNESDAY, meeting.getMeetingDetails().getWeekDay());
+       Assert.assertEquals("Delhi", meeting.getMeetingPlace());
+       Assert.assertEquals(FIVE, meeting.getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(WeekDay.WEDNESDAY, meeting.getMeetingDetails().getWeekDay());
     }
 
     public void testFailureUpdateMontlyMeetingInValidDayNumber() throws MeetingException {
         meeting = createMonthlyMeetingOnDate(Short.valueOf("5"), TWO, new Date());
         try {
             meeting.update(Short.valueOf("32"), "Delhi");
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_DAYNUMBER, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_DAYNUMBER, me.getKey());
         }
     }
 
@@ -1196,39 +1198,39 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = createMonthlyMeetingOnDate(Short.valueOf("5"), TWO, new Date());
         try {
             meeting.update(SIX, "");
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
         }
     }
 
     public void testSuccessfulUpdateMontlyMeetingOnDate() throws MeetingException {
         meeting = createMonthlyMeetingOnDate(Short.valueOf("5"), TWO, new Date());
         meeting.update(TEN, "Delhi");
-        assertEquals("Delhi", meeting.getMeetingPlace());
-        assertEquals(TWO, meeting.getMeetingDetails().getRecurAfter());
-        assertEquals(TEN, meeting.getMeetingDetails().getDayNumber());
+       Assert.assertEquals("Delhi", meeting.getMeetingPlace());
+       Assert.assertEquals(TWO, meeting.getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(TEN, meeting.getMeetingDetails().getDayNumber());
     }
 
     public void testFailureUpdateMontlyMeetingOnWeekDay() throws MeetingException {
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, TWO, new Date());
         try {
             meeting.update(null, null, "Delhi");
-            fail();
+            Assert.fail();
         } catch (MeetingException me) {
-            assertTrue(true);
-            assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
         }
     }
 
     public void testSuccessfulUpdateMontlyMeetingOnWeekDay() throws MeetingException {
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, TWO, new Date());
         meeting.update(WeekDay.THURSDAY, RankType.THIRD, "Delhi");
-        assertEquals("Delhi", meeting.getMeetingPlace());
-        assertEquals(TWO, meeting.getMeetingDetails().getRecurAfter());
-        assertEquals(WeekDay.THURSDAY, meeting.getMeetingDetails().getWeekDay());
-        assertEquals(RankType.THIRD, meeting.getMeetingDetails().getWeekRank());
+       Assert.assertEquals("Delhi", meeting.getMeetingPlace());
+       Assert.assertEquals(TWO, meeting.getMeetingDetails().getRecurAfter());
+       Assert.assertEquals(WeekDay.THURSDAY, meeting.getMeetingDetails().getWeekDay());
+       Assert.assertEquals(RankType.THIRD, meeting.getMeetingDetails().getWeekRank());
     }
 
     private MeetingBO createDailyMeeting(Short recurAfer, Date startDate) throws MeetingException {
@@ -1260,9 +1262,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     void matchDateLists(List<Date> expectedList, List<Date> list) {
-        assertEquals(expectedList.size(), list.size());
+       Assert.assertEquals(expectedList.size(), list.size());
         for (int i = 0; i < expectedList.size(); i++)
-            assertEquals("Dates are invalid", expectedList.get(i), list.get(i));
+           Assert.assertEquals("Dates are invalid", expectedList.get(i), list.get(i));
     }
 
     public void testShouldReturnDateOfNextWeekOnSameWeekdayAsConfiguredIfStartDateDayIsAfterConfiguredWeekday()
@@ -1271,7 +1273,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meetingBO = createWeeklyMeeting(WeekDay.MONDAY, ONE, DateUtils.getDate(2008, Calendar.JANUARY, 1));
         Date shouldBeDateFallingNextWeekOnMeetingWeekday = meetingBO
                 .getNextScheduleDateAfterRecurrence(dateFallingOnTuesday);
-        assertEquals(DateUtils.getDate(2008, Calendar.JANUARY, 14), shouldBeDateFallingNextWeekOnMeetingWeekday);
+       Assert.assertEquals(DateUtils.getDate(2008, Calendar.JANUARY, 14), shouldBeDateFallingNextWeekOnMeetingWeekday);
     }
 
     public void testShouldReturnDateOfSameWeekOnSameWeekdayAsConfiguredIfStartDateDayIsBeforeConfiguredWeekday()
@@ -1280,6 +1282,6 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meetingBO = createWeeklyMeeting(WeekDay.MONDAY, ONE, DateUtils.getDate(2008, Calendar.JANUARY, 1));
         Date shouldBeDateFallingNextWeekOnMeetingWeekday = meetingBO
                 .getNextScheduleDateAfterRecurrence(dateFallingOnSunday);
-        assertEquals(DateUtils.getDate(2008, Calendar.JANUARY, 14), shouldBeDateFallingNextWeekOnMeetingWeekday);
+       Assert.assertEquals(DateUtils.getDate(2008, Calendar.JANUARY, 14), shouldBeDateFallingNextWeekOnMeetingWeekday);
     }
 }

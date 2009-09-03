@@ -26,6 +26,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -69,7 +71,7 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testLoanAccountBOOfsetAllowablePersistence() {
-        assertTrue(accountBO.getOffsettingAllowable().intValue() == 1);
+       Assert.assertTrue(accountBO.getOffsettingAllowable().intValue() == 1);
     }
 
     @Override

@@ -22,6 +22,8 @@ package org.mifos.application.accounts.business;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -59,7 +61,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 accountFeesActionDetailEntity.makeRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
-                assertEquals(accountFeesActionDetailEntity.getFeeAmount(), accountFeesActionDetailEntity
+               Assert.assertEquals(accountFeesActionDetailEntity.getFeeAmount(), accountFeesActionDetailEntity
                         .getFeeAmountPaid());
             }
         }
@@ -71,7 +73,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 accountFeesActionDetailEntity.makeRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
-                assertEquals(accountFeesActionDetailEntity.getFeeAmount(), accountFeesActionDetailEntity
+               Assert.assertEquals(accountFeesActionDetailEntity.getFeeAmount(), accountFeesActionDetailEntity
                         .getFeeAmountPaid());
             }
         }
@@ -87,9 +89,9 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDate
                 .getAccountFeesActionDetails()) {
             chargeWaived = accountFeesActionDetailEntity.waiveCharges();
-            assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
+           Assert.assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
         }
-        assertEquals(new Money("100"), chargeWaived);
+       Assert.assertEquals(new Money("100"), chargeWaived);
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());

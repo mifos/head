@@ -20,6 +20,8 @@
 
 package org.mifos.application.customer.struts.action;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -104,7 +106,7 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("waiveChargesDue_Success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testForwardWaiveChargeOverDue() {
@@ -120,7 +122,7 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("waiveChargesOverDue_Success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testGetAllActivity() {
@@ -135,7 +137,7 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("viewClientActivity");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     private void createInitialObjects() {

@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
@@ -47,47 +48,47 @@ public class SystemInfoTest extends TestCase {
     }
 
     public void testApplicationDatabaseVersion() throws Exception {
-        assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info.getApplicationVersion());
+       Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info.getApplicationVersion());
     }
 
     public void testDatabaseDetails() throws Exception {
-        assertEquals("vendorName", info.getDatabaseVendor());
-        assertEquals("1.0", info.getDatabaseVersion());
-        assertEquals("driverName", info.getDriverName());
-        assertEquals("2.0", info.getDriverVersion());
+       Assert.assertEquals("vendorName", info.getDatabaseVendor());
+       Assert.assertEquals("1.0", info.getDatabaseVersion());
+       Assert.assertEquals("driverName", info.getDriverName());
+       Assert.assertEquals("2.0", info.getDriverVersion());
     }
 
     public void testDatabaseInfos() throws Exception {
         String infoSourceValue = "test";
         info.setInfoSource(infoSourceValue);
-        assertEquals(info.getInfoSource(), infoSourceValue);
+       Assert.assertEquals(info.getInfoSource(), infoSourceValue);
         URI full = new URI("jdbc:mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
         URI mysqlSpecific = new URI(full.getSchemeSpecificPart());
         info.setInfoURL(mysqlSpecific);
-        assertEquals("localhost", info.getDatabaseServer());
-        assertEquals("mifos", info.getDatabaseName());
-        assertEquals("3305", info.getDatabasePort());
+       Assert.assertEquals("localhost", info.getDatabaseServer());
+       Assert.assertEquals("mifos", info.getDatabaseName());
+       Assert.assertEquals("3305", info.getDatabasePort());
         info.setInfoUserName("mysql");
-        assertEquals("mysql", info.getDatabaseUser());
+       Assert.assertEquals("mysql", info.getDatabaseUser());
     }
 
     public void testJava() throws Exception {
-        assertEquals("Sun", info.getJavaVendor());
-        assertEquals("1.5", info.getJavaVersion());
+       Assert.assertEquals("Sun", info.getJavaVendor());
+       Assert.assertEquals("1.5", info.getJavaVersion());
     }
 
     public void testApplicationServer() throws Exception {
-        assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
+       Assert.assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
     }
 
     public void testGetSubversionRevision() throws Exception {
-        assertEquals("123456", info.getSvnRevision());
+       Assert.assertEquals("123456", info.getSvnRevision());
     }
 
     public void testGetSubversionRevisionFromMissingFile() throws Exception {
         try {
             info.setSvnRevision(new SvnRevision("non-existant.file"));
-            fail("Expected RuntimeException.");
+            Assert.fail("Expected RuntimeException.");
         } catch (RuntimeException e) {
             // expected
         }
@@ -99,7 +100,7 @@ public class SystemInfoTest extends TestCase {
         try {
             // set a fixed datetime which is what SystemInfo should get back
             dateTimeService.setCurrentDateTimeFixed(referenceDateTime);
-            assertEquals("System info date time should be from the DateTimeService", referenceDateTime, info
+           Assert.assertEquals("System info date time should be from the DateTimeService", referenceDateTime, info
                     .getDateTime());
         } finally {
             dateTimeService.resetToCurrentSystemDateTime();

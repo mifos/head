@@ -23,6 +23,8 @@ package org.mifos.application.accounts.loan.business;
 import java.util.Iterator;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -44,14 +46,14 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
     public void testGetPrincipalDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
         accountActionDate.setPrincipalPaid(new Money("10.0"));
-        assertEquals(90.0, accountActionDate.getPrincipalDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(90.0, accountActionDate.getPrincipalDue().getAmountDoubleValue(), DELTA);
 
     }
 
     public void testGetInterestDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
         accountActionDate.setInterestPaid(new Money("2.0"));
-        assertEquals(10.0, accountActionDate.getInterestDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(10.0, accountActionDate.getInterestDue().getAmountDoubleValue(), DELTA);
 
     }
 
@@ -61,7 +63,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setPenaltyPaid(new Money("5.0"));
         accountActionDate.setMiscPenalty(new Money("10.0"));
         accountActionDate.setMiscPenaltyPaid(new Money("5.0"));
-        assertEquals(20.0, accountActionDate.getPenaltyDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(20.0, accountActionDate.getPenaltyDue().getAmountDoubleValue(), DELTA);
 
     }
 
@@ -74,7 +76,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscPenalty(new Money("10.0"));
         accountActionDate.setMiscFee(new Money("20.0"));
         accountActionDate.setMiscFeePaid(new Money("5.0"));
-        assertEquals(140.0, accountActionDate.getTotalDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(140.0, accountActionDate.getTotalDue().getAmountDoubleValue(), DELTA);
 
     }
 
@@ -87,7 +89,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscPenalty(new Money("10.0"));
         accountActionDate.setMiscFee(new Money("20.0"));
         accountActionDate.setMiscFeePaid(new Money("5.0"));
-        assertEquals(240.0, accountActionDate.getTotalDueWithFees().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(240.0, accountActionDate.getTotalDueWithFees().getAmountDoubleValue(), DELTA);
 
     }
 
@@ -100,7 +102,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscPenalty(new Money("10.0"));
         accountActionDate.setMiscFee(new Money("20.0"));
         accountActionDate.setMiscFeePaid(new Money("5.0"));
-        assertEquals(115.0, accountActionDate.getDueAmnts().getFeesOverdue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(115.0, accountActionDate.getDueAmnts().getFeesOverdue().getAmountDoubleValue(), DELTA);
 
     }
 
@@ -114,10 +116,10 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscFee(new Money("20.0"));
         accountActionDate.setMiscFeePaid(new Money("5.0"));
         OverDueAmounts totalDue = accountActionDate.getDueAmnts();
-        assertEquals(115.0, totalDue.getFeesOverdue().getAmountDoubleValue(), DELTA);
-        assertEquals(90.0, totalDue.getPrincipalOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(10.0, totalDue.getInterestOverdue().getAmountDoubleValue(), DELTA);
-        assertEquals(25.0, totalDue.getPenaltyOverdue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(115.0, totalDue.getFeesOverdue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(90.0, totalDue.getPrincipalOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(10.0, totalDue.getInterestOverdue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(25.0, totalDue.getPenaltyOverdue().getAmountDoubleValue(), DELTA);
 
     }
 
@@ -144,7 +146,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.addAccountFeesAction(loanFeeSchedule);
         accountActionDate.addAccountFeesAction(loanFeeSchedule1);
 
-        assertEquals(new Money("170"), accountActionDate.getTotalScheduleAmountWithFees());
+       Assert.assertEquals(new Money("170"), accountActionDate.getTotalScheduleAmountWithFees());
     }
 
     public void testIsPricipalZero() {
@@ -152,9 +154,9 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId() == 1) {
                 accountActionDateEntity.setPrincipal(new Money());
-                assertTrue(accountActionDateEntity.isPrincipalZero());
+               Assert.assertTrue(accountActionDateEntity.isPrincipalZero());
             } else
-                assertFalse(accountActionDateEntity.isPrincipalZero());
+                Assert.assertFalse(accountActionDateEntity.isPrincipalZero());
         }
     }
 
@@ -177,11 +179,11 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             accountActionDateEntity.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
-            assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
-            assertEquals(accountActionDateEntity.getInterest(), accountActionDateEntity.getInterestPaid());
-            assertEquals(accountActionDateEntity.getPenalty(), accountActionDateEntity.getPenaltyPaid());
-            assertEquals(accountActionDateEntity.getMiscFee(), accountActionDateEntity.getMiscFeePaid());
-            assertTrue(accountActionDateEntity.isPaid());
+           Assert.assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
+           Assert.assertEquals(accountActionDateEntity.getInterest(), accountActionDateEntity.getInterestPaid());
+           Assert.assertEquals(accountActionDateEntity.getPenalty(), accountActionDateEntity.getPenaltyPaid());
+           Assert.assertEquals(accountActionDateEntity.getMiscFee(), accountActionDateEntity.getMiscFeePaid());
+           Assert.assertTrue(accountActionDateEntity.isPaid());
         }
     }
 
@@ -189,11 +191,11 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             accountActionDateEntity.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
-            assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
-            assertEquals(accountActionDateEntity.getInterest(), accountActionDateEntity.getInterestPaid());
-            assertEquals(accountActionDateEntity.getPenalty(), accountActionDateEntity.getPenaltyPaid());
-            assertEquals(accountActionDateEntity.getMiscFee(), accountActionDateEntity.getMiscFeePaid());
-            assertTrue(accountActionDateEntity.isPaid());
+           Assert.assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
+           Assert.assertEquals(accountActionDateEntity.getInterest(), accountActionDateEntity.getInterestPaid());
+           Assert.assertEquals(accountActionDateEntity.getPenalty(), accountActionDateEntity.getPenaltyPaid());
+           Assert.assertEquals(accountActionDateEntity.getMiscFee(), accountActionDateEntity.getMiscFeePaid());
+           Assert.assertTrue(accountActionDateEntity.isPaid());
         }
     }
 
@@ -209,7 +211,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         while (itr.hasNext()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) itr.next();
             accountActionDateEntity.removeFees(feeId);
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 

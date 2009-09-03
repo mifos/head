@@ -23,6 +23,8 @@ package org.mifos.application.accounts.savings.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
@@ -132,10 +134,10 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         Hibernate.initialize(savings.getAccountPayments());
         Hibernate.initialize(savings.getAccountFees());
         Hibernate.initialize(savings.getAccountActionDates());
-        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
                 request);
-        assertNull(clientList);
+        Assert.assertNull(clientList);
 
         group = new CustomerPersistence().getCustomer(group.getCustomerId());
         center = new CustomerPersistence().getCustomer(center.getCustomerId());
@@ -161,11 +163,11 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         Hibernate.initialize(savings.getAccountPayments());
         Hibernate.initialize(savings.getAccountFees());
         Hibernate.initialize(savings.getAccountActionDates());
-        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
                 request);
-        assertNotNull(clientList);
-        assertEquals(2, clientList.size());
+        Assert.assertNotNull(clientList);
+       Assert.assertEquals(2, clientList.size());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -329,8 +331,8 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("close_success");
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
 
-        assertEquals(new Money(), savings.getSavingsBalance());
-        assertEquals(AccountState.SAVINGS_CLOSED.getValue(), savings.getAccountState().getId());
+       Assert.assertEquals(new Money(), savings.getSavingsBalance());
+       Assert.assertEquals(AccountState.SAVINGS_CLOSED.getValue(), savings.getAccountState().getId());
     }
 
     private void createInitialObjects() {

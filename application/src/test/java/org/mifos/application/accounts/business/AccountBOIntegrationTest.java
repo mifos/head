@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.AccountIntegrationTestCase;
@@ -114,7 +116,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
         loan = (LoanBO) session.get(LoanBO.class, loan.getAccountId());
 
-        assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted(), DELTA);
+       Assert.assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted(), DELTA);
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
@@ -143,11 +145,11 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
             loan.adjustLastPayment("Payment with amount 100 has been adjusted by test code");
         } catch (AccountException e) {
 
-            assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
+           Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
         }
         TestObjectFactory.updateObject(loan);
         /*
-         * assertEquals("The amount returned should have been 0.0", 0.0,
+         *Assert.assertEquals("The amount returned should have been 0.0", 0.0,
          * loan.getLastPmntAmntToBeAdjusted());
          */
         try {
@@ -155,11 +157,11 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
         } catch (AccountException e) {
 
-            assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
+           Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
         }
         TestObjectFactory.updateObject(loan);
         /*
-         * assertEquals("The amount returned should have been : 0.0", 0.0,
+         *Assert.assertEquals("The amount returned should have been : 0.0", 0.0,
          * loan.getLastPmntAmntToBeAdjusted());
          */
 
@@ -182,12 +184,12 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     @Test(dependsOnMethods = {"testSuccessUpdateAccountActionDateEntity"})
     public void testSuccessUpdateAccountFeesEntity() {
         Set<AccountFeesEntity> accountFeesEntitySet = accountBO.getAccountFees();
-        assertEquals(1, accountFeesEntitySet.size());
+       Assert.assertEquals(1, accountFeesEntitySet.size());
         Iterator<AccountFeesEntity> itr = accountFeesEntitySet.iterator();
         while (itr.hasNext()) {
             AccountFeesEntity accountFeesEntity = (AccountFeesEntity) itr.next();
             accountBO.updateAccountFeesEntity(accountFeesEntity.getFees().getFeeId());
-            assertFalse(accountFeesEntity.isActive());
+            Assert.assertFalse(accountFeesEntity.isActive());
         }
     }
 
@@ -204,7 +206,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
         TestObjectFactory.updateObject(loan);
         TestObjectFactory.flushandCloseSession();
-        assertEquals("The amount returned for the payment should have been 1272", 700.0, loan.getLastPmntAmnt());
+       Assert.assertEquals("The amount returned for the payment should have been 1272", 700.0, loan.getLastPmntAmnt());
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
@@ -233,14 +235,14 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         loan.setUserContext(TestUtils.makeUser());
         loan.adjustPmnt("loan account has been adjusted by test code");
         TestObjectFactory.updateObject(loan);
-        assertEquals("The amount returned for the payment should have been 0", 0.0, loan.getLastPmntAmnt());
+       Assert.assertEquals("The amount returned for the payment should have been 0", 0.0, loan.getLastPmntAmnt());
         LoanTrxnDetailEntity lastLoanTrxn = null;
         for (AccountTrxnEntity accntTrxn : loan.getLastPmnt().getAccountTrxns()) {
             lastLoanTrxn = (LoanTrxnDetailEntity) accntTrxn;
             break;
         }
         AccountActionDateEntity installment = loan.getAccountActionDate(lastLoanTrxn.getInstallmentId());
-        assertFalse("The installment adjusted should now be marked unpaid(due).", installment.isPaid());
+        Assert.assertFalse("The installment adjusted should now be marked unpaid(due).", installment.isPaid());
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
@@ -261,9 +263,9 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.updateObject(loan);
         try {
             loan.adjustPmnt("loan account has been adjusted by test code");
-            fail();
+            Assert.fail();
         } catch (AccountException e) {
-            assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
+           Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
         }
     }
 
@@ -284,11 +286,11 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 
         Set<AccountPaymentEntity> payments = loan.getAccountPayments();
-        assertEquals(1, payments.size());
+       Assert.assertEquals(1, payments.size());
         AccountPaymentEntity accntPmnt = payments.iterator().next();
         TestObjectFactory.flushandCloseSession();
 
-        assertEquals("Account payment retrieved should be zero with currency MFI currency", TestObjectFactory
+       Assert.assertEquals("Account payment retrieved should be zero with currency MFI currency", TestObjectFactory
                 .getMoneyForMFICurrency(0), accntPmnt.getAmount());
     }
 
@@ -315,12 +317,12 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         }
         loan.setUserContext(TestUtils.makeUser());
         List<TransactionHistoryView> trxnHistlist = loan.getTransactionHistoryView();
-        assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
-        assertTrue("Account TrxnHistoryView list object Size should be greater than zero", trxnHistlist.size() > 0);
-        assertEquals(ids.size(), trxnHistlist.size());
+        Assert.assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
+       Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero", trxnHistlist.size() > 0);
+       Assert.assertEquals(ids.size(), trxnHistlist.size());
         int i = 0;
         for (TransactionHistoryView transactionHistoryView : trxnHistlist) {
-            assertEquals(ids.get(i), transactionHistoryView.getAccountTrxnId());
+           Assert.assertEquals(ids.get(i), transactionHistoryView.getAccountTrxnId());
             i++;
         }
         TestObjectFactory.flushandCloseSession();
@@ -343,10 +345,10 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(TestUtils.makeUser());
         List<TransactionHistoryView> trxnHistlist = loan.getTransactionHistoryView();
-        assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
-        assertTrue("Account TrxnHistoryView list object Size should be greater than zero", trxnHistlist.size() > 0);
+        Assert.assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
+       Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero", trxnHistlist.size() > 0);
         for (TransactionHistoryView transactionHistoryView : trxnHistlist) {
-            assertEquals(transactionHistoryView.getPostedBy(), personnel.getDisplayName());
+           Assert.assertEquals(transactionHistoryView.getPostedBy(), personnel.getDisplayName());
         }
         TestObjectFactory.flushandCloseSession();
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
@@ -361,7 +363,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         accountPersistence.createOrUpdate(accountBO);
         TestObjectFactory.flushandCloseSession();
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-        assertEquals(1, accountBO.getPeriodicFeeList().size());
+       Assert.assertEquals(1, accountBO.getPeriodicFeeList().size());
     }
 
     @Test(dependsOnMethods = {"testGetPeriodicFeeList"})
@@ -372,9 +374,9 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         calendar.add(Calendar.DAY_OF_MONTH, 10);
         java.util.Date trxnDate = new Date(calendar.getTimeInMillis());
         if (AccountingRules.isBackDatedTxnAllowed())
-            assertTrue(accountBO.isTrxnDateValid(trxnDate));
+           Assert.assertTrue(accountBO.isTrxnDateValid(trxnDate));
         else
-            assertFalse(accountBO.isTrxnDateValid(trxnDate));
+            Assert.assertFalse(accountBO.isTrxnDateValid(trxnDate));
 
     }
 
@@ -417,7 +419,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         StaticHibernateUtil.getTransaction().commit();
         StaticHibernateUtil.closeSession();
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-        assertEquals(1, accountBO.getAccountActionDates().size());
+       Assert.assertEquals(1, accountBO.getAccountActionDates().size());
 
     }
 
@@ -436,13 +438,13 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
         for (AccountNotesEntity accountNotes : accountBO.getRecentAccountNotes()) {
-            assertEquals("Last note added is account updated", "account updated", accountNotes.getComment());
-            assertEquals(currentDate.toString(), accountNotes.getCommentDateStr());
-            assertEquals(personnelBO.getPersonnelId(), accountNotes.getPersonnel().getPersonnelId());
-            assertEquals(personnelBO.getDisplayName(), accountNotes.getPersonnel().getDisplayName());
-            assertEquals(currentDate.toString(), accountNotes.getCommentDate().toString());
-            assertEquals(accountBO.getAccountId(), accountNotes.getAccount().getAccountId());
-            assertNotNull(accountNotes.getCommentId());
+           Assert.assertEquals("Last note added is account updated", "account updated", accountNotes.getComment());
+           Assert.assertEquals(currentDate.toString(), accountNotes.getCommentDateStr());
+           Assert.assertEquals(personnelBO.getPersonnelId(), accountNotes.getPersonnel().getPersonnelId());
+           Assert.assertEquals(personnelBO.getDisplayName(), accountNotes.getPersonnel().getDisplayName());
+           Assert.assertEquals(currentDate.toString(), accountNotes.getCommentDate().toString());
+           Assert.assertEquals(accountBO.getAccountId(), accountNotes.getAccount().getAccountId());
+            Assert.assertNotNull(accountNotes.getCommentId());
             break;
         }
     }
@@ -459,8 +461,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
             break;
         }
         List<AccountActionDateEntity> pastInstallments = centerBO.getCustomerAccount().getPastInstallments();
-        assertNotNull(pastInstallments);
-        assertEquals(1, pastInstallments.size());
+        Assert.assertNotNull(pastInstallments);
+       Assert.assertEquals(1, pastInstallments.size());
         TestObjectFactory.cleanUp(centerBO);
     }
 
@@ -473,8 +475,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         centerBO = TestObjectFactory.getCenter(centerBO.getCustomerId());
 
         List<AccountActionDateEntity> allInstallments = centerBO.getCustomerAccount().getAllInstallments();
-        assertNotNull(allInstallments);
-        assertEquals(10, allInstallments.size());
+        Assert.assertNotNull(allInstallments);
+       Assert.assertEquals(10, allInstallments.size());
         TestObjectFactory.cleanUp(centerBO);
     }
 
@@ -507,7 +509,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(1, accountBO.getPerformanceHistory().getNoOfPayments().intValue());
+       Assert.assertEquals(1, accountBO.getPerformanceHistory().getNoOfPayments().intValue());
 
     }
 
@@ -522,7 +524,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         java.util.Date mutatingDate1 = (java.util.Date) originalDate.clone();
         account.setClosedDate(mutatingDate1);
         mutatingDate1.setTime(System.currentTimeMillis() + TEN_SECONDS);
-        assertEquals(account.getClosedDate(), originalDate);
+       Assert.assertEquals(account.getClosedDate(), originalDate);
 
         // verify that after the getter is called, changes to the object
         // returned by the getter do not affect the internal state
@@ -530,7 +532,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         account.setClosedDate(originalDate2);
         java.util.Date mutatingDate2 = account.getClosedDate();
         mutatingDate2.setTime(System.currentTimeMillis() + TEN_SECONDS);
-        assertEquals(account.getClosedDate(), originalDate);
+       Assert.assertEquals(account.getClosedDate(), originalDate);
     }
 
     @Test(dependsOnMethods = {"testAccountBOClosedDate"})
@@ -549,7 +551,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         AccountBO account = new AccountBO(35);
         String officeGlobalNum = "0567";
         String globalAccountNum = account.generateId(officeGlobalNum);
-        assertEquals("056700000000035", globalAccountNum);
+       Assert.assertEquals("056700000000035", globalAccountNum);
     }
 
     public static void addToAccountStatusChangeHistory(LoanBO loan,
@@ -569,15 +571,15 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     private void checkScheduleDates(List<java.util.Date> meetingDates, AccountActionDateEntity actionDateEntity) {
         // first installment should remain today, ie meeting unchanged
         if (actionDateEntity.getInstallmentId() == 1)
-            assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
+           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
                     .getCurrentDateWithoutTimeStamp());
         // next week's installment & subsequent weeks should be on new meeting
         // dates
         else if (actionDateEntity.getInstallmentId() == 2)
-            assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
+           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
                     .getDateWithoutTimeStamp(meetingDates.get(1)));
         else if (actionDateEntity.getInstallmentId() == 3)
-            assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
+           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
                     .getDateWithoutTimeStamp(meetingDates.get(2)));
     }
 

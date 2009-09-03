@@ -23,9 +23,9 @@ package org.mifos.application.ppi.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.junit.Assert;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.exceptions.ValidationException;
 
@@ -68,7 +68,7 @@ public class PpiLikelihoodTest extends TestCase {
         try {
             int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
             PPILikelihood lh = new PPILikelihood(0, nonPoorMax + 1, 10.5, 30.2);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -76,7 +76,7 @@ public class PpiLikelihoodTest extends TestCase {
     public void testLikelihoodConstructorBottomHalfNegative() throws Exception {
         try {
             PPILikelihood lh = new PPILikelihood(0, 5, -10.5, 30.2);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -84,7 +84,7 @@ public class PpiLikelihoodTest extends TestCase {
     public void testLikelihoodConstructorTopHalfNegative() throws Exception {
         try {
             PPILikelihood lh = new PPILikelihood(0, 5, 10.5, -30.2);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -92,7 +92,7 @@ public class PpiLikelihoodTest extends TestCase {
     public void testLikelihoodConstructorBothNegative() throws Exception {
         try {
             PPILikelihood lh = new PPILikelihood(0, 5, 10.5, -30.2);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -100,7 +100,7 @@ public class PpiLikelihoodTest extends TestCase {
     public void testLikelihoodConstructorTooBig() throws Exception {
         try {
             PPILikelihood lh = new PPILikelihood(0, 5, 85.5, 30.2);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -108,7 +108,7 @@ public class PpiLikelihoodTest extends TestCase {
     public void testLikelihoodConstructorTopHalfTooBig() throws Exception {
         try {
             PPILikelihood lh = new PPILikelihood(0, 5, 110.1, 5.5);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -116,7 +116,7 @@ public class PpiLikelihoodTest extends TestCase {
     public void testLikelihoodConstructorBothTooBig() throws Exception {
         try {
             PPILikelihood lh = new PPILikelihood(0, 5, 5.5, 110.5);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -124,7 +124,7 @@ public class PpiLikelihoodTest extends TestCase {
     public void testLikelihoodConstructorPosNeg() throws Exception {
         try {
             PPILikelihood lh = new PPILikelihood(0, 5, 105.0, -20.5);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -147,7 +147,7 @@ public class PpiLikelihoodTest extends TestCase {
             list.add(new PPILikelihood(4, 10, 1, 2));
             PPISurvey survey = new PPISurvey();
             survey.setLikelihoods(list);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -161,7 +161,7 @@ public class PpiLikelihoodTest extends TestCase {
             list.add(new PPILikelihood(32, 100, 1, 2));
             PPISurvey survey = new PPISurvey();
             survey.setLikelihoods(list);
-            fail("expected ValidationException !!!");
+            Assert.fail("expected ValidationException !!!");
         } catch (ValidationException e) {
         }
     }
@@ -171,7 +171,7 @@ public class PpiLikelihoodTest extends TestCase {
             PPISurvey survey = new PPISurvey();
             survey.setLikelihoods(createRows());
             PPILikelihood l = survey.getLikelihood(-1);
-            fail("expected IllegalArgumentException !!!");
+            Assert.fail("expected IllegalArgumentException !!!");
         } catch (IllegalArgumentException e) {
         }
     }
@@ -182,7 +182,7 @@ public class PpiLikelihoodTest extends TestCase {
             survey.setLikelihoods(createRows());
             int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
             PPILikelihood l = survey.getLikelihood(nonPoorMax + 1);
-            fail("expected IllegalArgumentException !!!");
+            Assert.fail("expected IllegalArgumentException !!!");
         } catch (IllegalArgumentException e) {
         }
     }

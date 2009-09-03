@@ -29,6 +29,7 @@ import java.util.MissingResourceException;
 
 import javax.servlet.jsp.JspException;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -94,11 +95,11 @@ public class TableTagTest extends TestCase {
         try {
             Locale locale = Localization.getInstance().getMainLocale();
             new TableTag("single").getSingleFile(locale);
-            fail();
+            Assert.fail();
         } catch (MissingResourceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } catch (JspException e) {
-            fail();
+            Assert.fail();
         }
     }
 
@@ -106,25 +107,25 @@ public class TableTagTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         TableTag tableTag = new TableTag("single");
         tableTag.setName("viewUsers");
-        assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml", tableTag.getSingleFile(locale));
+       Assert.assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml", tableTag.getSingleFile(locale));
     }
 
     public void testParser() throws Exception {
 
         Files files = TypeParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/type.xml");
-        assertNotNull(files);
+        Assert.assertNotNull(files);
         FileName[] file = files.getFileName();
-        assertNotNull(file);
-        assertEquals("1", file[0].getName());
-        assertEquals("org/mifos/framework/util/resources/tabletag/CustomerClient.xml", file[0].getPath());
+        Assert.assertNotNull(file);
+       Assert.assertEquals("1", file[0].getName());
+       Assert.assertEquals("org/mifos/framework/util/resources/tabletag/CustomerClient.xml", file[0].getPath());
 
     }
 
     public void testGetDisplayText() throws Exception {
-        assertEquals("<span class=\"fontnormalbold\">a</span>,<span class=\"fontnormalbold\">b</span>", Text
+       Assert.assertEquals("<span class=\"fontnormalbold\">a</span>,<span class=\"fontnormalbold\">b</span>", Text
                 .getDisplayText(new String[] { "a", "b" }, "true"));
-        assertEquals("", Text.getDisplayText(new String[] { "", "" }, "true"));
-        assertEquals("<span class=\"fontnormal\">a</span>,<span class=\"fontnormal\">b</span>", Text.getDisplayText(
+       Assert.assertEquals("", Text.getDisplayText(new String[] { "", "" }, "true"));
+       Assert.assertEquals("<span class=\"fontnormal\">a</span>,<span class=\"fontnormal\">b</span>", Text.getDisplayText(
                 new String[] { "a", "b" }, "false"));
 
     }
@@ -132,15 +133,15 @@ public class TableTagTest extends TestCase {
     public void testGetImage() throws Exception {
         Locale locale = Localization.getInstance().getMainLocale();
         CustomerSearch customerSearch = new CustomerSearch();
-        assertEquals(
+       Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;PartialApplication</span>",
                 Text.getImage(customerSearch, "1", locale));
         customerSearch.setCustomerType(Short.valueOf("4"));
-        assertEquals(
+       Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Pending Approval</span>",
                 Text.getImage(customerSearch, "2", locale));
         customerSearch.setCustomerType(Short.valueOf("6"));
-        assertEquals(
+       Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Partial Application</span>",
                 Text.getImage(customerSearch, "13", locale));
     }
@@ -149,33 +150,33 @@ public class TableTagTest extends TestCase {
         Table table = TableTagParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/viewUsers.xml");
         Path path[] = table.getPath();
         for (int i = 0; i < path.length; i++) {
-            assertEquals("PersonAction.do", path[i].getAction());
-            assertEquals("search_success", path[i].getForwardkey());
-            assertEquals("viewUsers", path[i].getKey());
+           Assert.assertEquals("PersonAction.do", path[i].getAction());
+           Assert.assertEquals("search_success", path[i].getForwardkey());
+           Assert.assertEquals("viewUsers", path[i].getKey());
 
         }
         for (Row row : table.getRow()) {
-            assertEquals("false", row.getTdrequired());
+           Assert.assertEquals("false", row.getTdrequired());
 
             int i = 0;
             for (Column column : row.getColumn()) {
 
                 if (i++ == 1) {
-                    assertEquals("PersonAction.do", column.getAction());
-                    assertEquals("true", column.getBoldlabel());
-                    assertEquals(null, column.getCheckLinkOptionalRequired());
-                    assertEquals("false", column.getImage());
-                    assertEquals("false", column.getIsLinkOptional());
-                    assertEquals("/", column.getLabel());
-                    assertEquals("string", column.getLabeltype());
+                   Assert.assertEquals("PersonAction.do", column.getAction());
+                   Assert.assertEquals("true", column.getBoldlabel());
+                   Assert.assertEquals(null, column.getCheckLinkOptionalRequired());
+                   Assert.assertEquals("false", column.getImage());
+                   Assert.assertEquals("false", column.getIsLinkOptional());
+                   Assert.assertEquals("/", column.getLabel());
+                   Assert.assertEquals("string", column.getLabeltype());
 
                     DisplayName displayName = column.getDisplayname();
-                    assertEquals("true", displayName.getBold());
+                   Assert.assertEquals("true", displayName.getBold());
                     for (Fragment fragment : displayName.getFragment()) {
-                        assertEquals("true", fragment.getBold());
-                        assertEquals("personnelName", fragment.getFragmentName());
-                        assertEquals("method", fragment.getFragmentType());
-                        assertEquals("false", fragment.getItalic());
+                       Assert.assertEquals("true", fragment.getBold());
+                       Assert.assertEquals("personnelName", fragment.getFragmentName());
+                       Assert.assertEquals("method", fragment.getFragmentType());
+                       Assert.assertEquals("false", fragment.getItalic());
                     }
 
                     Parameters parameters = column.getParameters();
@@ -183,9 +184,9 @@ public class TableTagTest extends TestCase {
                     int j = 0;
                     for (Param param : parameters.getParam()) {
                         if (j++ == 1) {
-                            assertEquals("method", param.getParameterName());
-                            assertEquals("get", param.getParameterValue());
-                            assertEquals("string", param.getParameterValueType());
+                           Assert.assertEquals("method", param.getParameterName());
+                           Assert.assertEquals("get", param.getParameterValue());
+                           Assert.assertEquals("string", param.getParameterValueType());
                         }
                     }
 
@@ -196,14 +197,14 @@ public class TableTagTest extends TestCase {
 
         PageRequirements pageRequirements = table.getPageRequirements();
 
-        assertEquals("false", pageRequirements.getBlanklinerequired());
-        assertEquals("true", pageRequirements.getBluelineRequired());
-        assertEquals("false", pageRequirements.getBottombluelineRequired());
-        assertEquals("false", pageRequirements.getFlowRequired());
-        assertEquals("false", pageRequirements.getHeadingRequired());
-        assertEquals("true", pageRequirements.getNumbersRequired());
-        assertEquals("true", pageRequirements.getTopbluelineRequired());
-        assertEquals("false", pageRequirements.getValignnumbers());
+       Assert.assertEquals("false", pageRequirements.getBlanklinerequired());
+       Assert.assertEquals("true", pageRequirements.getBluelineRequired());
+       Assert.assertEquals("false", pageRequirements.getBottombluelineRequired());
+       Assert.assertEquals("false", pageRequirements.getFlowRequired());
+       Assert.assertEquals("false", pageRequirements.getHeadingRequired());
+       Assert.assertEquals("true", pageRequirements.getNumbersRequired());
+       Assert.assertEquals("true", pageRequirements.getTopbluelineRequired());
+       Assert.assertEquals("false", pageRequirements.getValignnumbers());
 
     }
 
@@ -211,44 +212,44 @@ public class TableTagTest extends TestCase {
 
         TableTag tableTag = new TableTag("single");
         tableTag.setName("viewUsers");
-        assertNotNull(tableTag.helperCache("org/mifos/framework/util/resources/tabletag/viewUsers.xml", "viewUsers"));
+        Assert.assertNotNull(tableTag.helperCache("org/mifos/framework/util/resources/tabletag/viewUsers.xml", "viewUsers"));
     }
 
     public void testPageScroll() {
         Locale locale = Localization.getInstance().getMainLocale();
-        assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>", PageScroll.getAnchor("hRef",
+       Assert.assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>", PageScroll.getAnchor("hRef",
                 "text", "load", "1234", 1, null));
-        assertEquals(
+       Assert.assertEquals(
                 "<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",
                 PageScroll.getPages(1, 10, 100, "loaad", "1234", locale, null));
-        assertEquals(
+       Assert.assertEquals(
                 "<tr><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",
                 PageScroll.getPages(5, 10, 100, "loaad", "1234", locale, null));
-        assertEquals(
+       Assert.assertEquals(
                 "<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",
                 PageScroll.getPages(1, 10, 3, "loaad", "1234", locale, null));
     }
 
     public void testPageScrollgetAnchor() {
         Locale locale = Localization.getInstance().getMainLocale();
-        assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>", PageScroll.getAnchor("hRef",
+       Assert.assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>", PageScroll.getAnchor("hRef",
                 "text", "load", "1234", 1, null));
-        assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1&" + RequestConstants.PERSPECTIVE + "="
+       Assert.assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1&" + RequestConstants.PERSPECTIVE + "="
                 + LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN + "'>text</a>", PageScroll.getAnchor("hRef", "text",
                 "load", "1234", 1, LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN));
     }
 
     public void testLink() {
-        assertEquals("", Link.createLink(new String[] { "" }, null, null, null, null, null, null));
-        assertEquals(
+       Assert.assertEquals("", Link.createLink(new String[] { "" }, null, null, null, null, null, null));
+       Assert.assertEquals(
                 "<span class=\"fontnormalbold\"><a href= \"load?X&currentFlowKey=1234&randomNUm=9999\">a</a></span>,<span class=\"fontnormalbold\"><a href= \"load?Y&currentFlowKey=1234&randomNUm=9999\">b</a></span>",
                 Link.createLink(new String[] { "a", "b" }, new String[] { "X", "Y" }, "true", "load", "fontnormalbold",
                         "1234", "9999"));
-        assertEquals(
+       Assert.assertEquals(
                 "<span class=\"headingblue\"><a href= \"load?X\"&currentFlowKey=1234&randomNUm=9999class=\"headingblue\">a</a></span>,<span class=\"headingblue\"><a href= \"load?Y\"&currentFlowKey=1234&randomNUm=9999class=\"headingblue\">b</a></span>",
                 Link.createLink(new String[] { "a", "b" }, new String[] { "X", "Y" }, "true", "load", "headingblue",
                         "1234", "9999"));
-        assertEquals(
+       Assert.assertEquals(
                 "<span><a href= \"load?X&currentFlowKey=1234&randomNUm=9999\">a</a></span>,<span><a href= \"load?Y&currentFlowKey=1234&randomNUm=9999\">b</a></span>",
                 Link.createLink(new String[] { "a", "b" }, new String[] { "X", "Y" }, "true", "load", null, "1234",
                         "9999"));
@@ -257,9 +258,9 @@ public class TableTagTest extends TestCase {
     public void testTableTagTypeParserException() throws Exception {
         try {
             TypeParser.getInstance().parser("org/mifos/framework/components/tabletag/type.xml");
-            fail();
+            Assert.fail();
         } catch (TableTagTypeParserException tttpe) {
-            assertEquals("exception.framework.SystemException.TypeParseException", tttpe.getKey());
+           Assert.assertEquals("exception.framework.SystemException.TypeParseException", tttpe.getKey());
         }
     }
 
@@ -267,9 +268,9 @@ public class TableTagTest extends TestCase {
         try {
             Locale locale = Localization.getInstance().getMainLocale();
             Text.getImage(this, "name", locale);
-            fail();
+            Assert.fail();
         } catch (TableTagException tte) {
-            assertEquals("exception.framework.TableTagException", tte.getKey());
+           Assert.assertEquals("exception.framework.TableTagException", tte.getKey());
         }
     }
 
@@ -278,35 +279,35 @@ public class TableTagTest extends TestCase {
         TableTag tableTag = new TableTag();
 
         tableTag.setClassName("myclass");
-        assertEquals("myclass", tableTag.getClassName());
+       Assert.assertEquals("myclass", tableTag.getClassName());
         tableTag.setType("mytype");
-        assertEquals("mytype", tableTag.getType());
+       Assert.assertEquals("mytype", tableTag.getType());
         tableTag.setName("myname");
-        assertEquals("myname", tableTag.getName());
+       Assert.assertEquals("myname", tableTag.getName());
         tableTag.setBorder("myborder");
-        assertEquals("myborder", tableTag.getBorder());
+       Assert.assertEquals("myborder", tableTag.getBorder());
         tableTag.setCellpadding("mycellpading");
-        assertEquals("mycellpading", tableTag.getCellpadding());
+       Assert.assertEquals("mycellpading", tableTag.getCellpadding());
         tableTag.setCellspacing("mycellspacing");
-        assertEquals("mycellspacing", tableTag.getCellspacing());
+       Assert.assertEquals("mycellspacing", tableTag.getCellspacing());
         tableTag.setWidth("mywidth");
-        assertEquals("mywidth", tableTag.getWidth());
+       Assert.assertEquals("mywidth", tableTag.getWidth());
         tableTag.setKey("mykey");
-        assertEquals("mykey", tableTag.getKey());
+       Assert.assertEquals("mykey", tableTag.getKey());
 
         tableTag.release();
 
-        assertEquals(1, tableTag.current);
-        assertEquals(0, tableTag.size);
+       Assert.assertEquals(1, tableTag.current);
+       Assert.assertEquals(0, tableTag.size);
 
     }
 
     public void testSearchObject() throws Exception {
         SearchObject searchObject = new SearchObject();
         searchObject.addSearchTermAndOffice("newSearchTerm", "1");
-        assertEquals("newSearchTerm", searchObject.getFromSearchNodeMap("dummy-search-term-key"));
+       Assert.assertEquals("newSearchTerm", searchObject.getFromSearchNodeMap("dummy-search-term-key"));
         searchObject.setSearchNodeMap(null);
-        assertNull(searchObject.getSearchNodeMap());
+        Assert.assertNull(searchObject.getSearchNodeMap());
     }
 
 }

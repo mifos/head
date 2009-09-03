@@ -20,6 +20,7 @@
 
 package org.mifos.framework.struts.tags;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class RawButtonTest extends TestCase {
@@ -35,14 +36,14 @@ public class RawButtonTest extends TestCase {
         rawButton.setTitle("title");
         rawButton.setType("type");
         rawButton.setValue("value");
-        assertEquals("disabled", rawButton.getDisabled());
-        assertEquals("id", rawButton.getId());
-        assertEquals("name", rawButton.getName());
-        assertEquals("onClick", rawButton.getOnclick());
-        assertEquals("onDblClick", rawButton.getOndblclick());
-        assertEquals("title", rawButton.getTitle());
-        assertEquals("type", rawButton.getType());
-        assertEquals("value", rawButton.getValue());
-        assertTrue(rawButton.toString().contains("Click To move the selected item"));
+       Assert.assertEquals("disabled", rawButton.getDisabled());
+       Assert.assertEquals("id", rawButton.getId());
+       Assert.assertEquals("name", rawButton.getName());
+       Assert.assertEquals("onClick", rawButton.getOnclick());
+       Assert.assertEquals("onDblClick", rawButton.getOndblclick());
+       Assert.assertEquals("title", rawButton.getTitle());
+       Assert.assertEquals("type", rawButton.getType());
+       Assert.assertEquals("value", rawButton.getValue());
+       Assert.assertTrue(rawButton.toString().contains("Click To move the selected item"));
     }
 }

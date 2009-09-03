@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -49,30 +51,30 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
         Date fromDate = getDate("01/01/2006");
         Date toDate = getDate("08/01/2006");
         int days = helper.calculateDays(fromDate, toDate);
-        assertEquals("7", String.valueOf(days));
+       Assert.assertEquals("7", String.valueOf(days));
 
         // check for month feb
         fromDate = getDate("25/02/2006");
         toDate = getDate("05/03/2006");
         days = helper.calculateDays(fromDate, toDate);
-        assertEquals("8", String.valueOf(days));
+       Assert.assertEquals("8", String.valueOf(days));
 
         // check for month feb in leap year
         fromDate = getDate("25/02/2004");
         toDate = getDate("05/03/2004");
         days = helper.calculateDays(fromDate, toDate);
-        assertEquals("9", String.valueOf(days));
+       Assert.assertEquals("9", String.valueOf(days));
 
         fromDate = getDate("25/01/2006");
         toDate = getDate("05/02/2006");
         days = helper.calculateDays(fromDate, toDate);
-        assertEquals("11", String.valueOf(days));
+       Assert.assertEquals("11", String.valueOf(days));
 
         // long differnce in days
         fromDate = getDate("05/01/2006");
         toDate = getDate("06/07/2006");
         days = helper.calculateDays(fromDate, toDate);
-        assertEquals("182", String.valueOf(days));
+       Assert.assertEquals("182", String.valueOf(days));
     }
 
     public void testGetNextInterestCalculationDateEveryMonth() throws Exception {
@@ -84,41 +86,41 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, null, meeting);
         date = getDate("30/04/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/05/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/06/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/07/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         date = getDate("31/08/2006");
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
 
         date = getDate("30/09/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/10/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/11/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/12/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/01/2007");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
     }
 
     public void testGetNextInterestCalculationDateThreeMonths() throws Exception {
@@ -131,27 +133,27 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, null, meeting);
         date = getDate("31/03/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/06/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/09/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/12/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/03/2007");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/06/2007");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
     }
 
     public void testGetNextInterestPostingDateWithRecurOnEveryMonth() throws Exception {
@@ -162,35 +164,35 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, null, meeting);
         date = getDate("31/07/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/08/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/09/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/10/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/11/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/12/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/01/2007");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("28/02/2007");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
     }
 
     public void testGetNextInterestPostingDateWithRecurOnEveryFourMonths() throws Exception {
@@ -203,19 +205,19 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, null, meeting);
         date = getDate("31/12/2007");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("30/04/2008");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/08/2008");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getNextScheduleDate(accountActivationDate, date, meeting);
         date = getDate("31/12/2008");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
     }
 
     public void testPrevIntCalcDateOnEveryMonth() throws Exception {
@@ -225,20 +227,20 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
         /*
          * Date resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
          * getDate("30/06/2006"), meeting); Date date = getDate("31/05/2006");
-         * assertEquals(date, resultDate);
+         *Assert.assertEquals(date, resultDate);
          * 
          * resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
          * getDate("01/01/2007"), meeting); date = getDate("01/12/2006");
-         * assertEquals(date, resultDate);
+         *Assert.assertEquals(date, resultDate);
          */
 
         Date resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"), getDate("31/07/2006"), meeting);
         Date date = getDate("30/06/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"), getDate("01/01/2007"), meeting);
         date = getDate("31/12/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
     }
 
@@ -252,10 +254,10 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
         resultDate = helper.getPrevScheduleDate(getDate("01/03/2006"), getDate("30/06/2006"), meeting);
         date = getDate("31/03/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getPrevScheduleDate(getDate("01/03/2006"), getDate("01/03/2006"), meeting);
-        assertNull(resultDate);
+        Assert.assertNull(resultDate);
     }
 
     public void testPrevInterestPostingDateWithRecurOnEveryMonth() throws Exception {
@@ -266,11 +268,11 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
         resultDate = helper.getPrevScheduleDate(getDate("01/07/2006"), getDate("31/01/2007"), meeting);
         date = getDate("31/12/2006");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
 
         resultDate = helper.getPrevScheduleDate(getDate("01/07/2006"), getDate("28/02/2007"), meeting);
         date = getDate("31/01/2007");
-        assertEquals(date, resultDate);
+       Assert.assertEquals(date, resultDate);
     }
 
     public void testPrevInterestPostingDateWithRecurOnEveryFourMonths() throws Exception {
@@ -286,7 +288,7 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
         Date activationDate = getDate("01/07/2006");
         Set<Date> keys = currentAndPrevDates.keySet();
         for (Date currentDate : keys) {
-            assertEquals(currentAndPrevDates.get(currentDate), helper.getPrevScheduleDate(activationDate, currentDate,
+           Assert.assertEquals(currentAndPrevDates.get(currentDate), helper.getPrevScheduleDate(activationDate, currentDate,
                     meeting));
         }
     }
@@ -295,6 +297,6 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
         Date interestPostingDate = helper.getNextScheduleDate(getDate("02/01/2008"), null, new MeetingBO(Short
                 .valueOf("31"), Short.valueOf("6"), getDate("01/01/2006"), MeetingType.SAVINGS_INTEREST_POSTING,
                 "somePlace"));
-        assertEquals(getDate("30/06/2008"), interestPostingDate);
+       Assert.assertEquals(getDate("30/06/2008"), interestPostingDate);
     }
 }

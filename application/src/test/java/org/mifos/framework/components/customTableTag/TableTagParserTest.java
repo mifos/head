@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 
@@ -42,9 +43,9 @@ public class TableTagParserTest extends TestCase {
         TableTagParser tableTagParser = new TableTagParser();
         try {
             tableTagParser.parser("WEB-INF/struts-config.xml");
-            fail();
+            Assert.fail();
         } catch (TableTagParseException e) {
-            assertEquals("exception.framework.TableTagParseException", e.getKey());
+           Assert.assertEquals("exception.framework.TableTagParseException", e.getKey());
             ObjectAssert.assertInstanceOf(FileNotFoundException.class, e.getCause());
         }
     }
@@ -52,22 +53,22 @@ public class TableTagParserTest extends TestCase {
     public void testParser() throws Exception {
         Table table = TableTagParser.getInstance().parser(
                 ClasspathResource.getURI("org/mifos/framework/util/resources/customTableTag/example.xml").toString());
-        assertNotNull(table);
+        Assert.assertNotNull(table);
         HeaderDetails details = table.getHeaderDetails();
-        assertEquals("drawtablerowbold", details.getHeaderStyle());
+       Assert.assertEquals("drawtablerowbold", details.getHeaderStyle());
         StringBuilder builder = new StringBuilder();
         details.getHeaderInfo(builder);
         assertContains("drawtablerowbold", builder.toString());
         Row row = table.getRow();
-        assertEquals("true", row.getBottomLineRequired());
-        assertEquals("100", row.getTotWidth());
+       Assert.assertEquals("true", row.getBottomLineRequired());
+       Assert.assertEquals("100", row.getTotWidth());
         Column[] columns = row.getColumn();
         for (int i = 0; i < columns.length; i++) {
             if (i == 0) {
-                assertEquals("text", columns[i].getColumnType());
-                assertEquals("Name", columns[i].getLabel());
-                assertEquals("Name", columns[i].getValue());
-                assertEquals("method", columns[i].getValueType());
+               Assert.assertEquals("text", columns[i].getColumnType());
+               Assert.assertEquals("Name", columns[i].getLabel());
+               Assert.assertEquals("Name", columns[i].getValue());
+               Assert.assertEquals("method", columns[i].getValueType());
                 StringBuilder builder2 = new StringBuilder();
                 Locale locale = new Locale("en", "GB");
                 OfficeView officeView = new OfficeView(Short.valueOf("1"), "abcd", Short.valueOf("1"), "branch",
@@ -78,7 +79,7 @@ public class TableTagParserTest extends TestCase {
                 columnDetails.setAlign("Down");
                 columns[i].setColumnDetials(columnDetails);
                 columns[i].generateTableColumn(builder2, officeView, locale, locale, locale);
-                assertEquals("<td class=\"drawtablerowbold\"   align=\"Down\" > </td>", builder2.toString());
+               Assert.assertEquals("<td class=\"drawtablerowbold\"   align=\"Down\" > </td>", builder2.toString());
 
             }
         }
@@ -91,7 +92,7 @@ public class TableTagParserTest extends TestCase {
         actionParam.setValue("officeName");
         StringBuilder stringBuilder = new StringBuilder();
         actionParam.generateParameter(stringBuilder, createOfficeView());
-        assertEquals("officeName=abcd", stringBuilder.toString());
+       Assert.assertEquals("officeName=abcd", stringBuilder.toString());
 
     }
 
@@ -126,7 +127,7 @@ public class TableTagParserTest extends TestCase {
         list.add(createOfficeView());
         Locale locale = new Locale("en", "GB");
         row.generateTableRows(stringBuilder, list, locale, locale, locale);
-        assertEquals("<tr><td class=\"drawtablerowbold\"   align=\"Down\" > </td></tr>", stringBuilder.toString());
+       Assert.assertEquals("<tr><td class=\"drawtablerowbold\"   align=\"Down\" > </td></tr>", stringBuilder.toString());
 
     }
 

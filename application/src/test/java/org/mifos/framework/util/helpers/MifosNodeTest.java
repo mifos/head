@@ -22,6 +22,7 @@ package org.mifos.framework.util.helpers;
 
 import java.util.HashMap;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class MifosNodeTest extends TestCase {
@@ -30,10 +31,10 @@ public class MifosNodeTest extends TestCase {
         HashMap<String, String> nodes = new HashMap<String, String>();
         nodes.put("key", "value");
         MifosNode mifosNode = new MifosNode(nodes);
-        assertEquals("value", mifosNode.getElement("key"));
-        assertEquals("org.mifos.framework.util.helpers.Node", mifosNode.toString());
+       Assert.assertEquals("value", mifosNode.getElement("key"));
+       Assert.assertEquals("org.mifos.framework.util.helpers.Node", mifosNode.toString());
         mifosNode = new MifosNode();
         mifosNode.setNodes(nodes);
-        assertEquals(1, mifosNode.getNodes().size());
+       Assert.assertEquals(1, mifosNode.getNodes().size());
     }
 }

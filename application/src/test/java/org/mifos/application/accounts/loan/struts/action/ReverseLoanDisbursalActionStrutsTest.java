@@ -26,6 +26,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -144,9 +146,9 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
 
-        assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_SIZE, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_SIZE, request));
         StaticHibernateUtil.closeSession();
     }
 

@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
@@ -133,16 +135,16 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(PersonnelConstants.OFFICE, request);
-        assertNotNull(office);
-        assertEquals(1, office.getOfficeId().intValue());
+        Assert.assertNotNull(office);
+       Assert.assertEquals(1, office.getOfficeId().intValue());
         verifyMasterData();
         PersonActionForm personActionForm = (PersonActionForm) request.getSession().getAttribute("personActionForm");
-        assertNotNull(personActionForm);
-        assertEquals(1, personActionForm.getCustomFields().size());
+        Assert.assertNotNull(personActionForm);
+       Assert.assertEquals(1, personActionForm.getCustomFields().size());
         verifyForward(ActionForwards.load_success.toString());
         PersonActionForm actionForm = (PersonActionForm) request.getSession().getAttribute("personActionForm");
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        assertEquals(currentDate, DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfJoiningMFI()));
+       Assert.assertEquals(currentDate, DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfJoiningMFI()));
 
     }
 
@@ -153,27 +155,27 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(PersonnelConstants.OFFICE, request);
-        assertNotNull(office);
-        assertEquals(3, office.getOfficeId().intValue());
+        Assert.assertNotNull(office);
+       Assert.assertEquals(3, office.getOfficeId().intValue());
         verifyMasterData();
         PersonActionForm personActionForm = (PersonActionForm) request.getSession().getAttribute("personActionForm");
-        assertNotNull(personActionForm);
-        assertEquals(1, personActionForm.getCustomFields().size());
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
-        assertEquals(2, ((List) SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request)).size());
+        Assert.assertNotNull(personActionForm);
+       Assert.assertEquals(1, personActionForm.getCustomFields().size());
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
+       Assert.assertEquals(2, ((List) SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request)).size());
         verifyForward(ActionForwards.load_success.toString());
     }
 
     public void testPreviewFailure() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         actionPerform();
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_FIRSTNAME));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LASTNAME));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_GENDER));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LEVEL));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_USER_NAME));
-        assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_DOB));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_FIRSTNAME));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LASTNAME));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_GENDER));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LEVEL));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_USER_NAME));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_DOB));
         verifyInputForward();
     }
 
@@ -182,7 +184,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestData();
         addRequestParameter("userPassword", "XXX");
         actionPerform();
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_PASSWORD_LENGTH));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_PASSWORD_LENGTH));
         verifyInputForward();
     }
 
@@ -192,7 +194,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("userPassword", "XXXXXX");
         addRequestParameter("passwordRepeat", "XXXXXZ");
         actionPerform();
-        assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
         verifyInputForward();
     }
 
@@ -225,15 +227,15 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
-        assertNotNull(request.getAttribute("globalPersonnelNum"));
-        assertNotNull(request.getAttribute("displayName"));
+        Assert.assertNotNull(request.getAttribute("globalPersonnelNum"));
+        Assert.assertNotNull(request.getAttribute("displayName"));
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnelByGlobalPersonnelNum((String) request
                 .getAttribute("globalPersonnelNum"));
-        assertNotNull(personnelBO);
+        Assert.assertNotNull(personnelBO);
         // assert few values
-        assertEquals("Jim", personnelBO.getPersonnelDetails().getName().getFirstName());
-        assertEquals("khan", personnelBO.getPersonnelDetails().getName().getLastName());
-        assertEquals(1, personnelBO.getPersonnelDetails().getGender().intValue());
+       Assert.assertEquals("Jim", personnelBO.getPersonnelDetails().getName().getFirstName());
+       Assert.assertEquals("khan", personnelBO.getPersonnelDetails().getName().getLastName());
+       Assert.assertEquals(1, personnelBO.getPersonnelDetails().getGender().intValue());
         TestObjectFactory.cleanUp(personnelBO);
     }
 
@@ -254,15 +256,15 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
-        assertNotNull(request.getAttribute("globalPersonnelNum"));
-        assertNotNull(request.getAttribute("displayName"));
+        Assert.assertNotNull(request.getAttribute("globalPersonnelNum"));
+        Assert.assertNotNull(request.getAttribute("displayName"));
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnelByGlobalPersonnelNum((String) request
                 .getAttribute("globalPersonnelNum"));
-        assertNotNull(personnelBO);
+        Assert.assertNotNull(personnelBO);
         // assert few values
-        assertEquals("Jim", personnelBO.getPersonnelDetails().getName().getFirstName());
-        assertEquals("khan", personnelBO.getPersonnelDetails().getName().getLastName());
-        assertEquals(1, personnelBO.getPersonnelDetails().getGender().intValue());
+       Assert.assertEquals("Jim", personnelBO.getPersonnelDetails().getName().getFirstName());
+       Assert.assertEquals("khan", personnelBO.getPersonnelDetails().getName().getLastName());
+       Assert.assertEquals(1, personnelBO.getPersonnelDetails().getGender().intValue());
         TestObjectFactory.cleanUp(personnelBO);
         personnelBO = null;
 
@@ -285,9 +287,9 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         QueryResult queryResult = (QueryResult) SessionUtils.getAttribute(Constants.SEARCH_RESULTS, request);
-        assertNotNull(queryResult);
-        assertEquals(1, queryResult.getSize());
-        assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertNotNull(queryResult);
+       Assert.assertEquals(1, queryResult.getSize());
+       Assert.assertEquals(1, queryResult.get(0, 10).size());
         verifyForward(ActionForwards.search_success.toString());
     }
 
@@ -296,7 +298,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         addActionAndMethod(Methods.search.toString());
         addRequestParameter("input", "");
         actionPerform();
-        assertEquals(1, getErrorSize(PersonnelConstants.NO_SEARCH_STRING));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.NO_SEARCH_STRING));
         verifyInputForward();
     }
 
@@ -323,13 +325,13 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private void verifyMasterData() throws Exception {
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
     }
 
     public void testManage() throws Exception {
@@ -341,13 +343,13 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
     }
 
     public void testPreviewManage() throws Exception {
@@ -359,13 +361,13 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         addActionAndMethod(Methods.previewManage.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("userPassword", "abcdef");
@@ -380,15 +382,15 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     public void testManagePreviewFailure() throws Exception {
         addActionAndMethod(Methods.previewManage.toString());
         actionPerform();
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_FIRSTNAME));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LASTNAME));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_GENDER));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LEVEL));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_USER_NAME));
-        assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_DOB));
-        assertEquals(1, getErrorSize(PersonnelConstants.OFFICE));
-        assertEquals(1, getErrorSize(PersonnelConstants.STATUS));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_FIRSTNAME));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LASTNAME));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_GENDER));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LEVEL));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_USER_NAME));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_DOB));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.OFFICE));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.STATUS));
         verifyInputForward();
     }
 
@@ -397,7 +399,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestData();
         addRequestParameter("userPassword", "XXX");
         actionPerform();
-        assertEquals(2, getErrorSize("password"));
+       Assert.assertEquals(2, getErrorSize("password"));
         verifyInputForward();
     }
 
@@ -406,7 +408,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestData();
         addRequestParameter("loginName", "XYZ PQR");
         actionPerform();
-        assertEquals(1, getErrorSize(PersonnelConstants.INVALID_USER_NAME));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.INVALID_USER_NAME));
         verifyInputForward();
     }
 
@@ -416,28 +418,28 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("userPassword", "XXXXXX");
         addRequestParameter("passwordRepeat", "XXXXXZ");
         actionPerform();
-        assertEquals(1, getErrorSize("password"));
+       Assert.assertEquals(1, getErrorSize("password"));
         verifyInputForward();
     }
 
     public void testUpdateSuccess() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
-        assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
-        assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
+       Assert.assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
+       Assert.assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
         addActionAndMethod(Methods.manage.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         addActionAndMethod(Methods.previewManage.toString());
 
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -459,7 +461,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
         personnel = (PersonnelBO) TestObjectFactory.getObject(PersonnelBO.class, personnel.getPersonnelId());
 
-        assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
+       Assert.assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
     }
 
     public void testLoadUnLockUser() throws Exception {
@@ -469,7 +471,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadUnLockUser_success.toString());
-        assertEquals(LoginConstants.MAXTRIES, SessionUtils.getAttribute(PersonnelConstants.LOGIN_ATTEMPTS_COUNT,
+       Assert.assertEquals(LoginConstants.MAXTRIES, SessionUtils.getAttribute(PersonnelConstants.LOGIN_ATTEMPTS_COUNT,
                 request));
     }
 
@@ -481,8 +483,8 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.unLockUserAccount_success.toString());
-        assertFalse(personnel.isLocked());
-        assertEquals(0, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(0, personnel.getNoOfTries().intValue());
     }
 
     private void createPersonnelAndSetInSession(OfficeBO office, PersonnelLevel personnelLevel) throws Exception {
@@ -537,7 +539,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("entityType", "Personnel");
         addRequestParameter("entityId", personnel.getPersonnelId().toString());
         actionPerform();
-        assertEquals(1, ((List) request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
+       Assert.assertEquals(1, ((List) request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
         verifyForward("viewPersonnelChangeLog");
         personnel = null;
         TestObjectFactory.cleanUpChangeLog();

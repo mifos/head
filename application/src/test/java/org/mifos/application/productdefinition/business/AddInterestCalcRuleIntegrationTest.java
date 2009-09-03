@@ -21,6 +21,7 @@
 package org.mifos.application.productdefinition.business;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -39,9 +40,9 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
     public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "InterestTypes-DecliningBalance";
         String format = "InterestTypes-";
-        assertTrue(AddInterestCalcRule.validateLookupValueKey(format, validKey));
+       Assert.assertTrue(AddInterestCalcRule.validateLookupValueKey(format, validKey));
         String invalidKey = "DecliningBalance";
-        assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
     }
 
     public void testConstructor() throws Exception {
@@ -55,7 +56,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
             upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
                     categoryId, "DecliningBalance", description, TEST_LOCALE, "DecliningBalance");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddInterestCalcRule.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddInterestCalcRule.wrongConstructor);
         }
         String invalidKey = "DecliningBalance";
 
@@ -64,7 +65,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
             upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
                     categoryId, invalidKey, description);
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddInterestCalcRule.wrongLookupValueKeyFormat);
+           Assert.assertEquals(e.getMessage(), AddInterestCalcRule.wrongLookupValueKeyFormat);
         }
         String goodKey = "InterestTypes-NewDecliningBalance";
         // use valid construtor and valid key
@@ -73,7 +74,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         upgrade.upgrade(database.openConnection());
         Session session = database.openSession();
         InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
-        assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
+       Assert.assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
     }
 
 }

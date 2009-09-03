@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -41,7 +43,6 @@ import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -73,16 +74,16 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOAN, accountBO.getAccountId());
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(4, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(4, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Collateral Notes")) {
-                assertEquals("-", auditLogRecord.getOldValue());
-                assertEquals("Added note", auditLogRecord.getNewValue());
+               Assert.assertEquals("-", auditLogRecord.getOldValue());
+               Assert.assertEquals("Added note", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge deducted At Disbursement")) {
-                assertEquals("1", auditLogRecord.getOldValue());
-                assertEquals("0", auditLogRecord.getNewValue());
+               Assert.assertEquals("1", auditLogRecord.getOldValue());
+               Assert.assertEquals("0", auditLogRecord.getNewValue());
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -101,13 +102,13 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
         auditLogView.setNewValue("new value");
         auditLogView.setOldValue("old value");
         auditLogView.setUser("user");
-        assertEquals("value of date", new Date(currentTime).toString(), auditLogView.getDate());
-        assertEquals("value of field", "field", auditLogView.getField());
-        // assertEquals("value of Locale", new Locale("1"), auditLogView
+       Assert.assertEquals("value of date", new Date(currentTime).toString(), auditLogView.getDate());
+       Assert.assertEquals("value of field", "field", auditLogView.getField());
+        //Assert.assertEquals("value of Locale", new Locale("1"), auditLogView
         // .getMfiLocale());
-        assertEquals("value of new value", "new value", auditLogView.getNewValue());
-        assertEquals("value of old value", "old value", auditLogView.getOldValue());
-        assertEquals("value of user", "user", auditLogView.getUser());
+       Assert.assertEquals("value of new value", "new value", auditLogView.getNewValue());
+       Assert.assertEquals("value of old value", "old value", auditLogView.getOldValue());
+       Assert.assertEquals("value of user", "user", auditLogView.getUser());
     }
 
     private Date incrementCurrentDate(int noOfDays) {

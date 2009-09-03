@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity;
@@ -107,10 +109,10 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         loanAccount3 = getLoanAccount(group, meeting, AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER, "off3");
         loanAccount4 = getLoanAccount(group, meeting, AccountState.LOAN_PENDING_APPROVAL, "off4");
 
-        assertNull(loanAccount1.getLoanArrearsAgingEntity());
-        assertNull(loanAccount2.getLoanArrearsAgingEntity());
-        assertNull(loanAccount3.getLoanArrearsAgingEntity());
-        assertNull(loanAccount4.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount1.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount2.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount3.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount4.getLoanArrearsAgingEntity());
 
         setDisbursementDateAsOldDate(loanAccount1, 15, Short.valueOf("1"));
         loanAccount1.update();
@@ -135,24 +137,24 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         loanAccount3 = new LoanPersistence().getAccount(loanAccount3.getAccountId());
         loanAccount4 = new LoanPersistence().getAccount(loanAccount4.getAccountId());
 
-        assertNotNull(loanAccount1.getLoanArrearsAgingEntity());
-        assertNotNull(loanAccount2.getLoanArrearsAgingEntity());
-        assertNull(loanAccount3.getLoanArrearsAgingEntity());
-        assertNull(loanAccount4.getLoanArrearsAgingEntity());
+        Assert.assertNotNull(loanAccount1.getLoanArrearsAgingEntity());
+        Assert.assertNotNull(loanAccount2.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount3.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount4.getLoanArrearsAgingEntity());
         LoanArrearsAgingEntity entityAccount1 = loanAccount1.getLoanArrearsAgingEntity();
         LoanArrearsAgingEntity entityAccount2 = loanAccount2.getLoanArrearsAgingEntity();
 
-        assertEquals(new Money("100"), entityAccount1.getOverduePrincipal());
-        assertEquals(new Money("12"), entityAccount1.getOverdueInterest());
-        assertEquals(new Money("112"), entityAccount1.getOverdueBalance());
+       Assert.assertEquals(new Money("100"), entityAccount1.getOverduePrincipal());
+       Assert.assertEquals(new Money("12"), entityAccount1.getOverdueInterest());
+       Assert.assertEquals(new Money("112"), entityAccount1.getOverdueBalance());
 
-        assertEquals(Short.valueOf("15"), entityAccount1.getDaysInArrears());
+       Assert.assertEquals(Short.valueOf("15"), entityAccount1.getDaysInArrears());
 
-        assertEquals(new Money("300"), entityAccount2.getOverduePrincipal());
-        assertEquals(new Money("36"), entityAccount2.getOverdueInterest());
-        assertEquals(new Money("336"), entityAccount2.getOverdueBalance());
+       Assert.assertEquals(new Money("300"), entityAccount2.getOverduePrincipal());
+       Assert.assertEquals(new Money("36"), entityAccount2.getOverdueInterest());
+       Assert.assertEquals(new Money("336"), entityAccount2.getOverdueBalance());
 
-        assertEquals(Short.valueOf("22"), entityAccount2.getDaysInArrears());
+       Assert.assertEquals(Short.valueOf("22"), entityAccount2.getDaysInArrears());
 
         assertForLoanArrearsAgingEntity(loanAccount1);
         assertForLoanArrearsAgingEntity(loanAccount2);
@@ -164,19 +166,19 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     private void assertForLoanArrearsAgingEntity(LoanBO loanAccount) {
         LoanArrearsAgingEntity loanArrearsAgingEntity = loanAccount.getLoanArrearsAgingEntity();
 
-        assertEquals(loanAccount.getLoanSummary().getPrincipalDue(), loanArrearsAgingEntity.getUnpaidPrincipal());
-        assertEquals(loanAccount.getLoanSummary().getInterestDue(), loanArrearsAgingEntity.getUnpaidInterest());
-        assertEquals(loanAccount.getLoanSummary().getPrincipalDue().add(loanAccount.getLoanSummary().getInterestDue()),
+       Assert.assertEquals(loanAccount.getLoanSummary().getPrincipalDue(), loanArrearsAgingEntity.getUnpaidPrincipal());
+       Assert.assertEquals(loanAccount.getLoanSummary().getInterestDue(), loanArrearsAgingEntity.getUnpaidInterest());
+       Assert.assertEquals(loanAccount.getLoanSummary().getPrincipalDue().add(loanAccount.getLoanSummary().getInterestDue()),
                 loanArrearsAgingEntity.getUnpaidBalance());
 
-        assertEquals(loanAccount.getTotalPrincipalAmountInArrears(), loanArrearsAgingEntity.getOverduePrincipal());
-        assertEquals(loanAccount.getTotalInterestAmountInArrears(), loanArrearsAgingEntity.getOverdueInterest());
-        assertEquals(loanAccount.getTotalPrincipalAmountInArrears().add(loanAccount.getTotalInterestAmountInArrears()),
+       Assert.assertEquals(loanAccount.getTotalPrincipalAmountInArrears(), loanArrearsAgingEntity.getOverduePrincipal());
+       Assert.assertEquals(loanAccount.getTotalInterestAmountInArrears(), loanArrearsAgingEntity.getOverdueInterest());
+       Assert.assertEquals(loanAccount.getTotalPrincipalAmountInArrears().add(loanAccount.getTotalInterestAmountInArrears()),
                 loanArrearsAgingEntity.getOverdueBalance());
 
-        assertEquals(group.getCustomerId(), loanArrearsAgingEntity.getCustomer().getCustomerId());
-        assertEquals(center.getCustomerId(), loanArrearsAgingEntity.getParentCustomer().getCustomerId());
-        assertEquals(group.getDisplayName(), loanArrearsAgingEntity.getCustomerName());
+       Assert.assertEquals(group.getCustomerId(), loanArrearsAgingEntity.getCustomer().getCustomerId());
+       Assert.assertEquals(center.getCustomerId(), loanArrearsAgingEntity.getParentCustomer().getCustomerId());
+       Assert.assertEquals(group.getDisplayName(), loanArrearsAgingEntity.getCustomerName());
     }
 
     public void testClearArrears() throws Exception {
@@ -185,10 +187,10 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         loanAccount3 = getLoanAccount(group, meeting, AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER, "off3");
         loanAccount4 = getLoanAccount(group, meeting, AccountState.LOAN_PENDING_APPROVAL, "off4");
 
-        assertNull(loanAccount1.getLoanArrearsAgingEntity());
-        assertNull(loanAccount2.getLoanArrearsAgingEntity());
-        assertNull(loanAccount3.getLoanArrearsAgingEntity());
-        assertNull(loanAccount4.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount1.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount2.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount3.getLoanArrearsAgingEntity());
+        Assert.assertNull(loanAccount4.getLoanArrearsAgingEntity());
 
         setDisbursementDateAsOldDate(loanAccount1, 22, Short.valueOf("3"));
         loanAccount1.update();
@@ -203,23 +205,23 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         loanAccount1 = new LoanPersistence().getAccount(loanAccount1.getAccountId());
         loanAccount2 = new LoanPersistence().getAccount(loanAccount2.getAccountId());
 
-        assertNotNull(loanAccount1.getLoanArrearsAgingEntity());
-        assertNotNull(loanAccount2.getLoanArrearsAgingEntity());
+        Assert.assertNotNull(loanAccount1.getLoanArrearsAgingEntity());
+        Assert.assertNotNull(loanAccount2.getLoanArrearsAgingEntity());
 
         LoanArrearsAgingEntity entityAccount1 = loanAccount1.getLoanArrearsAgingEntity();
         LoanArrearsAgingEntity entityAccount2 = loanAccount2.getLoanArrearsAgingEntity();
 
-        assertEquals(new Money("300"), entityAccount1.getOverduePrincipal());
-        assertEquals(new Money("36"), entityAccount1.getOverdueInterest());
-        assertEquals(new Money("336"), entityAccount1.getOverdueBalance());
+       Assert.assertEquals(new Money("300"), entityAccount1.getOverduePrincipal());
+       Assert.assertEquals(new Money("36"), entityAccount1.getOverdueInterest());
+       Assert.assertEquals(new Money("336"), entityAccount1.getOverdueBalance());
 
-        assertEquals(Short.valueOf("22"), entityAccount1.getDaysInArrears());
+       Assert.assertEquals(Short.valueOf("22"), entityAccount1.getDaysInArrears());
 
-        assertEquals(new Money("300"), entityAccount2.getOverduePrincipal());
-        assertEquals(new Money("36"), entityAccount2.getOverdueInterest());
-        assertEquals(new Money("336"), entityAccount2.getOverdueBalance());
+       Assert.assertEquals(new Money("300"), entityAccount2.getOverduePrincipal());
+       Assert.assertEquals(new Money("36"), entityAccount2.getOverdueInterest());
+       Assert.assertEquals(new Money("336"), entityAccount2.getOverdueBalance());
 
-        assertEquals(Short.valueOf("22"), entityAccount2.getDaysInArrears());
+       Assert.assertEquals(Short.valueOf("22"), entityAccount2.getDaysInArrears());
 
         // apply a payment to loanAccount2 which should cover the overdue
         // balance and move it out of arrears
@@ -241,11 +243,11 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         loanAccount1 = new LoanPersistence().getAccount(loanAccount1.getAccountId());
         loanAccount2 = new LoanPersistence().getAccount(loanAccount2.getAccountId());
 
-        assertTrue(loanAccount1.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
-        assertNull(loanAccount1.getLoanArrearsAgingEntity());
+       Assert.assertTrue(loanAccount1.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
+        Assert.assertNull(loanAccount1.getLoanArrearsAgingEntity());
 
-        assertTrue(loanAccount2.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
-        assertNull(loanAccount2.getLoanArrearsAgingEntity());
+       Assert.assertTrue(loanAccount2.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+        Assert.assertNull(loanAccount2.getLoanArrearsAgingEntity());
 
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = group.getParentCustomer();

@@ -24,6 +24,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerHistoricalDataEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -91,7 +93,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.getHistoricalData_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals(new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime()).toString(), SessionUtils
+       Assert.assertEquals(new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime()).toString(), SessionUtils
                 .getAttribute(CustomerConstants.MFIJOININGDATE, request).toString());
     }
 
@@ -103,7 +105,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         group.updateHistoricalData(customerHistoricalDataEntity);
         group.update();
         StaticHibernateUtil.commitTransaction();
-        assertEquals(mfiDate, new Date(group.getMfiJoiningDate().getTime()));
+       Assert.assertEquals(mfiDate, new Date(group.getMfiJoiningDate().getTime()));
         setRequestPathInfo("/custHistoricalDataAction.do");
         addRequestParameter("method", "getHistoricalData");
         addRequestParameter("globalCustNum", group.getGlobalCustNum());
@@ -112,7 +114,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.getHistoricalData_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(mfiDate.getTime()).getTime()).toString(),
+       Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(mfiDate.getTime()).getTime()).toString(),
                 SessionUtils.getAttribute(CustomerConstants.MFIJOININGDATE, request).toString());
     }
 
@@ -213,14 +215,14 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionErrors();
         verifyNoActionMessages();
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals("Test", group.getHistoricalData().getProductName());
-        assertEquals("Test notes", group.getHistoricalData().getNotes());
-        assertEquals(new Money("100"), group.getHistoricalData().getLoanAmount());
-        assertEquals(new Money("50"), group.getHistoricalData().getTotalAmountPaid());
-        assertEquals(new Money("10"), group.getHistoricalData().getInterestPaid());
-        assertEquals(1, group.getHistoricalData().getMissedPaymentsCount().intValue());
-        assertEquals(2, group.getHistoricalData().getTotalPaymentsCount().intValue());
-        assertEquals(1, group.getHistoricalData().getLoanCycleNumber().intValue());
+       Assert.assertEquals("Test", group.getHistoricalData().getProductName());
+       Assert.assertEquals("Test notes", group.getHistoricalData().getNotes());
+       Assert.assertEquals(new Money("100"), group.getHistoricalData().getLoanAmount());
+       Assert.assertEquals(new Money("50"), group.getHistoricalData().getTotalAmountPaid());
+       Assert.assertEquals(new Money("10"), group.getHistoricalData().getInterestPaid());
+       Assert.assertEquals(1, group.getHistoricalData().getMissedPaymentsCount().intValue());
+       Assert.assertEquals(2, group.getHistoricalData().getTotalPaymentsCount().intValue());
+       Assert.assertEquals(1, group.getHistoricalData().getLoanCycleNumber().intValue());
     }
 
     public void testUpdateHistoricalDataWhenCustHistoricalDataIsNotNull() throws Exception {
@@ -251,14 +253,14 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionErrors();
         verifyNoActionMessages();
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals("Test", group.getHistoricalData().getProductName());
-        assertEquals("Test notes", group.getHistoricalData().getNotes());
-        assertEquals(new Money("200"), group.getHistoricalData().getLoanAmount());
-        assertEquals(new Money("150"), group.getHistoricalData().getTotalAmountPaid());
-        assertEquals(new Money("50"), group.getHistoricalData().getInterestPaid());
-        assertEquals(2, group.getHistoricalData().getMissedPaymentsCount().intValue());
-        assertEquals(3, group.getHistoricalData().getTotalPaymentsCount().intValue());
-        assertEquals(2, group.getHistoricalData().getLoanCycleNumber().intValue());
+       Assert.assertEquals("Test", group.getHistoricalData().getProductName());
+       Assert.assertEquals("Test notes", group.getHistoricalData().getNotes());
+       Assert.assertEquals(new Money("200"), group.getHistoricalData().getLoanAmount());
+       Assert.assertEquals(new Money("150"), group.getHistoricalData().getTotalAmountPaid());
+       Assert.assertEquals(new Money("50"), group.getHistoricalData().getInterestPaid());
+       Assert.assertEquals(2, group.getHistoricalData().getMissedPaymentsCount().intValue());
+       Assert.assertEquals(3, group.getHistoricalData().getTotalPaymentsCount().intValue());
+       Assert.assertEquals(2, group.getHistoricalData().getLoanCycleNumber().intValue());
     }
 
     private void createInitialObjects() {

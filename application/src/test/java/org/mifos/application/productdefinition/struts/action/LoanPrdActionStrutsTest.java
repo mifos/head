@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
@@ -117,37 +119,37 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
         List<ProductCategoryBO> productCategories = (List<ProductCategoryBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, request);
-        assertEquals("The size of master data for categories", 1, productCategories.size());
+       Assert.assertEquals("The size of master data for categories", 1, productCategories.size());
         for (ProductCategoryBO productCategory : productCategories) {
-            assertNotNull(productCategory.getProductType());
+            Assert.assertNotNull(productCategory.getProductType());
         }
-        assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANAPPLFORLIST, request)).size());
 
-        assertEquals("The size of grace period types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of grace period types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, request)).size());
-        assertEquals("The size of interest types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of interest types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.INTERESTTYPESLIST, request)).size());
-        assertEquals("The size of applicable list", 10, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 10, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRICIPALGLCODELIST, request)).size());
-        assertEquals("The size of applicable list", 3, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 3, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANINTERESTGLCODELIST, request)).size());
         List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST, request);
-        assertNotNull(funds);
+        Assert.assertNotNull(funds);
         List<FeeView> loanFees = (List<FeeView>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANFEESLIST,
                 request);
-        assertNull(loanFees);
+        Assert.assertNull(loanFees);
         List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE,
                 request);
-        assertNotNull(productFees);
+        Assert.assertNotNull(productFees);
         List<FeeView> selectedFees = (List<FeeView>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
-        assertNotNull(selectedFees);
+        Assert.assertNotNull(selectedFees);
         List<FundBO> selectedFunds = (List<FundBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request);
-        assertNotNull(selectedFunds);
-        assertEquals(0, (selectedFees).size());
-        assertEquals(0, (selectedFunds).size());
+        Assert.assertNotNull(selectedFunds);
+       Assert.assertEquals(0, (selectedFees).size());
+       Assert.assertEquals(0, (selectedFunds).size());
     }
 
     public void testPreviewWithOutData() throws Exception {
@@ -557,7 +559,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.cancelCreate_success.toString());
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
 
     public void testPrevious() throws Exception {
@@ -648,9 +650,9 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class,
                 (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
         TestObjectFactory.cleanUp(fee);
@@ -667,80 +669,80 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
         List<ProductCategoryBO> productCategories = (List<ProductCategoryBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, request);
-        assertEquals("The size of master data for categories", 1, productCategories.size());
+       Assert.assertEquals("The size of master data for categories", 1, productCategories.size());
         for (ProductCategoryBO productCategory : productCategories) {
-            assertNotNull(productCategory.getProductType());
+            Assert.assertNotNull(productCategory.getProductType());
         }
-        assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANAPPLFORLIST, request)).size());
 
-        assertEquals("The size of grace period types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of grace period types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, request)).size());
-        assertEquals("The size of interest types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of interest types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.INTERESTTYPESLIST, request)).size());
-        assertEquals("The size of applicable list", 10, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 10, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRICIPALGLCODELIST, request)).size());
-        assertEquals("The size of applicable list", 3, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 3, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANINTERESTGLCODELIST, request)).size());
         List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST, request);
-        assertNotNull(funds);
+        Assert.assertNotNull(funds);
         List<FeeView> fees = (List<FeeView>) SessionUtils
                 .getAttribute(ProductDefinitionConstants.LOANFEESLIST, request);
-        assertNull(fees);
+        Assert.assertNull(fees);
         List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE,
                 request);
-        assertNotNull(productFees);
+        Assert.assertNotNull(productFees);
         List<FeeView> selectedFees = (List<FeeView>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
-        assertNotNull(selectedFees);
+        Assert.assertNotNull(selectedFees);
         List<FundBO> selectedFunds = (List<FundBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request);
-        assertNotNull(selectedFunds);
-        assertEquals("The size of applicable status list", 2, ((List<PrdStatusEntity>) SessionUtils.getAttribute(
+        Assert.assertNotNull(selectedFunds);
+       Assert.assertEquals("The size of applicable status list", 2, ((List<PrdStatusEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRDSTATUSLIST, request)).size());
         LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) request.getSession().getAttribute(
                 ProductDefinitionConstants.LOANPRODUCTACTIONFORM);
-        assertNotNull(loanPrdActionForm);
+        Assert.assertNotNull(loanPrdActionForm);
 
-        assertEquals(loanOffering.getPrdOfferingId().toString(), loanPrdActionForm.getPrdOfferingId());
-        assertEquals(loanOffering.getPrdOfferingName(), loanPrdActionForm.getPrdOfferingName());
-        assertEquals(loanOffering.getPrdOfferingShortName(), loanPrdActionForm.getPrdOfferingShortName());
-        assertEquals(loanOffering.getPrdCategory().getProductCategoryID().toString(), loanPrdActionForm
+       Assert.assertEquals(loanOffering.getPrdOfferingId().toString(), loanPrdActionForm.getPrdOfferingId());
+       Assert.assertEquals(loanOffering.getPrdOfferingName(), loanPrdActionForm.getPrdOfferingName());
+       Assert.assertEquals(loanOffering.getPrdOfferingShortName(), loanPrdActionForm.getPrdOfferingShortName());
+       Assert.assertEquals(loanOffering.getPrdCategory().getProductCategoryID().toString(), loanPrdActionForm
                 .getPrdCategory());
-        assertEquals(loanOffering.getStatus().getValue().toString(), loanPrdActionForm.getPrdStatus());
-        assertEquals(loanOffering.getPrdApplicableMasterEnum(), loanPrdActionForm.getPrdApplicableMasterEnum());
-        assertEquals(DateUtils.getUserLocaleDate(TestObjectFactory.getContext().getPreferredLocale(), DateUtils
+       Assert.assertEquals(loanOffering.getStatus().getValue().toString(), loanPrdActionForm.getPrdStatus());
+       Assert.assertEquals(loanOffering.getPrdApplicableMasterEnum(), loanPrdActionForm.getPrdApplicableMasterEnum());
+       Assert.assertEquals(DateUtils.getUserLocaleDate(TestObjectFactory.getContext().getPreferredLocale(), DateUtils
                 .toDatabaseFormat(loanOffering.getStartDate())), loanPrdActionForm.getStartDate());
         if (loanOffering.getEndDate() != null) {
-            assertEquals(DateUtils.getUserLocaleDate(TestObjectFactory.getContext().getPreferredLocale(), DateUtils
+           Assert.assertEquals(DateUtils.getUserLocaleDate(TestObjectFactory.getContext().getPreferredLocale(), DateUtils
                     .toDatabaseFormat(loanOffering.getEndDate())), loanPrdActionForm.getEndDate());
         } else {
-            assertNull(loanPrdActionForm.getEndDate());
+            Assert.assertNull(loanPrdActionForm.getEndDate());
         }
-        assertEquals(loanOffering.getDescription(), loanPrdActionForm.getDescription());
-        assertEquals(loanOffering.getGracePeriodType().getId().toString(), loanPrdActionForm.getGracePeriodType());
-        assertEquals(loanOffering.getGracePeriodDuration().toString(), loanPrdActionForm.getGracePeriodDuration());
-        assertEquals(loanOffering.getInterestTypes().getId().toString(), loanPrdActionForm.getInterestTypes());
+       Assert.assertEquals(loanOffering.getDescription(), loanPrdActionForm.getDescription());
+       Assert.assertEquals(loanOffering.getGracePeriodType().getId().toString(), loanPrdActionForm.getGracePeriodType());
+       Assert.assertEquals(loanOffering.getGracePeriodDuration().toString(), loanPrdActionForm.getGracePeriodDuration());
+       Assert.assertEquals(loanOffering.getInterestTypes().getId().toString(), loanPrdActionForm.getInterestTypes());
         Set<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoan = loanOffering.getLoanAmountSameForAllLoan();
-        assertNotNull(loanAmountSameForAllLoan);
+        Assert.assertNotNull(loanAmountSameForAllLoan);
         Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan = loanOffering.getNoOfInstallSameForAllLoan();
-        assertNotNull(noOfInstallSameForAllLoan);
-        assertEquals(loanOffering.getMaxInterestRate().toString(), loanPrdActionForm.getMaxInterestRate());
-        assertEquals(loanOffering.getMinInterestRate().toString(), loanPrdActionForm.getMinInterestRate());
-        assertEquals(loanOffering.getDefInterestRate().toString(), loanPrdActionForm.getDefInterestRate());
+        Assert.assertNotNull(noOfInstallSameForAllLoan);
+       Assert.assertEquals(loanOffering.getMaxInterestRate().toString(), loanPrdActionForm.getMaxInterestRate());
+       Assert.assertEquals(loanOffering.getMinInterestRate().toString(), loanPrdActionForm.getMinInterestRate());
+       Assert.assertEquals(loanOffering.getDefInterestRate().toString(), loanPrdActionForm.getDefInterestRate());
 
-        assertEquals(loanOffering.isIntDedDisbursement(), loanPrdActionForm.isIntDedAtDisbValue());
-        assertEquals(loanOffering.isPrinDueLastInst(), loanPrdActionForm.isPrinDueLastInstValue());
-        assertEquals(loanOffering.isIncludeInLoanCounter(), loanPrdActionForm.isLoanCounterValue());
-        assertEquals(loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString(),
+       Assert.assertEquals(loanOffering.isIntDedDisbursement(), loanPrdActionForm.isIntDedAtDisbValue());
+       Assert.assertEquals(loanOffering.isPrinDueLastInst(), loanPrdActionForm.isPrinDueLastInstValue());
+       Assert.assertEquals(loanOffering.isIncludeInLoanCounter(), loanPrdActionForm.isLoanCounterValue());
+       Assert.assertEquals(loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString(),
                 loanPrdActionForm.getRecurAfter());
-        assertEquals(loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType()
+       Assert.assertEquals(loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType()
                 .getRecurrenceId().toString(), loanPrdActionForm.getFreqOfInstallments());
-        assertEquals(loanOffering.getPrincipalGLcode().getGlcodeId().toString(), loanPrdActionForm.getPrincipalGLCode());
-        assertEquals(loanOffering.getInterestGLcode().getGlcodeId().toString(), loanPrdActionForm.getInterestGLCode());
+       Assert.assertEquals(loanOffering.getPrincipalGLcode().getGlcodeId().toString(), loanPrdActionForm.getPrincipalGLCode());
+       Assert.assertEquals(loanOffering.getInterestGLcode().getGlcodeId().toString(), loanPrdActionForm.getInterestGLCode());
 
-        assertEquals(loanOffering.getLoanOfferingFees().size(), (selectedFees).size());
-        assertEquals(loanOffering.getLoanOfferingFunds().size(), (selectedFunds).size());
+       Assert.assertEquals(loanOffering.getLoanOfferingFees().size(), (selectedFees).size());
+       Assert.assertEquals(loanOffering.getLoanOfferingFunds().size(), (selectedFunds).size());
     }
 
     public void testEditPreviewWithOutData() throws Exception {
@@ -893,7 +895,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.editcancel_success.toString());
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
 
     public void testUpdate() throws Exception {
@@ -946,22 +948,22 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
         StaticHibernateUtil.closeSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-        assertEquals("Loan Product", product.getPrdOfferingName());
-        assertEquals("LOAP", product.getPrdOfferingShortName());
-        assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
+       Assert.assertEquals("Loan Product", product.getPrdOfferingName());
+       Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
+       Assert.assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
         for (Iterator<LoanAmountSameForAllLoanBO> itr = product.getLoanAmountSameForAllLoan().iterator(); itr.hasNext();) {
             LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-            assertEquals(new Double("11000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
-            assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
-            assertEquals(new Double("5000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("11000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
         }
-        assertEquals(Short.valueOf("1"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+       Assert.assertEquals(Short.valueOf("1"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
                 .getRecurAfter());
-        assertEquals(Short.valueOf("2"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+       Assert.assertEquals(Short.valueOf("2"), product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
                 .getRecurrenceType().getRecurrenceId());
-        assertEquals(1, product.getLoanOfferingFees().size());
+       Assert.assertEquals(1, product.getLoanOfferingFees().size());
 
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
         TestObjectFactory.removeObject(product);
         TestObjectFactory.cleanUp(fee);
     }
@@ -993,43 +995,43 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         // to the session. But in reloaded, the locale that has been set is
         // lost.
 
-        assertNotNull(loanOffering1.getPrdOfferingId());
-        assertNotNull(loanOffering1.getPrdOfferingName());
-        assertNotNull(loanOffering1.getPrdOfferingShortName());
-        assertNotNull(loanOffering1.getPrdCategory().getProductCategoryName());
-        assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName());
-        assertNotNull(loanOffering1.getPrdApplicableMasterEnum());
-        assertNotNull(loanOffering1.getStartDate());
-        assertNotNull(loanOffering1.getGracePeriodType().getName());
-        assertNotNull(loanOffering1.getGracePeriodDuration());
-        assertNotNull(loanOffering1.getInterestTypes().getName());
+        Assert.assertNotNull(loanOffering1.getPrdOfferingId());
+        Assert.assertNotNull(loanOffering1.getPrdOfferingName());
+        Assert.assertNotNull(loanOffering1.getPrdOfferingShortName());
+        Assert.assertNotNull(loanOffering1.getPrdCategory().getProductCategoryName());
+        Assert.assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName());
+        Assert.assertNotNull(loanOffering1.getPrdApplicableMasterEnum());
+        Assert.assertNotNull(loanOffering1.getStartDate());
+        Assert.assertNotNull(loanOffering1.getGracePeriodType().getName());
+        Assert.assertNotNull(loanOffering1.getGracePeriodDuration());
+        Assert.assertNotNull(loanOffering1.getInterestTypes().getName());
         for (Iterator<LoanAmountSameForAllLoanBO> itr = loanOffering1.getLoanAmountSameForAllLoan().iterator(); itr
                 .hasNext();) {
             LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-            assertNotNull(loanAmountSameForAllLoanBO.getMaxLoanAmount());
-            assertNotNull(loanAmountSameForAllLoanBO.getMinLoanAmount());
-            assertNotNull(loanAmountSameForAllLoanBO.getDefaultLoanAmount());
+            Assert.assertNotNull(loanAmountSameForAllLoanBO.getMaxLoanAmount());
+            Assert.assertNotNull(loanAmountSameForAllLoanBO.getMinLoanAmount());
+            Assert.assertNotNull(loanAmountSameForAllLoanBO.getDefaultLoanAmount());
         }
-        assertNotNull(loanOffering1.getMaxInterestRate());
-        assertNotNull(loanOffering1.getMinInterestRate());
-        assertNotNull(loanOffering1.getDefInterestRate());
+        Assert.assertNotNull(loanOffering1.getMaxInterestRate());
+        Assert.assertNotNull(loanOffering1.getMinInterestRate());
+        Assert.assertNotNull(loanOffering1.getDefInterestRate());
         for (Iterator<NoOfInstallSameForAllLoanBO> itr = loanOffering1.getNoOfInstallSameForAllLoan().iterator(); itr
                 .hasNext();) {
             NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO = itr.next();
-            assertNotNull(noOfInstallSameForAllLoanBO.getMaxNoOfInstall());
-            assertNotNull(noOfInstallSameForAllLoanBO.getMinNoOfInstall());
-            assertNotNull(noOfInstallSameForAllLoanBO.getDefaultNoOfInstall());
+            Assert.assertNotNull(noOfInstallSameForAllLoanBO.getMaxNoOfInstall());
+            Assert.assertNotNull(noOfInstallSameForAllLoanBO.getMinNoOfInstall());
+            Assert.assertNotNull(noOfInstallSameForAllLoanBO.getDefaultNoOfInstall());
         }
-        assertNotNull(loanOffering1.isIntDedDisbursement());
-        assertNotNull(loanOffering1.isPrinDueLastInst());
-        assertNotNull(loanOffering1.isIncludeInLoanCounter());
-        assertNotNull(loanOffering1.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter());
-        assertNotNull(loanOffering1.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType()
+        Assert.assertNotNull(loanOffering1.isIntDedDisbursement());
+        Assert.assertNotNull(loanOffering1.isPrinDueLastInst());
+        Assert.assertNotNull(loanOffering1.isIncludeInLoanCounter());
+        Assert.assertNotNull(loanOffering1.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+        Assert.assertNotNull(loanOffering1.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType()
                 .getRecurrenceId());
-        assertNotNull(loanOffering1.getPrincipalGLcode().getGlcode());
-        assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
-        assertNotNull(loanOffering1.getLoanOfferingFees());
-        assertNotNull(loanOffering1.getLoanOfferingFunds());
+        Assert.assertNotNull(loanOffering1.getPrincipalGLcode().getGlcode());
+        Assert.assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
+        Assert.assertNotNull(loanOffering1.getLoanOfferingFees());
+        Assert.assertNotNull(loanOffering1.getLoanOfferingFunds());
         StaticHibernateUtil.closeSession();
     }
 
@@ -1046,15 +1048,15 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
         List<LoanOfferingBO> loanOfferings = (List<LoanOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRODUCTLIST, request);
-        assertNotNull(loanOfferings);
-        assertEquals(2, loanOfferings.size());
+        Assert.assertNotNull(loanOfferings);
+       Assert.assertEquals(2, loanOfferings.size());
         Short DEFAULT_LOCALE_ID = (short) 1;
         for (LoanOfferingBO loanOfferingBO : loanOfferings) {
             loanOfferingBO = (LoanOfferingBO) StaticHibernateUtil.getSessionTL().get(LoanOfferingBO.class,
                     loanOfferingBO.getPrdOfferingId());
-            assertNotNull(loanOfferingBO.getPrdOfferingName());
-            assertNotNull(loanOfferingBO.getPrdOfferingId());
-            assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
+            Assert.assertNotNull(loanOfferingBO.getPrdOfferingName());
+            Assert.assertNotNull(loanOfferingBO.getPrdOfferingId());
+            Assert.assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
         }
         StaticHibernateUtil.closeSession();
         TestObjectFactory.removeObject(loanOffering1);
@@ -1156,9 +1158,9 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
 
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class,
                 (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
@@ -1259,9 +1261,9 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
-        assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
+        Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
 
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class,
                 (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));

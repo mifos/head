@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -90,65 +92,65 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
     public void testSavingsAccountLinkWithoutSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, false, randomNum);
-        assertEquals(true, createdLink.contains("custSearchAction"));
-        assertEquals(true, createdLink.contains("TestBranchOffice"));
-        assertEquals(true, createdLink.contains("centerCustAction"));
-        assertEquals(true, createdLink.contains("Center_Active_test"));
-        assertEquals(true, createdLink.contains("groupCustAction"));
-        assertEquals(true, createdLink.contains("Group_Active_test"));
-        assertEquals(true, createdLink.contains("prd1"));
+       Assert.assertEquals(true, createdLink.contains("custSearchAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(true, createdLink.contains("centerCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("groupCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Group_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("prd1"));
     }
 
     public void testSavingsAccountLinkWithSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, true, randomNum);
-        assertEquals(true, createdLink.contains("custSearchAction"));
-        assertEquals(true, createdLink.contains("TestBranchOffice"));
-        assertEquals(true, createdLink.contains("centerCustAction"));
-        assertEquals(true, createdLink.contains("Center_Active_test"));
-        assertEquals(true, createdLink.contains("groupCustAction"));
-        assertEquals(true, createdLink.contains("Group_Active_test"));
-        assertEquals(true, createdLink.contains("savingsAction"));
+       Assert.assertEquals(true, createdLink.contains("custSearchAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(true, createdLink.contains("centerCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("groupCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Group_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("savingsAction"));
     }
 
     public void testPersonnelLinkWithoutSelfLink() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
         String createdLink = TagGenerator.createHeaderLinks(personnel, false, randomNum);
-        assertEquals(false, createdLink.contains("PersonAction"));
-        assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(false, createdLink.contains("PersonAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
     }
 
     public void testPersonnelLinkWithSelfLink() throws Exception {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
         String createdLink = TagGenerator.createHeaderLinks(personnel, true, randomNum);
-        assertEquals(true, createdLink.contains("PersonAction"));
-        assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(true, createdLink.contains("PersonAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
     }
 
     public void testTagGeneratorFactory() throws Exception {
         createInitialObjectsForSavings();
         TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(center);
         if (tagGenerator instanceof CustomerTagGenerator)
-            assertTrue(true);
+           Assert.assertTrue(true);
 
         tagGenerator = TagGeneratorFactory.getInstance().getGenerator(group);
         if (tagGenerator instanceof CustomerTagGenerator)
-            assertTrue(true);
+           Assert.assertTrue(true);
 
         tagGenerator = TagGeneratorFactory.getInstance().getGenerator(savings);
         if (tagGenerator instanceof AccountTagGenerator)
-            assertTrue(true);
+           Assert.assertTrue(true);
 
     }
 
     public void testTagGeneratorFactoryPageExpired() throws Exception {
         try {
             TagGeneratorFactory.getInstance().getGenerator(null);
-            fail();
+            Assert.fail();
         } catch (PageExpiredException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -158,7 +160,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
         TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(personnel);
         tagGenerator = TagGeneratorFactory.getInstance().getGenerator(personnel);
         if (tagGenerator instanceof PersonnelTagGenerator)
-            assertTrue(true);
+           Assert.assertTrue(true);
     }
 
     private void createInitialObjectsForSavings() throws Exception {

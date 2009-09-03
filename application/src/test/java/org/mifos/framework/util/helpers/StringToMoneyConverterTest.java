@@ -20,6 +20,7 @@
 
 package org.mifos.framework.util.helpers;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.commons.beanutils.Converter;
@@ -49,7 +50,7 @@ public class StringToMoneyConverterTest extends TestCase {
     public void testConvert() {
         Converter stringToMoney = new StringToMoneyConverter();
         Money money = new Money("142.34");
-        assertEquals("testing StringToMoneyConverter should have returned a Money object.", money,
+       Assert.assertEquals("testing StringToMoneyConverter should have returned a Money object.", money,
                 (Money) stringToMoney.convert(Money.class, "142.34"));
     }
 
@@ -64,7 +65,7 @@ public class StringToMoneyConverterTest extends TestCase {
 
         Converter stringToMoney = new StringToMoneyConverter();
         Money money = new Money("0");
-        assertEquals("testing StringToMoneyConverter should have returned a Money object with amount set to zero.",
+       Assert.assertEquals("testing StringToMoneyConverter should have returned a Money object with amount set to zero.",
                 money, (Money) stringToMoney.convert(Money.class, ""));
 
     }

@@ -20,6 +20,8 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -39,7 +41,7 @@ public class FinancialActionCacheIntegrationTest extends MifosIntegrationTestCas
 
         FinancialActionBO principalAction = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
-        assertEquals(principalAction.getId().shortValue(), 1);
+       Assert.assertEquals(principalAction.getId().shortValue(), 1);
 
     }
 

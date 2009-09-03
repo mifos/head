@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
@@ -103,15 +105,15 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         LoanBO loanBO = loanBusinessService.findBySystemId(accountBO.getGlobalAccountNum());
-        assertEquals(loanBO.getGlobalAccountNum(), accountBO.getGlobalAccountNum());
-        assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
+       Assert.assertEquals(loanBO.getGlobalAccountNum(), accountBO.getGlobalAccountNum());
+       Assert.assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
     }
 
     public void testFindIndividualLoans() throws Exception {
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         List<LoanBO> listLoanBO = loanBusinessService.findIndividualLoans(accountBO.getAccountId().toString());
-        assertEquals(0, listLoanBO.size());
+       Assert.assertEquals(0, listLoanBO.size());
     }
 
     public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
@@ -119,8 +121,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         loanBusinessService = new LoanBusinessService();
         List<LoanBO> loanBO = loanBusinessService.getLoanAccountsActiveInGoodBadStanding(accountBO.getCustomer()
                 .getCustomerId());
-        assertEquals(Short.valueOf("1"), loanBO.get(0).getAccountType().getAccountTypeId());
-        assertNotNull(loanBO.size());
+       Assert.assertEquals(Short.valueOf("1"), loanBO.get(0).getAccountType().getAccountTypeId());
+        Assert.assertNotNull(loanBO.size());
 
     }
 
@@ -140,16 +142,16 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         List<LoanActivityView> loanRecentActivityView = loanBusinessService.getRecentActivityView(accountBO
                 .getGlobalAccountNum());
 
-        assertEquals(3, loanRecentActivityView.size());
-        assertNotNull(loanRecentActivityView);
+       Assert.assertEquals(3, loanRecentActivityView.size());
+        Assert.assertNotNull(loanRecentActivityView);
     }
 
     private void applyPayments() throws PersistenceException, AccountException {
         Set<AccountActionDateEntity> actionDates = accountBO.getAccountActionDates();
         // Is this always true or does it depend on System.currentTimeMillis?
-        // assertEquals(6, actionDates.size());
+        //Assert.assertEquals(6, actionDates.size());
         for (AccountActionDateEntity actionDate : actionDates) {
-            assertNotNull(actionDate);
+            Assert.assertNotNull(actionDate);
             accountBO = accountPersistence.getAccount(accountBO.getAccountId());
             PaymentData paymentData = createPaymentViewObject(accountBO);
             accountBO.applyPaymentWithPersist(paymentData);
@@ -173,24 +175,24 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         List<LoanActivityView> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO
                 .getGlobalAccountNum());
 
-        assertNotNull(loanAllActivityView);
-        assertEquals(6, loanAllActivityView.size());
+        Assert.assertNotNull(loanAllActivityView);
+       Assert.assertEquals(6, loanAllActivityView.size());
         for (LoanActivityView view : loanAllActivityView) {
-            assertNotNull(view.getActivity());
-            assertNotNull(view.getUserPrefferedDate());
-            assertNotNull(view.getActionDate().getTime());
-            assertEquals(new Money("100.0"), view.getFees());
-            assertNotNull(view.getId());
-            assertEquals(new Money("12.0"), view.getInterest());
-            assertNull(view.getLocale());
-            assertEquals(new Money("0.0"), view.getPenalty());
-            assertEquals(new Money("100.0"), view.getPrincipal());
-            assertEquals(new Money("212.0"), view.getTotal());
-            assertNotNull(view.getTimeStamp());
-            assertEquals(new Money("-100.0"), view.getRunningBalanceFees());
-            assertEquals(new Money("24.0"), view.getRunningBalanceInterest());
-            assertEquals(new Money("0.0"), view.getRunningBalancePenalty());
-            assertEquals(new Money("200.0"), view.getRunningBalancePrinciple());
+            Assert.assertNotNull(view.getActivity());
+            Assert.assertNotNull(view.getUserPrefferedDate());
+            Assert.assertNotNull(view.getActionDate().getTime());
+           Assert.assertEquals(new Money("100.0"), view.getFees());
+            Assert.assertNotNull(view.getId());
+           Assert.assertEquals(new Money("12.0"), view.getInterest());
+            Assert.assertNull(view.getLocale());
+           Assert.assertEquals(new Money("0.0"), view.getPenalty());
+           Assert.assertEquals(new Money("100.0"), view.getPrincipal());
+           Assert.assertEquals(new Money("212.0"), view.getTotal());
+            Assert.assertNotNull(view.getTimeStamp());
+           Assert.assertEquals(new Money("-100.0"), view.getRunningBalanceFees());
+           Assert.assertEquals(new Money("24.0"), view.getRunningBalanceInterest());
+           Assert.assertEquals(new Money("0.0"), view.getRunningBalancePenalty());
+           Assert.assertEquals(new Money("200.0"), view.getRunningBalancePrinciple());
             break;
         }
     }
@@ -199,8 +201,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         List<LoanBO> loanAccounts = loanBusinessService.getAllLoanAccounts();
-        assertNotNull(loanAccounts);
-        assertEquals(1, loanAccounts.size());
+        Assert.assertNotNull(loanAccounts);
+       Assert.assertEquals(1, loanAccounts.size());
     }
 
     private AccountBO getLoanAccount() {
@@ -243,7 +245,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
                 accountBusinessServiceMock);
 
-        assertEquals(asList(loanMock1), new LoanBusinessService(new LoanPersistence(), configServiceMock,
+       Assert.assertEquals(asList(loanMock1), new LoanBusinessService(new LoanPersistence(), configServiceMock,
                 accountBusinessServiceMock).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
 
         verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,

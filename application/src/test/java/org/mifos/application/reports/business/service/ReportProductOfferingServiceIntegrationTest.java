@@ -24,6 +24,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import junit.framework.Assert;
 
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -57,7 +58,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
         replay(loanPrdBusinessServiceMock);
         LoanOfferingBO retrievedLoanOffering = reportProductOfferingService.getLoanOffering1();
         verify(loanPrdBusinessServiceMock);
-        assertEquals(loanOffering1, retrievedLoanOffering);
+       Assert.assertEquals(loanOffering1, retrievedLoanOffering);
     }
 
     public void testGetLoanOffering2ReturnsLoanOffering() throws Exception {
@@ -66,7 +67,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
         replay(loanPrdBusinessServiceMock);
         LoanOfferingBO retrievedLoanOffering = reportProductOfferingService.getLoanOffering2();
         verify(loanPrdBusinessServiceMock);
-        assertEquals(loanOffering2, retrievedLoanOffering);
+       Assert.assertEquals(loanOffering2, retrievedLoanOffering);
     }
 
     public void testGetSavingsOffering1ReturnsSavingsOffering() throws Exception {
@@ -75,7 +76,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
         replay(savingsProductBusinessServiceMock);
         SavingsOfferingBO retrievedSavingsOffering = reportProductOfferingService.getSavingsOffering1();
         verify(savingsProductBusinessServiceMock);
-        assertEquals(savingsOffering1, retrievedSavingsOffering);
+       Assert.assertEquals(savingsOffering1, retrievedSavingsOffering);
     }
 
     public void testGetSavingsOffering2ReturnsSavingsOffering() throws Exception {
@@ -84,14 +85,14 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
         replay(savingsProductBusinessServiceMock);
         SavingsOfferingBO retrievedSavingsOffering = reportProductOfferingService.getSavingsOffering2();
         verify(savingsProductBusinessServiceMock);
-        assertEquals(savingsOffering2, retrievedSavingsOffering);
+       Assert.assertEquals(savingsOffering2, retrievedSavingsOffering);
     }
 
     public void testFindsReportProductOfferingConfigFile() throws Exception {
         try {
             reportProductOfferingService = new ReportProductOfferingService(null, null, reportProductOfferingConfig);
         } catch (ConfigServiceInitializationException e) {
-            fail("Was not able to find reportproductoffering config file" + e);
+            Assert.fail("Was not able to find reportproductoffering config file" + e);
         }
     }
 
@@ -105,7 +106,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
     }
 
     private void retrieveAndAssertSignatureColumn(String signatureColumnNumber) {
-        assertTrue("could not find signature column " + signatureColumnNumber, reportProductOfferingService
+       Assert.assertTrue("could not find signature column " + signatureColumnNumber, reportProductOfferingService
                 .isPropertyPresent(ReportConfigServiceConstants.DISPLAY_SIGNATURE_COLUMN + "." + signatureColumnNumber));
     }
 
@@ -113,7 +114,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
         try {
             reportProductOfferingService = new ReportProductOfferingService(null, null, new ClassPathResource(
                     "/abcd/filenotexist.properties"));
-            fail("Was not able to find reportproductoffering config file");
+            Assert.fail("Was not able to find reportproductoffering config file");
         } catch (ConfigServiceInitializationException e) {
         }
     }

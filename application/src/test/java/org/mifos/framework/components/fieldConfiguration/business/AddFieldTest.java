@@ -23,6 +23,7 @@ package org.mifos.framework.components.fieldConfiguration.business;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.util.helpers.EntityType;
@@ -50,17 +51,17 @@ public class AddFieldTest extends TestCase {
         upgrade.upgrade(database.openConnection());
         FieldConfigurationEntity fetched = (FieldConfigurationEntity) database.openSession().get(
                 FieldConfigurationEntity.class, newId);
-        assertEquals(newId, (int) fetched.getFieldConfigId());
-        assertFalse(fetched.isHidden());
-        assertFalse(fetched.isMandatory());
-        assertEquals(EntityType.CLIENT, fetched.getEntityType());
-        assertEquals("AssignClients", fetched.getFieldName());
+       Assert.assertEquals(newId, (int) fetched.getFieldConfigId());
+        Assert.assertFalse(fetched.isHidden());
+        Assert.assertFalse(fetched.isMandatory());
+       Assert.assertEquals(EntityType.CLIENT, fetched.getEntityType());
+       Assert.assertEquals("AssignClients", fetched.getFieldName());
 
         /*
          * This upgrade doesn't yet have the ability to set the parent. Looks
          * like we'll probably need that some day (not for 106 upgrade).
          */
-        assertEquals(null, fetched.getParentFieldConfig());
+       Assert.assertEquals(null, fetched.getParentFieldConfig());
 
         return upgrade;
     }

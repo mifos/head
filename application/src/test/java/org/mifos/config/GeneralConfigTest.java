@@ -20,6 +20,7 @@
 
 package org.mifos.config;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
@@ -36,13 +37,13 @@ public class GeneralConfigTest extends TestCase {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         int currentValue = 30;
         configMgr.setProperty(GeneralConfig.MaxPointsPerPPISurvey, currentValue);
-        assertEquals(currentValue, GeneralConfig.getMaxPointsPerPPISurvey());
+       Assert.assertEquals(currentValue, GeneralConfig.getMaxPointsPerPPISurvey());
         // clear the MaxPointsPerPPISurvey property from the config file so
         // should get the default value
         configMgr.clearProperty(GeneralConfig.MaxPointsPerPPISurvey);
         int defaultValue = GeneralConfig.getMaxPointsPerPPISurvey();
         int expectedDefaultValue = 101;
-        assertEquals(defaultValue, expectedDefaultValue);
+       Assert.assertEquals(defaultValue, expectedDefaultValue);
         // save it back
         configMgr.setProperty(GeneralConfig.MaxPointsPerPPISurvey, configuredValue);
 
@@ -53,13 +54,13 @@ public class GeneralConfigTest extends TestCase {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         int currentValue = 40;
         configMgr.setProperty(GeneralConfig.BatchSizeForBatchJobs, currentValue);
-        assertEquals(currentValue, GeneralConfig.getBatchSizeForBatchJobs());
+       Assert.assertEquals(currentValue, GeneralConfig.getBatchSizeForBatchJobs());
         // clear the BatchSizeForBatchJobs property from the config file so
         // should get the default value
         configMgr.clearProperty(GeneralConfig.BatchSizeForBatchJobs);
         int defaultValue = GeneralConfig.getBatchSizeForBatchJobs();
         int expectedDefaultValue = 40;
-        assertEquals(defaultValue, expectedDefaultValue);
+       Assert.assertEquals(defaultValue, expectedDefaultValue);
         // save it back
         configMgr.setProperty(GeneralConfig.BatchSizeForBatchJobs, configuredValue);
 
@@ -70,13 +71,13 @@ public class GeneralConfigTest extends TestCase {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         int currentValue = 500;
         configMgr.setProperty(GeneralConfig.RecordCommittingSizeForBatchJobs, currentValue);
-        assertEquals(currentValue, GeneralConfig.getRecordCommittingSizeForBatchJobs());
+       Assert.assertEquals(currentValue, GeneralConfig.getRecordCommittingSizeForBatchJobs());
         // clear the BatchSizeForBatchJobs property from the config file so
         // should get the default value
         configMgr.clearProperty(GeneralConfig.RecordCommittingSizeForBatchJobs);
         int defaultValue = GeneralConfig.getRecordCommittingSizeForBatchJobs();
         int expectedDefaultValue = 1000;
-        assertEquals(defaultValue, expectedDefaultValue);
+       Assert.assertEquals(defaultValue, expectedDefaultValue);
         // save it back
         configMgr.setProperty(GeneralConfig.RecordCommittingSizeForBatchJobs, configuredValue);
 
@@ -87,11 +88,11 @@ public class GeneralConfigTest extends TestCase {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         int currentValue = 500;
         configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, currentValue);
-        assertEquals(currentValue, GeneralConfig.getOutputIntervalForBatchJobs());
+       Assert.assertEquals(currentValue, GeneralConfig.getOutputIntervalForBatchJobs());
         configMgr.clearProperty(GeneralConfig.OutputIntervalForBatchJobs);
         int defaultValue = GeneralConfig.getOutputIntervalForBatchJobs();
         int expectedDefaultValue = 1000;
-        assertEquals(defaultValue, expectedDefaultValue);
+       Assert.assertEquals(defaultValue, expectedDefaultValue);
         // save it back
         configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, configuredValue);
         

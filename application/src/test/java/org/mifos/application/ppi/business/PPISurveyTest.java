@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.joda.time.DateMidnight;
@@ -77,7 +78,7 @@ public class PPISurveyTest extends MifosInMemoryIntegrationTestCase {
     public void testCreateSurveyInstance() throws Exception {
         Survey survey = new PPISurvey();
         SurveyInstance instance = survey.createSurveyInstance();
-        assertTrue("Instance should be instance of PpiSurveyInstance", PPISurvey.class.isInstance(survey));
+       Assert.assertTrue("Instance should be instance of PpiSurveyInstance", PPISurvey.class.isInstance(survey));
     }
 
     public void testCreateSurvey() throws Exception {
@@ -88,15 +89,15 @@ public class PPISurveyTest extends MifosInMemoryIntegrationTestCase {
         persistence.createOrUpdate(ppiSurvey);
         persistence.createOrUpdate(regularSurvey);
 
-        assertEquals(1, persistence.retrieveAllPPISurveys().size());
-        assertEquals(2, persistence.retrieveAllSurveys().size());
+       Assert.assertEquals(1, persistence.retrieveAllPPISurveys().size());
+       Assert.assertEquals(2, persistence.retrieveAllSurveys().size());
 
         PPISurvey dbPPISurvey = persistence.retrieveActivePPISurvey();
-        assertNotNull(dbPPISurvey);
-        assertEquals(ppiSurvey.getQuestions().size(), dbPPISurvey.getQuestions().size());
-        assertEquals(ppiSurvey.getNonPoorMin(), dbPPISurvey.getNonPoorMin());
-        assertEquals(ppiSurvey.getName(), dbPPISurvey.getName());
-        assertEquals(ppiSurvey.getCountry(), dbPPISurvey.getCountry());
+        Assert.assertNotNull(dbPPISurvey);
+       Assert.assertEquals(ppiSurvey.getQuestions().size(), dbPPISurvey.getQuestions().size());
+       Assert.assertEquals(ppiSurvey.getNonPoorMin(), dbPPISurvey.getNonPoorMin());
+       Assert.assertEquals(ppiSurvey.getName(), dbPPISurvey.getName());
+       Assert.assertEquals(ppiSurvey.getCountry(), dbPPISurvey.getCountry());
     }
 
     public static PPISurvey makePPISurvey(String name) throws ValidationException {
@@ -142,15 +143,15 @@ public class PPISurveyTest extends MifosInMemoryIntegrationTestCase {
         ppiSurvey.populateDefaultValues();
         int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
 
-        assertTrue(0 == ppiSurvey.getVeryPoorMin());
-        assertTrue(ppiSurvey.getVeryPoorMin() <= ppiSurvey.getVeryPoorMax());
-        assertTrue(ppiSurvey.getVeryPoorMax() == ppiSurvey.getPoorMin() - 1);
-        assertTrue(ppiSurvey.getPoorMin() <= ppiSurvey.getPoorMax());
-        assertTrue(ppiSurvey.getPoorMax() == ppiSurvey.getAtRiskMin() - 1);
-        assertTrue(ppiSurvey.getAtRiskMin() <= ppiSurvey.getAtRiskMax());
-        assertTrue(ppiSurvey.getAtRiskMax() == ppiSurvey.getNonPoorMin() - 1);
-        assertTrue(ppiSurvey.getNonPoorMin() <= ppiSurvey.getNonPoorMax());
-        assertTrue(ppiSurvey.getNonPoorMax() == nonPoorMax);
+       Assert.assertTrue(0 == ppiSurvey.getVeryPoorMin());
+       Assert.assertTrue(ppiSurvey.getVeryPoorMin() <= ppiSurvey.getVeryPoorMax());
+       Assert.assertTrue(ppiSurvey.getVeryPoorMax() == ppiSurvey.getPoorMin() - 1);
+       Assert.assertTrue(ppiSurvey.getPoorMin() <= ppiSurvey.getPoorMax());
+       Assert.assertTrue(ppiSurvey.getPoorMax() == ppiSurvey.getAtRiskMin() - 1);
+       Assert.assertTrue(ppiSurvey.getAtRiskMin() <= ppiSurvey.getAtRiskMax());
+       Assert.assertTrue(ppiSurvey.getAtRiskMax() == ppiSurvey.getNonPoorMin() - 1);
+       Assert.assertTrue(ppiSurvey.getNonPoorMin() <= ppiSurvey.getNonPoorMax());
+       Assert.assertTrue(ppiSurvey.getNonPoorMax() == nonPoorMax);
     }
 
     public void testRetrieve() throws Exception {
@@ -159,7 +160,7 @@ public class PPISurveyTest extends MifosInMemoryIntegrationTestCase {
         persistence.createOrUpdate(ppiSurvey);
 
         PPISurvey retrievedPPISurvey = persistence.retrieveActivePPISurvey();
-        assertEquals("PPI Test Survey", retrievedPPISurvey.getName());
+       Assert.assertEquals("PPI Test Survey", retrievedPPISurvey.getName());
     }
 
     public void testRetrieveById() throws Exception {
@@ -168,7 +169,7 @@ public class PPISurveyTest extends MifosInMemoryIntegrationTestCase {
         persistence.createOrUpdate(ppiSurvey);
 
         Survey retrievedPPISurvey = persistence.getSurvey(ppiSurvey.getSurveyId());
-        assertEquals("PPI Test Survey", retrievedPPISurvey.getName());
+       Assert.assertEquals("PPI Test Survey", retrievedPPISurvey.getName());
     }
 
     public void testRetrieveRegularSurvey() throws Exception {
@@ -177,15 +178,15 @@ public class PPISurveyTest extends MifosInMemoryIntegrationTestCase {
         int surveyId = regularSurvey.getSurveyId();
 
         Survey retrievedSurvey = persistence.getSurvey(surveyId);
-        assertEquals("PPI Test Survey", retrievedSurvey.getName());
-        assertFalse(retrievedSurvey instanceof PPISurvey);
+       Assert.assertEquals("PPI Test Survey", retrievedSurvey.getName());
+        Assert.assertFalse(retrievedSurvey instanceof PPISurvey);
 
-        assertEquals(null, new PPIPersistence().getPPISurvey(surveyId));
+       Assert.assertEquals(null, new PPIPersistence().getPPISurvey(surveyId));
     }
 
     public void testNotFound() throws Exception {
         Survey retrieved = persistence.getSurvey(23423);
-        assertEquals(null, retrieved);
+       Assert.assertEquals(null, retrieved);
     }
 
     public void testViaInstance() throws Exception {
@@ -220,20 +221,20 @@ public class PPISurveyTest extends MifosInMemoryIntegrationTestCase {
         persistence.createOrUpdate(survey);
 
         PPISurvey retrievedSurvey = persistence.retrievePPISurveyByCountry(Country.INDIA);
-        assertEquals("PPI Survey India", retrievedSurvey.getName());
-        assertEquals(Country.INDIA, retrievedSurvey.getCountryAsEnum());
+       Assert.assertEquals("PPI Survey India", retrievedSurvey.getName());
+       Assert.assertEquals(Country.INDIA, retrievedSurvey.getCountryAsEnum());
 
-        assertEquals(10, retrievedSurvey.getQuestions().size());
-        assertEquals("Number of children", retrievedSurvey.getQuestion(0).getShortName());
-        assertEquals("What is the household's primary energy source for cooking?", retrievedSurvey.getQuestion(1)
+       Assert.assertEquals(10, retrievedSurvey.getQuestions().size());
+       Assert.assertEquals("Number of children", retrievedSurvey.getQuestion(0).getShortName());
+       Assert.assertEquals("What is the household's primary energy source for cooking?", retrievedSurvey.getQuestion(1)
                 .getQuestionText());
 
-        assertEquals(0, retrievedSurvey.getLikelihood(2).getOrder());
-        assertEquals(1, retrievedSurvey.getLikelihood(5).getOrder());
-        assertEquals(5, retrievedSurvey.getLikelihood(25).getOrder());
+       Assert.assertEquals(0, retrievedSurvey.getLikelihood(2).getOrder());
+       Assert.assertEquals(1, retrievedSurvey.getLikelihood(5).getOrder());
+       Assert.assertEquals(5, retrievedSurvey.getLikelihood(25).getOrder());
 
-        assertEquals(6.9, retrievedSurvey.getLikelihood(43).getBottomHalfBelowPovertyLinePercent(), DELTA);
-        assertEquals(29.5, retrievedSurvey.getLikelihood(43).getTopHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(6.9, retrievedSurvey.getLikelihood(43).getBottomHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(29.5, retrievedSurvey.getLikelihood(43).getTopHalfBelowPovertyLinePercent(), DELTA);
     }
 
     private PersonnelBO makeSystemUser() throws Exception {

@@ -21,6 +21,8 @@ package org.mifos.application.admindocuments.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -43,12 +45,12 @@ public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTes
 
     public void testGetAllAdminDocuments() throws PersistenceException {
         List<AdminDocumentBO> listadmindoc = reportsPersistence.getAllAdminDocuments();
-        assertEquals(0, listadmindoc.size());
+       Assert.assertEquals(0, listadmindoc.size());
     }
 
     public void testGetAdminDocumentById() throws NumberFormatException, PersistenceException {
         AdminDocumentBO admindoc = reportsPersistence.getAdminDocumentById(Short.valueOf("1"));
-        assertEquals(null, admindoc);
+       Assert.assertEquals(null, admindoc);
     }
 
 }

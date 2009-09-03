@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -83,24 +85,24 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         session.save(branchReport);
         List<BranchReportClientSummaryBO> retrievedClientSummaries = branchReportService.getClientSummaryInfo(
                 BRANCH_ID, RUN_DATE_STR);
-        assertNotNull(retrievedClientSummaries);
-        assertEquals(3, retrievedClientSummaries.size());
+        Assert.assertNotNull(retrievedClientSummaries);
+       Assert.assertEquals(3, retrievedClientSummaries.size());
 
-        assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(centerCountClientSummary)));
+       Assert.assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(centerCountClientSummary)));
 
-        assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeClientsCountSummary)));
+       Assert.assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeClientsCountSummary)));
 
-        assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeBorrowersCountSummary)));
+       Assert.assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeBorrowersCountSummary)));
     }
 
     public void testReturnsLoanArrearsAgingInfo() throws Exception {
         session.save(branchReport);
         List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingInfo = branchReportService
                 .getLoanArrearsAgingInfo(BRANCH_ID, RUN_DATE_STR);
-        assertEquals(3, retrievedLoanArrearsAgingInfo.size());
-        assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForFirstWeek)));
-        assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForSecondWeek)));
-        assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForThirdWeek)));
+       Assert.assertEquals(3, retrievedLoanArrearsAgingInfo.size());
+       Assert.assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForFirstWeek)));
+       Assert.assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForSecondWeek)));
+       Assert.assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForThirdWeek)));
     }
 
     public void testServiceReturnsHeaderInformation() throws Exception {
@@ -110,7 +112,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         replay(officeBusinessServiceMock);
         BranchReportHeaderDTO returnedHeaderDTO = branchReportService.getBranchReportHeaderDTO(BRANCH_ID, RUN_DATE_STR);
         verify(officeBusinessServiceMock);
-        assertEquals(new BranchReportHeaderDTO(office, null, ReportUtils.parseReportDate(RUN_DATE_STR)),
+       Assert.assertEquals(new BranchReportHeaderDTO(office, null, ReportUtils.parseReportDate(RUN_DATE_STR)),
                 returnedHeaderDTO);
     }
 
@@ -120,31 +122,31 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
 
         List<BranchReportClientSummaryBO> clientSummaryInfo = branchReportService.getClientSummaryInfo(BRANCH_ID,
                 RUN_DATE_STR);
-        assertNotNull(clientSummaryInfo);
-        assertEquals(0, clientSummaryInfo.size());
+        Assert.assertNotNull(clientSummaryInfo);
+       Assert.assertEquals(0, clientSummaryInfo.size());
 
         List<BranchReportLoanArrearsAgingBO> loanArrearsAgingInfo = branchReportService.getLoanArrearsAgingInfo(
                 BRANCH_ID, RUN_DATE_STR);
-        assertNotNull(loanArrearsAgingInfo);
-        assertEquals(0, loanArrearsAgingInfo.size());
+        Assert.assertNotNull(loanArrearsAgingInfo);
+       Assert.assertEquals(0, loanArrearsAgingInfo.size());
     }
 
     public void testServiceReturnsFalseIfBranchReportDataNotPresent() throws Exception {
-        assertFalse(branchReportService.isReportDataPresentForRundateAndBranchId("2", "01/01/2008"));
+        Assert.assertFalse(branchReportService.isReportDataPresentForRundateAndBranchId("2", "01/01/2008"));
     }
 
     public void testServiceReturnsTrueIfBranchReportDataPresent() throws Exception {
         session.save(branchReport);
-        assertTrue(branchReportService.isReportDataPresentForRundateAndBranchId(BRANCH_ID.toString(), RUN_DATE_STR));
+       Assert.assertTrue(branchReportService.isReportDataPresentForRundateAndBranchId(BRANCH_ID.toString(), RUN_DATE_STR));
     }
 
     public void testServiceReturnsFalseIfBranchReportDataNotPresentForGivenDate() throws Exception {
-        assertFalse(branchReportService.isReportDataPresentForRundate(DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+        Assert.assertFalse(branchReportService.isReportDataPresentForRundate(DateUtils.getDate(2008, Calendar.JANUARY, 1)));
     }
 
     public void testServiceReturnsTrueIfBranchReportDataPresentForGivenDate() throws Exception {
         session.save(branchReport);
-        assertTrue(branchReportService.isReportDataPresentForRundate(RUN_DATE));
+       Assert.assertTrue(branchReportService.isReportDataPresentForRundate(RUN_DATE));
     }
 
     public void testGetStaffSummaryReportReturnsStaffSummaryForBranchAndDate() throws Exception {
@@ -155,7 +157,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         session.save(otherBranchReportWithStaffSummary);
         List<BranchReportStaffSummaryBO> retrievedStaffSummary = branchReportService.getStaffSummary(BRANCH_ID,
                 RUN_DATE_STR);
-        assertEquals(1, retrievedStaffSummary.size());
+       Assert.assertEquals(1, retrievedStaffSummary.size());
         assertSameCollections(branchReportWithStaffSummary.getStaffSummaries(), retrievedStaffSummary);
     }
 
@@ -163,7 +165,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
     public void testExtractLoanArrearsAgingInPeriod() throws Exception {
         BranchReportLoanArrearsAgingBO loanArrearsAgingInfoInPeriod = branchReportService
                 .extractLoanArrearsAgingInfoInPeriod(BRANCH_ID_SHORT, LoanArrearsAgingPeriod.ONE_WEEK, DEFAULT_CURRENCY);
-        assertNotNull(loanArrearsAgingInfoInPeriod);
+        Assert.assertNotNull(loanArrearsAgingInfoInPeriod);
         // TODO TW more assertions based on test data
     }
 
@@ -186,10 +188,10 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         BranchReportStaffingLevelSummaryBO lastBO = null;
         for (BranchReportStaffingLevelSummaryBO summaryBO : retrievedStaffingLevel) {
             if (lastBO != null)
-                assertEquals(1, summaryBO.compareTo(lastBO));
+               Assert.assertEquals(1, summaryBO.compareTo(lastBO));
             lastBO = summaryBO;
         }
-        assertEquals(0, totalStaffSummaryBO.compareTo(lastBO));
+       Assert.assertEquals(0, totalStaffSummaryBO.compareTo(lastBO));
     }
 
     @Override

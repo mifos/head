@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
@@ -111,8 +113,8 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         addRequestParameter("method", "load");
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
     }
 
     public void testGetLoanOfficersWithoutOffice() throws Exception {
@@ -133,9 +135,9 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
     }
 
     public void testGetCentersWithoutOfficeAndLoanOfficer() throws Exception {
@@ -163,10 +165,10 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, request));
     }
 
     public void testGetPrdOfferingsWithoutOfficeAndLoanOfficerAndCenter() throws Exception {
@@ -207,11 +209,11 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request));
         TestObjectFactory.removeObject(loanOffering1);
     }
 
@@ -231,7 +233,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertEquals(1, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
+       Assert.assertEquals(1, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
                 .size());
 
         TestObjectFactory.removeObject(loanOffering1);
@@ -262,7 +264,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         actionPerform();
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertEquals(3, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
+       Assert.assertEquals(3, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
                 .size());
 
         TestObjectFactory.removeObject(loanOffering1);
@@ -321,9 +323,9 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
 
         // this retrieve the loan purposes so this is 129 if empty lookup name
         // are removed
-        assertEquals(131, ((List) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request)).size());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, request));
+       Assert.assertEquals(131, ((List) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request)).size());
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, request));
         TestObjectFactory.removeObject(loanOffering);
     }
 
@@ -391,16 +393,16 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyForward(ActionForwards.create_success.toString());
 
         List<String> accountNumbers = ((List<String>) request.getAttribute(LoanConstants.ACCOUNTS_LIST));
-        assertEquals(1, accountNumbers.size());
+       Assert.assertEquals(1, accountNumbers.size());
         LoanBO loan = new LoanBusinessService().findBySystemId(accountNumbers.get(0));
-        assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
+       Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
                 .getLoanAmount().toString());
-        assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
-        assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
+       Assert.assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
+       Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
                 .getNoOfInstallments());
-        assertEquals(Short.valueOf("0"), loan.getGracePeriodDuration());
-        assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+       Assert.assertEquals(Short.valueOf("0"), loan.getGracePeriodDuration());
+       Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         TestObjectFactory.cleanUp(loan);
     }
 

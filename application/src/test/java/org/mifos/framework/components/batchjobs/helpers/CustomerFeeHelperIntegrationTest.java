@@ -35,6 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -108,7 +110,7 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
                 ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
         accountFeeSet.add(accountPeriodicFee);
         Date lastAppliedFeeDate = offSetDate(new Date(System.currentTimeMillis()), 1);
-        assertEquals(2, accountFeeSet.size());
+       Assert.assertEquals(2, accountFeeSet.size());
         for (Iterator iter = accountFeeSet.iterator(); iter.hasNext();) {
             AccountFeesEntity accountFeesEntity = (AccountFeesEntity) iter.next();
             accountFeesEntity.setLastAppliedDate(offSetDate(new Date(System.currentTimeMillis()), 1));
@@ -125,10 +127,10 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
         for (AccountFeesEntity periodicFees : periodicFeeSet) {
             if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
-                assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
+               Assert.assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
                         .getTime()));
             else {
-                assertEquals(DateUtils.getDateWithoutTimeStamp(offSetDate(lastAppliedFeeDate, -7).getTime()), DateUtils
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(offSetDate(lastAppliedFeeDate, -7).getTime()), DateUtils
                         .getDateWithoutTimeStamp(periodicFees.getLastAppliedDate().getTime()));
             }
         }
@@ -158,7 +160,7 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
         accountPeriodicFee.setLastAppliedDate(offSetDate(new Date(System.currentTimeMillis()), 1));
         accountFeeSet.add(accountPeriodicFee);
 
-        assertEquals(2, accountFeeSet.size());
+       Assert.assertEquals(2, accountFeeSet.size());
         TestObjectFactory.updateObject(center);
         TestObjectFactory.flushandCloseSession();
 
@@ -172,24 +174,24 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
             CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
             if (customerScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 lastAppliedFeeDate = customerScheduleEntity.getActionDate();
-                assertEquals(2, customerScheduleEntity.getAccountFeesActionDetails().size());
+               Assert.assertEquals(2, customerScheduleEntity.getAccountFeesActionDetails().size());
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
                         .getAccountFeesActionDetails()) {
                     if (accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Training_Fee")) {
-                        assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
+                       Assert.assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
                     } else if (accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Maintenance Fee")) {
-                        assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
+                       Assert.assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
                     }
                 }
             }
         }
         for (CustomerActivityEntity customerActivityEntity : center.getCustomerAccount().getCustomerActivitDetails()) {
-            assertEquals(new Money("200.0"), customerActivityEntity.getAmount());
+           Assert.assertEquals(new Money("200.0"), customerActivityEntity.getAmount());
         }
         Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
         for (AccountFeesEntity periodicFees : periodicFeeSet) {
             if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
-                assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
+               Assert.assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
                         .getTime()));
         }
     }
@@ -202,12 +204,12 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
 
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
         List<Task> tasks = query.list();
-        assertNotNull(tasks);
-        assertEquals(1, tasks.size());
+        Assert.assertNotNull(tasks);
+       Assert.assertEquals(1, tasks.size());
         for (Task task : tasks) {
-            assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task.getStatus());
-            assertEquals("ApplyCustomerFeeTask", task.getTask());
-            assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
+           Assert.assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task.getStatus());
+           Assert.assertEquals("ApplyCustomerFeeTask", task.getTask());
+           Assert.assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
             TestObjectFactory.removeObject(task);
         }
     }
@@ -226,11 +228,11 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
 
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
         List<Task> tasks = query.list();
-        assertNotNull(tasks);
-        assertEquals(1, tasks.size());
+        Assert.assertNotNull(tasks);
+       Assert.assertEquals(1, tasks.size());
         for (Task task : tasks) {
-            assertEquals(TaskStatus.FAILED.getValue().shortValue(), task.getStatus());
-            assertEquals("ApplyCustomerFeeTask", task.getTask());
+           Assert.assertEquals(TaskStatus.FAILED.getValue().shortValue(), task.getStatus());
+           Assert.assertEquals("ApplyCustomerFeeTask", task.getTask());
             TestObjectFactory.removeObject(task);
         }
     }
@@ -245,7 +247,7 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
 
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
         List<Task> tasks = query.list();
-        assertEquals(0, tasks.size());
+       Assert.assertEquals(0, tasks.size());
 
     }
 

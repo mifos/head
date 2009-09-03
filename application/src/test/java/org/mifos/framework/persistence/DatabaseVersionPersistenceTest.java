@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
@@ -64,9 +65,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(54)");
         try {
             new DatabaseVersionPersistence(database.openConnection()).read();
-            fail();
+            Assert.fail();
         } catch (RuntimeException e) {
-            assertEquals("too many rows in DATABASE_VERSION", e.getMessage());
+           Assert.assertEquals("too many rows in DATABASE_VERSION", e.getMessage());
         }
     }
 
@@ -75,9 +76,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
         try {
             new DatabaseVersionPersistence(database.openConnection()).read();
-            fail();
+            Assert.fail();
         } catch (RuntimeException e) {
-            assertEquals("No row in DATABASE_VERSION", e.getMessage());
+           Assert.assertEquals("No row in DATABASE_VERSION", e.getMessage());
         }
     }
 
@@ -89,38 +90,38 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         Database database = new Database();
     try {    
         new DatabaseVersionPersistence(database.openConnection()).read();
-        fail("SQLException was expected");
+        Assert.fail("SQLException was expected");
     } catch (SQLException e){}
     }
 
     public void testWrite() throws Exception {
         Database database = DummyUpgrade.databaseWithVersionTable(53);
         new DatabaseVersionPersistence(database.openConnection()).write(77);
-        assertEquals(77, new DatabaseVersionPersistence(database.openConnection()).read());
+       Assert.assertEquals(77, new DatabaseVersionPersistence(database.openConnection()).read());
     }
 
     public void testIsNotVersioned() throws Exception {
         Database database = TestDatabase.makeDatabase();
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(database.openConnection());
-        assertFalse(persistence.isVersioned());
+        Assert.assertFalse(persistence.isVersioned());
 
         database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
         database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(43)");
-        assertTrue(persistence.isVersioned());
+       Assert.assertTrue(persistence.isVersioned());
     }
 
     public void testNoUpgrade() throws Exception {
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(null);
         List<Upgrade> scripts = persistence.scripts(88, 88);
-        assertEquals(0, scripts.size());
+       Assert.assertEquals(0, scripts.size());
     }
 
     public void testUpgrade() throws Exception {
         DatabaseVersionPersistence persistence = sqlFor89And90();
         List<Upgrade> scripts = persistence.scripts(90, 88);
-        assertEquals(2, scripts.size());
-        assertEquals("upgrade_to_89.sql", ((SqlUpgrade) scripts.get(0)).sql().getPath());
-        assertEquals("upgrade_to_90.sql", ((SqlUpgrade) scripts.get(1)).sql().getPath());
+       Assert.assertEquals(2, scripts.size());
+       Assert.assertEquals("upgrade_to_89.sql", ((SqlUpgrade) scripts.get(0)).sql().getPath());
+       Assert.assertEquals("upgrade_to_90.sql", ((SqlUpgrade) scripts.get(1)).sql().getPath());
     }
 
     private DatabaseVersionPersistence sqlFor89And90() {
@@ -143,15 +144,15 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(null);
         try {
             persistence.scripts(87, 88);
-            fail();
+            Assert.fail();
         } catch (UnsupportedOperationException e) {
-            assertEquals("your database needs to be downgraded from 88 to 87", e.getMessage());
+           Assert.assertEquals("your database needs to be downgraded from 88 to 87", e.getMessage());
         }
     }
 
     public void testReadEmpty() throws Exception {
         String[] sqlStatements = SqlUpgrade.readFile(new ByteArrayInputStream(new byte[0]));
-        assertEquals(0, sqlStatements.length);
+       Assert.assertEquals(0, sqlStatements.length);
     }
 
     public void testBlankLines() throws Exception {
@@ -173,6 +174,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
     public void testComments() throws Exception {
         /*
          * Many of the details here, like what comments get swallowed and
+import junit.framework.Assert;
          * placement of whitespace, aren't very important. It just seems better
          * to have tests so we know what the code is doing.
          */
@@ -191,16 +193,16 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 
     private void checkSplit(String sql, String... expected) throws UnsupportedEncodingException {
         String[] statements = SqlUpgrade.readFile(new ByteArrayInputStream(sql.getBytes("UTF-8")));
-        assertEquals(expected.length, statements.length);
+       Assert.assertEquals(expected.length, statements.length);
         for (int i = 0; i < expected.length; ++i) {
-            assertEquals(expected[i], statements[i]);
+           Assert.assertEquals(expected[i], statements[i]);
         }
     }
 
     public void testBadUtf8() throws Exception {
         try {
             SqlUpgrade.readFile(new ByteArrayInputStream(new byte[] { (byte) 0x80 }));
-            fail();
+            Assert.fail();
         } catch (RuntimeException e) {
             ObjectAssert.assertInstanceOf(CharacterCodingException.class, e.getCause());
         }
@@ -209,9 +211,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
     public void testGoodUtf8() throws Exception {
         String[] sqlStatements = SqlUpgrade.readFile(new ByteArrayInputStream(new byte[] { (byte) 0xe2, (byte) 0x82,
                 (byte) 0xac }));
-        assertEquals(1, sqlStatements.length);
+       Assert.assertEquals(1, sqlStatements.length);
         String euroSign = sqlStatements[0];
-        assertEquals("\n\u20AC", euroSign);
+       Assert.assertEquals("\n\u20AC", euroSign);
     }
 
     public void testExecuteStream() throws Exception {
@@ -241,10 +243,10 @@ public class DatabaseVersionPersistenceTest extends TestCase {
     private void readOneValueFromFoo(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet results = statement.executeQuery("select * from FOO");
-        assertTrue(results.next());
+       Assert.assertTrue(results.next());
         int valueFromFoo = results.getInt(1);
-        assertEquals(53, valueFromFoo);
-        assertFalse(results.next());
+       Assert.assertEquals(53, valueFromFoo);
+        Assert.assertFalse(results.next());
         results.close();
         statement.close();
     }
@@ -265,10 +267,10 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         DatabaseVersionPersistence persistence = javaOnlyPersistence(database, upgrade);
         try {
             persistence.upgradeDatabase(connection, 79);
-            fail();
+            Assert.fail();
         } catch (RuntimeException e) {
-            assertEquals("error in upgrading to 79", e.getMessage());
-            assertEquals("tried but failed", e.getCause().getMessage());
+           Assert.assertEquals("error in upgrading to 79", e.getMessage());
+           Assert.assertEquals("tried but failed", e.getCause().getMessage());
         }
     }
 
@@ -283,7 +285,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         };
         try {
             persistence.findUpgrade(69);
-            fail();
+            Assert.fail();
         } catch (IllegalStateException e) {
             StringAssert.assertStartsWith("Did not find upgrade to 69 in java " + "or in upgrade_to_69.sql next to ", e
                     .getMessage());
@@ -295,16 +297,16 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         DatabaseVersionPersistence persistence = javaOnlyPersistence(database);
         DummyUpgrade found = (DummyUpgrade) persistence.findUpgrade(69);
         found.upgrade(null);
-        assertEquals("upgrade to 69\n", found.getLog());
+       Assert.assertEquals("upgrade to 69\n", found.getLog());
     }
 
     public void testJavaConditional() throws Exception {
         Database database = new Database();
         DatabaseVersionPersistence persistence = conditionalPersistence(database);
         SqlUpgrade found = persistence.findUpgradeScript(10, CONDITIONAL_UPGRADE_10_NAME);
-        assertTrue(found != null);
+       Assert.assertTrue(found != null);
         SqlUpgrade found_downgrade = persistence.findUpgradeScript(10, CONDITIONAL_DOWNGRADE_10_NAME);
-        assertTrue(found_downgrade != null);
+       Assert.assertTrue(found_downgrade != null);
     }
 
     private DatabaseVersionPersistence javaOnlyPersistence(Database database) {
@@ -330,9 +332,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 
         try {
             persistence.findUpgrade(69);
-            fail();
+            Assert.fail();
         } catch (IllegalStateException e) {
-            assertEquals("Found upgrade to 69 both in java and in upgrade_to_69.sql", e.getMessage());
+           Assert.assertEquals("Found upgrade to 69 both in java and in upgrade_to_69.sql", e.getMessage());
         }
     }
 
@@ -383,9 +385,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
         try {
             DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
-            fail();
+            Assert.fail();
         } catch (IllegalStateException e) {
-            assertEquals("already have an upgrade to 70", e.getMessage());
+           Assert.assertEquals("already have an upgrade to 70", e.getMessage());
         }
     }
 }

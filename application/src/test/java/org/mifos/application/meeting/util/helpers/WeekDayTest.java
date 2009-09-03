@@ -25,6 +25,7 @@ import static org.mifos.application.meeting.util.helpers.WeekDay.SATURDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.SUNDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.TUESDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.WEDNESDAY;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
@@ -33,9 +34,9 @@ import org.testng.annotations.Test;
 public class WeekDayTest extends TestCase {
 
     public void testNext() throws Exception {
-        assertEquals(MONDAY, SUNDAY.next());
-        assertEquals(WEDNESDAY, TUESDAY.next());
-        assertEquals(SUNDAY, SATURDAY.next());
+       Assert.assertEquals(MONDAY, SUNDAY.next());
+       Assert.assertEquals(WEDNESDAY, TUESDAY.next());
+       Assert.assertEquals(SUNDAY, SATURDAY.next());
     }
 
 }

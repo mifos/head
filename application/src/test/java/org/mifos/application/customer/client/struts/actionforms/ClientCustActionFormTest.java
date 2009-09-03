@@ -20,6 +20,7 @@
 
 package org.mifos.application.customer.client.struts.actionforms;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.struts.action.ActionErrors;
@@ -37,7 +38,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthMM("12");
         form.setDateOfBirthYY("1950");
         form.validateDateOfBirth(null, errors);
-        assertEquals(0, errors.size());
+       Assert.assertEquals(0, errors.size());
     }
 
     public void testFutureDate() throws Exception {
@@ -47,9 +48,9 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthMM("12");
         form.setDateOfBirthYY("2108");
         form.validateDateOfBirth(null, errors);
-        assertEquals(1, errors.size());
+       Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
-        assertEquals(ClientConstants.FUTURE_DOB_EXCEPTION, message.getKey());
+       Assert.assertEquals(ClientConstants.FUTURE_DOB_EXCEPTION, message.getKey());
     }
 
     public void testInvalidDate() throws Exception {
@@ -59,9 +60,9 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthMM("20");
         form.setDateOfBirthYY("1980");
         form.validateDateOfBirth(null, errors);
-        assertEquals(1, errors.size());
+       Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
-        assertEquals(ClientConstants.INVALID_DOB_EXCEPTION, message.getKey());
+       Assert.assertEquals(ClientConstants.INVALID_DOB_EXCEPTION, message.getKey());
 
     }
 

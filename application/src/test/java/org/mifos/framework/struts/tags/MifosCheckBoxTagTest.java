@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -33,7 +34,7 @@ public class MifosCheckBoxTagTest extends TestCase {
         mifosCheckBoxTag.setPropertyExpr("test2");
         StringBuffer inputsForhidden = new StringBuffer();
         inputsForhidden.append("<input type=\"hidden\" name=\"" + "test1" + "\" value=\"" + "test2" + "\" />");
-        assertEquals(inputsForhidden.toString(), mifosCheckBoxTag.renderInputsForhidden());
+       Assert.assertEquals(inputsForhidden.toString(), mifosCheckBoxTag.renderInputsForhidden());
         assertWellFormedFragment(mifosCheckBoxTag.renderInputsForhidden());
     }
 }

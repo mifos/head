@@ -24,6 +24,7 @@ import static org.mifos.framework.persistence.DatabaseVersionPersistence.LATEST_
 
 import java.sql.ResultSet;
 
+import junit.framework.Assert;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
@@ -56,7 +57,7 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTestCase {
         database = TestDatabase.makeDatabase();
         applyUpgrades(database);
         String upgradeDump = new SqlDumper().dump(database.dataStore());
-        assertEquals(latestDump, upgradeDump);
+       Assert.assertEquals(latestDump, upgradeDump);
     }
 
     private void applyUpgrades(Database database) {
@@ -73,12 +74,12 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTestCase {
     public void testRealSchemaFromCheckpoint() throws Exception {
         Database database = TestDatabase.makeDatabase();
         loadRealLatest(database);
-        assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, version(database));
+       Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, version(database));
         String latestDump = new SqlDumper(false).dump(database.dataStore());
 
         DataStore upgraded = applyRealUpgradesFromCheckpoint();
         String upgradeDump = new SqlDumper(false).dump(upgraded);
-        assertEquals(latestDump, upgradeDump);
+       Assert.assertEquals(latestDump, upgradeDump);
     }
 
     private DataStore applyRealUpgradesFromCheckpoint() throws Exception {
@@ -94,7 +95,7 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTestCase {
         DatabaseSetup.executeScript(database, "latest-schema.sql");
         DatabaseSetup.executeScript(database, "mifosdroptables.sql");
         String cleanedDB = new SqlDumper().dump(database.dataStore());
-        assertEquals(blankDB, cleanedDB);
+       Assert.assertEquals(blankDB, cleanedDB);
     }
 
     /**
@@ -105,7 +106,7 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTestCase {
     public void testDropTablesWithData() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         DatabaseSetup.executeScript(database.openConnection(), "mifosdroptables.sql");
-        assertEquals("", database.dumpForComparison());
+       Assert.assertEquals("", database.dumpForComparison());
     }
 
     private static DataStore latestCheckpointVersion;
@@ -133,13 +134,13 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTestCase {
         // Assert that custom values have been retained
         ResultSet rs = database.query("select * from lookup_value where lookup_id=" + nextLookupId);
         rs.next();
-        assertEquals(19, rs.getInt("entity_id"));
-        assertEquals(" ", rs.getString("lookup_name"));
+       Assert.assertEquals(19, rs.getInt("entity_id"));
+       Assert.assertEquals(" ", rs.getString("lookup_name"));
 
         rs = database.query("select * from lookup_value_locale where lookup_id=" + nextLookupId);
         rs.next();
-        assertEquals(1, rs.getInt("locale_id"));
-        assertEquals("Martian", rs.getString("lookup_value"));
+       Assert.assertEquals(1, rs.getInt("locale_id"));
+       Assert.assertEquals("Martian", rs.getString("lookup_value"));
         rs.close();
     }
 }

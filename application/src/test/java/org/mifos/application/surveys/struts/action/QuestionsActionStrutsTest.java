@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Session;
 import org.mifos.application.ppi.business.PPIChoice;
@@ -132,9 +134,9 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         List<Question> newQuestions = (List<Question>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTIONS);
-        assertEquals(1, newQuestions.size());
-        assertEquals(questionText1, newQuestions.get(0).getQuestionText());
-        assertEquals(AnswerType.FREETEXT, newQuestions.get(0).getAnswerTypeAsEnum());
+       Assert.assertEquals(1, newQuestions.size());
+       Assert.assertEquals(questionText1, newQuestions.get(0).getQuestionText());
+       Assert.assertEquals(AnswerType.FREETEXT, newQuestions.get(0).getAnswerTypeAsEnum());
 
         String questionText2 = "testDefineQuestion sample text two";
         String shortName2 = "testDefineQuestion 2";
@@ -151,16 +153,16 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         List<String> newChoices = (List<String>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTION_CHOICES);
-        assertEquals(3, newChoices.size());
+       Assert.assertEquals(3, newChoices.size());
         addRequestParameter("method", "addQuestion");
         actionPerform();
         verifyNoActionErrors();
         newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
-        assertEquals(2, newQuestions.size());
-        assertEquals(shortName2, newQuestions.get(1).getShortName());
-        assertEquals(questionText2, newQuestions.get(1).getQuestionText());
-        assertEquals(AnswerType.CHOICE, newQuestions.get(1).getAnswerTypeAsEnum());
-        assertEquals(3, newQuestions.get(1).getChoices().size());
+       Assert.assertEquals(2, newQuestions.size());
+       Assert.assertEquals(shortName2, newQuestions.get(1).getShortName());
+       Assert.assertEquals(questionText2, newQuestions.get(1).getQuestionText());
+       Assert.assertEquals(AnswerType.CHOICE, newQuestions.get(1).getAnswerTypeAsEnum());
+       Assert.assertEquals(3, newQuestions.get(1).getChoices().size());
 
         String questionText3 = "testDefineQuestions question text 3";
         String shortName3 = "testDefineQuestions 3";
@@ -171,24 +173,24 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
-        assertEquals(3, newQuestions.size());
-        assertEquals(questionText3, newQuestions.get(2).getQuestionText());
-        assertEquals(shortName3, newQuestions.get(2).getShortName());
+       Assert.assertEquals(3, newQuestions.size());
+       Assert.assertEquals(questionText3, newQuestions.get(2).getQuestionText());
+       Assert.assertEquals(shortName3, newQuestions.get(2).getShortName());
         addRequestParameter("newQuestionNum", Integer.toString(newQuestions.size() - 1));
         addRequestParameter("method", "deleteNewQuestion");
         actionPerform();
         verifyNoActionErrors();
         newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
-        assertEquals(2, newQuestions.size());
+       Assert.assertEquals(2, newQuestions.size());
 
         addRequestParameter("method", "createQuestions");
         actionPerform();
         verifyNoActionErrors();
         SurveysPersistence persistence = new SurveysPersistence();
         List<Question> dbQuestions = persistence.retrieveAllQuestions();
-        assertEquals(2, dbQuestions.size());
-        assertEquals(questionText1, dbQuestions.get(0).getQuestionText());
-        assertEquals(questionText2, dbQuestions.get(1).getQuestionText());
+       Assert.assertEquals(2, dbQuestions.size());
+       Assert.assertEquals(questionText1, dbQuestions.get(0).getQuestionText());
+       Assert.assertEquals(questionText2, dbQuestions.get(1).getQuestionText());
 
     }
 
@@ -213,10 +215,10 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         Collections.sort(testQuestionList);
         for (int i = 0; i < testQuestionList.size(); i++) {
             Question tempQuestion = retrievedQuestionList.get(i);
-            assertEquals(testQuestionList.get(i).getQuestionText(), tempQuestion.getQuestionText());
-            assertEquals(testQuestionList.get(i).getNumericMin(), tempQuestion.getNumericMin());
-            assertEquals(testQuestionList.get(i).getNumericMax(), tempQuestion.getNumericMax());
-            assertEquals(testQuestionList.get(i).getChoices().size(), tempQuestion.getChoices().size());
+           Assert.assertEquals(testQuestionList.get(i).getQuestionText(), tempQuestion.getQuestionText());
+           Assert.assertEquals(testQuestionList.get(i).getNumericMin(), tempQuestion.getNumericMin());
+           Assert.assertEquals(testQuestionList.get(i).getNumericMax(), tempQuestion.getNumericMax());
+           Assert.assertEquals(testQuestionList.get(i).getChoices().size(), tempQuestion.getChoices().size());
         }
     }
 
@@ -261,8 +263,8 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
         Question newQuestion = persistence.getQuestion(questionId);
 
-        assertEquals(newQuestion.getShortName(), shortName);
-        assertEquals(newQuestion.getQuestionText(), questionText);
+       Assert.assertEquals(newQuestion.getShortName(), shortName);
+       Assert.assertEquals(newQuestion.getQuestionText(), questionText);
     }
 
     public void testEditPPI() throws Exception {

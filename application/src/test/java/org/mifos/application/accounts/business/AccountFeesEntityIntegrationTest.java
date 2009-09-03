@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -101,7 +103,7 @@ public class AccountFeesEntityIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountFeesEntity> accountFeesEntitySet = accountBO.getAccountFees();
         for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
             accountFeesEntity.changeFeesStatus(FeeStatus.INACTIVE, new Date(System.currentTimeMillis()));
-            assertEquals(accountFeesEntity.getFeeStatus(), FeeStatus.INACTIVE.getValue());
+           Assert.assertEquals(accountFeesEntity.getFeeStatus(), FeeStatus.INACTIVE.getValue());
         }
     }
 
@@ -127,12 +129,12 @@ public class AccountFeesEntityIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         Set<AccountFeesEntity> accountFeeSet = group.getCustomerAccount().getAccountFees();
-        assertEquals(1, accountFeeSet.size());
+       Assert.assertEquals(1, accountFeeSet.size());
         for (AccountFeesEntity periodicFees : center.getCustomerAccount().getAccountFees()) {
             if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
-                assertEquals(Integer.valueOf(0), periodicFees.getApplicableDatesCount(currentDate));
+               Assert.assertEquals(Integer.valueOf(0), periodicFees.getApplicableDatesCount(currentDate));
             else
-                assertEquals(Integer.valueOf(1), periodicFees.getApplicableDatesCount(currentDate));
+               Assert.assertEquals(Integer.valueOf(1), periodicFees.getApplicableDatesCount(currentDate));
         }
     }
 

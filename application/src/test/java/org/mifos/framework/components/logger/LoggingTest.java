@@ -20,6 +20,7 @@
 
 package org.mifos.framework.components.logger;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Level;
@@ -55,7 +56,7 @@ public class LoggingTest extends TestCase {
     public void testInvalidResourceBundle() throws Exception {
         try {
             MifosLogManager.getResourceBundle("unavailableResourceBundle");
-            fail();
+            Assert.fail();
         } catch (ResourceBundleNotFoundException ex) {
         }
     }
@@ -63,9 +64,9 @@ public class LoggingTest extends TestCase {
     public void testNonKey() throws Exception {
         TestLogger logger = new TestLogger();
         logger.debug("test debug message", false, null);
-        assertEquals(1, logger.nonKeyCount());
-        assertEquals(Level.DEBUG, logger.nonKeyLevel(0));
-        assertEquals("test debug message", logger.nonKeyMessage(0));
+       Assert.assertEquals(1, logger.nonKeyCount());
+       Assert.assertEquals(Level.DEBUG, logger.nonKeyLevel(0));
+       Assert.assertEquals("test debug message", logger.nonKeyMessage(0));
     }
 
 }

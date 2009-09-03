@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import junit.framework.Assert;
+
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -89,12 +91,12 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
     }
 
     public void testLoginForFirstTimeUser() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -105,13 +107,13 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testLoginForUserNull() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -119,14 +121,14 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("userName", "");
         addRequestParameter("password", "PASSWORD");
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testLoginForPasswordNull() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -134,14 +136,14 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("userName", personnel.getUserName());
         addRequestParameter("password", "");
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testUpdatePassword() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -152,8 +154,8 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         setRequestPathInfo("/loginAction.do");
@@ -168,22 +170,22 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.updatePassword_success.toString());
-        assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.commitTransaction();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-        assertTrue(personnel.isPasswordChanged());
+       Assert.assertTrue(personnel.isPasswordChanged());
         // add verifying change log
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.PERSONNEL, personnel.getPersonnelId()
                 .intValue());
-        assertEquals(1, auditLogList.size());
+       Assert.assertEquals(1, auditLogList.size());
         for (int auditLogListIndex = 0; auditLogListIndex < auditLogList.size(); auditLogListIndex++) {
             auditLogList.get(auditLogListIndex).getAuditLogRecords();
         }
-        assertEquals(EntityType.PERSONNEL, auditLogList.get(0).getEntityTypeAsEnum());
-        assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(EntityType.PERSONNEL, auditLogList.get(0).getEntityTypeAsEnum());
+       Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-            assertEquals(true, auditLogRecord.getFieldName().equalsIgnoreCase("lastLogin")
+           Assert.assertEquals(true, auditLogRecord.getFieldName().equalsIgnoreCase("lastLogin")
                     || auditLogRecord.getFieldName().equalsIgnoreCase("Password"));
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -191,7 +193,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testUpdatePasswordWithUserNull() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -202,8 +204,8 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.updatePassword.toString());
@@ -214,13 +216,13 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "LoginChangePW");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize());
+       Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
     }
 
     public void testUpdatePasswordWithOldPasswordNotMatching() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -231,8 +233,8 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.updatePassword.toString());
@@ -245,12 +247,12 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyActionErrors(new String[] { LoginConstants.INVALIDOLDPASSWORD });
         verifyForward(ActionForwards.updatePassword_failure.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testUpdatePasswordWithSameOldAndNewPassword() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -261,8 +263,8 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.updatePassword.toString());
@@ -275,12 +277,12 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyActionErrors(new String[] { LoginConstants.SAME_OLD_AND_NEW_PASSWORD });
         verifyInputForward();
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testLoginForRegularUser() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -291,8 +293,8 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         setRequestPathInfo("/loginAction.do");
@@ -308,9 +310,9 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.commitTransaction();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 
-        assertTrue(personnel.isPasswordChanged());
-        assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+       Assert.assertTrue(personnel.isPasswordChanged());
+        Assert.assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.login.toString());
@@ -320,15 +322,15 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.login_success.toString());
-        assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testLoginForInvalidUser() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
-        assertFalse(personnel.isLocked());
+        Assert.assertFalse(personnel.isLocked());
 
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.login.toString());
@@ -341,13 +343,13 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-        assertFalse(personnel.isLocked());
-        assertEquals(0, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(0, personnel.getNoOfTries().intValue());
     }
 
     public void testLoginForInvalidPassword() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -361,13 +363,13 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-        assertFalse(personnel.isLocked());
-        assertEquals(1, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(1, personnel.getNoOfTries().intValue());
     }
 
     public void testLoginForLockedUser() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
         lockUser();
 
@@ -382,8 +384,8 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-        assertTrue(personnel.isLocked());
-        assertEquals(5, personnel.getNoOfTries().intValue());
+       Assert.assertTrue(personnel.isLocked());
+       Assert.assertEquals(5, personnel.getNoOfTries().intValue());
     }
 
     public void testLogout() {
@@ -404,7 +406,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testCancel() throws Exception {
         loadLoginPage();
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
 
         setRequestPathInfo("/loginAction.do");
@@ -415,7 +417,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.cancel.toString());
@@ -424,13 +426,13 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.cancel_success.toString());
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testLogin_batchJobNotRunning() throws Exception {
         loadLoginPage();
-        assertEquals(false, MifosTask.isBatchJobRunning());
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+       Assert.assertEquals(false, MifosTask.isBatchJobRunning());
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.login.toString());
@@ -440,14 +442,14 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testLogin_batchJobRunning() throws Exception {
         loadLoginPage();
         MifosTask.batchJobStarted();
-        assertEquals(true, MifosTask.isBatchJobRunning());
-        assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+       Assert.assertEquals(true, MifosTask.isBatchJobRunning());
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
         setRequestPathInfo("/loginAction.do");
         addRequestParameter("method", Methods.login.toString());
@@ -456,7 +458,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.load_main_page.toString());
         MifosTask.batchJobFinished();
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     private PersonnelBO createPersonnel() throws Exception {
@@ -491,20 +493,20 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void lockUser() {
         tryLoginWithWrongPassword();
-        assertFalse(personnel.isLocked());
-        assertEquals(1, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(1, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
-        assertFalse(personnel.isLocked());
-        assertEquals(2, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(2, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
-        assertFalse(personnel.isLocked());
-        assertEquals(3, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(3, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
-        assertFalse(personnel.isLocked());
-        assertEquals(4, personnel.getNoOfTries().intValue());
+        Assert.assertFalse(personnel.isLocked());
+       Assert.assertEquals(4, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
-        assertTrue(personnel.isLocked());
-        assertEquals(5, personnel.getNoOfTries().intValue());
+       Assert.assertTrue(personnel.isLocked());
+       Assert.assertEquals(5, personnel.getNoOfTries().intValue());
     }
 
     private void loadLoginPage() {

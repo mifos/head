@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
@@ -38,9 +39,9 @@ public class ValidatorsTest extends TestCase {
     private void checkException(Validator val, Object input, String error) {
         try {
             val.validate(input);
-            fail();
+            Assert.fail();
         } catch (ValidationError e) {
-            assertTrue(e.getMsg().endsWith(error));
+           Assert.assertTrue(e.getMsg().endsWith(error));
         }
 
     }
@@ -52,7 +53,7 @@ public class ValidatorsTest extends TestCase {
         inputMap.put("DD", "20");
         inputMap.put("MM", "5");
         inputMap.put("YY", "2000");
-        assertEquals(expectedDate, validator.validate(inputMap));
+       Assert.assertEquals(expectedDate, validator.validate(inputMap));
 
         inputMap.put("MM", "20");
         checkException(validator, inputMap, ErrorType.DATE_FORMAT.toString());
@@ -63,14 +64,14 @@ public class ValidatorsTest extends TestCase {
         inputMap.put("mydate_DD", "20");
         inputMap.put("mydate_MM", "5");
         inputMap.put("mydate_YY", "2000");
-        assertEquals(expectedDate, schema.validate(inputMap).get("mydate"));
+       Assert.assertEquals(expectedDate, schema.validate(inputMap).get("mydate"));
 
     }
 
     public void testDateValidator() throws Exception {
         Validator validator = new DateValidator();
         Date expectedDate = new DateMidnight(2005, 04, 03).toDate();
-        assertEquals(expectedDate, validator.validate("3/4/2005"));
+       Assert.assertEquals(expectedDate, validator.validate("3/4/2005"));
         checkException(validator, "5/13/2000", ErrorType.DATE_FORMAT.toString());
     }
 
@@ -79,12 +80,12 @@ public class ValidatorsTest extends TestCase {
         data.put("simple", "a");
         data.put("map_one", "b");
         data.put("map_two", "c");
-        assertEquals("a", Schema.parseField("simple", Schema.FieldType.SIMPLE, data));
-        assertNull(Schema.parseField("notafield", Schema.FieldType.SIMPLE, data));
+       Assert.assertEquals("a", Schema.parseField("simple", Schema.FieldType.SIMPLE, data));
+        Assert.assertNull(Schema.parseField("notafield", Schema.FieldType.SIMPLE, data));
         Map<String, Object> expectedResults = new HashMap<String, Object>();
         expectedResults.put("one", "b");
         expectedResults.put("two", "c");
-        assertEquals(expectedResults, Schema.parseField("map", Schema.FieldType.MAP, data));
+       Assert.assertEquals(expectedResults, Schema.parseField("map", Schema.FieldType.MAP, data));
     }
 
     private enum TestEnum {
@@ -93,8 +94,8 @@ public class ValidatorsTest extends TestCase {
 
     public void testEnumValidator() throws Exception {
         Validator val = new EnumValidator(TestEnum.class);
-        assertEquals(TestEnum.VALUE_ONE, val.validate("VALUE_ONE"));
-        assertEquals(TestEnum.VALUE_ONE, val.validate("value_one"));
+       Assert.assertEquals(TestEnum.VALUE_ONE, val.validate("VALUE_ONE"));
+       Assert.assertEquals(TestEnum.VALUE_ONE, val.validate("value_one"));
         checkException(val, null, ErrorType.MISSING.toString());
         checkException(val, "bad value", ErrorType.INVALID_ENUM.toString());
     }
@@ -112,19 +113,19 @@ public class ValidatorsTest extends TestCase {
         data.put("switch_field", "a");
         data.put("age", "2");
         Map<String, Object> results = val.validate(data);
-        assertEquals(2, results.get("age"));
+       Assert.assertEquals(2, results.get("age"));
 
         data.put("name", "bob");
         data.put("switch_field", "b");
         results = val.validate(data);
-        assertEquals("bob", results.get("name"));
+       Assert.assertEquals("bob", results.get("name"));
 
         try {
             data.put("switch_field", "c");
             val.validate(data);
-            fail();
+            Assert.fail();
         } catch (ValidationError e) {
-            assertEquals(val.getKey(ErrorType.MISSING_EXPECTED_VALUE.toString()), e.getMsg());
+           Assert.assertEquals(val.getKey(ErrorType.MISSING_EXPECTED_VALUE.toString()), e.getMsg());
         }
 
         val.setDefaultCase(schemaB);
@@ -133,8 +134,8 @@ public class ValidatorsTest extends TestCase {
 
     public void testIntValidator() throws Exception {
         Validator val = new IntValidator();
-        assertEquals(42, val.validate("42"));
-        assertEquals(42, val.validate("042"));
+       Assert.assertEquals(42, val.validate("42"));
+       Assert.assertEquals(42, val.validate("042"));
         checkException(val, "notanumber", ErrorType.INVALID_INT.toString());
         // check error when given wrong type
         checkException(val, new LinkedList(), ErrorType.WRONG_TYPE.toString());
@@ -143,29 +144,29 @@ public class ValidatorsTest extends TestCase {
 
     public void testIsInstanceValidator() throws Exception {
         Validator val = new IsInstanceValidator(Number.class);
-        assertEquals(42, val.validate(42));
-        assertEquals(new BigInteger("42"), val.validate(new BigInteger("42")));
+       Assert.assertEquals(42, val.validate(42));
+       Assert.assertEquals(new BigInteger("42"), val.validate(new BigInteger("42")));
         checkException(val, "a string", ErrorType.WRONG_TYPE.toString());
     }
 
     public void testIdentityValidator() throws Exception {
         Validator val = new IdentityValidator();
         String input = "a string";
-        assertEquals(input, val.validate(input));
-        assertEquals(null, val.validate(null));
+       Assert.assertEquals(input, val.validate(input));
+       Assert.assertEquals(null, val.validate(null));
     }
 
     public void testNullValidator() throws Exception {
         Validator val = new NullValidator(new IntValidator());
-        assertEquals(null, val.validate(null));
-        assertEquals(42, val.validate("42"));
+       Assert.assertEquals(null, val.validate(null));
+       Assert.assertEquals(42, val.validate("42"));
         checkException(val, "a string", ErrorType.INVALID_INT.toString());
     }
 
     public void testMaxLengthValidator() throws Exception {
         Validator val = new MaxLengthValidator(4);
-        assertEquals("abc", val.validate("abc"));
-        assertEquals("abcd", val.validate("abcd"));
+       Assert.assertEquals("abc", val.validate("abc"));
+       Assert.assertEquals("abcd", val.validate("abcd"));
         checkException(val, "toolong", ErrorType.STRING_TOO_LONG.toString());
     }
 
@@ -179,27 +180,27 @@ public class ValidatorsTest extends TestCase {
         input.put("fieldOne", "42");
         input.put("fieldTwo", "abcd");
         Map<String, Object> results = schema.validate(input);
-        assertTrue(42 == (Integer) results.get("fieldOne"));
-        assertEquals("abcd", (String) results.get("fieldTwo"));
+       Assert.assertTrue(42 == (Integer) results.get("fieldOne"));
+       Assert.assertEquals("abcd", (String) results.get("fieldTwo"));
 
         input.put("fieldOne", null);
         input.put("fieldTwo", "abcde");
         try {
             schema.validate(input);
-            fail();
+            Assert.fail();
         } catch (SchemaValidationError e) {
-            assertEquals(2, e.size());
-            assertEquals(maxLengthValidator.getKey(ErrorType.STRING_TOO_LONG.toString()), e.getFieldMsg("fieldTwo"));
-            assertEquals(intValidator.getKey(ErrorType.MISSING.toString()), e.getFieldMsg("fieldOne"));
+           Assert.assertEquals(2, e.size());
+           Assert.assertEquals(maxLengthValidator.getKey(ErrorType.STRING_TOO_LONG.toString()), e.getFieldMsg("fieldTwo"));
+           Assert.assertEquals(intValidator.getKey(ErrorType.MISSING.toString()), e.getFieldMsg("fieldOne"));
         }
         // now make field one optional
         schema.setSimpleValidator("fieldOne", new NullValidator(new IntValidator()));
         try {
             schema.validate(input);
-            fail();
+            Assert.fail();
         } catch (SchemaValidationError e) {
-            assertEquals(1, e.size());
-            assertEquals(maxLengthValidator.getKey(ErrorType.STRING_TOO_LONG.toString()), e.getFieldMsg("fieldTwo"));
+           Assert.assertEquals(1, e.size());
+           Assert.assertEquals(maxLengthValidator.getKey(ErrorType.STRING_TOO_LONG.toString()), e.getFieldMsg("fieldTwo"));
         }
     }
 
@@ -221,12 +222,12 @@ public class ValidatorsTest extends TestCase {
         items.add("one");
         items.add("two");
         Validator val = new OneOfValidator(items);
-        assertEquals("one", val.validate("one"));
+       Assert.assertEquals("one", val.validate("one"));
         checkException(val, null, ErrorType.MISSING.toString());
         checkException(val, "three", ErrorType.NOT_A_CHOICE.toString());
 
         val = new OneOfValidator(new TestItemSource());
-        assertEquals("one", val.validate("one"));
+       Assert.assertEquals("one", val.validate("one"));
         checkException(val, null, ErrorType.MISSING.toString());
         checkException(val, "three", ErrorType.NOT_A_CHOICE.toString());
     }

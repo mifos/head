@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -69,8 +71,8 @@ public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordLoanOfficerId", "0");
         performNoErrors();
         Map constantMap = (Map) context.getAttribute("CustomFieldType");
-        assertNotNull(constantMap);
-        assertEquals("NUMERIC", constantMap.get("NUMERIC").toString());
+        Assert.assertNotNull(constantMap);
+       Assert.assertEquals("NUMERIC", constantMap.get("NUMERIC").toString());
     }
 
     public void testIfAllConstantFilesAreLoaded() {
@@ -79,21 +81,21 @@ public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordOfficeId", "0");
         addRequestParameter("recordLoanOfficerId", "0");
         performNoErrors();
-        assertNotNull(context.getAttribute("FeeFrequencyType"));
-        assertNotNull(context.getAttribute("FeeCategory"));
-        assertNotNull(context.getAttribute("FeeLevel"));
-        assertNotNull(context.getAttribute("FeePayment"));
-        assertNotNull(context.getAttribute("FeeStatus"));
-        assertNotNull(context.getAttribute("RateAmountFlag"));
-        assertNotNull(context.getAttribute("RecurrenceType"));
-        assertNotNull(context.getAttribute("AccountTypes"));
-        assertNotNull(context.getAttribute("OfficeStatus"));
-        assertNotNull(context.getAttribute("OfficeLevel"));
-        assertNotNull(context.getAttribute("CustomerStatus"));
-        assertNotNull(context.getAttribute("CustomerLevel"));
-        assertNotNull(context.getAttribute("PrdStatus"));
-        assertNotNull(context.getAttribute("AccountState"));
-        assertNotNull(context.getAttribute("RecommendedAmountUnit"));
+        Assert.assertNotNull(context.getAttribute("FeeFrequencyType"));
+        Assert.assertNotNull(context.getAttribute("FeeCategory"));
+        Assert.assertNotNull(context.getAttribute("FeeLevel"));
+        Assert.assertNotNull(context.getAttribute("FeePayment"));
+        Assert.assertNotNull(context.getAttribute("FeeStatus"));
+        Assert.assertNotNull(context.getAttribute("RateAmountFlag"));
+        Assert.assertNotNull(context.getAttribute("RecurrenceType"));
+        Assert.assertNotNull(context.getAttribute("AccountTypes"));
+        Assert.assertNotNull(context.getAttribute("OfficeStatus"));
+        Assert.assertNotNull(context.getAttribute("OfficeLevel"));
+        Assert.assertNotNull(context.getAttribute("CustomerStatus"));
+        Assert.assertNotNull(context.getAttribute("CustomerLevel"));
+        Assert.assertNotNull(context.getAttribute("PrdStatus"));
+        Assert.assertNotNull(context.getAttribute("AccountState"));
+        Assert.assertNotNull(context.getAttribute("RecommendedAmountUnit"));
     }
 
     public void testEnumPluginException() throws Exception {
@@ -102,7 +104,7 @@ public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
         enumPluginClasses.add("org.mifos.doesNotExist");
         try {
             enumPlugin.buildClasses(enumPluginClasses);
-            fail();
+            Assert.fail();
         } catch (EnumsNotLoadedException expected) {
         }
     }

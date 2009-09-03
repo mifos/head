@@ -23,6 +23,8 @@ package org.mifos.application.accounts.loan.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.TransactionHistoryView;
@@ -124,7 +126,7 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         List<TransactionHistoryView> history = loanBO.getTransactionHistoryView();
 
         for (TransactionHistoryView entry : history) {
-            assertEquals(AccountConstants.LOAN_RESCHEDULED, entry.getType());
+           Assert.assertEquals(AccountConstants.LOAN_RESCHEDULED, entry.getType());
         }
         StaticHibernateUtil.closeSession(session);
     }

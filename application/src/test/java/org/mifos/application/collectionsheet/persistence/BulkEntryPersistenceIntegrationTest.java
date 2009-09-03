@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -88,7 +90,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
-        assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
     }
 
     public void testSuccessfulApplyPayment() throws Exception {
@@ -101,7 +103,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
-        assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(account.getAccountActionDates().iterator().next());
@@ -111,7 +113,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 .valueOf("1"), currentDate, currentDate);
         try {
             account.applyPaymentWithPersist(paymentData);
-            assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid().getAmountDoubleValue(), Double
+           Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid().getAmountDoubleValue(), Double
                     .valueOf("100.0"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +133,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
-        assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(account.getAccountActionDates().iterator().next());
@@ -142,7 +144,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
 
         account.applyPaymentWithPersist(paymentData);
         StaticHibernateUtil.commitTransaction();
-        assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid().getAmountDoubleValue(), Double.valueOf("100.0"));
+       Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid().getAmountDoubleValue(), Double.valueOf("100.0"));
     }
 
     public void testFailureApplyPayment() throws Exception {
@@ -155,7 +157,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
-        assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
         for (AccountActionDateEntity actionDate : account.getAccountActionDates()) {
             if (actionDate.getInstallmentId().equals(Short.valueOf("1"))) {
                 actionDate.setPaymentStatus(PaymentStatus.PAID);
@@ -169,11 +171,11 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
 
         try {
             account.applyPaymentWithPersist(paymentData);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (AccountException be) {
-            assertNotNull(be);
-            assertEquals(be.getKey(), "errors.makePayment");
-            assertTrue(true);
+            Assert.assertNotNull(be);
+           Assert.assertEquals(be.getKey(), "errors.makePayment");
+           Assert.assertTrue(true);
         }
 
     }

@@ -20,6 +20,7 @@
 
 package org.mifos.application.customer.business;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class CustomerViewTest extends TestCase {
@@ -27,16 +28,16 @@ public class CustomerViewTest extends TestCase {
     public void testCustomerView() throws Exception {
         CustomerView customerView = new CustomerView(Integer.valueOf("1"), "Customer", "001global", Short.valueOf("2"));
 
-        assertEquals(1, customerView.getCustomerId().intValue());
-        assertEquals("Customer", customerView.getDisplayName());
-        assertEquals("001global", customerView.getGlobalCustNum());
-        assertEquals(2, customerView.getStatusId().shortValue());
+       Assert.assertEquals(1, customerView.getCustomerId().intValue());
+       Assert.assertEquals("Customer", customerView.getDisplayName());
+       Assert.assertEquals("001global", customerView.getGlobalCustNum());
+       Assert.assertEquals(2, customerView.getStatusId().shortValue());
 
         CustomerView customerView1 = new CustomerView(Integer.valueOf("1"), "Customer", "001global",
                 Short.valueOf("2"), Short.valueOf("2"), Integer.valueOf("1"), Short.valueOf("2"), Short.valueOf("3"));
-        assertEquals(2, customerView1.getCustomerLevelId().shortValue());
-        assertEquals(2, customerView1.getOfficeId().shortValue());
-        assertEquals(3, customerView1.getPersonnelId().shortValue());
-        assertEquals(1, customerView1.getVersionNo().intValue());
+       Assert.assertEquals(2, customerView1.getCustomerLevelId().shortValue());
+       Assert.assertEquals(2, customerView1.getOfficeId().shortValue());
+       Assert.assertEquals(3, customerView1.getPersonnelId().shortValue());
+       Assert.assertEquals(1, customerView1.getVersionNo().intValue());
     }
 }

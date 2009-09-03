@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -33,7 +34,7 @@ public class MifosTextareaTagTest extends TestCase {
         mifosTextareaTag.setPropertyExpr("test2");
         StringBuffer inputsForhidden = new StringBuffer();
         inputsForhidden.append("<input type=\"hidden\" name=\"" + "test1" + "\" value=\"" + "test2" + "\" />");
-        assertEquals(inputsForhidden.toString(), mifosTextareaTag.render());
+       Assert.assertEquals(inputsForhidden.toString(), mifosTextareaTag.render());
         assertWellFormedFragment(mifosTextareaTag.render());
     }
 }

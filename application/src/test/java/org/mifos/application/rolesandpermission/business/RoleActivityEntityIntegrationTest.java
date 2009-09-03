@@ -20,6 +20,8 @@
 
 package org.mifos.application.rolesandpermission.business;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -34,9 +36,9 @@ public class RoleActivityEntityIntegrationTest extends MifosIntegrationTestCase 
 
     public void testGetRoleActivity() {
         RoleActivityEntity roleActivityEntity = getRoleActivity((short) 1, (short) 1);
-        assertNull(roleActivityEntity);
+        Assert.assertNull(roleActivityEntity);
         roleActivityEntity = getRoleActivity(Short.valueOf("1"), Short.valueOf("3"));
-        assertNotNull(roleActivityEntity);
+        Assert.assertNotNull(roleActivityEntity);
     }
 
     private RoleActivityEntity getRoleActivity(Short roleId, Short activityId) {

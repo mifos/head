@@ -22,6 +22,8 @@ package org.mifos.application.master.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -61,7 +63,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         CustomValueList paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES, (short) 1,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
         List<CustomValueListElement> paymentValues = paymentTypes.getCustomValueListElements();
-        assertEquals(4, paymentValues.size());
+       Assert.assertEquals(4, paymentValues.size());
 
     }
 
@@ -71,9 +73,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         try {
             masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES, (short) 1,
                     "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
-            fail();
+            Assert.fail();
         } catch (Exception e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -83,7 +85,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueList gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER, Short.valueOf("1"));
         List<CustomValueListElement> genderValues = gender.getCustomValueListElements();
-        assertEquals(2, genderValues.size());
+       Assert.assertEquals(2, genderValues.size());
 
     }
 
@@ -92,7 +94,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         List<ValueListElement> masterEntity = masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES,
                 Short.valueOf("1"));
         // 131 if includes the empty lookup_name for lookup id 259, 263
-        assertEquals(131, masterEntity.size());
+       Assert.assertEquals(131, masterEntity.size());
     }
 
     public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {
@@ -100,9 +102,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, Short.valueOf("1"));
-            fail();
+            Assert.fail();
         } catch (Exception e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -113,9 +115,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterPersistence.retrieveCustomFieldsDefinition(EntityType.CLIENT);
-            fail();
+            Assert.fail();
         } catch (Exception e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -123,18 +125,18 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();
-        assertEquals("Partial Application", masterPersistence.retrieveMasterEntities(1, Short.valueOf("1")));
+       Assert.assertEquals("Partial Application", masterPersistence.retrieveMasterEntities(1, Short.valueOf("1")));
     }
 
     public void testRetrieveMasterDataEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<MasterDataEntity> masterDataList = masterPersistence
                 .retrieveMasterDataEntity("org.mifos.application.accounts.business.AccountStateEntity");
-        assertEquals(18, masterDataList.size());
+       Assert.assertEquals(18, masterDataList.size());
         for (MasterDataEntity masterDataEntity : masterDataList) {
             for (LookUpValueLocaleEntity lookUpValueLocaleEntity : masterDataEntity.getLookUpValue()
                     .getLookUpValueLocales()) {
-                assertEquals(Short.valueOf("1"), lookUpValueLocaleEntity.getLocaleId());
+               Assert.assertEquals(Short.valueOf("1"), lookUpValueLocaleEntity.getLocaleId());
             }
         }
     }
@@ -144,9 +146,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterPersistence.retrieveMasterDataEntity("org.mifos.application.accounts.business.AccountStateEntity");
-            fail();
+            Assert.fail();
         } catch (Exception e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -192,7 +194,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         // verify that the new salutation was created
         Integer newSalutationId = findValueListElementId(masterPersistence, MasterConstants.SALUTATION,
                 NEW_SALUTATION_STRING, DEFAULT_LOCALE);
-        assertTrue(newSalutationId != null);
+       Assert.assertTrue(newSalutationId != null);
 
         // remove the new salutation
         masterPersistence.deleteValueListElement(newSalutationId);
@@ -200,7 +202,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndCloseSession();
 
         // verify that the new salutation was deleted
-        assertFalse(foundStringInCustomValueList(masterPersistence, MasterConstants.SALUTATION, NEW_SALUTATION_STRING,
+        Assert.assertFalse(foundStringInCustomValueList(masterPersistence, MasterConstants.SALUTATION, NEW_SALUTATION_STRING,
                 DEFAULT_LOCALE));
     }
 
@@ -227,7 +229,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION, DEFAULT_LOCALE);
         for (ValueListElement entity : salutations) {
             if (entity.getId() == id) {
-                assertEquals(entity.getName(), UPDATED_NAME);
+               Assert.assertEquals(entity.getName(), UPDATED_NAME);
             }
         }
         // restore it

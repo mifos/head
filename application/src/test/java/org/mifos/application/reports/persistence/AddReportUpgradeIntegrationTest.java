@@ -22,6 +22,8 @@ package org.mifos.application.reports.persistence;
 
 import java.sql.Connection;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.reports.business.ReportsBO;
@@ -60,7 +62,7 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
             addReport.doUpgrade(connection);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            fail("Should not throw error when inserting report:");
+            Assert.fail("Should not throw error when inserting report:");
         }
     }
 
@@ -73,8 +75,8 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         AddReport addReport = createReport(HIGHER_UPGRADE_VERSION);
         addReport.doUpgrade(connection);
         ReportsBO report = new ReportsPersistence().getReport(TEST_REPORT_ID);
-        assertNotNull(report.getActivityId());
-        assertNotNull(report.getIsActive());
+        Assert.assertNotNull(report.getActivityId());
+        Assert.assertNotNull(report.getIsActive());
     }
 
     @Override

@@ -22,6 +22,8 @@ package org.mifos.application.accounts.business;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
@@ -59,24 +61,24 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
         List<AccountStateEntity> stateList = service.getStatusList(new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
-        assertEquals(2, stateList.size());
+       Assert.assertEquals(2, stateList.size());
     }
 
     public void testGetStatusName() throws Exception {
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
-        assertNotNull(service.getStatusName((short) 1, AccountState.LOAN_CLOSED_RESCHEDULED, AccountTypes.LOAN_ACCOUNT));
+        Assert.assertNotNull(service.getStatusName((short) 1, AccountState.LOAN_CLOSED_RESCHEDULED, AccountTypes.LOAN_ACCOUNT));
     }
 
     public void testGetFlagName() throws Exception {
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
-        assertNotNull(service.getFlagName((short) 1, AccountStateFlag.LOAN_WITHDRAW, AccountTypes.LOAN_ACCOUNT));
+        Assert.assertNotNull(service.getFlagName((short) 1, AccountStateFlag.LOAN_WITHDRAW, AccountTypes.LOAN_ACCOUNT));
     }
 
     public void testStatesInitializationException() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
-            fail();
+            Assert.fail();
         } catch (StatesInitializationException sie) {
         } finally {
             StaticHibernateUtil.closeSession();
@@ -86,7 +88,7 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
     public void testServiceUnavailableException() throws Exception {
         try {
             service = (AccountBusinessService) ServiceFactory.getInstance().getBusinessService(null);
-            fail();
+            Assert.fail();
         } catch (ServiceUnavailableException sue) {
         }
     }
@@ -98,10 +100,10 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
                 AccountState.LOAN_PARTIAL_APPLICATION), AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
         for (AccountStateEntity accountState : stateList) {
             if (accountState.getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
-                assertEquals(3, accountState.getFlagSet().size());
+               Assert.assertEquals(3, accountState.getFlagSet().size());
                 for (AccountStateFlagEntity accountStateFlag : accountState.getFlagSet()) {
                     if (accountStateFlag.getId().equals(AccountStateFlag.LOAN_REVERSAL.getValue()))
-                        fail();
+                        Assert.fail();
                 }
             }
         }

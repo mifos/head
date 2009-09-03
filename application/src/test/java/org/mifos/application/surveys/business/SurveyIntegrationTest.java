@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -87,23 +89,23 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateSurveyInstance() throws Exception {
         Survey survey = new Survey();
         SurveyInstance instance = survey.createSurveyInstance();
-        assertTrue("Instance should be instance of SurveyInstance, not PpiSurveyInstance", !(PPISurvey.class
+       Assert.assertTrue("Instance should be instance of SurveyInstance, not PpiSurveyInstance", !(PPISurvey.class
                 .isInstance(survey)));
     }
 
     public void testSurveyType() {
-        assertEquals("client", SurveyType.CLIENT.getValue());
-        assertEquals("group", SurveyType.GROUP.getValue());
-        assertEquals("center", SurveyType.CENTER.getValue());
-        assertEquals("loan", SurveyType.LOAN.getValue());
-        assertEquals("savings", SurveyType.SAVINGS.getValue());
-        assertEquals("all", SurveyType.ALL.getValue());
+       Assert.assertEquals("client", SurveyType.CLIENT.getValue());
+       Assert.assertEquals("group", SurveyType.GROUP.getValue());
+       Assert.assertEquals("center", SurveyType.CENTER.getValue());
+       Assert.assertEquals("loan", SurveyType.LOAN.getValue());
+       Assert.assertEquals("savings", SurveyType.SAVINGS.getValue());
+       Assert.assertEquals("all", SurveyType.ALL.getValue());
 
-        assertEquals(SurveyType.CLIENT, SurveyType.fromString("client"));
-        assertEquals(SurveyType.GROUP, SurveyType.fromString("group"));
-        assertEquals(SurveyType.CENTER, SurveyType.fromString("center"));
-        assertEquals(SurveyType.LOAN, SurveyType.fromString("loan"));
-        assertEquals(SurveyType.SAVINGS, SurveyType.fromString("savings"));
+       Assert.assertEquals(SurveyType.CLIENT, SurveyType.fromString("client"));
+       Assert.assertEquals(SurveyType.GROUP, SurveyType.fromString("group"));
+       Assert.assertEquals(SurveyType.CENTER, SurveyType.fromString("center"));
+       Assert.assertEquals(SurveyType.LOAN, SurveyType.fromString("loan"));
+       Assert.assertEquals(SurveyType.SAVINGS, SurveyType.fromString("savings"));
     }
 
     public void testRetrieveQuestionsByState() throws Exception {
@@ -126,10 +128,10 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         surveysPersistence.createOrUpdate(question3);
 
         List<Question> results = surveysPersistence.retrieveGeneralQuestionsByState(QuestionState.ACTIVE);
-        assertEquals(2, results.size());
-        assertEquals(questionText1, results.get(0).getQuestionText());
+       Assert.assertEquals(2, results.size());
+       Assert.assertEquals(questionText1, results.get(0).getQuestionText());
         results = surveysPersistence.retrieveGeneralQuestionsByState(QuestionState.INACTIVE);
-        assertEquals(questionText2, results.get(0).getQuestionText());
+       Assert.assertEquals(questionText2, results.get(0).getQuestionText());
     }
 
     public void testRetrieveInstances() throws Exception {
@@ -164,22 +166,22 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesByCustomer(instance1
                 .getCustomer());
-        assertEquals(2, retrievedInstances.size());
-        assertEquals("survey2", retrievedInstances.get(1).getSurvey().getName());
+       Assert.assertEquals(2, retrievedInstances.size());
+       Assert.assertEquals("survey2", retrievedInstances.get(1).getSurvey().getName());
 
         retrievedInstances = surveysPersistence.retrieveInstancesByCustomer(center);
-        assertEquals(1, retrievedInstances.size());
-        assertEquals("survey2", retrievedInstances.get(0).getSurvey().getName());
+       Assert.assertEquals(1, retrievedInstances.size());
+       Assert.assertEquals("survey2", retrievedInstances.get(0).getSurvey().getName());
         SurveyInstance retrievedInstance = retrievedInstances.get(0);
         CenterBO retrievedCenter = (CenterBO) retrievedInstance.getCustomer();
-        assertEquals("somewhere", retrievedCenter.getCustomerMeeting().getMeeting().getMeetingPlace());
+       Assert.assertEquals("somewhere", retrievedCenter.getCustomerMeeting().getMeeting().getMeetingPlace());
 
         retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(instance1.getSurvey());
-        assertEquals(1, retrievedInstances.size());
-        assertEquals("survey1", retrievedInstances.get(0).getSurvey().getName());
+       Assert.assertEquals(1, retrievedInstances.size());
+       Assert.assertEquals("survey1", retrievedInstances.get(0).getSurvey().getName());
         retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(survey2);
-        assertEquals(2, retrievedInstances.size());
-        assertEquals("survey2", retrievedInstances.get(0).getSurvey().getName());
+       Assert.assertEquals(2, retrievedInstances.size());
+       Assert.assertEquals("survey2", retrievedInstances.get(0).getSurvey().getName());
     }
 
     public void testRetrieveQuestionsByAnswerType() throws Exception {
@@ -203,20 +205,20 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         surveysPersistence.createOrUpdate(question4);
 
         List<Question> results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.FREETEXT);
-        assertEquals(1, results.size());
-        assertEquals(questionText1, results.get(0).getQuestionText());
+       Assert.assertEquals(1, results.size());
+       Assert.assertEquals(questionText1, results.get(0).getQuestionText());
 
         results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.NUMBER);
-        assertEquals(1, results.size());
-        assertEquals(questionText2, results.get(0).getQuestionText());
+       Assert.assertEquals(1, results.size());
+       Assert.assertEquals(questionText2, results.get(0).getQuestionText());
 
         results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.DATE);
-        assertEquals(1, results.size());
-        assertEquals(questionText3, results.get(0).getQuestionText());
+       Assert.assertEquals(1, results.size());
+       Assert.assertEquals(questionText3, results.get(0).getQuestionText());
 
         results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.CHOICE);
-        assertEquals(1, results.size());
-        assertEquals(questionText4, results.get(0).getQuestionText());
+       Assert.assertEquals(1, results.size());
+       Assert.assertEquals(questionText4, results.get(0).getQuestionText());
 
     }
 
@@ -237,19 +239,19 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         surveysPersistence.createOrUpdate(survey6);
 
         List<Survey> allOnlyResults = surveysPersistence.retrieveSurveysByType(SurveyType.ALL);
-        assertEquals(1, allOnlyResults.size());
-        assertEquals(survey6.getName(), allOnlyResults.get(0).getName());
+       Assert.assertEquals(1, allOnlyResults.size());
+       Assert.assertEquals(survey6.getName(), allOnlyResults.get(0).getName());
 
         List<Survey> clientResults = surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT);
-        assertEquals(2, clientResults.size());
-        assertEquals(survey1.getName(), clientResults.get(0).getName());
+       Assert.assertEquals(2, clientResults.size());
+       Assert.assertEquals(survey1.getName(), clientResults.get(0).getName());
 
         List<Survey> loanResults = surveysPersistence.retrieveSurveysByType(SurveyType.LOAN);
-        assertEquals(2, loanResults.size());
-        assertEquals(survey4.getName(), loanResults.get(0).getName());
+       Assert.assertEquals(2, loanResults.size());
+       Assert.assertEquals(survey4.getName(), loanResults.get(0).getName());
 
         List<Survey> allResults = surveysPersistence.retrieveAllSurveys();
-        assertEquals(6, allResults.size());
+       Assert.assertEquals(6, allResults.size());
 
     }
 
@@ -261,13 +263,13 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         surveysPersistence.createOrUpdate(survey);
 
         List result = StaticHibernateUtil.getSessionTL().createQuery("from " + Survey.class.getName()).list();
-        assertEquals(1, result.size());
+       Assert.assertEquals(1, result.size());
         Survey read_survey = (Survey) result.get(0);
         StaticHibernateUtil.commitTransaction();
 
-        assertEquals("testsurvey", read_survey.getName());
-        assertEquals(SurveyState.ACTIVE, read_survey.getStateAsEnum());
-        assertEquals(SurveyType.CLIENT, read_survey.getAppliesToAsEnum());
+       Assert.assertEquals("testsurvey", read_survey.getName());
+       Assert.assertEquals(SurveyState.ACTIVE, read_survey.getStateAsEnum());
+       Assert.assertEquals(SurveyType.CLIENT, read_survey.getAppliesToAsEnum());
     }
 
     public void testCreateQuestion() {
@@ -281,11 +283,11 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.getSessionTL().save(question);
 
         List result = StaticHibernateUtil.getSessionTL().createQuery("from " + Question.class.getName()).list();
-        assertEquals(1, result.size());
+       Assert.assertEquals(1, result.size());
         Question retrieved = (Question) result.get(0);
-        assertEquals(questionText, retrieved.getQuestionText());
-        assertEquals(AnswerType.FREETEXT, retrieved.getAnswerTypeAsEnum());
-        assertEquals(QuestionState.ACTIVE, retrieved.getQuestionStateAsEnum());
+       Assert.assertEquals(questionText, retrieved.getQuestionText());
+       Assert.assertEquals(AnswerType.FREETEXT, retrieved.getAnswerTypeAsEnum());
+       Assert.assertEquals(QuestionState.ACTIVE, retrieved.getQuestionStateAsEnum());
     }
 
     public void testRetrieveQuestions() throws Exception {
@@ -303,15 +305,15 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         surveysPersistence.createOrUpdate(question3);
 
         List<Question> results = surveysPersistence.retrieveAllQuestions();
-        assertEquals(3, results.size());
-        assertEquals(questionText1, results.get(0).getQuestionText());
-        assertEquals(questionText2, results.get(1).getQuestionText());
-        assertEquals(questionText3, results.get(2).getQuestionText());
+       Assert.assertEquals(3, results.size());
+       Assert.assertEquals(questionText1, results.get(0).getQuestionText());
+       Assert.assertEquals(questionText2, results.get(1).getQuestionText());
+       Assert.assertEquals(questionText3, results.get(2).getQuestionText());
 
         results = surveysPersistence.retrieveGeneralQuestionsByState(QuestionState.ACTIVE);
-        assertEquals(2, results.size());
-        assertEquals(questionText1, results.get(0).getQuestionText());
-        assertEquals(questionText3, results.get(1).getQuestionText());
+       Assert.assertEquals(2, results.size());
+       Assert.assertEquals(questionText1, results.get(0).getQuestionText());
+       Assert.assertEquals(questionText3, results.get(1).getQuestionText());
 
     }
 
@@ -323,8 +325,8 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         surveysPersistence.createOrUpdate(question1);
 
         List<Question> results = surveysPersistence.retrieveQuestionsByName(name1);
-        assertEquals(1, results.size());
-        assertEquals(name1, results.get(0).getShortName());
+       Assert.assertEquals(1, results.size());
+       Assert.assertEquals(name1, results.get(0).getShortName());
     }
 
     public static SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException, PersistenceException,
@@ -381,8 +383,8 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         response.setInstance(instance);
         StaticHibernateUtil.getSessionTL().save(response);
         List<SurveyResponse> responses = persistence.retrieveAllResponses();
-        assertEquals(1, responses.size());
-        assertEquals(choice1.getChoiceId(), responses.get(0).getChoiceValue().getChoiceId());
+       Assert.assertEquals(1, responses.size());
+       Assert.assertEquals(choice1.getChoiceId(), responses.get(0).getChoiceValue().getChoiceId());
     }
 
     // this test was created because of problems persisting number survey
@@ -403,8 +405,8 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.getSessionTL().save(response);
 
         List<SurveyResponse> responses = new SurveysPersistence().retrieveAllResponses();
-        assertEquals(1, responses.size());
-        assertEquals(questionText, responses.get(0).getQuestion().getQuestionText());
+       Assert.assertEquals(1, responses.size());
+       Assert.assertEquals(questionText, responses.get(0).getQuestion().getQuestionText());
     }
 
     public void testSurveyResponseTypechecks() throws Exception {
@@ -428,23 +430,23 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         SurveyResponse response = new SurveyResponse(instance, surveyQuestion);
         try {
             response.setValue(dateAnswer);
-            fail();
+            Assert.fail();
         } catch (ApplicationException e) {
-            assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
+           Assert.assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
         }
 
         try {
             response.setValue(choiceAnswer);
-            fail();
+            Assert.fail();
         } catch (ApplicationException e) {
-            assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
+           Assert.assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
         }
 
         try {
             response.setValue(numberAnswer);
-            fail();
+            Assert.fail();
         } catch (ApplicationException e) {
-            assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
+           Assert.assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
         }
 
         // verify date answertype check
@@ -452,23 +454,23 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         try {
             response.setValue(freetextAnswer);
-            fail();
+            Assert.fail();
         } catch (ApplicationException e) {
-            assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
+           Assert.assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
         }
 
         try {
             response.setValue(choiceAnswer);
-            fail();
+            Assert.fail();
         } catch (ApplicationException e) {
-            assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
+           Assert.assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
         }
 
         try {
             response.setValue(numberAnswer);
-            fail();
+            Assert.fail();
         } catch (ApplicationException e) {
-            assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
+           Assert.assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
         }
 
     }
@@ -491,7 +493,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         persistence.createOrUpdate(response1);
         List<SurveyResponse> allResponses = persistence.retrieveAllResponses();
-        assertEquals(1, allResponses.size());
+       Assert.assertEquals(1, allResponses.size());
 
         questionText = "text for second testCreateSurveyResponse question";
         shortName = "Short name two";
@@ -504,7 +506,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         persistence.createOrUpdate(response2);
         allResponses = persistence.retrieveAllResponses();
-        assertEquals(2, allResponses.size());
+       Assert.assertEquals(2, allResponses.size());
 
         SurveyInstance instance2 = makeSurveyInstance("Test survey create response2");
         SurveyResponse response3 = new SurveyResponse();
@@ -514,26 +516,26 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         persistence.createOrUpdate(response3);
         allResponses = persistence.retrieveAllResponses();
-        assertEquals(3, allResponses.size());
+       Assert.assertEquals(3, allResponses.size());
 
         List<SurveyResponse> responses = persistence.retrieveResponsesByInstance(instance1);
-        assertEquals(2, responses.size());
-        assertTrue(responses.contains(response1));
-        assertTrue(responses.contains(response2));
-        assertEquals(AnswerType.NUMBER, responses.get(1).getQuestion().getAnswerTypeAsEnum());
-        assertEquals(5.0, responses.get(1).getNumberValue(), DELTA);
-        assertEquals(response1Value, responses.get(0).getFreetextValue());
+       Assert.assertEquals(2, responses.size());
+       Assert.assertTrue(responses.contains(response1));
+       Assert.assertTrue(responses.contains(response2));
+       Assert.assertEquals(AnswerType.NUMBER, responses.get(1).getQuestion().getAnswerTypeAsEnum());
+       Assert.assertEquals(5.0, responses.get(1).getNumberValue(), DELTA);
+       Assert.assertEquals(response1Value, responses.get(0).getFreetextValue());
 
         responses = persistence.retrieveResponsesByInstance(instance2);
-        assertEquals(1, responses.size());
-        assertTrue(responses.contains(response3));
-        assertEquals(AnswerType.NUMBER, responses.get(0).getQuestion().getAnswerTypeAsEnum());
-        assertEquals(42.0, responses.get(0).getNumberValue(), DELTA);
-        assertNull(responses.get(0).getFreetextValue());
+       Assert.assertEquals(1, responses.size());
+       Assert.assertTrue(responses.contains(response3));
+       Assert.assertEquals(AnswerType.NUMBER, responses.get(0).getQuestion().getAnswerTypeAsEnum());
+       Assert.assertEquals(42.0, responses.get(0).getNumberValue(), DELTA);
+        Assert.assertNull(responses.get(0).getFreetextValue());
 
         SurveyInstance retrievedInstance = persistence.getInstance(instance1.getInstanceId());
         responses = persistence.retrieveResponsesByInstance(retrievedInstance);
-        assertEquals(2, responses.size());
+       Assert.assertEquals(2, responses.size());
     }
 
     public void testSerialize() throws Exception {

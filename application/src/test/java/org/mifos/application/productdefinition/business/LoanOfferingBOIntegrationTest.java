@@ -35,6 +35,8 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.CategoryTypeEntity;
@@ -152,19 +154,19 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT, new Integer(product
                 .getPrdOfferingId().toString()));
-        assertEquals(2, auditLogList.size());
-        assertEquals(EntityType.LOANPRODUCT.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(13, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(2, auditLogList.size());
+       Assert.assertEquals(EntityType.LOANPRODUCT.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(13, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Fee Types")
                     && auditLogRecord.getNewValue().equalsIgnoreCase("Loan Periodic")) {
-                assertEquals("-", auditLogRecord.getOldValue());
+               Assert.assertEquals("-", auditLogRecord.getOldValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Fee Types")
                     && auditLogRecord.getNewValue().equalsIgnoreCase("Loan One time")) {
-                assertEquals("Loan Periodic", auditLogRecord.getOldValue());
+               Assert.assertEquals("Loan Periodic", auditLogRecord.getOldValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge deducted At Disbursement")) {
-                assertEquals("1", auditLogRecord.getOldValue());
-                assertEquals("0", auditLogRecord.getNewValue());
+               Assert.assertEquals("1", auditLogRecord.getOldValue());
+               Assert.assertEquals("0", auditLogRecord.getNewValue());
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -194,22 +196,22 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT, new Integer(product
                 .getPrdOfferingId().toString()));
-        assertEquals(1, auditLogList.size());
-        assertEquals(EntityType.LOANPRODUCT.getValue(), auditLogList.get(0).getEntityType());
-        assertEquals(14, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(1, auditLogList.size());
+       Assert.assertEquals(EntityType.LOANPRODUCT.getValue(), auditLogList.get(0).getEntityType());
+       Assert.assertEquals(14, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Min Loan Amount")) {
-                assertEquals("300.0", auditLogRecord.getOldValue());
-                assertEquals("1000.0", auditLogRecord.getNewValue());
+               Assert.assertEquals("300.0", auditLogRecord.getOldValue());
+               Assert.assertEquals("1000.0", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Description")) {
-                assertEquals("-", auditLogRecord.getOldValue());
-                assertEquals("Loan Product updated", auditLogRecord.getNewValue());
+               Assert.assertEquals("-", auditLogRecord.getOldValue());
+               Assert.assertEquals("Loan Product updated", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Applicable For")) {
-                assertEquals("Groups", auditLogRecord.getOldValue());
-                assertEquals("Clients", auditLogRecord.getNewValue());
+               Assert.assertEquals("Groups", auditLogRecord.getOldValue());
+               Assert.assertEquals("Clients", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Frequency Of Installments")) {
-                assertEquals("Week(s)", auditLogRecord.getOldValue());
-                assertEquals("Month(s)", auditLogRecord.getNewValue());
+               Assert.assertEquals("Week(s)", auditLogRecord.getOldValue());
+               Assert.assertEquals("Month(s)", auditLogRecord.getNewValue());
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -220,7 +222,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new LoanOfferingBO(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                     null, false, false, false, null, null, null);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -229,7 +231,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new LoanOfferingBO(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, false, false, false, null, null, null, null, null);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -241,7 +243,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     new Date(System.currentTimeMillis()), interestTypes, new Money("1000"), new Money("3000"), 12.0,
                     2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false, false, frequency, principalglCodeEntity,
                     intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -253,7 +255,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, new Date(System.currentTimeMillis()), interestTypes, new Money("1000"),
                     new Money("3000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false, false,
                     frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -266,7 +268,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, interestTypes, new Money("1000"), new Money("3000"), 12.0, 2.0,
                     3.0, (short) 20, (short) 1, (short) 12, false, false, false, frequency, principalglCodeEntity,
                     intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -278,8 +280,8 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 productCategory, prdApplicableMaster, startDate, interestTypes, new Money("1000"), new Money("3000"),
                 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, true, false, frequency,
                 principalglCodeEntity, intglCodeEntity);
-        assertNotNull(product.getGlobalPrdOfferingNum());
-        assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+        Assert.assertNotNull(product.getGlobalPrdOfferingNum());
+       Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
     }
 
     public void testStartDateGreaterThanCurrentDate() throws SystemException, ApplicationException {
@@ -289,8 +291,8 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 productCategory, prdApplicableMaster, startDate, interestTypes, new Money("1000"), new Money("3000"),
                 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, true, false, frequency,
                 principalglCodeEntity, intglCodeEntity);
-        assertNotNull(product.getGlobalPrdOfferingNum());
-        assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
+        Assert.assertNotNull(product.getGlobalPrdOfferingNum());
+       Assert.assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
 
     }
 
@@ -303,7 +305,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, interestTypes, new Money("1000"), new Money("3000"), 12.0, 2.0,
                     3.0, (short) 20, (short) 1, (short) 12, false, false, false, frequency, principalglCodeEntity,
                     intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -317,7 +319,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, interestTypes, new Money("1000"), new Money("3000"), 12.0, 2.0,
                     3.0, (short) 20, (short) 1, (short) 12, false, false, false, frequency, principalglCodeEntity,
                     intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -331,7 +333,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), null, 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false, false,
                     null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -344,7 +346,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, null, new Money("1000"), new Money("3000"), 12.0, 2.0, 3.0,
                     (short) 20, (short) 1, (short) 12, false, false, false, frequency, principalglCodeEntity,
                     intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -357,7 +359,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, interestTypes, new Money("1000.0"), null, 12.0, 2.0, 3.0,
                     (short) 20, (short) 1, (short) 12, false, false, false, frequency, principalglCodeEntity,
                     intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -369,7 +371,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, interestTypes, new Money("1000.0"), new Money("3000"), 12.0, 2.0,
                     3.0, (short) 20, (short) 1, (short) 12, false, false, false, frequency, null, null);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -384,7 +386,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), new Money("200.0"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -398,7 +400,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("10000"),
                     new Money("3000"), null, 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false, false,
                     null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -412,7 +414,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), new Money("2000.0"), 12.0, 2.0, 13.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -426,7 +428,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), new Money("2000.0"), 12.0, 20.0, 13.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -440,7 +442,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 31, (short) 21, false,
                     false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -454,7 +456,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 7, false,
                     false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -467,10 +469,10 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 productCategory, prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(
                         "1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
                 (short) 17, false, true, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-        assertNotNull(loanOffering.getGracePeriodType());
-        assertNotNull(loanOffering.getGracePeriodDuration());
-        assertEquals(GraceType.NONE.getValue(), loanOffering.getGracePeriodType().getId());
-        assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
+        Assert.assertNotNull(loanOffering.getGracePeriodType());
+        Assert.assertNotNull(loanOffering.getGracePeriodDuration());
+       Assert.assertEquals(GraceType.NONE.getValue(), loanOffering.getGracePeriodType().getId());
+       Assert.assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
     }
 
     public void testNullGracePeriodDurationWithGraceType() throws ProductDefinitionException {
@@ -483,7 +485,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, gracePeriodType, null, interestTypes, new Money(
                             "1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
                     (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -497,9 +499,9 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 productCategory, prdApplicableMaster, startDate, endDate, null, gracePeriodType, null, interestTypes,
                 new Money("1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
                 (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-        assertNotNull(loanOffering.getGracePeriodDuration());
-        assertEquals(GraceType.NONE.getValue(), loanOffering.getGracePeriodType().getId());
-        assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
+        Assert.assertNotNull(loanOffering.getGracePeriodDuration());
+       Assert.assertEquals(GraceType.NONE.getValue(), loanOffering.getGracePeriodType().getId());
+       Assert.assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
     }
 
     public void testFeeNotMatchingFrequencyOfLoanOffering() throws ProductDefinitionException, FeeException {
@@ -518,7 +520,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, gracePeriodType, null, interestTypes, new Money(
                             "1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
                     (short) 17, false, false, false, null, fees, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -544,8 +546,8 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 interestTypes, new Money("1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20,
                 (short) 11, (short) 17, false, false, false, funds, fees, frequency, principalglCodeEntity,
                 intglCodeEntity);
-        assertEquals(2, loanOffering.getLoanOfferingFees().size());
-        assertEquals(1, loanOffering.getLoanOfferingFunds().size());
+       Assert.assertEquals(2, loanOffering.getLoanOfferingFees().size());
+       Assert.assertEquals(1, loanOffering.getLoanOfferingFunds().size());
     }
 
     public void testCreateLoanOffering() throws ProductDefinitionException, FeeException {
@@ -572,36 +574,36 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
-        assertEquals("Loan Offering", product.getPrdOfferingName());
-        assertEquals("LOAP", product.getPrdOfferingShortName());
-        assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
-        assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
-        assertEquals(startDate, product.getStartDate());
-        assertEquals(endDate, product.getEndDate());
-        assertEquals("1234", product.getDescription());
-        assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
-        assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
-        assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
+       Assert.assertEquals("Loan Offering", product.getPrdOfferingName());
+       Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
+       Assert.assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
+       Assert.assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
+       Assert.assertEquals(startDate, product.getStartDate());
+       Assert.assertEquals(endDate, product.getEndDate());
+       Assert.assertEquals("1234", product.getDescription());
+       Assert.assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
+       Assert.assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
+       Assert.assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
         LoanAmountOption eligibleLoanAmount = product.eligibleLoanAmount(null, null);
-        assertEquals(new Money("1000").getAmountDoubleValue(), eligibleLoanAmount.getMinLoanAmount());
-        assertEquals(new Money("3000").getAmountDoubleValue(), eligibleLoanAmount.getMaxLoanAmount());
-        assertEquals(new Money("2000").getAmountDoubleValue(), eligibleLoanAmount.getDefaultLoanAmount());
-        assertEquals(2.0, product.getMinInterestRate(), DELTA);
-        assertEquals(12.0, product.getMaxInterestRate(), DELTA);
-        assertEquals(3.0, product.getDefInterestRate(), DELTA);
+       Assert.assertEquals(new Money("1000").getAmountDoubleValue(), eligibleLoanAmount.getMinLoanAmount());
+       Assert.assertEquals(new Money("3000").getAmountDoubleValue(), eligibleLoanAmount.getMaxLoanAmount());
+       Assert.assertEquals(new Money("2000").getAmountDoubleValue(), eligibleLoanAmount.getDefaultLoanAmount());
+       Assert.assertEquals(2.0, product.getMinInterestRate(), DELTA);
+       Assert.assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+       Assert.assertEquals(3.0, product.getDefInterestRate(), DELTA);
         LoanOfferingInstallmentRange eligibleNoOfInstall = product.eligibleNoOfInstall(null, null);
-        assertEquals(Short.valueOf("11"), eligibleNoOfInstall.getMinNoOfInstall());
-        assertEquals(Short.valueOf("20"), eligibleNoOfInstall.getMaxNoOfInstall());
-        assertEquals(Short.valueOf("17"), eligibleNoOfInstall.getDefaultNoOfInstall());
-        assertFalse(product.isIncludeInLoanCounter());
-        assertFalse(product.isIntDedDisbursement());
-        assertFalse(product.isPrinDueLastInst());
-        assertEquals(2, product.getLoanOfferingFees().size());
-        assertNotNull(product.getLoanOfferingMeeting());
-        assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+       Assert.assertEquals(Short.valueOf("11"), eligibleNoOfInstall.getMinNoOfInstall());
+       Assert.assertEquals(Short.valueOf("20"), eligibleNoOfInstall.getMaxNoOfInstall());
+       Assert.assertEquals(Short.valueOf("17"), eligibleNoOfInstall.getDefaultNoOfInstall());
+        Assert.assertFalse(product.isIncludeInLoanCounter());
+        Assert.assertFalse(product.isIntDedDisbursement());
+        Assert.assertFalse(product.isPrinDueLastInst());
+       Assert.assertEquals(2, product.getLoanOfferingFees().size());
+        Assert.assertNotNull(product.getLoanOfferingMeeting());
+       Assert.assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
                 .getRecurrenceTypeEnum());
-        assertNotNull(product.getPrincipalGLcode());
-        assertNotNull(product.getInterestGLcode());
+        Assert.assertNotNull(product.getPrincipalGLcode());
+        Assert.assertNotNull(product.getInterestGLcode());
     }
 
     public void testUpdateloanOfferingWithoutDataForMandatoryFields() {
@@ -609,7 +611,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             product.update(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, false, false, false, null, null, null, null);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -622,7 +624,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     .currentTimeMillis()), null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes,
                     (short) 0, new Money("3000"), new Money("1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20,
                     (short) 1, (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -635,7 +637,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     .currentTimeMillis()), null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes,
                     (short) 0, new Money("3000"), new Money("1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20,
                     (short) 1, (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -649,7 +651,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("3000"),
                     new Money("1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -664,7 +666,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 false, null, null, (short) 2, RecurrenceType.WEEKLY);
         StaticHibernateUtil.commitTransaction();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
-        assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+       Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
 
     }
 
@@ -678,7 +680,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("3000"),
                     new Money("1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
 
@@ -694,7 +696,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(
                             "3000"), new Money("1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
                     (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
         TestObjectFactory.removeObject(loanOffering1);
@@ -710,7 +712,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(
                             "3000"), new Money("1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
                     (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
         TestObjectFactory.removeObject(loanOffering1);
@@ -726,7 +728,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("3000"),
                     new Money("1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -740,7 +742,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, null, (short) 0, new Money("3000"), new Money(
                             "1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -754,7 +756,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, null, new Money(
                             "1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -769,9 +771,9 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, null, new Money(
                             "1000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -788,7 +790,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("1000"),
                     new Money("3000"), new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -803,7 +805,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("1000"),
                     new Money("3000"), new Money("1000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -817,7 +819,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("3000"),
                     new Money("1000"), new Money("1000"), 12.0, 2.0, 13.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -832,7 +834,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("3000"),
                     new Money("1000"), new Money("1000"), 12.0, 22.0, 12.0, (short) 20, (short) 1, (short) 12, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -847,7 +849,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("3000"),
                     new Money("1000"), new Money("1000"), 12.0, 2.0, 12.0, (short) 2, (short) 12, (short) 2, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -862,7 +864,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money("3000"),
                     new Money("1000"), new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 22, false,
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -879,10 +881,10 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
-        assertNotNull(product.getGracePeriodType());
-        assertNotNull(product.getGracePeriodDuration());
-        assertEquals(GraceType.NONE.getValue(), product.getGracePeriodType().getId());
-        assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
+        Assert.assertNotNull(product.getGracePeriodType());
+        Assert.assertNotNull(product.getGracePeriodDuration());
+       Assert.assertEquals(GraceType.NONE.getValue(), product.getGracePeriodType().getId());
+       Assert.assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
     }
 
     public void testUpdateFeeNotMatchingFrequencyOfLoanOffering() throws ProductDefinitionException, FeeException {
@@ -902,7 +904,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, gracePeriodType, interestTypes, (short) 0,
                     new Money("3000"), new Money("1000"), new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
                     (short) 2, false, true, false, null, fees, (short) 2, RecurrenceType.WEEKLY);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
@@ -928,8 +930,8 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, gracePeriodType, interestTypes, (short) 0, new Money(
                         "3000"), new Money("1000"), new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
                 (short) 2, false, true, false, funds, fees, (short) 2, RecurrenceType.WEEKLY);
-        assertEquals(2, product.getLoanOfferingFees().size());
-        assertEquals(1, product.getLoanOfferingFunds().size());
+       Assert.assertEquals(2, product.getLoanOfferingFees().size());
+       Assert.assertEquals(1, product.getLoanOfferingFunds().size());
     }
 
     public void testUpdateLoanOffering() throws ProductDefinitionException, FeeException {
@@ -952,28 +954,28 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
-        assertEquals("Loan Product", product.getPrdOfferingName());
-        assertEquals("LOAN", product.getPrdOfferingShortName());
-        assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
-        assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
-        assertEquals(startDate, product.getStartDate());
-        assertEquals(endDate, product.getEndDate());
-        assertEquals("Loan Product updated", product.getDescription());
-        assertEquals(GraceType.NONE, product.getGraceType());
-        assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
-        assertEquals(InterestType.FLAT, product.getInterestType());
-        assertEquals(2.0, product.getMinInterestRate(), DELTA);
-        assertEquals(12.0, product.getMaxInterestRate(), DELTA);
-        assertEquals(12.0, product.getDefInterestRate(), DELTA);
-        assertFalse(product.isIncludeInLoanCounter());
-        assertTrue(product.isIntDedDisbursement());
-        assertFalse(product.isPrinDueLastInst());
-        assertEquals(2, product.getLoanOfferingFees().size());
-        assertNotNull(product.getLoanOfferingMeeting());
-        assertEquals(RecurrenceType.MONTHLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+       Assert.assertEquals("Loan Product", product.getPrdOfferingName());
+       Assert.assertEquals("LOAN", product.getPrdOfferingShortName());
+       Assert.assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
+       Assert.assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
+       Assert.assertEquals(startDate, product.getStartDate());
+       Assert.assertEquals(endDate, product.getEndDate());
+       Assert.assertEquals("Loan Product updated", product.getDescription());
+       Assert.assertEquals(GraceType.NONE, product.getGraceType());
+       Assert.assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
+       Assert.assertEquals(InterestType.FLAT, product.getInterestType());
+       Assert.assertEquals(2.0, product.getMinInterestRate(), DELTA);
+       Assert.assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+       Assert.assertEquals(12.0, product.getDefInterestRate(), DELTA);
+        Assert.assertFalse(product.isIncludeInLoanCounter());
+       Assert.assertTrue(product.isIntDedDisbursement());
+        Assert.assertFalse(product.isPrinDueLastInst());
+       Assert.assertEquals(2, product.getLoanOfferingFees().size());
+        Assert.assertNotNull(product.getLoanOfferingMeeting());
+       Assert.assertEquals(RecurrenceType.MONTHLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
                 .getRecurrenceTypeEnum());
-        assertNotNull(product.getPrincipalGLcode());
-        assertNotNull(product.getInterestGLcode());
+        Assert.assertNotNull(product.getPrincipalGLcode());
+        Assert.assertNotNull(product.getInterestGLcode());
     }
 
     public void testLoanOfferingWithDecliningInterestDeductionAtDisbursement() {
@@ -986,9 +988,9 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false,
                     true, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
-            assertEquals("exceptions.declineinterestdisbursementdeduction", e.getKey());
+           Assert.assertEquals("exceptions.declineinterestdisbursementdeduction", e.getKey());
         }
     }
 
@@ -1001,7 +1003,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 productCategory, prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(
                         "1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
                 (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-        assertEquals(InterestType.DECLINING, loanOffering.getInterestType());
+       Assert.assertEquals(InterestType.DECLINING, loanOffering.getInterestType());
     }
 
     public void testLoanOfferingWithEqualPrincipalDecliningInterestDeductionAtDisbursement() {
@@ -1014,9 +1016,9 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money("1000"),
                     new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false,
                     true, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException e) {
-            assertEquals("exceptions.declineinterestdisbursementdeduction", e.getKey());
+           Assert.assertEquals("exceptions.declineinterestdisbursementdeduction", e.getKey());
         }
     }
 
@@ -1029,17 +1031,17 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 productCategory, prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(
                         "1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
                 (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity);
-        assertEquals(InterestType.DECLINING_EPI, loanOffering.getInterestType());
+       Assert.assertEquals(InterestType.DECLINING_EPI, loanOffering.getInterestType());
     }
 
     public void testPrdOfferingView() {
         PrdOfferingView prdOfferingView = new PrdOfferingView();
         prdOfferingView.setGlobalPrdOfferingNum("1234");
-        assertEquals("1234", prdOfferingView.getGlobalPrdOfferingNum());
+       Assert.assertEquals("1234", prdOfferingView.getGlobalPrdOfferingNum());
         prdOfferingView.setPrdOfferingId(Short.valueOf("1"));
-        assertEquals(Short.valueOf("1"), prdOfferingView.getPrdOfferingId());
+       Assert.assertEquals(Short.valueOf("1"), prdOfferingView.getPrdOfferingId());
         prdOfferingView.setPrdOfferingName("name");
-        assertEquals("name", prdOfferingView.getPrdOfferingName());
+       Assert.assertEquals("name", prdOfferingView.getPrdOfferingName());
     }
 
     private MeetingBO getMeeting() {
@@ -1095,41 +1097,41 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
-        assertEquals("Loan Offering", product.getPrdOfferingName());
-        assertEquals("LOAP", product.getPrdOfferingShortName());
-        assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
-        assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
-        assertEquals(startDate, product.getStartDate());
-        assertEquals(endDate, product.getEndDate());
-        assertEquals("1234", product.getDescription());
-        assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
-        assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
-        assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
+       Assert.assertEquals("Loan Offering", product.getPrdOfferingName());
+       Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
+       Assert.assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
+       Assert.assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
+       Assert.assertEquals(startDate, product.getStartDate());
+       Assert.assertEquals(endDate, product.getEndDate());
+       Assert.assertEquals("1234", product.getDescription());
+       Assert.assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
+       Assert.assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
+       Assert.assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
         for (Iterator<LoanAmountSameForAllLoanBO> itr = product.getLoanAmountSameForAllLoan().iterator(); itr.hasNext();) {
             LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-            assertEquals(new Double("3000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
-            assertEquals(new Double("1000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
-            assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("3000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("1000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
         }
         for (Iterator<NoOfInstallSameForAllLoanBO> itr = product.getNoOfInstallSameForAllLoan().iterator(); itr
                 .hasNext();) {
             NoOfInstallSameForAllLoanBO noofInstallSameForAllLoanBO = itr.next();
-            assertEquals(new Short("12"), noofInstallSameForAllLoanBO.getMaxNoOfInstall());
-            assertEquals(new Short("1"), noofInstallSameForAllLoanBO.getMinNoOfInstall());
-            assertEquals(new Short("2"), noofInstallSameForAllLoanBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Short("12"), noofInstallSameForAllLoanBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("1"), noofInstallSameForAllLoanBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("2"), noofInstallSameForAllLoanBO.getDefaultNoOfInstall());
         }
-        assertEquals(2.0, product.getMinInterestRate(), DELTA);
-        assertEquals(12.0, product.getMaxInterestRate(), DELTA);
-        assertEquals(3.0, product.getDefInterestRate(), DELTA);
-        assertFalse(product.isIncludeInLoanCounter());
-        assertFalse(product.isIntDedDisbursement());
-        assertFalse(product.isPrinDueLastInst());
-        assertEquals(2, product.getLoanOfferingFees().size());
-        assertNotNull(product.getLoanOfferingMeeting());
-        assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+       Assert.assertEquals(2.0, product.getMinInterestRate(), DELTA);
+       Assert.assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+       Assert.assertEquals(3.0, product.getDefInterestRate(), DELTA);
+        Assert.assertFalse(product.isIncludeInLoanCounter());
+        Assert.assertFalse(product.isIntDedDisbursement());
+        Assert.assertFalse(product.isPrinDueLastInst());
+       Assert.assertEquals(2, product.getLoanOfferingFees().size());
+        Assert.assertNotNull(product.getLoanOfferingMeeting());
+       Assert.assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
                 .getRecurrenceTypeEnum());
-        assertNotNull(product.getPrincipalGLcode());
-        assertNotNull(product.getInterestGLcode());
+        Assert.assertNotNull(product.getPrincipalGLcode());
+        Assert.assertNotNull(product.getInterestGLcode());
     }
 
     public void testCreateLoanOfferingByLastLoanAmount() throws ProductDefinitionException, FeeException {
@@ -1166,106 +1168,106 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
-        assertEquals("Loan Offering", product.getPrdOfferingName());
-        assertEquals("LOAP", product.getPrdOfferingShortName());
-        assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
-        assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
-        assertEquals(startDate, product.getStartDate());
-        assertEquals(endDate, product.getEndDate());
-        assertEquals("1234", product.getDescription());
-        assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
-        assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
-        assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
+       Assert.assertEquals("Loan Offering", product.getPrdOfferingName());
+       Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
+       Assert.assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
+       Assert.assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
+       Assert.assertEquals(startDate, product.getStartDate());
+       Assert.assertEquals(endDate, product.getEndDate());
+       Assert.assertEquals("1234", product.getDescription());
+       Assert.assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
+       Assert.assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
+       Assert.assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
         for (Iterator<LoanAmountFromLastLoanAmountBO> itr = product.getLoanAmountFromLastLoan().iterator(); itr
                 .hasNext();) {
             LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("0"), loanAmountFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("1000"), loanAmountFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
-            assertEquals(new Double("1000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
-            assertEquals(new Double("2000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("0"), loanAmountFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("1000"), loanAmountFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("1000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
             loanAmountFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("1001"), loanAmountFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("2000"), loanAmountFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
-            assertEquals(new Double("2000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
-            assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("1001"), loanAmountFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("2000"), loanAmountFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
             loanAmountFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("2001"), loanAmountFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
-            assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
-            assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("2001"), loanAmountFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("3000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
             loanAmountFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("3001"), loanAmountFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
-            assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
-            assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("3001"), loanAmountFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("4000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
             loanAmountFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("4001"), loanAmountFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Double("7000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
-            assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
-            assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("4001"), loanAmountFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Double("7000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
             loanAmountFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("5001"), loanAmountFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Double("8000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
-            assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
-            assertEquals(new Double("7000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("5001"), loanAmountFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Double("8000"), loanAmountFromLastLoanAmountBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("6000"), loanAmountFromLastLoanAmountBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("7000"), loanAmountFromLastLoanAmountBO.getDefaultLoanAmount());
         }
         for (Iterator<NoOfInstallFromLastLoanAmountBO> itr = product.getNoOfInstallFromLastLoan().iterator(); itr
                 .hasNext();) {
             NoOfInstallFromLastLoanAmountBO noOfInstallFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("0"), noOfInstallFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("1000"), noOfInstallFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Short("30"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
-            assertEquals(new Short("10"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
-            assertEquals(new Short("20"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Double("0"), noOfInstallFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("1000"), noOfInstallFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Short("30"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("10"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("20"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
             noOfInstallFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("1001"), noOfInstallFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("2000"), noOfInstallFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Short("40"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
-            assertEquals(new Short("20"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
-            assertEquals(new Short("30"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Double("1001"), noOfInstallFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("2000"), noOfInstallFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Short("40"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("20"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("30"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
             noOfInstallFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("2001"), noOfInstallFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("3000"), noOfInstallFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Short("50"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
-            assertEquals(new Short("30"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
-            assertEquals(new Short("40"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Double("2001"), noOfInstallFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("3000"), noOfInstallFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Short("50"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("30"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("40"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
             noOfInstallFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("3001"), noOfInstallFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("4000"), noOfInstallFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Short("60"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
-            assertEquals(new Short("40"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
-            assertEquals(new Short("50"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Double("3001"), noOfInstallFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("4000"), noOfInstallFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Short("60"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("40"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("50"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
             noOfInstallFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("4001"), noOfInstallFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("5000"), noOfInstallFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Short("70"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
-            assertEquals(new Short("50"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
-            assertEquals(new Short("60"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Double("4001"), noOfInstallFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("5000"), noOfInstallFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Short("70"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("50"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("60"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
             noOfInstallFromLastLoanAmountBO = itr.next();
-            assertEquals(new Double("5001"), noOfInstallFromLastLoanAmountBO.getStartRange());
-            assertEquals(new Double("6000"), noOfInstallFromLastLoanAmountBO.getEndRange());
-            assertEquals(new Short("80"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
-            assertEquals(new Short("60"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
-            assertEquals(new Short("70"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Double("5001"), noOfInstallFromLastLoanAmountBO.getStartRange());
+           Assert.assertEquals(new Double("6000"), noOfInstallFromLastLoanAmountBO.getEndRange());
+           Assert.assertEquals(new Short("80"), noOfInstallFromLastLoanAmountBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("60"), noOfInstallFromLastLoanAmountBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("70"), noOfInstallFromLastLoanAmountBO.getDefaultNoOfInstall());
         }
-        assertEquals(2.0, product.getMinInterestRate(), DELTA);
-        assertEquals(12.0, product.getMaxInterestRate(), DELTA);
-        assertEquals(3.0, product.getDefInterestRate(), DELTA);
-        assertFalse(product.isIncludeInLoanCounter());
-        assertFalse(product.isIntDedDisbursement());
-        assertFalse(product.isPrinDueLastInst());
-        assertEquals(2, product.getLoanOfferingFees().size());
-        assertNotNull(product.getLoanOfferingMeeting());
-        assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+       Assert.assertEquals(2.0, product.getMinInterestRate(), DELTA);
+       Assert.assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+       Assert.assertEquals(3.0, product.getDefInterestRate(), DELTA);
+        Assert.assertFalse(product.isIncludeInLoanCounter());
+        Assert.assertFalse(product.isIntDedDisbursement());
+        Assert.assertFalse(product.isPrinDueLastInst());
+       Assert.assertEquals(2, product.getLoanOfferingFees().size());
+        Assert.assertNotNull(product.getLoanOfferingMeeting());
+       Assert.assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
                 .getRecurrenceTypeEnum());
-        assertNotNull(product.getPrincipalGLcode());
-        assertNotNull(product.getInterestGLcode());
+        Assert.assertNotNull(product.getPrincipalGLcode());
+        Assert.assertNotNull(product.getInterestGLcode());
     }
 
     public void testCreateLoanOfferingFromLoanCycle() throws ProductDefinitionException, FeeException {
@@ -1296,81 +1298,81 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
-        assertEquals("Loan Offering", product.getPrdOfferingName());
-        assertEquals("LOAP", product.getPrdOfferingShortName());
-        assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
-        assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
-        assertEquals(startDate, product.getStartDate());
-        assertEquals(endDate, product.getEndDate());
-        assertEquals("1234", product.getDescription());
-        assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
-        assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
-        assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
+       Assert.assertEquals("Loan Offering", product.getPrdOfferingName());
+       Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
+       Assert.assertEquals(Short.valueOf("1"), product.getPrdCategory().getProductCategoryID());
+       Assert.assertEquals(ApplicableTo.CLIENTS, product.getPrdApplicableMasterEnum());
+       Assert.assertEquals(startDate, product.getStartDate());
+       Assert.assertEquals(endDate, product.getEndDate());
+       Assert.assertEquals("1234", product.getDescription());
+       Assert.assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
+       Assert.assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
+       Assert.assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
         for (Iterator<LoanAmountFromLoanCycleBO> itr = product.getLoanAmountFromLoanCycle().iterator(); itr.hasNext();) {
             LoanAmountFromLoanCycleBO loanAmountFromLoanCycleBO = itr.next();
-            assertEquals(new Double("3000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
-            assertEquals(new Double("1000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
-            assertEquals(new Double("2000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("3000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("1000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
             loanAmountFromLoanCycleBO = itr.next();
-            assertEquals(new Double("4000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
-            assertEquals(new Double("2000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
-            assertEquals(new Double("3000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("4000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("2000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("3000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
             loanAmountFromLoanCycleBO = itr.next();
-            assertEquals(new Double("5000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
-            assertEquals(new Double("3000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
-            assertEquals(new Double("4000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("3000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("4000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
             loanAmountFromLoanCycleBO = itr.next();
-            assertEquals(new Double("6000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
-            assertEquals(new Double("4000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
-            assertEquals(new Double("5000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("6000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("4000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
             loanAmountFromLoanCycleBO = itr.next();
-            assertEquals(new Double("7000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
-            assertEquals(new Double("5000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
-            assertEquals(new Double("6000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("7000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("5000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("6000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
             loanAmountFromLoanCycleBO = itr.next();
-            assertEquals(new Double("8000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
-            assertEquals(new Double("6000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
-            assertEquals(new Double("7000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
+           Assert.assertEquals(new Double("8000"), loanAmountFromLoanCycleBO.getMaxLoanAmount());
+           Assert.assertEquals(new Double("6000"), loanAmountFromLoanCycleBO.getMinLoanAmount());
+           Assert.assertEquals(new Double("7000"), loanAmountFromLoanCycleBO.getDefaultLoanAmount());
         }
         for (Iterator<NoOfInstallFromLoanCycleBO> itr = product.getNoOfInstallFromLoanCycle().iterator(); itr.hasNext();) {
             NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycleBO = itr.next();
-            assertEquals(new Short("30"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
-            assertEquals(new Short("10"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
-            assertEquals(new Short("20"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Short("30"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("10"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("20"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
             noOfInstallFromLoanCycleBO = itr.next();
-            assertEquals(new Short("40"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
-            assertEquals(new Short("20"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
-            assertEquals(new Short("30"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Short("40"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("20"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("30"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
             noOfInstallFromLoanCycleBO = itr.next();
-            assertEquals(new Short("50"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
-            assertEquals(new Short("30"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
-            assertEquals(new Short("40"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Short("50"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("30"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("40"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
             noOfInstallFromLoanCycleBO = itr.next();
-            assertEquals(new Short("60"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
-            assertEquals(new Short("40"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
-            assertEquals(new Short("50"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Short("60"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("40"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("50"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
             noOfInstallFromLoanCycleBO = itr.next();
-            assertEquals(new Short("70"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
-            assertEquals(new Short("50"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
-            assertEquals(new Short("60"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Short("70"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("50"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("60"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
             noOfInstallFromLoanCycleBO = itr.next();
-            assertEquals(new Short("80"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
-            assertEquals(new Short("60"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
-            assertEquals(new Short("70"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
+           Assert.assertEquals(new Short("80"), noOfInstallFromLoanCycleBO.getMaxNoOfInstall());
+           Assert.assertEquals(new Short("60"), noOfInstallFromLoanCycleBO.getMinNoOfInstall());
+           Assert.assertEquals(new Short("70"), noOfInstallFromLoanCycleBO.getDefaultNoOfInstall());
 
         }
-        assertEquals(2.0, product.getMinInterestRate(), DELTA);
-        assertEquals(12.0, product.getMaxInterestRate(), DELTA);
-        assertEquals(3.0, product.getDefInterestRate(), DELTA);
-        assertFalse(product.isIncludeInLoanCounter());
-        assertFalse(product.isIntDedDisbursement());
-        assertFalse(product.isPrinDueLastInst());
-        assertEquals(2, product.getLoanOfferingFees().size());
-        assertNotNull(product.getLoanOfferingMeeting());
-        assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+       Assert.assertEquals(2.0, product.getMinInterestRate(), DELTA);
+       Assert.assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+       Assert.assertEquals(3.0, product.getDefInterestRate(), DELTA);
+        Assert.assertFalse(product.isIncludeInLoanCounter());
+        Assert.assertFalse(product.isIntDedDisbursement());
+        Assert.assertFalse(product.isPrinDueLastInst());
+       Assert.assertEquals(2, product.getLoanOfferingFees().size());
+        Assert.assertNotNull(product.getLoanOfferingMeeting());
+       Assert.assertEquals(RecurrenceType.WEEKLY, product.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
                 .getRecurrenceTypeEnum());
-        assertNotNull(product.getPrincipalGLcode());
-        assertNotNull(product.getInterestGLcode());
+        Assert.assertNotNull(product.getPrincipalGLcode());
+        Assert.assertNotNull(product.getInterestGLcode());
     }
 
     private LoanPrdActionForm populateLoanPrdActionForm(String loanAmtCalcType, String calcInstallmentType,

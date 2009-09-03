@@ -28,6 +28,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -105,23 +107,23 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
         List<ProductCategoryBO> productCategories = (List<ProductCategoryBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST, request);
-        assertEquals("The size of master data for categories", 1, productCategories.size());
+       Assert.assertEquals("The size of master data for categories", 1, productCategories.size());
         for (ProductCategoryBO productCategory : productCategories) {
-            assertNotNull(productCategory.getProductType());
+            Assert.assertNotNull(productCategory.getProductType());
         }
-        assertEquals("The size of applicable list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSAPPLFORLIST, request)).size());
-        assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSTYPELIST, request)).size());
-        assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.RECAMNTUNITLIST, request)).size());
-        assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.INTCALCTYPESLIST, request)).size());
-        assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSRECURRENCETYPELIST, request)).size());
-        assertEquals("The size of applicable list", 6, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 6, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSDEPOSITGLCODELIST, request)).size());
-        assertEquals("The size of applicable list", 2, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 2, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSINTERESTGLCODELIST, request)).size());
     }
 
@@ -353,7 +355,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID));
         TestObjectFactory.removeObject((SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class,
                 (Short) request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID)));
     }
@@ -395,7 +397,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID));
         TestObjectFactory.removeObject((SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class,
                 (Short) request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID)));
     }
@@ -436,7 +438,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
 
-        assertNotNull(request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID));
+        Assert.assertNotNull(request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID));
         TestObjectFactory.removeObject((SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class,
                 (Short) request.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID)));
     }
@@ -513,11 +515,11 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.get_success.toString());
-        assertEquals(prdName, product.getPrdOfferingName());
-        assertEquals(prdShortName, product.getPrdOfferingShortName());
-        assertEquals(prdShortName, product.getPrdOfferingShortName());
-        assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
-        assertEquals(2, product.getSavingsType().getId().shortValue());
+       Assert.assertEquals(prdName, product.getPrdOfferingName());
+       Assert.assertEquals(prdShortName, product.getPrdOfferingShortName());
+       Assert.assertEquals(prdShortName, product.getPrdOfferingShortName());
+       Assert.assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
+       Assert.assertEquals(2, product.getSavingsType().getId().shortValue());
     }
 
     public void testManage() throws Exception {
@@ -532,25 +534,25 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.manage_success.toString());
         List<ProductCategoryBO> productCategories = (List<ProductCategoryBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST, request);
-        assertEquals("The size of master data for categories", 1, productCategories.size());
+       Assert.assertEquals("The size of master data for categories", 1, productCategories.size());
         for (ProductCategoryBO productCategory : productCategories) {
-            assertNotNull(productCategory.getProductType());
+            Assert.assertNotNull(productCategory.getProductType());
         }
-        assertEquals("The size of applicable list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSAPPLFORLIST, request)).size());
-        assertEquals("The size of savings type list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of savings type list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSTYPELIST, request)).size());
-        assertEquals("The size of reco amount unit list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of reco amount unit list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.RECAMNTUNITLIST, request)).size());
-        assertEquals("The size of interest calculation types list", 2, ((List<MasterDataEntity>) SessionUtils
+       Assert.assertEquals("The size of interest calculation types list", 2, ((List<MasterDataEntity>) SessionUtils
                 .getAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, request)).size());
-        assertEquals("The size of recurrence type list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of recurrence type list", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSRECURRENCETYPELIST, request)).size());
-        assertEquals("The size of applicable list", 6, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of applicable list", 6, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSDEPOSITGLCODELIST, request)).size());
-        assertEquals("The size of gl codes list", 2, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of gl codes list", 2, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSINTERESTGLCODELIST, request)).size());
-        assertEquals("The size of status list", 2, ((List<GLCodeEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of status list", 2, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.PRDCATEGORYSTATUSLIST, request)).size());
 
     }
@@ -562,19 +564,19 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "previewManage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("error size", 12, getErrorSize());
-        assertEquals("prdOfferingName", 1, getErrorSize("prdOfferingName"));
-        assertEquals("prdOfferingShortName", 1, getErrorSize("prdOfferingShortName"));
-        assertEquals("prdCategory", 1, getErrorSize("prdCategory"));
-        assertEquals("startDate", 1, getErrorSize("startDate"));
-        assertEquals("prdApplicableMaster", 1, getErrorSize("prdApplicableMaster"));
-        assertEquals("savingsType", 1, getErrorSize("savingsType"));
-        assertEquals("interestRate", 1, getErrorSize("interestRate"));
-        assertEquals("interestCalcType", 1, getErrorSize("interestCalcType"));
-        assertEquals("timeForInterestCacl", 1, getErrorSize("timeForInterestCacl"));
-        assertEquals("freqOfInterest", 1, getErrorSize("freqOfInterest"));
-        assertEquals("depositGLCode", 1, getErrorSize("depositGLCode"));
-        assertEquals("interest", 1, getErrorSize("interest"));
+       Assert.assertEquals("error size", 12, getErrorSize());
+       Assert.assertEquals("prdOfferingName", 1, getErrorSize("prdOfferingName"));
+       Assert.assertEquals("prdOfferingShortName", 1, getErrorSize("prdOfferingShortName"));
+       Assert.assertEquals("prdCategory", 1, getErrorSize("prdCategory"));
+       Assert.assertEquals("startDate", 1, getErrorSize("startDate"));
+       Assert.assertEquals("prdApplicableMaster", 1, getErrorSize("prdApplicableMaster"));
+       Assert.assertEquals("savingsType", 1, getErrorSize("savingsType"));
+       Assert.assertEquals("interestRate", 1, getErrorSize("interestRate"));
+       Assert.assertEquals("interestCalcType", 1, getErrorSize("interestCalcType"));
+       Assert.assertEquals("timeForInterestCacl", 1, getErrorSize("timeForInterestCacl"));
+       Assert.assertEquals("freqOfInterest", 1, getErrorSize("freqOfInterest"));
+       Assert.assertEquals("depositGLCode", 1, getErrorSize("depositGLCode"));
+       Assert.assertEquals("interest", 1, getErrorSize("interest"));
         verifyInputForward();
     }
 
@@ -599,7 +601,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("interestGLCode", "57");
 
         actionPerform();
-        assertEquals("recommendedAmntUnit", 1, getErrorSize("recommendedAmntUnit"));
+       Assert.assertEquals("recommendedAmntUnit", 1, getErrorSize("recommendedAmntUnit"));
         verifyInputForward();
     }
 
@@ -625,7 +627,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("interestGLCode", "57");
 
         actionPerform();
-        assertEquals("Manadatory amount", 1, getErrorSize("recommendedAmount"));
+       Assert.assertEquals("Manadatory amount", 1, getErrorSize("recommendedAmount"));
         verifyInputForward();
     }
 
@@ -655,7 +657,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("minAmntForInt", "10.0");
 
         actionPerform();
-        assertEquals("Manadatory amount is 0", 1, getErrorSize("recommendedAmount"));
+       Assert.assertEquals("Manadatory amount is 0", 1, getErrorSize("recommendedAmount"));
         verifyInputForward();
     }
 
@@ -682,7 +684,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recommendedAmount", "120.0");
 
         actionPerform();
-        assertEquals("interestRate >100", 1, getErrorSize("interestRate"));
+       Assert.assertEquals("interestRate >100", 1, getErrorSize("interestRate"));
         verifyInputForward();
     }
 
@@ -709,7 +711,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recommendedAmount", "120.0");
 
         actionPerform();
-        assertEquals("start date", 1, getErrorSize("startDate"));
+       Assert.assertEquals("start date", 1, getErrorSize("startDate"));
         verifyInputForward();
     }
 
@@ -737,7 +739,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recommendedAmount", "120.0");
 
         actionPerform();
-        assertEquals("endDate", 1, getErrorSize("endDate"));
+       Assert.assertEquals("endDate", 1, getErrorSize("endDate"));
         verifyInputForward();
     }
 
@@ -795,8 +797,8 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
             addRequestParameter("recommendedAmount", "120.0");
             actionPerform();
         } catch (PageExpiredException pe) {
-            assertTrue(true);
-            assertEquals(ExceptionConstants.PAGEEXPIREDEXCEPTION, pe.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(ExceptionConstants.PAGEEXPIREDEXCEPTION, pe.getKey());
         }
     }
 
@@ -830,7 +832,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.previewManage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         setRequestPathInfo("/savingsproductaction.do");
         addRequestParameter("method", "update");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -841,19 +843,19 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
         product = (SavingsOfferingBO) StaticHibernateUtil.getSessionTL().get(SavingsOfferingBO.class,
                 product.getPrdOfferingId());
-        assertEquals("Savings Offering", product.getPrdOfferingName());
-        assertEquals("SAVP", product.getPrdOfferingShortName());
-        assertEquals(2, product.getPrdCategory().getProductCategoryID().intValue());
-        assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
-        assertEquals(SavingsType.MANDATORY, product.getSavingsTypeAsEnum());
-        assertEquals(1, product.getInterestCalcType().getId().intValue());
-        assertEquals(1, product.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter().intValue());
-        assertEquals(2, product.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurrenceType()
+       Assert.assertEquals("Savings Offering", product.getPrdOfferingName());
+       Assert.assertEquals("SAVP", product.getPrdOfferingShortName());
+       Assert.assertEquals(2, product.getPrdCategory().getProductCategoryID().intValue());
+       Assert.assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
+       Assert.assertEquals(SavingsType.MANDATORY, product.getSavingsTypeAsEnum());
+       Assert.assertEquals(1, product.getInterestCalcType().getId().intValue());
+       Assert.assertEquals(1, product.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter().intValue());
+       Assert.assertEquals(2, product.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurrenceType()
                 .getRecurrenceId().shortValue());
-        assertEquals(1, product.getFreqOfPostIntcalc().getMeeting().getMeetingDetails().getRecurAfter().intValue());
-        assertEquals("Recommended Amount", new Money("120"), product.getRecommendedAmount());
-        assertEquals(9.0, product.getInterestRate(), DELTA);
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+       Assert.assertEquals(1, product.getFreqOfPostIntcalc().getMeeting().getMeetingDetails().getRecurAfter().intValue());
+       Assert.assertEquals("Recommended Amount", new Money("120"), product.getRecommendedAmount());
+       Assert.assertEquals(9.0, product.getInterestRate(), DELTA);
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testPreviousManage() throws Exception {
@@ -878,7 +880,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.search_success.toString());
         List<SavingsOfferingBO> savingsProducts = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSPRODUCTLIST, request);
-        assertEquals("The size of savings products", 1, savingsProducts.size());
+       Assert.assertEquals("The size of savings products", 1, savingsProducts.size());
 
     }
 
@@ -899,7 +901,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.previewManage_success.toString());
-        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         setRequestPathInfo("/savingsproductaction.do");
         addRequestParameter("method", "update");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -911,7 +913,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         product = (SavingsOfferingBO) StaticHibernateUtil.getSessionTL().get(SavingsOfferingBO.class,
                 product.getPrdOfferingId());
 
-        assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
+       Assert.assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
         setRequestPathInfo("/savingsproductaction.do");
         addRequestParameter("method", "search");
         actionPerform();
@@ -920,12 +922,12 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.search_success.toString());
         List<SavingsOfferingBO> savingsProducts = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.SAVINGSPRODUCTLIST, request);
-        assertEquals("The size of savings products", 1, savingsProducts.size());
+       Assert.assertEquals("The size of savings products", 1, savingsProducts.size());
 
         SavingsOfferingBO savingsProduct = (SavingsOfferingBO) StaticHibernateUtil.getSessionTL().get(
                 SavingsOfferingBO.class, savingsProducts.get(0).getPrdOfferingId());
 
-        assertEquals("Inactive", savingsProduct.getPrdStatus().getPrdState().getName());
+       Assert.assertEquals("Inactive", savingsProduct.getPrdStatus().getPrdState().getName());
 
         product = (SavingsOfferingBO) StaticHibernateUtil.getSessionTL().get(SavingsOfferingBO.class,
                 product.getPrdOfferingId());

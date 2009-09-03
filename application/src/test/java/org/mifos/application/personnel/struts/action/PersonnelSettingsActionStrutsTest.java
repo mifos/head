@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
@@ -136,10 +138,10 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("emailId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize("firstName"));
-        assertEquals(1, getErrorSize("lastName"));
-        assertEquals(1, getErrorSize("gender"));
-        assertEquals(1, getErrorSize(PersonnelConstants.ERROR_VALID_EMAIL));
+       Assert.assertEquals(1, getErrorSize("firstName"));
+       Assert.assertEquals(1, getErrorSize("lastName"));
+       Assert.assertEquals(1, getErrorSize("gender"));
+       Assert.assertEquals(1, getErrorSize(PersonnelConstants.ERROR_VALID_EMAIL));
         verifyInputForward();
     }
 
@@ -155,7 +157,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("emailId", personnel.getEmailId());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize("firstName"));
+       Assert.assertEquals(1, getErrorSize("firstName"));
         verifyInputForward();
     }
 
@@ -178,7 +180,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("emailId", personnel.getEmailId());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize("firstName"));
+       Assert.assertEquals(1, getErrorSize("firstName"));
         verifyInputForward();
     }
 
@@ -201,7 +203,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("emailId", personnel.getEmailId());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize("lastName"));
+       Assert.assertEquals(1, getErrorSize("lastName"));
         verifyInputForward();
     }
 
@@ -217,7 +219,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("emailId", personnel.getEmailId());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize("lastName"));
+       Assert.assertEquals(1, getErrorSize("lastName"));
         verifyInputForward();
     }
 
@@ -233,7 +235,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("emailId", personnel.getEmailId());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize("gender"));
+       Assert.assertEquals(1, getErrorSize("gender"));
         verifyInputForward();
     }
 
@@ -267,7 +269,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
 
-        assertEquals(1, getErrorSize("displayName"));
+       Assert.assertEquals(1, getErrorSize("displayName"));
         verifyInputForward();
     }
 
@@ -329,17 +331,17 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         performNoErrors();
         verifyForward(ActionForwards.updateSettings_success.toString());
 
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-        assertEquals("new first name", personnel.getPersonnelDetails().getName().getFirstName());
-        assertEquals("new middle name", personnel.getPersonnelDetails().getName().getMiddleName());
-        assertEquals("new second Last name", personnel.getPersonnelDetails().getName().getSecondLastName());
-        assertEquals("new last name", personnel.getPersonnelDetails().getName().getLastName());
-        assertEquals("XYZ@aditi.com", personnel.getEmailId());
-        assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
-        assertEquals(1, personnel.getPreferredLocale().getLocaleId().intValue());
-        assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
+       Assert.assertEquals("new first name", personnel.getPersonnelDetails().getName().getFirstName());
+       Assert.assertEquals("new middle name", personnel.getPersonnelDetails().getName().getMiddleName());
+       Assert.assertEquals("new second Last name", personnel.getPersonnelDetails().getName().getSecondLastName());
+       Assert.assertEquals("new last name", personnel.getPersonnelDetails().getName().getLastName());
+       Assert.assertEquals("XYZ@aditi.com", personnel.getEmailId());
+       Assert.assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
+       Assert.assertEquals(1, personnel.getPreferredLocale().getLocaleId().intValue());
+       Assert.assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
     }
 
     public void testLoadChangePassword() throws Exception {
@@ -351,7 +353,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testGet_batchJobNotRunning() throws Exception {
-        assertEquals(false, MifosTask.isBatchJobRunning());
+       Assert.assertEquals(false, MifosTask.isBatchJobRunning());
         createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
@@ -363,7 +365,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testGet_batchJobRunning() throws Exception {
         MifosTask.batchJobStarted();
-        assertEquals(true, MifosTask.isBatchJobRunning());
+       Assert.assertEquals(true, MifosTask.isBatchJobRunning());
         createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
@@ -374,9 +376,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private void verifyMasterData() throws Exception {
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
     }
 
     private PersonnelBO createPersonnel(OfficeBO office, PersonnelLevel personnelLevel) throws Exception {

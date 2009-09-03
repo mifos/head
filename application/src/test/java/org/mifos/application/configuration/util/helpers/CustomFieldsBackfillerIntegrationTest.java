@@ -20,10 +20,11 @@
 
 package org.mifos.application.configuration.util.helpers;
 
+import junit.framework.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.junit.Assert;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
@@ -80,7 +81,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
         YesNoFlag mandatory = YesNoFlag.YES;
         customField = new CustomFieldDefinitionEntity(CUSTOM_FIELD_LABEL, CustomerLevel.CLIENT.getValue(),
                 CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, FAVORITE_COLOR, mandatory);
-        assertNotNull(customField);
+        Assert.assertNotNull(customField);
         ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
         persistence.addCustomField(customField);
         Short englishLocale = new Short("1");
@@ -92,7 +93,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
         YesNoFlag mandatory = YesNoFlag.NO;
         customField = new CustomFieldDefinitionEntity(CUSTOM_FIELD_LABEL2, CustomerLevel.CLIENT.getValue(),
                 CustomFieldType.NUMERIC, EntityType.CLIENT, "", mandatory);
-        assertNotNull(customField);
+        Assert.assertNotNull(customField);
         ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
         persistence.addCustomField(customField);
         Short englishLocale = new Short("1");
@@ -105,7 +106,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
      */
     public void testExistingClientGetsNewField() throws Exception {
         createCustomField();
-        assertEquals(CUSTOM_FIELD_LABEL, customField.getLabel());
+       Assert.assertEquals(CUSTOM_FIELD_LABEL, customField.getLabel());
         CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
         // do the actual backfill
         cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT, CustomerLevel.CLIENT.getValue(), customField);
@@ -119,8 +120,8 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
         query.setInteger("fieldId", customField.getFieldId());
         query.setInteger("customerId", client.getCustomerId());
         ccfe = (CustomerCustomFieldEntity) query.list().get(0);
-        assertNotNull(ccfe);
-        assertEquals(FAVORITE_COLOR, ccfe.getFieldValue());
+        Assert.assertNotNull(ccfe);
+       Assert.assertEquals(FAVORITE_COLOR, ccfe.getFieldValue());
     }
 
     /**
@@ -129,7 +130,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
      */
     public void testExistingClientGetsNewNonmandatoryFieldWithoutDefault() throws Exception {
         createNonMandatoryCustomFieldWithoutDefault();
-        assertEquals(CUSTOM_FIELD_LABEL2, customField.getLabel());
+       Assert.assertEquals(CUSTOM_FIELD_LABEL2, customField.getLabel());
         CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
         // do the actual backfill
         cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT, CustomerLevel.CLIENT.getValue(), customField);
@@ -143,7 +144,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
         query.setInteger("fieldId", customField.getFieldId());
         query.setInteger("customerId", client.getCustomerId());
         ccfe = (CustomerCustomFieldEntity) query.list().get(0);
-        assertNotNull(ccfe);
+        Assert.assertNotNull(ccfe);
         Assert.assertTrue(StringUtils.isBlank(ccfe.getFieldValue()));
     }
 

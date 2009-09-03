@@ -23,6 +23,8 @@ package org.mifos.application.productdefinition.business.service;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -56,28 +58,28 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
     }
 
     public void testGetActiveSavingsProductCategories() throws ServiceException {
-        assertEquals(1, new SavingsPrdBusinessService().getActiveSavingsProductCategories().size());
+       Assert.assertEquals(1, new SavingsPrdBusinessService().getActiveSavingsProductCategories().size());
     }
 
     public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
-        assertEquals(2, new SavingsPrdBusinessService().getSavingsApplicableRecurrenceTypes().size());
+       Assert.assertEquals(2, new SavingsPrdBusinessService().getSavingsApplicableRecurrenceTypes().size());
     }
 
     public void testGetAllSavingsProducts() throws Exception {
         SavingsOfferingBO savingsOffering = createSavingsOfferingBO();
-        assertEquals(1, new SavingsPrdBusinessService().getAllSavingsProducts().size());
+       Assert.assertEquals(1, new SavingsPrdBusinessService().getAllSavingsProducts().size());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
     public void testGetApplicablePrdStatus() throws ServiceException {
         List<PrdStatusEntity> prdStatusList = new SavingsPrdBusinessService().getApplicablePrdStatus((short) 1);
         StaticHibernateUtil.closeSession();
-        assertEquals(2, prdStatusList.size());
+       Assert.assertEquals(2, prdStatusList.size());
         for (PrdStatusEntity prdStatus : prdStatusList) {
             if (prdStatus.getPrdState().equals("1"))
-                assertEquals("Active", prdStatus.getPrdState().getName());
+               Assert.assertEquals("Active", prdStatus.getPrdState().getName());
             if (prdStatus.getPrdState().equals("2"))
-                assertEquals("InActive", prdStatus.getPrdState().getName());
+               Assert.assertEquals("InActive", prdStatus.getPrdState().getName());
         }
     }
 
@@ -85,9 +87,9 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getApplicablePrdStatus((short) 1);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -96,9 +98,9 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getAllSavingsProducts();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
             StaticHibernateUtil.closeSession();
             TestObjectFactory.removeObject(savingsOffering);
         }
@@ -108,9 +110,9 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getSavingsApplicableRecurrenceTypes();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -118,24 +120,24 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getActiveSavingsProductCategories();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testRetrieveDormancyDays() throws Exception {
         Short dormancyDays = new SavingsPrdBusinessService().retrieveDormancyDays();
-        assertEquals(dormancyDays, Short.valueOf("30"));
+       Assert.assertEquals(dormancyDays, Short.valueOf("30"));
     }
 
     public void testRetrieveDormancyDaysForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
             new SavingsPrdBusinessService().getActiveSavingsProductCategories();
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 

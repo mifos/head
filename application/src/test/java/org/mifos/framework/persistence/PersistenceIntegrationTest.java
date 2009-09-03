@@ -20,6 +20,7 @@
 
 package org.mifos.framework.persistence;
 
+import junit.framework.Assert;
 import net.sourceforge.mayfly.Database;
 
 import org.hibernate.SessionFactory;
@@ -40,7 +41,7 @@ public class PersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testConnection() {
         LoanPersistence loanPersistance = new LoanPersistence();
-        assertNotNull(loanPersistance.getConnection());
+        Assert.assertNotNull(loanPersistance.getConnection());
         StaticHibernateUtil.closeSession();
     }
 
@@ -59,10 +60,10 @@ public class PersistenceIntegrationTest extends MifosIntegrationTestCase {
         firstSession.save(firstEntity);
 
         Session secondSession = factory.openSession(database.openConnection());
-        assertEquals("code1", firstEntity.getGlcode());
+       Assert.assertEquals("code1", firstEntity.getGlcode());
 
         GLCodeEntity refetched = (GLCodeEntity) secondSession.get(GLCodeEntity.class, firstEntity.getGlcodeId());
-        assertEquals("code1", refetched.getGlcode());
+       Assert.assertEquals("code1", refetched.getGlcode());
     }
 
 }

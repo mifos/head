@@ -20,6 +20,8 @@
 
 package org.mifos.application.reports.business.validator;
 
+import junit.framework.Assert;
+
 import org.mifos.application.reports.business.ReportParameterForm;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -41,7 +43,7 @@ public class ReportParameterValidatorFactoryIntegrationTest extends MifosIntegra
     public void testReturnsNullIfValidatorNotFound() throws Exception {
         ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
                 .getValidator("not-existing-reportname");
-        assertNull(validator);
+        Assert.assertNull(validator);
     }
 
     public void testReturnsCollectionSheetReportValidator() throws Exception {
@@ -75,7 +77,7 @@ public class ReportParameterValidatorFactoryIntegrationTest extends MifosIntegra
     private void retrieveAndAssertValidatorType(String reportFilename, Class validatorClass) {
         ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
                 .getValidator(reportFilename);
-        assertNotNull("Validator not found for " + reportFilename, validator);
-        assertEquals(validatorClass, validator.getClass());
+        Assert.assertNotNull("Validator not found for " + reportFilename, validator);
+       Assert.assertEquals(validatorClass, validator.getClass());
     }
 }

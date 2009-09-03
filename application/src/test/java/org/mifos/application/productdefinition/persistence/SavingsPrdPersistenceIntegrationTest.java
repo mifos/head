@@ -23,6 +23,8 @@ package org.mifos.application.productdefinition.persistence;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -85,41 +87,41 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         StaticHibernateUtil.closeSession();
         List<SavingsBO> savingsList = new SavingsPrdPersistence().retrieveSavingsAccountsForPrd(savingsOffering
                 .getPrdOfferingId());
-        assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
+       Assert.assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
         savings = new SavingsPersistence().findById(savings.getAccountId());
     }
 
     public void testGetTimePerForIntCalcAndFreqPost() throws PersistenceException, ProductDefinitionException {
         savingsOffering = createSavingsOfferingBO();
         savingsOffering = new SavingsPrdPersistence().getSavingsProduct(savingsOffering.getPrdOfferingId());
-        assertNotNull("The time period for Int calc should not be null", savingsOffering.getTimePerForInstcalc());
-        assertNotNull("The freq for Int post should not be null", savingsOffering.getFreqOfPostIntcalc());
+        Assert.assertNotNull("The time period for Int calc should not be null", savingsOffering.getTimePerForInstcalc());
+        Assert.assertNotNull("The freq for Int post should not be null", savingsOffering.getFreqOfPostIntcalc());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
     public void testDormancyDays() throws Exception {
-        assertEquals(Short.valueOf("30"), new SavingsPrdPersistence().retrieveDormancyDays());
+       Assert.assertEquals(Short.valueOf("30"), new SavingsPrdPersistence().retrieveDormancyDays());
     }
 
     public void testGetSavingsOfferingsNotMixed() throws Exception {
         savingsOffering = createSavingsOfferingBO();
-        assertEquals(1, new SavingsPrdPersistence().getSavingsOfferingsNotMixed(Short.valueOf("1")).size());
+       Assert.assertEquals(1, new SavingsPrdPersistence().getSavingsOfferingsNotMixed(Short.valueOf("1")).size());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
     public void testGetAllActiveSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
-        assertEquals(1, new SavingsPrdPersistence().getAllActiveSavingsProducts().size());
+       Assert.assertEquals(1, new SavingsPrdPersistence().getAllActiveSavingsProducts().size());
         TestObjectFactory.removeObject(savingsOffering);
     }
 
     public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
-        assertEquals(2, new SavingsPrdPersistence().getSavingsApplicableRecurrenceTypes().size());
+       Assert.assertEquals(2, new SavingsPrdPersistence().getSavingsApplicableRecurrenceTypes().size());
     }
 
     public void testGetAllSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
-        assertEquals(1, new SavingsPrdPersistence().getAllSavingsProducts().size());
+       Assert.assertEquals(1, new SavingsPrdPersistence().getAllSavingsProducts().size());
         TestObjectFactory.removeObject(savingsOffering);
     }
 

@@ -23,6 +23,8 @@ package org.mifos.config;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -79,15 +81,15 @@ public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
         localization.setConfigLocale(newConfigLocale);
         localization.refresh();
         // configMgr.setProperty(LocalizationCountryCode, countryCode);
-        assertEquals(countryCode, localization.getCountryCode());
-        assertEquals(languageCode, localization.getLanguageCode());
+       Assert.assertEquals(countryCode, localization.getCountryCode());
+       Assert.assertEquals(languageCode, localization.getLanguageCode());
         // clear the country code property from the config file
         localization.clearCountryCodeLanguageCodeFromConfigFile();
         // should throw exception
         try {
             localization.refresh();
         } catch (RuntimeException e) {
-            assertEquals(e.getMessage(), "The country code is not defined in the config file.");
+           Assert.assertEquals(e.getMessage(), "The country code is not defined in the config file.");
 
         }
         restoreConfigSetupToConfigFile(localization, savedConfigLocale);
@@ -109,8 +111,8 @@ public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
         localization.setConfigLocale(newConfigLocale);
         localization.refresh();
         if (Locale.getDefault().equals(Locale.UK)) {
-            assertEquals(languageName, localization.getLanguageName());
-            assertEquals(countryName, localization.getCountryName());
+           Assert.assertEquals(languageName, localization.getLanguageName());
+           Assert.assertEquals(countryName, localization.getCountryName());
         }
         restoreConfigSetup(localization, savedConfigLocale);
     }
@@ -134,7 +136,7 @@ public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
         newConfigLocale.setLanguageCode(languageCode);
         localization.setConfigLocale(newConfigLocale);
         ArrayList<Short> locales = localization.getSupportedLocaleIds();
-        assertTrue(findLocaleId(locales, localeId));
+       Assert.assertTrue(findLocaleId(locales, localeId));
         restoreConfigSetup(localization, savedConfigLocale);
 
     }

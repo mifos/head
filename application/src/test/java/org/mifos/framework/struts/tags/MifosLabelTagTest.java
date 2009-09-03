@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -37,7 +38,7 @@ public class MifosLabelTagTest extends TestCase {
                 "if(document.getElementById(\"" + "Client.GovernmentId" + "\")!=null){").append(
                 "document.getElementById(\"" + "Client.GovernmentId" + "\")").append(".style.display=\"none\";}")
                 .append("</script>");
-        assertEquals(label.toString(), xmlBuilder.toString());
+       Assert.assertEquals(label.toString(), xmlBuilder.toString());
         assertWellFormedFragment(xmlBuilder.toString());
     }
 
@@ -50,7 +51,7 @@ public class MifosLabelTagTest extends TestCase {
         label.append("<script language=\"javascript\">").append(
                 "if(document.getElementById(\"" + "test" + "\")!=null){").append(
                 "document.getElementById(\"" + "test" + "\")").append(".style.display=\"none\";}").append("</script>");
-        assertEquals(label.toString(), xmlBuilder.toString());
+       Assert.assertEquals(label.toString(), xmlBuilder.toString());
         assertWellFormedFragment(xmlBuilder.toString());
     }
 }

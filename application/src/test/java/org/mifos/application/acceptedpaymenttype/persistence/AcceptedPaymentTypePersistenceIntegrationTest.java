@@ -23,6 +23,8 @@ package org.mifos.application.acceptedpaymenttype.persistence;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.application.acceptedpaymenttype.persistence.helper.TransactionAcceptedPaymentTypes;
@@ -122,9 +124,9 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 
     private void verify(List<AcceptedPaymentType> savedAcceptedPaymentTypes,
             List<AcceptedPaymentType> acceptedPaymentTypes) {
-        assertTrue(savedAcceptedPaymentTypes.size() == acceptedPaymentTypes.size());
+       Assert.assertTrue(savedAcceptedPaymentTypes.size() == acceptedPaymentTypes.size());
         for (AcceptedPaymentType acceptedPaymentType : savedAcceptedPaymentTypes) {
-            assertTrue(FindAcceptedPaymentType(acceptedPaymentType, acceptedPaymentTypes));
+           Assert.assertTrue(FindAcceptedPaymentType(acceptedPaymentType, acceptedPaymentTypes));
         }
     }
 
@@ -213,9 +215,9 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     }
 
     private void compare(List<PaymentTypeEntity> entityList, List<AcceptedPaymentType> acceptedPaymentTypeList) {
-        assertTrue(entityList.size() == acceptedPaymentTypeList.size());
+       Assert.assertTrue(entityList.size() == acceptedPaymentTypeList.size());
         for (AcceptedPaymentType acceptedPaymentType : acceptedPaymentTypeList)
-            assertTrue(FindEntity(entityList, acceptedPaymentType.getPaymentTypeEntity()));
+           Assert.assertTrue(FindEntity(entityList, acceptedPaymentType.getPaymentTypeEntity()));
 
     }
 

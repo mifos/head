@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.util.helpers.RoleTempleteBuilder;
@@ -42,7 +44,7 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
     public void testLocaleId() {
         RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();
         roleTempleteBuilder.setLocaleId(Short.valueOf("1"));
-        assertEquals(Short.valueOf("1"), roleTempleteBuilder.getLocaleId());
+       Assert.assertEquals(Short.valueOf("1"), roleTempleteBuilder.getLocaleId());
     }
 
     public void testSetCurrentActivites() {
@@ -51,27 +53,27 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase
         RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();
         roleTempleteBuilder.setCurrentActivites(activities);
         activities = roleTempleteBuilder.getCurrentActivites();
-        assertEquals(1, activities.size());
+       Assert.assertEquals(1, activities.size());
     }
 
     public void testGetRolesTemplete() throws Exception {
         List<ActivityEntity> activities = new RolesPermissionsBusinessService().getActivities();
         StringBuilder stringBuilder = new RoleTempleteBuilder().getRolesTemplete(activities);
-        assertNotNull(stringBuilder);
-        assertTrue(stringBuilder.toString().contains("Can create new role"));
-        assertTrue(stringBuilder.toString().contains("Can modify a role"));
-        assertTrue(stringBuilder.toString().contains("Can delete a role"));
+        Assert.assertNotNull(stringBuilder);
+       Assert.assertTrue(stringBuilder.toString().contains("Can create new role"));
+       Assert.assertTrue(stringBuilder.toString().contains("Can modify a role"));
+       Assert.assertTrue(stringBuilder.toString().contains("Can delete a role"));
     }
 
     public void testActivityChangeEvent() {
         ActivityChangeEvent activityChangeEvent = new ActivityChangeEvent("event", "stringObject");
-        assertEquals("value of event", "event", activityChangeEvent.getEventType());
-        assertEquals("value of object", "stringObject", activityChangeEvent.getObject());
+       Assert.assertEquals("value of event", "event", activityChangeEvent.getEventType());
+       Assert.assertEquals("value of object", "stringObject", activityChangeEvent.getObject());
     }
 
     public void testRoleChangeEvent() {
         RoleChangeEvent roleChangeEvent = new RoleChangeEvent("event", "stringObject");
-        assertEquals("value of event", "event", roleChangeEvent.getEventType());
-        assertEquals("value of object", "stringObject", roleChangeEvent.getObject());
+       Assert.assertEquals("value of event", "event", roleChangeEvent.getEventType());
+       Assert.assertEquals("value of object", "stringObject", roleChangeEvent.getObject());
     }
 }

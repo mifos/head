@@ -20,6 +20,7 @@
 
 package org.mifos.framework.components.tabletag;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.exceptions.TableTagException;
@@ -31,9 +32,9 @@ public class TableTagExceptionTest extends TestCase {
         try {
             UserContext userContext = new UserContext();
             Text.getImage(this, "name", userContext.getPreferredLocale());
-            fail();
+            Assert.fail();
         } catch (TableTagException tte) {
-            assertEquals("exception.framework.TableTagException", tte.getKey());
+           Assert.assertEquals("exception.framework.TableTagException", tte.getKey());
         }
     }
 }

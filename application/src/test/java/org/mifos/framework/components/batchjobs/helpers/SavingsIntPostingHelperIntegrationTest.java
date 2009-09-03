@@ -29,6 +29,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MO
 import java.util.Calendar;
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -138,33 +140,33 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
         savings3 = persistence.findById(savings3.getAccountId());
         savings4 = persistence.findById(savings4.getAccountId());
 
-        assertEquals(0.0, savings1.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(750.0, savings1.getSavingsBalance().getAmountDoubleValue(), DELTA);
-        assertEquals(1, savings1.getAccountPayments().size());
+       Assert.assertEquals(0.0, savings1.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(750.0, savings1.getSavingsBalance().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(1, savings1.getAccountPayments().size());
         AccountPaymentEntity payment1 = savings1.getAccountPayments().iterator().next();
-        assertEquals(500.0, payment1.getAmount().getAmountDoubleValue(), DELTA);
-        assertEquals(helper.getDate("30/04/2006"), savings1.getNextIntPostDate());
+       Assert.assertEquals(500.0, payment1.getAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(helper.getDate("30/04/2006"), savings1.getNextIntPostDate());
 
-        assertEquals(1, savings1.getSavingsActivityDetails().size());
+       Assert.assertEquals(1, savings1.getSavingsActivityDetails().size());
         for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails())
-            assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
+           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
                     .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 
-        assertEquals(1050.4, savings4.getSavingsBalance().getAmountDoubleValue(), DELTA);
-        assertEquals(0.0, savings4.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(1, savings4.getAccountPayments().size());
+       Assert.assertEquals(1050.4, savings4.getSavingsBalance().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, savings4.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(1, savings4.getAccountPayments().size());
 
         AccountPaymentEntity payment4 = savings4.getAccountPayments().iterator().next();
-        assertEquals(800.4, payment4.getAmount().getAmountDoubleValue(), DELTA);
-        assertEquals(helper.getDate("30/04/2006"), savings4.getNextIntPostDate());
+       Assert.assertEquals(800.4, payment4.getAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(helper.getDate("30/04/2006"), savings4.getNextIntPostDate());
 
-        assertEquals(1, savings1.getSavingsActivityDetails().size());
+       Assert.assertEquals(1, savings1.getSavingsActivityDetails().size());
         for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails())
-            assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
+           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
                     .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 
-        assertEquals(0, savings2.getAccountPayments().size());
-        assertEquals(0, savings3.getAccountPayments().size());
+       Assert.assertEquals(0, savings2.getAccountPayments().size());
+       Assert.assertEquals(0, savings3.getAccountPayments().size());
     }
 
     private void createInitialObjects() throws Exception {

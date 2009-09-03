@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -75,9 +77,9 @@ public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordLoanOfficerId", "0");
         performNoErrors();
         Map constantMap = (Map) context.getAttribute("MasterConstants");
-        assertNotNull(constantMap);
-        assertEquals("PaymentType", constantMap.get("PAYMENT_TYPE"));
-        assertEquals(Short.valueOf("1"), constantMap.get("CUSTOMFIELD_NUMBER"));
+        Assert.assertNotNull(constantMap);
+       Assert.assertEquals("PaymentType", constantMap.get("PAYMENT_TYPE"));
+       Assert.assertEquals(Short.valueOf("1"), constantMap.get("CUSTOMFIELD_NUMBER"));
     }
 
     public void testIfAllConstantFilesAreLoaded() {
@@ -86,11 +88,11 @@ public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordOfficeId", "0");
         addRequestParameter("recordLoanOfficerId", "0");
         performNoErrors();
-        assertNotNull(context.getAttribute("Constants"));
-        assertNotNull(context.getAttribute("MasterConstants"));
-        assertNotNull(context.getAttribute("CustomerConstants"));
-        assertNotNull(context.getAttribute("AccountStates"));
-        assertNotNull(context.getAttribute("SavingsConstants"));
+        Assert.assertNotNull(context.getAttribute("Constants"));
+        Assert.assertNotNull(context.getAttribute("MasterConstants"));
+        Assert.assertNotNull(context.getAttribute("CustomerConstants"));
+        Assert.assertNotNull(context.getAttribute("AccountStates"));
+        Assert.assertNotNull(context.getAttribute("SavingsConstants"));
     }
 
     public void testConstantsPluginException() throws Exception {
@@ -107,7 +109,7 @@ public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
 
         try {
             constPlugin.buildClasses(constPluginClasses);
-            fail();
+            Assert.fail();
         } catch (ConstantsNotLoadedException expected) {
         }
     }

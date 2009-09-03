@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -50,7 +52,7 @@ public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         auditLog.save();
         AuditBusinessService auditBusinessService = new AuditBusinessService();
         List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short) 2, 1);
-        assertEquals(1, auditLogViewList.size());
+       Assert.assertEquals(1, auditLogViewList.size());
         auditLog = getAuditLog(1, (short) 2);
         TestObjectFactory.cleanUp(auditLog);
     }
@@ -64,10 +66,10 @@ public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         auditLog.save();
         AuditBusinessService auditBusinessService = new AuditBusinessService();
         List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short) 2, 1);
-        assertEquals(1, auditLogViewList.size());
+       Assert.assertEquals(1, auditLogViewList.size());
         AuditLogView auditLogView = auditLogViewList.get(0);
-        assertEquals(AuditConstants.HIDDEN_PASSWORD, auditLogView.getOldValue());
-        assertEquals(AuditConstants.HIDDEN_PASSWORD, auditLogView.getNewValue());
+       Assert.assertEquals(AuditConstants.HIDDEN_PASSWORD, auditLogView.getOldValue());
+       Assert.assertEquals(AuditConstants.HIDDEN_PASSWORD, auditLogView.getNewValue());
         auditLog = getAuditLog(1, (short) 2);
         TestObjectFactory.cleanUp(auditLog);
     }

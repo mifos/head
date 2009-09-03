@@ -23,6 +23,7 @@ package org.mifos.application.ppi.business;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.surveys.business.SurveyResponse;
@@ -35,15 +36,15 @@ public class PpiSurveyInstanceTest extends TestCase {
     public void testComputeScore() {
         PPISurveyInstance instance = new PPISurveyInstance();
         instance.setSurveyResponses(createSurveyResponses());
-        assertEquals(instance.computeScore(), 12);
+       Assert.assertEquals(instance.computeScore(), 12);
     }
 
     public void testLikelihoodsAfterInitialize() throws Exception {
         PPISurveyInstance instance = createPPISurveyInstance();
-        assertEquals(20.0, instance.getBottomHalfBelowPovertyLinePercent(), DELTA);
-        assertEquals(55.0, instance.getTopHalfBelowPovertyLinePercent(), DELTA);
-        assertEquals(25.0, instance.getAbovePovertyLinePercent(), DELTA);
-        assertEquals(75.0, instance.getBelowPovertyLine(), DELTA);
+       Assert.assertEquals(20.0, instance.getBottomHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(55.0, instance.getTopHalfBelowPovertyLinePercent(), DELTA);
+       Assert.assertEquals(25.0, instance.getAbovePovertyLinePercent(), DELTA);
+       Assert.assertEquals(75.0, instance.getBelowPovertyLine(), DELTA);
     }
 
     private Set<SurveyResponse> createSurveyResponses() {

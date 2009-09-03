@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -55,18 +57,18 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
 
     public void testGetDefaultCurrency() throws Exception {
         MifosCurrency defaultCurrency = configurationPersistence.getDefaultCurrency();
-        assertEquals("Indian Rupee", defaultCurrency.getCurrencyName());
+       Assert.assertEquals("Indian Rupee", defaultCurrency.getCurrencyName());
     }
 
     public void testNoDefaultCurrency() throws Exception {
         try {
             configurationPersistence.defaultCurrencyFromList(Collections.EMPTY_LIST);
-            fail();
+            Assert.fail();
         } catch (FrameworkRuntimeException e) {
-            assertEquals("No Default Currency Specified", e.getMessage());
+           Assert.assertEquals("No Default Currency Specified", e.getMessage());
             e.setValues(null);
-            assertNull(e.getValues());
-            assertEquals(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, e.getKey());
+            Assert.assertNull(e.getValues());
+           Assert.assertEquals(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, e.getKey());
         }
     }
 
@@ -79,9 +81,9 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
                     (short) 0, "ERO"));
 
             configurationPersistence.defaultCurrencyFromList(currencies);
-            fail();
+            Assert.fail();
         } catch (FrameworkRuntimeException e) {
-            assertEquals("Both Franc and Euro are marked as default currencies", e.getMessage());
+           Assert.assertEquals("Both Franc and Euro are marked as default currencies", e.getMessage());
         }
     }
 
@@ -89,17 +91,17 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
         MifosCurrency currency = (MifosCurrency) configurationPersistence.getPersistentObject(MifosCurrency.class,
                 Short.valueOf("2"));
-        assertNotNull(currency);
-        assertEquals("Indian Rupee", currency.getCurrencyName());
+        Assert.assertNotNull(currency);
+       Assert.assertEquals("Indian Rupee", currency.getCurrencyName());
     }
 
     public void testCheckIndividualMonitoringKeyExists() throws Exception {
-        assertNotNull(new ConfigurationPersistence()
+        Assert.assertNotNull(new ConfigurationPersistence()
                 .getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED));
     }
 
     public void testIfGroupLoanWithIndividualMonitoringIsEnabled() throws Exception {
-        assertFalse(new ConfigurationPersistence().isGlimEnabled());
+        Assert.assertFalse(new ConfigurationPersistence().isGlimEnabled());
     }
 
 }

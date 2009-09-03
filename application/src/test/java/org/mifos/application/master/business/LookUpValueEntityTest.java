@@ -22,6 +22,7 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.hibernate.classic.Session;
@@ -35,12 +36,12 @@ public class LookUpValueEntityTest extends TestCase {
         TestDatabase database = TestDatabase.makeStandard();
         Session reader = database.openSession();
         LookUpValueEntity readEntity = (LookUpValueEntity) reader.get(LookUpValueEntity.class, 404);
-        assertEquals(" ", readEntity.getLookUpName());
-        assertEquals(87, (int) readEntity.getLookUpEntity().getEntityId());
+       Assert.assertEquals(" ", readEntity.getLookUpName());
+       Assert.assertEquals(87, (int) readEntity.getLookUpEntity().getEntityId());
 
         Set<LookUpValueLocaleEntity> locales = readEntity.getLookUpValueLocales();
-        assertEquals(1, locales.size());
-        assertEquals("Can make payments to Client accounts", locales.iterator().next().getLookUpValue());
+       Assert.assertEquals(1, locales.size());
+       Assert.assertEquals("Can make payments to Client accounts", locales.iterator().next().getLookUpValue());
 
         reader.close();
     }
@@ -62,8 +63,8 @@ public class LookUpValueEntityTest extends TestCase {
 
         Session reader = database.openSession();
         LookUpValueEntity readEntity = (LookUpValueEntity) reader.get(LookUpValueEntity.class, writtenId);
-        assertEquals("my entity", readEntity.getLookUpName());
-        assertEquals(87, (int) readEntity.getLookUpEntity().getEntityId());
+       Assert.assertEquals("my entity", readEntity.getLookUpName());
+       Assert.assertEquals(87, (int) readEntity.getLookUpEntity().getEntityId());
     }
 
 }

@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -135,8 +137,8 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
 
         CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
                 "centerCustActionForm");
@@ -147,7 +149,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
                 .ukLocale());
         Date curDate = localFormat.parse(currentDate);
         Date retrievedDate = retrievedFormat.parse(actionForm.getMfiJoiningDate());
-        assertEquals(curDate, retrievedDate);
+       Assert.assertEquals(curDate, retrievedDate);
     }
 
     public void testFailurePreviewWithAllValuesNull() throws Exception {
@@ -156,9 +158,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Center Name", 1, getErrorSize(CustomerConstants.NAME));
-        assertEquals("Loan Officer", 1, getErrorSize(CustomerConstants.LOAN_OFFICER));
-        assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
+       Assert.assertEquals("Center Name", 1, getErrorSize(CustomerConstants.NAME));
+       Assert.assertEquals("Loan Officer", 1, getErrorSize(CustomerConstants.LOAN_OFFICER));
+       Assert.assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
         verifyInputForward();
     }
 
@@ -169,9 +171,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("displayName", "center");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Center Name", 0, getErrorSize(CustomerConstants.NAME));
-        assertEquals("Loan Officer", 1, getErrorSize(CustomerConstants.LOAN_OFFICER));
-        assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
+       Assert.assertEquals("Center Name", 0, getErrorSize(CustomerConstants.NAME));
+       Assert.assertEquals("Loan Officer", 1, getErrorSize(CustomerConstants.LOAN_OFFICER));
+       Assert.assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
         verifyInputForward();
     }
 
@@ -183,9 +185,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanOfficerId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Center Name", 0, getErrorSize(CustomerConstants.NAME));
-        assertEquals("Loan Officer", 0, getErrorSize(CustomerConstants.LOAN_OFFICER));
-        assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
+       Assert.assertEquals("Center Name", 0, getErrorSize(CustomerConstants.NAME));
+       Assert.assertEquals("Loan Officer", 0, getErrorSize(CustomerConstants.LOAN_OFFICER));
+       Assert.assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
         verifyInputForward();
     }
 
@@ -202,7 +204,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanOfficerId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
+       Assert.assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
         verifyInputForward();
     }
 
@@ -236,9 +238,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
 
         if (isCustomFieldMandatory)
-            assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+           Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
         else
-            assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+           Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
     }
 
     public void testFailurePreview_WithDuplicateFee() throws Exception {
@@ -259,7 +261,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[1].amount", "150");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
+       Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
         removeFees(feesToRemove);
     }
 
@@ -279,7 +281,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[0].amount", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
+       Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
         removeFees(feesToRemove);
     }
 
@@ -298,7 +300,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
         addRequestParameter("selectedFee[0].amount", "200");
         actionPerform();
-        assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+       Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
         removeFees(feesToRemove);
     }
 
@@ -331,7 +333,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[0].amount", fee.getAmount());
         actionPerform();
 
-        assertEquals(0, getErrorSize());
+       Assert.assertEquals(0, getErrorSize());
 
         verifyForward(ActionForwards.preview_success.toString());
         verifyNoActionErrors();
@@ -361,7 +363,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
                 .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
         List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
-        assertEquals(1, feeList.size());
+       Assert.assertEquals(1, feeList.size());
         FeeView fee = feeList.get(0);
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -400,14 +402,14 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.manage_success.toString());
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.CLIENT_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(CustomerConstants.POSITIONS, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CLIENT_LIST, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.POSITIONS, request));
 
         CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
                 "centerCustActionForm");
-        assertEquals(center.getPersonnel().getPersonnelId(), actionForm.getLoanOfficerIdValue());
+       Assert.assertEquals(center.getPersonnel().getPersonnelId(), actionForm.getLoanOfficerIdValue());
     }
 
     public void testFailureEditPreviewWithLoanOfficerNull() throws Exception {
@@ -423,7 +425,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("loanOfficerId", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals("Loan Officer", 1, getErrorSize(CustomerConstants.LOAN_OFFICER));
+       Assert.assertEquals("Loan Officer", 1, getErrorSize(CustomerConstants.LOAN_OFFICER));
         verifyInputForward();
     }
 
@@ -457,9 +459,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         if (isCustomFieldMandatory)
-            assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+           Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
         else
-            assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+           Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
         verifyInputForward();
     }
 
@@ -489,7 +491,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        assertEquals(0, getErrorSize());
+       Assert.assertEquals(0, getErrorSize());
 
         verifyForward(ActionForwards.editpreview_success.toString());
         verifyNoActionErrors();
@@ -542,7 +544,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         }
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        assertEquals(0, getErrorSize());
+       Assert.assertEquals(0, getErrorSize());
 
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "update");
@@ -552,8 +554,8 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        assertEquals(positions.size(), center.getCustomerPositions().size());
-        assertEquals("12", center.getExternalId());
+       Assert.assertEquals(positions.size(), center.getCustomerPositions().size());
+       Assert.assertEquals("12", center.getExternalId());
 
     }
 
@@ -588,12 +590,12 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.get_success.toString());
         CustomerBO centerBO = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        assertNotNull(center);
-        assertEquals(center.getCustomerId(), centerBO.getCustomerId());
+        Assert.assertNotNull(center);
+       Assert.assertEquals(center.getCustomerId(), centerBO.getCustomerId());
         List children = (List) SessionUtils.getAttribute(CenterConstants.GROUP_LIST, request);
-        assertNotNull(children);
-        assertEquals(1, children.size());
-        assertEquals("Size of the active accounts should be 1", 1, ((List<SavingsBO>) SessionUtils.getAttribute(
+        Assert.assertNotNull(children);
+       Assert.assertEquals(1, children.size());
+       Assert.assertEquals("Size of the active accounts should be 1", 1, ((List<SavingsBO>) SessionUtils.getAttribute(
                 ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, request)).size());
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -610,7 +612,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
         FlowManager fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         String flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, getMeeting(), request);
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -632,7 +634,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[0].amount", fee.getAmount());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         verifyForward(ActionForwards.preview_success.toString());
         setRequestPathInfo("/centerCustAction.do");
@@ -646,7 +648,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
                 "centerCustActionForm");
         center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
-        assertEquals(false, fm.isFlowValid(flowKey));
+       Assert.assertEquals(false, fm.isFlowValid(flowKey));
     }
 
     public void testFlowFailure() throws Exception {
@@ -658,7 +660,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         FlowManager fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         String flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, getMeeting(), request);
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -680,7 +682,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[0].amount", fee.getAmount());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(true, fm.isFlowValid(flowKey));
+       Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
         verifyForward(ActionForwards.preview_success.toString());
         setRequestPathInfo("/centerCustAction.do");
@@ -694,7 +696,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
                 "centerCustActionForm");
         center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
-        assertEquals(false, fm.isFlowValid(flowKey));
+       Assert.assertEquals(false, fm.isFlowValid(flowKey));
 
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "create");
@@ -723,9 +725,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(ActionForwards.search_success.toString());
         QueryResult queryResult = (QueryResult) SessionUtils.getAttribute(Constants.SEARCH_RESULTS, request);
-        assertNotNull(queryResult);
-        assertEquals(1, queryResult.getSize());
-        assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertNotNull(queryResult);
+       Assert.assertEquals(1, queryResult.getSize());
+       Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
     private void addActionAndMethod(String method) {

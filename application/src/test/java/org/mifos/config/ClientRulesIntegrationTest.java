@@ -20,6 +20,8 @@
 
 package org.mifos.config;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
@@ -46,11 +48,11 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
         configPersistence.updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, Constants.NO);
         ClientRules.refresh();
         // set db value to false, too
-        assertFalse(ClientRules.getGroupCanApplyLoans());
+        Assert.assertFalse(ClientRules.getGroupCanApplyLoans());
         // now the return value from accounting rules class has to be what is in
         // the database (0)
         ClientRules.refresh();
-        assertFalse(ClientRules.getGroupCanApplyLoans());
+        Assert.assertFalse(ClientRules.getGroupCanApplyLoans());
         // set the saved value back for following tests
         configPersistence
                 .updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, savedDBValue.getValue());
@@ -69,11 +71,11 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
         configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, Constants.NO);
         ClientRules.refresh();
         // set db value to false, too
-        assertFalse(ClientRules.getClientCanExistOutsideGroup());
+        Assert.assertFalse(ClientRules.getClientCanExistOutsideGroup());
         // now the return value from accounting rules class has to be what is in
         // the database (0)
         ClientRules.refresh();
-        assertFalse(ClientRules.getClientCanExistOutsideGroup());
+        Assert.assertFalse(ClientRules.getClientCanExistOutsideGroup());
         // set the saved value back for following tests
         configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, savedDBValue
                 .getValue());
@@ -90,7 +92,7 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
      */
     @Test
     public void testValidNameSequence() {
-        assertTrue(ClientRules.isValidNameSequence(ClientRules.getNameSequence()));
+       Assert.assertTrue(ClientRules.isValidNameSequence(ClientRules.getNameSequence()));
     }
 
     /**
@@ -103,8 +105,8 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testInvalidNameSequence() {
         String[] invalidSequence = { "" };
-        assertFalse(ClientRules.isValidNameSequence(invalidSequence));
+        Assert.assertFalse(ClientRules.isValidNameSequence(invalidSequence));
         String[] invalidSequence2 = { "invalid", "", "name", "sequence" };
-        assertFalse(ClientRules.isValidNameSequence(invalidSequence2));
+        Assert.assertFalse(ClientRules.isValidNameSequence(invalidSequence2));
     }
 }

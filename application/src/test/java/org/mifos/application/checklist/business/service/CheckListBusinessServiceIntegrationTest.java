@@ -22,6 +22,8 @@ package org.mifos.application.checklist.business.service;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
@@ -59,19 +61,19 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
     public void testGetCheckListMasterData() throws Exception {
         List<CheckListMasterView> checkListMasterDataView = new CheckListBusinessService()
                 .getCheckListMasterData(TestObjectFactory.getContext());
-        assertNotNull(checkListMasterDataView);
-        assertEquals(checkListMasterDataView.size(), 5);
+        Assert.assertNotNull(checkListMasterDataView);
+       Assert.assertEquals(checkListMasterDataView.size(), 5);
         for (CheckListMasterView view : checkListMasterDataView) {
             if (view.getMasterTypeId().equals(CustomerLevel.CENTER))
-                assertEquals(true, view.getIsCustomer());
+               Assert.assertEquals(true, view.getIsCustomer());
             if (view.getMasterTypeId().equals(CustomerLevel.GROUP))
-                assertEquals(true, view.getIsCustomer());
+               Assert.assertEquals(true, view.getIsCustomer());
             if (view.getMasterTypeId().equals(CustomerLevel.CLIENT))
-                assertEquals(true, view.getIsCustomer());
+               Assert.assertEquals(true, view.getIsCustomer());
             if (view.getMasterTypeId().equals(ProductType.LOAN))
-                assertEquals(false, view.getIsCustomer());
+               Assert.assertEquals(false, view.getIsCustomer());
             if (view.getMasterTypeId().equals(ProductType.SAVINGS))
-                assertEquals(false, view.getIsCustomer());
+               Assert.assertEquals(false, view.getIsCustomer());
         }
     }
 
@@ -79,9 +81,9 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.simulateInvalidConnection();
         try {
             new CheckListBusinessService().getCheckListMasterData(TestObjectFactory.getContext());
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -91,8 +93,8 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
         List<AccountCheckListBO> checkLists = new CheckListBusinessService().retreiveAllAccountCheckLists();
-        assertNotNull(checkLists);
-        assertEquals(1, checkLists.size());
+        Assert.assertNotNull(checkLists);
+       Assert.assertEquals(1, checkLists.size());
         TestObjectFactory.cleanUp(checkList);
         TestObjectFactory.cleanUp(checkList1);
     }
@@ -101,9 +103,9 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.simulateInvalidConnection();
         try {
             new CheckListBusinessService().retreiveAllAccountCheckLists();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -113,8 +115,8 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
         List<CustomerCheckListBO> checkLists = new CheckListBusinessService().retreiveAllCustomerCheckLists();
-        assertNotNull(checkLists);
-        assertEquals(1, checkLists.size());
+        Assert.assertNotNull(checkLists);
+       Assert.assertEquals(1, checkLists.size());
         TestObjectFactory.cleanUp(checkList);
         TestObjectFactory.cleanUp(checkList1);
     }
@@ -123,9 +125,9 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.simulateInvalidConnection();
         try {
             new CheckListBusinessService().retreiveAllCustomerCheckLists();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -134,7 +136,7 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
         new CheckListBusinessService().isValidCheckListState(((CustomerCheckListBO) checkList).getCustomerLevel()
                 .getId(), ((CustomerCheckListBO) checkList).getCustomerStatus().getId(), false);
-        assertTrue(true);
+       Assert.assertTrue(true);
         TestObjectFactory.cleanUp(checkList);
     }
 
@@ -144,9 +146,9 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         try {
             new CheckListBusinessService().isValidCheckListState(((CustomerCheckListBO) checkList).getCustomerLevel()
                     .getId(), ((CustomerCheckListBO) checkList).getCustomerStatus().getId(), true);
-            fail();
+            Assert.fail();
         } catch (ServiceException se) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         TestObjectFactory.cleanUp(checkList);
     }
@@ -155,9 +157,9 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.simulateInvalidConnection();
         try {
             new CheckListBusinessService().isValidCheckListState(Short.valueOf("1"), Short.valueOf("1"), true);
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -166,10 +168,10 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
         StaticHibernateUtil.closeSession();
         checkList = new CheckListBusinessService().getCheckList(checkList.getChecklistId());
-        assertNotNull(checkList);
-        assertEquals("productchecklist", checkList.getChecklistName());
-        assertEquals(CheckListConstants.STATUS_ACTIVE, checkList.getChecklistStatus());
-        assertEquals(1, checkList.getChecklistDetails().size());
+        Assert.assertNotNull(checkList);
+       Assert.assertEquals("productchecklist", checkList.getChecklistName());
+       Assert.assertEquals(CheckListConstants.STATUS_ACTIVE, checkList.getChecklistStatus());
+       Assert.assertEquals(1, checkList.getChecklistDetails().size());
         TestObjectFactory.cleanUp(checkList);
     }
 
@@ -180,9 +182,9 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.simulateInvalidConnection();
         try {
             checkList = new CheckListBusinessService().getCheckList(checkList.getChecklistId());
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
         StaticHibernateUtil.closeSession();
         TestObjectFactory.cleanUp(checkList);
@@ -191,11 +193,11 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
     public void testGetCustomerStates() throws Exception {
         List<CheckListStatesView> statesView = new CheckListBusinessService().getCustomerStates(Short.valueOf("3"),
                 Short.valueOf("1"));
-        assertNotNull(statesView);
-        assertEquals(2, statesView.size());
+        Assert.assertNotNull(statesView);
+       Assert.assertEquals(2, statesView.size());
         for (CheckListStatesView state : statesView) {
             if (state.getStateId().equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
-                assertEquals(state.getStateName(), "Active");
+               Assert.assertEquals(state.getStateName(), "Active");
             }
         }
     }
@@ -204,21 +206,21 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.simulateInvalidConnection();
         try {
             new CheckListBusinessService().getCustomerStates(Short.valueOf("1"), Short.valueOf("1"));
-            assertTrue(false);
-            fail();
+           Assert.assertTrue(false);
+            Assert.fail();
         } catch (Exception e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
     public void testGetAccountStates() throws Exception {
         List<CheckListStatesView> accountStates = new CheckListBusinessService().getAccountStates(Short.valueOf("2"),
                 Short.valueOf("1"));
-        assertNotNull(accountStates);
-        assertEquals(4, accountStates.size());
+        Assert.assertNotNull(accountStates);
+       Assert.assertEquals(4, accountStates.size());
         for (CheckListStatesView state : accountStates) {
             if (state.getStateId().equals("2")) {
-                assertEquals(state.getStateName(), "Active");
+               Assert.assertEquals(state.getStateName(), "Active");
             }
         }
     }
@@ -227,10 +229,10 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.simulateInvalidConnection();
         try {
             new CheckListBusinessService().getAccountStates(Short.valueOf("1"), Short.valueOf("1"));
-            assertTrue(false);
-            fail();
+           Assert.assertTrue(false);
+            Assert.fail();
         } catch (Exception e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 

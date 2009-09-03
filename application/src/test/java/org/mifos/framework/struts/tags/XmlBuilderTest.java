@@ -20,6 +20,7 @@
 
 package org.mifos.framework.struts.tags;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
@@ -37,50 +38,50 @@ public class XmlBuilderTest extends TestCase {
     public void testBasics() {
         out.startTag("html");
         out.endTag("html");
-        assertEquals("<html></html>", out.getOutput());
+       Assert.assertEquals("<html></html>", out.getOutput());
     }
 
     public void testText() {
         out.startTag("html");
         out.text("don't\"<&>");
         out.endTag("html");
-        assertEquals("<html>don't\"&lt;&amp;&gt;</html>", out.getOutput());
+       Assert.assertEquals("<html>don't\"&lt;&amp;&gt;</html>", out.getOutput());
     }
 
     public void testAttribute() {
         out.startTag("html", "characters", "<&>\"don't");
         out.endTag("html");
-        assertEquals("<html characters=\"&lt;&amp;&gt;&quot;don't\"></html>", out.getOutput());
+       Assert.assertEquals("<html characters=\"&lt;&amp;&gt;&quot;don't\"></html>", out.getOutput());
     }
 
     public void testMultipleAttributes() {
         out.startTag("form", new String[] { "action", "launch", "method", "nuke" });
         out.endTag("form");
-        assertEquals("<form action=\"launch\" method=\"nuke\"></form>", out.getOutput());
+       Assert.assertEquals("<form action=\"launch\" method=\"nuke\"></form>", out.getOutput());
     }
 
     public void testMultipleAttributesSingleTag() {
         out.singleTag("img", new String[] { "src", "foo.png", "alt", "Wombat Porn" });
-        assertEquals("<img src=\"foo.png\" alt=\"Wombat Porn\" />", out.getOutput());
+       Assert.assertEquals("<img src=\"foo.png\" alt=\"Wombat Porn\" />", out.getOutput());
     }
 
     public void testSingleTag() {
         out.singleTag("br");
-        assertEquals("<br />", out.getOutput());
+       Assert.assertEquals("<br />", out.getOutput());
     }
 
     public void testSingleTagWithAttribute() {
         out.singleTag("input", "name", "phoneNumber");
-        assertEquals("<input name=\"phoneNumber\" />", out.getOutput());
+       Assert.assertEquals("<input name=\"phoneNumber\" />", out.getOutput());
     }
 
     public void testUnclosed() {
         out.startTag("html");
         try {
             out.getOutput();
-            fail();
+            Assert.fail();
         } catch (XmlBuilderException e) {
-            assertEquals("unclosed element html", e.getMessage());
+           Assert.assertEquals("unclosed element html", e.getMessage());
         }
     }
 
@@ -88,9 +89,9 @@ public class XmlBuilderTest extends TestCase {
         out.startTag("p");
         try {
             out.endTag("body");
-            fail();
+            Assert.fail();
         } catch (XmlBuilderException e) {
-            assertEquals("end tag body does not match start tag p", e.getMessage());
+           Assert.assertEquals("end tag body does not match start tag p", e.getMessage());
         }
     }
 
@@ -104,7 +105,7 @@ public class XmlBuilderTest extends TestCase {
         out.singleTag("x:y-z_w.7e\u0300");
         out.endTag("_bar");
         out.endTag(":foo");
-        assertEquals("<:foo><_bar><x:y-z_w.7e\u0300 /></_bar></:foo>", out.getOutput());
+       Assert.assertEquals("<:foo><_bar><x:y-z_w.7e\u0300 /></_bar></:foo>", out.getOutput());
     }
 
     public void testBadCharacterInName() throws Exception {
@@ -127,18 +128,18 @@ public class XmlBuilderTest extends TestCase {
     private void checkBadCharacter(String expectedMessage, String tag) {
         try {
             out.startTag(tag);
-            fail();
+            Assert.fail();
         } catch (XmlBuilderException e) {
-            assertEquals(expectedMessage, e.getMessage());
+           Assert.assertEquals(expectedMessage, e.getMessage());
         }
     }
 
     public void testBadCharacterInSingleTag() throws Exception {
         try {
             out.singleTag("<html/>");
-            fail();
+            Assert.fail();
         } catch (XmlBuilderException e) {
-            assertEquals("Bad character < in start tag <html/>", e.getMessage());
+           Assert.assertEquals("Bad character < in start tag <html/>", e.getMessage());
         }
     }
 
@@ -154,14 +155,14 @@ public class XmlBuilderTest extends TestCase {
         out.endTag("body");
         out.endTag("html");
 
-        assertEquals("<html xmlns=\"default/namespace\">" + "<body xmlns:x=\"some/other/namespace\">"
+       Assert.assertEquals("<html xmlns=\"default/namespace\">" + "<body xmlns:x=\"some/other/namespace\">"
                 + "<x:image x:width=\"5\" />" + "</body>" + "</html>", out.getOutput());
     }
 
     public void testNewline() throws Exception {
         out.singleTag("html");
         out.newline();
-        assertEquals("<html />\n", out.getOutput());
+       Assert.assertEquals("<html />\n", out.getOutput());
     }
 
     public void testIndent() throws Exception {
@@ -172,7 +173,7 @@ public class XmlBuilderTest extends TestCase {
         out.newline();
         out.endTag("html");
         out.newline();
-        assertEquals("<html>\n" + "    <br />\n" + "</html>\n", out.getOutput());
+       Assert.assertEquals("<html>\n" + "    <br />\n" + "</html>\n", out.getOutput());
     }
 
     public void testFragment() throws Exception {
@@ -185,7 +186,7 @@ public class XmlBuilderTest extends TestCase {
         out.startTag("p");
         out.text("a paragraph");
         out.endTag("p");
-        assertEquals("Hi<p>a paragraph</p>", out.getOutput());
+       Assert.assertEquals("Hi<p>a paragraph</p>", out.getOutput());
     }
 
     public void testCompose() throws Exception {
@@ -200,22 +201,22 @@ public class XmlBuilderTest extends TestCase {
 
         out.text("intro");
         out.append(paragraph);
-        assertEquals("intro<p>Hello, world</p>", out.getOutput());
+       Assert.assertEquals("intro<p>Hello, world</p>", out.getOutput());
     }
 
     public void testComment() throws Exception {
         out.comment("text");
-        assertEquals("<!--text-->", out.getOutput());
+       Assert.assertEquals("<!--text-->", out.getOutput());
     }
 
     public void testCommentWithHyphens() throws Exception {
         out.comment("--");
-        assertEquals("<!--__-->", out.getOutput());
+       Assert.assertEquals("<!--__-->", out.getOutput());
     }
 
     public void testCommentWithHyphensEnds() throws Exception {
         out.comment("- foo -");
-        assertEquals("<!--_ foo _-->", out.getOutput());
+       Assert.assertEquals("<!--_ foo _-->", out.getOutput());
     }
 
 }

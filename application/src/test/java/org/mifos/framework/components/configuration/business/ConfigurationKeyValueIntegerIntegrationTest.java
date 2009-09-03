@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.configuration.business;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -45,9 +47,9 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
         TestObjectFactory.flushandCloseSession();
 
         ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(TEST_KEY);
-        assertEquals(keyValue.getKey(), TEST_KEY);
-        assertEquals(keyValue.getValue(), TEST_VALUE);
-        assertEquals(TEST_VALUE, configurationPersistence.getConfigurationValueInteger(TEST_KEY));
+       Assert.assertEquals(keyValue.getKey(), TEST_KEY);
+       Assert.assertEquals(keyValue.getValue(), TEST_VALUE);
+       Assert.assertEquals(TEST_VALUE, configurationPersistence.getConfigurationValueInteger(TEST_KEY));
 
         configurationPersistence.delete(keyValue);
         StaticHibernateUtil.commitTransaction();
@@ -55,12 +57,12 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
 
     public void testUnusedConfigurationKeyValueInteger() throws Exception {
         ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(UNUSED_KEY);
-        assertNull(keyValue);
+        Assert.assertNull(keyValue);
         try {
             configurationPersistence.getConfigurationValueInteger(UNUSED_KEY);
-            fail("Expected runtime exeption for key lookup failure");
+            Assert.fail("Expected runtime exeption for key lookup failure");
         } catch (RuntimeException e) {
-            assertTrue(e.getMessage().contains("parameter not found for key"));
+           Assert.assertTrue(e.getMessage().contains("parameter not found for key"));
         }
     }
 
@@ -71,9 +73,9 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
 
         try {
             configurationPersistence.addConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE_2);
-            fail("Expected PersistenceException for violating uniqueness constraint on the key.");
+            Assert.fail("Expected PersistenceException for violating uniqueness constraint on the key.");
         } catch (PersistenceException e) {
-            assertTrue(e.getMessage().contains("could not insert"));
+           Assert.assertTrue(e.getMessage().contains("could not insert"));
             StaticHibernateUtil.rollbackTransaction();
             StaticHibernateUtil.closeSession();
         }
@@ -86,9 +88,9 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
     public void testIllegalArgument() throws Exception {
         try {
             new ConfigurationKeyValueInteger(null, 0);
-            fail("A null key is not allowed for ConfiguruationKeyValueInteger");
+            Assert.fail("A null key is not allowed for ConfiguruationKeyValueInteger");
         } catch (IllegalArgumentException e) {
-            assertTrue(e.getMessage().contains("null"));
+           Assert.assertTrue(e.getMessage().contains("null"));
         }
     }
 
@@ -102,8 +104,8 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
         TestObjectFactory.flushandCloseSession();
 
         ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(TEST_KEY);
-        assertEquals(keyValue.getKey(), TEST_KEY);
-        assertEquals(keyValue.getValue(), TEST_VALUE_2);
+       Assert.assertEquals(keyValue.getKey(), TEST_KEY);
+       Assert.assertEquals(keyValue.getValue(), TEST_VALUE_2);
 
         configurationPersistence.deleteConfigurationKeyValueInteger(TEST_KEY);
         StaticHibernateUtil.commitTransaction();

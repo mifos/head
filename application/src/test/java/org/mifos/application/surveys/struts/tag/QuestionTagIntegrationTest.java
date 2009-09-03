@@ -20,6 +20,8 @@
 
 package org.mifos.application.surveys.struts.tag;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.helpers.AnswerType;
@@ -77,7 +79,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
         String markup = tag.getQuestionMarkup(result);
         String expectedMarkup = "<textarea class=\"surveyform freetext fontnormal8pt\" "
                 + "cols=\"70\" rows=\"10\" name=\"value(response_1)\">freetext answer</textarea>";
-        assertEquals(expectedMarkup, markup);
+       Assert.assertEquals(expectedMarkup, markup);
     }
 
     public void testNumber() throws Exception {
@@ -91,7 +93,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
                 + "name=\"value(response_" + question.getQuestionId() + ")\" value=\"42\" />";
         String markup = tag.getQuestionMarkup(result);
 
-        assertEquals(expectedMarkup, markup);
+       Assert.assertEquals(expectedMarkup, markup);
 
     }
 
@@ -111,7 +113,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
                 + " name=\"value(response_" + question.getQuestionId() + "_YY)\"" + " value=\"2000\" /> YYYY ";
         String markup = tag.getQuestionMarkup(result);
 
-        assertEquals(expectedMarkup, markup);
+       Assert.assertEquals(expectedMarkup, markup);
     }
 
 }

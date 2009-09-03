@@ -24,6 +24,7 @@ import static junitx.framework.StringAssert.assertContains;
 import static org.mifos.application.ui.DispatchTestUtil.dispatch;
 import static org.mifos.application.ui.DispatchTestUtil.dispatchPost;
 import static org.mifos.application.ui.DispatchTestUtil.getSuccessfulDocument;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -36,8 +37,8 @@ public class DispatcherTest extends TestCase {
 
     public void testMainPageNoTrailingSlash() throws Exception {
         HttpServletResponseSimulator response = dispatch(null);
-        assertEquals(303, response.getStatusCode());
-        assertEquals("https://test-server:123/context/developer/", response.getHeader("Location"));
+       Assert.assertEquals(303, response.getStatusCode());
+       Assert.assertEquals("https://test-server:123/context/developer/", response.getHeader("Location"));
     }
 
     public void testMainPageWithTrailingSlash() throws Exception {
@@ -55,7 +56,7 @@ public class DispatcherTest extends TestCase {
 
     public void testPostNotFound() throws Exception {
         HttpServletResponseSimulator response = dispatchPost("/foo/bar");
-        assertEquals(404, response.getStatusCode());
+       Assert.assertEquals(404, response.getStatusCode());
     }
 
 }

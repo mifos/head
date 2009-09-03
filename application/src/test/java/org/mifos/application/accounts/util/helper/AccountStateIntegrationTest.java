@@ -25,6 +25,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -56,13 +58,13 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
     public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
         List<AccountStateEntity> accountStateEntityList = accountPersistence
                 .retrieveAllAccountStateList(ProductType.SAVINGS.getValue());
-        assertNotNull(accountStateEntityList);
-        assertEquals(6, accountStateEntityList.size());
+        Assert.assertNotNull(accountStateEntityList);
+       Assert.assertEquals(6, accountStateEntityList.size());
 
         List<AccountStateEntity> accountStateEntityList2 = accountPersistence
                 .retrieveAllAccountStateList(ProductType.LOAN.getValue());
-        assertNotNull(accountStateEntityList2);
-        assertEquals(12, accountStateEntityList2.size());
+        Assert.assertNotNull(accountStateEntityList2);
+       Assert.assertEquals(12, accountStateEntityList2.size());
 
         accountStateEntityList.addAll(accountStateEntityList2);
 
@@ -73,14 +75,14 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
             }
         });
 
-        assertEquals(AccountState.values().length, accountStateEntityList.size());
+       Assert.assertEquals(AccountState.values().length, accountStateEntityList.size());
 
         Iterator<AccountStateEntity> stateListIterator = accountStateEntityList.iterator();
         for (AccountState state : AccountState.values()) {
             AccountStateEntity stateInDatabase = stateListIterator.next();
-            assertEquals(state.getValue(), stateInDatabase.getId());
-            assertEquals(state.getPropertiesKey(), stateInDatabase.getLookUpValue().getLookUpName());
-            assertEquals(MessageLookup.getInstance().lookup(state), MessageLookup.getInstance().lookup(stateInDatabase));
+           Assert.assertEquals(state.getValue(), stateInDatabase.getId());
+           Assert.assertEquals(state.getPropertiesKey(), stateInDatabase.getLookUpValue().getLookUpName());
+           Assert.assertEquals(MessageLookup.getInstance().lookup(state), MessageLookup.getInstance().lookup(stateInDatabase));
         }
 
     }

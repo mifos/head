@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.sql.ResultSet;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.MayflyException;
@@ -44,13 +45,13 @@ public class MayflyMiscTest extends TestCase {
     public void testMayflySanityCheck() throws Exception {
         Database database = new Database(DatabaseSetup.getStandardStore());
         ResultSet results = database.query("select * from coahierarchy");
-        assertFalse(results.next());
+        Assert.assertFalse(results.next());
     }
 
     public void xtestStartupTime() throws Exception {
         long start = System.currentTimeMillis();
         DataStore store = DatabaseSetup.getStandardStore();
-        assertEquals(4, store.table("currency").rowCount());
+       Assert.assertEquals(4, store.table("currency").rowCount());
         long end = System.currentTimeMillis();
         System.out.println("total = " + (end - start) / 1000.0 + " s");
     }
@@ -82,7 +83,7 @@ public class MayflyMiscTest extends TestCase {
         }
 
         String dump2 = new SqlDumper().dump(database2.dataStore());
-        assertEquals(dump, dump2);
+       Assert.assertEquals(dump, dump2);
     }
 
 }

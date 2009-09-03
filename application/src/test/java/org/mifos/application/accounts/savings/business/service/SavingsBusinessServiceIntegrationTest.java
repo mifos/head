@@ -23,6 +23,8 @@ package org.mifos.application.accounts.savings.business.service;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -91,10 +93,10 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "a1lt", currentDate);
         List<PrdOfferingView> products = service.getSavingProducts(null, group.getCustomerLevel(), CustomerLevel.GROUP
                 .getValue());
-        assertEquals(Integer.valueOf("2").intValue(), products.size());
-        assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),
+       Assert.assertEquals(Integer.valueOf("2").intValue(), products.size());
+       Assert.assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),
                 "SavingPrd1");
-        assertEquals("Offerng name for the second product do not match.", products.get(1).getPrdOfferingName(),
+       Assert.assertEquals("Offerng name for the second product do not match.", products.get(1).getPrdOfferingName(),
                 "SavingPrd2");
     }
 
@@ -106,9 +108,9 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.getSavingProducts(null, group.getCustomerLevel(), CustomerLevel.GROUP.getValue());
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -116,17 +118,17 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     public void testRetrieveCustomFieldsDefinition() throws Exception {
         List<CustomFieldDefinitionEntity> customFields = service.retrieveCustomFieldsDefinition();
-        assertNotNull(customFields);
-        assertEquals(TestConstants.SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
+        Assert.assertNotNull(customFields);
+       Assert.assertEquals(TestConstants.SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.retrieveCustomFieldsDefinition();
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -139,7 +141,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate);
         savings = createSavingsAccount("FFFF", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
         SavingsBO savings1 = service.findById(savings.getAccountId());
-        assertNotNull(savings1);
+        Assert.assertNotNull(savings1);
     }
 
     public void testFindByIdForInvalidConnection() throws Exception {
@@ -150,9 +152,9 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.findById(savings.getAccountId());
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -166,7 +168,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         savings = createSavingsAccount("YYYY", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
         SavingsBO savings1 = service.findBySystemId(savings.getGlobalAccountNum());
 
-        assertEquals(savings.getAccountId(), savings1.getAccountId());
+       Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
     }
 
     public void testFindBySystemIdForInvalidConnection() throws Exception {
@@ -177,9 +179,9 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.findBySystemId("YYYY");
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -197,7 +199,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         savings = TestObjectFactory.createSavingsAccount("432434", center, AccountState.SAVINGS_CLOSED.getValue(),
                 startDate, savingsOffering);
         List<SavingsBO> savingsAccounts = service.getAllClosedAccounts(center.getCustomerId());
-        assertEquals(1, savingsAccounts.size());
+       Assert.assertEquals(1, savingsAccounts.size());
     }
 
     public void testGetAllClosedAccountsForInvalidConnection() throws Exception {
@@ -214,9 +216,9 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.simulateInvalidConnection();
         try {
             service.getAllClosedAccounts(center.getCustomerId());
-            fail();
+            Assert.fail();
         } catch (ServiceException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -229,8 +231,8 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         savings = createSavingsAccount("FFFF", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 
         List<SavingsBO> savingsAccounts = service.getAllSavingsAccount();
-        assertNotNull(savingsAccounts);
-        assertEquals(1, savingsAccounts.size());
+        Assert.assertNotNull(savingsAccounts);
+       Assert.assertEquals(1, savingsAccounts.size());
     }
 
     private void createInitialObjects() {

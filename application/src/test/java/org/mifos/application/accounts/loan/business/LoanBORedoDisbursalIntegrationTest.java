@@ -31,6 +31,8 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -254,14 +256,14 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     protected LoanBO redoLoanWithMondayMeetingAndVerify(UserContext userContext, int numberOfDaysInPast,
             List<FeeView> feeViews) throws Exception {
         LoanBO loan = redoLoanWithMondayMeeting(userContext, createPreviousDate(numberOfDaysInPast), feeViews);
-        assertEquals(new Money("300.0"), loan.getLoanAmount());
+       Assert.assertEquals(new Money("300.0"), loan.getLoanAmount());
         return loan;
     }
 
     protected LoanBO redoLoanWithMeetingTodayAndVerify(UserContext userContext, int numberOfDaysInPast,
             List<FeeView> feeViews) throws Exception {
         LoanBO loan = redoLoanWithMeetingToday(userContext, createPreviousDate(numberOfDaysInPast), feeViews);
-        assertEquals(new Money("300.0"), loan.getLoanAmount());
+       Assert.assertEquals(new Money("300.0"), loan.getLoanAmount());
         return loan;
     }
 
@@ -284,14 +286,14 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     protected LoanBO redoLoanAndVerify(UserContext userContext, Date disbursementDate, List<FeeView> feeViews)
             throws Exception {
         LoanBO loan = redoLoanWithMondayMeeting(userContext, disbursementDate, new ArrayList<FeeView>());
-        assertEquals(new Money("300.0"), loan.getLoanAmount());
+       Assert.assertEquals(new Money("300.0"), loan.getLoanAmount());
         return loan;
     }
 
     private void disburseLoanAndVerify(UserContext userContext, LoanBO loan, int numberofDaysInPast) throws Exception {
         Date disbursementDate = createPreviousDate(numberofDaysInPast);
         disburseLoan(userContext, loan, disbursementDate);
-        assertEquals(disbursementDate.getTime(), loan.getDisbursementDate().getTime());
+       Assert.assertEquals(disbursementDate.getTime(), loan.getDisbursementDate().getTime());
 
         // Validate disbursement information
         Iterator<AccountPaymentEntity> payments = loan.getAccountPayments().iterator();
@@ -304,9 +306,9 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
                 break;
             }
         } while (trxns.hasNext());
-        assertEquals(AccountActionTypes.DISBURSAL, trxn.getAccountAction());
-        assertEquals(loan.getLoanAmount(), trxn.getAmount());
-        assertEquals(disbursementDate.getTime(), trxn.getActionDate().getTime());
+       Assert.assertEquals(AccountActionTypes.DISBURSAL, trxn.getAccountAction());
+       Assert.assertEquals(loan.getLoanAmount(), trxn.getAmount());
+       Assert.assertEquals(disbursementDate.getTime(), trxn.getActionDate().getTime());
 
     }
 
@@ -325,12 +327,12 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
                 if (trxn.getAccountAction() == AccountActionTypes.LOAN_REPAYMENT
                         && trxn.getAmount().equals(paymentAmount)) {
                     foundThePayment = true;
-                    assertEquals(paymentDate, trxn.getActionDate());
+                   Assert.assertEquals(paymentDate, trxn.getActionDate());
                     break;
                 }
             } while (trxns.hasNext());
         } while (payments.hasNext());
-        assertTrue("Couldnt find a LOAN_REPAYMENT", foundThePayment);
+       Assert.assertTrue("Couldnt find a LOAN_REPAYMENT", foundThePayment);
     }
 
     protected void applyAndVerifyPayment(UserContext userContext, LoanBO loan, int numberOfDaysInPast, Money amount)
@@ -404,7 +406,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, loanStartDaysAgo, new ArrayList<FeeView>());
         disburseLoanAndVerify(userContext, loan, loanStartDaysAgo);
 
-        assertFalse(loan.havePaymentsBeenMade());
+        Assert.assertFalse(loan.havePaymentsBeenMade());
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -415,7 +417,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
         applyAndVerifyPayment(userContext, loan, paymentDaysAgo, new Money("50"));
 
-        assertTrue(loan.havePaymentsBeenMade());
+       Assert.assertTrue(loan.havePaymentsBeenMade());
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 1.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -432,10 +434,10 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         disburseLoanAndVerify(userContext, loan, 14);
 
         Double feeAmount = new Double("33.0");
-        assertTrue(loan.isRoundedAmount(feeAmount));
+       Assert.assertTrue(loan.isRoundedAmount(feeAmount));
         applyCharge(loan, Short.valueOf(AccountConstants.MISC_PENALTY), feeAmount);
 
-        assertFalse(loan.havePaymentsBeenMade());
+        Assert.assertFalse(loan.havePaymentsBeenMade());
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 33.0);
@@ -549,8 +551,8 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-            assertFalse(loan.isRoundedAmount(33.7));
-            assertFalse(loan.canApplyMiscCharge(new Money(new BigDecimal(33.7))));
+            Assert.assertFalse(loan.isRoundedAmount(33.7));
+            Assert.assertFalse(loan.canApplyMiscCharge(new Money(new BigDecimal(33.7))));
             // Should throw AccountExcption
             applyCharge(loan, Short.valueOf(AccountConstants.MISC_PENALTY), new Double("33.7"));
 
@@ -560,7 +562,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 4, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.2, 0.8, 0.0, 0.0, 0.0);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }
@@ -597,7 +599,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 4, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.2, 0.8, 0.0, 0.0, 0.0);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }
@@ -609,10 +611,10 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         disburseLoanAndVerify(userContext, loan, 14);
 
         Double feeAmount = new Double("33.0");
-        assertTrue(loan.isRoundedAmount(feeAmount));
+       Assert.assertTrue(loan.isRoundedAmount(feeAmount));
         applyCharge(loan, Short.valueOf(AccountConstants.MISC_FEES), feeAmount);
 
-        assertFalse(loan.havePaymentsBeenMade());
+        Assert.assertFalse(loan.havePaymentsBeenMade());
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 33.0, 0.0);
@@ -723,8 +725,8 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-            assertFalse(loan.isRoundedAmount(33.7));
-            assertFalse(loan.canApplyMiscCharge(new Money(new BigDecimal(33.7))));
+            Assert.assertFalse(loan.isRoundedAmount(33.7));
+            Assert.assertFalse(loan.canApplyMiscCharge(new Money(new BigDecimal(33.7))));
             // Should throw AccountExcption
             applyCharge(loan, Short.valueOf(AccountConstants.MISC_FEES), new Double("33.7"));
 
@@ -734,7 +736,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 4, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.2, 0.8, 0.0, 0.0, 0.0);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }
@@ -771,7 +773,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 4, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.2, 0.8, 0.0, 0.0, 0.0);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }
@@ -902,7 +904,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
             applyCharge(loan, createOneTimeAmountFee(10.2).getFeeId(), 10.2);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }
@@ -1036,7 +1038,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
             // Expect AccountException
             applyCharge(loan, createPeriodicRateFee(5.0).getFeeId(), 5.0);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }
@@ -1150,7 +1152,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
             // expect account exception
             removeAccountFee(loan);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }
@@ -1196,7 +1198,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
             // Expect AccountException
             removeAccountFee(loan);
-            fail("Expected AccountException !!");
+            Assert.fail("Expected AccountException !!");
         } catch (AccountException e) {
         }
     }

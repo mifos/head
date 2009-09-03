@@ -33,6 +33,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.mifos.application.branchreport.BranchReportBO;
@@ -80,7 +82,7 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
     }
 
     private void assertLoanArrearsAgingPopulated(Set<BranchReportLoanArrearsAgingBO> loanArrearsAgingSummaries) {
-        assertNotNull(loanArrearsAgingSummaries);
+        Assert.assertNotNull(loanArrearsAgingSummaries);
         Collection foundPeriods = CollectionUtils.collect(loanArrearsAgingSummaries, new Transformer() {
             public Object transform(Object input) {
                 return ((BranchReportLoanArrearsAgingBO) input).getAgingPeriod();
@@ -94,7 +96,7 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
         Money agingAmount = createMoney(3.3333);
         BranchReportLoanArrearsAgingBO loanArrears = new BranchReportLoanArrearsAgingBO(null, null, null, agingAmount,
                 createMoney(3.3333), createMoney(666.70));
-        assertEquals(agingAmount.getAmount().setScale(agingAmount.getCurrency().getDefaultDigitsAfterDecimal(),
+       Assert.assertEquals(agingAmount.getAmount().setScale(agingAmount.getCurrency().getDefaultDigitsAfterDecimal(),
                 RoundingMode.HALF_UP), loanArrears.getAmountAging());
     }
 

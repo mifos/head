@@ -24,6 +24,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -82,8 +84,8 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         loanArrearHelper.execute(System.currentTimeMillis());
         loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
-        assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
-        assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
+       Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
+       Assert.assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
     }
 
     private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) throws AccountException {

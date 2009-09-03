@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
@@ -100,8 +102,8 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(PersonnelConstants.ERROR_MANDATORY_TEXT_AREA));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(PersonnelConstants.ERROR_MANDATORY_TEXT_AREA));
         verifyInputForward();
     }
 
@@ -121,8 +123,8 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        assertEquals(1, getErrorSize());
-        assertEquals("Notes", 1, getErrorSize(PersonnelConstants.MAXIMUM_LENGTH));
+       Assert.assertEquals(1, getErrorSize());
+       Assert.assertEquals("Notes", 1, getErrorSize(PersonnelConstants.MAXIMUM_LENGTH));
         verifyInputForward();
     }
 
@@ -207,7 +209,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
 
-        assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
+       Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
         StaticHibernateUtil.closeSession();
 

@@ -20,6 +20,8 @@
 
 package org.mifos.application.customer.group.persistence;
 
+import junit.framework.Assert;
+
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.CenterTemplateImpl;
@@ -89,13 +91,13 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Integer groupId = group.getCustomerId();
         boolean result = getGroupPersistence().updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(
                 portfolioAtRisk, groupId);
-        assertTrue(result);
+       Assert.assertTrue(result);
         group = TestObjectFactory.getGroup(group.getCustomerId());
-        assertEquals(1, group.getUpdatedBy().intValue());
+       Assert.assertEquals(1, group.getUpdatedBy().intValue());
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-        assertEquals(1, group.getUpdatedBy().intValue());
-        assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
-        assertEquals(new Money("0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
+       Assert.assertEquals(1, group.getUpdatedBy().intValue());
+       Assert.assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
+       Assert.assertEquals(new Money("0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
 
     }
 
@@ -116,35 +118,35 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
             GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(center.getCustomerId());
             GroupBO group = getGroupPersistence().createGroup(userContext, groupTemplate);
 
-            assertNotNull(group.getCustomerId());
-            assertTrue(group.isActive());
+            Assert.assertNotNull(group.getCustomerId());
+           Assert.assertTrue(group.isActive());
         } finally {
             StaticHibernateUtil.rollbackTransaction();
         }
-        assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
+       Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
 
     public void testGetGroupBySystemId() throws PersistenceException {
         createGroup();
         group = groupPersistence.findBySystemId(group.getGlobalCustNum());
-        assertEquals("Group_Active_test", group.getDisplayName());
+       Assert.assertEquals("Group_Active_test", group.getDisplayName());
     }
 
     public void testSearch() throws Exception {
         createGroup();
         QueryResult queryResult = groupPersistence.search(group.getDisplayName(), Short.valueOf("1"));
-        assertNotNull(queryResult);
-        assertEquals(1, queryResult.getSize());
-        assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertNotNull(queryResult);
+       Assert.assertEquals(1, queryResult.getSize());
+       Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
     public void testSearchForAddingClientToGroup() throws Exception {
         createGroup_ON_HOLD_STATUS();
         QueryResult queryResult = groupPersistence.searchForAddingClientToGroup(group.getDisplayName(), Short
                 .valueOf("1"));
-        assertNotNull(queryResult);
-        assertEquals(0, queryResult.getSize());
-        assertEquals(0, queryResult.get(0, 10).size());
+        Assert.assertNotNull(queryResult);
+       Assert.assertEquals(0, queryResult.getSize());
+       Assert.assertEquals(0, queryResult.get(0, 10).size());
     }
 
     private CenterBO createCenter() {

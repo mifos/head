@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -88,16 +90,16 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
         loanArrearTask.run();
         Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
         List<Task> tasks = query.list();
-        assertEquals(1, tasks.size());
+       Assert.assertEquals(1, tasks.size());
 
         Task task = tasks.get(0);
-        assertEquals(TaskStatus.COMPLETE, task.getStatusEnum());
-        assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
+       Assert.assertEquals(TaskStatus.COMPLETE, task.getStatusEnum());
+       Assert.assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
         TestObjectFactory.removeObject(task);
 
         loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
-        assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
-        assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
+       Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
+       Assert.assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
     }
 
     private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) throws AccountException {

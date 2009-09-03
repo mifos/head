@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -66,21 +68,21 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.closeSession();
 
         List<HolidayBO> holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
-        assertNotNull(holidays);
-        assertEquals(1, holidays.size());
+        Assert.assertNotNull(holidays);
+       Assert.assertEquals(1, holidays.size());
 
         TestObjectFactory.cleanUpHolidays(holidays);
         holidayEntity = null;
 
         holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR) - 1);
-        assertNotNull(holidays);
-        assertEquals(holidays.size(), 0);
+        Assert.assertNotNull(holidays);
+       Assert.assertEquals(holidays.size(), 0);
     }
 
     public void testGetRepaymentRuleTypes() throws Exception {
         List<RepaymentRuleEntity> repaymentRules = new HolidayPersistence().getRepaymentRuleTypes();
-        assertNotNull(repaymentRules);
-        assertEquals(3, repaymentRules.size());
+        Assert.assertNotNull(repaymentRules);
+       Assert.assertEquals(3, repaymentRules.size());
     }
 
     public void testGetUnAppliedHolidaysAgainstAppliedOnes() throws Exception {
@@ -98,8 +100,8 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
         List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
 
         // There should not be any UnappliedHolidays
-        assertNotNull(holidays);
-        assertEquals(holidays.size(), 0);
+        Assert.assertNotNull(holidays);
+       Assert.assertEquals(holidays.size(), 0);
 
         TestObjectFactory.cleanUpHolidays(holidays);
         holidayEntity = null;
@@ -119,8 +121,8 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
         List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
 
         // There should be exactly one UnappliedHoliday
-        assertNotNull(holidays);
-        assertEquals(1, holidays.size());
+        Assert.assertNotNull(holidays);
+       Assert.assertEquals(1, holidays.size());
 
         TestObjectFactory.cleanUpHolidays(holidays);
         holidayEntity = null;
@@ -128,7 +130,7 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     public void testGetDistinctYears() throws Exception {
         List<HolidayBO> distinctYears = new HolidayPersistence().getDistinctYears();
-        assertNotNull(distinctYears);
+        Assert.assertNotNull(distinctYears);
     }
 
 }

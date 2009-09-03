@@ -23,6 +23,8 @@ package org.mifos.application.customer.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -116,9 +118,9 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(CustomerSearchConstants.LOADFORWARDOFFICE_SUCCESS);
         List<OfficeBO> officeset = (List<OfficeBO>) SessionUtils.getAttribute(CustomerSearchConstants.OFFICESLIST,
                 request);
-        assertNotNull(officeset);
-        assertEquals(1, officeset.size());
-        assertEquals(TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE).getOfficeName(), SessionUtils
+        Assert.assertNotNull(officeset);
+       Assert.assertEquals(1, officeset.size());
+       Assert.assertEquals(TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE).getOfficeName(), SessionUtils
                 .getAttribute(CustomerSearchConstants.OFFICE, request));
     }
 
@@ -136,9 +138,9 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS);
         List<PersonnelBO> personnelList = (List<PersonnelBO>) SessionUtils.getAttribute(
                 CustomerSearchConstants.LOANOFFICERSLIST, request);
-        assertNotNull(personnelList);
-        assertEquals(1, personnelList.size());
-        assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
+        Assert.assertNotNull(personnelList);
+       Assert.assertEquals(1, personnelList.size());
+       Assert.assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
         TestObjectFactory.cleanUp(personnelBO);
     }
 
@@ -153,9 +155,9 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS);
         List<CustomerBO> customerList = (List<CustomerBO>) SessionUtils.getAttribute(
                 CustomerSearchConstants.CUSTOMERLIST, request);
-        assertNotNull(customerList);
-        assertEquals(0, customerList.size());
-        assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
+        Assert.assertNotNull(customerList);
+       Assert.assertEquals(0, customerList.size());
+       Assert.assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
 
     }
 
@@ -180,7 +182,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("searchString", "");
         addRequestParameter("officeId", "0");
         actionPerform();
-        assertEquals("SearchString", 1, getErrorSize(CustomerSearchConstants.NAMEMANDATORYEXCEPTION));
+       Assert.assertEquals("SearchString", 1, getErrorSize(CustomerSearchConstants.NAMEMANDATORYEXCEPTION));
         verifyForward(ActionForwards.mainSearch_success.toString());
     }
 
@@ -221,9 +223,9 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS);
         OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 
-        assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
-        assertEquals(true, SessionUtils.getAttribute("isCenterHierarchyExists", request));
-        assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, SessionUtils.getAttribute(
+       Assert.assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
+       Assert.assertEquals(true, SessionUtils.getAttribute("isCenterHierarchyExists", request));
+       Assert.assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, SessionUtils.getAttribute(
                 CustomerSearchConstants.LOADFORWARD, request));
 
     }
@@ -239,9 +241,9 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS);
         OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 
-        assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
-        assertEquals(true, SessionUtils.getAttribute("isCenterHierarchyExists", request));
-        assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, SessionUtils.getAttribute(
+       Assert.assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
+       Assert.assertEquals(true, SessionUtils.getAttribute("isCenterHierarchyExists", request));
+       Assert.assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, SessionUtils.getAttribute(
                 CustomerSearchConstants.LOADFORWARD, request));
 
     }
@@ -258,9 +260,9 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void veryfyResults() throws Exception {
         QueryResult queryResult = (QueryResult) SessionUtils.getAttribute(Constants.SEARCH_RESULTS, request);
-        assertNotNull(queryResult);
-        assertEquals(1, queryResult.getSize());
-        assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertNotNull(queryResult);
+       Assert.assertEquals(1, queryResult.getSize());
+       Assert.assertEquals(1, queryResult.get(0, 10).size());
 
     }
 

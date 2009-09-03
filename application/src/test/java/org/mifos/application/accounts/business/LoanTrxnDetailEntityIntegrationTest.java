@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -79,7 +81,7 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
                 sampleDate, loanOffering);
         StaticHibernateUtil.closeSession();
         account = new AccountPersistence().getAccount(account.getAccountId());
-        assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();
         accountActionsToBeUpdated.add(account.getAccountActionDates().iterator().next());
@@ -89,13 +91,13 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
         account.applyPaymentWithPersist(paymentData);
         StaticHibernateUtil.commitTransaction();
 
-        assertEquals(1, account.getAccountPayments().size());
+       Assert.assertEquals(1, account.getAccountPayments().size());
         AccountPaymentEntity payment = account.getAccountPayments().iterator().next();
-        assertEquals(4, payment.getAccountTrxns().size());
+       Assert.assertEquals(4, payment.getAccountTrxns().size());
         // Should we assert something about each of those transactions?
 
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) account).getLoanSummary();
-        assertEquals(loanSummaryEntity.getOriginalPrincipal().subtract(loanSummaryEntity.getPrincipalPaid()),
+       Assert.assertEquals(loanSummaryEntity.getOriginalPrincipal().subtract(loanSummaryEntity.getPrincipalPaid()),
                 ((LoanBO) account).getLoanActivityDetails().iterator().next().getPrincipalOutstanding());
 
     }

@@ -22,6 +22,8 @@ package org.mifos.application.collectionsheet.business;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
@@ -80,20 +82,20 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         // of 200, total overdue amount is 400 and due amount for next meeting
         // date is 200
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(400.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(400.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
         accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 
     }
 
@@ -109,8 +111,8 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
     }
 
     public void testForMandatoryAccountWithFullPayment() throws Exception {
@@ -126,8 +128,8 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
     }
 
     public void testForVoluntaryAccountWithPartialPayment() throws Exception {
@@ -142,8 +144,8 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
     }
 
     public void testForVoluntaryAccountWithFullPayment() throws Exception {
@@ -159,8 +161,8 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
     }
 
     public void testTotalSavingsAmountDueForVoluntaryAccount() throws Exception {
@@ -171,7 +173,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
     }
 
     public void testTotalSavingsAmountDueForMandatoryAccount() throws Exception {
@@ -182,7 +184,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
-        assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
     }
 
     private SavingsBO createSavingsAccount(SavingsType savingsType) throws Exception {

@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import junit.framework.Assert;
 import junitx.framework.StringAssert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -169,7 +170,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         for (CustomValueListElement attendanceTypeCustomValueListElement : attendanceTypesCustomValueList) {
             attendanceTypesLookupValueList.add(attendanceTypeCustomValueListElement.getLookUpValue());
         }
-        assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
+       Assert.assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
 
         HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
 

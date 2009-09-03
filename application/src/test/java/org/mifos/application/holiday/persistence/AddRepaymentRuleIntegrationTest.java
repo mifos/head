@@ -21,6 +21,7 @@
 package org.mifos.application.holiday.persistence;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import junit.framework.Assert;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -38,9 +39,9 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "RepaymentRule-NewSameDay";
         String format = "RepaymentRule-";
-        assertTrue(AddRepaymentRule.validateLookupValueKey(format, validKey));
+       Assert.assertTrue(AddRepaymentRule.validateLookupValueKey(format, validKey));
         String invalidKey = "NewSameDay";
-        assertFalse(AddRepaymentRule.validateLookupValueKey(format, invalidKey));
+        Assert.assertFalse(AddRepaymentRule.validateLookupValueKey(format, invalidKey));
     }
 
     public void testConstructor() throws Exception {
@@ -52,7 +53,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
                     RepaymentRuleTypes.SAME_DAY, TEST_LOCALE, "SameDayValue");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddRepaymentRule.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddRepaymentRule.wrongConstructor);
         }
         String invalidKey = "SameDay";
 
@@ -61,7 +62,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
                     RepaymentRuleTypes.SAME_DAY, invalidKey);
         } catch (Exception e) {
-            assertEquals(e.getMessage(), AddRepaymentRule.wrongLookupValueKeyFormat);
+           Assert.assertEquals(e.getMessage(), AddRepaymentRule.wrongLookupValueKeyFormat);
         }
 
         String goodKey = "RepaymentRule-NextWorkingDay";
@@ -69,7 +70,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
         upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
                 RepaymentRuleTypes.NEXT_WORKING_DAY, goodKey);
         String afterUpAndDownGrade = database.dumpForComparison();
-        assertEquals(start, afterUpAndDownGrade);
+       Assert.assertEquals(start, afterUpAndDownGrade);
 
     }
 

@@ -22,6 +22,8 @@ package org.mifos.application.productdefinition.business;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.service.ProductCategoryBusinessService;
@@ -44,20 +46,20 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateProductCategory() throws SystemException, ApplicationException {
         UserContext userContext = TestUtils.makeUser();
         List<ProductTypeEntity> productTypeList = new ProductCategoryBusinessService().getProductTypes();
-        assertEquals(2, productTypeList.size());
+       Assert.assertEquals(2, productTypeList.size());
         TestObjectFactory.updateObject(new ProductCategoryBO(userContext, productTypeList.get(0), "product category",
                 null));
         ProductCategoryBO productCategoryBO = getProductCategory().get(2);
-        assertEquals("1-003", productCategoryBO.getGlobalPrdCategoryNum());
-        assertEquals("product category", productCategoryBO.getProductCategoryName());
-        assertNull(productCategoryBO.getProductCategoryDesc());
-        assertNotNull(productCategoryBO.getProductType());
+       Assert.assertEquals("1-003", productCategoryBO.getGlobalPrdCategoryNum());
+       Assert.assertEquals("product category", productCategoryBO.getProductCategoryName());
+        Assert.assertNull(productCategoryBO.getProductCategoryDesc());
+        Assert.assertNotNull(productCategoryBO.getProductType());
         try {
             TestObjectFactory.updateObject(new ProductCategoryBO(userContext, productTypeList.get(0),
                     "product category", null));
-            fail();
+            Assert.fail();
         } catch (ProductDefinitionException expected) {
-            assertEquals(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME, expected.getKey());
+           Assert.assertEquals(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME, expected.getKey());
         }
         deleteProductCategory(productCategoryBO);
     }
@@ -65,7 +67,7 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
     public void testUpdateProductCategory() throws SystemException, ApplicationException {
         UserContext userContext = TestUtils.makeUser();
         List<ProductTypeEntity> productTypeList = new ProductCategoryBusinessService().getProductTypes();
-        assertEquals(2, productTypeList.size());
+       Assert.assertEquals(2, productTypeList.size());
         TestObjectFactory.updateObject(new ProductCategoryBO(userContext, productTypeList.get(0), "product category",
                 null));
         ProductCategoryBO productCategoryBO = getProductCategory().get(2);
@@ -74,11 +76,11 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
         productCategoryBO.updateProductCategory("Category", "Name changed", prdCategoryStatusEntity);
         TestObjectFactory.updateObject(productCategoryBO);
         productCategoryBO = getProductCategory().get(2);
-        assertEquals("1-003", productCategoryBO.getGlobalPrdCategoryNum());
-        assertEquals("Category", productCategoryBO.getProductCategoryName());
-        assertNotNull(productCategoryBO.getProductCategoryDesc());
-        assertNotNull(productCategoryBO.getProductType());
-        assertNotNull("Name changed", productCategoryBO.getProductCategoryDesc());
+       Assert.assertEquals("1-003", productCategoryBO.getGlobalPrdCategoryNum());
+       Assert.assertEquals("Category", productCategoryBO.getProductCategoryName());
+        Assert.assertNotNull(productCategoryBO.getProductCategoryDesc());
+        Assert.assertNotNull(productCategoryBO.getProductType());
+        Assert.assertNotNull("Name changed", productCategoryBO.getProductCategoryDesc());
         productCategoryBO.updateProductCategory("Category", "Name changed", prdCategoryStatusEntity);
         // TODO: assert that it got updated.
         deleteProductCategory(productCategoryBO);

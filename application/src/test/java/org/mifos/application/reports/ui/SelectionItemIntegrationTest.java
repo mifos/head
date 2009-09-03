@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
@@ -59,9 +61,9 @@ public class SelectionItemIntegrationTest extends MifosIntegrationTestCase {
         try {
             activeBranchesUnderUser = selectionItemPersistence.getActiveBranchesUnderUser("1.1");
         } catch (Exception e) {
-            fail("Should not fail while retrieving SelectionItem");
+            Assert.fail("Should not fail while retrieving SelectionItem");
         }
-        assertFalse(activeBranchesUnderUser.isEmpty());
+        Assert.assertFalse(activeBranchesUnderUser.isEmpty());
     }
 
     public void testRetrievesLoanOfficersThroughNamedQuery() throws Exception {
@@ -69,9 +71,9 @@ public class SelectionItemIntegrationTest extends MifosIntegrationTestCase {
         try {
             activeLoanOfficers = selectionItemPersistence.getActiveLoanOfficersUnderOffice(BRANCH_ID);
         } catch (Exception e) {
-            fail("Should not fail while retrieving SelectionItem");
+            Assert.fail("Should not fail while retrieving SelectionItem");
         }
-        assertFalse(activeLoanOfficers.isEmpty());
+        Assert.assertFalse(activeLoanOfficers.isEmpty());
     }
 
     public void testRetrievesMeetingDateInclusiveOfFromDate() throws Exception {
@@ -84,7 +86,7 @@ public class SelectionItemIntegrationTest extends MifosIntegrationTestCase {
         DateSelectionItem meetingOnFromDate = new DateSelectionItem(FROM_DATE);
         List<DateSelectionItem> meetingDates = selectionItemPersistence.getMeetingDates(BRANCH_ID, NumberUtils
                 .convertShortToInteger(LOAN_OFFICER_ID), CUSTOMER_ID, FROM_DATE);
-        assertTrue(meetingDates.contains(meetingOnFromDate));
+       Assert.assertTrue(meetingDates.contains(meetingOnFromDate));
     }
 
     @Override

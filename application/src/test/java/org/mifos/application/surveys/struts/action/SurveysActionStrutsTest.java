@@ -22,6 +22,8 @@ package org.mifos.application.surveys.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
@@ -97,8 +99,8 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         List<Survey> surveys = (List<Survey>) request.getAttribute(SurveysConstants.KEY_CLIENT_SURVEYS_LIST);
-        assertEquals(testName, surveys.get(0).getName());
-        assertEquals(1, surveys.get(0).getQuestions().size());
+       Assert.assertEquals(testName, surveys.get(0).getName());
+       Assert.assertEquals(1, surveys.get(0).getQuestions().size());
     }
 
     public void testGetAndPrint() throws Exception {
@@ -112,9 +114,9 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         Survey retrievedSurvey = (Survey) request.getSession().getAttribute(Constants.BUSINESS_KEY);
-        assertEquals(testName, retrievedSurvey.getName());
+       Assert.assertEquals(testName, retrievedSurvey.getName());
         Question question = retrievedSurvey.getQuestion(0);
-        assertEquals(questionText, question.getQuestionText());
+       Assert.assertEquals(questionText, question.getQuestionText());
 
         setRequestPathInfo("/surveysAction");
         addRequestParameter("method", "printVersion");
@@ -128,7 +130,7 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         String appliesTo = "client";
         String state = "ACTIVE";
         SurveysPersistence surveysPersistence = new SurveysPersistence();
-        assertEquals(0, surveysPersistence.retrieveAllSurveys().size());
+       Assert.assertEquals(0, surveysPersistence.retrieveAllSurveys().size());
         String questionText = "testCreateEntry question 1";
         String shortName = "testCreateEntry 1";
         question = new Question(shortName, questionText, AnswerType.CHOICE);
@@ -141,16 +143,16 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
                 SurveysConstants.KEY_QUESTIONS_LIST);
         List<Question> addedQuestions = (List<Question>) request.getSession().getAttribute(
                 SurveysConstants.KEY_ADDED_QUESTIONS);
-        assertEquals(1, questionsList.size());
-        assertEquals(0, addedQuestions.size());
+       Assert.assertEquals(1, questionsList.size());
+       Assert.assertEquals(0, addedQuestions.size());
 
         addRequestParameter("value(newQuestion)", Integer.toString(question.getQuestionId()));
         setRequestPathInfo("/surveysAction");
         addRequestParameter("method", "add_new_question");
         actionPerform();
         verifyNoActionErrors();
-        assertEquals(0, questionsList.size());
-        assertEquals(1, addedQuestions.size());
+       Assert.assertEquals(0, questionsList.size());
+       Assert.assertEquals(1, addedQuestions.size());
 
         addRequestParameter("value(name)", name);
         addRequestParameter("value(appliesTo)", appliesTo);
@@ -162,8 +164,8 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "create");
         actionPerform();
         verifyNoActionErrors();
-        assertEquals(1, surveysPersistence.retrieveAllSurveys().size());
-        assertEquals(name, surveysPersistence.retrieveAllSurveys().get(0).getName());
+       Assert.assertEquals(1, surveysPersistence.retrieveAllSurveys().size());
+       Assert.assertEquals(name, surveysPersistence.retrieveAllSurveys().get(0).getName());
     }
 
     public void testEditEntry() throws Exception {
@@ -188,8 +190,8 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("value(surveyId)", Integer.toString(surveyId));
         actionPerform();
         verifyNoActionErrors();
-        assertEquals(1, ((List) getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS)).size());
-        assertEquals(1, ((List) getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST)).size());
+       Assert.assertEquals(1, ((List) getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS)).size());
+       Assert.assertEquals(1, ((List) getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST)).size());
 
         addRequestParameter("method", "add_new_question");
         addRequestParameter("value(newQuestion)", Integer.toString(question.getQuestionId()));
@@ -208,12 +210,12 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
 
         List<Survey> listSurvey = surveysPersistence.retrieveAllSurveys();
-        assertEquals(1, listSurvey.size());
+       Assert.assertEquals(1, listSurvey.size());
         Survey survey = listSurvey.get(0);
-        assertEquals("new name", survey.getName());
-        assertEquals(SurveyType.ALL, survey.getAppliesToAsEnum());
-        assertEquals(SurveyState.INACTIVE, survey.getStateAsEnum());
-        assertEquals(surveyId, survey.getSurveyId());
-        assertEquals(2, survey.getQuestions().size());
+       Assert.assertEquals("new name", survey.getName());
+       Assert.assertEquals(SurveyType.ALL, survey.getAppliesToAsEnum());
+       Assert.assertEquals(SurveyState.INACTIVE, survey.getStateAsEnum());
+       Assert.assertEquals(surveyId, survey.getSurveyId());
+       Assert.assertEquals(2, survey.getQuestions().size());
     }
 }

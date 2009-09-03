@@ -23,6 +23,8 @@ package org.mifos.application.accounts.loan.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -112,8 +114,8 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("currentStatus", account.getAccountState().getId().toString());
         performNoErrors();
         verifyForward(ActionForwards.changeAccountStatusSearch_success.toString());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
-        assertEquals(1, ((List<PersonnelView>) SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request)).size());
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
+       Assert.assertEquals(1, ((List<PersonnelView>) SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request)).size());
     }
 
     public void testSearchResults_noresults_forvalidate() throws Exception {
@@ -140,7 +142,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("currentStatus", AccountState.LOAN_PARTIAL_APPLICATION.getValue().toString());
         actionPerform();
         verifyForward(ActionForwards.noresultfound.toString());
-        assertNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
+        Assert.assertNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
     }
 
     public void testSearchResults_exception() {
@@ -162,8 +164,8 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", account.getOffice().getOfficeId().toString());
         actionPerform();
         verifyForward(ActionForwards.changeAccountStatus_success.toString());
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request));
-        assertEquals(1, ((List<PersonnelView>) SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request)).size());
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request));
+       Assert.assertEquals(1, ((List<PersonnelView>) SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request)).size());
     }
 
     public void testUpdate() throws Exception {

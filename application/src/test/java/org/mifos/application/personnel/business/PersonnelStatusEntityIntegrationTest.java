@@ -20,6 +20,8 @@
 
 package org.mifos.application.personnel.business;
 
+import junit.framework.Assert;
+
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -36,9 +38,9 @@ public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCa
         MasterPersistence masterPersistenceService = new MasterPersistence();
         PersonnelStatusEntity personnelStatusEntity = (PersonnelStatusEntity) masterPersistenceService
                 .getPersistentObject(PersonnelStatusEntity.class, (short) 1);
-        assertEquals(Short.valueOf("1"), personnelStatusEntity.getId());
+       Assert.assertEquals(Short.valueOf("1"), personnelStatusEntity.getId());
         personnelStatusEntity.setLocaleId(TestObjectFactory.TEST_LOCALE);
-        assertEquals("Active", personnelStatusEntity.getName());
+       Assert.assertEquals("Active", personnelStatusEntity.getName());
     }
 
 }

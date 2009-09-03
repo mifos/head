@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -96,7 +98,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(Constants.LOAD_SUCCESS);
         Money amount = (Money) SessionUtils.getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
-        assertEquals(amount, ((LoanBO) accountBO).getTotalEarlyRepayAmount());
+       Assert.assertEquals(amount, ((LoanBO) accountBO).getTotalEarlyRepayAmount());
     }
 
     public void testRepaymentPreview() {
@@ -128,10 +130,10 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
 
-        assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
+       Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
 
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
-        assertEquals(amount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
+       Assert.assertEquals(amount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
                 loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
 
     }
@@ -150,10 +152,10 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
 
-        assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
+       Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
 
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
-        assertEquals(amount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
+       Assert.assertEquals(amount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
                 loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
 
     }

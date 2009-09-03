@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -49,15 +51,15 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
         auditLog.save();
         auditLog = getAuditLog(Integer.valueOf("1"), Short.valueOf("2"));
 
-        assertEquals(Integer.valueOf("1"), auditLog.getEntityId());
-        assertEquals(Short.valueOf("2"), auditLog.getEntityType());
-        assertEquals("Mifos", auditLog.getModifierName());
-        assertEquals("Mifos", auditLog.getModifierName());
-        assertEquals(1, auditLog.getAuditLogRecords().size());
+       Assert.assertEquals(Integer.valueOf("1"), auditLog.getEntityId());
+       Assert.assertEquals(Short.valueOf("2"), auditLog.getEntityType());
+       Assert.assertEquals("Mifos", auditLog.getModifierName());
+       Assert.assertEquals("Mifos", auditLog.getModifierName());
+       Assert.assertEquals(1, auditLog.getAuditLogRecords().size());
         for (AuditLogRecord logRecord : auditLog.getAuditLogRecords()) {
-            assertEquals("ColumnName_1", logRecord.getFieldName());
-            assertEquals("test_1", logRecord.getOldValue());
-            assertEquals("new_test_1", logRecord.getNewValue());
+           Assert.assertEquals("ColumnName_1", logRecord.getFieldName());
+           Assert.assertEquals("test_1", logRecord.getOldValue());
+           Assert.assertEquals("new_test_1", logRecord.getNewValue());
         }
         TestObjectFactory.cleanUp(auditLog);
     }
@@ -73,7 +75,7 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
         auditLog = getAuditLog(Integer.valueOf("1"), Short.valueOf("2"));
         AuditPersistence auditPersistence = new AuditPersistence();
         List<AuditLog> auditLogList = auditPersistence.getAuditLogRecords(Short.valueOf("2"), Integer.valueOf("1"));
-        assertEquals(1, auditLogList.size());
+       Assert.assertEquals(1, auditLogList.size());
         TestObjectFactory.cleanUp(auditLog);
     }
 

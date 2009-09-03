@@ -22,6 +22,8 @@ package org.mifos.application.accounts.struts.action;
 
 import java.sql.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -240,7 +242,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("search_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-        assertEquals("Size of the search result should be 2", 2, ((QueryResult) SessionUtils.getAttribute(
+       Assert.assertEquals("Size of the search result should be 2", 2, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
         StaticHibernateUtil.closeSession();
         savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
@@ -368,7 +370,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
 
-        assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
+       Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
         StaticHibernateUtil.closeSession();
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());

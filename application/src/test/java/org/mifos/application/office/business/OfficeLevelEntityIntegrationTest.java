@@ -20,6 +20,8 @@
 
 package org.mifos.application.office.business;
 
+import junit.framework.Assert;
+
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -45,10 +47,10 @@ public class OfficeLevelEntityIntegrationTest extends MifosIntegrationTestCase {
         try {
             OfficeLevelEntity officeLevelEntity = regionalOffice.getLevel();
             officeLevelEntity.update(false);
-            assertFalse(true);
+            Assert.assertFalse(true);
         } catch (OfficeException oe) {
-            assertTrue(true);
-            assertEquals(oe.getKey(), OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
+           Assert.assertTrue(true);
+           Assert.assertEquals(oe.getKey(), OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
         }
 
         TestObjectFactory.cleanUp(regionalOffice);

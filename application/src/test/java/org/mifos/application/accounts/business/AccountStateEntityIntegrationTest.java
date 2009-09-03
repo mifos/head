@@ -22,6 +22,8 @@ package org.mifos.application.accounts.business;
 
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -55,39 +57,39 @@ public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase 
     public void testGetNameFailure() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         String name = accountStateEntity.getName();
-        assertFalse("This should fail, name is Partial Application", !("Partial Application".equals(name)));
+        Assert.assertFalse("This should fail, name is Partial Application", !("Partial Application".equals(name)));
     }
 
     public void testGetNameSuccess() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         String name = accountStateEntity.getName();
-        assertEquals("Partial Application", name);
+       Assert.assertEquals("Partial Application", name);
     }
 
     public void testGetNamesSuccess() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = accountStateEntity.getNames();
         int size = lookUpValueLocaleEntitySet.size();
-        assertEquals(1, size);
+       Assert.assertEquals(1, size);
     }
 
     public void testGetNamesFailure() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = accountStateEntity.getNames();
         int size = lookUpValueLocaleEntitySet.size();
-        assertFalse("This should fail, the size is 1", !(size == 1));
+        Assert.assertFalse("This should fail, the size is 1", !(size == 1));
     }
 
     public void testGetNameWithLocaleSuccess() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
         String name = accountStateEntity.getName();
-        assertEquals(TestConstants.APPROVED, name);
+       Assert.assertEquals(TestConstants.APPROVED, name);
     }
 
     public void testGetNameWithLocaleFailure() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
         String name = accountStateEntity.getName();
-        assertFalse("This should fail, name is Approved", !(TestConstants.APPROVED.equals(name)));
+        Assert.assertFalse("This should fail, name is Approved", !(TestConstants.APPROVED.equals(name)));
     }
 
     private AccountStateEntity getAccountStateEntityObject(Short id) {

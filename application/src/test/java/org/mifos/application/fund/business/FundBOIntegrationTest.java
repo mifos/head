@@ -20,6 +20,8 @@
 
 package org.mifos.application.fund.business;
 
+import junit.framework.Assert;
+
 import org.mifos.application.fund.exception.FundException;
 import org.mifos.application.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
@@ -54,10 +56,10 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
     public void testBuildFundWithoutFundCode() throws Exception {
         try {
             fundBO = new FundBO(null, "Fund-1");
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (FundException fe) {
-            assertTrue(true);
-            assertEquals(FundConstants.INVALID_FUND_CODE, fe.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(FundConstants.INVALID_FUND_CODE, fe.getKey());
         }
     }
 
@@ -66,10 +68,10 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
                 (short) 1);
         try {
             fundBO = new FundBO(fundCodeEntity, null);
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (FundException fe) {
-            assertTrue(true);
-            assertEquals(FundConstants.INVALID_FUND_NAME, fe.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(FundConstants.INVALID_FUND_NAME, fe.getKey());
         }
     }
 
@@ -79,10 +81,10 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
         fundBO = createFund(fundCodeEntity, "Fund-1");
         try {
             new FundBO(fundCodeEntity, "Fund-1");
-            fail();
+            Assert.fail();
         } catch (FundException fe) {
-            assertTrue(true);
-            assertEquals(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION, fe.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION, fe.getKey());
         }
     }
 
@@ -94,9 +96,9 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             fundBO = new FundBO(fundCodeEntity, "Fund-1");
             fundBO.save();
-            fail();
+            Assert.fail();
         } catch (FundException e) {
-            assertTrue(true);
+           Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -111,9 +113,9 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class, fundBO.getFundId());
-        assertEquals("Fund-1", fundBO.getFundName());
-        assertNotNull(fundBO.getFundCode());
-        assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
+       Assert.assertEquals("Fund-1", fundBO.getFundName());
+        Assert.assertNotNull(fundBO.getFundCode());
+       Assert.assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
     }
 
     public void testUpdateFundForNullFundName() throws Exception {
@@ -123,15 +125,15 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class, fundBO.getFundId());
-        assertEquals("Fund-1", fundBO.getFundName());
-        assertNotNull(fundBO.getFundCode());
-        assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
+       Assert.assertEquals("Fund-1", fundBO.getFundName());
+        Assert.assertNotNull(fundBO.getFundCode());
+       Assert.assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
         try {
             fundBO.update("");
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (FundException fe) {
-            assertTrue(true);
-            assertEquals(FundConstants.INVALID_FUND_NAME, fe.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(FundConstants.INVALID_FUND_NAME, fe.getKey());
         }
     }
 
@@ -143,15 +145,15 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class, fundBO.getFundId());
-        assertEquals("Fund-1", fundBO.getFundName());
-        assertNotNull(fundBO.getFundCode());
-        assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
+       Assert.assertEquals("Fund-1", fundBO.getFundName());
+        Assert.assertNotNull(fundBO.getFundCode());
+       Assert.assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
         try {
             fundBO.update(fund.getFundName());
-            assertTrue(false);
+           Assert.assertTrue(false);
         } catch (FundException fe) {
-            assertTrue(true);
-            assertEquals(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION, fe.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION, fe.getKey());
         }
 
     }
@@ -163,14 +165,14 @@ public class FundBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class, fundBO.getFundId());
-        assertEquals("Fund-1", fundBO.getFundName());
-        assertNotNull(fundBO.getFundCode());
-        assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
+       Assert.assertEquals("Fund-1", fundBO.getFundName());
+        Assert.assertNotNull(fundBO.getFundCode());
+       Assert.assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
         fundBO.update("Fund-2");
         StaticHibernateUtil.commitTransaction();
-        assertEquals("Fund-2", fundBO.getFundName());
-        assertNotNull(fundBO.getFundCode());
-        assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
+       Assert.assertEquals("Fund-2", fundBO.getFundName());
+        Assert.assertNotNull(fundBO.getFundCode());
+       Assert.assertEquals(fundCodeEntity.getFundCodeValue(), fundBO.getFundCode().getFundCodeValue());
     }
 
     private FundBO createFund(FundCodeEntity fundCodeEntity, String fundName) throws Exception {

@@ -26,6 +26,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
@@ -91,10 +93,10 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(Constants.LOAD_SUCCESS);
         verifyNoActionErrors();
-        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) request.getSession().getAttribute(
                 "applyPaymentActionForm");
-        assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue());
     }
 
     // added for defect 1590 [start]
@@ -109,10 +111,10 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(Constants.LOAD_SUCCESS);
         verifyNoActionErrors();
-        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) request.getSession().getAttribute(
                 "applyPaymentActionForm");
-        assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue());
     }
 
     // added for defect 1590 [end]
@@ -179,9 +181,9 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward("loan_detail_page");
-        assertEquals(new Money(), accountBO.getTotalPaymentDue());
-        assertEquals(0, accountBO.getTotalInstallmentsDue().size());
-        assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
+       Assert.assertEquals(new Money(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(0, accountBO.getTotalInstallmentsDue().size());
+       Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
     }
 
     public void testApplyPaymentPreviewDateValidation() throws Exception {
@@ -237,9 +239,9 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        assertEquals(new Money(), accountBO.getTotalPaymentDue());
-        assertEquals(0, accountBO.getTotalInstallmentsDue().size());
-        assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
+       Assert.assertEquals(new Money(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(0, accountBO.getTotalInstallmentsDue().size());
+       Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
 
         setRequestPathInfo("/loanAccountAction");
         addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
@@ -248,10 +250,10 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         LoanBO loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         loan = (LoanBO) StaticHibernateUtil.getSessionTL().load(LoanBO.class, loan.getAccountId());
-        assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
+       Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
 
         Short DEFAULT_LOCALE = (short) 1;
-        assertNotNull(loan.getAccountState().getName());
+        Assert.assertNotNull(loan.getAccountState().getName());
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().load(AccountBO.class, accountBO.getAccountId());
     }
@@ -278,9 +280,9 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward("loan_detail_page");
-        assertEquals(new Money(), accountBO.getTotalPaymentDue());
-        assertEquals(0, accountBO.getTotalInstallmentsDue().size());
-        assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
+       Assert.assertEquals(new Money(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(0, accountBO.getTotalInstallmentsDue().size());
+       Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
     }
 
     public void testApplyPaymentPrevious() {

@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -105,7 +107,7 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
         savingsBO = getSavingsAccount(center, "SAVINGS_OFFERING", "SAV");
         CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
 
-        assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
+       Assert.assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
 
         for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
             CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
@@ -126,7 +128,7 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
         collectionSheetHelper.execute(runTime);
 
         List<CollectionSheetBO> collectionSheets = getCollectionSheets();
-        assertEquals("Size of collectionSheets should be 1", 1, collectionSheets.size());
+       Assert.assertEquals("Size of collectionSheets should be 1", 1, collectionSheets.size());
 
         CollectionSheetBO collectionSheet = collectionSheets.get(0);
 
@@ -144,8 +146,8 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
         collectionSheetDate.roll(Calendar.DATE, collectionSheetHelper.getDaysInAdvance());
         long normalizedCollectionSheetTime = collectionSheetDate.getTimeInMillis();
 
-        assertEquals(collectionSheet.getRunDate().getTime(), normalizedRunTime);
-        assertEquals(collectionSheet.getCollSheetDate().getTime(), normalizedCollectionSheetTime);
+       Assert.assertEquals(collectionSheet.getRunDate().getTime(), normalizedRunTime);
+       Assert.assertEquals(collectionSheet.getCollSheetDate().getTime(), normalizedCollectionSheetTime);
 
         clearCollectionSheets(collectionSheets);
     }

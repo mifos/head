@@ -22,6 +22,8 @@ package org.mifos.application.fund.persistence;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -38,14 +40,14 @@ public class FundPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetFundNameCountWithoutData() throws PersistenceException {
-        assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund1"));
+       Assert.assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund1"));
     }
 
     public void testGetFundNameCountWithDifferentName() throws Exception {
         FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
                 (short) 1);
         FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
-        assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund2"));
+       Assert.assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund2"));
         TestObjectFactory.removeObject(fund);
 
     }
@@ -54,7 +56,7 @@ public class FundPersistenceIntegrationTest extends MifosIntegrationTestCase {
         FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
                 (short) 1);
         FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
-        assertEquals(Long.valueOf("1"), new FundPersistence().getFundNameCount("Fund1"));
+       Assert.assertEquals(Long.valueOf("1"), new FundPersistence().getFundNameCount("Fund1"));
         TestObjectFactory.removeObject(fund);
     }
 
@@ -62,19 +64,19 @@ public class FundPersistenceIntegrationTest extends MifosIntegrationTestCase {
         FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
                 (short) 1);
         FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
-        assertEquals("Fund1", new FundPersistence().getFund("Fund1").getFundName());
+       Assert.assertEquals("Fund1", new FundPersistence().getFund("Fund1").getFundName());
         TestObjectFactory.removeObject(fund);
     }
 
     public void testGetFundCodes() throws Exception {
         List<FundCodeEntity> funds = new FundPersistence().getFundCodes();
-        assertEquals(5, funds.size());
+       Assert.assertEquals(5, funds.size());
     }
 
     public void testGetSourcesOfFund() throws Exception {
         List<FundBO> funds = new FundPersistence().getSourcesOfFund();
-        assertNotNull(funds);
-        assertEquals(5, funds.size());
+        Assert.assertNotNull(funds);
+       Assert.assertEquals(5, funds.size());
     }
 
     public void testGetFundById() throws Exception {
@@ -84,9 +86,9 @@ public class FundPersistenceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         fund = new FundPersistence().getFund(fund.getFundId());
-        assertNotNull(fund);
-        assertEquals("Fund1", fund.getFundName());
-        assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
+        Assert.assertNotNull(fund);
+       Assert.assertEquals("Fund1", fund.getFundName());
+       Assert.assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
         TestObjectFactory.removeObject(fund);
     }
 }

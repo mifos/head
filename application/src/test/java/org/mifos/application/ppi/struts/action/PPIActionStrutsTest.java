@@ -22,6 +22,8 @@ package org.mifos.application.ppi.struts.action;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.business.PPISurveyTest;
@@ -85,7 +87,7 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.get_success.toString());
 
         PPISurvey retrieved = (PPISurvey) request.getAttribute(SurveysConstants.KEY_SURVEY);
-        assertEquals("Test Survey", retrieved.getName());
+       Assert.assertEquals("Test Survey", retrieved.getName());
     }
 
     public void testConfigureNoExistingPPISurvey() throws Exception {
@@ -95,12 +97,12 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
 
         List<Country> countryList = (List<Country>) request.getAttribute("countries");
-        assertEquals(Country.values().length, countryList.size());
+       Assert.assertEquals(Country.values().length, countryList.size());
     }
 
     public void testPreviewNoExistingPPISurvey() throws Exception {
         PPIPersistence ppiPersistence = new PPIPersistence();
-        assertEquals(0, ppiPersistence.retrieveAllPPISurveys().size());
+       Assert.assertEquals(0, ppiPersistence.retrieveAllPPISurveys().size());
 
         setRequestPathInfo("/ppiAction");
         addRequestParameter("method", "configure");
@@ -122,12 +124,12 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
 
-        assertEquals(0, ppiPersistence.retrieveAllPPISurveys().size());
+       Assert.assertEquals(0, ppiPersistence.retrieveAllPPISurveys().size());
     }
 
     public void testCreateUpdateNoExistingPPISurvey() throws Exception {
         PPIPersistence ppiPersistence = new PPIPersistence();
-        assertEquals(0, ppiPersistence.retrieveAllPPISurveys().size());
+       Assert.assertEquals(0, ppiPersistence.retrieveAllPPISurveys().size());
 
         setRequestPathInfo("/ppiAction");
         addRequestParameter("method", "configure");
@@ -153,7 +155,7 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
 
-        assertEquals(1, ppiPersistence.retrieveAllPPISurveys().size());
+       Assert.assertEquals(1, ppiPersistence.retrieveAllPPISurveys().size());
     }
 
     public void testCreatUpdateWithExistingPPISurvey() throws Exception {
@@ -205,6 +207,6 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
 
         PPIPersistence ppiPersistence = new PPIPersistence();
-        assertEquals(1, ppiPersistence.retrieveAllPPISurveys().size());
+       Assert.assertEquals(1, ppiPersistence.retrieveAllPPISurveys().size());
     }
 }

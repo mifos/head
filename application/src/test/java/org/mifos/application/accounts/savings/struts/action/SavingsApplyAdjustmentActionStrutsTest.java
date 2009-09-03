@@ -23,6 +23,8 @@ package org.mifos.application.accounts.savings.struts.action;
 import java.util.Date;
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
@@ -137,12 +139,12 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyNoActionMessages();
         verifyNoActionErrors();
         savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        assertNotNull(savings.getLastPmnt());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
+        Assert.assertNotNull(savings.getLastPmnt());
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
         AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(
                 SavingsConstants.ACCOUNT_ACTION, request);
-        assertEquals(AccountActionTypes.SAVINGS_DEPOSIT, accountAction.asEnum());
-        assertEquals(Short.valueOf("1"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
+       Assert.assertEquals(AccountActionTypes.SAVINGS_DEPOSIT, accountAction.asEnum());
+       Assert.assertEquals(Short.valueOf("1"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
     }
 
     public void testSuccessfullLoad_WithValidLastPaymentWithdrawal() throws Exception {
@@ -167,12 +169,12 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyNoActionMessages();
         verifyNoActionErrors();
         savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        assertNotNull(savings.getLastPmnt());
-        assertNotNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
+        Assert.assertNotNull(savings.getLastPmnt());
+        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
         AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(
                 SavingsConstants.ACCOUNT_ACTION, request);
-        assertEquals(AccountActionTypes.SAVINGS_WITHDRAWAL, accountAction.asEnum());
-        assertEquals(Short.valueOf("1"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
+       Assert.assertEquals(AccountActionTypes.SAVINGS_WITHDRAWAL, accountAction.asEnum());
+       Assert.assertEquals(Short.valueOf("1"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
     }
 
     public void testSuccessfullLoad_WithoutValidLastPayment() throws Exception {
@@ -188,10 +190,10 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyNoActionMessages();
         verifyNoActionErrors();
         savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        assertNull(savings.getLastPmnt());
-        assertNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
-        assertNull(SessionUtils.getAttribute(SavingsConstants.CLIENT_NAME, request));
-        assertEquals(Short.valueOf("0"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
+        Assert.assertNull(savings.getLastPmnt());
+        Assert.assertNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
+        Assert.assertNull(SessionUtils.getAttribute(SavingsConstants.CLIENT_NAME, request));
+       Assert.assertEquals(Short.valueOf("0"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
     }
 
     public void testSuccessfullPreviewSuccess() throws Exception {
@@ -256,9 +258,9 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
                         + "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
                         + "abcdefghijklmnopqrstuvwxyz");
         actionPerform();
-        assertEquals(2, getErrorSize());
-        assertEquals(1, getErrorSize(AccountConstants.MAX_NOTE_LENGTH));
-        assertEquals(1, getErrorSize(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
+       Assert.assertEquals(2, getErrorSize());
+       Assert.assertEquals(1, getErrorSize(AccountConstants.MAX_NOTE_LENGTH));
+       Assert.assertEquals(1, getErrorSize(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
         StaticHibernateUtil.closeSession();
         // savings = new SavingsPersistence().findById(savings.getAccountId());
     }
@@ -275,7 +277,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         addRequestParameter("method", "cancel");
         actionPerform();
         verifyForward("account_detail_page");
-        assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
     public void testSuccessfullAdjustUserPayment_AmountNullified() throws Exception {
@@ -292,7 +294,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-        assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt().getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt().getAccountTrxns().size());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
@@ -303,7 +305,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyForward("account_detail_page");
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-        assertEquals(Integer.valueOf(2).intValue(), savings.getLastPmnt().getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getLastPmnt().getAccountTrxns().size());
     }
 
     private void createInitialObjects() {

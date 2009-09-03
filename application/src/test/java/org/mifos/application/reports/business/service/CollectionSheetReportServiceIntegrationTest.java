@@ -31,6 +31,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -136,7 +138,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
         verify(loanProductBusinessServiceMock);
         verify(savingsProductBusinessServiceMock);
         verify(reportProductOfferingServiceMock);
-        assertEquals(2, collectionSheets.size());
+       Assert.assertEquals(2, collectionSheets.size());
     }
 
     private void setProductOfferingExpectation() throws ServiceException {
@@ -199,7 +201,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
         verify(loanProductBusinessServiceMock);
         verify(savingsProductBusinessServiceMock);
         verify(reportProductOfferingServiceMock);
-        assertEquals(MAX_COUNT, collectionSheets.size());
+       Assert.assertEquals(MAX_COUNT, collectionSheets.size());
     }
 
     public void testCollectionSheetForAllLoanOfficerAllCenterOffices() throws Exception {
@@ -240,7 +242,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
         verify(loanProductBusinessServiceMock);
         verify(savingsProductBusinessServiceMock);
         verify(reportProductOfferingServiceMock);
-        assertEquals(MAX_COUNT * 2, collectionSheets.size());
+       Assert.assertEquals(MAX_COUNT * 2, collectionSheets.size());
     }
 
     public void testBsklProductFilterReturnsLoanProductWithBsklOfferingType() throws Exception {
@@ -252,7 +254,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
         replay(reportProductOfferingServiceMock);
         CollSheetLnDetailsEntity filteredLoanDetailEntity = collectionSheetReportService.getLoanProduct(
                 collectionSheet, reportProductOfferingServiceMock.getLoanOffering1());
-        assertNotNull(filteredLoanDetailEntity);
+        Assert.assertNotNull(filteredLoanDetailEntity);
         assertSame(bsklLoanDetailsEntity, filteredLoanDetailEntity);
         verify(reportProductOfferingServiceMock);
         verify(accountBusinessServiceMock);
@@ -269,7 +271,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
 
         CollSheetLnDetailsEntity filteredLoanDetailEntity = collectionSheetReportService.getLoanProduct(
                 collectionSheet, reportProductOfferingServiceMock.getLoanOffering2());
-        assertNotNull(filteredLoanDetailEntity);
+        Assert.assertNotNull(filteredLoanDetailEntity);
         assertSame(clLoanDetailsEntity, filteredLoanDetailEntity);
         verify(reportProductOfferingServiceMock);
         verify(accountBusinessServiceMock);
@@ -288,7 +290,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
 
         CollSheetSavingsDetailsEntity filteredSavingsDetailEntity = collectionSheetReportService.getSavingProduct(
                 collectionSheet, reportProductOfferingServiceMock.getSavingsOffering1());
-        assertNotNull(filteredSavingsDetailEntity);
+        Assert.assertNotNull(filteredSavingsDetailEntity);
         assertSame(mm1SavingDetailsEntity, filteredSavingsDetailEntity);
         verify(reportProductOfferingServiceMock);
         verify(accountBusinessServiceMock);
@@ -307,7 +309,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
 
         CollSheetSavingsDetailsEntity filteredSavingsDetailEntity = collectionSheetReportService.getSavingProduct(
                 collectionSheet, reportProductOfferingServiceMock.getSavingsOffering2());
-        assertNotNull(filteredSavingsDetailEntity);
+        Assert.assertNotNull(filteredSavingsDetailEntity);
         assertSame(skSavingDetailsEntity, filteredSavingsDetailEntity);
         verify(reportProductOfferingServiceMock);
         verify(accountBusinessServiceMock);

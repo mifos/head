@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.branchreport.BranchReportBO;
@@ -98,18 +100,18 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
 
     private boolean compareBranchReports(BranchReportBO generatedBranchReport, BranchReportBO retrievedBranchReports) {
         boolean result = false;
-        assertEquals(generatedBranchReport.getBranchId(), retrievedBranchReports.getBranchId());
-        assertEquals(generatedBranchReport.getBranchReportId(), retrievedBranchReports.getBranchReportId());
-        assertEquals(generatedBranchReport.getClientSummaries().size(), retrievedBranchReports.getClientSummaries()
+       Assert.assertEquals(generatedBranchReport.getBranchId(), retrievedBranchReports.getBranchId());
+       Assert.assertEquals(generatedBranchReport.getBranchReportId(), retrievedBranchReports.getBranchReportId());
+       Assert.assertEquals(generatedBranchReport.getClientSummaries().size(), retrievedBranchReports.getClientSummaries()
                 .size());
-        assertEquals(generatedBranchReport.getLoanArrearsAging().size(), retrievedBranchReports.getLoanArrearsAging()
+       Assert.assertEquals(generatedBranchReport.getLoanArrearsAging().size(), retrievedBranchReports.getLoanArrearsAging()
                 .size());
-        assertEquals(generatedBranchReport.getLoanArrearsProfile().size(), retrievedBranchReports
+       Assert.assertEquals(generatedBranchReport.getLoanArrearsProfile().size(), retrievedBranchReports
                 .getLoanArrearsProfile().size());
-        assertEquals(generatedBranchReport.getLoanDetails().size(), retrievedBranchReports.getLoanDetails().size());
-        assertEquals(generatedBranchReport.getStaffingLevelSummaries().size(), retrievedBranchReports
+       Assert.assertEquals(generatedBranchReport.getLoanDetails().size(), retrievedBranchReports.getLoanDetails().size());
+       Assert.assertEquals(generatedBranchReport.getStaffingLevelSummaries().size(), retrievedBranchReports
                 .getStaffingLevelSummaries().size());
-        assertEquals(generatedBranchReport.getStaffSummaries().size(), retrievedBranchReports.getStaffSummaries()
+       Assert.assertEquals(generatedBranchReport.getStaffSummaries().size(), retrievedBranchReports.getStaffSummaries()
                 .size());
         result = true;
         return result;
@@ -117,13 +119,13 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
 
     private void assertBranchReport(BranchReportBO generatedBranchReport, BranchReportBO retrievedBranchReports)
             throws ServiceException {
-        assertNotNull(retrievedBranchReports);
+        Assert.assertNotNull(retrievedBranchReports);
         // now that generatedBranchReport is flushed the generatedBranchReport
         // and retrievedBranchReports
         // are not equal any more, we have to compare on the contents. It is
         // replaced with compareBranchReport
-        // assertEquals(generatedBranchReport, retrievedBranchReports);
-        assertTrue(compareBranchReports(generatedBranchReport, retrievedBranchReports));
+        //Assert.assertEquals(generatedBranchReport, retrievedBranchReports);
+       Assert.assertTrue(compareBranchReports(generatedBranchReport, retrievedBranchReports));
     }
 
     private void assertStaffSummary(Set<BranchReportStaffSummaryBO> generatedStaffSummaries,
@@ -140,10 +142,10 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
         boolean result = false;
         for (BranchReportLoanArrearsAgingBO bo : retrievedLoanArrearsAgingReports) {
             if (bo.getArrearsAgingId().equals(loanArrearsAging.getArrearsAgingId())) {
-                assertEquals(bo.getPeriodDescription(), loanArrearsAging.getPeriodDescription());
-                assertEquals(bo.getAgingPeriod(), loanArrearsAging.getAgingPeriod());
-                assertEquals(bo.getAmountAging(), loanArrearsAging.getAmountAging());
-                assertEquals(bo.getAmountOutstandingAging(), loanArrearsAging.getAmountOutstandingAging());
+               Assert.assertEquals(bo.getPeriodDescription(), loanArrearsAging.getPeriodDescription());
+               Assert.assertEquals(bo.getAgingPeriod(), loanArrearsAging.getAgingPeriod());
+               Assert.assertEquals(bo.getAmountAging(), loanArrearsAging.getAmountAging());
+               Assert.assertEquals(bo.getAmountOutstandingAging(), loanArrearsAging.getAmountOutstandingAging());
                 result = true;
                 return result;
             }
@@ -159,7 +161,7 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
         Iterator iterator = generatedLoanArrearsAgingReport.iterator();
         while (iterator.hasNext()) {
             BranchReportLoanArrearsAgingBO loanArrearsAging = (BranchReportLoanArrearsAgingBO) iterator.next();
-            assertTrue(find(loanArrearsAging, retrievedLoanArrearsAgingReports));
+           Assert.assertTrue(find(loanArrearsAging, retrievedLoanArrearsAgingReports));
         }
 
     }

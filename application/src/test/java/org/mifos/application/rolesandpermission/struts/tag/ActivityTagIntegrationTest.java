@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -40,14 +42,14 @@ public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
 
     public void testConvertToIdSet() throws Exception {
         Set<Short> activities = new ActivityTag().convertToIdSet(getActivities());
-        assertNotNull(activities);
-        assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
+        Assert.assertNotNull(activities);
+       Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
     }
 
     public void testGetActivities() throws Exception {
         List<ActivityEntity> activities = new ActivityTag().getActivities(getActivities(), getUiActivities());
-        assertNotNull(activities);
-        assertEquals(2, activities.size());
+        Assert.assertNotNull(activities);
+       Assert.assertEquals(2, activities.size());
     }
 
     private List<ActivityEntity> getActivities() throws Exception {

@@ -23,6 +23,7 @@ package org.mifos.application.reports.persistence;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.junit.Ignore;
@@ -49,15 +50,15 @@ public class AddReportTest extends TestCase {
                 "DetailedAgingPortfolioAtRisk.rptdesign");
         upgrade.upgrade(database.openConnection());
         ReportsBO fetched = (ReportsBO) database.openSession().get(ReportsBO.class, newId);
-        assertEquals(newId, (int) fetched.getReportId());
-        assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
-        assertEquals(null, fetched.getActivityId());
-        assertEquals("Detailed Aging of Portfolio at Risk", fetched.getReportName());
-        assertEquals("aging_portfolio_at_risk", fetched.getReportIdentifier());
-        assertEquals(ReportsCategoryBO.ANALYSIS, (int) fetched.getReportsCategoryBO().getReportCategoryId());
+       Assert.assertEquals(newId, (int) fetched.getReportId());
+       Assert.assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
+       Assert.assertEquals(null, fetched.getActivityId());
+       Assert.assertEquals("Detailed Aging of Portfolio at Risk", fetched.getReportName());
+       Assert.assertEquals("aging_portfolio_at_risk", fetched.getReportIdentifier());
+       Assert.assertEquals(ReportsCategoryBO.ANALYSIS, (int) fetched.getReportsCategoryBO().getReportCategoryId());
 
         ReportsJasperMap map = fetched.getReportsJasperMap();
-        assertEquals("DetailedAgingPortfolioAtRisk.rptdesign", map.getReportJasper());
+       Assert.assertEquals("DetailedAgingPortfolioAtRisk.rptdesign", map.getReportJasper());
 
         return upgrade;
     }

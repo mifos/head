@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
@@ -133,10 +135,10 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "1asq", currentDate);
         List<PrdOfferingView> products = savingsPersistence.getSavingsProducts(null, group.getCustomerLevel(),
                 new Short("2"));
-        assertEquals(2, products.size());
-        assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),
+       Assert.assertEquals(2, products.size());
+       Assert.assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),
                 "SavingPrd1");
-        assertEquals("Offerng name for the second product do not match.", products.get(1).getPrdOfferingName(),
+       Assert.assertEquals("Offerng name for the second product do not match.", products.get(1).getPrdOfferingName(),
                 "SavingPrd2");
 
     }
@@ -144,8 +146,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void testRetrieveCustomFieldsDefinition() throws Exception {
         List<CustomFieldDefinitionEntity> customFields = savingsPersistence
                 .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
-        assertNotNull(customFields);
-        assertEquals(TestConstants.SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
+        Assert.assertNotNull(customFields);
+       Assert.assertEquals(TestConstants.SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     public void testFindById() throws Exception {
@@ -154,28 +156,28 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "xdsa", currentDate);
         savings = createSavingsAccount("FFFF", savingsOffering);
         SavingsBO savings1 = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings1.getRecommendedAmount()
+       Assert.assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings1.getRecommendedAmount()
                 .getAmountDoubleValue());
     }
 
     public void testGetAccountStatus() throws Exception {
         AccountStateEntity accountState = savingsPersistence.getAccountStatusObject(AccountStates.SAVINGS_ACC_CLOSED);
-        assertNotNull(accountState);
-        assertEquals(accountState.getId().shortValue(), AccountStates.SAVINGS_ACC_CLOSED);
+        Assert.assertNotNull(accountState);
+       Assert.assertEquals(accountState.getId().shortValue(), AccountStates.SAVINGS_ACC_CLOSED);
     }
 
     public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
         List<AccountStateEntity> accountStateEntityList = accountPersistence.retrieveAllAccountStateList(Short
                 .valueOf("2"));
-        assertNotNull(accountStateEntityList);
-        assertEquals(6, accountStateEntityList.size());
+        Assert.assertNotNull(accountStateEntityList);
+       Assert.assertEquals(6, accountStateEntityList.size());
     }
 
     public void testRetrieveAllActiveAccountStateList() throws NumberFormatException, PersistenceException {
         List<AccountStateEntity> accountStateEntityList = accountPersistence.retrieveAllActiveAccountStateList(Short
                 .valueOf("2"));
-        assertNotNull(accountStateEntityList);
-        assertEquals(6, accountStateEntityList.size());
+        Assert.assertNotNull(accountStateEntityList);
+       Assert.assertEquals(6, accountStateEntityList.size());
     }
 
     public void testGetStatusChecklist() throws Exception {
@@ -183,9 +185,9 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                 AccountState.SAVINGS_PARTIAL_APPLICATION, Short.valueOf("1"));
         List statusCheckList = accountPersistence.getStatusChecklist(Short.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT
                 .getValue());
-        assertNotNull(statusCheckList);
+        Assert.assertNotNull(statusCheckList);
 
-        assertEquals(1, statusCheckList.size());
+       Assert.assertEquals(1, statusCheckList.size());
     }
 
     public void testFindBySystemId() throws Exception {
@@ -194,8 +196,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "v1ws", currentDate);
         savings = createSavingsAccount("kkk", savingsOffering);
         SavingsBO savings1 = savingsPersistence.findBySystemId(savings.getGlobalAccountNum());
-        assertEquals(savings.getAccountId(), savings1.getAccountId());
-        assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings1.getRecommendedAmount()
+       Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
+       Assert.assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings1.getRecommendedAmount()
                 .getAmountDoubleValue());
     }
 
@@ -263,7 +265,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
             savings.setUserContext(userContext);
             SavingsTrxnDetailEntity trxn = savingsPersistence.retrieveLastTransaction(savings.getAccountId(), helper
                     .getDate("12/03/2006"));
-            assertEquals(Double.valueOf("500"), trxn.getAmount().getAmountDoubleValue());
+           Assert.assertEquals(Double.valueOf("500"), trxn.getAmount().getAmountDoubleValue());
             group = savings.getCustomer();
             center = group.getParentCustomer();
         } catch (Exception e) {
@@ -299,8 +301,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         StaticHibernateUtil.closeSession();
 
         List<Integer> savingsList = savingsPersistence.retreiveAccountsPendingForIntCalc(helper.getDate("01/07/2006"));
-        assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
-        assertEquals(savings.getAccountId(), savingsList.get(0));
+       Assert.assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
+       Assert.assertEquals(savings.getAccountId(), savingsList.get(0));
 
         // retrieve objects to remove
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -336,9 +338,9 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
         List<Integer> savingsList = savingsPersistence.retreiveAccountsPendingForIntPosting(helper
                 .getDate("01/08/2006"));
-        assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
+       Assert.assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
 
-        assertEquals(savings.getAccountId(), savingsList.get(0));
+       Assert.assertEquals(savings.getAccountId(), savingsList.get(0));
 
         // retrieve objects to remove
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -371,7 +373,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Calendar currentDateCalendar = new GregorianCalendar();
         java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
 
-        assertEquals(savingsPersistence.getMissedDeposits(savings.getAccountId(), currentDate), 1);
+       Assert.assertEquals(savingsPersistence.getMissedDeposits(savings.getAccountId(), currentDate), 1);
     }
 
     public void testGetMissedDepositsPaidAfterDueDate() throws Exception {
@@ -397,7 +399,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         StaticHibernateUtil.commitTransaction();
-        assertEquals(savingsPersistence.getMissedDepositsPaidAfterDueDate(savings.getAccountId()), 1);
+       Assert.assertEquals(savingsPersistence.getMissedDepositsPaidAfterDueDate(savings.getAccountId()), 1);
     }
 
     public void testGetAllSavingsAccount() throws Exception {
@@ -407,8 +409,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savings = createSavingsAccount("kkk", savingsOffering);
 
         List<SavingsBO> savingsAccounts = savingsPersistence.getAllSavingsAccount();
-        assertNotNull(savingsAccounts);
-        assertEquals(1, savingsAccounts.size());
+        Assert.assertNotNull(savingsAccounts);
+       Assert.assertEquals(1, savingsAccounts.size());
 
     }
 

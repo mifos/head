@@ -39,6 +39,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -193,14 +195,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = savingsPersistence.findById(savings.getAccountId());
         Money balanceAmount = new Money(currency, "2000.0");
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 25/09 - 30/9 = 2000
         // Interest 2000*.12*5/365 = 2.2
-        assertEquals(2.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(2.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -220,19 +222,19 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
 
         Money amountAdjustedTo = new Money("0");
         savings.setUserContext(userContext);
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(new Money(currency, "2002.2"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "2002.2"), savings.getSavingsBalance());
         balanceAmount = new Money(currency, "1502.2");
         recommendedAmnt = new Money(currency, "500.0");
         AccountPaymentEntity payment3 = helper.createAccountPayment(savings, null, recommendedAmnt, helper
@@ -246,7 +248,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(new Money(currency, "1502.2"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "1502.2"), savings.getSavingsBalance());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -254,7 +256,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/09 - 31/10 = 1502.2
         // Interest 1502.2*.8*31/365 = 10.3
-        assertEquals(10.3, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(10.3, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -266,7 +268,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/10 - 30/11 = 1512.5
         // Interest 1512.5*.8*30/365 = 10.0
-        assertEquals(10.0, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(10.0, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -278,7 +280,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/11 - 31/12 = 1522.5
         // Interest1522.5*.8*31/365 = 10.4
-        assertEquals(10.4, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(10.4, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -313,14 +315,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = savingsPersistence.findById(savings.getAccountId());
         Money balanceAmount = new Money(currency, "2000.0");
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 25/09 - 30/9 = 2000
         // Interest 2000*.12*5/365 = 2.2
-        assertEquals(2.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(2.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -351,12 +353,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(new Money(currency, "2002.2"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "2002.2"), savings.getSavingsBalance());
 
         recommendedAmnt = new Money(currency, "345.0");
         paymentDate = helper.getDate("26/10/2030");
@@ -375,7 +377,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(new Money(currency, "2347.2"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "2347.2"), savings.getSavingsBalance());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -383,7 +385,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/09 - 31/10 = 2000
         // Interest 2002.2*.8*31/365 = 13.6
-        assertEquals(13.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(13.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -395,7 +397,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/10 - 30/11 = 2360.79
         // Interest 2360.79*.8*30/365 = 15.6
-        assertEquals(15.6, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(15.6, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -407,7 +409,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/11 - 31/12 = 2392.46
         // Interest 2392.469*.8*31/365 = 16.2
-        assertEquals(16.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(16.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -419,7 +421,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/12 - 30/01 = 2408.72
         // Interest 2408.72*.8*30/365 = 16.3
-        assertEquals(16.3, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(16.3, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -447,18 +449,18 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = savingsPersistence.findById(savings.getAccountId());
         Money balanceAmount = new Money(currency, "2000.0");
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
         Money amountAdjustedTo = new Money("1000");
         savings.setUserContext(userContext);
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(new Money(currency, "1000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "1000"), savings.getSavingsBalance());
 
         Money recommendedAmnt = new Money(currency, "1000.0");
         Date paymentDate = helper.getDate("25/02/2006");
@@ -480,14 +482,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 25/02 - 01/3 = 2000
         // Interest 2000*.12*4/365 = 2.6
-        assertEquals(2.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(2.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -498,7 +500,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 01/03 - 31/3 = 2002.7
         // Interest 2002.7*.12*30/365 = 20.4
-        assertEquals(19.8, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(19.8, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -509,7 +511,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/03 - 30/4 = 2022.5
         // Interest 2022.5*.12*30/365 = 20.0
-        assertEquals(20.0, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(20.0, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -518,7 +520,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(20.9, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(20.9, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -573,7 +575,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setActivationDate(startDate);
         Short flagId = 1;
         savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
-        assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+       Assert.assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
         Money depositMoney = new Money(currency, "200.0");
         Money balanceAmt = new Money(currency, "200.0");
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositMoney, balanceAmt,
@@ -587,9 +589,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < 12; i++) {
             savings.updateInterestAccrued();
             savings.postInterest();
-            assertEquals(DateUtils.addDays(savings.getLastIntPostDate(), 1), savings.getNextIntPostDate());
-            assertEquals(DateUtils.addDays(savings.getLastIntCalcDate(), 1), savings.getNextIntCalcDate());
-            assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+           Assert.assertEquals(DateUtils.addDays(savings.getLastIntPostDate(), 1), savings.getNextIntPostDate());
+           Assert.assertEquals(DateUtils.addDays(savings.getLastIntCalcDate(), 1), savings.getNextIntCalcDate());
+           Assert.assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
         }
 
     }
@@ -604,7 +606,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setActivationDate(startDate);
         Short flagId = 1;
         savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
-        assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+       Assert.assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
         Money depositMoney = new Money(currency, "200.0");
         Money balanceAmt = new Money(currency, "200.0");
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositMoney, balanceAmt,
@@ -618,9 +620,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < 12; i++) {
             savings.updateInterestAccrued();
             savings.postInterest();
-            assertEquals(DateUtils.addDays(savings.getLastIntPostDate(), 7), savings.getNextIntPostDate());
-            assertEquals(DateUtils.addDays(savings.getLastIntCalcDate(), 7), savings.getNextIntCalcDate());
-            assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+           Assert.assertEquals(DateUtils.addDays(savings.getLastIntPostDate(), 7), savings.getNextIntPostDate());
+           Assert.assertEquals(DateUtils.addDays(savings.getLastIntCalcDate(), 7), savings.getNextIntCalcDate());
+           Assert.assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
         }
 
     }
@@ -635,7 +637,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setActivationDate(startDate);
         Short flagId = 1;
         savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
-        assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+       Assert.assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
         Money depositMoney = new Money(currency, "200.0");
         Money balanceAmt = new Money(currency, "200.0");
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositMoney, balanceAmt,
@@ -649,7 +651,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < 12; i++) {
             savings.updateInterestAccrued();
             savings.postInterest();
-            assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+           Assert.assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
         }
 
     }
@@ -679,12 +681,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         savings.updateInterestAccrued();
-        assertEquals(1.644, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(1.644, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
 
         SavingsHelper sHelper = new SavingsHelper();
         Date nextIntCalcDate2 = sHelper.getNextScheduleDate(startDate, nextIntCalcDate, savingsOffering
                 .getTimePerForInstcalc().getMeeting());
-        assertEquals(nextIntCalcDate2, savings.getNextIntCalcDate());
+       Assert.assertEquals(nextIntCalcDate2, savings.getNextIntCalcDate());
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -693,11 +695,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         Date postDate = sHelper.getNextScheduleDate(startDate, null, savingsOffering.getFreqOfPostIntcalc()
                 .getMeeting());
-        assertEquals(postDate, savings.getLastIntPostDate());
+       Assert.assertEquals(postDate, savings.getLastIntPostDate());
         postDate = sHelper
                 .getNextScheduleDate(startDate, postDate, savingsOffering.getFreqOfPostIntcalc().getMeeting());
 
-        assertEquals(postDate, savings.getNextIntPostDate());
+       Assert.assertEquals(postDate, savings.getNextIntPostDate());
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -705,11 +707,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.updateInterestAccrued();
         int days = sHelper.calculateDays(nextIntCalcDate, nextIntCalcDate2);
         double interest = (201.644 * 0.1 * days / 365);
-        assertEquals(getRoundedDouble(interest), getRoundedDouble(savings.getInterestToBePosted()
+       Assert.assertEquals(getRoundedDouble(interest), getRoundedDouble(savings.getInterestToBePosted()
                 .getAmountDoubleValue()));
         nextIntCalcDate2 = sHelper.getNextScheduleDate(startDate, nextIntCalcDate2, savingsOffering
                 .getTimePerForInstcalc().getMeeting());
-        assertEquals(nextIntCalcDate2, savings.getNextIntCalcDate());
+       Assert.assertEquals(nextIntCalcDate2, savings.getNextIntCalcDate());
 
         AccountingRules.setDigitsAfterDecimal(savedDigits);
     }
@@ -846,10 +848,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -859,9 +861,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Min Bal from 25/02 - 01/3 = 2000
         // Interest 2000*.12*4/365 = 2.6
         // * TODO: financial_calculation_rounding
-        // assertEquals(2.6,
+        //Assert.assertEquals(2.6,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(2.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(2.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -872,13 +874,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest = 7000*.12*31/365 = 71.3
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(71.3, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals(71.4, getRoundedDouble(oldInterest.getAmountDoubleValue()), DELTA);
+        //Assert.assertEquals(71.3, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(71.4, getRoundedDouble(oldInterest.getAmountDoubleValue()), DELTA);
         // 71.3 + 2.6 = 73.9
         // * TODO: financial_calculation_rounding
-        // assertEquals(73.9,
+        //Assert.assertEquals(73.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(71.8, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(71.8, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
 
         savings.setUserContext(userContext);
         // Nullifying last payment
@@ -887,20 +889,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
 
-        assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
         // principal = (7000* 31) /31 = 7000
         // Interest = 7000*.12*31/365 = 71.3
         // 71.3 + 2.0 = 73.9
         // * TODO: financial_calculation_rounding
-        // assertEquals(73.9,
+        //Assert.assertEquals(73.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("71.8", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("71.8", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -948,7 +950,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue());
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -958,9 +960,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Min Bal from 25/02 - 28/2 = 2000
         // Interest 2000*.12*3/365 = 2.0
         // * TODO: financial_calculation_rounding
-        // assertEquals(2.6,
+        //Assert.assertEquals(2.6,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("2.0", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("2.0", savings.getInterestToBePosted().toString());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -971,10 +973,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest = 5000*.12*31/365 = 51.0
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
         // * TODO: financial_calculation_rounding
-        assertEquals("51.0", oldInterest.toString());
+       Assert.assertEquals("51.0", oldInterest.toString());
         // 51.0 + 2.0 = 53.0
         // * TODO: financial_calculation_rounding
-        assertEquals("53.0", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("53.0", savings.getInterestToBePosted().toString());
 
         savings.setUserContext(userContext);
         // Nullifying last payment
@@ -983,20 +985,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
 
-        assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
         // principal = (7000* 31) /31 = 7000
         // Interest = 7000*.12*31/365 = 71.3
         // 71.3 + 2.0 = 73.3
         // * TODO: financial_calculation_rounding
-        // assertEquals(73.9,
+        //Assert.assertEquals(73.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("73.4", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("73.4", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1063,10 +1065,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1077,9 +1079,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Therefore avg bal 11000/3
         // Interest 11000/3*.12*3/365 = 3.6
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9,
+        //Assert.assertEquals(5.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("3.7", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("3.7", savings.getInterestToBePosted().toString());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1090,13 +1092,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest = 7658.1*.12*31/365 = 78.0
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(78.0, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals("77.7", oldInterest.toString());
+        //Assert.assertEquals(78.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals("77.7", oldInterest.toString());
         // 77.7 + 3.6 = 81.3
         // * TODO: financial_calculation_rounding
-        // assertEquals(83.9,
+        //Assert.assertEquals(83.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("81.4", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("81.4", savings.getInterestToBePosted().toString());
 
         savings.setUserContext(userContext);
         Money amountAdjustedTo = new Money(currency, "2000");
@@ -1104,20 +1106,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
 
-        assertEquals(new Money(currency, "9000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "9000"), savings.getSavingsBalance());
         // principal = (7000* 14(days)+ 9000*17(days))/31 = 8096.8
         // Interest = 8096.8*.12*31/365 = 82.5
         // Total Interest = 82.5 + 3.6 = 86.1
         // * TODO: financial_calculation_rounding
-        // assertEquals(88.4,
+        //Assert.assertEquals(88.4,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("85.6", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("85.6", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1195,10 +1197,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1209,9 +1211,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Therefore avg bal 11000/3
         // Interest 11000/3 *.12*3/365 = 3.6
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9,
+        //Assert.assertEquals(5.9,
         // savings.getInterestToBePosted().getAmountDoubleValue());
-        assertEquals("3.7", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("3.7", savings.getInterestToBePosted().toString());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1222,13 +1224,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest = 7658.1*.12*31/365 = 78.0
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(78.0, oldInterest.getAmountDoubleValue());
-        assertEquals("77.7", oldInterest.toString());
+        //Assert.assertEquals(78.0, oldInterest.getAmountDoubleValue());
+       Assert.assertEquals("77.7", oldInterest.toString());
         // 77.7 + 3.6 = 81.3
         // * TODO: financial_calculation_rounding
-        // assertEquals(83.9,
+        //Assert.assertEquals(83.9,
         // savings.getInterestToBePosted().getAmountDoubleValue());
-        assertEquals("81.4", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("81.4", savings.getInterestToBePosted().toString());
 
         savings.setUserContext(userContext);
         Money amountAdjustedTo = new Money(currency, "2000");
@@ -1236,20 +1238,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
 
-        assertEquals(new Money(currency, "9000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "9000"), savings.getSavingsBalance());
         // principal = (7000* 14(days)+ 9000*17(days))/31 = 8096.8
         // Interest = 8096.8*.12*31/365 = 82.5
         // Total Interest = 82.5 + 3.6 = 86.1
         // * TODO: financial_calculation_rounding
-        // assertEquals(88.4,
+        //Assert.assertEquals(88.4,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("85.6", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("85.6", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1327,10 +1329,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(balanceAmount, savings.getSavingsBalance());
+       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1341,9 +1343,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Therefore avg bal 11000/3
         // Interest (11000/3)*.12*3/365 = 3.6
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9,
+        //Assert.assertEquals(5.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("3.7", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("3.7", savings.getInterestToBePosted().toString());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1354,13 +1356,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest = 7658.1*.12*31/365 = 78.0
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(78.0, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals("77.7", oldInterest.toString());
+        //Assert.assertEquals(78.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals("77.7", oldInterest.toString());
         // 77.7 + 3.6 = 81.3
         // * TODO: financial_calculation_rounding
-        // assertEquals(83.9,
+        //Assert.assertEquals(83.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("81.4", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("81.4", savings.getInterestToBePosted().toString());
 
         savings.setUserContext(userContext);
         // Nullifying last payment
@@ -1369,20 +1371,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
 
-        assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
         // principal = (7000* 31) /31 = 7000
         // Interest = 7000*.12*31/365 = 71.3
         // Total Interest = 71.3 + 3.6 = 74.9
         // * TODO: financial_calculation_rounding
-        // assertEquals(77.2,
+        //Assert.assertEquals(77.2,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("75.1", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("75.1", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1419,7 +1421,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("27/02/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1429,9 +1431,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Min Bal 25/02 - 28/02 = 2000
         // Interest 2000*.12*3/365 = 2.0
         // * TODO: financial_calculation_rounding
-        // assertEquals(2.6,
+        //Assert.assertEquals(2.6,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("2.0", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("2.0", savings.getInterestToBePosted().toString());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1443,11 +1445,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Total Interest 71.3 + 2.0 = 73.3
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("27/02/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(73.9, oldInterest.getAmountDoubleValue(), DELTA);
-        // assertEquals(73.9, savings.getInterestToBePosted()
+        //Assert.assertEquals(73.9, oldInterest.getAmountDoubleValue(), DELTA);
+        //Assert.assertEquals(73.9, savings.getInterestToBePosted()
         // .getAmountDoubleValue(), DELTA);
-        assertEquals("73.4", oldInterest.toString());
-        assertEquals("73.4", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("73.4", oldInterest.toString());
+       Assert.assertEquals("73.4", savings.getInterestToBePosted().toString());
 
         savings.setUserContext(userContext);
         Money amountAdjustedTo = new Money(currency, "4000");
@@ -1455,19 +1457,19 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         payment = savings.getLastPmnt();
-        assertEquals(new Money(currency, "6000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "6000"), savings.getSavingsBalance());
 
         // Min Bal 25/02 - 28/02 = 6000
         // Interest 6000*.12*31/365 = 61.2
         // Total Interest 61.2 + 2.0 = 63.2
         // * TODO: financial_calculation_rounding
-        assertEquals("63.2", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("63.2", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1478,10 +1480,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountPaymentEntity accountPaymentEntity : savings.getAccountPayments()) {
             for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()) {
                 SavingsTrxnDetailEntity trxnEntity = (SavingsTrxnDetailEntity) accountTrxnEntity;
-                assertEquals(new Money("5500"), trxnEntity.getBalance());
-                assertEquals(new Money(), trxnEntity.getDepositAmount());
-                assertEquals(new Money(), trxnEntity.getInterestAmount());
-                assertEquals(new Money(), trxnEntity.getWithdrawlAmount());
+               Assert.assertEquals(new Money("5500"), trxnEntity.getBalance());
+               Assert.assertEquals(new Money(), trxnEntity.getDepositAmount());
+               Assert.assertEquals(new Money(), trxnEntity.getInterestAmount());
+               Assert.assertEquals(new Money(), trxnEntity.getWithdrawlAmount());
                 break;
             }
         }
@@ -1567,20 +1569,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void verifyFields() throws Exception {
-        assertTrue(true);
-        assertEquals(savings.getInterestRate(), savingsOffering.getInterestRate());
-        assertEquals(savings.getMinAmntForInt().getAmountDoubleValue(), savingsOffering.getMinAmntForInt()
+       Assert.assertTrue(true);
+       Assert.assertEquals(savings.getInterestRate(), savingsOffering.getInterestRate());
+       Assert.assertEquals(savings.getMinAmntForInt().getAmountDoubleValue(), savingsOffering.getMinAmntForInt()
                 .getAmountDoubleValue());
-        assertEquals(savings.getMinAmntForInt(), savingsOffering.getMinAmntForInt());
-        assertEquals(savings.getTimePerForInstcalc().getMeetingDetails().getRecurAfter(), savingsOffering
+       Assert.assertEquals(savings.getMinAmntForInt(), savingsOffering.getMinAmntForInt());
+       Assert.assertEquals(savings.getTimePerForInstcalc().getMeetingDetails().getRecurAfter(), savingsOffering
                 .getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter());
-        assertEquals(1, savings.getAccountCustomFields().size());
+       Assert.assertEquals(1, savings.getAccountCustomFields().size());
         Iterator itr = savings.getAccountCustomFields().iterator();
         AccountCustomFieldEntity customFieldEntity = (AccountCustomFieldEntity) itr.next();
-        assertEquals(Short.valueOf("8"), customFieldEntity.getFieldId());
-        assertEquals("13", customFieldEntity.getFieldValue());
-        assertEquals(AccountTypes.SAVINGS_ACCOUNT, savings.getType());
-        assertEquals(group.getPersonnel().getPersonnelId(), savings.getPersonnel().getPersonnelId());
+       Assert.assertEquals(Short.valueOf("8"), customFieldEntity.getFieldId());
+       Assert.assertEquals("13", customFieldEntity.getFieldValue());
+       Assert.assertEquals(AccountTypes.SAVINGS_ACCOUNT, savings.getType());
+       Assert.assertEquals(group.getPersonnel().getPersonnelId(), savings.getPersonnel().getPersonnelId());
     }
 
     public void testInterestAdjustment_LastWithdrawalPaymentNullified_WithMinBal() throws Exception {
@@ -1625,7 +1627,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1636,14 +1638,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Min Bal 20/02 - 28/02 = 2000
         // Interest 2000*.12*8/365 = 5.3
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9,
+        //Assert.assertEquals(5.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("5.3", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("5.3", savings.getInterestToBePosted().toString());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals("5.3", oldInterest.toString());
+        //Assert.assertEquals(5.9, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals("5.3", oldInterest.toString());
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -1652,7 +1654,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1661,9 +1663,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Min Bal 20/02 - 01/03 = 2000
         // Interest 2000*.12*8/365 = 5.3
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9,
+        //Assert.assertEquals(5.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("5.3", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("5.3", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1712,7 +1714,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1725,11 +1727,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest = (21500 * .12 / 365 * 8) = 6.2
 
         // * TODO: financial_calculation_rounding
-        assertEquals("6.3", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("6.3", savings.getInterestToBePosted().toString());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // * TODO: financial_calculation_rounding
-        assertEquals("6.3", oldInterest.toString());
+       Assert.assertEquals("6.3", oldInterest.toString());
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -1738,7 +1740,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1747,7 +1749,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Therefore Avg Bal (8000+12000)/9 = 20000/9
         // Interest = (20000 * .12 / 365) = 7.56
         // * TODO: financial_calculation_rounding
-        assertEquals("6.6", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("6.6", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1783,7 +1785,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1795,14 +1797,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Interest 3666.667*.12*3/365 = 3.616
 
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9,
+        //Assert.assertEquals(5.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("3.7", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("3.7", savings.getInterestToBePosted().toString());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals("3.7", oldInterest.toString());
+        //Assert.assertEquals(5.9, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals("3.7", oldInterest.toString());
 
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1814,21 +1816,21 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         payment = savings.getLastPmnt();
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(new Money(currency, "2000"), savings.getSavingsBalance());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(currency, "2000"), savings.getSavingsBalance());
         // After Adjustment
         // Avg Bal 25/02 - 28/02 = 2000 * 3/3 = 2000
         // Interest 2000*.12*3/365 = 2.0
         // * TODO: financial_calculation_rounding
-        // assertEquals(2.6,
+        //Assert.assertEquals(2.6,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("2.0", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("2.0", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1854,7 +1856,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -1863,15 +1865,15 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal 25/02 - 01/03 = 2000
         // Interest 2000*.12*3/365 = 2.0
-        // assertEquals(2.6,
+        //Assert.assertEquals(2.6,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
         // * TODO: financial_calculation_rounding
-        assertEquals(2.0, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(2.0, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // TODO: financial_calculation_rounding
-        // assertEquals(2.6, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals(2.0, getRoundedDouble(oldInterest.getAmountDoubleValue()), DELTA);
+        //Assert.assertEquals(2.6, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(2.0, getRoundedDouble(oldInterest.getAmountDoubleValue()), DELTA);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
@@ -1882,16 +1884,16 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         payment = savings.getLastPmnt();
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(new Money(), savings.getSavingsBalance());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(), savings.getSavingsBalance());
 
-        assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue());
+       Assert.assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -1915,8 +1917,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
 
-        assertTrue(savings.isTrxnDateValid(savings.getActivationDate()));
-        assertFalse(savings.isTrxnDateValid(offSetCurrentDate(1)));
+       Assert.assertTrue(savings.isTrxnDateValid(savings.getActivationDate()));
+        Assert.assertFalse(savings.isTrxnDateValid(offSetCurrentDate(1)));
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
@@ -1940,9 +1942,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         java.util.Date trxnDate = offSetCurrentDate(-5);
         if (AccountingRules.isBackDatedTxnAllowed())
-            assertTrue(savings.isTrxnDateValid(trxnDate));
+           Assert.assertTrue(savings.isTrxnDateValid(trxnDate));
         else
-            assertFalse(savings.isTrxnDateValid(trxnDate));
+            Assert.assertFalse(savings.isTrxnDateValid(trxnDate));
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
@@ -1957,8 +1959,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         verifyFields();
-        assertEquals(AccountState.SAVINGS_PENDING_APPROVAL.getValue(), savings.getAccountState().getId());
-        assertEquals(100.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(AccountState.SAVINGS_PENDING_APPROVAL.getValue(), savings.getAccountState().getId());
+       Assert.assertEquals(100.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
     }
 
     public void testSuccessfulSaveInApprovedState() throws Exception {
@@ -1975,8 +1977,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         verifyFields();
-        assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
-        assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings.getRecommendedAmount()
+       Assert.assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
+       Assert.assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings.getRecommendedAmount()
                 .getAmountDoubleValue());
 
     }
@@ -1991,8 +1993,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.getTransaction().commit();
         StaticHibernateUtil.closeSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-        assertTrue(true);
-        assertEquals(new Double(700).doubleValue(), savings.getRecommendedAmount().getAmountDoubleValue());
+       Assert.assertTrue(true);
+       Assert.assertEquals(new Double(700).doubleValue(), savings.getRecommendedAmount().getAmountDoubleValue());
     }
 
     public void testSuccessfulUpdateDepositSchedule() throws Exception {
@@ -2006,13 +2008,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.getTransaction().commit();
         StaticHibernateUtil.closeSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-        assertTrue(true);
-        assertEquals(new Double(700).doubleValue(), savings.getRecommendedAmount().getAmountDoubleValue());
+       Assert.assertTrue(true);
+       Assert.assertEquals(new Double(700).doubleValue(), savings.getRecommendedAmount().getAmountDoubleValue());
         Set<AccountActionDateEntity> actionDates = savings.getAccountActionDates();
-        assertNotNull(actionDates);
+        Assert.assertNotNull(actionDates);
         for (AccountActionDateEntity entity : actionDates) {
             if (entity.getActionDate().compareTo(new java.sql.Date(System.currentTimeMillis())) > 0)
-                assertEquals(700.0, ((SavingsScheduleEntity) entity).getDeposit().getAmountDoubleValue(), DELTA);
+               Assert.assertEquals(700.0, ((SavingsScheduleEntity) entity).getDeposit().getAmountDoubleValue(), DELTA);
         }
     }
 
@@ -2022,7 +2024,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         boolean initialBalance = false;
         Money minBal = savings.getMinimumBalance(getTimeStampDate(helper.getDate("05/01/2006")),
                 getTimeStampDate(helper.getDate("10/05/2006")), initialTrxn, null, initialBalance);
-        assertEquals(Double.valueOf("4000"), minBal.getAmountDoubleValue());
+       Assert.assertEquals(Double.valueOf("4000"), minBal.getAmountDoubleValue());
         TestObjectFactory.flushandCloseSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         group = TestObjectFactory.getGroup(savings.getCustomer().getCustomerId());
@@ -2040,7 +2042,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 helper.getDate("05/01/2006"));
         Money avgBalance = savings.getAverageBalance(getTimeStampDate(helper.getDate("05/01/2006")),
                 getTimeStampDate(helper.getDate("10/04/2006")), initialTrxn, null);
-        assertEquals("5507.4", avgBalance.toString());
+       Assert.assertEquals("5507.4", avgBalance.toString());
         TestObjectFactory.flushandCloseSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         group = TestObjectFactory.getGroup(savings.getCustomer().getCustomerId());
@@ -2068,7 +2070,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.getSavingsOffering().setMinAmntForInt(new Money("0"));
         Money amount = savings.calculateInterestForClosure(helper.getDate("30/05/2006"));
-        assertEquals("6.6", amount.toString());
+       Assert.assertEquals("6.6", amount.toString());
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -2094,7 +2096,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         double intAmount = savings.calculateInterestForClosure(helper.getDate("30/05/2006")).getAmountDoubleValue();
-        assertEquals(Double.valueOf("0"), intAmount);
+       Assert.assertEquals(Double.valueOf("0"), intAmount);
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -2147,12 +2149,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // remove workarounds like this when rounding rules are working
         // double intAmount = savings.calculateInterestForClosure(
         // helper.getDate("10/04/2006")).getAmountDoubleValue();
-        // assertEquals(Double.valueOf("78.2"), getRoundedDouble(intAmount));
+        //Assert.assertEquals(Double.valueOf("78.2"), getRoundedDouble(intAmount));
 
         Money roundedInterestForClosure = Money.round(
                 savings.calculateInterestForClosure(helper.getDate("10/04/2006")), AccountingRules
                         .getDigitsAfterDecimalMultiple(), AccountingRules.getCurrencyRoundingMode());
-        assertEquals("78.3", roundedInterestForClosure.toString());
+       Assert.assertEquals("78.3", roundedInterestForClosure.toString());
     }
 
     public void testIsMandatory() throws Exception {
@@ -2160,7 +2162,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        assertEquals(Boolean.valueOf(false).booleanValue(), savings.isMandatory());
+       Assert.assertEquals(Boolean.valueOf(false).booleanValue(), savings.isMandatory());
     }
 
     public void testIsDepositScheduleBeRegenerated() throws Exception {
@@ -2169,7 +2171,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 RecommendedAmountUnit.PER_INDIVIDUAL);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        assertEquals(Boolean.valueOf(false).booleanValue(), savings.isMandatory());
+       Assert.assertEquals(Boolean.valueOf(false).booleanValue(), savings.isMandatory());
     }
 
     public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
@@ -2192,7 +2194,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setUserContext(userContext);
         group = savings.getCustomer();
         center = group.getParentCustomer();
-        assertEquals(10, savings.getAccountActionDates().size());
+       Assert.assertEquals(10, savings.getAccountActionDates().size());
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         client1 = customerPersistence.getCustomer(client1.getCustomerId());
@@ -2221,8 +2223,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         paymentData.setRecieptNum("34244");
         boolean persist = true;
         savings.withdraw(paymentData, persist);
-        assertEquals(0.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
-        assertEquals(1, savings.getSavingsActivityDetails().size());
+       Assert.assertEquals(0.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
         savings.getAccountPayments().clear();
     }
 
@@ -2251,9 +2253,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);
         paymentData.addAccountPaymentData(savingsPaymentData);
         savings.applyPaymentWithPersist(paymentData);
-        assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
-        assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
-        assertEquals(1, savings.getSavingsActivityDetails().size());
+       Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
+       Assert.assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
         savings.getAccountPayments().clear();
         client1 = customerPersistence.getCustomer(client1.getCustomerId());
     }
@@ -2285,17 +2287,17 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = (SavingsBO) accountPersistence.getAccount(savings.getAccountId());
-        assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
-        assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
-        assertEquals(1, savings.getSavingsActivityDetails().size());
+       Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
+       Assert.assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
         Set<AccountPaymentEntity> payments = savings.getAccountPayments();
-        assertEquals(1, payments.size());
+       Assert.assertEquals(1, payments.size());
         for (AccountPaymentEntity payment : payments) {
-            assertEquals(1, payment.getAccountTrxns().size());
+           Assert.assertEquals(1, payment.getAccountTrxns().size());
             for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
                 SavingsTrxnDetailEntity trxn = (SavingsTrxnDetailEntity) accountTrxn;
-                assertEquals(enteredAmount, trxn.getBalance());
-                assertEquals(client1.getCustomerId(), trxn.getCustomer().getCustomerId());
+               Assert.assertEquals(enteredAmount, trxn.getBalance());
+               Assert.assertEquals(client1.getCustomerId(), trxn.getCustomer().getCustomerId());
             }
         }
         client1 = customerPersistence.getCustomer(client1.getCustomerId());
@@ -2324,9 +2326,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
 
-        assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
-        assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
-        assertEquals(1, savings.getSavingsActivityDetails().size());
+       Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
+       Assert.assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
     }
 
     private SavingsPaymentData getSavingsPaymentdata(CollectionSheetEntryInstallmentView bulkEntryAccountActionView) {
@@ -2355,9 +2357,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             boolean persist = true;
             savings.withdraw(paymentData, persist);
-            assertTrue("No Exception is thrown. Even amount greater than max withdrawal allowed to be withdrawn", false);
+           Assert.assertTrue("No Exception is thrown. Even amount greater than max withdrawal allowed to be withdrawn", false);
         } catch (AccountException ae) {
-            assertTrue("Exception is thrown. Amount greater than max withdrawal not allowed to be withdrawn", true);
+           Assert.assertTrue("Exception is thrown. Amount greater than max withdrawal not allowed to be withdrawn", true);
         }
         savings.getAccountPayments().clear();
     }
@@ -2381,7 +2383,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         session = StaticHibernateUtil.getSessionTL();
         SavingsBO savingsNew = (SavingsBO) (session.get(SavingsBO.class, Integer.valueOf(savings.getAccountId())));
-        assertEquals(savingsNew.getAccountFlags().size(), 3);
+       Assert.assertEquals(savingsNew.getAccountFlags().size(), 3);
         session.evict(savingsNew);
         StaticHibernateUtil.closeSession();
     }
@@ -2393,7 +2395,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
         AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.SAVINGS_ACCOUNT, null);
         savings.changeStatus(AccountState.SAVINGS_PENDING_APPROVAL.getValue(), null, "notes");
-        assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings.getAccountState().getId().shortValue());
+       Assert.assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings.getAccountState().getId().shortValue());
 
     }
 
@@ -2406,7 +2408,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // 6 is blacklisted
 
         savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), Short.valueOf("6"), "notes");
-        assertEquals(AccountStates.SAVINGS_ACC_CANCEL, savings.getAccountState().getId().shortValue());
+       Assert.assertEquals(AccountStates.SAVINGS_ACC_CANCEL, savings.getAccountState().getId().shortValue());
 
     }
 
@@ -2417,8 +2419,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
         Money amountAdjustedTo = new Money(currency, "500.0");
         boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-        assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
+       Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+       Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
     public void testIsAdjustPossibleOnLastTrxn_NoLastPayment() throws Exception {
@@ -2428,9 +2430,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         Money amountAdjustedTo = new Money(currency, "500.0");
         boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        assertNull(savings.getLastPmnt());
-        assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
+       Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
+        Assert.assertNull(savings.getLastPmnt());
+       Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
     public void testIsAdjustPossibleOnLastTrxn_LastPaymentIsInterestPosting() throws Exception {
@@ -2446,9 +2448,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         Money amountAdjustedTo = new Money(currency, "500.0");
         boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        assertNotNull(savings.getLastPmnt());
-        assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
+       Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
+        Assert.assertNotNull(savings.getLastPmnt());
+       Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
     public void testIsAdjustPossibleOnLastTrxn_AmountSame() throws Exception {
@@ -2464,9 +2466,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         Money amountAdjustedTo = new Money(currency, "1000.0");
         boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        assertNotNull(savings.getLastPmnt());
-        assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
+       Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
+        Assert.assertNotNull(savings.getLastPmnt());
+       Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
     public void testIsAdjustPossibleOnLastTrxn_MaxWithdrawalAmntIsLess() throws Exception {
@@ -2483,9 +2485,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savingsOffering.setMaxAmntWithdrawl(new Money("1200"));
         Money amountAdjustedTo = new Money(currency, "1500.0");
         boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        assertNotNull(savings.getLastPmnt());
-        assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
+       Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
+        Assert.assertNotNull(savings.getLastPmnt());
+       Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
     public void testIsAdjustPossibleOnLastTrxn_Balance_Negative() throws Exception {
@@ -2504,10 +2506,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savingsOffering.setMaxAmntWithdrawl(new Money("2500"));
         Money amountAdjustedTo = new Money(currency, "2000.0");
         boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        assertNotNull(savings.getLastPmnt());
-        assertEquals(savings.getSavingsBalance(), new Money(currency, "400.0"));
-        assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
+       Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
+        Assert.assertNotNull(savings.getLastPmnt());
+       Assert.assertEquals(savings.getSavingsBalance(), new Money(currency, "400.0"));
+       Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
     // When IsAdjustPossibleOnLastTrxn returns false.
@@ -2529,13 +2531,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(true);
-            assertEquals("exception.accounts.ApplicationException.CannotAdjust", ae.getKey());
+           Assert.assertTrue(true);
+           Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust", ae.getKey());
         }
 
-        assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        assertNotNull(savings.getLastPmnt());
-        assertEquals(savings.getSavingsBalance(), new Money(currency, "400.0"));
+       Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
+        Assert.assertNotNull(savings.getLastPmnt());
+       Assert.assertEquals(savings.getSavingsBalance(), new Money(currency, "400.0"));
     }
 
     public void testAdjustPmnt_LastPaymentNullified() throws Exception {
@@ -2556,20 +2558,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.getSavingsOffering().setMaxAmntWithdrawl(new Money("2500"));
         savings.setUserContext(userContext);
         Money amountAdjustedTo = new Money();
-        assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         payment = savings.getLastPmnt();
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(savings.getSavingsBalance(), new Money(currency, "1400.0"));
-        assertEquals(Integer.valueOf("1").intValue(), savings.getSavingsActivityDetails().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(savings.getSavingsBalance(), new Money(currency, "1400.0"));
+       Assert.assertEquals(Integer.valueOf("1").intValue(), savings.getSavingsActivityDetails().size());
         for (SavingsActivityEntity activity : savings.getSavingsActivityDetails()) {
-            assertEquals(new Money(currency, "1000.0"), activity.getAmount());
-            assertEquals(new Money(currency, "1400.0"), activity.getBalanceAmount());
-            assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
+           Assert.assertEquals(new Money(currency, "1000.0"), activity.getAmount());
+           Assert.assertEquals(new Money(currency, "1400.0"), activity.getBalanceAmount());
+           Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
                     .getTrxnCreatedDate().getTime()));
         }
         group = savings.getCustomer();
@@ -2596,7 +2598,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
 
-        assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
         Money amountAdjustedTo = new Money(currency, "500.0");
 
         payment = savings.getLastPmnt();
@@ -2606,23 +2608,23 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
 
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(new Money(), payment.getAmount());
-        assertEquals(savings.getSavingsBalance(), new Money(currency, "5000.0"));
-        assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(), payment.getAmount());
+       Assert.assertEquals(savings.getSavingsBalance(), new Money(currency, "5000.0"));
+       Assert.assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
 
-        assertEquals(Integer.valueOf("2").intValue(), savings.getSavingsActivityDetails().size());
+       Assert.assertEquals(Integer.valueOf("2").intValue(), savings.getSavingsActivityDetails().size());
         for (SavingsActivityEntity activity : savings.getSavingsActivityDetails()) {
             if (activity.getActivity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-                assertEquals(new Money(currency, "1000.0"), activity.getAmount());
-                assertEquals(new Money(currency, "5500.0"), activity.getBalanceAmount());
-                assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
+               Assert.assertEquals(new Money(currency, "1000.0"), activity.getAmount());
+               Assert.assertEquals(new Money(currency, "5500.0"), activity.getBalanceAmount());
+               Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
                         .getTrxnCreatedDate().getTime()));
             } else {
-                assertEquals(new Money(currency, "500.0"), activity.getAmount());
-                assertEquals(new Money(currency, "5000.0"), activity.getBalanceAmount());
-                assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("20/05/2006").getTime()), DateUtils
+               Assert.assertEquals(new Money(currency, "500.0"), activity.getAmount());
+               Assert.assertEquals(new Money(currency, "5000.0"), activity.getBalanceAmount());
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("20/05/2006").getTime()), DateUtils
                         .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
             }
         }
@@ -2653,7 +2655,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
 
-        assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
         Money amountAdjustedTo = new Money(currency, "1900.0");
 
         payment = savings.getLastPmnt();
@@ -2662,20 +2664,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
         Integer clientId = client1.getCustomerId();
 
         for (AccountPaymentEntity payment1 : savings.getAccountPayments()) {
             for (AccountTrxnEntity accountTrxn : payment1.getAccountTrxns()) {
                 SavingsTrxnDetailEntity trxn = (SavingsTrxnDetailEntity) accountTrxn;
-                assertEquals(clientId, trxn.getCustomer().getCustomerId());
+               Assert.assertEquals(clientId, trxn.getCustomer().getCustomerId());
             }
         }
-        assertEquals(new Money(), payment.getAmount());
-        assertEquals(new Money(currency, "3600.0"), savings.getSavingsBalance());
-        assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
+       Assert.assertEquals(new Money(), payment.getAmount());
+       Assert.assertEquals(new Money(currency, "3600.0"), savings.getSavingsBalance());
+       Assert.assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
 
         Hibernate.initialize(savings.getAccountActionDates());
         group = savings.getCustomer();
@@ -2704,7 +2706,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
 
-        assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
         Money amountAdjustedTo = new Money(currency, "2000.0");
 
         payment = savings.getLastPmnt();
@@ -2713,23 +2715,23 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(new Money(), payment.getAmount());
-        assertEquals(new Money(currency, "5500.0"), savings.getSavingsBalance());
-        assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
+       Assert.assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(), payment.getAmount());
+       Assert.assertEquals(new Money(currency, "5500.0"), savings.getSavingsBalance());
+       Assert.assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
 
         for (SavingsActivityEntity activity : savings.getSavingsActivityDetails()) {
             if (activity.getActivity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-                assertEquals(new Money(currency, "1000.0"), activity.getAmount());
-                assertEquals(new Money(currency, "3500.0"), activity.getBalanceAmount());
-                assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
+               Assert.assertEquals(new Money(currency, "1000.0"), activity.getAmount());
+               Assert.assertEquals(new Money(currency, "3500.0"), activity.getBalanceAmount());
+               Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
                         .getTrxnCreatedDate().getTime()));
             } else {
-                assertEquals(new Money(currency, "2000.0"), activity.getAmount());
-                assertEquals(new Money(currency, "5500.0"), activity.getBalanceAmount());
-                assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("20/05/2006").getTime()), DateUtils
+               Assert.assertEquals(new Money(currency, "2000.0"), activity.getAmount());
+               Assert.assertEquals(new Money(currency, "5500.0"), activity.getBalanceAmount());
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("20/05/2006").getTime()), DateUtils
                         .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
             }
         }
@@ -2791,7 +2793,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
             Hibernate.initialize(accountTrxn.getFinancialTransactions());
         }
-        assertEquals(Integer.valueOf(3).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(3).intValue(), payment.getAccountTrxns().size());
 
         // Adjust last deposit of 1200 to 2000.
         Money amountAdjustedTo = new Money(currency, "2000.0");
@@ -2803,24 +2805,24 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         AccountPaymentEntity newPayment = savings.getLastPmnt();
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(6).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(6).intValue(), payment.getAccountTrxns().size());
         int countFinancialTrxns = 0;
         for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
             countFinancialTrxns += accountTrxn.getFinancialTransactions().size();
             if (accountTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()))
-                assertEquals(userContext.getId(), accountTrxn.getPersonnel().getPersonnelId());
+               Assert.assertEquals(userContext.getId(), accountTrxn.getPersonnel().getPersonnelId());
             for (FinancialTransactionBO finTrxn : accountTrxn.getFinancialTransactions()) {
-                assertEquals("correction entry", finTrxn.getNotes());
-                assertEquals(userContext.getId(), finTrxn.getPostedBy().getPersonnelId());
+               Assert.assertEquals("correction entry", finTrxn.getNotes());
+               Assert.assertEquals(userContext.getId(), finTrxn.getPostedBy().getPersonnelId());
             }
         }
-        assertEquals(Integer.valueOf(6).intValue(), countFinancialTrxns);
-        assertEquals(payment.getAmount(), new Money());
+       Assert.assertEquals(Integer.valueOf(6).intValue(), countFinancialTrxns);
+       Assert.assertEquals(payment.getAmount(), new Money());
 
-        assertEquals(new Money(currency, "6000.0"), savings.getSavingsBalance());
-        assertEquals(newPayment.getAmount(), amountAdjustedTo);
-        assertEquals(Integer.valueOf(3).intValue(), newPayment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(currency, "6000.0"), savings.getSavingsBalance());
+       Assert.assertEquals(newPayment.getAmount(), amountAdjustedTo);
+       Assert.assertEquals(Integer.valueOf(3).intValue(), newPayment.getAccountTrxns().size());
 
         Hibernate.initialize(savings.getAccountActionDates());
         group = savings.getCustomer();
@@ -2865,7 +2867,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setUserContext(userContext);
         payment = savings.getLastPmnt();
 
-        assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
 
         // Adjust last deposit of 500 to 1200.
         Money amountAdjustedTo = new Money(currency, "1200.0");
@@ -2880,16 +2882,16 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         AccountPaymentEntity newPayment = savings.getLastPmnt();
         for (AccountTrxnEntity accountTrxn : newPayment.getAccountTrxns()) {
             if (accountTrxn.getInstallmentId() != null && accountTrxn.getInstallmentId().shortValue() == 1)
-                assertTrue(true);
+               Assert.assertTrue(true);
         }
 
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(payment.getAmount(), new Money());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(payment.getAmount(), new Money());
 
-        assertEquals(new Money(currency, "5200.0"), savings.getSavingsBalance());
-        assertEquals(amountAdjustedTo, newPayment.getAmount());
-        assertEquals(Integer.valueOf(3).intValue(), newPayment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(currency, "5200.0"), savings.getSavingsBalance());
+       Assert.assertEquals(amountAdjustedTo, newPayment.getAmount());
+       Assert.assertEquals(Integer.valueOf(3).intValue(), newPayment.getAccountTrxns().size());
 
         Hibernate.initialize(savings.getAccountActionDates());
         group = savings.getCustomer();
@@ -2942,7 +2944,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setUserContext(userContext);
         payment = savings.getLastPmnt();
 
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
         // Adjust last deposit of 700 to 1000.
         Money amountAdjustedTo = new Money(currency, "1000.0");
         savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
@@ -2952,17 +2954,17 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         for (AccountActionDateEntity action : savings.getAccountActionDates())
-            assertEquals(recommendedAmnt, ((SavingsScheduleEntity) action).getDepositPaid());
+           Assert.assertEquals(recommendedAmnt, ((SavingsScheduleEntity) action).getDepositPaid());
 
         AccountPaymentEntity newPayment = savings.getLastPmnt();
 
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(4).intValue(), payment.getAccountTrxns().size());
-        assertEquals(payment.getAmount(), new Money());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(4).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(payment.getAmount(), new Money());
 
-        assertEquals(new Money(currency, "5000.0"), savings.getSavingsBalance());
-        assertEquals(amountAdjustedTo, newPayment.getAmount());
-        assertEquals(Integer.valueOf(2).intValue(), newPayment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(currency, "5000.0"), savings.getSavingsBalance());
+       Assert.assertEquals(amountAdjustedTo, newPayment.getAmount());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), newPayment.getAccountTrxns().size());
 
         Hibernate.initialize(savings.getAccountActionDates());
         group = savings.getCustomer();
@@ -3007,7 +3009,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setUserContext(userContext);
         payment = savings.getLastPmnt();
 
-        assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
 
         // Adjust last deposit of 700 to 1000.
         Money amountAdjustedTo = new Money(currency, "500.0");
@@ -3019,13 +3021,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         AccountPaymentEntity newPayment = savings.getLastPmnt();
 
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(payment.getAmount(), new Money());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(payment.getAmount(), new Money());
 
-        assertEquals(new Money(currency, "4500.0"), savings.getSavingsBalance());
-        assertEquals(amountAdjustedTo, newPayment.getAmount());
-        assertEquals(Integer.valueOf(1).intValue(), newPayment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(currency, "4500.0"), savings.getSavingsBalance());
+       Assert.assertEquals(amountAdjustedTo, newPayment.getAmount());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), newPayment.getAccountTrxns().size());
 
         Hibernate.initialize(savings.getAccountActionDates());
         group = savings.getCustomer();
@@ -3070,7 +3072,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setUserContext(userContext);
         payment = savings.getLastPmnt();
 
-        assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
 
         // Adjust last deposit of 700 to 1000.
         Money amountAdjustedTo = new Money(currency, "800.0");
@@ -3082,13 +3084,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         AccountPaymentEntity newPayment = savings.getLastPmnt();
 
-        assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
-        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        assertEquals(payment.getAmount(), new Money());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getAccountPayments().size());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+       Assert.assertEquals(payment.getAmount(), new Money());
 
-        assertEquals(new Money(currency, "4800.0"), savings.getSavingsBalance());
-        assertEquals(amountAdjustedTo, newPayment.getAmount());
-        assertEquals(Integer.valueOf(2).intValue(), newPayment.getAccountTrxns().size());
+       Assert.assertEquals(new Money(currency, "4800.0"), savings.getSavingsBalance());
+       Assert.assertEquals(amountAdjustedTo, newPayment.getAmount());
+       Assert.assertEquals(Integer.valueOf(2).intValue(), newPayment.getAccountTrxns().size());
 
         Hibernate.initialize(savings.getAccountActionDates());
         group = savings.getCustomer();
@@ -3119,7 +3121,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         trxn.commit();
         StaticHibernateUtil.closeSession();
         accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 3);
-        assertEquals(300.00, savings.getOverDueDepositAmount(accountActionDate.getActionDate()).getAmountDoubleValue(),
+       Assert.assertEquals(300.00, savings.getOverDueDepositAmount(accountActionDate.getActionDate()).getAmountDoubleValue(),
                 DELTA);
 
     }
@@ -3140,7 +3142,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         session.update(savings);
         trxn.commit();
         StaticHibernateUtil.closeSession();
-        assertEquals(0.00, savings.getOverDueDepositAmount(accountActionDate.getActionDate()).getAmountDoubleValue(),
+       Assert.assertEquals(0.00, savings.getOverDueDepositAmount(accountActionDate.getActionDate()).getAmountDoubleValue(),
                 DELTA);
 
     }
@@ -3165,18 +3167,18 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
-        assertEquals(1, savings.getRecentAccountActivity(3).size());
+       Assert.assertEquals(1, savings.getRecentAccountActivity(3).size());
         for (SavingsRecentActivityView view : savings.getRecentAccountActivity(3)) {
-            assertNotNull(view.getActivity());
+            Assert.assertNotNull(view.getActivity());
             // * TODO: financial_calculation_rounding getAmount returns too much
             // precision
-            assertEquals(new Money("100.0"), new Money(view.getAmount()));
+           Assert.assertEquals(new Money("100.0"), new Money(view.getAmount()));
 
-            assertEquals(new Money("22.0"), new Money(view.getRunningBalance()));
-            assertNotNull(view.getAccountTrxnId());
-            assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
+           Assert.assertEquals(new Money("22.0"), new Money(view.getRunningBalance()));
+            Assert.assertNotNull(view.getAccountTrxnId());
+           Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
                     .getActionDate().getTime()));
-            assertNull(view.getLocale());
+            Assert.assertNull(view.getLocale());
             break;
         }
         group = savings.getCustomer();
@@ -3194,7 +3196,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetTotalAmountInArrearsForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
     }
 
     public void testGetTotalAmountInArrearsForSingleInstallmentDue() throws Exception {
@@ -3202,7 +3204,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(200.0, savings.getTotalAmountInArrears().getAmountDoubleValue());
+       Assert.assertEquals(200.0, savings.getTotalAmountInArrears().getAmountDoubleValue());
     }
 
     public void testGetTotalAmountInArrearsWithPartialPayment() throws Exception {
@@ -3212,7 +3214,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(180.0, savings.getTotalAmountInArrears().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(180.0, savings.getTotalAmountInArrears().getAmountDoubleValue(), DELTA);
     }
 
     public void testGetTotalAmountInArrearsWithPaymentDone() throws Exception {
@@ -3222,7 +3224,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
         accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID);
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
     }
 
     public void testGetTotalAmountDueForTwoInstallmentsDue() throws Exception {
@@ -3235,12 +3237,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = (SavingsBO) saveAndFetch(savings);
 
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 400.0);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 400.0);
     }
 
     public void testGetTotalAmountDueForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
-        assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 200.0);
+       Assert.assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 200.0);
     }
 
     public void testGetTotalAmountDueForSingleInstallment() throws Exception {
@@ -3250,7 +3252,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 400.0);
+       Assert.assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 400.0);
     }
 
     public void testGetTotalAmountDueWithPartialPayment() throws Exception {
@@ -3261,7 +3263,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         accountActionDateEntity.setDepositPaid(new Money("20.0"));
         accountActionDateEntity.setActionDate(offSetCurrentDate(1));
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 380.0);
+       Assert.assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 380.0);
     }
 
     public void testGetTotalAmountDueWithPaymentDone() throws Exception {
@@ -3273,7 +3275,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = (SavingsBO) saveAndFetch(savings);
 
-        assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 200.0);
+       Assert.assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 200.0);
     }
 
     public void testGetTotalAmountDueForTwoInstallments() throws Exception {
@@ -3286,7 +3288,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = (SavingsBO) saveAndFetch(savings);
 
-        assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 600.0);
+       Assert.assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 600.0);
     }
 
     public void testGetTotalAmountDueForActiveCustomers() throws Exception {
@@ -3301,7 +3303,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 ((SavingsScheduleEntity) actionDate).setActionDate(offSetCurrentDate(2));
         }
         Money dueAmount = new Money("1000");
-        assertEquals(dueAmount, savings.getTotalAmountDue());
+       Assert.assertEquals(dueAmount, savings.getTotalAmountDue());
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
     }
@@ -3314,12 +3316,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
             break;
         }
         dueAmount = dueAmount.add(dueAmount);
-        assertEquals(dueAmount, savings.getTotalAmountDue());
+       Assert.assertEquals(dueAmount, savings.getTotalAmountDue());
     }
 
     public void testGetTotalAmountDueForNextInstallmentForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
-        assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 200.0);
+       Assert.assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 200.0);
     }
 
     public void testGetTotalAmountDueForNextInstallmentWithPartialPayment() throws Exception {
@@ -3328,7 +3330,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         accountActionDateEntity.setDepositPaid(new Money("20.0"));
 
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 180.0);
+       Assert.assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 180.0);
     }
 
     public void testGetTotalAmountDueForNextInstallmentPaymentDone() throws Exception {
@@ -3337,12 +3339,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate(Short.valueOf("1"));
         accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID);
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 0.0);
     }
 
     public void testGetDetailsOfInstallmentsInArrearsForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
-        assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
+       Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
     }
 
     public void testGetDetailsOfInstallmentsInArrearsForSingleInstallmentDue() throws Exception {
@@ -3350,7 +3352,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 1);
+       Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 1);
     }
 
     public void testGetDetailsOfInstallmentsInArrearsWithPaymentDone() throws Exception {
@@ -3360,7 +3362,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
         accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID);
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
+       Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
     }
 
     public void testGetDetailsOfInstallmentsInArrearsForTwoInstallmentsDue() throws Exception {
@@ -3373,7 +3375,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = (SavingsBO) saveAndFetch(savings);
 
-        assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 2);
+       Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 2);
     }
 
     public void testWaiveAmountOverDueForSingleInstallmentDue() throws Exception {
@@ -3381,11 +3383,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
         ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 200.0);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 200.0);
         savings.waiveAmountOverDue();
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
-        assertEquals(savings.getSavingsActivityDetails().size(), 1);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
     public void testWaiveAmountOverDueWithPartialPayment() throws Exception {
@@ -3395,12 +3397,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 180.0);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 180.0);
 
         savings.waiveAmountOverDue();
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
-        assertEquals(savings.getSavingsActivityDetails().size(), 1);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
     public void testWaiveAmountOverDueForTwoInstallmentsDue() throws Exception {
@@ -3414,21 +3416,21 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = (SavingsBO) saveAndFetch(savings);
 
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 400.0);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 400.0);
 
         savings.waiveAmountOverDue();
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
-        assertEquals(savings.getSavingsActivityDetails().size(), 1);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
     public void testWaiveAmountDueForCurrentDateMeeting() throws Exception {
         savings = getSavingsAccount();
-        assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 200.0);
+       Assert.assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 200.0);
         savings.waiveAmountDue(WaiveEnum.ALL);
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
-        assertEquals(savings.getSavingsActivityDetails().size(), 1);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
     public void testWaiveAmountDueWithPartialPayment() throws Exception {
@@ -3437,11 +3439,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         accountActionDateEntity.setDepositPaid(new Money("20.0"));
 
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 180.0);
+       Assert.assertEquals(savings.getTotalAmountDueForNextInstallment().getAmountDoubleValue(), 180.0);
         savings.waiveAmountDue(WaiveEnum.ALL);
         savings = (SavingsBO) saveAndFetch(savings);
-        assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
-        assertEquals(savings.getSavingsActivityDetails().size(), 1);
+       Assert.assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+       Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
     }
 
     private void createCustomerObjects() {
@@ -3465,8 +3467,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         savings.updateInterestAccrued();
-        assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(helper.getDate("07/03/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(helper.getDate("07/03/2006"), savings.getNextIntCalcDate());
 
         AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
                 new Money(currency, "1000.0"), helper.getDate("06/03/2006"), AccountActionTypes.SAVINGS_DEPOSIT
@@ -3485,8 +3487,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.updateInterestAccrued();
-        assertEquals("1.2", savings.getInterestToBePosted().toString());
-        assertEquals(helper.getDate("08/03/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals("1.2", savings.getInterestToBePosted().toString());
+       Assert.assertEquals(helper.getDate("08/03/2006"), savings.getNextIntCalcDate());
     }
 
     public void testCalculateInterest_IntCalcFreqOneDay_avgBal() throws Exception {
@@ -3501,8 +3503,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         savings.updateInterestAccrued();
-        assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(helper.getDate("07/03/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(helper.getDate("07/03/2006"), savings.getNextIntCalcDate());
 
         AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
                 new Money(currency, "1000.0"), helper.getDate("06/03/2006"), AccountActionTypes.SAVINGS_DEPOSIT
@@ -3521,8 +3523,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.updateInterestAccrued();
-        assertEquals(1.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
-        assertEquals(helper.getDate("08/03/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals(1.2, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(helper.getDate("08/03/2006"), savings.getNextIntCalcDate());
     }
 
     public void testCalculateInterest_IntCalcFreqTenDays_minbal() throws Exception {
@@ -3538,8 +3540,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         savings.updateInterestAccrued();
-        assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue());
-        assertEquals(helper.getDate("22/03/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue());
+       Assert.assertEquals(helper.getDate("22/03/2006"), savings.getNextIntCalcDate());
 
         AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
                 new Money(currency, "1000.0"), helper.getDate("11/03/2006"), AccountActionTypes.SAVINGS_DEPOSIT
@@ -3566,10 +3568,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.updateInterestAccrued();
         // * TODO: financial_calculation_rounding
-        // assertEquals(1.6,
+        //Assert.assertEquals(1.6,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(1.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
-        assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals(1.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
     }
 
     public void testCalculateInterest_IntCalcFreqTenDays_avg() throws Exception {
@@ -3585,8 +3587,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         savings.updateInterestAccrued();
-        assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(helper.getDate("22/03/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals(0.0, savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(helper.getDate("22/03/2006"), savings.getNextIntCalcDate());
 
         AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
                 new Money(currency, "1000.0"), helper.getDate("11/03/2006"), AccountActionTypes.SAVINGS_DEPOSIT
@@ -3613,10 +3615,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.updateInterestAccrued();
         // * TODO: financial_calculation_rounding
-        // assertEquals(4.6,
+        //Assert.assertEquals(4.6,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals(4.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
-        assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
+       Assert.assertEquals(4.7, getRoundedDouble(savings.getInterestToBePosted().getAmountDoubleValue()), DELTA);
+       Assert.assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
     }
 
     private SavingsOfferingBO createSavingsOfferingForIntCalc(String offeringName, String shortName,
@@ -3683,7 +3685,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -3693,14 +3695,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // MinBal from 20/02 - 28/02 = 1500
         // Interest 1500*.12*8/365 = 3.9
         // * TODO: financial_calculation_rounding
-        // assertEquals(4.4,
+        //Assert.assertEquals(4.4,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("4.0", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("4.0", savings.getInterestToBePosted().toString());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("25/02/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(4.4, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals("4.0", oldInterest.toString());
+        //Assert.assertEquals(4.4, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals("4.0", oldInterest.toString());
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
@@ -3710,7 +3712,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -3718,7 +3720,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // MinBal from 20/02 - 28/02 = 1000
         // Interest 1000*.12*8/365 = 3.0
         // * TODO: financial_calculation_rounding
-        assertEquals("2.7", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("2.7", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -3754,7 +3756,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
 
         Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("27/02/2006"), null);
-        assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(0.0, oldInterest.getAmountDoubleValue(), DELTA);
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
@@ -3765,14 +3767,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // Therefore avg bal 11000/3 = 3666.667
         // Interest 3666.667*.12*3/365 = 5.91
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9,
+        //Assert.assertEquals(5.9,
         // savings.getInterestToBePosted().getAmountDoubleValue(), DELTA);
-        assertEquals("3.7", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("3.7", savings.getInterestToBePosted().toString());
 
         oldInterest = savings.calculateInterestForAdjustment(helper.getDate("27/02/2006"), null);
         // * TODO: financial_calculation_rounding
-        // assertEquals(5.9, oldInterest.getAmountDoubleValue(), DELTA);
-        assertEquals("3.7", oldInterest.toString());
+        //Assert.assertEquals(5.9, oldInterest.getAmountDoubleValue(), DELTA);
+       Assert.assertEquals("3.7", oldInterest.toString());
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
@@ -3781,18 +3783,18 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-            assertTrue(false);
+           Assert.assertTrue(false);
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         payment = savings.getLastPmnt();
-        assertEquals(new Money(currency, "6000"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(currency, "6000"), savings.getSavingsBalance());
         // from 25/02 - 27/02 = 2000*2 + from 27/02 - 28//02 = 6000*1 = 10000
         // Therefore avg bal 10000/3 = 3333.333
         // Interest 3333.333*.12*3/365 = 3.288
         // * TODO: financial_calculation_rounding
-        assertEquals("3.3", savings.getInterestToBePosted().toString());
+       Assert.assertEquals("3.3", savings.getInterestToBePosted().toString());
 
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -3818,10 +3820,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
         for (AccountActionDateEntity actionDateEntity : savings.getAccountActionDates()) {
             if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+               Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
         }
     }
@@ -3855,10 +3857,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
         for (AccountActionDateEntity actionDateEntity : savings.getAccountActionDates()) {
             if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                assertEquals(intallment2ndDate, DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()
+               Assert.assertEquals(intallment2ndDate, DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()
                         .getTime()));
             else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-                assertEquals(intallment3ndDate, DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()
+               Assert.assertEquals(intallment3ndDate, DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()
                         .getTime()));
         }
     }
@@ -3889,7 +3891,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         Money recommendedAmnt = new Money(currency, "500.0");
         Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
-        assertEquals(recommendedAmnt, paymentDue);
+       Assert.assertEquals(recommendedAmnt, paymentDue);
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -3898,8 +3900,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         createObjectToCheckForTotalInstallmentDue(SavingsType.VOLUNTARY);
         savings = savingsPersistence.findById(savings.getAccountId());
         List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
-        assertEquals(1, dueInstallment.size());
-        assertEquals(Short.valueOf("2"), dueInstallment.get(0).getInstallmentId());
+       Assert.assertEquals(1, dueInstallment.size());
+       Assert.assertEquals(Short.valueOf("2"), dueInstallment.get(0).getInstallmentId());
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -3909,7 +3911,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         Money amount = new Money(currency, "1000.0");
         Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
-        assertEquals(amount, paymentDue);
+       Assert.assertEquals(amount, paymentDue);
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -3918,7 +3920,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         createObjectToCheckForTotalInstallmentDue(SavingsType.MANDATORY);
         savings = savingsPersistence.findById(savings.getAccountId());
         List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
-        assertEquals(2, dueInstallment.size());
+       Assert.assertEquals(2, dueInstallment.size());
         group = savings.getCustomer();
         center = group.getParentCustomer();
     }
@@ -3988,19 +3990,19 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
-        assertEquals(2, savings.getSavingsActivityDetails().size());
+       Assert.assertEquals(2, savings.getSavingsActivityDetails().size());
 
         for (SavingsActivityEntity activity : savings.getSavingsActivityDetails()) {
-            assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
+           Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(activity
                     .getTrxnCreatedDate().getTime()));
             if (activity.getActivity().getId().equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
                 // * TODO: financial_calculation_rounding
-                assertEquals(getRoundedMoney(balanceAmount.add(interestAtClosure)), getRoundedMoney(activity
+               Assert.assertEquals(getRoundedMoney(balanceAmount.add(interestAtClosure)), getRoundedMoney(activity
                         .getAmount()));
-                assertEquals(getRoundedMoney(balanceAmount.add(interestAtClosure)), getRoundedMoney(savings
+               Assert.assertEquals(getRoundedMoney(balanceAmount.add(interestAtClosure)), getRoundedMoney(savings
                         .getSavingsPerformance().getTotalWithdrawals()));
             } else if (activity.getActivity().getId().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue()))
-                assertEquals(getRoundedMoney(interestAtClosure), getRoundedMoney(activity.getAmount()));
+               Assert.assertEquals(getRoundedMoney(interestAtClosure), getRoundedMoney(activity.getAmount()));
         }
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -4026,9 +4028,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         List<AccountNotesEntity> notes = savings.getRecentAccountNotes();
 
-        assertEquals("Size of recent notes is 3", 3, notes.size());
+       Assert.assertEquals("Size of recent notes is 3", 3, notes.size());
         for (AccountNotesEntity accountNotesEntity : notes) {
-            assertEquals("Last note added is note5", "note5", accountNotesEntity.getComment());
+           Assert.assertEquals("Last note added is note5", "note5", accountNotesEntity.getComment());
             break;
         }
 
@@ -4081,7 +4083,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         calendar2.setTime(meetingDates.get(0));
         Calendar calendar3 = Calendar.getInstance();
         calendar3.setTime(FirstSavingInstallmetDate);
-        assertEquals(0, new GregorianCalendar(calendar3.get(Calendar.YEAR), calendar3.get(Calendar.MONTH), calendar3
+       Assert.assertEquals(0, new GregorianCalendar(calendar3.get(Calendar.YEAR), calendar3.get(Calendar.MONTH), calendar3
                 .get(Calendar.DATE), 0, 0, 0).compareTo(new GregorianCalendar(calendar2.get(Calendar.YEAR), calendar2
                 .get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0)));
         TestObjectFactory.cleanUp(savingsBO);

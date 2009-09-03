@@ -20,8 +20,6 @@
 
 package org.mifos.framework;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -29,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -69,13 +68,13 @@ public class ProperlyAdaptedJUnit4Test {
     public void testAllAreProperlyAdapted() throws IOException {
         // recursively find .java files in test dir
         List<String> javaTestSourceFiles = getJavaTestSourceFiles();
-        assertTrue("no java source files were found", javaTestSourceFiles.size() > 0);
+       Assert.assertTrue("no java source files were found", javaTestSourceFiles.size() > 0);
 
         // look for only those files that call the JUnit4TestAdapter constructor
         // from a
         // "suite()" method
         List<String> adaptedTests = filterNonAdaptedTests(javaTestSourceFiles);
-        assertTrue("no adapted tests were found. This test class can now be" + " deleted!", adaptedTests.size() > 0);
+       Assert.assertTrue("no adapted tests were found. This test class can now be" + " deleted!", adaptedTests.size() > 0);
 
         // ensure that class calls the JUnit4TestAdapter constructor
         // appropriately
@@ -83,7 +82,7 @@ public class ProperlyAdaptedJUnit4Test {
             String errmsg = adaptedTest + " is not properly coded as a JUnit 4 adapted test."
                     + " Please ensure that the call to the JUnit4TestAdapter"
                     + " constructor in the suite() method passes in the" + " correct class as the first argument.";
-            assertTrue(errmsg, isProperlyAdapted(adaptedTest));
+           Assert.assertTrue(errmsg, isProperlyAdapted(adaptedTest));
         }
     }
 
@@ -95,7 +94,7 @@ public class ProperlyAdaptedJUnit4Test {
 
     private static void findJavaSourceFiles(String dir, List<String> foundSoFar) throws IOException {
         File d = new File(dir);
-        assertTrue("dir was actually passed in", d.isDirectory());
+       Assert.assertTrue("dir was actually passed in", d.isDirectory());
         for (File f : d.listFiles()) {
             // files beginning with a period or an underscore are generally
             // considered "hidden"

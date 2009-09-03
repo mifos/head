@@ -20,6 +20,8 @@
 
 package org.mifos.application.admin.struts.action;
 
+import junit.framework.Assert;
+
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -66,6 +68,6 @@ public class ViewOrganizationSettingsActionStrutsTest extends MifosMockStrutsTes
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.load_success.toString());
-        assertNull(SessionUtils.getAttribute(ViewOrganizationSettingsAction.ORGANIZATION_SETTINGS, request));
+        Assert.assertNull(SessionUtils.getAttribute(ViewOrganizationSettingsAction.ORGANIZATION_SETTINGS, request));
     }
 }

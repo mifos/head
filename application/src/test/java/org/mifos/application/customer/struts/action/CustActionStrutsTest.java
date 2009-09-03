@@ -23,6 +23,8 @@ package org.mifos.application.customer.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -124,9 +126,9 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.getAllClosedAccounts.toString());
 
-        assertEquals("Size of closed savings accounts should be 1 for group", 1, ((List<AccountBO>) SessionUtils
+       Assert.assertEquals("Size of closed savings accounts should be 1 for group", 1, ((List<AccountBO>) SessionUtils
                 .getAttribute(AccountConstants.CLOSEDSAVINGSACCOUNTSLIST, request)).size());
-        assertEquals("Size of closed loan accounts should be 1 for group", 1, ((List<AccountBO>) SessionUtils
+       Assert.assertEquals("Size of closed loan accounts should be 1 for group", 1, ((List<AccountBO>) SessionUtils
                 .getAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST, request)).size());
     }
 

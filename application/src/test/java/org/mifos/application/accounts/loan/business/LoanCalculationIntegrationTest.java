@@ -43,6 +43,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
 import org.mifos.application.accounts.business.AccountBO;
@@ -336,7 +338,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             }
         }
 
-        assertEquals(transactionCount, expected999AccountTransactions);
+       Assert.assertEquals(transactionCount, expected999AccountTransactions);
 
     }
 
@@ -380,21 +382,21 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             }
         }
 
-        assertEquals(transactionCount, expected999AccountTransactions);
+       Assert.assertEquals(transactionCount, expected999AccountTransactions);
 
     }
 
     private void verifyReversedLastPaymentLoanSchedules(LoanScheduleEntity[] schedules, Results expectedResults) {
         List<PaymentDetail> list = expectedResults.getPayments();
-        assertEquals(list.size(), schedules.length);
+       Assert.assertEquals(list.size(), schedules.length);
         for (int i = 0; i < schedules.length; i++) {
             if (i == schedules.length - 1) {
                 Money zeroAmount = new Money("0");
-                assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
-                assertEquals(schedules[i].getPaymentDate(), null);
-                assertEquals(schedules[i].isPaid(), false);
+               Assert.assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
+               Assert.assertEquals(schedules[i].getPaymentDate(), null);
+               Assert.assertEquals(schedules[i].isPaid(), false);
             } else {
-                assertEquals(schedules[i].isPaid(), true);
+               Assert.assertEquals(schedules[i].isPaid(), true);
             }
             verifyScheduleAndPaymentDetail(schedules[i], list.get(i));
         }
@@ -439,7 +441,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO.adjustLastPayment("Adjust last payment");
         new TestObjectPersistence().persist(accountBO);
         accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO.getAccountId());
-        assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this
+       Assert.assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this
         // is
         // the
         // last
@@ -483,19 +485,19 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void verifyScheduleAndPaymentDetail(LoanScheduleEntity schedule, PaymentDetail payment) {
-        assertEquals(schedule.getPrincipal(), payment.getPrincipal());
-        assertEquals(schedule.getInterest(), payment.getInterest());
-        assertEquals(schedule.getTotalFeeDue(), payment.getFee());
+       Assert.assertEquals(schedule.getPrincipal(), payment.getPrincipal());
+       Assert.assertEquals(schedule.getInterest(), payment.getInterest());
+       Assert.assertEquals(schedule.getTotalFeeDue(), payment.getFee());
     }
 
     private void verifyReversedLoanSchedules(LoanScheduleEntity[] schedules, Results expectedResults) {
         List<PaymentDetail> list = expectedResults.getPayments();
-        assertEquals(list.size(), schedules.length);
+       Assert.assertEquals(list.size(), schedules.length);
         for (int i = 0; i < schedules.length; i++) {
             Money zeroAmount = new Money("0");
-            assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
-            assertEquals(schedules[i].getPaymentDate(), null);
-            assertEquals(schedules[i].isPaid(), false);
+           Assert.assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
+           Assert.assertEquals(schedules[i].getPaymentDate(), null);
+           Assert.assertEquals(schedules[i].isPaid(), false);
             verifyScheduleAndPaymentDetail(schedules[i], list.get(i));
         }
 
@@ -540,7 +542,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 .getAccountId());
         // every payment is reversed so amount is 0
         for (AccountPaymentEntity payment : accountPayments)
-            assertEquals(payment.getAmount(), new Money("0"));
+           Assert.assertEquals(payment.getAmount(), new Money("0"));
 
     }
 
@@ -658,7 +660,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan
                 .getAccountId());
-        assertEquals(accountPayments.size(), paymentToReverse);
+       Assert.assertEquals(accountPayments.size(), paymentToReverse);
         Set<AccountPaymentEntity> list = new LinkedHashSet<AccountPaymentEntity>();
         for (AccountPaymentEntity payment : accountPayments)
             list.add(payment);
@@ -666,7 +668,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         loan.adjustLastPayment("Adjust last payment");
         new TestObjectPersistence().persist(loan);
         accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan.getAccountId());
-        assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this
+       Assert.assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this
         // is
         // the
         // last
@@ -678,7 +680,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // 0
         actionDateEntities = loan.getAccountActionDates();
         paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
-        assertEquals(paymentsArray[paymentToReverse - 1].getPrincipalPaid(), new Money("0"));
+       Assert.assertEquals(paymentsArray[paymentToReverse - 1].getPrincipalPaid(), new Money("0"));
 
         if (payLastPayment) {
             for (int i = paymentToReverse - 1; i < paymentsArray.length; i++) {
@@ -747,7 +749,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 }
             }
         }
-        assertEquals(i, 0);
+       Assert.assertEquals(i, 0);
 
     }
 
@@ -1058,7 +1060,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             System.out.println("Results   (Expected : Calculated : Difference)");
             printComparison("999 Account:   ", expected999Account, calculated999Account);
         }
-        assertEquals(expected999Account, calculated999Account);
+       Assert.assertEquals(expected999Account, calculated999Account);
     }
 
     private void runOne999AccountTestCaseWithDataFromSpreadSheet(String fileName) throws NumberFormatException,
@@ -1086,15 +1088,15 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) {
                 FinancialTransactionBO financialTransaction = iterator.next();
                 if (financialTransaction.getGlcode().getGlcodeId() == 51) {
-                    assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
+                   Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
                     Money postedAmount = financialTransaction.getPostedAmount();
                     Money expected999Account = testCaseData.getExpectedResult().getAccount999();
-                    assertEquals(postedAmount, expected999Account);
+                   Assert.assertEquals(postedAmount, expected999Account);
                     if (expected999Account.getAmountDoubleValue() > 0) {
-                        assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
+                       Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.CREDIT);
                     } else {
-                        assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
+                       Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.DEBIT);
                     }
 
@@ -1133,7 +1135,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) {
                 FinancialTransactionBO financialTransaction = iterator.next();
                 if (financialTransaction.getGlcode().getGlcodeId() == 51) {
-                    assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
+                   Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
                     Money postedAmount = financialTransaction.getPostedAmount();
                     Money expected999Account = testCaseData.getExpectedResult().getAccount999();
                     if (!postedAmount.equals(expected999Account)) {
@@ -1141,12 +1143,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                                 + postedAmount.getAmountDoubleValue() + " expected amount: "
                                 + expected999Account.getAmountDoubleValue());
                     }
-                    assertEquals(postedAmount, expected999Account);
+                   Assert.assertEquals(postedAmount, expected999Account);
                     if (expected999Account.getAmountDoubleValue() > 0) {
-                        assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
+                       Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.CREDIT);
                     } else {
-                        assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
+                       Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.DEBIT);
                     }
 
@@ -1570,21 +1572,21 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private void compareResults(Results expectedResult, Results calculatedResult, String testName) {
         printResults(expectedResult, calculatedResult, testName);
 
-        assertEquals(testName, expectedResult.getTotalInterest(), calculatedResult.getTotalInterest());
-        assertEquals(testName, expectedResult.getTotalPayments(), calculatedResult.getTotalPayments());
-        assertEquals(testName, expectedResult.getTotalPrincipal(), calculatedResult.getTotalPrincipal());
+       Assert.assertEquals(testName, expectedResult.getTotalInterest(), calculatedResult.getTotalInterest());
+       Assert.assertEquals(testName, expectedResult.getTotalPayments(), calculatedResult.getTotalPayments());
+       Assert.assertEquals(testName, expectedResult.getTotalPrincipal(), calculatedResult.getTotalPrincipal());
         List<PaymentDetail> expectedPayments = expectedResult.getPayments();
         List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
-        assertEquals(testName, expectedPayments.size(), calculatedPayments.size());
+       Assert.assertEquals(testName, expectedPayments.size(), calculatedPayments.size());
         for (int i = 0; i < expectedPayments.size(); i++) {
             /*
              * Do not assert balance since it is derived from loan information
-             * assertEquals(testName, expectedPayments.get(i).getBalance(),
+             *Assert.assertEquals(testName, expectedPayments.get(i).getBalance(),
              * calculatedPayments.get(i).getBalance());
              */
-            assertEquals(testName, expectedPayments.get(i).getInterest(), calculatedPayments.get(i).getInterest());
-            assertEquals(testName, expectedPayments.get(i).getPayment(), calculatedPayments.get(i).getPayment());
-            assertEquals(testName, expectedPayments.get(i).getPrincipal(), calculatedPayments.get(i).getPrincipal());
+           Assert.assertEquals(testName, expectedPayments.get(i).getInterest(), calculatedPayments.get(i).getInterest());
+           Assert.assertEquals(testName, expectedPayments.get(i).getPayment(), calculatedPayments.get(i).getPayment());
+           Assert.assertEquals(testName, expectedPayments.get(i).getPrincipal(), calculatedPayments.get(i).getPrincipal());
         }
 
     }
@@ -2418,7 +2420,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         LoanScheduleEntity[] sortedList = new LoanScheduleEntity[actionDateCollection.size()];
 
-        assertEquals(expectedCount, actionDateCollection.size());
+       Assert.assertEquals(expectedCount, actionDateCollection.size());
 
         for (AccountActionDateEntity actionDateEntity : actionDateCollection) {
             sortedList[actionDateEntity.getInstallmentId().intValue() - 1] = (LoanScheduleEntity) actionDateEntity;

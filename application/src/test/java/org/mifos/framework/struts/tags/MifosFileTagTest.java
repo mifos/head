@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -34,7 +35,7 @@ public class MifosFileTagTest extends TestCase {
         StringBuffer inputsForhidden = new StringBuffer();
         inputsForhidden.append("<input type=\"hidden\" name=\"" + mifosFileTag.getKeyhm() + "\" value=\""
                 + mifosFileTag.getPropertyExpr() + "\" />");
-        assertEquals(inputsForhidden.toString(), mifosFileTag.renderInputsForhidden());
+       Assert.assertEquals(inputsForhidden.toString(), mifosFileTag.renderInputsForhidden());
         assertWellFormedFragment(mifosFileTag.renderInputsForhidden());
     }
 }

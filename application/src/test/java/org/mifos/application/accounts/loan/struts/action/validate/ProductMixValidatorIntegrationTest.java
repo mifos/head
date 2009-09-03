@@ -28,6 +28,8 @@ import static org.easymock.classextension.EasyMock.verify;
 import java.util.Arrays;
 import java.util.Collections;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
@@ -81,7 +83,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
                 }
             }.validateProductMix(loanMock2, Arrays.asList(loanMock1));
 
-            fail("Product mix conflict not detected");
+            Assert.fail("Product mix conflict not detected");
             verify(loanMock1, loanMock2, loanOfferingMock1, loanOfferingMock2, productMixBusinessServiceMock);
         } catch (AccountException e) {
 
@@ -106,14 +108,14 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
             }.validateProductMix(loanMock2, Arrays.asList(loanMock1));
             verify(loanMock1, loanMock2, loanOfferingMock1, loanOfferingMock2, productMixBusinessServiceMock);
         } catch (AccountException e) {
-            fail("Invalid Product mix conflict detected");
+            Assert.fail("Invalid Product mix conflict detected");
         }
     }
 
     public void testShouldGetLoansIfCustomerIsCoSigningClientInGlimMode() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         replay(loanMock, customerMock, configServiceMock);
-        assertEquals(Arrays.asList(loanMock), getProductMixValidatorWithCosigningClientTrue()
+       Assert.assertEquals(Arrays.asList(loanMock), getProductMixValidatorWithCosigningClientTrue()
                 .getLoansToCheckAgainstProductMix(customerMock, Arrays.asList(loanMock)));
         verify(loanMock, customerMock, configServiceMock);
     }
@@ -121,7 +123,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
     public void testShouldReturnEmptyListIfCustomerIsNotACoSigningClientInGlimMode() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(true);
         replay(loanMock, customerMock, configServiceMock);
-        assertEquals(Collections.EMPTY_LIST, getProductMixValidatorWithCosigningClientFalse()
+       Assert.assertEquals(Collections.EMPTY_LIST, getProductMixValidatorWithCosigningClientFalse()
                 .getLoansToCheckAgainstProductMix(customerMock, Arrays.asList(loanMock)));
         verify(loanMock, customerMock, configServiceMock);
     }
@@ -129,7 +131,7 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase
     public void testShouldReturnAllLoansIfNotGlim() throws Exception {
         expect(configServiceMock.isGlimEnabled()).andReturn(false);
         replay(loanMock, customerMock, configServiceMock);
-        assertEquals(Arrays.asList(loanMock), new ProductMixValidator(configServiceMock,
+       Assert.assertEquals(Arrays.asList(loanMock), new ProductMixValidator(configServiceMock,
                 new ProductMixBusinessService())
                 .getLoansToCheckAgainstProductMix(customerMock, Arrays.asList(loanMock)));
         verify(loanMock, customerMock, configServiceMock);

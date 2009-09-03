@@ -22,6 +22,8 @@ package org.mifos.application.configuration;
 
 import java.util.Map;
 
+import junit.framework.Assert;
+
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LabelKey;
@@ -46,28 +48,28 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
     public void testInitializeLabelCache() {
 
         Map<LabelKey, String> labelCache = configuration.getLabelCache();
-        assertEquals(true, labelCache.size() > 10);
+       Assert.assertEquals(true, labelCache.size() > 10);
 
     }
 
     public void testGetLabelValueEnglish() {
-        assertEquals("Bulk entry", MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,
+       Assert.assertEquals("Bulk entry", MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,
                 (short) 1));
     }
 
     /*
      * Will be uncommented when spanish values will be entered in master data.
-     * public void testGetLabelValueSpanish(){ assertEquals("Entrada agranel
+     * public void testGetLabelValueSpanish(){Assert.assertEquals("Entrada agranel
      * ",MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,(short)2))
      * ; }
      */
 
     public void testLabelKey() {
         LabelKey labelKey = new LabelKey("key", (short) 1);
-        assertEquals("[localeId=1][key=key]", labelKey.toString());
-        assertEquals(false, labelKey.equals(null));
+       Assert.assertEquals("[localeId=1][key=key]", labelKey.toString());
+       Assert.assertEquals(false, labelKey.equals(null));
         LabelKey labelKeyToCompare = new LabelKey("key", (short) 2);
-        assertEquals(false, labelKey.equals(labelKeyToCompare));
+       Assert.assertEquals(false, labelKey.equals(labelKeyToCompare));
     }
 
 }

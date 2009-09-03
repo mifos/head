@@ -21,6 +21,7 @@
 package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
@@ -33,7 +34,7 @@ public class MifosSelectTagTest extends TestCase {
         mifosSelectTag.setKeyhm("test1");
         mifosSelectTag.setPropertyExpr("test2");
         resultsDoStartTag.append("<input type=\"hidden\" name=\"" + "test1" + "\" value=\"" + "test2" + "\" />");
-        assertEquals(resultsDoStartTag.toString(), mifosSelectTag.renderDoStartTag());
+       Assert.assertEquals(resultsDoStartTag.toString(), mifosSelectTag.renderDoStartTag());
         assertWellFormedFragment(mifosSelectTag.renderDoStartTag());
     }
 
@@ -44,6 +45,6 @@ public class MifosSelectTagTest extends TestCase {
         resultsDoEndTag.append("test");
         resultsDoEndTag.append("</option>");
         resultsDoEndTag.append("</select>");
-        assertEquals(resultsDoEndTag.toString(), mifosSelectTag.renderDoEndTag("test"));
+       Assert.assertEquals(resultsDoEndTag.toString(), mifosSelectTag.renderDoEndTag("test"));
     }
 }

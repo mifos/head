@@ -23,6 +23,8 @@ package org.mifos.application.accounts.savings.struts.tag;
 import java.sql.Date;
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -62,13 +64,13 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
 
     public void testBuildDateUI() {
         Date date = new Date(System.currentTimeMillis());
-        assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en", "GB"), date).toString().contains(
+       Assert.assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en", "GB"), date).toString().contains(
                 DateUtils.getUserLocaleDate(new Locale("en", "GB"), date.toString())));
 
     }
 
     public void testBuildAmountUI() {
-        assertTrue(new SavingsOverDueDepositsTag().buildAmountUI(new Money("1000")).toString().contains("1000"));
+       Assert.assertTrue(new SavingsOverDueDepositsTag().buildAmountUI(new Money("1000")).toString().contains("1000"));
 
     }
 
@@ -77,14 +79,14 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
 
         String outString = new SavingsOverDueDepositsTag().buildDepositDueUIRow(new Locale("en", "GB"), date,
                 new Money("1000")).toString();
-        assertTrue(outString.contains(DateUtils.getUserLocaleDate(new Locale("en", "GB"), date.toString())));
+       Assert.assertTrue(outString.contains(DateUtils.getUserLocaleDate(new Locale("en", "GB"), date.toString())));
 
-        assertTrue(outString.contains("1000"));
+       Assert.assertTrue(outString.contains("1000"));
     }
 
     public void testbuildUI() throws Exception {
         createInitialObjects();
-        assertNotNull(new SavingsOverDueDepositsTag().buildUI(savings.getDetailsOfInstallmentsInArrears(), new Locale(
+        Assert.assertNotNull(new SavingsOverDueDepositsTag().buildUI(savings.getDetailsOfInstallmentsInArrears(), new Locale(
                 "en", "GB")));
     }
 
