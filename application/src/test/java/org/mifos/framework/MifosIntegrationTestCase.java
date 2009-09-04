@@ -54,28 +54,28 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  */
 public class MifosIntegrationTestCase extends TestCase {
 
-    public MifosIntegrationTestCase() throws SystemException, ApplicationException {
+    protected MifosIntegrationTestCase() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
     }
 
     private StatisticsService statisticsService;
 
-    public void assertEquals(String s, Money one, Money two) {
+    protected void assertEquals(String s, Money one, Money two) {
         if (one.equals(two))
             return;
         throw new ComparisonFailure(s, one.toString(), two.toString());
     }
 
-    public Date getDate(String date) throws ParseException {
+    protected Date getDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         return format.parse(date);
     }
 
-    public StatisticsService getStatisticsService() {
+    protected StatisticsService getStatisticsService() {
         return this.statisticsService;
     }
 
-    public void setStatisticsService(StatisticsService service) {
+    protected void setStatisticsService(StatisticsService service) {
         this.statisticsService = service;
     }
 
@@ -88,7 +88,7 @@ public class MifosIntegrationTestCase extends TestCase {
     /*
      * Gets the test data office with office_id == 1
      */
-    public OfficeBO getHeadOffice() {
+    protected OfficeBO getHeadOffice() {
         try {
             return new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         } catch (PersistenceException e) {
@@ -99,7 +99,7 @@ public class MifosIntegrationTestCase extends TestCase {
     /*
      * Gets the test data office with office_id == 3
      */
-    public OfficeBO getBranchOffice() {
+    protected OfficeBO getBranchOffice() {
         try {
             return new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         } catch (PersistenceException e) {
@@ -110,7 +110,7 @@ public class MifosIntegrationTestCase extends TestCase {
     /*
      * Gets the test data user personnel_id == 1
      */
-    public PersonnelBO getSystemUser() {
+    protected PersonnelBO getSystemUser() {
         try {
             return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
         } catch (PersistenceException e) {
@@ -121,7 +121,7 @@ public class MifosIntegrationTestCase extends TestCase {
     /*
      * Gets the test data user personnel_id == 3
      */
-    public PersonnelBO getTestUser() {
+    protected PersonnelBO getTestUser() {
         try {
             return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
         } catch (PersistenceException e) {

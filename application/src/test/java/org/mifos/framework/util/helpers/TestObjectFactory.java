@@ -36,7 +36,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -55,7 +55,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -139,7 +139,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBOIntegrationTest;
+import org.mifos.application.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
@@ -617,8 +617,8 @@ public class TestObjectFactory {
         }
 
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
-        LoanOfferingBOIntegrationTest.setStatus(loanOffering, prdStatus);
-        LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 
@@ -649,8 +649,8 @@ public class TestObjectFactory {
         }
 
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
-        LoanOfferingBOIntegrationTest.setStatus(loanOffering, prdStatus);
-        LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 
@@ -679,8 +679,8 @@ public class TestObjectFactory {
         }
 
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
-        LoanOfferingBOIntegrationTest.setStatus(loanOffering, prdStatus);
-        LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 
@@ -819,13 +819,13 @@ public class TestObjectFactory {
         savings.save();
         savings.setUserContext(TestObjectFactory.getContext());
         savings.changeStatus(accountStateId, null, "");
-        SavingsBOIntegrationTest.setActivationDate(savings, new Date(System.currentTimeMillis()));
+        SavingBOTestUtils.setActivationDate(savings, new Date(System.currentTimeMillis()));
         List<Date> meetingDates = getMeetingDates(meeting, 3);
         short installment = 0;
         for (Date date : meetingDates) {
             SavingsScheduleEntity actionDate = new SavingsScheduleEntity(savings, customer, ++installment,
                     new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, new Money(currency, "200.0"));
-            AccountActionDateEntityIntegrationTest.addAccountActionDate(actionDate, savings);
+            AccountTestUtils.addAccountActionDate(actionDate, savings);
         }
         StaticHibernateUtil.commitTransaction();
         return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
@@ -848,7 +848,7 @@ public class TestObjectFactory {
         SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, state, savingsOffering
                 .getRecommendedAmount(), getCustomFieldView());
         savings.save();
-        SavingsBOIntegrationTest.setActivationDate(savings, new Date(System.currentTimeMillis()));
+        SavingBOTestUtils.setActivationDate(savings, new Date(System.currentTimeMillis()));
         StaticHibernateUtil.commitTransaction();
         return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
     }

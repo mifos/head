@@ -131,15 +131,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public static void setDateOfBirth(ClientBO client, Date dateofBirth) {
-        client.setDateOfBirth(dateofBirth);
-    }
-
-    public static void setNoOfActiveLoans(ClientPerformanceHistoryEntity clientPerformanceHistoryEntity,
-            Integer noOfActiveLoans) {
-        clientPerformanceHistoryEntity.setNoOfActiveLoans(noOfActiveLoans);
-    }
-
     public void testPovertyLikelihoodHibernateMapping() throws Exception {
         createInitialObjects();
         Double pct = new Double(55.0);

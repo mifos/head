@@ -39,7 +39,7 @@ import org.joda.time.DateTime;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -52,7 +52,7 @@ import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerSearch;
@@ -524,7 +524,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     public void testGetCustomersWithUpdatedMeetings() throws Exception {
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
-        CustomerBOIntegrationTest.setUpdatedFlag(group.getCustomerMeeting(), YesNoFlag.YES.getValue());
+        CustomerBOTestUtils.setUpdatedFlag(group.getCustomerMeeting(), YesNoFlag.YES.getValue());
         TestObjectFactory.updateObject(group);
         List<Integer> customerIds = customerPersistence.getCustomersWithUpdatedMeetings();
        Assert.assertEquals(1, customerIds.size());
@@ -545,11 +545,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         AccountBO account2 = getLoanAccount(client2, meeting, "fasdfdsfasdf", "1qwe");
         AccountBO account3 = getLoanAccount(client3, meeting, "fdsgdfgfd", "543g");
         AccountBO account4 = getLoanAccount(group1, meeting, "fasdf23", "3fds");
-        CustomerBOIntegrationTest.setCustomerStatus(client2, new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
+        CustomerBOTestUtils.setCustomerStatus(client2, new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
 
         TestObjectFactory.updateObject(client2);
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
-        CustomerBOIntegrationTest.setCustomerStatus(client3, new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
+        CustomerBOTestUtils.setCustomerStatus(client3, new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
         TestObjectFactory.updateObject(client3);
         client3 = TestObjectFactory.getClient(client3.getCustomerId());
 
@@ -818,7 +818,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         customerPersistence.deleteCustomerMeeting(client);
-        CustomerBOIntegrationTest.setCustomerMeeting(client, null);
+        CustomerBOTestUtils.setCustomerMeeting(client, null);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -954,7 +954,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         AccountFeesEntity accountFee = new AccountFeesEntity(center.getCustomerAccount(), periodicFee,
                 ((AmountFeeBO) periodicFee).getFeeAmount().getAmountDoubleValue());
         CustomerAccountBO customerAccount = center.getCustomerAccount();
-        AccountFeesEntityIntegrationTest.addAccountFees(accountFee, customerAccount);
+        AccountTestUtils.addAccountFees(accountFee, customerAccount);
         TestObjectFactory.updateObject(customerAccount);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

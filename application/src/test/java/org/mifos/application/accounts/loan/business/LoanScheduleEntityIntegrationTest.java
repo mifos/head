@@ -160,21 +160,6 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         }
     }
 
-    public static void modifyData(LoanScheduleEntity accntActionDate, Money penalty, Money penaltyPaid,
-            Money miscPenalty, Money miscPenaltyPaid, Money miscFee, Money miscFeePaid, Money principal,
-            Money principalPaid, Money interest, Money interestPaid) {
-        accntActionDate.setPenalty(penalty);
-        accntActionDate.setMiscPenalty(miscPenalty);
-        accntActionDate.setMiscPenaltyPaid(miscPenaltyPaid);
-        accntActionDate.setPenaltyPaid(penaltyPaid);
-        accntActionDate.setMiscFee(miscFee);
-        accntActionDate.setMiscFeePaid(miscFeePaid);
-        accntActionDate.setPrincipal(principal);
-        accntActionDate.setPrincipalPaid(principalPaid);
-        accntActionDate.setInterest(interest);
-        accntActionDate.setInterestPaid(interestPaid);
-    }
-
     public void testMakeEarlyRepaymentEnteriesForFeePayment() {
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;

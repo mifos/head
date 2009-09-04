@@ -43,7 +43,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -143,7 +143,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
         ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
         center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
+        CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
         List<java.util.Date> meetingDates = center.getCustomerMeeting().getMeeting().getAllDates((short) 10);
         meetingDates.remove(0);
@@ -195,7 +195,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence().setWeekDay(
                 (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
                         WeekDaysEntity.class, null));
-        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
+        CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
         AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getDetailsOfNextInstallment();
         center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
@@ -253,7 +253,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence().setWeekDay(
                 (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
                         WeekDaysEntity.class, null));
-        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
+        CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
         AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getDetailsOfNextInstallment();
         center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
@@ -309,7 +309,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
 
         center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("1"));
-        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
+        CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
         java.util.Date meetingStartDate = center.getCustomerMeeting().getMeeting().getMeetingStartDate();
         AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getDetailsOfNextInstallment();

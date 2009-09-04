@@ -25,7 +25,7 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
@@ -86,12 +86,12 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
        Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("100.00"));
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
        Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
         accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
@@ -109,7 +109,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         // of 200, total overdue amount is Rs 300 and due amount for next
         // meeting date is Rs 200
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("100.00"));
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
        Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
@@ -125,7 +125,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         // of 200, total overdue amount is Rs 200 and due amount for next
         // meeting date is Rs 200
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
@@ -142,7 +142,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         // of 200, total overdue amount is Rs 0 and due amount for next meeting
         // date is Rs 200
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("100.00"));
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
        Assert.assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
@@ -158,7 +158,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         // of 200, total overdue amount is Rs 0 and due amount for next meeting
         // date is Rs 200
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
@@ -170,7 +170,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         savings = createSavingsAccount(SavingsType.VOLUNTARY);
         CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
@@ -181,7 +181,7 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         savings = createSavingsAccount(SavingsType.MANDATORY);
         CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
         SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        SavingBOTestUtils.setDepositPaid(accountActionDate, new Money("200.00"));
         accountActionDate.setPaymentStatus(PaymentStatus.PAID);
         collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
        Assert.assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);

@@ -32,13 +32,13 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
@@ -188,11 +188,6 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         account2 = TestObjectFactory.getObject(AccountBO.class, account2.getAccountId());
     }
 
-    public static void setLastGroupLoanAmount(GroupPerformanceHistoryEntity groupPerformanceHistoryEntity,
-            Money disburseAmount) {
-        groupPerformanceHistoryEntity.setLastGroupLoanAmount(disburseAmount);
-    }
-
     public void testChangeUpdatedMeeting() throws Exception {
         String oldMeetingPlace = "Delhi";
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
@@ -285,7 +280,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.getInterceptor().createInitialValueMap(group);
 
         List<CustomerPositionView> customerPositionList = new ArrayList<CustomerPositionView>();
-        CustomerBOIntegrationTest.setDisplayName(group, "changed group name");
+        CustomerBOTestUtils.setDisplayName(group, "changed group name");
         group.update(TestUtils.makeUser(), group.getDisplayName(), personnelId, "ABCD", Short.valueOf("1"), new Date(),
                 TestObjectFactory.getAddressHelper(), getNewCustomFields(), customerPositionList);
         StaticHibernateUtil.commitTransaction();
@@ -641,11 +636,11 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGetTotalSavingsBalance() throws Exception {
         createInitialObjects();
         SavingsBO savings1 = getSavingsAccount(group, "fsaf6", "ads6");
-        SavingsBOIntegrationTest.setBalance(savings1, new Money("1000"));
+        SavingBOTestUtils.setBalance(savings1, new Money("1000"));
 
         savings1.update();
         SavingsBO savings2 = getSavingsAccount(client, "fsaf5", "ads5");
-        SavingsBOIntegrationTest.setBalance(savings2, new Money("2000"));
+        SavingBOTestUtils.setBalance(savings2, new Money("2000"));
         savings1.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

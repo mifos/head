@@ -26,7 +26,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -120,7 +120,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
             savings=getSavingsAccountForCenter();
             int noOfInstallments=savings.getAccountActionDates().size();
-            AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(savings);
+            AccountTestUtils.changeInstallmentDatesToPreviousDate(savings);
             TestObjectFactory.flushandCloseSession();
             savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
             new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
@@ -143,7 +143,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         savings = helper.createSavingsAccount(savingsOffering, group, AccountState.SAVINGS_ACTIVE, userContext);
         Date meetingStartDate = savings.getCustomer().getCustomerMeeting().getMeeting().getStartDate();
         int noOfInstallments = savings.getAccountActionDates().size();
-        AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDateExceptLastInstallment(savings, 6);
+        AccountTestUtils.changeInstallmentDatesToPreviousDateExceptLastInstallment(savings, 6);
         TestObjectFactory.flushandCloseSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
@@ -162,7 +162,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeView);
         // give batch jobs something useful to do
         // TODO: move this method to a shared util class?
-        AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
+        AccountTestUtils.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
         center.update();
     }
 

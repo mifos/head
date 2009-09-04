@@ -32,9 +32,9 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -120,13 +120,13 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
         AccountingRules.setDigitsAfterDecimal(new Short("3"));
         createInitialObjects();
         PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-        SavingsBOIntegrationTest.setNextIntCalcDate(savings1, helper.getDate("01/05/2006"));
-        SavingsBOIntegrationTest.setActivationDate(savings1, helper.getDate("05/03/2006"));
+        SavingBOTestUtils.setNextIntCalcDate(savings1, helper.getDate("01/05/2006"));
+        SavingBOTestUtils.setActivationDate(savings1, helper.getDate("05/03/2006"));
 
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings1, new Money(currency, "1000.0"),
                 new Money(currency, "1000.0"), helper.getDate("10/03/2006"), AccountActionTypes.SAVINGS_DEPOSIT
                         .getValue(), savings1, createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings1);
+        AccountTestUtils.addAccountPayment(payment, savings1);
 
         savings1.update();
         StaticHibernateUtil.commitTransaction();
@@ -134,52 +134,52 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
         payment = helper.createAccountPaymentToPersist(savings1, new Money(currency, "500.0"), new Money(currency,
                 "1500.0"), helper.getDate("20/03/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1,
                 createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings1);
+        AccountTestUtils.addAccountPayment(payment, savings1);
         savings1.update();
         StaticHibernateUtil.commitTransaction();
 
         payment = helper.createAccountPaymentToPersist(savings1, new Money(currency, "600.0"), new Money(currency,
                 "900.0"), helper.getDate("10/04/2006"), AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings1,
                 createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings1);
+        AccountTestUtils.addAccountPayment(payment, savings1);
         savings1.update();
         StaticHibernateUtil.commitTransaction();
 
         payment = helper.createAccountPaymentToPersist(savings1, new Money(currency, "800.0"), new Money(currency,
                 "1700.0"), helper.getDate("20/04/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1,
                 createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings1);
+        AccountTestUtils.addAccountPayment(payment, savings1);
         savings1.update();
         StaticHibernateUtil.commitTransaction();
 
-        SavingsBOIntegrationTest.setNextIntCalcDate(savings4, helper.getDate("01/05/2006"));
-        SavingsBOIntegrationTest.setActivationDate(savings4, helper.getDate("10/04/2006"));
+        SavingBOTestUtils.setNextIntCalcDate(savings4, helper.getDate("01/05/2006"));
+        SavingBOTestUtils.setActivationDate(savings4, helper.getDate("10/04/2006"));
 
         payment = helper.createAccountPaymentToPersist(savings4, new Money(currency, "1000.0"), new Money(currency,
                 "1000.0"), helper.getDate("20/04/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4,
                 createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings4);
+        AccountTestUtils.addAccountPayment(payment, savings4);
         savings4.update();
         StaticHibernateUtil.commitTransaction();
 
         payment = helper.createAccountPaymentToPersist(savings4, new Money(currency, "500.0"), new Money(currency,
                 "1500.0"), helper.getDate("25/04/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4,
                 createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings4);
+        AccountTestUtils.addAccountPayment(payment, savings4);
         savings4.update();
         StaticHibernateUtil.commitTransaction();
 
         payment = helper.createAccountPaymentToPersist(savings4, new Money(currency, "600.0"), new Money(currency,
                 "900.0"), helper.getDate("28/04/2006"), AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings4,
                 createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings4);
+        AccountTestUtils.addAccountPayment(payment, savings4);
         savings4.update();
         StaticHibernateUtil.commitTransaction();
 
         payment = helper.createAccountPaymentToPersist(savings4, new Money(currency, "800.0"), new Money(currency,
                 "1700.0"), helper.getDate("30/04/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4,
                 createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings4);
+        AccountTestUtils.addAccountPayment(payment, savings4);
         savings4.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

@@ -83,11 +83,7 @@ public class AccountFeesEntityIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public static void addAccountFees(AccountFeesEntity fees, AccountBO account) {
-        account.addAccountFees(fees);
-    }
-
-    public AccountBO getLoanAccount() {
+    private AccountBO getLoanAccount() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter("Center", meeting);

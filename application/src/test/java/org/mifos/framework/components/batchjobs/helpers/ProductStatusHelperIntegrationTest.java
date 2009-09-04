@@ -34,7 +34,7 @@ import org.hibernate.Query;
 import org.hibernate.SessionException;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBOIntegrationTest;
+import org.mifos.application.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
@@ -205,7 +205,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
                 LOAN_INSTALLMENT, MONDAY));
         product = TestObjectFactory.createLoanOffering("Loan Offering", "LOAN", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency);
-        LoanOfferingBOIntegrationTest.setStatus(product, new PrdOfferingPersistence()
+        LoanOfferingTestUtils.setStatus(product, new PrdOfferingPersistence()
                 .getPrdStatus(PrdStatus.LOAN_INACTIVE));
         TestObjectFactory.updateObject(product);
         StaticHibernateUtil.closeSession();

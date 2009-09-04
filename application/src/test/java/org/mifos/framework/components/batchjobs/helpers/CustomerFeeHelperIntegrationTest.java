@@ -42,7 +42,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -91,7 +91,7 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.createCenter("center1_Active_test", meeting);
 
         for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
-            CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+            CustomerAccountBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                     .getActionDate(), 1));
         }
 
@@ -141,7 +141,7 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter("center1_Active_test", meeting);
         for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
-            CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+            CustomerAccountBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                     .getActionDate(), 1));
         }
         meeting = center.getCustomerMeeting().getMeeting();

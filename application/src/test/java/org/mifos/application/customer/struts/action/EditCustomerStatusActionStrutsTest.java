@@ -30,7 +30,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -414,7 +414,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     @SuppressWarnings("unchecked")
     public void testUpdateStatusForClientForActiveLoanOfficer() throws CustomerException, PageExpiredException {
         createInitialObjects();
-        CustomerBOIntegrationTest.setCustomerStatus(client, new CustomerStatusEntity(CustomerStatus.CLIENT_PARTIAL
+        CustomerBOTestUtils.setCustomerStatus(client, new CustomerStatusEntity(CustomerStatus.CLIENT_PARTIAL
                 .getValue()));
         client.update();
         StaticHibernateUtil.commitTransaction();
@@ -587,7 +587,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     @SuppressWarnings("unchecked")
     public void testChangeStatusToActiveForClient() throws Exception {
         createObjectsForClient("Client");
-        CustomerBOIntegrationTest.setPersonnel(client, null);
+        CustomerBOTestUtils.setPersonnel(client, null);
         client.update();
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());

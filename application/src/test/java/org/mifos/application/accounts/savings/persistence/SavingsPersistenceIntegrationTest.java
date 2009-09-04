@@ -29,11 +29,11 @@ import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -214,7 +214,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                     .getInstance().getSystemConfig().getCurrency(), "700.0"), new Money(Configuration.getInstance()
                     .getSystemConfig().getCurrency(), "1700.0"), helper.getDate("15/01/2006"),
                     AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-            AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
+            AccountTestUtils.addAccountPayment(payment, savings);
             savings.save();
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.closeSession();
@@ -223,7 +223,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                     .getSystemConfig().getCurrency(), "1000.0"), new Money(Configuration.getInstance()
                     .getSystemConfig().getCurrency(), "2700.0"), helper.getDate("20/02/2006"),
                     AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-            AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
+            AccountTestUtils.addAccountPayment(payment, savings);
             savings.update();
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.closeSession();
@@ -234,7 +234,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                     .getSystemConfig().getCurrency(), "500.0"), new Money(Configuration.getInstance().getSystemConfig()
                     .getCurrency(), "2200.0"), helper.getDate("10/03/2006"), AccountActionTypes.SAVINGS_WITHDRAWAL
                     .getValue(), savings, createdBy, group);
-            AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
+            AccountTestUtils.addAccountPayment(payment, savings);
             savings.update();
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.closeSession();
@@ -245,7 +245,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                     .getSystemConfig().getCurrency(), "1200.0"), new Money(Configuration.getInstance()
                     .getSystemConfig().getCurrency(), "3400.0"), helper.getDate("15/03/2006"),
                     AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-            AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
+            AccountTestUtils.addAccountPayment(payment, savings);
             savings.update();
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.closeSession();
@@ -256,7 +256,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                     .getSystemConfig().getCurrency(), "2500.0"), new Money(Configuration.getInstance()
                     .getSystemConfig().getCurrency(), "900.0"), helper.getDate("25/03/2006"),
                     AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
-            AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
+            AccountTestUtils.addAccountPayment(payment, savings);
             savings.update();
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.closeSession();
@@ -290,9 +290,9 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                 AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
         savings2 = helper.createSavingsAccount("000100000000023", savingsOffering2, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        SavingsBOIntegrationTest.setNextIntCalcDate(savings, helper.getDate("30/06/2006"));
-        SavingsBOIntegrationTest.setNextIntCalcDate(savings1, helper.getDate("30/06/2006"));
-        SavingsBOIntegrationTest.setNextIntCalcDate(savings2, helper.getDate("31/07/2006"));
+        SavingBOTestUtils.setNextIntCalcDate(savings, helper.getDate("30/06/2006"));
+        SavingBOTestUtils.setNextIntCalcDate(savings1, helper.getDate("30/06/2006"));
+        SavingBOTestUtils.setNextIntCalcDate(savings2, helper.getDate("31/07/2006"));
 
         savings.update();
         savings1.update();
@@ -327,9 +327,9 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                 AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
         savings2 = helper.createSavingsAccount("000100000000023", savingsOffering2, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        SavingsBOIntegrationTest.setNextIntPostDate(savings, helper.getDate("31/07/2006"));
-        SavingsBOIntegrationTest.setNextIntPostDate(savings1, helper.getDate("31/07/2006"));
-        SavingsBOIntegrationTest.setNextIntPostDate(savings2, helper.getDate("31/08/2006"));
+        SavingBOTestUtils.setNextIntPostDate(savings, helper.getDate("31/07/2006"));
+        SavingBOTestUtils.setNextIntPostDate(savings1, helper.getDate("31/07/2006"));
+        SavingBOTestUtils.setNextIntPostDate(savings2, helper.getDate("31/08/2006"));
         savings.update();
         savings1.update();
         savings2.update();
@@ -361,7 +361,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                 .currentTimeMillis()), savingsOffering);
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setActionDate(accountActionDateEntity, offSetCurrentDate(7));
+        SavingBOTestUtils.setActionDate(accountActionDateEntity, offSetCurrentDate(7));
 
         savings.update();
         StaticHibernateUtil.commitTransaction();
@@ -387,12 +387,12 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                 .currentTimeMillis()), savingsOffering);
 
         AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
-        SavingsBOIntegrationTest.setActionDate(accountActionDateEntity, offSetCurrentDate(7));
+        SavingBOTestUtils.setActionDate(accountActionDateEntity, offSetCurrentDate(7));
         accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID);
         Calendar currentDateCalendar = new GregorianCalendar();
         java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
 
-        SavingsBOIntegrationTest.setPaymentDate(accountActionDateEntity, currentDate);
+        SavingBOTestUtils.setPaymentDate(accountActionDateEntity, currentDate);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

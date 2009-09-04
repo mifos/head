@@ -38,7 +38,7 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.TransactionHistoryView;
@@ -363,7 +363,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
         AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(accountBO, upfrontFee, new Double("20.0"),
                 FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
-        AccountFeesEntityIntegrationTest.addAccountFees(accountUpfrontFee, accountBO);
+        AccountTestUtils.addAccountFees(accountUpfrontFee, accountBO);
         AccountFeesActionDetailEntity accountUpfrontFeesaction = new LoanFeeScheduleEntity(loanScheduleEntity,
                 upfrontFee, accountUpfrontFee, new Money("20.0"));
         loanScheduleEntity.addAccountFeesAction(accountUpfrontFeesaction);
@@ -375,7 +375,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 "30", FeePayment.TIME_OF_DISBURSMENT);
         AccountFeesEntity accountDisbursmentFee = new AccountFeesEntity(accountBO, timeOfDisbursmentFees, new Double(
                 "30.0"), FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
-        AccountFeesEntityIntegrationTest.addAccountFees(accountDisbursmentFee, accountBO);
+        AccountTestUtils.addAccountFees(accountDisbursmentFee, accountBO);
         AccountFeesActionDetailEntity accountDisbursmentFeesaction = new LoanFeeScheduleEntity(loanScheduleEntity,
                 timeOfDisbursmentFees, accountDisbursmentFee, new Money("30.0"));
         loanScheduleEntity.addAccountFeesAction(accountDisbursmentFeesaction);
@@ -387,7 +387,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 FeeCategory.LOAN, "40", FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
         AccountFeesEntity accountFirstLoanRepaymentFee = new AccountFeesEntity(accountBO, firstLoanRepaymentFee,
                 new Double("40.0"), FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
-        AccountFeesEntityIntegrationTest.addAccountFees(accountFirstLoanRepaymentFee, accountBO);
+        AccountTestUtils.addAccountFees(accountFirstLoanRepaymentFee, accountBO);
         AccountFeesActionDetailEntity accountTimeOfFirstLoanRepaymentFeesaction = new LoanFeeScheduleEntity(
                 loanScheduleEntity, firstLoanRepaymentFee, accountFirstLoanRepaymentFee, new Money("40.0"));
         loanScheduleEntity.addAccountFeesAction(accountTimeOfFirstLoanRepaymentFeesaction);
@@ -398,7 +398,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
         AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(accountBO, periodicFee, new Double("200.0"),
                 FeeStatus.INACTIVE.getValue(), null, null);
-        AccountFeesEntityIntegrationTest.addAccountFees(accountPeriodicFee, accountBO);
+        AccountTestUtils.addAccountFees(accountPeriodicFee, accountBO);
         TestObjectFactory.updateObject(accountBO);
 
         return accountBO;
@@ -417,7 +417,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 .valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
         AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(customerAccountBO, upfrontFee, new Double("20.0"),
                 FeeStatus.ACTIVE.getValue(), null, customerScheduleEntity.getActionDate());
-        AccountFeesEntityIntegrationTest.addAccountFees(accountUpfrontFee, customerAccountBO);
+        AccountTestUtils.addAccountFees(accountUpfrontFee, customerAccountBO);
         AccountFeesActionDetailEntity accountUpfrontFeesaction = new CustomerFeeScheduleEntity(customerScheduleEntity,
                 upfrontFee, accountUpfrontFee, new Money("20.0"));
         customerScheduleEntity.addAccountFeesAction(accountUpfrontFeesaction);
@@ -428,7 +428,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
         AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(customerAccountBO, periodicFee,
                 new Double("200.0"), FeeStatus.INACTIVE.getValue(), null, null);
-        AccountFeesEntityIntegrationTest.addAccountFees(accountPeriodicFee, customerAccountBO);
+        AccountTestUtils.addAccountFees(accountPeriodicFee, customerAccountBO);
         TestObjectFactory.updateObject(center);
 
         return customerAccountBO;

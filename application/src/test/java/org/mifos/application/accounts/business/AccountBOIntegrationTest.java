@@ -71,10 +71,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
 
-    public static void addAccountFlag(AccountStateFlagEntity flagDetail, AccountBO account) {
-        account.addAccountFlag(flagDetail);
-    }
-
     /**
      * The name of this test, and some now-gone (and broken) exception-catching
      * code, make it look like it was supposed to test failure. But it doesn't
@@ -552,11 +548,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         String officeGlobalNum = "0567";
         String globalAccountNum = account.generateId(officeGlobalNum);
        Assert.assertEquals("056700000000035", globalAccountNum);
-    }
-
-    public static void addToAccountStatusChangeHistory(LoanBO loan,
-            AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
-        loan.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
     }
 
     private List<Short> getApplicableInstallmentIdsForRemoveFees(AccountBO account) {

@@ -34,7 +34,7 @@ import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -332,14 +332,14 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         Calendar startDate = Calendar.getInstance();
         // TODO: It is ugly to call into another test like this,
         // and this code also isn't cleaning up the data correctly.
-        LoanBOIntegrationTest testLoanBO = new LoanBOIntegrationTest();
+        LoanBOTestUtils loanBOTestUtils = new LoanBOTestUtils();
 
-        LoanScheduleEntity[] loanRepaymentSchedule = testLoanBO.createLoanRepaymentSchedule();
+        LoanScheduleEntity[] loanRepaymentSchedule = loanBOTestUtils.createLoanRepaymentSchedule();
 
         AccountBO accountBO = (AccountBO) new MeetingPersistence().getPersistentObject(AccountBO.class,
                 loanRepaymentSchedule[0].getAccount().getAccountId());
 
-        loanRepaymentSchedule = testLoanBO.getSortedAccountActionDateEntity(accountBO.getAccountActionDates());
+        loanRepaymentSchedule = loanBOTestUtils.getSortedAccountActionDateEntity(accountBO.getAccountActionDates());
 
         startDate.setTime(loanRepaymentSchedule[0].getActionDate());
 
@@ -378,7 +378,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
 
         Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
 
-        loanRepaymentSchedule = testLoanBO.getSortedAccountActionDateEntity(actionDateEntities);
+        loanRepaymentSchedule = loanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
         startDate.setTime(holidayStartDate); // for calculating the other dates
         // correctly
 

@@ -28,11 +28,11 @@ import junit.framework.Assert;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
-import org.mifos.application.customer.business.CustomerTrxnDetailEntityIntegrationTest;
+import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -78,17 +78,6 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
         super.tearDown();
     }
 
-    public static void addAccountPayment(AccountPaymentEntity payment, AccountBO account) {
-        account.addAccountPayment(payment);
-    }
-
-    public static List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment, AccountPaymentEntity lastPayment)
-            throws Exception {
-        return lastPayment.reversalAdjustment(new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext()
-                .getId()), adjustmentComment);
-
-    }
-
     public void testReversalAdjustment() throws Exception {
         userContext = TestObjectFactory.getContext();
         createInitialObjects();
@@ -99,10 +88,10 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
 
         CustomerScheduleEntity accountAction = (CustomerScheduleEntity) customerAccountBO.getAccountActionDate(Short
                 .valueOf("1"));
-        CustomerAccountBOIntegrationTest.setMiscFeePaid(accountAction, TestObjectFactory.getMoneyForMFICurrency(100));
-        CustomerAccountBOIntegrationTest.setMiscPenaltyPaid(accountAction, TestObjectFactory
+        CustomerAccountBOTestUtils.setMiscFeePaid(accountAction, TestObjectFactory.getMoneyForMFICurrency(100));
+        CustomerAccountBOTestUtils.setMiscPenaltyPaid(accountAction, TestObjectFactory
                 .getMoneyForMFICurrency(100));
-        CustomerAccountBOIntegrationTest.setPaymentDate(accountAction, currentDate);
+        CustomerAccountBOTestUtils.setPaymentDate(accountAction, currentDate);
         accountAction.setPaymentStatus(PaymentStatus.PAID);
 
         MasterPersistence masterPersistenceService = new MasterPersistence();
@@ -122,7 +111,7 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
             accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
                     .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());
-            CustomerTrxnDetailEntityIntegrationTest.addFeesTrxnDetail(accountTrxnEntity, feeTrxn);
+            CustomerBOTestUtils.addFeesTrxnDetail(accountTrxnEntity, feeTrxn);
             // TODO: is there anything to assert on here?
             // totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
         }

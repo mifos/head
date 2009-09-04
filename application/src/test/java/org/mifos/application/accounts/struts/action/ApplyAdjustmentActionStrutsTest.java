@@ -28,7 +28,7 @@ import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountBOIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -178,7 +178,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), personnel, loan);
-        AccountBOIntegrationTest.addToAccountStatusChangeHistory(loan, historyEntity);
+        AccountTestUtils.addToAccountStatusChangeHistory(loan, historyEntity);
         TestObjectFactory.updateObject(loan);
         TestObjectFactory.flushandCloseSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
@@ -219,14 +219,14 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), personnel, loan);
-        AccountBOIntegrationTest.addToAccountStatusChangeHistory(loan, historyEntity);
+        AccountTestUtils.addToAccountStatusChangeHistory(loan, historyEntity);
         TestObjectFactory.updateObject(loan);
         TestObjectFactory.flushandCloseSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         historyEntity = new AccountStatusChangeHistoryEntity(new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_BAD_STANDING), new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), personnel, loan);
-        AccountBOIntegrationTest.addToAccountStatusChangeHistory(loan, historyEntity);
+        AccountTestUtils.addToAccountStatusChangeHistory(loan, historyEntity);
         TestObjectFactory.updateObject(loan);
         StaticHibernateUtil.closeSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());

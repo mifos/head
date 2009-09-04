@@ -40,7 +40,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -52,7 +52,7 @@ import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.business.GroupBOIntegrationTest;
+import org.mifos.application.customer.group.business.GroupTestUtils;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -137,26 +137,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         }
         StaticHibernateUtil.closeSession();
         super.tearDown();
-    }
-
-    public static void setCustomerStatus(CustomerBO customer, CustomerStatusEntity customerStatusEntity) {
-        customer.setCustomerStatus(customerStatusEntity);
-    }
-
-    public static void setCustomerMeeting(CustomerBO customer, CustomerMeetingEntity customerMeeting) {
-        customer.setCustomerMeeting(customerMeeting);
-    }
-
-    public static void setPersonnel(CustomerBO customer, PersonnelBO personnel) {
-        customer.setPersonnel(personnel);
-    }
-
-    public static void setDisplayName(CustomerBO customer, String displayName) {
-        customer.setDisplayName(displayName);
-    }
-
-    public static void setUpdatedFlag(CustomerMeetingEntity customerMeetingEntity, Short updatedFlag) {
-        customerMeetingEntity.setUpdatedFlag(updatedFlag);
     }
 
     public void testRemoveGroupMemberShip() throws Exception {
@@ -316,7 +296,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGroupPerfObject() throws PersistenceException {
         createInitialObjects();
         GroupPerformanceHistoryEntity groupPerformanceHistory = group.getGroupPerformanceHistory();
-        GroupBOIntegrationTest.setLastGroupLoanAmount(groupPerformanceHistory, new Money("100"));
+        GroupTestUtils.setLastGroupLoanAmount(groupPerformanceHistory, new Money("100"));
         TestObjectFactory.updateObject(group);
         StaticHibernateUtil.closeSession();
         group = (GroupBO) customerPersistence
@@ -488,7 +468,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testgetSavingsBalance() throws Exception {
         SavingsBO savings = getSavingsAccount("fsaf4", "ads4");
-        SavingsBOIntegrationTest.setBalance(savings, new Money("1000"));
+        SavingBOTestUtils.setBalance(savings, new Money("1000"));
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -775,7 +755,8 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() +" Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
-    public OfficeBO getBranchOffice() {
+    @Override
+    protected OfficeBO getBranchOffice() {
         return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 
     }

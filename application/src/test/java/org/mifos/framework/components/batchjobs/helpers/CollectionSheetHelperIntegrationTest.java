@@ -32,12 +32,12 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -110,7 +110,7 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
        Assert.assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
 
         for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
-            CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+            CustomerAccountBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                     .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
         }
 
@@ -120,7 +120,7 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
         }
 
         for (AccountActionDateEntity accountActionDateEntity : savingsBO.getAccountActionDates()) {
-            SavingsBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+            SavingBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                     .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
         }
 

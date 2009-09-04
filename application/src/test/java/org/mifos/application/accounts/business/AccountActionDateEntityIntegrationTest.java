@@ -32,7 +32,7 @@ import junit.framework.Assert;
 import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -52,10 +52,6 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
 
     private static final double DELTA = 0.00000001;
 
-    public static void addAccountActionDate(AccountActionDateEntity accountAction, AccountBO account) {
-        account.addAccountActionDate(accountAction);
-    }
-
     public void testGetPrincipal() {
         Set<AccountActionDateEntity> accountActionDates = accountBO.getAccountActionDates();
         for (AccountActionDateEntity accountActionDate : accountActionDates) {
@@ -70,8 +66,8 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
 
         CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group.getCustomerAccount()
                 .getAccountActionDates().toArray()[0];
-        CustomerAccountBOIntegrationTest.setMiscFee(accountActionDate, new Money("20"));
-        Money chargeWaived = CustomerAccountBOIntegrationTest.waiveCharges(accountActionDate);
+        CustomerAccountBOTestUtils.setMiscFee(accountActionDate, new Money("20"));
+        Money chargeWaived = CustomerAccountBOTestUtils.waiveCharges(accountActionDate);
        Assert.assertEquals(new Money(), accountActionDate.getMiscFee());
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDate
                 .getAccountFeesActionDetails()) {
@@ -108,7 +104,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         Set<AccountFeesEntity> accountFeeSet = group.getCustomerAccount().getAccountFees();
         for (AccountFeesEntity accFeesEntity : accountFeeSet) {
             if (accFeesEntity.getFees().getFeeName().equalsIgnoreCase("Periodic Fee")) {
-                CustomerAccountBOIntegrationTest.applyPeriodicFees(accountActionDateEntity, accFeesEntity.getFees()
+                CustomerAccountBOTestUtils.applyPeriodicFees(accountActionDateEntity, accFeesEntity.getFees()
                         .getFeeId(), new Money("100"));
                 break;
             }
@@ -129,35 +125,6 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         StaticHibernateUtil.closeSession();
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
-    }
-
-    /**
-     * Changes <em>all</em> installment dates to yesterday. In production,
-     * multiple installments should never have the same ACTION_DATE.
-     */
-    public static void changeInstallmentDatesToPreviousDate(AccountBO accountBO) {
-        Calendar currentDateCalendar = new GregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-        for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            accountActionDateEntity.setActionDate(new java.sql.Date(currentDateCalendar.getTimeInMillis()));
-        }
-    }
-
-    public static void changeInstallmentDatesToPreviousDateExceptLastInstallment(AccountBO accountBO,
-            int noOfInstallmentsToBeChanged) {
-        Calendar currentDateCalendar = new GregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-        for (int i = 1; i <= noOfInstallmentsToBeChanged; i++) {
-            AccountActionDateEntity accountActionDateEntity = accountBO.getAccountActionDate(Integer.valueOf(i)
-                    .shortValue());
-            accountActionDateEntity.setActionDate(new java.sql.Date(currentDateCalendar.getTimeInMillis()));
-        }
     }
 
 }

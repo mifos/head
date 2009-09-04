@@ -34,7 +34,7 @@ import junit.framework.Assert;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -114,17 +114,17 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
 
     public void testInterestPosting() throws Exception {
         createInitialObjects();
-        SavingsBOIntegrationTest.setNextIntPostDate(savings1, helper.getDate("31/03/2006"));
-        SavingsBOIntegrationTest.setActivationDate(savings1, helper.getDate("05/03/2006"));
-        SavingsBOIntegrationTest.setInterestToBePosted(savings1, new Money(currency, "500"));
-        SavingsBOIntegrationTest.setBalance(savings1, new Money("250"));
+        SavingBOTestUtils.setNextIntPostDate(savings1, helper.getDate("31/03/2006"));
+        SavingBOTestUtils.setActivationDate(savings1, helper.getDate("05/03/2006"));
+        SavingBOTestUtils.setInterestToBePosted(savings1, new Money(currency, "500"));
+        SavingBOTestUtils.setBalance(savings1, new Money("250"));
 
         savings1.update();
 
-        SavingsBOIntegrationTest.setNextIntPostDate(savings4, helper.getDate("31/03/2006"));
-        SavingsBOIntegrationTest.setActivationDate(savings4, helper.getDate("15/03/2006"));
-        SavingsBOIntegrationTest.setInterestToBePosted(savings4, new Money(currency, "800.40"));
-        SavingsBOIntegrationTest.setBalance(savings4, new Money("250"));
+        SavingBOTestUtils.setNextIntPostDate(savings4, helper.getDate("31/03/2006"));
+        SavingBOTestUtils.setActivationDate(savings4, helper.getDate("15/03/2006"));
+        SavingBOTestUtils.setInterestToBePosted(savings4, new Money(currency, "800.40"));
+        SavingBOTestUtils.setBalance(savings4, new Money("250"));
         savings4.update();
 
         StaticHibernateUtil.commitTransaction();

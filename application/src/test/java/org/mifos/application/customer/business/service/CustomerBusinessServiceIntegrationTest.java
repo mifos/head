@@ -42,7 +42,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
@@ -54,10 +54,10 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -289,7 +289,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
                 .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-                    CustomerAccountBOIntegrationTest.setFeeAmount(
+                    CustomerAccountBOTestUtils.setFeeAmount(
                             (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("100"));
                 }
             }
@@ -306,7 +306,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
                 .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-                    CustomerAccountBOIntegrationTest.setFeeAmount(
+                    CustomerAccountBOTestUtils.setFeeAmount(
                             (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("100"));
                 }
             }
@@ -323,7 +323,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
                 .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-                    CustomerAccountBOIntegrationTest.setFeeAmount(
+                    CustomerAccountBOTestUtils.setFeeAmount(
                             (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("20"));
                 }
             }
@@ -455,11 +455,11 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         changeFirstInstallmentDateToPastDate(account9);
         AccountBO account10 = getLoanAccount(group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afadsff",
         "23e");
-        CustomerBOIntegrationTest.setCustomerStatus(client2, new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
+        CustomerBOTestUtils.setCustomerStatus(client2, new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
 
         TestObjectFactory.updateObject(client2);
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
-        CustomerBOIntegrationTest.setCustomerStatus(client3, new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
+        CustomerBOTestUtils.setCustomerStatus(client3, new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
         TestObjectFactory.updateObject(client3);
         client3 = TestObjectFactory.getClient(client3.getCustomerId());
 
@@ -839,7 +839,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 startDate, savingsOffering);
         StaticHibernateUtil.closeSession();
         savingsBO = (SavingsBO) (new AccountPersistence().getAccount(savingsBO.getAccountId()));
-        SavingsBOIntegrationTest.setBalance(savingsBO, new Money());
+        SavingBOTestUtils.setBalance(savingsBO, new Money());
         Money enteredAmount = new Money(currency, "100.0");
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savingsBO.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));

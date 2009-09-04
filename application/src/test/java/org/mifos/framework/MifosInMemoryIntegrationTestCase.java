@@ -35,17 +35,17 @@ public class MifosInMemoryIntegrationTestCase extends TestCase {
     protected TestDatabase database;
 
     @Override
-    public void setUp() {
+    protected void setUp() {
         database = TestDatabase.makeStandard();
         database.installInThreadLocal();
     }
 
     @Override
-    public void tearDown() {
+    protected void tearDown() {
         StaticHibernateUtil.resetDatabase();
     }
 
-    public MifosInMemoryIntegrationTestCase() {
+    protected MifosInMemoryIntegrationTestCase() {
         MifosLogManager.configureLogging();
         DatabaseSetup.initializeHibernate(true);
     }

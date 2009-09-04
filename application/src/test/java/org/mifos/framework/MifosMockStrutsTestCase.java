@@ -46,7 +46,7 @@ import servletunit.struts.MockStrutsTestCase;
 
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
-    public MifosMockStrutsTestCase() throws SystemException, ApplicationException {
+    protected MifosMockStrutsTestCase() throws SystemException, ApplicationException {
         super();
         new TestCaseInitializer().initialize();
     }
@@ -126,7 +126,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
     }
 
-    public void doCleanUp(HttpSession session) {
+    protected void doCleanUp(HttpSession session) {
         Enumeration keys = session.getAttributeNames();
         String attributeKey = null;
         if (null != keys) {
@@ -149,7 +149,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         session = null;
     }// end-doCleanUp
 
-    public void doCleanUp(HttpServletRequest request) {
+    protected void doCleanUp(HttpServletRequest request) {
         Enumeration keys = request.getAttributeNames();
         String attributeKey = null;
         if (null != keys) {

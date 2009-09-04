@@ -37,7 +37,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,11 +45,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -60,18 +55,14 @@ import org.mifos.application.accounts.loan.persistance.LoanDao;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -168,6 +159,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     private LoanDao loanDao;
 
+    @Override
     public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
 
@@ -182,6 +174,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         loanDao = new LoanDao();
     }
 
+    @Override
     public void tearDown() throws Exception {
         TestObjectFactory.removeObject(loanOffering);
         if (accountBO != null)
@@ -211,92 +204,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         setNumberOfInterestDays(savedDaysInYear);
     }
 
-    public static void setFeeAmount(AccountFeesActionDetailEntity accountFeesActionDetailEntity, Money feeAmount) {
-        ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).setFeeAmount(feeAmount);
-    }
-
-    public static void setFeeAmountPaid(AccountFeesActionDetailEntity accountFeesActionDetailEntity, Money feeAmountPaid) {
-        ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).setFeeAmountPaid(feeAmountPaid);
-    }
-
-    public static void setActionDate(AccountActionDateEntity accountActionDateEntity, java.sql.Date actionDate) {
-        ((LoanScheduleEntity) accountActionDateEntity).setActionDate(actionDate);
-    }
-
-    public static void setDisbursementDate(AccountBO account, Date disbursementDate) {
-        ((LoanBO) account).setDisbursementDate(disbursementDate);
-    }
-
-    public static LoanBO createIndividualLoanAccount(String globalNum, CustomerBO customer, AccountState state,
-            Date startDate, LoanOfferingBO loanOfering) {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(startDate);
-        MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
-
-        LoanBO loan;
-        MifosCurrency currency = TestObjectFactory.getCurrency();
-        try {
-            loan = LoanBO.createIndividualLoan(TestUtils.makeUser(), loanOfering, customer, state, new Money(currency,
-                    "300.0"), Short.valueOf("6"), meetingDates.get(0), true, false, 0.0, (short) 0, new FundBO(),
-                    new ArrayList<FeeView>(), null);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
-        FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
-                RecurrenceType.WEEKLY, Short.valueOf("1"));
-        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan, maintanenceFee,
-                ((AmountFeeBO) maintanenceFee).getFeeAmount().getAmountDoubleValue());
-        AccountFeesEntityIntegrationTest.addAccountFees(accountPeriodicFee, loan);
-        loan.setLoanMeeting(meeting);
-        short i = 0;
-        for (Date date : meetingDates) {
-            LoanScheduleEntity actionDate = (LoanScheduleEntity) loan.getAccountActionDate(++i);
-            actionDate.setPrincipal(new Money(currency, "100.0"));
-            actionDate.setInterest(new Money(currency, "12.0"));
-            actionDate.setActionDate(new java.sql.Date(date.getTime()));
-            actionDate.setPaymentStatus(PaymentStatus.UNPAID);
-            AccountActionDateEntityIntegrationTest.addAccountActionDate(actionDate, loan);
-
-            AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(actionDate, maintanenceFee,
-                    accountPeriodicFee, new Money(currency, "100.0"));
-            setFeeAmountPaid(accountFeesaction, new Money(currency, "0.0"));
-            actionDate.addAccountFeesAction(accountFeesaction);
-        }
-        loan.setCreatedBy(Short.valueOf("1"));
-        loan.setCreatedDate(new Date(System.currentTimeMillis()));
-
-        setLoanSummary(loan, currency);
-        return loan;
-    }
-
-    private static void setLoanSummary(LoanBO loan, MifosCurrency currency) {
-        LoanSummaryEntity loanSummary = loan.getLoanSummary();
-        loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
-        loanSummary.setOriginalInterest(new Money(currency, "36.0"));
-    }
-
-    public static void modifyDisbursmentDate(LoanBO loan, Date disbursmentDate) {
-        loan.setDisbursementDate(disbursmentDate);
-    }
-
     /* This part is for the testing of 999 account */
     /****************************************************************************/
     /****************************************************************************/
     /****************************************************************************/
     /****************************************************************************/
-
-    public static RateFeeBO createPeriodicRateFee(InternalConfiguration config, LoanParameters loanParams,
-            MeetingBO meeting) {
-
-        try {
-            return TestObjectFactory.createPeriodicRateFee("testLoanFee", FeeCategory.LOAN, new Double(config
-                    .getFeePercentage()), config.getFeeType(), loanParams.getPaymentFrequency(), (short) 1, TestUtils
-                    .makeUserWithLocales(), meeting);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(String fileName,
             int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment)
@@ -410,7 +322,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO = setUpLoanFor999Account(config, loanParams);
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
@@ -429,7 +341,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         // after all payments are made
         printLoanScheduleEntities(paymentsArray);
         List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO
@@ -452,7 +364,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // is
         // 0
         actionDateEntities = accountBO.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         // after last payment is reversed
         printLoanScheduleEntities(paymentsArray);
         verifyReversedLastPaymentLoanSchedules(paymentsArray, expectedResults);
@@ -510,7 +422,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO = setUpLoanFor999Account(config, loanParams);
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
@@ -529,14 +441,14 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         // after all payments are made
         printLoanScheduleEntities(paymentsArray);
         // reverse loan
         ((LoanBO) accountBO).reverseLoanDisbursal(personnelBO, "Reverse this loan for testing");
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         verifyReversedLoanSchedules(paymentsArray, expectedResults);
         List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO
                 .getAccountId());
@@ -602,7 +514,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
 
@@ -636,7 +548,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
 
@@ -657,7 +569,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         calculatedResults.setAccount999(((LoanBO) loan).calculate999Account(lastPayment));
         new TestObjectPersistence().persist(loan);
         actionDateEntities = loan.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan
                 .getAccountId());
        Assert.assertEquals(accountPayments.size(), paymentToReverse);
@@ -679,7 +591,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // is
         // 0
         actionDateEntities = loan.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
        Assert.assertEquals(paymentsArray[paymentToReverse - 1].getPrincipalPaid(), new Money("0"));
 
         if (payLastPayment) {
@@ -703,7 +615,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO = setUpLoanFor999Account(config, loanParams);
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
@@ -721,7 +633,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         }
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         printLoanScheduleEntities(paymentsArray);
         // loan repay
         UserContext uc = TestUtils.makeUser();
@@ -729,7 +641,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 .getId());
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
-        paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         printLoanScheduleEntities(paymentsArray);
         // no 999 account is logged
         Set<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
@@ -970,7 +882,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
 
@@ -1036,7 +948,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
         LoanScheduleEntity loanSchedule = null;
@@ -1692,7 +1604,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private Results calculatePayments(InternalConfiguration config, AccountBO accountBO, LoanParameters loanParams) {
 
         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
 
         MathContext context = new MathContext(config.getInternalPrecision());
@@ -2414,19 +2326,4 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         }
 
     }
-
-    public static LoanScheduleEntity[] getSortedAccountActionDateEntity(
-            Set<AccountActionDateEntity> actionDateCollection, int expectedCount) {
-
-        LoanScheduleEntity[] sortedList = new LoanScheduleEntity[actionDateCollection.size()];
-
-       Assert.assertEquals(expectedCount, actionDateCollection.size());
-
-        for (AccountActionDateEntity actionDateEntity : actionDateCollection) {
-            sortedList[actionDateEntity.getInstallmentId().intValue() - 1] = (LoanScheduleEntity) actionDateEntity;
-        }
-
-        return sortedList;
-    }
-
 }

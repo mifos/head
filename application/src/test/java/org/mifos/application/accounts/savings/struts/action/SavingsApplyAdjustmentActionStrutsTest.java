@@ -28,9 +28,9 @@ import junit.framework.Assert;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -126,8 +126,8 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         Money depositAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000");
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositAmount, depositAmount,
                 helper.getDate("20/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
-        SavingsBOIntegrationTest.setBalance(savings, depositAmount);
+        AccountTestUtils.addAccountPayment(payment, savings);
+        SavingBOTestUtils.setBalance(savings, depositAmount);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -156,8 +156,8 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         Money balance = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "2000.0");
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, balance, helper
                 .getDate("20/05/2006"), AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
-        SavingsBOIntegrationTest.setBalance(savings, balance);
+        AccountTestUtils.addAccountPayment(payment, savings);
+        SavingBOTestUtils.setBalance(savings, balance);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -288,8 +288,8 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         Money depositAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.0");
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositAmount, depositAmount,
                 helper.getDate("20/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
-        SavingsBOIntegrationTest.setBalance(savings, depositAmount);
+        AccountTestUtils.addAccountPayment(payment, savings);
+        SavingBOTestUtils.setBalance(savings, depositAmount);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

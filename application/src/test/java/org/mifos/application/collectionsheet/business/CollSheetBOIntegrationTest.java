@@ -42,7 +42,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntityIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -287,7 +287,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
                     .getMoneyForMFICurrency(3));
 
             accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
-            LoanScheduleEntityIntegrationTest.modifyData(accntActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
+            LoanBOTestUtils.modifyData(accntActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
                     TestObjectFactory.getMoneyForMFICurrency(5), TestObjectFactory.getMoneyForMFICurrency(3),
                     TestObjectFactory.getMoneyForMFICurrency(0), TestObjectFactory.getMoneyForMFICurrency(5),
                     TestObjectFactory.getMoneyForMFICurrency(5), accntActionDate.getPrincipal(), accntActionDate
@@ -313,7 +313,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 
             accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 
-            LoanScheduleEntityIntegrationTest.modifyData(accntActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
+            LoanBOTestUtils.modifyData(accntActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
                     TestObjectFactory.getMoneyForMFICurrency(5), TestObjectFactory.getMoneyForMFICurrency(3),
                     TestObjectFactory.getMoneyForMFICurrency(0), TestObjectFactory.getMoneyForMFICurrency(5),
                     TestObjectFactory.getMoneyForMFICurrency(4), TestObjectFactory.getMoneyForMFICurrency(10),

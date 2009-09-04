@@ -28,7 +28,7 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -81,10 +81,6 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         super.tearDown();
     }
 
-    public static void addFeesTrxnDetail(CustomerTrxnDetailEntity accountTrxnEntity, FeesTrxnDetailEntity feeTrxn) {
-        accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
-    }
-
     public void testGenerateReverseTrxn() throws Exception {
         accountBO = client.getCustomerAccount();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -112,7 +108,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
                         .getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100));
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
-            CustomerAccountBOIntegrationTest.setFeeAmountPaid(
+            CustomerAccountBOTestUtils.setFeeAmountPaid(
                     (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, TestObjectFactory
                             .getMoneyForMFICurrency(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
@@ -120,7 +116,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
             accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
         }
         accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity, customerAccountBO);
+        AccountTestUtils.addAccountPayment(accountPaymentEntity, customerAccountBO);
 
         PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());
         for (AccountTrxnEntity accntTrxn : customerAccountBO.getLastPmnt().getAccountTrxns()) {

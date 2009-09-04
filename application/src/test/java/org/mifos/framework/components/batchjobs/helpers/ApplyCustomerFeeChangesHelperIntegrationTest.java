@@ -33,7 +33,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.customer.business.CustomerAccountBO;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -103,7 +103,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
                 .valueOf("1"));
         AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
                 accountPeriodicFee, new Money("10.0"));
-        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+        CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
                 "0.0"));
         accountActionDate.addAccountFeesAction(accountFeesaction);
         TestObjectFactory.flushandCloseSession();
@@ -134,7 +134,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         CustomerAccountBO customerAccount = center.getCustomerAccount();
         CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short
                 .valueOf("1"));
-        CustomerAccountBOIntegrationTest.setActionDate(accountActionDate, offSetDate(accountActionDate.getActionDate(),
+        CustomerAccountBOTestUtils.setActionDate(accountActionDate, offSetDate(accountActionDate.getActionDate(),
                 -1));
         TestObjectFactory.updateObject(center);
         TestObjectFactory.flushandCloseSession();
@@ -149,7 +149,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short.valueOf("2"));
         AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
                 accountPeriodicFee, new Money("10.0"));
-        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+        CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
                 "0.0"));
         accountActionDate.addAccountFeesAction(accountFeesaction);
         TestObjectFactory.flushandCloseSession();
@@ -178,7 +178,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         CustomerAccountBO customerAccount = center.getCustomerAccount();
         CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short
                 .valueOf("1"));
-        CustomerAccountBOIntegrationTest.setActionDate(accountActionDate, offSetDate(accountActionDate.getActionDate(),
+        CustomerAccountBOTestUtils.setActionDate(accountActionDate, offSetDate(accountActionDate.getActionDate(),
                 -1));
         TestObjectFactory.updateObject(center);
         StaticHibernateUtil.closeSession();
@@ -194,7 +194,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short.valueOf("2"));
         AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
                 accountPeriodicFee, new Money("10.0"));
-        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+        CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
                 "0.0"));
         accountActionDate.addAccountFeesAction(accountFeesaction);
         StaticHibernateUtil.commitTransaction();
@@ -316,14 +316,14 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
                 .valueOf("1"));
         AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
                 accountPeriodicFee, new Money("10.0"));
-        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+        CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
                 "0.0"));
         accountActionDate.addAccountFeesAction(accountFeesaction);
         CustomerScheduleEntity groupaccountActionDate = (CustomerScheduleEntity) groupAccount
                 .getAccountActionDate(Short.valueOf("1"));
         AccountFeesActionDetailEntity groupaccountFeesaction = new CustomerFeeScheduleEntity(groupaccountActionDate,
                 trainingFee, groupaccountPeriodicFee, new Money("10.0"));
-        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) groupaccountFeesaction,
+        CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) groupaccountFeesaction,
                 new Money("0.0"));
         groupaccountActionDate.addAccountFeesAction(groupaccountFeesaction);
 

@@ -28,7 +28,7 @@ import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -344,7 +344,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-        SavingsBOIntegrationTest.setBalance(savings, new Money("500"));
+        SavingBOTestUtils.setBalance(savings, new Money("500"));
 
         savings.update();
         StaticHibernateUtil.commitTransaction();

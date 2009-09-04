@@ -38,9 +38,9 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -109,42 +109,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
         StaticHibernateUtil.closeSession();
         super.tearDown();
-    }
-
-    public static void setMiscFee(CustomerScheduleEntity customerSchedule, Money miscFee) {
-        customerSchedule.setMiscFee(miscFee);
-    }
-
-    public static void setMiscFeePaid(CustomerScheduleEntity customerSchedule, Money miscFeePaid) {
-        customerSchedule.setMiscFeePaid(miscFeePaid);
-    }
-
-    public static void setMiscPenaltyPaid(CustomerScheduleEntity customerSchedule, Money miscPenaltyPaid) {
-        customerSchedule.setMiscPenaltyPaid(miscPenaltyPaid);
-    }
-
-    public static void applyPeriodicFees(CustomerScheduleEntity customerSchedule, Short feeId, Money totalAmount) {
-        customerSchedule.applyPeriodicFees(feeId, totalAmount);
-    }
-
-    public static Money waiveCharges(CustomerScheduleEntity customerSchedule) {
-        return customerSchedule.waiveCharges();
-    }
-
-    public static void setFeeAmount(CustomerFeeScheduleEntity customerFeeScheduleEntity, Money feeAmount) {
-        customerFeeScheduleEntity.setFeeAmount(feeAmount);
-    }
-
-    public static void setFeeAmountPaid(CustomerFeeScheduleEntity customerFeeScheduleEntity, Money feeAmountPaid) {
-        customerFeeScheduleEntity.setFeeAmountPaid(feeAmountPaid);
-    }
-
-    public static void setActionDate(AccountActionDateEntity accountActionDateEntity, java.sql.Date actionDate) {
-        ((CustomerScheduleEntity) accountActionDateEntity).setActionDate(actionDate);
-    }
-
-    public static void setPaymentDate(AccountActionDateEntity accountActionDateEntity, java.sql.Date paymentDate) {
-        accountActionDateEntity.setPaymentDate(paymentDate);
     }
 
     public void testSuccessfulMakePayment() throws Exception {
@@ -243,7 +207,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO = TestObjectFactory.getObject(CustomerAccountBO.class, customerAccountBO.getAccountId());
         client = customerAccountBO.getCustomer();
         customerAccountBO.setUserContext(userContext);
-        List<AccountTrxnEntity> reversedTrxns = AccountPaymentEntityIntegrationTest.reversalAdjustment(
+        List<AccountTrxnEntity> reversedTrxns = AccountTestUtils.reversalAdjustment(
                 "payment adjustment done", customerAccountBO.getLastPmnt());
         customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
         for (AccountTrxnEntity accntTrxn : reversedTrxns) {
@@ -387,7 +351,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group.getCustomerAccount(), fee,
                 ((AmountFeeBO) fee).getFeeAmount().getAmountDoubleValue(), null, null, new Date(System
                         .currentTimeMillis()));
-        AccountFeesEntityIntegrationTest.addAccountFees(accountFeesEntity, group.getCustomerAccount());
+        AccountTestUtils.addAccountFees(accountFeesEntity, group.getCustomerAccount());
         TestObjectFactory.updateObject(group);
         TestObjectFactory.flushandCloseSession();
 
@@ -572,7 +536,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = center.getCustomerMeeting().getMeeting();
         meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
         CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
-        CustomerBOIntegrationTest.setCustomerStatus(group, customerStatusEntity);
+        CustomerBOTestUtils.setCustomerStatus(group, customerStatusEntity);
         group.getCustomerAccount().regenerateFutureInstallments((short) 2);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1033,14 +997,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                         .getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100));
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
-            setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity, TestObjectFactory
+            CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity, TestObjectFactory
                     .getMoneyForMFICurrency(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
                     .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());
             accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
         }
         accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity, customerAccountBO);
+        AccountTestUtils.addAccountPayment(accountPaymentEntity, customerAccountBO);
         TestObjectFactory.updateObject(customerAccountBO);
         TestObjectFactory.flushandCloseSession();
     }

@@ -27,9 +27,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -278,12 +278,12 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        SavingsBOIntegrationTest.setActivationDate(savings, helper.getDate("20/05/2006"));
+        SavingBOTestUtils.setActivationDate(savings, helper.getDate("20/05/2006"));
         PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
         AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, new Money(TestObjectFactory
                 .getMFICurrency(), "1000.0"), new Money(TestObjectFactory.getMFICurrency(), "1000.0"), helper
                 .getDate("30/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment1, savings);
+        AccountTestUtils.addAccountPayment(payment1, savings);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -292,14 +292,14 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings, new Money(TestObjectFactory
                 .getMFICurrency(), "500.0"), balanceAmount, helper.getDate("15/06/2006"),
                 AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-        AccountPaymentEntityIntegrationTest.addAccountPayment(payment2, savings);
+        AccountTestUtils.addAccountPayment(payment2, savings);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
         Money interestAmount = new Money(TestObjectFactory.getMFICurrency(), "40");
-        SavingsBOIntegrationTest.setInterestToBePosted(savings, interestAmount);
-        SavingsBOIntegrationTest.setBalance(savings, balanceAmount);
+        SavingBOTestUtils.setInterestToBePosted(savings, interestAmount);
+        SavingBOTestUtils.setBalance(savings, balanceAmount);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

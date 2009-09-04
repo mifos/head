@@ -29,7 +29,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntityIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
@@ -96,7 +96,7 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
                 .setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory.getMoneyForMFICurrency(3));
         accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 
-        LoanScheduleEntityIntegrationTest.modifyData(accountActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
+        LoanBOTestUtils.modifyData(accountActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
                 TestObjectFactory.getMoneyForMFICurrency(5), TestObjectFactory.getMoneyForMFICurrency(3),
                 TestObjectFactory.getMoneyForMFICurrency(0), TestObjectFactory.getMoneyForMFICurrency(5),
                 TestObjectFactory.getMoneyForMFICurrency(5), accountActionDate.getPrincipal(), accountActionDate
