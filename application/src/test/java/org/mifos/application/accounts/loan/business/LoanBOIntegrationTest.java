@@ -655,7 +655,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * TODO: re-enable this test when loan schedule adjustments correctly handle
      * removing fees.
      */
-    public void xxtestSuccessRemoveFees() throws Exception {
+    public void xtestSuccessRemoveFees() throws Exception {
         accountBO = getLoanAccount();
         UserContext uc = TestUtils.makeUser();
         Set<AccountFeesEntity> accountFeesEntitySet = accountBO.getAccountFees();
@@ -2377,7 +2377,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * This test now breaks. However, rounding with miscellaneous fees is fully
      * covered by tests in TestLoanRedoDisbursal.java, so it is disabled.
      */
-    public void xxtestRoundInstallments() throws AccountException, SystemException {
+    public void xtestRoundInstallments() throws AccountException, SystemException {
         accountBO = getLoanAccount();
         TestObjectFactory.flushandCloseSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
