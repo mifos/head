@@ -36,8 +36,8 @@ public abstract class CollectionSheetEntryInstallmentView extends View {
 
     private final Short installmentId;
 
-    public CollectionSheetEntryInstallmentView(Integer accountId, Integer customerId, Short installmentId,
-            Integer actionDateId, Date actionDate) {
+    public CollectionSheetEntryInstallmentView(final Integer accountId, final Integer customerId, final Short installmentId,
+            final Integer actionDateId, final Date actionDate) {
         this.actionDateId = actionDateId;
         this.accountId = accountId;
         this.customerId = customerId;
@@ -66,12 +66,13 @@ public abstract class CollectionSheetEntryInstallmentView extends View {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj != null && obj instanceof CollectionSheetEntryInstallmentView) {
             CollectionSheetEntryInstallmentView collectionSheetEntryAccountActionView = (CollectionSheetEntryInstallmentView) obj;
             if (collectionSheetEntryAccountActionView.getAccountId().equals(getAccountId())
-                    && collectionSheetEntryAccountActionView.getCustomerId().equals(getCustomerId()))
+                    && collectionSheetEntryAccountActionView.getCustomerId().equals(getCustomerId())) {
                 return true;
+            }
         }
         return false;
     }

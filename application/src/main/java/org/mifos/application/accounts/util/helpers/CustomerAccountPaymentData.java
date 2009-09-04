@@ -32,6 +32,13 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ * @deprecated This class shouldnt be needed. It should be possible to make
+ *             payments using a monetary amount. The model then should have the
+ *             capability of paying off all associated fees and penalties where
+ *             possible as determined by the amount paid.
+ */
+@Deprecated
 public class CustomerAccountPaymentData extends AccountPaymentData {
 
     private Money miscFeePaid;

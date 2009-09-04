@@ -28,15 +28,15 @@ public class MifosRuntimeException extends RuntimeException {
 		super();
 	}
 	
-	public MifosRuntimeException(String message) {
+	public MifosRuntimeException(final String message) {
 		super(message);
 	}
 	
-    public MifosRuntimeException(String message, Throwable cause) {
+    public MifosRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public MifosRuntimeException(Throwable cause) {
+    public MifosRuntimeException(final Throwable cause) {
         super(cause);
     }
 }

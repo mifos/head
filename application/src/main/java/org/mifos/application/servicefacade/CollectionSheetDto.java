@@ -19,21 +19,20 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.util.Date;
 import java.util.List;
-
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.customer.client.business.ClientAttendanceBO;
 
 /**
  *
  */
-public interface CollectionSheetService {
+public class CollectionSheetDto {
 
-    void saveCollectionSheet(List<ClientAttendanceBO> clientAttendances, List<LoanBO> loanAccounts,
-            List<AccountBO> customerAccounts, List<SavingsBO> savingAccounts);
+    private final List<CollectionSheetCustomerDto> collectionSheetCustomer;
 
-    CollectionSheetDto retrieveCollectionSheet(Integer customerId, Date transactionDate);
+    public CollectionSheetDto(final List<CollectionSheetCustomerDto> collectionSheetCustomer) {
+        this.collectionSheetCustomer = collectionSheetCustomer;
+    }
+
+    public List<CollectionSheetCustomerDto> getCollectionSheetCustomer() {
+        return this.collectionSheetCustomer;
+    }
 }

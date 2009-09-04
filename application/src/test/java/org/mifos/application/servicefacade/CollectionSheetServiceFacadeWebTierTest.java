@@ -20,6 +20,8 @@
 package org.mifos.application.servicefacade;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.when;
@@ -32,8 +34,11 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -99,6 +104,15 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
     @Mock
     private MasterDataEntity masterDataEntity;
+    
+    @Mock
+    private CollectionSheetDto collectionSheetData;
+    
+    @Mock
+    private CollectionSheetCustomerDto centerCustomer;
+
+    @Mock
+    private CollectionSheetFormEnteredDataDto formEnteredDataDto;
     
     private UserContext userContext;
     private BulkEntryActionForm collectionSheetForm;
@@ -377,5 +391,85 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
         // assert rest of data comes from previousDto
         assertThat(formDto.getCustomerList(), is(customers));
+    }
+    
+    @Ignore
+    @Test
+    public void shouldTranslateCollectionSheetDataIntoCollectionSheetEntryGridDtoType() throws Exception {
+
+        // setup
+        final List<CollectionSheetCustomerDto> collectionSheetCustomer = Arrays.asList(centerCustomer);
+        
+        final PersonnelView loanOfficer = new PersonnelView(Short.valueOf("1"), "loanOfficer");
+        final OfficeView office = new OfficeView(Short.valueOf("1"), "office", OfficeLevel.BRANCHOFFICE,
+                "levelNameKey", Integer.valueOf(1));
+        final Short paymentTypeId = Short.valueOf("99");
+        final ListItem<Short> paymentType = new ListItem<Short>(paymentTypeId, "item1");
+        final Date today = new DateTime().toDate();
+        final String receiptNumber = "XXX-120";
+        
+        // stubbing
+        when(collectionSheetData.getCollectionSheetCustomer()).thenReturn(collectionSheetCustomer);
+        
+        
+        when(formEnteredDataDto.getLoanOfficer()).thenReturn(loanOfficer);
+        when(formEnteredDataDto.getOffice()).thenReturn(office);
+        when(formEnteredDataDto.getPaymentType()).thenReturn(paymentType);
+        when(formEnteredDataDto.getMeetingDate()).thenReturn(today);
+        when(formEnteredDataDto.getReceiptDate()).thenReturn(today);
+        when(formEnteredDataDto.getReceiptId()).thenReturn(receiptNumber);
+        
+        // exercise test
+        final CollectionSheetEntryGridDto formDto = collectionSheetServiceFacadeWebTier.translate(collectionSheetData,
+                formEnteredDataDto);
+
+        // verification
+        assertThat(formDto.getTotalCustomers(), is(collectionSheetCustomer.size()));
+        
+        // assert that the parent entry view exists with correctly populated
+        
+        // assert form selected data set on dto
+        assertThat(formDto.getLoanOfficer(), is(loanOfficer));
+        assertThat(formDto.getOffice(), is(office));
+        assertThat(formDto.getPaymentType(), is(paymentType));
+        assertThat(formDto.getTransactionDate(), is(today));
+        assertThat(formDto.getReceiptDate(), is(today));
+        assertThat(formDto.getReceiptId(), is(receiptNumber));
+        assertThat(formDto.getPaymentTypeId(), is(paymentTypeId));
+    }
+    
+    /**
+     * FIXME: keithw - ignoring test for now until collection sheet refactoring
+     * is fully complete.
+     */
+    @Ignore
+    @Test
+    public void shouldTranslateCollectionSheetDataXXX() throws Exception {
+
+        // setup
+        final Integer customerId = Integer.valueOf(7);
+        
+        final List<CollectionSheetCustomerDto> collectionSheetCustomer = Arrays.asList(centerCustomer);
+
+        // stubbing
+        when(collectionSheetData.getCollectionSheetCustomer()).thenReturn(collectionSheetCustomer);
+        
+        when(centerCustomer.getCustomerId()).thenReturn(customerId);
+
+        // exercise test
+        final CollectionSheetEntryGridDto formDto = collectionSheetServiceFacadeWebTier.translate(collectionSheetData,
+                formEnteredDataDto);
+
+        // verification
+        assertThat(formDto.getTotalCustomers(), is(collectionSheetCustomer.size()));
+
+        // assert that the parent entry view exists with correctly populated
+        final CollectionSheetEntryView collectionSheetEntryParent = formDto.getBulkEntryParent();
+        assertThat(collectionSheetEntryParent, is(notNullValue()));
+        
+        assertThat(collectionSheetEntryParent.getAttendence(), is(nullValue()));
+        assertThat(collectionSheetEntryParent.getCountOfCustomers(), is(1));
+        assertThat(collectionSheetEntryParent.getCustomerDetail().getCustomerId(), is(customerId));
+        
     }
 }

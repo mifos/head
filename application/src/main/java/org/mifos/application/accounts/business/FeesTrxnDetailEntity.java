@@ -25,22 +25,16 @@ import org.mifos.framework.util.helpers.Money;
 
 public class FeesTrxnDetailEntity extends PersistentObject {
 
-    private final Integer feesTrxnId;
-
-    private final AccountTrxnEntity accountTrxn;
-
-    private final AccountFeesEntity accountFees;
-
-    private final Money feeAmount;
+    private Integer feesTrxnId;
+    private AccountTrxnEntity accountTrxn;
+    private AccountFeesEntity accountFees;
+    private Money feeAmount;
 
     protected FeesTrxnDetailEntity() {
-        feesTrxnId = null;
-        accountTrxn = null;
-        accountFees = null;
-        feeAmount = null;
+        // default constructor for hibernate
     }
 
-    public FeesTrxnDetailEntity(AccountTrxnEntity accountTrxnEntity, AccountFeesEntity accountFeesEntity, Money amount) {
+    public FeesTrxnDetailEntity(final AccountTrxnEntity accountTrxnEntity, final AccountFeesEntity accountFeesEntity, final Money amount) {
         feesTrxnId = null;
         accountTrxn = accountTrxnEntity;
         accountFees = accountFeesEntity;
@@ -51,10 +45,6 @@ public class FeesTrxnDetailEntity extends PersistentObject {
         return accountFees;
     }
 
-    public AccountTrxnEntity getAccountTrxn() {
-        return accountTrxn;
-    }
-
     public Money getFeeAmount() {
         return feeAmount;
     }
@@ -62,9 +52,16 @@ public class FeesTrxnDetailEntity extends PersistentObject {
     public Integer getFeesTrxnId() {
         return feesTrxnId;
     }
-
-    public FeesTrxnDetailEntity generateReverseTrxn(AccountTrxnEntity accountTrxn) {
-        return new FeesTrxnDetailEntity(accountTrxn, getAccountFees(), getFeeAmount().negate());
+    
+    public AccountTrxnEntity getAccountTrxn() {
+        return accountTrxn;
+    }
+    
+    public void setAccountTrxn(final AccountTrxnEntity accountTrxn) {
+        this.accountTrxn = accountTrxn;
     }
 
+    public FeesTrxnDetailEntity generateReverseTrxn(final AccountTrxnEntity accountTrxn) {
+        return new FeesTrxnDetailEntity(accountTrxn, getAccountFees(), getFeeAmount().negate());
+    }
 }

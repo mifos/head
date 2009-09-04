@@ -49,7 +49,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    UserContext userContext = null;
+    private UserContext userContext;
 
     @Override
     protected void setUp() throws Exception {
@@ -71,7 +71,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                     OperationMode.REMOTE_SERVER);
             Assert.fail("Should not have been able to get here");
         } catch (OfficeValidationException e) {
-           Assert.assertEquals(OfficeConstants.OFFICENAMEEXIST, e.getKey());
+            Assert.assertEquals(OfficeConstants.OFFICENAMEEXIST, e.getKey());
         }
     }
 
@@ -82,7 +82,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                     .getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", "mif2", null, OperationMode.REMOTE_SERVER);
             Assert.fail("Should not have been able to get here");
         } catch (OfficeValidationException e) {
-           Assert.assertEquals(OfficeConstants.OFFICESHORTNAMEEXIST, e.getKey());
+            Assert.assertEquals(OfficeConstants.OFFICESHORTNAMEEXIST, e.getKey());
         }
     }
 
@@ -103,11 +103,11 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.flushAndCloseSession();
         officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
-       Assert.assertEquals("1.1.2", officeBO.getSearchId());
-       Assert.assertEquals("abcd", officeBO.getOfficeName());
-       Assert.assertEquals("abcd", officeBO.getShortName());
-       Assert.assertEquals(OperationMode.REMOTE_SERVER, officeBO.getMode());
-       Assert.assertTrue(officeBO.isActive());
+        Assert.assertEquals("1.1.2", officeBO.getSearchId());
+        Assert.assertEquals("abcd", officeBO.getOfficeName());
+        Assert.assertEquals("abcd", officeBO.getShortName());
+        Assert.assertEquals(OperationMode.REMOTE_SERVER, officeBO.getMode());
+        Assert.assertTrue(officeBO.isActive());
         TestObjectFactory.cleanUp(officeBO);
     }
 
@@ -137,7 +137,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                     .getOffice(TestObjectFactory.HEAD_OFFICE), null, null, "mif2", null, OperationMode.REMOTE_SERVER);
             Assert.fail("Should not have been able to get here");
         } catch (OfficeValidationException e) {
-           Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
+            Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
         }
     }
 
@@ -149,7 +149,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                     .getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", null, null, OperationMode.REMOTE_SERVER);
             Assert.fail("Should not have been able to get here");
         } catch (OfficeValidationException e) {
-           Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
+            Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
         }
     }
 
@@ -160,7 +160,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                     null, OperationMode.REMOTE_SERVER);
             Assert.fail("Should not have been able to get here");
         } catch (OfficeValidationException e) {
-           Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
+            Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
         }
     }
 
@@ -172,7 +172,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                     .getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", "abcd", null, null);
             Assert.fail("Should not have been able to get here");
         } catch (OfficeValidationException e) {
-           Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
+            Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
         }
     }
 
@@ -184,7 +184,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                     OperationMode.REMOTE_SERVER);
             Assert.fail("Should not have been able to get here");
         } catch (OfficeValidationException e) {
-           Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
+            Assert.assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
         }
     }
 
@@ -197,7 +197,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         OfficeBO parent1 = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-       Assert.assertEquals(2, parent1.getChildren().size());
+        Assert.assertEquals(2, parent1.getChildren().size());
         officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
         TestObjectFactory.cleanUp(officeBO);
     }
@@ -215,8 +215,8 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO.getOfficeId());
-       Assert.assertEquals("3", savbedOffice.getOfficeName());
-       Assert.assertEquals("3", savbedOffice.getShortName());
+        Assert.assertEquals("3", savbedOffice.getOfficeName());
+        Assert.assertEquals("3", savbedOffice.getShortName());
         OfficeBO savbedChild = TestObjectFactory.getOffice(Child.getOfficeId());
 
         TestObjectFactory.cleanUp(savbedChild);
@@ -239,9 +239,9 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savbedOffice.setUserContext(userContext);
             savbedOffice.update("2", "2", officeBO.getOfficeStatus(), savbedOffice.getOfficeLevel(), null, null, null);
-           Assert.assertEquals(true, false);
+            Assert.assertEquals(true, false);
         } catch (OfficeException e) {
-           Assert.assertEquals(OfficeConstants.OFFICENAMEEXIST, e.getKey());
+            Assert.assertEquals(OfficeConstants.OFFICENAMEEXIST, e.getKey());
         }
         TestObjectFactory.cleanUp(savbedChild);
         TestObjectFactory.cleanUp(savbedOffice);
@@ -263,9 +263,9 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savbedOffice.setUserContext(userContext);
             savbedOffice.update("22", "2", officeBO.getOfficeStatus(), savbedOffice.getOfficeLevel(), null, null, null);
-           Assert.assertEquals(true, false);
+            Assert.assertEquals(true, false);
         } catch (OfficeException e) {
-           Assert.assertEquals(OfficeConstants.OFFICESHORTNAMEEXIST, e.getKey());
+            Assert.assertEquals(OfficeConstants.OFFICESHORTNAMEEXIST, e.getKey());
         }
         TestObjectFactory.cleanUp(savbedChild);
         TestObjectFactory.cleanUp(savbedOffice);
@@ -282,7 +282,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO.getOfficeId());
         savbedOffice.setUserContext(userContext);
         savbedOffice.update("abcd", "abcd", OfficeStatus.INACTIVE, savbedOffice.getOfficeLevel(), null, null, null);
-       Assert.assertEquals(OfficeStatus.INACTIVE, savbedOffice.getOfficeStatus());
+        Assert.assertEquals(OfficeStatus.INACTIVE, savbedOffice.getOfficeStatus());
         TestObjectFactory.cleanUp(savbedOffice);
     }
 
@@ -303,9 +303,9 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savbedOffice.setUserContext(userContext);
             savbedOffice.update("abcd", "abcd", OfficeStatus.INACTIVE, savbedOffice.getOfficeLevel(), null, null, null);
-           Assert.assertEquals(true, false);
+            Assert.assertEquals(true, false);
         } catch (OfficeException e) {
-           Assert.assertEquals(OfficeConstants.KEYHASACTIVECHILDREN, e.getKey());
+            Assert.assertEquals(OfficeConstants.KEYHASACTIVECHILDREN, e.getKey());
         }
         TestObjectFactory.cleanUp(savbedChild);
         TestObjectFactory.cleanUp(savbedOffice);
@@ -323,7 +323,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         savbedOffice.setUserContext(userContext);
         savbedOffice.update("abcd", "abcd", savbedOffice.getOfficeStatus(), OfficeLevel.SUBREGIONALOFFICE, null, null,
                 null);
-       Assert.assertEquals(OfficeLevel.SUBREGIONALOFFICE, savbedOffice.getOfficeLevel());
+        Assert.assertEquals(OfficeLevel.SUBREGIONALOFFICE, savbedOffice.getOfficeLevel());
         TestObjectFactory.cleanUp(savbedOffice);
     }
 
@@ -344,9 +344,9 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
             savbedOffice.setUserContext(userContext);
             savbedOffice.update("abcd", "abcd", savbedOffice.getOfficeStatus(), OfficeLevel.BRANCHOFFICE, null, null,
                     null);
-           Assert.assertEquals(true, false);
+            Assert.assertEquals(true, false);
         } catch (OfficeException e) {
-           Assert.assertEquals(true, true);
+            Assert.assertEquals(true, true);
         }
         TestObjectFactory.cleanUp(savbedChild);
         TestObjectFactory.cleanUp(savbedOffice);
@@ -370,8 +370,8 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         OfficeBO savbedOffice2 = TestObjectFactory.getOffice(officeBO.getOfficeId());
 
-       Assert.assertEquals("bangalore", savbedOffice.getAddress().getAddress().getLine1());
-       Assert.assertEquals("city", savbedOffice.getAddress().getAddress().getLine2());
+        Assert.assertEquals("bangalore", savbedOffice.getAddress().getAddress().getLine1());
+        Assert.assertEquals("city", savbedOffice.getAddress().getAddress().getLine2());
         TestObjectFactory.cleanUp(savbedOffice2);
     }
 
@@ -404,8 +404,8 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         OfficeBO savbedOffice2 = TestObjectFactory.getOffice(officeBO.getOfficeId());
         for (OfficeCustomFieldEntity customField : savbedOffice2.getCustomFields()) {
-           Assert.assertEquals("abcd", customField.getOffice().getOfficeName());
-           Assert.assertEquals("123456", customField.getFieldValue());
+            Assert.assertEquals("abcd", customField.getOffice().getOfficeName());
+            Assert.assertEquals("123456", customField.getFieldValue());
         }
         TestObjectFactory.cleanUp(savbedOffice2);
     }
@@ -434,7 +434,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO savbedOffice2 = TestObjectFactory.getOffice(officeBO.getOfficeId());
         for (OfficeCustomFieldEntity customField : savbedOffice2.getCustomFields()) {
 
-           Assert.assertEquals("123456", customField.getFieldValue());
+            Assert.assertEquals("123456", customField.getFieldValue());
         }
         TestObjectFactory.cleanUp(savbedOffice2);
     }
@@ -457,7 +457,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         savbedOffice = TestObjectFactory.getOffice(officeBO.getOfficeId());
-       Assert.assertEquals(OfficeStatus.ACTIVE, savbedOffice.getOfficeStatus());
+        Assert.assertEquals(OfficeStatus.ACTIVE, savbedOffice.getOfficeStatus());
         TestObjectFactory.cleanUp(savbedOffice);
     }
 
@@ -466,9 +466,9 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         OfficeLevelEntity levelEntity = (OfficeLevelEntity) masterPersistenceService.getPersistentObject(
                 OfficeLevelEntity.class, OfficeLevel.AREAOFFICE.getValue());
         Assert.assertNotNull(levelEntity.getChild());
-       Assert.assertEquals(OfficeLevel.AREAOFFICE, levelEntity.getLevel());
-       Assert.assertEquals(true, levelEntity.isConfigured());
-       Assert.assertEquals(false, levelEntity.isInteractionFlag());
+        Assert.assertEquals(OfficeLevel.AREAOFFICE, levelEntity.getLevel());
+        Assert.assertEquals(true, levelEntity.isConfigured());
+        Assert.assertEquals(false, levelEntity.isInteractionFlag());
         Assert.assertNotNull(levelEntity.getParent());
     }
 
@@ -480,7 +480,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-       Assert.assertEquals(1, office.getBranchOnlyChildren().size());
+        Assert.assertEquals(1, office.getBranchOnlyChildren().size());
         officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
         TestObjectFactory.cleanUp(officeBO);
     }
@@ -503,13 +503,14 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
         branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
         if (areaOffice.getSearchId().equalsIgnoreCase("1.1.2")) {
-           Assert.assertEquals("1.1.2.1", branchOffice.getSearchId());
+            Assert.assertEquals("1.1.2.1", branchOffice.getSearchId());
         } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1")) {
-           Assert.assertEquals("1.1.1.1", branchOffice.getSearchId());
+            Assert.assertEquals("1.1.1.1", branchOffice.getSearchId());
         } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.3")) {
-           Assert.assertEquals("1.1.3.1", branchOffice.getSearchId());
-        } else
-           Assert.assertEquals(true, false);
+            Assert.assertEquals("1.1.3.1", branchOffice.getSearchId());
+        } else {
+            Assert.assertEquals(true, false);
+        }
         TestObjectFactory.cleanUp(branchOffice);
         TestObjectFactory.cleanUp(areaOffice);
         TestObjectFactory.cleanUp(regionalOffice);
@@ -534,7 +535,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
 
             Assert.fail();
         } catch (OfficeException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         }
         regionalOffice = TestObjectFactory.getOffice(regionalOffice.getOfficeId());
         TestObjectFactory.cleanUp(branchOffice);
@@ -562,14 +563,15 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
         branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
 
-       Assert.assertEquals(areaOffice.getOfficeId(), branchOffice.getParentOffice().getOfficeId());
+        Assert.assertEquals(areaOffice.getOfficeId(), branchOffice.getParentOffice().getOfficeId());
         if (areaOffice.getSearchId().equalsIgnoreCase("1.1.2.1")) {
-           Assert.assertEquals("1.1.2.1.1", branchOffice.getSearchId());
+            Assert.assertEquals("1.1.2.1.1", branchOffice.getSearchId());
         } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1.1")) {
-           Assert.assertEquals("1.1.1.1.1", branchOffice.getSearchId());
+            Assert.assertEquals("1.1.1.1.1", branchOffice.getSearchId());
 
-        } else
-           Assert.assertEquals(true, false);
+        } else {
+            assertEquals(true, false);
+        }
         TestObjectFactory.cleanUp(branchOffice);
         TestObjectFactory.cleanUp(areaOffice);
         TestObjectFactory.cleanUp(regionalOffice);
@@ -590,11 +592,13 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1")) {
-            if ("1.1.1.1".equals(branchOffice.getSearchId()) || "1.1.1.2".equals(branchOffice.getSearchId()))
-               Assert.assertEquals(true, true);
+            if ("1.1.1.1".equals(branchOffice.getSearchId()) || "1.1.1.2".equals(branchOffice.getSearchId())) {
+                Assert.assertEquals(true, true);
+            }
 
-        } else
-           Assert.assertEquals(true, false);
+        } else {
+            Assert.assertEquals(true, false);
+        }
         TestObjectFactory.cleanUp(branchOffice);
         resetOffices();
 
@@ -610,10 +614,11 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-        if ("1.1.1".equals(branchOffice.getSearchId()) || "1.1.2".equals(branchOffice.getSearchId()))
-           Assert.assertEquals(true, true);
-        else
-           Assert.assertEquals(true, false);
+        if ("1.1.1".equals(branchOffice.getSearchId()) || "1.1.2".equals(branchOffice.getSearchId())) {
+            Assert.assertEquals(true, true);
+        } else {
+            Assert.assertEquals(true, false);
+        }
 
         // update it back
 
@@ -630,22 +635,23 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCreateOfficeView() {
 
-        OfficeView officeView = new OfficeView(Short.valueOf("1"), "headOffice", Integer.valueOf("1"));
-       Assert.assertEquals("headOffice", officeView.getOfficeName());
-       Assert.assertEquals(Integer.valueOf("1"), officeView.getVersionNo());
-       Assert.assertEquals(Short.valueOf("1"), officeView.getOfficeId());
+        final OfficeView officeView = new OfficeView(Short.valueOf("1"), "headOffice", OfficeLevel.BRANCHOFFICE,
+                "levelNameKey", Integer.valueOf("1"));
+        Assert.assertEquals("headOffice", officeView.getOfficeName());
+        Assert.assertEquals(Integer.valueOf("1"), officeView.getVersionNo());
+        Assert.assertEquals(Short.valueOf("1"), officeView.getOfficeId());
 
         OfficeView officeView2 = new OfficeView(Short.valueOf("1"), "headOffice", Short.valueOf("1"), "Hifos HO",
                 Integer.valueOf("1"));
 
-       Assert.assertEquals("Hifos HO", officeView2.getLevelName());
-       Assert.assertEquals("Hifos HO(headOffice)", officeView2.getDisplayName());
+        Assert.assertEquals("Hifos HO", officeView2.getLevelName());
+        Assert.assertEquals("Hifos HO(headOffice)", officeView2.getDisplayName());
     }
 
     public void testIsParent() throws Exception {
         OfficeBO ho = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         OfficeBO branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-       Assert.assertTrue(ho.isParent(branchOffice));
+        Assert.assertTrue(ho.isParent(branchOffice));
     }
 
     public void testIsNotParent() throws Exception {
@@ -693,8 +699,8 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
 
         // The following are temporary, until we can re-enable the
         // code to make verifyBasicEqualsContract pass again.
-       Assert.assertEquals(office1.getOfficeId(), office1b.getOfficeId());
-       Assert.assertTrue(office1.equals(office1a));
+        Assert.assertEquals(office1.getOfficeId(), office1b.getOfficeId());
+        Assert.assertTrue(office1.equals(office1a));
         Assert.assertFalse(office1.equals(office2));
         Assert.assertFalse(office1.equals(unsaved));
     }

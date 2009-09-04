@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -58,17 +59,15 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 
     private final Timestamp trxnCreatedDate;
 
-    private final Set<FinancialTransactionBO> financialTransactions;
-
     private final Short installmentId;
 
     private final AccountTrxnEntity relatedTrxn;
+    
+    private final Set<FinancialTransactionBO> financialTransactions;
 
     protected AccountTrxnEntity() {
-        createdDate = new DateTimeService().getCurrentJavaDateTime();
-        trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
-        // Note: the GK mifos branch is using a TreeSet instead of HashSet here.
-        // Is there a good reason to use a TreeSet rather than HashSet?
+        createdDate = new DateTime().toDate();
+        trxnCreatedDate = new Timestamp(createdDate.getTime());
         financialTransactions = new HashSet<FinancialTransactionBO>();
         accountActionEntity = null;
         installmentId = null;
@@ -83,9 +82,9 @@ public abstract class AccountTrxnEntity extends PersistentObject {
         comments = null;
     }
 
-    public AccountTrxnEntity(AccountPaymentEntity accountPayment, AccountActionEntity accountActionEntity,
-            Short installmentId, Date dueDate, PersonnelBO personnel, CustomerBO customer, Date actionDate,
-            Money amount, String comments, AccountTrxnEntity relatedTrxn) {
+    public AccountTrxnEntity(final AccountPaymentEntity accountPayment, final AccountActionEntity accountActionEntity,
+            final Short installmentId, final Date dueDate, final PersonnelBO personnel, final CustomerBO customer, final Date actionDate,
+            final Money amount, final String comments, final AccountTrxnEntity relatedTrxn) {
         createdDate = new DateTimeService().getCurrentJavaDateTime();
         trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
         financialTransactions = new HashSet<FinancialTransactionBO>();
@@ -93,10 +92,11 @@ public abstract class AccountTrxnEntity extends PersistentObject {
         this.accountActionEntity = accountActionEntity;
         this.installmentId = installmentId;
         this.dueDate = dueDate;
-        if (customer == null)
+        if (customer == null) {
             this.customer = account.getCustomer();
-        else
+        } else {
             this.customer = customer;
+        }
         this.personnel = personnel;
         this.actionDate = actionDate;
         this.amount = amount;
@@ -149,7 +149,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
         return personnel;
     }
 
-    public void addFinancialTransction(FinancialTransactionBO financialTransaction) {
+    public void addFinancialTransction(final FinancialTransactionBO financialTransaction) {
         this.financialTransactions.add(financialTransaction);
     }
 

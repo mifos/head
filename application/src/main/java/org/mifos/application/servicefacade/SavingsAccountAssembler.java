@@ -35,6 +35,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
@@ -123,7 +124,7 @@ public class SavingsAccountAssembler {
                     }
 
                 } catch (PersistenceException pe) {
-                    throw new RuntimeException(pe);
+                    throw new MifosRuntimeException(pe);
                 }
             }
         }

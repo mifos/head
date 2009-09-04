@@ -20,6 +20,8 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
@@ -27,14 +29,18 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -50,6 +56,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.
@@ -201,8 +208,99 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         final CollectionSheetEntryGridDto collectionSheetGridView = collectionSheetEntryGridViewAssembler.toDto(
                 formEnteredDataDto, userContext.getLocaleId());
+        
+        // TODO - keithw - write tests around collection sheet service
+        // retrieveCollectionSheet
 
+        /*
+         * Below code is commented until DTO model being brought back by new
+         * collection sheet queries can be fully translated into current
+         * DTO/View model.
+         * 
+         * When this is complete, the CollectionSheetEntryGridViewAssembler can
+         * be removed and alot of subsequent DAO calls also.
+         */
+        // final CollectionSheetData collectionSheet =
+        // collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
+        // .getCustomer().getCustomerId(), formEnteredDataDto.getMeetingDate());
+        //
+        // final CollectionSheetEntryGridDto translatedGridView =
+        // translate(collectionSheet, formEnteredDataDto);
+        
         return collectionSheetGridView;
+    }
+
+    public CollectionSheetEntryGridDto translate(final CollectionSheetDto collectionSheet,
+            final CollectionSheetFormEnteredDataDto formEnteredDataDto) {
+        
+        // TODO Generate hierarcy from list of CollectionSheetCustomer
+        final CollectionSheetEntryView collectionSheetEntryViewHierarchy = createEntryViewHierarchyFromCollectionSheetData(collectionSheet
+                .getCollectionSheetCustomer());
+        
+        final PersonnelView loanOfficer = formEnteredDataDto.getLoanOfficer();
+        final OfficeView office = formEnteredDataDto.getOffice();
+        final ListItem<Short> paymentType = formEnteredDataDto.getPaymentType();
+        final Date meetingDate = formEnteredDataDto.getMeetingDate();
+        final String receiptId = formEnteredDataDto.getReceiptId();
+        final Date receiptDate = formEnteredDataDto.getReceiptDate();
+
+        // TODO generate list of products (loan, savings) in use by
+        // CollectionSheetCustomers
+        final List<ProductDto> loanProductDtos = new ArrayList<ProductDto>();
+        final List<ProductDto> savingProductDtos = new ArrayList<ProductDto>();
+        
+        // queries for this data.
+        final HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
+        final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
+
+        final CollectionSheetEntryGridDto translatedGridDto = new CollectionSheetEntryGridDto(
+                collectionSheetEntryViewHierarchy,
+                loanOfficer, office, paymentType, meetingDate, receiptId, receiptDate, loanProductDtos,
+                savingProductDtos, clientAttendance, attendanceTypesList);
+        
+        return translatedGridDto;
+    }
+
+    private CollectionSheetEntryView createEntryViewHierarchyFromCollectionSheetData(
+            final List<CollectionSheetCustomerDto> collectionSheetCustomerHierarchy) {
+        
+        final int countOfCustomers = collectionSheetCustomerHierarchy.size();
+        
+        final CollectionSheetCustomerDto rootCustomerOfHierachy = collectionSheetCustomerHierarchy.get(0);
+
+        final Integer parentCustomerId = null;
+        final CustomerView parentCustomerDetail = new CustomerView(rootCustomerOfHierachy.getCustomerId(),
+                rootCustomerOfHierachy.getName(), parentCustomerId, rootCustomerOfHierachy.getLevelId());
+
+        CollectionSheetEntryView parentView = new CollectionSheetEntryView(parentCustomerDetail);
+        parentView.setAttendence(null);
+        parentView.setCountOfCustomers(countOfCustomers);
+        
+        final Integer accountId = rootCustomerOfHierachy.getCollectionSheetCustomerAccount().getAccountId();
+        final Integer customerId = rootCustomerOfHierachy.getCustomerId();
+        final Short installmentId = null;
+        final Integer actionDateId = null;
+        final Date actionDate = null;
+        final Money miscFee = new Money(rootCustomerOfHierachy.getCollectionSheetCustomerAccount().getTotalCustomerAccountCollectionFee().toString());
+        final Money miscFeePaid = new Money("0.0");
+        final Money miscPenalty = new Money("0.0");
+        final Money miscPenaltyPaid = new Money("0.0");
+        
+        final CustomerAccountView customerAccountDetails = new CustomerAccountView(rootCustomerOfHierachy
+                .getCollectionSheetCustomerAccount().getAccountId(), rootCustomerOfHierachy.getCustomerId());
+        customerAccountDetails.setAccountId(rootCustomerOfHierachy.getCollectionSheetCustomerAccount().getAccountId());
+        
+        // we only create one installment few and set the total amount due in
+        // the miscFee column for now
+        final CollectionSheetEntryInstallmentView installmentView = new CollectionSheetEntryCustomerAccountInstallmentView(
+                accountId, customerId, installmentId, actionDateId, actionDate, miscFee, miscFeePaid, miscPenalty,
+                miscPenaltyPaid);
+        final List<CollectionSheetEntryInstallmentView> installmentViewList = java.util.Arrays.asList(installmentView);
+        customerAccountDetails.setAccountActionDates(installmentViewList);
+
+        parentView.setCustomerAccountDetails(customerAccountDetails);
+
+        return parentView;
     }
 
     public CollectionSheetEntryGridDto previewCollectionSheetEntry(
@@ -260,7 +358,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 failedCustomerAccountPaymentNums);
     }
 
-    private List<ListItem<Short>> convertToPaymentTypesListItemDto(List<MasterDataEntity> paymentTypesList) {
+    private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<MasterDataEntity> paymentTypesList) {
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
         for (MasterDataEntity paymentType : paymentTypesList) {
             paymentTypesDtoList.add(new ListItem<Short>(paymentType.getId(), paymentType.getName()));

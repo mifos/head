@@ -42,8 +42,8 @@ public abstract class AccountActionDateEntity extends PersistentObject implement
 
     protected Date paymentDate;
 
-    protected AccountActionDateEntity(AccountBO account, CustomerBO customer, Short installmentId, Date actionDate,
-            PaymentStatus paymentStatus) {
+    protected AccountActionDateEntity(final AccountBO account, final CustomerBO customer, final Short installmentId, final Date actionDate,
+            final PaymentStatus paymentStatus) {
         this.actionDateId = null;
         this.account = account;
         this.customer = customer;
@@ -74,7 +74,7 @@ public abstract class AccountActionDateEntity extends PersistentObject implement
         return actionDate;
     }
 
-    public void setActionDate(Date actionDate) {
+    public void setActionDate(final Date actionDate) {
         this.actionDate = actionDate;
     }
 
@@ -82,7 +82,7 @@ public abstract class AccountActionDateEntity extends PersistentObject implement
         return paymentDate;
     }
 
-    public void setPaymentDate(Date paymentDate) {
+    public void setPaymentDate(final Date paymentDate) {
         this.paymentDate = paymentDate;
     }
 
@@ -97,23 +97,23 @@ public abstract class AccountActionDateEntity extends PersistentObject implement
         return PaymentStatus.fromInt(paymentStatus);
     }
 
-    void setPaymentStatus(Short paymentStatus) {
+    void setPaymentStatus(final Short paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
-    public void setPaymentStatus(PaymentStatus status) {
+    public void setPaymentStatus(final PaymentStatus status) {
         this.paymentStatus = status.getValue();
     }
 
-    public int compareDate(java.util.Date date) {
+    public int compareDate(final java.util.Date date) {
         return getActionDate().compareTo(date);
     }
-
+    
     public boolean isPaid() {
         return getPaymentStatusAsEnum() == PaymentStatus.PAID;
     }
 
-    public int compareTo(Object obj) {
+    public int compareTo(final Object obj) {
         return this.getInstallmentId().compareTo(((AccountActionDateEntity) obj).getInstallmentId());
     }
 

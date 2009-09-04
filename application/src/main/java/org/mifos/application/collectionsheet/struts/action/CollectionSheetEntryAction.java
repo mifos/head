@@ -41,6 +41,8 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
@@ -109,6 +111,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     private final AccountPersistence accountPersistence;
     private final ClientService clientService;
     private final CollectionSheetService collectionSheetService;
+    private final CollectionSheetDao collectionSheetDao;
     
     public CollectionSheetEntryAction() {
         
@@ -124,6 +127,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         loanPersistence = new LoanPersistence();
         accountPersistence = new AccountPersistence();
         clientService = new StandardClientService(clientAttendanceDao);
+        collectionSheetDao = new CollectionSheetDaoHibernate();
         
         final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler = new CollectionSheetEntryViewAssembler(
                 bulkEntryPersistence, customerPersistence, clientAttendanceDao);
@@ -140,7 +144,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         final CustomerAccountAssembler customerAccountAssember = new CustomerAccountAssembler(customerPersistence);
         
         collectionSheetService = new CollectionSheetServiceImpl(clientAttendanceDao, loanPersistence,
-                accountPersistence, savingsPersistence);
+                accountPersistence, savingsPersistence, collectionSheetDao);
         
         collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence, masterPersistence,
                 personnelPersistence, customerPersistence, collectionSheetService,
@@ -173,7 +177,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(final String method) {
         return method.equals(CollectionSheetEntryConstants.CREATEMETHOD);
     }
 
@@ -183,8 +187,8 @@ public class CollectionSheetEntryAction extends BaseAction {
      * center was successfully created.
      */
     @TransactionDemarcate(saveToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
 
         // clean up
         request.getSession().setAttribute(CollectionSheetEntryConstants.BULKENTRYACTIONFORM, null);
@@ -203,8 +207,8 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward loadLoanOfficers(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadLoanOfficers(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         
         final BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         final Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
@@ -222,8 +226,8 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward loadCustomerList(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadCustomerList(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         final BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         final Short personnelId = Short.valueOf(bulkEntryActionForm.getLoanOfficerId());
         final Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
@@ -245,8 +249,8 @@ public class CollectionSheetEntryAction extends BaseAction {
      * 
      */
     @TransactionDemarcate(joinToken = true)
-    public ActionForward getLastMeetingDateForCustomer(ActionMapping mapping, ActionForm form,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward getLastMeetingDateForCustomer(final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         
         final BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
         
@@ -272,8 +276,8 @@ public class CollectionSheetEntryAction extends BaseAction {
      * also retrieved
      */
     @TransactionDemarcate(joinToken = true)
-    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         
         logTrackingInfo("get", request, form);
         
@@ -294,8 +298,8 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         
         logTrackingInfo("preview", request, form);
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
@@ -321,8 +325,8 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
     
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws PageExpiredException {
+    public ActionForward create(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws PageExpiredException {
         
         logTrackingInfo("create", request, form);
         final BulkEntryActionForm collectionSheetActionForm = (BulkEntryActionForm) form;
@@ -352,20 +356,20 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         return mapping.findForward(CollectionSheetEntryConstants.PREVIOUSSUCCESS);
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancel_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         String forward = null;
         String methodCalled = request.getParameter(CollectionSheetEntryConstants.METHOD);
         String input = request.getParameter("input");
@@ -384,8 +388,8 @@ public class CollectionSheetEntryAction extends BaseAction {
         return null;
     }
     
-    private void setErrorMessagesIfErrorsExist(HttpServletRequest request,
-            CollectionSheetErrorsView collectionSheetErrors) {
+    private void setErrorMessagesIfErrorsExist(final HttpServletRequest request,
+            final CollectionSheetErrorsView collectionSheetErrors) {
         final UserContext userContext = getUserContext(request);
         final ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
                 .getPreferredLocale());
@@ -408,16 +412,16 @@ public class CollectionSheetEntryAction extends BaseAction {
         }
     }
     
-    private void logAfterSave(HttpServletRequest request,
+    private void logAfterSave(final HttpServletRequest request,
             final CollectionSheetEntryDecomposedView decomposedViews,
             final long beforeSaveData) {
         logger.info("after saveData(). session id:" + request.getSession().getId() + ". "
                 + getUpdateTotalsString(decomposedViews)
                 + ". Saving bulk entry data ran for approximately "
-                + ((System.currentTimeMillis() - beforeSaveData) / 1000.0) + " seconds.");
+                + (System.currentTimeMillis() - beforeSaveData) / 1000.0 + " seconds.");
     }
 
-    private void logBeforeSave(HttpServletRequest request, final BulkEntryActionForm bulkEntryActionForm,
+    private void logBeforeSave(final HttpServletRequest request, final BulkEntryActionForm bulkEntryActionForm,
             final CollectionSheetEntryGridDto bulkEntry) {
         String logMsg = "before saveData().";
         logMsg += " session id:" + request.getSession().getId();
@@ -433,7 +437,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         logger.info(logMsg);
     }
 
-    private void storeOnRequestErrorAndCollectionSheetData(HttpServletRequest request,
+    private void storeOnRequestErrorAndCollectionSheetData(final HttpServletRequest request,
             final CollectionSheetEntryDecomposedView decomposedViews,
             final CollectionSheetErrorsView collectionSheetErrors) throws PageExpiredException {
         
@@ -455,13 +459,13 @@ public class CollectionSheetEntryAction extends BaseAction {
                 .getSavingsWithNames(), request);
     }
     
-    private CollectionSheetEntryFormDto retrieveFromRequestCollectionSheetEntryFormDto(HttpServletRequest request)
+    private CollectionSheetEntryFormDto retrieveFromRequestCollectionSheetEntryFormDto(final HttpServletRequest request)
             throws PageExpiredException {
         return (CollectionSheetEntryFormDto) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO, request);
     }
     
-    private void storeOnRequestCollectionSheetEntryFormDto(HttpServletRequest request,
+    private void storeOnRequestCollectionSheetEntryFormDto(final HttpServletRequest request,
             final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto) throws PageExpiredException {
         
         SessionUtils.setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,
@@ -487,13 +491,13 @@ public class CollectionSheetEntryAction extends BaseAction {
         SessionUtils.setAttribute("LastMeetingDate", latestCollectionSheetEntryFormDto.getMeetingDate(), request);
     }
     
-    private CollectionSheetEntryGridDto retrieveFromRequestCollectionSheetEntryDto(HttpServletRequest request)
+    private CollectionSheetEntryGridDto retrieveFromRequestCollectionSheetEntryDto(final HttpServletRequest request)
             throws PageExpiredException {
         return (CollectionSheetEntryGridDto) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
     }
     
-    private void storeOnRequestCollectionSheetEntryDto(HttpServletRequest request,
-            CollectionSheetEntryGridDto collectionSheetEntry) throws PageExpiredException {
+    private void storeOnRequestCollectionSheetEntryDto(final HttpServletRequest request,
+            final CollectionSheetEntryGridDto collectionSheetEntry) throws PageExpiredException {
         
         SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, collectionSheetEntry, request);
         
@@ -511,7 +515,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         return totals;
     }
 
-    private void logTrackingInfo(String actionMethodName, HttpServletRequest request, ActionForm form) {
+    private void logTrackingInfo(final String actionMethodName, final HttpServletRequest request, final ActionForm form) {
         BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
         StringBuilder message = getLogMessage(actionMethodName, request);
         String receiptId = bulkEntryForm.getReceiptId();
@@ -522,7 +526,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         logger.info(message.toString());
     }
 
-    private StringBuilder getLogMessage(String actionMethodName, HttpServletRequest request) {
+    private StringBuilder getLogMessage(final String actionMethodName, final HttpServletRequest request) {
         UserContext userContext = getUserContext(request);
         StringBuilder message = new StringBuilder();
         message.append(", url:" + request.getRequestURI());
@@ -534,7 +538,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         return message;
     }
 
-    private void getErrorString(StringBuilder builder, List<String> accountNums, String message) {
+    private void getErrorString(final StringBuilder builder, final List<String> accountNums, final String message) {
         if (accountNums.size() != 0) {
             ListIterator<String> iter = accountNums.listIterator();
             builder.append("<br>");
@@ -551,7 +555,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     /**
      * used by JSP functions in view.
      */
-    protected Locale getUserLocale(HttpServletRequest request) {
+    protected Locale getUserLocale(final HttpServletRequest request) {
         Locale locale = null;
         UserContext userContext = getUserContext(request);
         if (null != userContext) {
@@ -563,7 +567,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     private class DummyBusinessService implements BusinessService {
 
         @Override
-        public BusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
+        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
             return null;
         }
 

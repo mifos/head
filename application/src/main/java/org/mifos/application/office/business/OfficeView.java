@@ -31,38 +31,51 @@ import org.mifos.framework.business.View;
  */
 public class OfficeView extends View {
 
-    private Short officeId;
+    private final Short officeId;
+    private final String officeName;
+    private final Short levelId;
+    private final String levelNameKey;
+    private final Integer versionNo;
 
-    private String officeName;
-
-    private Short levelId;
-
-    private String levelNameKey;
-
-    private Integer versionNo;
-
-    public OfficeView(Short officeId, String officeName, Short levelId, Integer versionNo) {
+    /**
+     * used by hibernate queries
+     */
+    public OfficeView(final Short levelId, final String levelNameKey) {
+        this.levelId = levelId;
+        this.levelNameKey = levelNameKey;
+        this.officeId = null;
+        this.officeName = null;
+        this.versionNo = null;
+    }
+    
+    /**
+     * used by hibernate queries
+     */
+    public OfficeView(final Short officeId, final String officeName, final Integer versionNo) {
         this.officeId = officeId;
         this.officeName = officeName;
-        this.levelId = levelId;
+        this.levelId = null;
+        this.levelNameKey = null;
         this.versionNo = versionNo;
     }
 
-    public OfficeView(Short officeId, String officeName, OfficeLevel level, String levelNameKey, Integer versionNo) {
+    public OfficeView(final Short officeId, final String officeName, final Short levelId, final Integer versionNo) {
+        this.officeId = officeId;
+        this.officeName = officeName;
+        this.levelId = levelId;
+        this.levelNameKey = null;
+        this.versionNo = versionNo;
+    }
+
+    public OfficeView(final Short officeId, final String officeName, final OfficeLevel level, final String levelNameKey, final Integer versionNo) {
         this(officeId, officeName, level.getValue(), levelNameKey, versionNo);
     }
 
-    public OfficeView(Short officeId, String officeName, Short levelId, String levelNameKey, Integer versionNo) {
+    public OfficeView(final Short officeId, final String officeName, final Short levelId, final String levelNameKey, final Integer versionNo) {
         this.officeId = officeId;
         this.officeName = officeName;
         this.levelId = levelId;
         this.levelNameKey = levelNameKey;
-        this.versionNo = versionNo;
-    }
-
-    public OfficeView(Short officeId, String officeName, Integer versionNo) {
-        this.officeId = officeId;
-        this.officeName = officeName;
         this.versionNo = versionNo;
     }
 
@@ -84,11 +97,6 @@ public class OfficeView extends View {
 
     public String getLevelName() {
         return MessageLookup.getInstance().lookup(levelNameKey);
-    }
-
-    public OfficeView(Short levelId, String levelNameKey) {
-        this.levelId = levelId;
-        this.levelNameKey = levelNameKey;
     }
 
     public String getDisplayName() {

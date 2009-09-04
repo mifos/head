@@ -280,7 +280,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals(1, productList.size());
     }
 
-    private AccountBO getLoanAccount(CustomerBO group, MeetingBO meeting, String offeringName, String shortName) {
+    private AccountBO getLoanAccount(final CustomerBO group, final MeetingBO meeting, final String offeringName, final String shortName) {
         Date startDate = new Date(System.currentTimeMillis());
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
@@ -288,8 +288,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     }
 
-    private AccountBO getLoanAccountInActiveBadStanding(CustomerBO group, MeetingBO meeting, String offeringName,
-            String shortName) {
+    private AccountBO getLoanAccountInActiveBadStanding(final CustomerBO group, final MeetingBO meeting, final String offeringName,
+            final String shortName) {
         Date startDate = new Date(System.currentTimeMillis());
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423141111", group, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
@@ -688,18 +688,18 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.closeSession();
        Assert.assertEquals(1, customerPersistence.getStatusChecklist(center.getCustomerStatus().getId(),
                 center.getCustomerLevel().getId()).size());
-        client = (ClientBO) (StaticHibernateUtil.getSessionTL().get(ClientBO.class, Integer.valueOf(client
-                .getCustomerId())));
-        group = (GroupBO) (StaticHibernateUtil.getSessionTL()
-                .get(GroupBO.class, Integer.valueOf(group.getCustomerId())));
-        center = (CenterBO) (StaticHibernateUtil.getSessionTL().get(CenterBO.class, Integer.valueOf(center
-                .getCustomerId())));
-        checklistCenter = (CustomerCheckListBO) (StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
-                checklistCenter.getChecklistId())));
-        checklistClient = (CustomerCheckListBO) (StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
-                checklistClient.getChecklistId())));
-        checklistGroup = (CustomerCheckListBO) (StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
-                checklistGroup.getChecklistId())));
+        client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, Integer.valueOf(client
+                .getCustomerId()));
+        group = (GroupBO) StaticHibernateUtil.getSessionTL()
+                .get(GroupBO.class, Integer.valueOf(group.getCustomerId()));
+        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, Integer.valueOf(center
+                .getCustomerId()));
+        checklistCenter = (CustomerCheckListBO) StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
+                checklistCenter.getChecklistId()));
+        checklistClient = (CustomerCheckListBO) StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
+                checklistClient.getChecklistId()));
+        checklistGroup = (CustomerCheckListBO) StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
+                checklistGroup.getChecklistId()));
         TestObjectFactory.cleanUp(checklistCenter);
         TestObjectFactory.cleanUp(checklistClient);
         TestObjectFactory.cleanUp(checklistGroup);
@@ -728,8 +728,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
            Assert.assertEquals("Test Note", note.getComment());
            Assert.assertEquals(center.getPersonnel().getPersonnelId(), note.getPersonnel().getPersonnelId());
         }
-        center = (CenterBO) (StaticHibernateUtil.getSessionTL().get(CenterBO.class, Integer.valueOf(center
-                .getCustomerId())));
+        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, Integer.valueOf(center
+                .getCustomerId()));
     }
 
     public void testGetAllCustomerNotesWithZeroNotes() throws Exception {
@@ -1097,7 +1097,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         // verification
     }
     
-    private AccountBO getSavingsAccount(CustomerBO customer, String prdOfferingname, String shortName) throws Exception {
+    private AccountBO getSavingsAccount(final CustomerBO customer, final String prdOfferingname, final String shortName) throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct(prdOfferingname, shortName,
                 startDate);
@@ -1130,14 +1130,14 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 savingsOffering1);
     }
 
-    private void createCustomers(CustomerStatus groupStatus, CustomerStatus clientStatus) {
+    private void createCustomers(final CustomerStatus groupStatus, final CustomerStatus clientStatus) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
         client = TestObjectFactory.createClient("Client", clientStatus, group);
     }
 
-    private static java.util.Date getMeetingDates(MeetingBO meeting) {
+    private static java.util.Date getMeetingDates(final MeetingBO meeting) {
         List<java.util.Date> dates = new ArrayList<java.util.Date>();
         try {
             dates = meeting.getAllDates(new java.util.Date(System.currentTimeMillis()));
@@ -1151,7 +1151,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         return createCenter("Center_Active_test");
     }
 
-    private CenterBO createCenter(String name) {
+    private CenterBO createCenter(final String name) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         return TestObjectFactory.createCenter(name, meeting);
@@ -1167,5 +1167,4 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
     }
-
 }

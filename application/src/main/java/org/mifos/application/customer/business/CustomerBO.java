@@ -439,7 +439,7 @@ public abstract class CustomerBO extends BusinessObject {
 
     public void generateGlobalCustomerNumber() throws CustomerException {
         globalCustNum = generateSystemId();
-        getCustomerAccount().generateCustomerAccountSystemId(userContext.getBranchGlobalNum());
+        getCustomerAccount().generateCustomerAccountSystemId();
     }
 
     public void update() throws CustomerException {
@@ -495,7 +495,8 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     /**
-     * TODO - keithw - delete me.
+     * TODO - keithw - delete me delete me post collection sheet refactoring
+     * work
      * 
      * @deprecated
      */
@@ -520,7 +521,7 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     /**
-     * TODO - keithw - delete me.
+     * TODO - keithw - delete me post collection sheet refactoring work
      * 
      * @deprecated
      */

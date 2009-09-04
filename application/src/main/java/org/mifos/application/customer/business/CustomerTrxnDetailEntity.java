@@ -25,13 +25,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionEntity;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -41,7 +39,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 
-    private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
+    private final Set<FeesTrxnDetailEntity> feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 
     private final Money totalAmount;
 
@@ -50,48 +48,20 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
     private final Money miscFeeAmount;
 
     protected CustomerTrxnDetailEntity() {
-        totalAmount = null;
-        miscPenaltyAmount = null;
-        miscFeeAmount = null;
-        feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+        super();
+        this.miscFeeAmount = null;
+        this.miscPenaltyAmount = null;
+        this.totalAmount = null;
     }
 
-    public CustomerTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
-            CustomerAccountPaymentData customerAccountPaymentDataView, PersonnelBO personnel,
-            java.util.Date transactionDate, AccountActionEntity accountActionEntity, String comments) {
-
-        super(accountPaymentEntity, accountActionEntity, customerAccountPaymentDataView.getInstallmentId(),
-                customerAccountPaymentDataView.getAccountActionDate().getActionDate(), personnel, null,
-                transactionDate, customerAccountPaymentDataView.getTotalPaidAmnt(), comments, null);
-        totalAmount = customerAccountPaymentDataView.getTotalPaidAmnt();
-        miscFeeAmount = customerAccountPaymentDataView.getMiscFeePaid();
-        miscPenaltyAmount = customerAccountPaymentDataView.getMiscPenaltyPaid();
-        feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-        CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) customerAccountPaymentDataView
-                .getAccountActionDate();
-        
-        for (AccountFeesActionDetailEntity accountFeesActionDetail : customerScheduleEntity
-                .getAccountFeesActionDetails()) {
-            
-            if (customerAccountPaymentDataView.getFeesPaid().containsKey(accountFeesActionDetail.getFee().getFeeId())) {
-                ((CustomerFeeScheduleEntity) accountFeesActionDetail).makePayment(customerAccountPaymentDataView
-                        .getFeesPaid().get(accountFeesActionDetail.getFee().getFeeId()));
-                FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(this, accountFeesActionDetail
-                        .getAccountFee(), accountFeesActionDetail.getFeeAmount());
-                addFeesTrxnDetail(feesTrxnDetailBO);
-            }
-        }
-    }
-
-    public CustomerTrxnDetailEntity(AccountPaymentEntity accountPayment, AccountActionEntity accountActionEntity,
-            Short installmentId, Date dueDate, PersonnelBO personnel, Date actionDate, Money amount, String comments,
-            AccountTrxnEntity relatedTrxn, Money miscFeeAmount, Money miscPenaltyAmount) {
+    public CustomerTrxnDetailEntity(final AccountPaymentEntity accountPayment, final AccountActionEntity accountActionEntity,
+            final Short installmentId, final Date dueDate, final PersonnelBO personnel, final Date actionDate, final Money amount, final String comments,
+            final AccountTrxnEntity relatedTrxn, final Money miscFeeAmount, final Money miscPenaltyAmount) {
         super(accountPayment, accountActionEntity, installmentId, dueDate, personnel, null, actionDate, amount,
                 comments, relatedTrxn);
         this.miscFeeAmount = miscFeeAmount;
         this.miscPenaltyAmount = miscPenaltyAmount;
         this.totalAmount = amount;
-        feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
     }
 
     public Money getTotalAmount() {
@@ -110,11 +80,11 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
         return feesTrxnDetails;
     }
 
-    public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
+    public void addFeesTrxnDetail(final FeesTrxnDetailEntity feesTrxn) {
         feesTrxnDetails.add(feesTrxn);
     }
 
-    public FeesTrxnDetailEntity getFeesTrxn(Integer accountFeeId) {
+    public FeesTrxnDetailEntity getFeesTrxn(final Integer accountFeeId) {
         if (null != getFeesTrxnDetails() && feesTrxnDetails.size() > 0) {
             for (FeesTrxnDetailEntity feesTrxn : feesTrxnDetails) {
 
@@ -127,7 +97,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
     }
 
     @Override
-    protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
+    protected AccountTrxnEntity generateReverseTrxn(final PersonnelBO loggedInUser, final String adjustmentComment)
             throws AccountException {
         MasterPersistence masterPersistence = new MasterPersistence();
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

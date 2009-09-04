@@ -17,12 +17,10 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,49 +29,70 @@ import java.io.IOException;
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+/**
+ *
+ */
+@RunWith(MockitoJUnitRunner.class)
 public class ConfigurationLocatorTest {
 
     private static final String EXPECTED_PATH = "/Users/caitie/.mifos";
 
+    // class under test
+    private ConfigurationLocator configurationLocator;
+
+    @Mock
+    private File file;
+
+    @Mock
+    private ConfigurationLocatorHelper configurationLocatorHelper;
+
+    @Before
+    public void setup() {
+        configurationLocator = new ConfigurationLocator();
+        configurationLocator.setConfigurationLocatorHelper(configurationLocatorHelper);
+    }
+
     @Test
     public void testGetFileHandle() throws IOException {
-        ConfigurationLocator locator = new ConfigurationLocator();
-        Assert.assertNotNull(locator.getFile("mock.mifosChartOfAccounts.xml"));
+        
+        // exercise test
+        File returnedFile = configurationLocator.getFile("mock.mifosChartOfAccounts.xml");
+
+        // verification
+        Assert.assertNotNull(returnedFile);
     }
 
-    @Test (expected = FileNotFoundException.class)
+    @Test(expected = FileNotFoundException.class)
     public void testGetFileHandleFailure() throws IOException {
-        ConfigurationLocator locator = new ConfigurationLocator();
-        locator.getFile("x.xml");
+        
+        // exercise test
+        configurationLocator.getFile("x.xml");
     }
 
     @Test
-    public void testGetConfigurationDirectory() throws IOException {
-        ConfigurationLocator locator = getConfigurationLocatorWithMockFileFactory();
-        String configurationDirectory = locator.getConfigurationDirectory();
+    public void testGetConfigurationDirectory() {
+
+        // stubbing
+        when(file.exists()).thenReturn(true);
+
+        when(configurationLocatorHelper.getFile(EXPECTED_PATH)).thenReturn(file);
+        when(configurationLocatorHelper.getHomeProperty("user.home")).thenReturn("/Users/caitie");
+
+        // exercise test
+        String configurationDirectory = configurationLocator.getConfigurationDirectory();
+
+        // verification
         Assert.assertNotNull(configurationDirectory);
         Assert.assertEquals(EXPECTED_PATH, configurationDirectory);
     }
-    
+
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(ConfigurationLocatorTest.class);
     }
-
-    private ConfigurationLocator getConfigurationLocatorWithMockFileFactory()  {
-        File mockFile = createMock(File.class);
-        expect(mockFile.exists()).andReturn(true);
-        replay(mockFile);
-        ConfigurationLocatorHelper mockFileFactory = createMock(ConfigurationLocatorHelper.class);
-        expect(mockFileFactory.getFile(EXPECTED_PATH)).andReturn(mockFile);
-        expect(mockFileFactory.getHomeProperty("user.home")).andReturn("/Users/caitie");
-        expect(mockFileFactory.getEnvironmentProperty("MIFOS_CONF")).andReturn("");
-        replay(mockFileFactory);
-        ConfigurationLocator configurationLocator = new ConfigurationLocator();
-        configurationLocator.setConfigurationLocatorHelper(mockFileFactory);
-        return configurationLocator;
-    }
-
-    
 }

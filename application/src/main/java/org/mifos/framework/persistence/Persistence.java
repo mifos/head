@@ -33,7 +33,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.GenericJDBCException;
+import org.hibernate.transform.Transformers;
 import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
@@ -55,7 +57,7 @@ public abstract class Persistence {
         return hibernateUtil;
     }
 
-    public void setHibernateUtil(HibernateUtil hibernateUtil) {
+    public void setHibernateUtil(final HibernateUtil hibernateUtil) {
         this.hibernateUtil = hibernateUtil;
     }
 
@@ -63,7 +65,7 @@ public abstract class Persistence {
         return getHibernateUtil().getSessionTL().connection();
     }
 
-    public Object createOrUpdate(Object object) throws PersistenceException {
+    public Object createOrUpdate(final Object object) throws PersistenceException {
         try {
             Session session = getHibernateUtil().getSessionTL();
             getHibernateUtil().startTransaction();
@@ -82,7 +84,7 @@ public abstract class Persistence {
         return getHibernateUtil().getSessionTL();
     }
 
-    public void delete(Object object) throws PersistenceException {
+    public void delete(final Object object) throws PersistenceException {
         Session session = getHibernateUtil().getSessionTL();
         try {
             getHibernateUtil().startTransaction();
@@ -96,7 +98,7 @@ public abstract class Persistence {
      * This method takes the name of a named query to be executed as well as a
      * list of parameters that the query uses. It assumes the session is open.
      */
-    public List executeNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
+    public List executeNamedQuery(final String queryName, final Map queryParameters) throws PersistenceException {
         try {
             Query query = createdNamedQuery(queryName);
             
@@ -107,11 +109,11 @@ public abstract class Persistence {
         }
     }
 
-    public List runQuery(Query query) {
+    public List runQuery(final Query query) {
         return query.list();
     }
 
-    public Query createdNamedQuery(String queryName) {
+    public Query createdNamedQuery(final String queryName) {
         Session session = getHibernateUtil().getSessionTL();
         Query query = session.getNamedQuery(queryName);
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
@@ -119,7 +121,7 @@ public abstract class Persistence {
         return query;
     }
 
-    public Object execUniqueResultNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
+    public Object execUniqueResultNamedQuery(final String queryName, final Map queryParameters) throws PersistenceException {
         try {
             Query query = null;
             Session session = getHibernateUtil().getSessionTL();
@@ -141,6 +143,37 @@ public abstract class Persistence {
         }
     }
     
+    public Object execUniqueResultNamedQueryWithResultTransformer(final String queryName,
+            final Map<String, ?> queryParameters,
+            final Class<?> clazz) {
+        try {
+            Query query = null;
+            Session session = getHibernateUtil().getSessionTL();
+            query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(clazz));
+            setParametersInQuery(query, queryName, queryParameters);
+            query.setResultTransformer(Transformers.aliasToBean(clazz));
+            return query.uniqueResult();
+        } catch (GenericJDBCException gje) {
+            throw new ConnectionNotFoundException(gje);
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List executeNamedQueryWithResultTransformer(final String queryName,
+            final Map<String, ?> queryParameters, final Class<?> clazz) {
+        try {
+            Session session = getHibernateUtil().getSessionTL();
+            Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(clazz));
+            setParametersInQuery(query, queryName, queryParameters);
+            return query.list();
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
     public Object executeUniqueHqlQuery(final String hqlQuery) {
 
         Session session = getHibernateUtil().getSessionTL();
@@ -155,7 +188,7 @@ public abstract class Persistence {
         return query.list();
     }
 
-    public static void setParametersInQuery(Query query, String queryName, Map queryParameters)
+    public static void setParametersInQuery(final Query query, final String queryName, final Map queryParameters)
             throws PersistenceException {
 
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
@@ -187,7 +220,7 @@ public abstract class Persistence {
     /**
      * Deleagtes to {@link Session#get(Class, Serializable)}.
      */
-    public Object getPersistentObject(Class clazz, Serializable persistentObjectId) throws PersistenceException {
+    public Object getPersistentObject(final Class clazz, final Serializable persistentObjectId) throws PersistenceException {
         // keep current unit tests happy, they get confused with an
         // IllegalArgumentException (thrown if get() is given a null ID, below)
         // TODO: get rid of this. The default handling for null IDs of
@@ -209,19 +242,19 @@ public abstract class Persistence {
     /**
      * Deleagtes to {@link Session#load(Class, Serializable)}.
      */
-    public Object loadPersistentObject(Class clazz, Serializable persistentObjectId) {
+    public Object loadPersistentObject(final Class clazz, final Serializable persistentObjectId) {
         return getHibernateUtil().getSessionTL().load(clazz, persistentObjectId);
     }
 
-    protected Param typeNameValue(String type, String name, Object value) {
+    protected Param typeNameValue(final String type, final String name, final Object value) {
         return new Param(type, name, value);
     }
 
-    public void initialize(Object object) {
+    public void initialize(final Object object) {
         Hibernate.initialize(object);
     }
 
-    protected Integer getCountFromQueryResult(List queryResult) {
+    protected Integer getCountFromQueryResult(final List queryResult) {
         int count = 0;
         if (queryResult.size() > 0 && queryResult.get(0) != null) {
             count = ((Number) queryResult.get(0)).intValue();
@@ -229,7 +262,7 @@ public abstract class Persistence {
         return count;
     }
 
-    protected BigDecimal getCalculateValueFromQueryResult(List queryResult) {
+    protected BigDecimal getCalculateValueFromQueryResult(final List queryResult) {
         return queryResult.size() > 0 && queryResult.get(0) != null ? BigDecimal.valueOf(((Number) queryResult.get(0))
                 .doubleValue()) : null;
     }

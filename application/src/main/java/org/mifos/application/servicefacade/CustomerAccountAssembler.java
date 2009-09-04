@@ -48,7 +48,7 @@ public class CustomerAccountAssembler {
     private static final MifosLogger logger = MifosLogManager.getLogger(CustomerAccountAssembler.class.getName());
     private final CustomerPersistence customerPersistence;
 
-    public CustomerAccountAssembler(CustomerPersistence customerPersistence) {
+    public CustomerAccountAssembler(final CustomerPersistence customerPersistence) {
         this.customerPersistence = customerPersistence;
     }
 
@@ -67,15 +67,13 @@ public class CustomerAccountAssembler {
                     final Integer accountId = customerAccountView.getAccountId();
                     
                     final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(customerAccountView
-                            .getAccountActionDates(), customerAccountView.getTotalAmountDue(), payment
-                            .getCreatedByUser(), payment.getReceiptNumber(), payment.getPaymentType().getId(), payment
-                            .getReceiptDate(), payment.getPaymentDate());
+                            .getAccountActionDates(), customerAccountView.getTotalAmountDue(), payment);
 
                     String globalCustomerAccountNum = "Unknown";
                     try {
                         final CustomerAccountBO account = findCustomerAccountByIdWithLoanSchedulesInitialized(accountId);
                         globalCustomerAccountNum = account.getGlobalAccountNum();
-                        account.applyPayment(accountPaymentDataView, false);
+                        account.applyPayment(accountPaymentDataView, true);
                         customerAccountList.add(account);
                     } catch (AccountException ae) {
                         logger.warn("Payment of loan on account [" + globalCustomerAccountNum
@@ -89,9 +87,15 @@ public class CustomerAccountAssembler {
         return customerAccountList;
     }
     
-    private PaymentData getCustomerAccountPaymentDataView(List<CollectionSheetEntryInstallmentView> accountActions,
-            Money totalAmount, PersonnelBO personnel, String receiptNum, Short paymentId, Date receiptDate,
-            Date transactionDate) {
+    private PaymentData getCustomerAccountPaymentDataView(final List<CollectionSheetEntryInstallmentView> accountActions,
+            final Money totalAmount,
+            final AccountPaymentEntity payment) {
+
+        final PersonnelBO personnel = payment.getCreatedByUser();
+        final String receiptNum = payment.getReceiptNumber();
+        final Short paymentId = payment.getPaymentType().getId();
+        final Date receiptDate = payment.getReceiptDate();
+        final Date transactionDate = payment.getPaymentDate();
 
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
         paymentData.setRecieptDate(receiptDate);
