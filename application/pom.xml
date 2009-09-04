@@ -925,7 +925,7 @@
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <!--
                 TODO: change to upstream buildnumber-maven-plugin version once
-                at least 1.0-alpha-4 is released. Note that
+                at least 1.0-beta-4 is released. Note that
                 versionInfo.properties must be updated when this is changed.
                 -->
                 <version>1.0-mifos-alpha-1</version>
