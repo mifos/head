@@ -787,7 +787,7 @@
                 <executions>
                     <execution>
                         <id>drop_db</id>
-                        <phase>process-test-resources</phase>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>execute</goal>
                         </goals>
@@ -797,7 +797,7 @@
                     </execution>
                     <execution>
                         <id>create_db</id>
-                        <phase>process-test-resources</phase>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>execute</goal>
                         </goals>
@@ -807,7 +807,7 @@
                     </execution>
                     <execution>
                         <id>populate_db</id>
-                        <phase>process-test-resources</phase>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>execute</goal>
                         </goals>
@@ -834,28 +834,40 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
-                    <!--
-                    Uncomment <excludes> elements below to exclude the
-                    Integration tests (those that hit the database).
-
-                    Do not uncomment except during development (to reduce
-                    turnaround time by excluding tests that hit the database
-                    and/or use Struts).
-                    
-                    *IntegrationTest extends MifosIntegrationTestCase 
-                    *StrutsTest extends MifosMockStrutsTestCase
-                    
+                    <!-- Exclude integration test classes    -->
                     <excludes>
                         <exclude>**/*IntegrationTest.java</exclude>
                         <exclude>**/*StrutsTest.java</exclude>
                     </excludes>
-                    
-                    -->
-                    <systemProperties>
+                    <reportsDirectory>${project.build.directory}/surefire-reports/unit</reportsDirectory>
+                </configuration>
+              <executions>
+               <execution>
+                  <id>integration-test</id>
+                  <phase>integration-test</phase>
+                  <goals>
+                     <goal>test</goal>
+                  </goals>
+                  <configuration>
+                    <testNGArtifactName>null</testNGArtifactName>
+                    <printSummary>false</printSummary>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <!-- override exclude integration test classes    -->
+                     <excludes>
+                        <exclude>none</exclude>
+                     </excludes>
+                     <includes>
+                        <include>**/*IntegrationTest.java</include>
+                        <include>**/*StrutsTest.java</include>
+                     </includes>
+                     <systemProperties>
                         <mifos.test.mode>integration</mifos.test.mode>
                     </systemProperties>
                     <argLine>${maven.surefire.memory}</argLine>
-                </configuration>
+                     <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                  </configuration>
+               </execution>
+             </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo.jspc</groupId>
