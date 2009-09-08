@@ -189,6 +189,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
+        logTrackingInfo("load", request);
 
         // clean up
         request.getSession().setAttribute(CollectionSheetEntryConstants.BULKENTRYACTIONFORM, null);
@@ -522,6 +523,12 @@ public class CollectionSheetEntryAction extends BaseAction {
         message.append(", receipt Id:" + receiptId);
         String centerId = bulkEntryForm.getCustomerId();
         message.append(", center:" + centerId);
+        message.append(", ");
+        logger.info(message.toString());
+    }
+
+    private void logTrackingInfo(String actionMethodName, HttpServletRequest request) {
+        StringBuilder message = getLogMessage(actionMethodName, request);
         message.append(", ");
         logger.info(message.toString());
     }
