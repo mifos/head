@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
@@ -34,7 +33,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
@@ -54,11 +53,11 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
         this.totalAmount = null;
     }
 
-    public CustomerTrxnDetailEntity(final AccountPaymentEntity accountPayment, final AccountActionEntity accountActionEntity,
+    public CustomerTrxnDetailEntity(final AccountPaymentEntity accountPayment, final AccountActionTypes accountActionType,
             final Short installmentId, final Date dueDate, final PersonnelBO personnel, final Date actionDate, final Money amount, final String comments,
-            final AccountTrxnEntity relatedTrxn, final Money miscFeeAmount, final Money miscPenaltyAmount) {
-        super(accountPayment, accountActionEntity, installmentId, dueDate, personnel, null, actionDate, amount,
-                comments, relatedTrxn);
+            final AccountTrxnEntity relatedTrxn, final Money miscFeeAmount, final Money miscPenaltyAmount, final Persistence persistence) {
+        super(accountPayment, accountActionType, installmentId, dueDate, personnel, null, actionDate, amount,
+                comments, relatedTrxn, persistence);
         this.miscFeeAmount = miscFeeAmount;
         this.miscPenaltyAmount = miscPenaltyAmount;
         this.totalAmount = amount;
@@ -110,15 +109,11 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
         }
 
         CustomerTrxnDetailEntity reverseAccntTrxn;
-        try {
-            reverseAccntTrxn = new CustomerTrxnDetailEntity(getAccountPayment(),
-                    (AccountActionEntity) masterPersistence.getPersistentObject(AccountActionEntity.class,
-                            AccountActionTypes.CUSTOMER_ADJUSTMENT.getValue()), getInstallmentId(), getDueDate(),
-                    loggedInUser, getActionDate(), getAmount().negate(), comment, this, getMiscFeeAmount().negate(),
-                    getMiscPenaltyAmount().negate());
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
+
+        reverseAccntTrxn = new CustomerTrxnDetailEntity(getAccountPayment(),
+                AccountActionTypes.CUSTOMER_ADJUSTMENT, getInstallmentId(), getDueDate(),
+                loggedInUser, getActionDate(), getAmount().negate(), comment, this, getMiscFeeAmount().negate(),
+                getMiscPenaltyAmount().negate(), masterPersistence);
 
         if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

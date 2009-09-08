@@ -42,6 +42,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -52,7 +53,7 @@ public class SavingsHelper {
      * I assume the hardcoding of 1 Jan 2006 is trying to say that the default
      * fiscal year is January 1 to December 31. Do we use the year? What does
      * this control, versus {@link SavingsConstants#POSTING_DAY}?
-     * 
+     *
      * Force a locale that works with pattern parsing.
      */
     public Date getFiscalStartDate() {
@@ -173,9 +174,9 @@ public class SavingsHelper {
     }
 
     public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance,
-            AccountActionEntity accountAction, CustomerBO customer, PersonnelBO createdBy) {
-        SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(payment, customer, accountAction, payment
-                .getAmount(), balance, createdBy, null, new SavingsHelper().getCurrentDate(), null, "");
+            AccountActionTypes accountActionType, CustomerBO customer, PersonnelBO createdBy, Persistence persistence, Date postingDate) {
+        SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(payment, customer, accountActionType, payment
+                .getAmount(), balance, createdBy, null, getCurrentDate(), null, "", persistence, postingDate);
         return savingsTrxn;
     }
 

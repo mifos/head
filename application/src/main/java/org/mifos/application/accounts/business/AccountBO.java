@@ -116,14 +116,14 @@ public class AccountBO extends BusinessObject {
 
     /*
      * Injected Persistence classes
-     * 
+     *
      * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     * 
+     *
      * The Persistence classes below are used by this class and can be injected
      * via a setter for testing purposes. In order for this mechanism to work
      * correctly, the getter must be used to access them because the getter will
      * initialize the Persistence class if it has not been injected.
-     * 
+     *
      * Long term these references to Persistence classes should probably be
      * eliminated.
      */
@@ -134,6 +134,18 @@ public class AccountBO extends BusinessObject {
     private MasterPersistence masterPersistence = null;
     private PersonnelPersistence personnelPersistence = null;
     private DateTimeService dateTimeService = null;
+    private FinancialBusinessService financialBusinessService = null;
+
+    public FinancialBusinessService getFinancialBusinessService() {
+        if (null == financialBusinessService) {
+            financialBusinessService = new FinancialBusinessService();
+        }
+        return financialBusinessService;
+    }
+
+    public void setFinancialBusinessService(final FinancialBusinessService financialBusinessService) {
+        this.financialBusinessService = financialBusinessService;
+    }
 
     public DateTimeService getDateTimeService() {
         if (null == dateTimeService) {
@@ -980,15 +992,11 @@ public class AccountBO extends BusinessObject {
         return nextAccountAction;
     }
 
+    /*
+     * Delegate to an injected service.
+     */
     protected final void buildFinancialEntries(final Set<AccountTrxnEntity> accountTrxns) throws AccountException {
-        try {
-            FinancialBusinessService financialBusinessService = new FinancialBusinessService();
-            for (AccountTrxnEntity accountTrxn : accountTrxns) {
-                financialBusinessService.buildAccountingEntries(accountTrxn);
-            }
-        } catch (FinancialException e) {
-            throw new AccountException("errors.unexpected", e);
-        }
+        getFinancialBusinessService().buildFinancialEntries(accountTrxns);
     }
 
     protected final String generateId(final String officeGlobalNum) throws AccountException {
@@ -1104,7 +1112,7 @@ public class AccountBO extends BusinessObject {
     }
 
     /**
-     * 
+     *
      * @param installmentDates
      *            dates adjusted for holidays
      * @param nonAdjustedInstallmentDates
@@ -1336,11 +1344,11 @@ public class AccountBO extends BusinessObject {
     protected AccountPaymentEntity makePayment(final PaymentData accountPaymentData) throws AccountException {
         return null;
     }
-    
+
     // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
     protected void updateTotalFeeAmount(final Money totalFeeAmount) {
     }
- 
+
     // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
     protected void updateTotalPenaltyAmount(final Money totalPenaltyAmount) {
     }

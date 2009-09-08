@@ -31,11 +31,25 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.activity.BaseFinancialActivity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
+import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
+import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.framework.util.helpers.Money;
 
 public abstract class BaseAccountingEntry {
     protected BaseFinancialActivity financialActivity;
+
+    /*
+     * Factor out access to the static cache to allow this method to be overridden for testing.
+     * Globals like FinancialActionCache should be eliminated or refactored to be injectable
+     */
+    protected FinancialActionBO getFinancialAction(FinancialActionConstants financialActionId) throws FinancialException {
+        return FinancialActionCache.getFinancialAction(financialActionId);
+    }
+
+    protected COABO getChartOfAccountsEntry(String glcode) throws FinancialException {
+        return ChartOfAccountsCache.get(glcode);
+    }
 
     public void buildAccountEntryForAction(BaseFinancialActivity financialActivity) throws FinancialException {
         this.financialActivity = financialActivity;
@@ -45,11 +59,12 @@ public abstract class BaseAccountingEntry {
     protected void addAccountEntryDetails(Money postedMoney, FinancialActionBO financialAction, GLCodeEntity glcode,
             FinancialConstants debitCredit) throws FinancialException {
         if (postedMoney.getAmountDoubleValue() != 0) {
-            postedMoney = getAmountToPost(postedMoney, financialAction, glcode, debitCredit);
+            Money amountToPost = getAmountToPost(postedMoney, financialAction, glcode, debitCredit);
             FinancialTransactionBO financialTransaction = new FinancialTransactionBO(
                     financialActivity.getAccountTrxn(), null, financialAction, glcode, financialActivity
                             .getAccountTrxn().getActionDate(), financialActivity.getAccountTrxn().getPersonnel(),
-                    (short) 1, postedMoney, financialActivity.getAccountTrxn().getComments(), debitCredit.getValue());
+                    (short) 1, amountToPost, financialActivity.getAccountTrxn().getComments(), debitCredit.getValue(),
+                    financialActivity.getAccountTrxn().getTrxnCreatedDate());
             financialActivity.addFinancialTransaction(financialTransaction);
         }
     }
@@ -68,7 +83,7 @@ public abstract class BaseAccountingEntry {
 
     private Money getAmountToPost(Money postedMoney, FinancialActionBO financialAction, GLCodeEntity glcode,
             FinancialConstants debitCredit) throws FinancialException {
-        COABO chartOfAccounts = ChartOfAccountsCache.get(glcode.getGlcode());
+        COABO chartOfAccounts = getChartOfAccountsEntry(glcode.getGlcode());
         if (chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.ASSET
                 || chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.EXPENDITURE) {
             if (debitCredit == FinancialConstants.DEBIT)

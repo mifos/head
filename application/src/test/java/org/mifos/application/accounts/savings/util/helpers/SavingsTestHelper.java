@@ -39,6 +39,8 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
@@ -56,12 +58,26 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsTestHelper {
+
+    private SavingsPersistence savingsPersistence = null;
+
+    public SavingsPersistence getSavingsPersistence() {
+        if (null == savingsPersistence) {
+            savingsPersistence = new SavingsPersistence();
+        }
+        return savingsPersistence;
+    }
+
+    public void setSavingsPersistence(SavingsPersistence savingsPersistence) {
+        this.savingsPersistence = savingsPersistence;
+    }
 
     public AccountPaymentEntity createAccountPayment(AccountBO account, Money amount, Date paymentDate,
             PersonnelBO createdBy) {
@@ -90,8 +106,8 @@ public class SavingsTestHelper {
             Money amount, Money balance, Date trxnDate, Date dueDate, Integer id, Short accountAction,
             SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer) throws Exception {
         SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity, customer,
-                (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
-                        accountAction), amount, balance, createdBy, dueDate, trxnDate, installmentId, "");
+                AccountActionTypes.fromInt(accountAction),
+                amount, balance, createdBy, dueDate, trxnDate, installmentId, "", getSavingsPersistence());
         return trxn;
     }
 
@@ -99,8 +115,8 @@ public class SavingsTestHelper {
             Date trxnDate, Date dueDate, Short accountAction, SavingsBO savingsObj, PersonnelBO createdBy,
             CustomerBO customer, String comments, AccountTrxnEntity relatedTrxn) throws Exception {
         SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity,
-                (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
-                        accountAction), amount, balance, createdBy, customer, dueDate, trxnDate, comments, relatedTrxn);
+                AccountActionTypes.fromInt(accountAction),
+                amount, balance, createdBy, customer, dueDate, trxnDate, comments, relatedTrxn, getSavingsPersistence());
         return trxn;
     }
 
@@ -108,8 +124,8 @@ public class SavingsTestHelper {
             Money amount, Money balance, Date trxnDate, Date dueDate, Integer id, Short accountAction,
             SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer, String comments) throws Exception {
         SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity, customer,
-                (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
-                        accountAction), amount, balance, createdBy, dueDate, trxnDate, installmentId, comments);
+                AccountActionTypes.fromInt(accountAction),
+                amount, balance, createdBy, dueDate, trxnDate, installmentId, comments, getSavingsPersistence());
         return trxn;
     }
 

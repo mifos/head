@@ -36,8 +36,7 @@ public class InterestPostingAccountingEntry extends BaseAccountingEntry {
 
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
 
-        FinancialActionBO finIntPostingAction = FinancialActionCache
-                .getFinancialAction(FinancialActionConstants.SAVINGS_INTERESTPOSTING);
+        FinancialActionBO finIntPostingAction = getFinancialAction(FinancialActionConstants.SAVINGS_INTERESTPOSTING);
         SavingsOfferingBO savingsOffering = ((SavingsBO) savingsTrxn.getAccount()).getSavingsOffering();
 
         addAccountEntryDetails(savingsTrxn.getInterestAmount(), finIntPostingAction, savingsOffering

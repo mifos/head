@@ -74,15 +74,22 @@ public class FinancialTransactionBO extends BusinessObject {
     }
 
     public FinancialTransactionBO(AccountTrxnEntity accountTrxn, FinancialTransactionBO relatedFinancialTrxn,
+    FinancialActionBO financialAction, GLCodeEntity glcode, Date actionDate, PersonnelBO postedBy,
+    Short accountingUpdated, Money postedAmount, String notes, Short debitCreditFlag) {
+        this(accountTrxn, relatedFinancialTrxn, financialAction, glcode, actionDate, postedBy,
+                accountingUpdated, postedAmount, notes, debitCreditFlag, new DateTimeService().getCurrentJavaDateTime());
+    }
+
+    public FinancialTransactionBO(AccountTrxnEntity accountTrxn, FinancialTransactionBO relatedFinancialTrxn,
             FinancialActionBO financialAction, GLCodeEntity glcode, Date actionDate, PersonnelBO postedBy,
-            Short accountingUpdated, Money postedAmount, String notes, Short debitCreditFlag) {
+            Short accountingUpdated, Money postedAmount, String notes, Short debitCreditFlag, Date postedDate) {
         this.trxnId = null;
         this.accountTrxn = accountTrxn;
         this.relatedFinancialTrxn = relatedFinancialTrxn;
         this.financialAction = financialAction;
         this.glcode = glcode;
         this.actionDate = actionDate;
-        this.postedDate = new DateTimeService().getCurrentJavaDateTime();
+        this.postedDate = postedDate;
         this.postedBy = postedBy;
         this.accountingUpdated = accountingUpdated;
         this.postedAmount = postedAmount;

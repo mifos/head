@@ -144,12 +144,12 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         LoanScheduleEntity accountAction = (LoanScheduleEntity) loan.getAccountActionDate(Short.valueOf("1"));
 
         LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
-                (AccountActionEntity) masterPersistenceService.getPersistentObject(AccountActionEntity.class,
-                        AccountActionTypes.LOAN_ADJUSTMENT.getValue()), Short.valueOf("1"), accountAction
+                AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), accountAction
                         .getActionDate(), TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
                 TestObjectFactory.getMoneyForMFICurrency(630), "test for loan adjustment", null, TestObjectFactory
                         .getMoneyForMFICurrency(200), TestObjectFactory.getMoneyForMFICurrency(300), new Money(),
-                TestObjectFactory.getMoneyForMFICurrency(10), TestObjectFactory.getMoneyForMFICurrency(20), null);
+                TestObjectFactory.getMoneyForMFICurrency(10), TestObjectFactory.getMoneyForMFICurrency(20), null,
+                masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             LoanBOTestUtils.setFeeAmountPaid(accountFeesActionDetailEntity, TestObjectFactory
@@ -361,12 +361,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
-                (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
-                        AccountActionTypes.WRITEOFF.getValue()), accountActionDateEntity.getInstallmentId(),
+                AccountActionTypes.WRITEOFF, accountActionDateEntity.getInstallmentId(),
                 accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Written Off", null,
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(), new Money(), new Money(),
-                new Money(), null);
+                new Money(), null, new MasterPersistence());
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);
@@ -397,12 +396,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
-                (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
-                        AccountActionTypes.LOAN_RESCHEDULED.getValue()), accountActionDateEntity.getInstallmentId(),
+                AccountActionTypes.LOAN_RESCHEDULED, accountActionDateEntity.getInstallmentId(),
                 accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Rescheduled", null,
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(), new Money(), new Money(),
-                new Money(), null);
+                new Money(), null, new MasterPersistence());
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);

@@ -101,11 +101,11 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
                 System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
-                (AccountActionEntity) masterPersistenceService.getPersistentObject(AccountActionEntity.class,
-                        AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"), accountAction.getActionDate(),
+                AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(),
                 TestObjectFactory.getPersonnel(userContext.getId()), currentDate, TestObjectFactory
                         .getMoneyForMFICurrency(200), "payment done", null, TestObjectFactory
-                        .getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100));
+                        .getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100),
+                        masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             CustomerAccountBOTestUtils.setFeeAmountPaid(
@@ -127,5 +127,5 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         }
 
     }
-    
+
 }

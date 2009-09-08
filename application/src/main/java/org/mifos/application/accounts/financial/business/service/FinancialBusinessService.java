@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
@@ -124,6 +125,16 @@ public class FinancialBusinessService implements BusinessService {
             glCodeList.add(chartOfAccounts.getAssociatedGlcode());
         }
         return glCodeList;
+    }
+
+    public final void buildFinancialEntries(final Set<AccountTrxnEntity> accountTrxns) throws AccountException {
+        try {
+            for (AccountTrxnEntity accountTrxn : accountTrxns) {
+                buildAccountingEntries(accountTrxn);
+            }
+        } catch (FinancialException e) {
+            throw new AccountException("errors.unexpected", e);
+        }
     }
 
 }

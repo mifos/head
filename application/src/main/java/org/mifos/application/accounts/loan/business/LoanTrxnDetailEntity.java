@@ -42,6 +42,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
 
 /*
@@ -100,12 +101,13 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         miscPenaltyAmount = null;
     }
 
-    public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment, AccountActionEntity accountActionEntity,
+    public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment, AccountActionTypes accountActionType,
             Short installmentId, Date dueDate, PersonnelBO personnel, Date actionDate, Money amount, String comments,
             AccountTrxnEntity relatedTrxn, Money principalAmount, Money interestAmount, Money penaltyAmount,
-            Money miscFeeAmount, Money miscPenaltyAmount, List<AccountFeesEntity> accountFees) {
-        super(accountPayment, accountActionEntity, installmentId, dueDate, personnel, null, actionDate, amount,
-                comments, relatedTrxn);
+            Money miscFeeAmount, Money miscPenaltyAmount, List<AccountFeesEntity> accountFees,
+            Persistence persistence) {
+        super(accountPayment, accountActionType, installmentId, dueDate, personnel, null, actionDate, amount,
+                comments, relatedTrxn, persistence);
         this.principalAmount = principalAmount;
         this.interestAmount = interestAmount;
         this.penaltyAmount = penaltyAmount;
@@ -121,11 +123,12 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     }
 
     public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, LoanPaymentData loanPaymentData,
-            PersonnelBO personnel, java.util.Date transactionDate, AccountActionEntity accountActionEntity,
-            Money amount, String comments) {
+            PersonnelBO personnel, java.util.Date transactionDate, AccountActionTypes accountActionType,
+            Money amount, String comments, Persistence persistence) {
 
-        super(accountPaymentEntity, accountActionEntity, loanPaymentData.getInstallmentId(), loanPaymentData
-                .getAccountActionDate().getActionDate(), personnel, null, transactionDate, amount, comments, null);
+        super(accountPaymentEntity, accountActionType, loanPaymentData.getInstallmentId(), loanPaymentData
+                .getAccountActionDate().getActionDate(), personnel, null, transactionDate, amount, comments,
+                null, persistence);
         interestAmount = loanPaymentData.getInterestPaid();
         penaltyAmount = loanPaymentData.getPenaltyPaid();
         principalAmount = loanPaymentData.getPrincipalPaid();
@@ -153,16 +156,13 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
             comment = adjustmentComment;
 
         LoanTrxnDetailEntity reverseAccntTrxn;
-        Short actionId = getReverseTransctionActionType().getValue();
-        try {
-            reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
-                    (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
-                            actionId), getInstallmentId(), getDueDate(), loggedInUser, getActionDate(), getAmount()
-                            .negate(), comment, this, getPrincipalAmount().negate(), getInterestAmount().negate(),
-                    getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
+
+        reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
+                getReverseTransctionActionType(), getInstallmentId(), getDueDate(), loggedInUser, getActionDate(), getAmount()
+                .negate(), comment, this, getPrincipalAmount().negate(), getInterestAmount().negate(),
+                getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null,
+                new MasterPersistence());
+
 
         if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
