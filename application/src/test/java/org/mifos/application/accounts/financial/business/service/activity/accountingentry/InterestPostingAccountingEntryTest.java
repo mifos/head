@@ -1,6 +1,7 @@
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -11,23 +12,18 @@ import org.joda.time.DateMidnight;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
-import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
-
-import static org.mockito.Mockito.*;
 
 public class InterestPostingAccountingEntryTest {
     @Ignore
@@ -53,7 +49,7 @@ public class InterestPostingAccountingEntryTest {
     public void testGetSpecificAccountActionEntry() throws FinancialException {
         InterestPostingAccountingEntryForTest entry = new InterestPostingAccountingEntryForTest();
 
-        /*
+        /* vanmh work in progess -- mockito seemed confused by this usage, not sure why
         COABO mockChartOfAccountsEntry = mock(COABO.class);
         COABO mockChartOfAccountsHeadEntry = mock(COABO.class);
         when(mockChartOfAccountsHeadEntry.getCategoryType()).thenReturn(GLCategoryType.ASSET);
@@ -64,7 +60,6 @@ public class InterestPostingAccountingEntryTest {
         // workaround for not being able to get commented out code above to work
         // make the COABO entry just return itself to avoid a null pointer return
         // value when this is called
-
         entry.setChartOfAccountsReturnValue(new COABO(3,"unused text") {
             public COABO getCOAHead() {return this;}
         });
