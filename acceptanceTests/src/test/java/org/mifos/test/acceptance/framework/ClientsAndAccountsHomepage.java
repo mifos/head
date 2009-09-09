@@ -35,6 +35,7 @@ import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewD
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
 import com.thoughtworks.selenium.Selenium;
@@ -70,6 +71,12 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         selenium.click("menu.link.label.createloanaccountprefix.loan.label.createloanaccountsuffix"); 
         waitForPageToLoad();
         return new CreateLoanAccountSearchPage(selenium);
+    }
+
+    public CreateSavingsAccountSearchPage navigateToCreateSavingsAccountUsingLeftMenu() {
+        selenium.click("menu.link.label.createsavingsaccountprefix.savings.label.createsavingsaccountsuffix"); 
+        waitForPageToLoad();
+        return new CreateSavingsAccountSearchPage(selenium);
     }
 
     public CreateCenterChooseOfficePage navigateToCreateNewCenterPage() {
@@ -164,4 +171,5 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         
         return clientDetailsPage4;
     }
+
 }

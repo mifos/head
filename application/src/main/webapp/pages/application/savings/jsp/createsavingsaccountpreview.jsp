@@ -242,7 +242,8 @@ explanation of the license and how it is applied.
                     <br>
                 </c:if>  
                     <span class="fontnormal">
-                    <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnCreateEdit(this.form)">
+                    <html-el:button property="editButton"  styleId="createsavingsaccountpreview.button.accountInformation"  
+                    styleClass="insidebuttn" onclick="fnCreateEdit(this.form)">
                    		<mifos:mifoslabel name="Savings.Edit"/>&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>&nbsp;<mifos:mifoslabel name="Savings.accountInformation"/>
 					</html-el:button> 
      			 </span> </td>
@@ -258,21 +259,24 @@ explanation of the license and how it is applied.
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                  <html-el:button property="saveForLaterButton" styleClass="buttn"	onclick="javascript:setAccountState(this.form,13)">
+                  <html-el:button property="saveForLaterButton" styleId="createsavingsaccountpreview.button.saveForLaterButton"
+                  styleClass="buttn"	onclick="javascript:setAccountState(this.form,13)">
 						<mifos:mifoslabel name="loan.saveForLater" />
 				 </html-el:button>
 &nbsp;
       		<c:choose >
 				<c:when test="${sessionScope.isPendingApproval == true}">
 					<html-el:button
-						property="approvedButton" styleClass="buttn"
+						property="approvedButton" styleId="createsavingsaccountpreview.button.submitForApproval"
+						styleClass="buttn"
 						onclick="javascript:setAccountState(this.form,14)">
 						<mifos:mifoslabel name="loan.submitForApproval" />
 					</html-el:button>
 				</c:when>
 				<c:otherwise>
 					<html-el:button
-						property="approvedButton" styleClass="buttn"
+						property="approvedButton" styleId="createsavingsaccountpreview.button.approved" 
+						styleClass="buttn"
 						onclick="javascript:setAccountState(this.form,16)">
 						<mifos:mifoslabel name="loan.approved" />
 					</html-el:button>
@@ -280,7 +284,8 @@ explanation of the license and how it is applied.
 			</c:choose>
 &nbsp;
       
-				<html-el:button property="cancelButton" styleClass="cancelbuttn" onclick="javascript:fun_createCancel(this.form)">
+				<html-el:button property="cancelButton" styleId="createsavingsaccountpreview.button.cancel"  
+				styleClass="cancelbuttn" onclick="javascript:fun_createCancel(this.form)">
 						<mifos:mifoslabel name="loan.cancel" />
 				</html-el:button>
                   </td>

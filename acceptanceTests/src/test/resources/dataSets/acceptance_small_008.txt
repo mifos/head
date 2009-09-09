@@ -1,0 +1,16 @@
+Database version: 213
+
+Description:
+Added following savings products to acceptance_small_004:
+	MandCenterSavings3MoPost
+	MandClientSavings1MoPostAvgBal
+	MandClientSavings3MoPostMinBal
+	MandGrouptSavingsPerIndiv1MoPost
+	VolCenterSavings3MoPost
+	VolClientSavings3MoPost
+	VolClientSavingsAvgBal12mo
+	VolClientSavingsMinBal1MoPost
+	VolGroupSavingsGroupAmtMinBal1MoPost
+	VolGroupSavingsPerIndivMinBal1MoPost
+
+This data set can be used for testing savings accounts.

@@ -118,7 +118,7 @@ explanation of the license and how it is applied.
                   <mifos:mifoslabel name="Savings.instanceName" isColonRequired="yes"/></td>
                   <td width="70%">
 
-             		<mifos:select name="savingsActionForm" property="selectedPrdOfferingId">
+             		<mifos:select name="savingsActionForm" styleId="createsavingsaccount.select.savingsProduct" property="selectedPrdOfferingId">
 
              		<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsPrdOfferings')}"
 											var="savingsPrdOfferings">
@@ -137,11 +137,11 @@ explanation of the license and how it is applied.
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                  <html-el:submit styleClass="buttn">
+                  <html-el:submit styleId="createsavingsaccount.button.continue" styleClass="buttn">
 						<mifos:mifoslabel name="loan.continue" />
 				  </html-el:submit>
 &nbsp;
-    			  <html-el:button property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn">
+    			  <html-el:button  styleId="createsavingsaccount.button.cancel" property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 				  </html-el:button>
                   </td>

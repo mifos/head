@@ -56,7 +56,7 @@ explanation of the license and how it is applied.
                 <br>
                         <br>
                </span>
-                    <html-el:link href="savingsAction.do?method=get&globalAccountNum=${requestScope.globalAccountNum}&recordOfficeId=${requestScope.recordOfficeId}&recordLoanOfficerId=${sessionScope.UserContext.id}">
+                    <html-el:link styleId="createsavingsaccountconfirmation.link.viewSavingsAccount" href="savingsAction.do?method=get&globalAccountNum=${requestScope.globalAccountNum}&recordOfficeId=${requestScope.recordOfficeId}&recordLoanOfficerId=${sessionScope.UserContext.id}">
 	                    <mifos:mifoslabel name="Savings.View"/>
 		            	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
 		            	<mifos:mifoslabel name="Savings.account"/>
@@ -73,13 +73,13 @@ explanation of the license and how it is applied.
                       <tr>
                         <td width="2%"><img src="pages/framework/images/trans.gif" width="15" height="10"></td>
                         <td width="98%"><span class="fontnormal">
-                        <html-el:link href="savingsAction.do?method=getPrdOfferings">
+                        <html-el:link styleId="createsavingsaccountconfirmation.link.newSavingsAccount" href="savingsAction.do?method=getPrdOfferings">
 	                        <mifos:mifoslabel name="Savings.openANew"/>
 			            	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
 			            	<mifos:mifoslabel name="Savings.account"/> 
                         </html-el:link><br>
                     <c:if test="${requestScope.clientLevel != CustomerConstants.CENTER_LEVEL_ID}">
-                        <html-el:link href="loanAccountAction.do?method=getPrdOfferings&customerId=${requestScope.clientId}&randomNUm=${sessionScope.randomNUm}">
+                        <html-el:link styleId="createsavingsaccountconfirmation.link.newLoanAccount" href="loanAccountAction.do?method=getPrdOfferings&customerId=${requestScope.clientId}&randomNUm=${sessionScope.randomNUm}">
                             <mifos:mifoslabel name="Savings.openANew"/>
 			            	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>
 			            	<mifos:mifoslabel name="Savings.account"/> 

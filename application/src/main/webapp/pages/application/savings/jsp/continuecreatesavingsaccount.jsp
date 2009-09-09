@@ -251,7 +251,7 @@ explanation of the license and how it is applied.
 	                </c:choose>
                   </td>
                   <td width="65%" valign="top">                  
-                  	<mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount"	
+                  	<mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount" styleId="continuecreatesavingsaccount.input.recommendedAmount"	
 		                  />
 		                   
 	                  <c:choose>
@@ -322,11 +322,11 @@ explanation of the license and how it is applied.
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                  <html-el:submit styleClass="buttn" >
+                  <html-el:submit styleId="continuecreatesavingsaccount.button.preview" styleClass="buttn" >
 						<mifos:mifoslabel name="loan.preview" />
 				  </html-el:submit>
 &nbsp;
-    			  <html-el:button property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn" >
+    			  <html-el:button styleId="continuecreatesavingsaccount.button.cancel" property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn" >
 						<mifos:mifoslabel name="loan.cancel" />
 				  </html-el:button>
                   </td>
