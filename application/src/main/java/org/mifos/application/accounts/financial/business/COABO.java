@@ -74,7 +74,7 @@ public class COABO extends BusinessObject {
     /**
      * Only used in unit tests.
      */
-    public COABO(int accountId, String accountName) {
+    public COABO(final int accountId, final String accountName) {
         this.accountId = (short) accountId;
         this.accountName = accountName;
     }
@@ -82,13 +82,13 @@ public class COABO extends BusinessObject {
     /**
      * Only used in unit tests.
      */
-    public COABO(int accountId, String accountName, GLCodeEntity glCodeEntity) {
+    public COABO(final int accountId, final String accountName, final GLCodeEntity glCodeEntity) {
         this.accountId = (short) accountId;
         this.accountName = accountName;
         this.associatedGlcode = glCodeEntity;
     }
 
-    public COABO(String accountName, GLCodeEntity glCodeEntity) {
+    public COABO(final String accountName, final GLCodeEntity glCodeEntity) {
         this.accountName = accountName;
         this.associatedGlcode = glCodeEntity;
     }
@@ -101,7 +101,7 @@ public class COABO extends BusinessObject {
         return accountName;
     }
 
-    public void setAccountName(String accountName) {
+    public void setAccountName(final String accountName) {
         this.accountName = accountName;
     }
 
@@ -117,22 +117,24 @@ public class COABO extends BusinessObject {
         return coaHierarchy;
     }
 
-    public void setCoaHierarchy(COAHierarchyEntity coaHierarchy) {
+    public void setCoaHierarchy(final COAHierarchyEntity coaHierarchy) {
         this.coaHierarchy = coaHierarchy;
     }
 
     public GLCategoryType getCategoryType() {
-        if (null == categoryType)
+        if (null == categoryType) {
             return null;
-        else
-            return GLCategoryType.fromString(categoryType);
+        }
+
+        return GLCategoryType.fromString(categoryType);
     }
 
-    public void setCategoryType(GLCategoryType categoryType) {
-        if (null == categoryType)
+    public void setCategoryType(final GLCategoryType categoryType) {
+        if (null == categoryType) {
             this.categoryType = null;
-        else
+        } else {
             this.categoryType = categoryType.toString();
+        }
     }
 
     public Set<COABO> getCurrentSubCategory() {
@@ -192,14 +194,15 @@ public class COABO extends BusinessObject {
     }
 
     @Override
-    public final boolean equals(Object otherObject) {
+    public final boolean equals(final Object otherObject) {
         if (!(otherObject instanceof COABO)) {
             return false;
         }
 
         COABO other = (COABO) otherObject;
-        if (other.getAccountId().equals(this.accountId))
+        if (other.getAccountId().equals(this.accountId)) {
             return true;
+        }
         return false;
     }
 
@@ -207,9 +210,10 @@ public class COABO extends BusinessObject {
     public int hashCode() {
         if (this.getAccountId() == null) {
             return super.hashCode();
-        } else {
-            return (this.getAccountId().hashCode());
         }
+
+        return this.getAccountId().hashCode();
+        
     }
 
     /**
@@ -217,7 +221,7 @@ public class COABO extends BusinessObject {
      * comparison since GL codes may have numbers <em>and</em> letters.
      */
     public class GLCodeComparator implements Comparator<COABO> {
-        public int compare(COABO coa1, COABO coa2) {
+        public int compare(final COABO coa1, final COABO coa2) {
             return coa1.getAssociatedGlcode().getGlcode().compareTo(coa2.getAssociatedGlcode().getGlcode());
         }
     }

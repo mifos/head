@@ -87,7 +87,6 @@ public interface CollectionSheetEntryConstants {
     public String ISCENTERHIERARCHYEXISTS = "isCenterHierarchyExists";
     public String LOANS = "loans";
     public String SAVINGS = "savings";
-    public String CLIENT_ATTENDANCE = "clientAttendance";
     public String COLLECTION_SHEET_ENTRY = "collectionSheetEntry";
     public String CUSTOMERACCOUNTS = "customeraccounts";
     public String ERRORLOANS = "errorloans";

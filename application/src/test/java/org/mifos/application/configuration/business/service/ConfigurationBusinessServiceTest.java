@@ -36,6 +36,7 @@ public class ConfigurationBusinessServiceTest extends TestCase {
 
     private ConfigurationPersistence configPersistenceMock;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         configPersistenceMock = createMock(ConfigurationPersistence.class);

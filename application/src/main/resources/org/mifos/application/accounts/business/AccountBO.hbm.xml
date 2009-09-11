@@ -549,6 +549,7 @@
 	
 	<sql-query name="findCustomerAtTopOfHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="parentCustomerId" type="integer" />
 		<return-scalar column="levelId" type="short" />
 		<return-scalar column="name" type="string" />
 		<return-scalar column="searchId" type="string" />
@@ -556,6 +557,7 @@
 		<return-scalar column="attendanceId" type="short" />
 		<![CDATA[
 			select c.customer_id as customerId, 
+			        c.parent_customer_id as parentCustomerId, 
 					c.customer_level_id as levelId, 
 					c.display_name as name,
 					c.search_id as searchId, 
@@ -570,6 +572,7 @@
 
 	<sql-query name="findCustomersWithinHierarchyAsDto">
 	    <return-scalar column="customerId" type="integer" />
+	    <return-scalar column="parentCustomerId" type="integer" />
 		<return-scalar column="levelId" type="short" />
 		<return-scalar column="name" type="string" />
 		<return-scalar column="searchId" type="string" />
@@ -577,6 +580,7 @@
 		<return-scalar column="attendanceId" type="short" />
 		<![CDATA[
 			select c.customer_id as customerId, 
+			        c.parent_customer_id as parentCustomerId, 
 					c.customer_level_id as levelId, 
 					c.display_name as name,
 					c.search_id as searchId, 
@@ -595,12 +599,14 @@
 	<sql-query name="findLoanDisbursementsforCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="accountStateId" type="short" />
 		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="productId" type="short" />
 		<return-scalar column="currencyId" type="short" />
 		<return-scalar column="disbursementAmount" type="big_decimal" />
 		<return-scalar column="payInterestAtDisbursement" type="short" />
 		<![CDATA[
-		select c.customer_id as customerId, a.account_id as accountId, po.prd_offering_short_name as productShortName,
+		select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId,
 		        la.loan_amount_currency_id as currencyId, la.loan_amount as disbursementAmount, la.interest_at_disb as payInterestAtDisbursement       
 				from loan_account la
 				inner join account a on la.account_id=a.account_id
@@ -616,7 +622,9 @@
 	<sql-query name="findLoanRepaymentsforCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="accountStateId" type="short" />
 		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="productId" type="short" />
 		<return-scalar column="currencyId" type="short" />
 		<return-scalar column="principalDue" type="big_decimal" />
 		<return-scalar column="principalPaid" type="big_decimal" />
@@ -629,7 +637,7 @@
 		<return-scalar column="miscPenaltyDue" type="big_decimal" />
 		<return-scalar column="miscPenaltyPaid" type="big_decimal" />
 		<![CDATA[
-			select c.customer_id as customerId, a.account_id as accountId, po.prd_offering_short_name as productShortName, lse.principal_currency_id as currencyId, 
+			select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, lse.principal_currency_id as currencyId, 
 					sum(lse.principal) as principalDue,
 					sum(lse.principal_paid) as principalPaid,
 					sum(lse.interest) as interestDue,
@@ -650,8 +658,8 @@
 			and c.search_id like :SEARCH_ID
 			and c.branch_id = :BRANCH_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id not in (3 , 4)
-			group by c.customer_id, a.account_id, po.prd_offering_short_name, lse.principal_currency_id
+			and a.account_state_id in (5, 9)
+			group by c.customer_id, a.account_id, a.account_state_id, po.prd_offering_short_name, po.prd_offering_id, lse.principal_currency_id
 		]]>
 	</sql-query>
 
@@ -677,7 +685,7 @@
 			and c.search_id like :SEARCH_ID
 			and c.branch_id = :BRANCH_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id not in (3 , 4)
+			and a.account_state_id in (5, 9)
 			group by c.customer_id, a.account_id, lfs.amount_currency_id
 		]]>
 	</sql-query>
@@ -785,26 +793,33 @@
 	<sql-query name="findSavingsDepositsforCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
 		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
 		<return-scalar column="currencyId" type="short" />
 		<return-scalar column="depositDue" type="big_decimal" />
 		<return-scalar column="depositPaid" type="big_decimal" />
 		<![CDATA[
-		   select c.customer_id as customerId, a.account_id as accountId, po.prd_offering_short_name as productShortName,
+		    select c.customer_id as customerId, 
+		   			a.account_id as accountId, 
+		   			po.prd_offering_id as productId, 
+		   			po.prd_offering_short_name as productShortName,
+		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
                     sse.deposit_currency_id as currencyId,
 					sum(sse.deposit) as depositDue,
 					sum(sse.deposit_paid) as depositPaid
 			from saving_schedule as sse
-			join savings_account l on sse.account_id = l.account_id
-			join account a on l.account_id = a.account_id
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
 			join customer c on a.customer_id = c.customer_id
-			join prd_offering po on l.prd_offering_id = po.prd_offering_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
 			where sse.action_date <= date(:TRANSACTION_DATE)
 			and sse.payment_status= 0
 			and c.search_id like :SEARCH_ID
-			and c.branch_id != :BRANCH_ID
+			and c.branch_id = :BRANCH_ID
 			and c.status_id in (3,4,9,10,13)
-			group by c.customer_id, a.account_id, po.prd_offering_short_name, sse.deposit_currency_id
+			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
+			order by c.customer_id, a.account_id, po.prd_offering_name
 		]]>
 	</sql-query>
 	

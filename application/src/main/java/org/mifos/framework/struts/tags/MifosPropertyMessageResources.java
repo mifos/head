@@ -36,17 +36,15 @@ import org.mifos.framework.util.helpers.MifosSelectHelper;
 
 public class MifosPropertyMessageResources extends PropertyMessageResources {
 
-    private Map dbMap_labels = new ConcurrentHashMap();
-    private Map dbMap_Values = new ConcurrentHashMap();
-    // private MifosLogger logger =
-    // MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
-    private MasterPersistence dao = new MasterPersistence();
+    private final Map dbMap_labels = new ConcurrentHashMap();
+    private final Map dbMap_Values = new ConcurrentHashMap();
+    private final MasterPersistence dao = new MasterPersistence();
 
-    public MifosPropertyMessageResources(MessageResourcesFactory factory, String config, boolean returnNull) {
+    public MifosPropertyMessageResources(final MessageResourcesFactory factory, final String config, final boolean returnNull) {
         super(factory, config, returnNull);
     }
 
-    public MifosPropertyMessageResources(MessageResourcesFactory factory, String config) {
+    public MifosPropertyMessageResources(final MessageResourcesFactory factory, final String config) {
         super(factory, config);
     }
 
@@ -59,7 +57,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      * Used in one method: LabelTagUtils.getLabel()
      */
     @Override
-    public String getMessage(Locale locale, String key) {
+    public String getMessage(final Locale locale, final String key) {
 
         String returnVal = null;
 
@@ -82,8 +80,9 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
             // (returnVal == null ? "null" : returnVal) );
         }
 
-        if (returnVal == null)
+        if (returnVal == null) {
             returnVal = (String) dbMap_labels.get(new BundleKey(locale, key));
+        }
 
         if (returnVal == null) {
             // try to get it from the database
@@ -111,7 +110,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      * Only used in one method (LabelTagUtils.getCustomValueListElements), which
      * may never be called
      */
-    public Collection getCustomValueListElements(Locale locale, String key, String mappingKey) {
+    public Collection getCustomValueListElements(final Locale locale, final String key, final String mappingKey) {
 
         Collection returnVal = null;
         // try to get from the local hashmap
@@ -122,12 +121,13 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
             try {
                 short locale_id = dao.getLocaleId(locale);
                 CustomValueList entity = null;
-                if (mappingKey == null || mappingKey.equals(""))
+                if (mappingKey == null || mappingKey.equals("")) {
                     entity = dao.getLookUpEntity(key, locale_id);
-                else {
+                } else {
                     String[] mappingValues = MifosSelectHelper.getInstance().getValue(mappingKey);
-                    if (mappingValues != null && mappingValues.length == 2)
-                        entity = dao.getCustomValueList(key, locale_id, mappingValues[0], mappingValues[1]);
+                    if (mappingValues != null && mappingValues.length == 2) {
+                        entity = dao.getCustomValueList(key, mappingValues[0], mappingValues[1]);
+                    }
                 }
                 if (entity != null) {
                     returnVal = entity.getCustomValueListElements();
@@ -146,7 +146,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      * Only called from one place: MifosPropertyMessageResources.getMessage in
      * order to get a label.
      */
-    public CustomValueList getEntity(Locale locale, String key) {
+    public CustomValueList getEntity(final Locale locale, final String key) {
         CustomValueList entity = null;
         try {
             short locale_id = dao.getLocaleId(locale);

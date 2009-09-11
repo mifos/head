@@ -48,9 +48,9 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
         super();
     }
 
-    protected LoanBO accountBO = null;
-    protected CustomerBO center = null;
-    protected CustomerBO group = null;
+    protected LoanBO accountBO;
+    protected CustomerBO center;
+    protected CustomerBO group;
     protected AccountPersistence accountPersistence;
 
     @Override
@@ -63,6 +63,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        super.tearDown();
         try {
             TestObjectFactory.cleanUp(accountBO);
             TestObjectFactory.cleanUp(group);
@@ -71,9 +72,9 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
-        StaticHibernateUtil.closeSession();
-        super.tearDown();
     }
 
     public LoanBO createLoanAccount() {

@@ -29,7 +29,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -47,7 +46,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomValueListElement;
@@ -121,15 +119,15 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP",
                 currentDate);
-        
+
         ProductDto loanOfferingDto = new ProductDto(loanOffering.getPrdOfferingId(), loanOffering
                 .getPrdOfferingShortName());
         ProductDto savingOfferingDto = new ProductDto(savingsOffering.getPrdOfferingId(), savingsOffering
                 .getPrdOfferingShortName());
-        
+
         List<ProductDto> loanProducts = Arrays.asList(loanOfferingDto);
         List<ProductDto> savingsProducts = Arrays.asList(savingOfferingDto);
-        
+
         UserContext userContext = TestObjectFactory.getContext();
         String result = new BulkEntryDisplayHelper().buildTableHeadings(loanProducts, savingsProducts,
                 userContext.getPreferredLocale()).toString();
@@ -162,21 +160,19 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         // Assert that the extracted attendance types are the ones expected
         final String[] EXPECTED_ATTENDANCE_TYPES = { "P", "A", "AA", "L" };
         List<CustomValueListElement> attendanceTypesCustomValueList = new MasterPersistence().getCustomValueList(
-                MasterConstants.ATTENDENCETYPES, (short) 1,
+                MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements();
-        
+
         List<String> attendanceTypesLookupValueList = new ArrayList<String>();
         for (CustomValueListElement attendanceTypeCustomValueListElement : attendanceTypesCustomValueList) {
             attendanceTypesLookupValueList.add(attendanceTypeCustomValueListElement.getLookUpValue());
         }
-       Assert.assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
-
-        HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
+        Assert.assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
 
         new BulkEntryDisplayHelper().buildForCenter(bulkEntry.getBulkEntryParent(), bulkEntry.getLoanProducts(),
-                bulkEntry.getSavingProducts(), clientAttendance, attendanceTypesCustomValueList, builder, Methods.get
-                        .toString(), TestObjectFactory.getContext(), (short) 1);
+                bulkEntry.getSavingProducts(), attendanceTypesCustomValueList, builder, Methods.get.toString(),
+                TestObjectFactory.getContext());
         String result = builder.toString();
 
         StringAssert.assertContains("Group", result);
@@ -191,7 +187,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         StringAssert.assertContains("withDrawalAmountEntered", result);
     }
 
-    private LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {
+    private LoanOfferingBO createLoanOfferingBO(final String prdOfferingName, final String shortName) {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
@@ -205,8 +201,10 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
                 CUSTOMER_MEETING));
         Date startDate = new Date(System.currentTimeMillis());
         center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
+                CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(startDate, meeting);
         LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", startDate, meeting);
         groupAccount = TestObjectFactory.createLoanAccount("42423142341", group,
@@ -259,8 +257,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         bulkEntrySubChild.getLoanAccountDetails().get(0).setDisBursementAmountEntered(
                 clientAccount.getLoanAmount().toString());
         bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(clientLoanAccountView.getPrdOfferingId());
-        
-        
+
         ProductDto loanOfferingDto = new ProductDto(loanOffering1.getPrdOfferingId(), loanOffering1
                 .getPrdOfferingShortName());
         ProductDto loanOfferingDto2 = new ProductDto(loanOffering2.getPrdOfferingId(), loanOffering2
@@ -274,29 +271,29 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
                 .getPrdOfferingShortName());
         ProductDto savingOfferingDto3 = new ProductDto(savingsOffering3.getPrdOfferingId(), savingsOffering3
                 .getPrdOfferingShortName());
-        
+
         List<ProductDto> savingsProducts = Arrays.asList(savingOfferingDto, savingOfferingDto2, savingOfferingDto3);
-        
+
         final PersonnelView loanOfficer = getPersonnelView(center.getPersonnel());
         final OfficeView officeView = null;
-        final HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
         final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
-        
+
         CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto(bulkEntryParent, loanOfficer,
                 officeView, getPaymentTypeView(), new java.util.Date(), "324343242", new java.util.Date(),
-                loanProducts, savingsProducts, clientAttendance, attendanceTypesList);
+                loanProducts, savingsProducts, attendanceTypesList);
 
         return bulkEntry;
 
     }
 
-    private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType, LoanOfferingBO loanOfferingBO) {
+    private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType,
+            final LoanOfferingBO loanOfferingBO) {
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOfferingBO, disbursalType);
 
     }
 
-    private LoanAccountView getLoanAccountView(LoanBO account) {
+    private LoanAccountView getLoanAccountView(final LoanBO account) {
         LoanAccountView accountView = TestObjectFactory.getLoanAccountView(account);
         List<AccountActionDateEntity> actionDates = new ArrayList<AccountActionDateEntity>();
         actionDates.add(account.getAccountActionDate((short) 1));
@@ -305,7 +302,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         return accountView;
     }
 
-    private SavingsAccountView getSavingsAccountView(SavingsBO account) {
+    private SavingsAccountView getSavingsAccountView(final SavingsBO account) {
         final Integer customerId = null;
         final String savingOfferingShortName = account.getSavingsOffering().getPrdOfferingShortName();
         final Short savingOfferingId = account.getSavingsOffering().getPrdOfferingId();
@@ -317,14 +314,14 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
         SavingsAccountView accountView = new SavingsAccountView(account.getAccountId(), customerId,
                 savingOfferingShortName, savingOfferingId, savingsTypeId, reccomendedAmountUnitId);
-        
+
         accountView.addAccountTrxnDetail(TestObjectFactory.getBulkEntryAccountActionView(account
                 .getAccountActionDate((short) 1)));
 
         return accountView;
     }
 
-    private CustomerView getCusomerView(CustomerBO customer) {
+    private CustomerView getCusomerView(final CustomerBO customer) {
         CustomerView customerView = new CustomerView();
         customerView.setCustomerId(customer.getCustomerId());
         customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
@@ -340,7 +337,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         return customerView;
     }
 
-    private PersonnelView getPersonnelView(PersonnelBO personnel) {
+    private PersonnelView getPersonnelView(final PersonnelBO personnel) {
         PersonnelView personnelView = new PersonnelView(personnel.getPersonnelId(), personnel.getDisplayName());
         return personnelView;
     }
@@ -350,7 +347,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         return paymentTypeView;
     }
 
-    private CustomerAccountView getCustomerAccountView(CustomerBO customer) {
+    private CustomerAccountView getCustomerAccountView(final CustomerBO customer) {
         CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId());
 
         List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();

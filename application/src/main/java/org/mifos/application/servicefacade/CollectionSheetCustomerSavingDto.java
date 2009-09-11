@@ -19,6 +19,8 @@
  */
 package org.mifos.application.servicefacade;
 
+import java.math.BigDecimal;
+
 /**
  *
  */
@@ -26,9 +28,13 @@ public class CollectionSheetCustomerSavingDto {
 
     private Integer customerId;
     private Integer accountId;
-    private Double payment;
+    private Short productId;
     private String productShortName;
-    
+    private Short recommendedAmountUnitId;
+    private Short currencyId;
+    private BigDecimal depositDue = BigDecimal.ZERO;
+    private BigDecimal depositPaid = BigDecimal.ZERO;
+
     public CollectionSheetCustomerSavingDto() {
         // default constructor for hibernate
     }
@@ -49,12 +55,12 @@ public class CollectionSheetCustomerSavingDto {
         this.accountId = accountId;
     }
 
-    public Double getPayment() {
-        return this.payment;
+    public Short getProductId() {
+        return this.productId;
     }
 
-    public void setPayment(final Double payment) {
-        this.payment = payment;
+    public void setProductId(final Short productId) {
+        this.productId = productId;
     }
 
     public String getProductShortName() {
@@ -63,5 +69,37 @@ public class CollectionSheetCustomerSavingDto {
 
     public void setProductShortName(final String productShortName) {
         this.productShortName = productShortName;
+    }
+
+    public Short getCurrencyId() {
+        return this.currencyId;
+    }
+
+    public void setCurrencyId(final Short currencyId) {
+        this.currencyId = currencyId;
+    }
+    
+    public Short getRecommendedAmountUnitId() {
+        return this.recommendedAmountUnitId;
+    }
+
+    public void setRecommendedAmountUnitId(final Short recommendedAmountUnitId) {
+        this.recommendedAmountUnitId = recommendedAmountUnitId;
+    }
+
+    public void setDepositDue(final BigDecimal depositDue) {
+        if (depositDue != null) {
+            this.depositDue = depositDue;
+        }
+    }
+
+    public void setDepositPaid(final BigDecimal depositPaid) {
+        if (depositPaid != null) {
+            this.depositPaid = depositPaid;
+        }
+    }
+
+    public Double getTotalDepositAmount() {
+        return depositDue.subtract(depositPaid).doubleValue();
     }
 }

@@ -62,7 +62,7 @@ public class MasterPersistence extends Persistence {
      * Only two non-test usages, one that may never be called and one for
      * getting labels.
      */
-    public CustomValueList getLookUpEntity(String entityName, Short localeId) throws ApplicationException,
+    public CustomValueList getLookUpEntity(final String entityName, final Short localeId) throws ApplicationException,
             SystemException {
         try {
             Session session = getSession();
@@ -80,7 +80,7 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-    private List<CustomValueListElement> lookUpValue(String entityName, Short localeId, Session session)
+    private List<CustomValueListElement> lookUpValue(final String entityName, final Short localeId, final Session session)
             throws PersistenceException {
         Query queryEntity = session.getNamedQuery("masterdata.entitylookupvalue");
         queryEntity.setString("entityType", entityName);
@@ -89,7 +89,7 @@ public class MasterPersistence extends Persistence {
         return entityList;
     }
 
-    public short getLocaleId(Locale locale) {
+    public short getLocaleId(final Locale locale) {
         return Localization.getInstance().getLocaleId();
     }
 
@@ -98,7 +98,7 @@ public class MasterPersistence extends Persistence {
      * MifosPropertyMessageResources.getCustomValueListElements (and that method
      * may never be called)
      */
-    public CustomValueList getCustomValueList(String entityName, Short localeId, String classPath, String column)
+    public CustomValueList getCustomValueList(final String entityName, final String classPath, final String column)
             throws ApplicationException, SystemException {
         Session session = null;
         try {
@@ -108,15 +108,17 @@ public class MasterPersistence extends Persistence {
             queryEntity.setString("entityType", entityName);
 
             CustomValueList entity = (CustomValueList) queryEntity.uniqueResult();
-            entity.setCustomValueListElements(getCustomValueListElements(entityName, localeId, classPath, column,
-                    session));
+            
+            List<CustomValueListElement> listElements = getCustomValueListElements(entityName, classPath, column,
+                    session);
+            entity.setCustomValueListElements(listElements);
             return entity;
         } catch (Exception e) {
             throw new ApplicationException(e);
         }
     }
 
-    private List<CustomValueListElement> getCustomValueListElements(final String entityName, final Short localeId,
+    private List<CustomValueListElement> getCustomValueListElements(final String entityName,
             final String entityClass, final String column, final Session session) {
         Query queryEntity = session
                 .createQuery("select new org.mifos.application.master.business.CustomValueListElement(" + "mainTable."
@@ -137,7 +139,7 @@ public class MasterPersistence extends Persistence {
         return entityList;
     }
 
-    public List<MasterDataEntity> retrieveMasterEntities(Class clazz, Short localeId) throws PersistenceException {
+    public List<MasterDataEntity> retrieveMasterEntities(final Class clazz, final Short localeId) throws PersistenceException {
         try {
             Session session = getSession();
             List<MasterDataEntity> masterEntities = session.createQuery("from " + clazz.getName()).list();
@@ -151,7 +153,7 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-    public MasterDataEntity retrieveMasterEntity(Short entityId, Class clazz, Short localeId)
+    public MasterDataEntity retrieveMasterEntity(final Short entityId, final Class clazz, final Short localeId)
             throws PersistenceException {
         try {
             Session session = getSession();
@@ -169,7 +171,7 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(EntityType entityType)
+    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(final EntityType entityType)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, entityType.getValue());
@@ -177,7 +179,7 @@ public class MasterPersistence extends Persistence {
 
     }
 
-    public CustomFieldDefinitionEntity retrieveOneCustomFieldDefinition(Short fieldId) throws PersistenceException {
+    public CustomFieldDefinitionEntity retrieveOneCustomFieldDefinition(final Short fieldId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("fieldId", fieldId);
         return (CustomFieldDefinitionEntity) execUniqueResultNamedQuery(NamedQueryConstants.RETRIEVE_ONE_CUSTOM_FIELD,
@@ -189,7 +191,7 @@ public class MasterPersistence extends Persistence {
      * This method is used to retrieve both custom and fixed value list
      * elements.
      */
-    public List<ValueListElement> retrieveMasterEntities(String entityName, Short localeId) throws PersistenceException {
+    public List<ValueListElement> retrieveMasterEntities(final String entityName, final Short localeId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("entityType", entityName);
         List<ValueListElement> elements = executeNamedQuery(NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
@@ -204,13 +206,13 @@ public class MasterPersistence extends Persistence {
      * 
      * @param localeId - a locale primary key which we now ignore
      */
-    public String retrieveMasterEntities(Integer entityId, Short localeId) throws PersistenceException {
+    public String retrieveMasterEntities(final Integer entityId, final Short localeId) throws PersistenceException {
 
         LookUpValueEntity lookupValue = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class, entityId);
         return MessageLookup.getInstance().lookup(lookupValue);
     }
 
-    public List<MasterDataEntity> retrieveMasterDataEntity(String classPath) throws PersistenceException {
+    public List<MasterDataEntity> retrieveMasterDataEntity(final String classPath) throws PersistenceException {
         List<MasterDataEntity> queryResult = null;
         try {
             queryResult = getSession().createQuery("from " + classPath).list();
@@ -220,7 +222,7 @@ public class MasterPersistence extends Persistence {
         return queryResult;
     }
 
-    public MasterDataEntity getMasterDataEntity(Class clazz, Short id) throws PersistenceException {
+    public MasterDataEntity getMasterDataEntity(final Class clazz, final Short id) throws PersistenceException {
         return (MasterDataEntity) getPersistentObject(clazz, id);
     }
 
@@ -231,7 +233,7 @@ public class MasterPersistence extends Persistence {
      *            - the database id of the LookUpValueLocaleEntity object
      *            representing a ValueListElement
      */
-    public void updateValueListElementForLocale(Integer lookupValueEntityId, String newValue)
+    public void updateValueListElementForLocale(final Integer lookupValueEntityId, final String newValue)
             throws PersistenceException {
         LookUpValueEntity lookupValueEntity = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class,
                 lookupValueEntityId);
@@ -249,8 +251,8 @@ public class MasterPersistence extends Persistence {
 
     }
 
-    public LookUpValueEntity addValueListElementForLocale(DynamicLookUpValueCreationTypes type, Short lookupEnityId,
-            String newElementText) throws PersistenceException {
+    public LookUpValueEntity addValueListElementForLocale(final DynamicLookUpValueCreationTypes type, final Short lookupEnityId,
+            final String newElementText) throws PersistenceException {
 
         // String lookUpName = StringUtils.camelCase(newElementText + "." +
         // System.currentTimeMillis());
@@ -264,7 +266,7 @@ public class MasterPersistence extends Persistence {
      * It would be nicer for this to operate on objects rather than ids, but it
      * is a first step that works.
      */
-    public LookUpValueEntity addValueListElementForLocale(Short lookupEnityId, String newElementText, String lookUpName)
+    public LookUpValueEntity addValueListElementForLocale(final Short lookupEnityId, final String newElementText, final String lookUpName)
             throws PersistenceException {
         MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) getPersistentObject(MifosLookUpEntity.class, lookupEnityId);
         LookUpValueEntity lookUpValueEntity = new LookUpValueEntity();
@@ -294,7 +296,7 @@ public class MasterPersistence extends Persistence {
      * It would be nicer for this to operate on objects rather than ids, but it
      * is a first step that works.
      */
-    public void deleteValueListElement(Integer lookupValueEntityId) throws PersistenceException {
+    public void deleteValueListElement(final Integer lookupValueEntityId) throws PersistenceException {
         LookUpValueEntity lookUpValueEntity = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class,
                 lookupValueEntityId);
 
@@ -307,12 +309,12 @@ public class MasterPersistence extends Persistence {
         MifosConfiguration.getInstance().deleteKey(lookUpValueEntity.getLookUpName());
     }
 
-    public void addLookUpEntity(MifosLookUpEntity lookUpEntity) throws PersistenceException {
+    public void addLookUpEntity(final MifosLookUpEntity lookUpEntity) throws PersistenceException {
 
         createOrUpdate(lookUpEntity);
     }
 
-    public LookUpValueLocaleEntity retrieveOneLookUpValueLocaleEntity(short localeId, int lookUpId)
+    public LookUpValueLocaleEntity retrieveOneLookUpValueLocaleEntity(final short localeId, final int lookUpId)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("aLocaleId", Short.valueOf(localeId));

@@ -106,7 +106,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
                 .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate);
-
+        
         final List<CollectionSheetCustomerDto> populatedCollectionSheetCustomer = new ArrayList<CollectionSheetCustomerDto>();
         for (CollectionSheetCustomerDto collectionSheetCustomer : customerHierarchy) {
 
@@ -148,8 +148,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final CollectionSheetCustomerAccountDto totalCollectionFee = sumAccountCollectionFees(customerAccountCollectionFees);
         
         final int accountId = Math.max(totalCollection.getAccountId(), totalCollectionFee.getAccountId());
+        final int currencyId = Math.max(totalCollection.getCurrencyId(), totalCollectionFee.getCurrencyId());
 
-        return new CollectionSheetCustomerAccountDto(accountId, totalCollection.getTotalCustomerAccountCollectionFee()
+        return new CollectionSheetCustomerAccountDto(accountId, (short) currencyId, totalCollection
+                .getTotalCustomerAccountCollectionFee()
                 + totalCollectionFee.getTotalCustomerAccountCollectionFee());
     }
 
@@ -158,7 +160,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         Double totalFee = Double.valueOf("0.0");
 
         if (customerAccountCollectionFees == null) {
-            return new CollectionSheetCustomerAccountDto(-1, totalFee);
+            return new CollectionSheetCustomerAccountDto(-1, Short.valueOf("1"), totalFee);
         }
 
         if (customerAccountCollectionFees.size() > 1) {
@@ -166,6 +168,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
 
         return new CollectionSheetCustomerAccountDto(customerAccountCollectionFees.get(0).getAccountId(),
+                customerAccountCollectionFees.get(0).getCurrencyId(),
                 customerAccountCollectionFees.get(0).getTotalFeeAmountDue());
     }
 
@@ -174,7 +177,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         Double totalFee = Double.valueOf("0.0");
         
         if (customerAccountCollections == null) {
-            return new CollectionSheetCustomerAccountDto(-1, totalFee);
+            return new CollectionSheetCustomerAccountDto(-1, Short.valueOf("-1"), totalFee);
         }
 
         if (customerAccountCollections.size() > 1) {
@@ -182,6 +185,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
         
         return new CollectionSheetCustomerAccountDto(customerAccountCollections.get(0).getAccountId(),
+                customerAccountCollections.get(0).getCurrencyId(),
                 customerAccountCollections.get(0).getAccountCollectionPayment());
     }
 
@@ -192,6 +196,11 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             final List<CollectionSheetCustomerLoanDto> allLoanDisbursements,
             final List<CollectionSheetCustomerSavingDto> associatedSavingAccount,
             final CollectionSheetCustomerAccountDto customerAccount) {
+        
+        List<CollectionSheetCustomerSavingDto> savingAccounts = new ArrayList<CollectionSheetCustomerSavingDto>();
+        if (associatedSavingAccount != null) {
+            savingAccounts = associatedSavingAccount;
+        }
 
         if (outstandingFeesOnLoanRepayments == null) {
 
@@ -207,16 +216,19 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
             
             return new CollectionSheetCustomerDto(collectionSheetCustomer, loanRepaymentsAndDisbursements,
-                    associatedSavingAccount, customerAccount);
+                    savingAccounts, customerAccount);
         }
 
         final List<CollectionSheetCustomerLoanDto> loanRepaymentsAndDisbursementsWithFees = new ArrayList<CollectionSheetCustomerLoanDto>();
-        for (CollectionSheetCustomerLoanDto collectionSheetCustomerLoan : associatedLoanRepayments) {
-            final List<CollectionSheetLoanFeeDto> loanFeesAgainstAccountOfCustomer = outstandingFeesOnLoanRepayments
-                    .get(collectionSheetCustomerLoan.getAccountId());
+        
+        if (associatedLoanRepayments != null) {
+            for (CollectionSheetCustomerLoanDto collectionSheetCustomerLoan : associatedLoanRepayments) {
+                final List<CollectionSheetLoanFeeDto> loanFeesAgainstAccountOfCustomer = outstandingFeesOnLoanRepayments
+                        .get(collectionSheetCustomerLoan.getAccountId());
 
-            loanRepaymentsAndDisbursementsWithFees.add(populateCollectionSheetCustomerLoan(collectionSheetCustomerLoan,
-                    loanFeesAgainstAccountOfCustomer));
+                loanRepaymentsAndDisbursementsWithFees.add(populateCollectionSheetCustomerLoan(
+                        collectionSheetCustomerLoan, loanFeesAgainstAccountOfCustomer));
+            }
         }
         
         if (allLoanDisbursements != null) {
@@ -224,7 +236,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
 
         return new CollectionSheetCustomerDto(collectionSheetCustomer, loanRepaymentsAndDisbursementsWithFees,
-                associatedSavingAccount, customerAccount);
+                savingAccounts, customerAccount);
     }
 
     private CollectionSheetCustomerLoanDto populateCollectionSheetCustomerLoan(final CollectionSheetCustomerLoanDto loan,

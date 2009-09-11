@@ -22,10 +22,13 @@ package org.mifos.application.servicefacade;
 public class CollectionSheetCustomerAccountDto {
     
     private final Integer accountId;
+    private final Short currencyId;
     private final Double totalCustomerAccountCollectionFee;
     
-    public CollectionSheetCustomerAccountDto(final Integer accountId, final Double totalCustomerAccountCollectionFee) {
+    public CollectionSheetCustomerAccountDto(final Integer accountId, final Short currencyId,
+            final Double totalCustomerAccountCollectionFee) {
         this.accountId = accountId;
+        this.currencyId = currencyId;
         this.totalCustomerAccountCollectionFee = totalCustomerAccountCollectionFee;
     }
 
@@ -35,6 +38,10 @@ public class CollectionSheetCustomerAccountDto {
 
     public Double getTotalCustomerAccountCollectionFee() {
         return this.totalCustomerAccountCollectionFee;
+    }
+
+    public Short getCurrencyId() {
+        return this.currencyId;
     }
 
 }

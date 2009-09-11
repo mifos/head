@@ -149,15 +149,6 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<CustomerView> findClientsThatAreActiveOrOnHoldInCustomerHierarchy(final String searchId,
-            final Short officeId)
-            throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", searchId + ".%");
-        queryParameters.put("OFFICE_ID", officeId);
-        return executeNamedQuery("findClientsThatAreActiveOrOnHoldInCustomerHierarchy", queryParameters);
-    }
-
     public List<Integer> getChildrenForParent(final String searchId, final Short officeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
@@ -198,7 +189,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     /*
-     * TODO - keithw - why is java.sql.date being used/returned throughout the
+     * FIXME - keithw - why is java.sql.date being used/returned throughout the
      * system? refactor away from this in favour of java.util.Date (use this in
      * hibernate type info)
      */
@@ -1148,10 +1139,8 @@ public class CustomerPersistence extends Persistence {
                 + "join la.loanOffering as lo "
                 + "where c.office.officeId = "
                 + branchId + " and c.searchId like '" + searchId + ".%' " + "and c.customerStatus.id in (3,4,9,10,13) "
-                + "and la.accountState.id in (5, 9) "
-                + "or (la.accountState.id in (3, 4) and date('"
-                + new LocalDate(transactionDate)
-                + "') >= la.disbursementDate) order by c.searchId";
+                + "and (la.accountState.id in (5, 9) or (la.accountState.id in (3, 4) and date('"
+                + new LocalDate(transactionDate) + "') >= la.disbursementDate)) " + "order by c.searchId";
 
 
         return executeNonUniqueHqlQuery(hqlQuery);

@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.joda.time.LocalDate;
-import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -35,8 +34,15 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
+/**
+ *
+ */
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
+    /*
+     * FIXME - keithw - no need to have MasterPersistence, DAO should
+     * extend/composed of base class implementing hibernate functionality.
+     */
     private final MasterPersistence masterPersistence;
     private HibernateUtil hibernateUtil;
 
@@ -44,20 +50,13 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         this.masterPersistence = masterPersistence;
     }
 
-    public AttendanceType getAttendance(final Integer clientId, final LocalDate meetingDate) throws PersistenceException {
-        ClientAttendanceBO result = getClientAttendance(clientId, meetingDate);
-        if (result == null) {
-            throw new PersistenceException("Could not find attendance for clientId " + clientId + " and meeting date "
-                    + meetingDate.toDateMidnight().toDate());
-        }
-        return result.getAttendanceAsEnum();
-    }
-
     @SuppressWarnings("unchecked")
-    public List<ClientAttendanceDto> findClientAttendanceForOffice(final Date meetingDate, final Short officeId) {
+    public List<ClientAttendanceDto> findClientAttendanceForOffice(final Date meetingDate, final Short officeId,
+            final String searchId) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
         queryParameters.put("OFFICE_ID", officeId);
+        queryParameters.put("SEARCH_ID", searchId + ".%");
 
         try {
             List<ClientAttendanceDto> queryResult = masterPersistence.executeNamedQuery("ClientAttendance.getAttendanceForOffice",
@@ -93,20 +92,6 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
             session.saveOrUpdate(clientAttendanceBO);
         }
         session.flush();
-    }
-
-    private ClientAttendanceBO getClientAttendance(final Integer clientId, final LocalDate meetingDate) throws PersistenceException {
-        ClientAttendanceBO result;
-        try {
-            Map<String, Object> queryParameters = new HashMap<String, Object>();
-            queryParameters.put("CUSTOMER_ID", clientId);
-            queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
-            result = (ClientAttendanceBO) masterPersistence.execUniqueResultNamedQuery(
-                    "ClientAttendance.getAttendanceForClientAndMeetingDate", queryParameters);
-            return result;
-        } catch (NumberFormatException e) {
-            throw new PersistenceException(e);
-        }
     }
     
     private HibernateUtil getHibernateUtil() {

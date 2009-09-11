@@ -27,17 +27,16 @@ import org.mifos.framework.util.helpers.Money;
 public class CollectionSheetEntrySavingsInstallmentView extends CollectionSheetEntryInstallmentView {
 
     private final Money deposit;
-
     private final Money depositPaid;
 
-    public CollectionSheetEntrySavingsInstallmentView(Integer accountId, Integer customerId, Short installmentId,
-            Integer actionDateId, Date actionDate, Money deposit, Money depositPaid) {
+    public CollectionSheetEntrySavingsInstallmentView(final Integer accountId, final Integer customerId, final Short installmentId,
+            final Integer actionDateId, final Date actionDate, final Money deposit, final Money depositPaid) {
         super(accountId, customerId, installmentId, actionDateId, actionDate);
         this.deposit = deposit;
         this.depositPaid = depositPaid;
     }
 
-    public CollectionSheetEntrySavingsInstallmentView(Integer accountId, Integer customerId) {
+    public CollectionSheetEntrySavingsInstallmentView(final Integer accountId, final Integer customerId) {
         super(accountId, customerId, null, null, null);
         this.deposit = null;
         this.depositPaid = null;

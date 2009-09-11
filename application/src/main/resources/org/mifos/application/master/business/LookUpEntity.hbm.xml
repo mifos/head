@@ -27,8 +27,8 @@
 		<![CDATA[select new org.mifos.application.master.business.CustomValueList(entity.entityId ,label.localeId,label.labelName) 
 				from org.mifos.application.master.business.LookUpEntity entity, 
 				org.mifos.application.master.business.LookUpLabelEntity label 
-				where entity.entityId = label.lookUpEntity.entityId and  
-				entity.entityType=:entityType]]>
+				where entity.entityId = label.lookUpEntity.entityId 
+				and entity.entityType=:entityType]]>
 	</query>
 	<query name="masterdata.entitylookupvalue">
 		<![CDATA[select new org.mifos.application.master.business.CustomValueListElement(

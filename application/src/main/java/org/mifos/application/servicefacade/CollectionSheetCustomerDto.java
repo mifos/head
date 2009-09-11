@@ -29,6 +29,7 @@ public class CollectionSheetCustomerDto {
     private Integer customerId;
     private String name;
     private Short levelId;
+    private Integer parentCustomerId;
     private String searchId;
     private Short branchId;
     private Short attendanceId;
@@ -62,6 +63,7 @@ public class CollectionSheetCustomerDto {
         this.levelId = collectionSheetCustomer.getLevelId();
         this.searchId = collectionSheetCustomer.getSearchId();
         this.branchId = collectionSheetCustomer.getBranchId();
+        this.parentCustomerId = collectionSheetCustomer.getParentCustomerId();
         this.collectionSheetCustomerAccount = collectionSheetCustomerAccount;
         this.attendanceId = collectionSheetCustomer.getAttendanceId();
         this.collectionSheetCustomerLoan = collectionSheetCustomerLoan;
@@ -90,6 +92,14 @@ public class CollectionSheetCustomerDto {
 
     public void setLevelId(final Short levelId) {
         this.levelId = levelId;
+    }
+
+    public Integer getParentCustomerId() {
+        return this.parentCustomerId;
+    }
+
+    public void setParentCustomerId(final Integer parentCustomerId) {
+        this.parentCustomerId = parentCustomerId;
     }
 
     public Short getAttendanceId() {

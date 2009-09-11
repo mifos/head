@@ -19,6 +19,9 @@
  */
 package org.mifos.application.servicefacade;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 
 /**
  * I am a DTO for PrdOfferingBO's
@@ -28,7 +31,7 @@ public class ProductDto {
     private final Short id;
     private final String shortName;
 
-    public ProductDto(Short prdOfferingId, String prdOfferingShortName) {
+    public ProductDto(final Short prdOfferingId, final String prdOfferingShortName) {
         this.id = prdOfferingId;
         this.shortName = prdOfferingShortName;
     }
@@ -39,5 +42,17 @@ public class ProductDto {
 
     public String getShortName() {
         return this.shortName;
+    }
+    
+    @Override
+    public boolean equals(final Object obj) {
+        final ProductDto product = (ProductDto) obj;
+        
+        return new EqualsBuilder().reflectionEquals(this, product);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().reflectionHashCode(this);
     }
 }

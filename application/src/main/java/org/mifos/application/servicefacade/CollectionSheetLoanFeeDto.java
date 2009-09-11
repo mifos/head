@@ -73,7 +73,12 @@ public class CollectionSheetLoanFeeDto {
     }
 
     public void setFeeAmountPaid(final BigDecimal feeAmountPaid) {
-        this.feeAmountPaid = feeAmountPaid;
+        
+        if (feeAmountPaid == null) {
+            this.feeAmountPaid = BigDecimal.ZERO;
+        } else {
+            this.feeAmountPaid = feeAmountPaid;
+        }
     }
 
     public Double getTotalFeeAmountDue() {

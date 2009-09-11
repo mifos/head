@@ -108,7 +108,10 @@ public class CollectionSheetCustomerAccountCollectionDto {
     }
 
     public void setFeeAmountDue(final BigDecimal feeAmountDue) {
-        this.feeAmountDue = feeAmountDue;
+        
+        if (feeAmountDue != null) {
+            this.feeAmountDue = feeAmountDue;
+        }
     }
 
     public BigDecimal getFeeAmountPaid() {
@@ -116,7 +119,10 @@ public class CollectionSheetCustomerAccountCollectionDto {
     }
 
     public void setFeeAmountPaid(final BigDecimal feeAmountPaid) {
-        this.feeAmountPaid = feeAmountPaid;
+        
+        if (feeAmountPaid != null) {
+            this.feeAmountPaid = feeAmountPaid;
+        }
     }
     
     public Double getTotalFeeAmountDue() {

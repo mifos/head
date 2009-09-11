@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
@@ -222,12 +222,10 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
                 "findOutstandingCustomerAccountFeesForTopCustomerOfHierarchyAsDto", queryParameters,
                 CollectionSheetCustomerAccountCollectionDto.class);
 
-        if (accountCollectionFeeForHierarchyCustomer == null) {
-            return accountCollectionsOnCustomerAccountGroupedByCustomerId;
+        if (accountCollectionFeeForHierarchyCustomer != null) {
+            accountCollectionsOnCustomerAccountGroupedByCustomerId.put(customerAtTopOfHierarchyId, Arrays
+                    .asList(accountCollectionFeeForHierarchyCustomer));
         }
-
-        accountCollectionsOnCustomerAccountGroupedByCustomerId.put(customerAtTopOfHierarchyId, Arrays
-                .asList(accountCollectionFeeForHierarchyCustomer));
 
         final Map<String, Object> withinHierarchyQueryParameters = new HashMap<String, Object>();
         withinHierarchyQueryParameters.put("BRANCH_ID", branchId);
@@ -237,6 +235,10 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         final List<CollectionSheetCustomerAccountCollectionDto> customerAccountFees = executeNamedQueryWithResultTransformer(
                 "findOutstandingFeesForCustomerAccountOnCustomerHierarchyAsDto", withinHierarchyQueryParameters,
                 CollectionSheetCustomerAccountCollectionDto.class);
+        
+        if (customerAccountFees == null) {
+            return accountCollectionsOnCustomerAccountGroupedByCustomerId;
+        }
 
         for (CollectionSheetCustomerAccountCollectionDto accountCollectionFee : customerAccountFees) {
 
@@ -276,14 +278,14 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             final Integer customerId = loanDisbursementAccount.getCustomerId();
             final Integer accountId = loanDisbursementAccount.getAccountId();
 
-            Double accountFeeAmount;
+            Double amountDueAtDisbursement;
             if (Constants.YES == loanDisbursementAccount.getPayInterestAtDisbursement()) {
-                accountFeeAmount = findAmountDueWhenInterestIsDueAtDibursementTime(accountId);
+                amountDueAtDisbursement = findAmountDueWhenInterestIsDueAtDibursementTime(accountId);
             } else {
-                accountFeeAmount = new LoanPersistence().getFeeAmountAtDisbursement(accountId);
+                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId);
             }
             
-            loanDisbursementAccount.setDisbursementFeeAmount(accountFeeAmount);
+            loanDisbursementAccount.setAmountDueAtDisbursement(amountDueAtDisbursement);
 
             if (loanDisbursementsGroupedByCustomerId.containsKey(customerId)) {
 
@@ -292,8 +294,8 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
                 loanAccountList.add(loanDisbursementAccount);
 
             } else {
-                final List<CollectionSheetCustomerLoanDto> loanAccountList = Arrays
-                        .<CollectionSheetCustomerLoanDto> asList(loanDisbursementAccount);
+                final List<CollectionSheetCustomerLoanDto> loanAccountList = new ArrayList<CollectionSheetCustomerLoanDto>();
+                loanAccountList.add(loanDisbursementAccount);
 
                 loanDisbursementsGroupedByCustomerId.put(customerId, loanAccountList);
             }
@@ -328,6 +330,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             } else {
                 final List<CollectionSheetCustomerSavingDto> savingAccountsForCustomer = new ArrayList<CollectionSheetCustomerSavingDto>();
                 savingAccountsForCustomer.add(savingAccountDeposit);
+                savingsGroupedByCustomerId.put(customerId, savingAccountsForCustomer);
             }
         }
 

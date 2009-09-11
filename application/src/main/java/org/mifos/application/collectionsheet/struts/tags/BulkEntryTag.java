@@ -21,7 +21,6 @@
 package org.mifos.application.collectionsheet.struts.tags;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +32,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDt
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
@@ -51,6 +49,7 @@ public class BulkEntryTag extends BodyTagSupport {
 
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
+    @SuppressWarnings("unchecked")
     @Override
     public int doStartTag() throws JspException {
 
@@ -69,13 +68,13 @@ public class BulkEntryTag extends BodyTagSupport {
             List<ProductDto> loanProducts = bulkEntry.getLoanProducts();
             List<ProductDto> savingsProducts = bulkEntry.getSavingProducts();
             try {
-                List<CustomValueListElement> custAttTypes = (List<CustomValueListElement>) SessionUtils.getAttribute(
+                final List<CustomValueListElement> custAttTypes = (List<CustomValueListElement>) SessionUtils
+                        .getAttribute(
                         CollectionSheetEntryConstants.CUSTOMERATTENDANCETYPES, request);
+                
                 String method = request.getParameter(CollectionSheetEntryConstants.METHOD);
-                HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
-                        .getAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, request);
-                generateTagData(bulkEntry, loanProducts, savingsProducts, clientAttendance, custAttTypes, method,
-                        builder);
+                
+                generateTagData(bulkEntry, loanProducts, savingsProducts, custAttTypes, method, builder);
             } catch (ApplicationException ae) {
                 throw new JspException(ae);
             } catch (SystemException se) {
@@ -90,11 +89,11 @@ public class BulkEntryTag extends BodyTagSupport {
         return SKIP_BODY;
     }
 
-    private void generateTagData(CollectionSheetEntryGridDto bulkEntry, List<ProductDto> loanProducts,
-            List<ProductDto> savingsProducts, HashMap<Integer, ClientAttendanceDto> clientAttendance,
-            List<CustomValueListElement> custAttTypes, String method, StringBuilder builder)
-            throws ApplicationException, SystemException, JspException {
-        UserContext userContext = ((UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT));
+    private void generateTagData(final CollectionSheetEntryGridDto bulkEntry, final List<ProductDto> loanProducts,
+            final List<ProductDto> savingsProducts, final List<CustomValueListElement> custAttTypes,
+            final String method, final StringBuilder builder)
+            throws SystemException {
+        UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
         BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();
         
         builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts, savingsProducts, userContext
@@ -105,13 +104,13 @@ public class BulkEntryTag extends BodyTagSupport {
         boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();
         if (centerHierachyExists) {
             totals = bulkEntryDisplayHelper.buildForCenter(bulkEntryParentView, loanProducts, savingsProducts,
-                    clientAttendance, custAttTypes, builder, method, userContext, bulkEntry.getOffice().getOfficeId());
+                    custAttTypes, builder, method, userContext);
         } else {
             totals = bulkEntryDisplayHelper.buildForGroup(bulkEntryParentView, loanProducts, savingsProducts,
-                    clientAttendance, custAttTypes, builder, method, userContext, bulkEntry.getOffice().getOfficeId());
+                    custAttTypes, builder, method, userContext);
 
         }
-        int columnSize = (2 * (loanProducts.size() + savingsProducts.size())) + 7;
+        int columnSize = 2 * (loanProducts.size() + savingsProducts.size()) + 7;
         builder.append(bulkEntryDisplayHelper.getEndTable(columnSize));
         builder.append(bulkEntryDisplayHelper.buildTotals(totals, loanProducts.size(), savingsProducts.size(), method,
                 userContext));

@@ -23,10 +23,8 @@ package org.mifos.application.collectionsheet.business;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -47,7 +45,6 @@ public class CollectionSheetEntryGridDto implements Serializable {
     private final Date receiptDate;
     private List<ProductDto> loanProducts = new ArrayList<ProductDto>();
     private List<ProductDto> savingProducts = new ArrayList<ProductDto>();
-    private HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
     private List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
     
     /**
@@ -55,10 +52,10 @@ public class CollectionSheetEntryGridDto implements Serializable {
      */
     private final int totalCustomers;
 
-    public CollectionSheetEntryGridDto(CollectionSheetEntryView collectionSheetParent, PersonnelView loanOfficer,
-            OfficeView office, ListItem<Short> paymentType, Date meetingDate, String receiptId, Date receiptDate,
-            List<ProductDto> loanProductDtos, List<ProductDto> savingProductDtos,
-            HashMap<Integer, ClientAttendanceDto> clientAttendance, List<CustomValueListElement> attendanceTypesList) {
+    public CollectionSheetEntryGridDto(final CollectionSheetEntryView collectionSheetParent, final PersonnelView loanOfficer,
+            final OfficeView office, final ListItem<Short> paymentType, final Date meetingDate, final String receiptId, final Date receiptDate,
+            final List<ProductDto> loanProductDtos, final List<ProductDto> savingProductDtos,
+            final List<CustomValueListElement> attendanceTypesList) {
         this.bulkEntryParent = collectionSheetParent;
         this.loanOfficer = loanOfficer;
         this.office = office;
@@ -68,7 +65,6 @@ public class CollectionSheetEntryGridDto implements Serializable {
         this.receiptDate = receiptDate;
         this.loanProducts = loanProductDtos;
         this.savingProducts = savingProductDtos;
-        this.clientAttendance = clientAttendance;
         this.attendanceTypesList = attendanceTypesList;
         this.totalCustomers = collectionSheetParent.getCountOfCustomers();
     }
@@ -111,10 +107,6 @@ public class CollectionSheetEntryGridDto implements Serializable {
 
     public List<ProductDto> getSavingProducts() {
         return this.savingProducts;
-    }
-
-    public HashMap<Integer, ClientAttendanceDto> getClientAttendance() {
-        return this.clientAttendance;
     }
 
     public List<CustomValueListElement> getAttendanceTypesList() {

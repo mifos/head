@@ -39,19 +39,19 @@ public class SystemException extends RuntimeException {
 
     private final Object[] values;
 
-    public SystemException(Throwable cause) {
+    public SystemException(final Throwable cause) {
         this(DEFAULT_KEY, cause.getMessage(), cause);
     }
 
-    public SystemException(String key, Throwable cause) {
+    public SystemException(final String key, final Throwable cause) {
         this(key, cause.getMessage(), cause);
     }
 
-    public SystemException(String key) {
+    public SystemException(final String key) {
         this(key, (String) null);
     }
 
-    public SystemException(String key, String internalMessage) {
+    public SystemException(final String key, final String internalMessage) {
         this(key, internalMessage, null);
     }
 
@@ -66,17 +66,17 @@ public class SystemException extends RuntimeException {
      *            key. Because the message is only for developers, it is not
      *            translated into different languages.
      */
-    public SystemException(String key, String internalMessage, Throwable cause) {
+    public SystemException(final String key, final String internalMessage, final Throwable cause) {
         this(key, internalMessage, cause, null);
     }
 
-    public SystemException(String key, Throwable cause, Object[] values) {
+    public SystemException(final String key, final Throwable cause, final Object[] values) {
         this(key, null, cause, values);
     }
 
     @SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.NullAssignment"})
     // Rationale: It is not stored directly, it's clone():d.
-    public SystemException(String key, String internalMessage, Throwable cause, Object[] values) {
+    public SystemException(final String key, final String internalMessage, final Throwable cause, final Object[] values) {
         super(internalMessage, cause);
         this.key = key;
         

@@ -35,7 +35,7 @@ public class LoanAccountView extends View {
     private final Integer customerId;
     private final String prdOfferingShortName;
     private final Short prdOfferingId;
-    private final Short accountSate;
+    private final Short accountState;
     private final Short interestDeductedAtDisbursement;
     private final Money loanAmount;
     private Double amountPaidAtDisbursement;
@@ -43,12 +43,12 @@ public class LoanAccountView extends View {
     private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
 
     public LoanAccountView(Integer accountId, Integer customerId, String prdOfferingShortName,
-            Short prdOfferingId, Short state, Short interestDeductedAtDisbursement, Money loanAmount) {
+            Short prdOfferingId, Short loanAccountState, Short interestDeductedAtDisbursement, Money loanAmount) {
         this.accountId = accountId;
         this.customerId = customerId;
         this.prdOfferingShortName = prdOfferingShortName;
         this.prdOfferingId = prdOfferingId;
-        this.accountSate = state;
+        this.accountState = loanAccountState;
         this.interestDeductedAtDisbursement = interestDeductedAtDisbursement;
         this.loanAmount = loanAmount;
     }
@@ -70,7 +70,7 @@ public class LoanAccountView extends View {
     }
     
     public Short getAccountSate() {
-        return accountSate;
+        return accountState;
     }
 
     public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {

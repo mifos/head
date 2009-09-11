@@ -39,8 +39,8 @@ public interface CollectionSheetServiceFacade {
     CollectionSheetEntryFormDto loadMeetingDateForCustomer(Integer customerId,
             CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto);
 
-    CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(CollectionSheetFormEnteredDataDto formEnteredDataDto,
-            UserContext userContext);
+    CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
+            CollectionSheetFormEnteredDataDto formEnteredDataDto);
 
     CollectionSheetEntryGridDto previewCollectionSheetEntry(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
             CollectionSheetDataView dataView);

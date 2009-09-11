@@ -60,7 +60,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testEntityMasterRetrieval() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueList paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES, (short) 1,
+        CustomValueList paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
         List<CustomValueListElement> paymentValues = paymentTypes.getCustomValueListElements();
        Assert.assertEquals(4, paymentValues.size());
@@ -71,7 +71,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
         try {
-            masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES, (short) 1,
+            masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
                     "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
             Assert.fail();
         } catch (Exception e) {
@@ -154,8 +154,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private boolean foundStringInCustomValueList(MasterPersistence masterPersistence, String CustomValueListName,
-            String searchString, short localId) throws PersistenceException {
+    private boolean foundStringInCustomValueList(final MasterPersistence masterPersistence, final String CustomValueListName,
+            final String searchString, final short localId) throws PersistenceException {
         List<ValueListElement> salutations = masterPersistence.retrieveMasterEntities(CustomValueListName, localId);
         boolean foundString = false;
         for (ValueListElement entity : salutations) {
@@ -166,8 +166,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         return foundString;
     }
 
-    private Integer findValueListElementId(MasterPersistence masterPersistence, String CustomValueListName,
-            String searchString, short localId) throws PersistenceException {
+    private Integer findValueListElementId(final MasterPersistence masterPersistence, final String CustomValueListName,
+            final String searchString, final short localId) throws PersistenceException {
         List<ValueListElement> salutations = masterPersistence.retrieveMasterEntities(CustomValueListName, localId);
         Integer elementId = null;
         for (ValueListElement entity : salutations) {

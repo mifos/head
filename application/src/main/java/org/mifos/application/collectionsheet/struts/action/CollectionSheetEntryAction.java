@@ -46,8 +46,6 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHiber
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.customer.client.business.service.ClientService;
-import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -97,8 +95,8 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     private final CollectionSheetServiceFacade collectionSheetServiceFacade;
     
-    // TODO - dependency inject persistence/dao classes into facade using
-    // spring.
+    // TODO - post-spring-di - dependency inject persistence/dao classes into
+    // facade using spring.
     private final OfficePersistence officePersistence;
     private final MasterPersistence masterPersistence;
     private final PersonnelPersistence personnelPersistence;
@@ -109,13 +107,13 @@ public class CollectionSheetEntryAction extends BaseAction {
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;
     private final AccountPersistence accountPersistence;
-    private final ClientService clientService;
     private final CollectionSheetService collectionSheetService;
     private final CollectionSheetDao collectionSheetDao;
     
     public CollectionSheetEntryAction() {
         
-        // TODO - none of below code is need when DI used with spring
+        // TODO - post-spring-di - none of below code is need when DI used with
+        // spring
         officePersistence = new OfficePersistence();
         masterPersistence = new MasterPersistence();
         personnelPersistence = new PersonnelPersistence();
@@ -126,14 +124,13 @@ public class CollectionSheetEntryAction extends BaseAction {
         clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
         loanPersistence = new LoanPersistence();
         accountPersistence = new AccountPersistence();
-        clientService = new StandardClientService(clientAttendanceDao);
         collectionSheetDao = new CollectionSheetDaoHibernate();
         
         final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler = new CollectionSheetEntryViewAssembler(
                 bulkEntryPersistence, customerPersistence, clientAttendanceDao);
         
         final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler = new CollectionSheetEntryGridViewAssembler(
-                customerPersistence, masterPersistence, clientService, collectionSheetEntryViewAssembler);
+                customerPersistence, masterPersistence, collectionSheetEntryViewAssembler);
         
         final AccountPaymentAssembler accountPaymentAssembler = new AccountPaymentAssembler(personnelPersistence);
         final SavingsAccountAssembler savingsAccountAssembler = new SavingsAccountAssembler(savingsPersistence,
@@ -290,8 +287,8 @@ public class CollectionSheetEntryAction extends BaseAction {
         final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(
                 collectionSheetEntryActionForm, dtoDecorator).toDto();
         
-        final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade.generateCollectionSheetEntryGridView(
-                formEnteredDataDto, getUserContext(request));
+        final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade
+                .generateCollectionSheetEntryGridView(formEnteredDataDto);
 
         storeOnRequestCollectionSheetEntryDto(request, collectionSheetEntry);
 
@@ -501,9 +498,10 @@ public class CollectionSheetEntryAction extends BaseAction {
             final CollectionSheetEntryGridDto collectionSheetEntry) throws PageExpiredException {
         
         SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, collectionSheetEntry, request);
-        
-        SessionUtils.setMapAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, collectionSheetEntry
-                .getClientAttendance(), request);
+
+        // SessionUtils.setMapAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE,
+        // collectionSheetEntry
+        // .getClientAttendance(), request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERATTENDANCETYPES, collectionSheetEntry
                 .getAttendanceTypesList(), request);
     }
@@ -527,7 +525,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         logger.info(message.toString());
     }
 
-    private void logTrackingInfo(String actionMethodName, HttpServletRequest request) {
+    private void logTrackingInfo(final String actionMethodName, final HttpServletRequest request) {
         StringBuilder message = getLogMessage(actionMethodName, request);
         message.append(", ");
         logger.info(message.toString());

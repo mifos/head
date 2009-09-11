@@ -43,23 +43,23 @@ public abstract class BaseAccountingEntry {
      * Factor out access to the static cache to allow this method to be overridden for testing.
      * Globals like FinancialActionCache should be eliminated or refactored to be injectable
      */
-    protected FinancialActionBO getFinancialAction(FinancialActionConstants financialActionId) throws FinancialException {
+    protected FinancialActionBO getFinancialAction(final FinancialActionConstants financialActionId) throws FinancialException {
         return FinancialActionCache.getFinancialAction(financialActionId);
     }
 
-    protected COABO getChartOfAccountsEntry(String glcode) throws FinancialException {
+    protected COABO getChartOfAccountsEntry(final String glcode) throws FinancialException {
         return ChartOfAccountsCache.get(glcode);
     }
 
-    public void buildAccountEntryForAction(BaseFinancialActivity financialActivity) throws FinancialException {
+    public void buildAccountEntryForAction(final BaseFinancialActivity financialActivity) throws FinancialException {
         this.financialActivity = financialActivity;
         getSpecificAccountActionEntry();
     }
 
-    protected void addAccountEntryDetails(Money postedMoney, FinancialActionBO financialAction, GLCodeEntity glcode,
-            FinancialConstants debitCredit) throws FinancialException {
+    protected void addAccountEntryDetails(final Money postedMoney, final FinancialActionBO financialAction, final GLCodeEntity glcode,
+            final FinancialConstants debitCredit) throws FinancialException {
         if (postedMoney.getAmountDoubleValue() != 0) {
-            Money amountToPost = getAmountToPost(postedMoney, financialAction, glcode, debitCredit);
+            Money amountToPost = getAmountToPost(postedMoney, glcode, debitCredit);
             FinancialTransactionBO financialTransaction = new FinancialTransactionBO(
                     financialActivity.getAccountTrxn(), null, financialAction, glcode, financialActivity
                             .getAccountTrxn().getActionDate(), financialActivity.getAccountTrxn().getPersonnel(),
@@ -71,7 +71,7 @@ public abstract class BaseAccountingEntry {
 
     protected abstract void getSpecificAccountActionEntry() throws FinancialException;
 
-    protected GLCodeEntity getGLcode(Set<COABO> chartsOfAccounts) {
+    protected GLCodeEntity getGLcode(final Set<COABO> chartsOfAccounts) {
         Iterator<COABO> iter = chartsOfAccounts.iterator();
         GLCodeEntity glcode = null;
         while (iter.hasNext()) {
@@ -81,31 +81,33 @@ public abstract class BaseAccountingEntry {
 
     }
 
-    private Money getAmountToPost(Money postedMoney, FinancialActionBO financialAction, GLCodeEntity glcode,
-            FinancialConstants debitCredit) throws FinancialException {
+    private Money getAmountToPost(final Money postedMoney, final GLCodeEntity glcode,
+            final FinancialConstants debitCredit) throws FinancialException {
+        
         COABO chartOfAccounts = getChartOfAccountsEntry(glcode.getGlcode());
         if (chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.ASSET
                 || chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.EXPENDITURE) {
-            if (debitCredit == FinancialConstants.DEBIT)
+            if (debitCredit == FinancialConstants.DEBIT) {
                 return postedMoney;
-            else
-                return postedMoney.negate();
+            }
+            
+            return postedMoney.negate();
         }
         if (chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.LIABILITY
                 || chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.INCOME) {
-            if (debitCredit == FinancialConstants.DEBIT)
+            if (debitCredit == FinancialConstants.DEBIT) {
                 return postedMoney.negate();
-            else
-                return postedMoney;
+            }
+            
+            return postedMoney;
         }
         return null;
     }
 
-    protected Money removeSign(Money amount) {
-        if (amount != null && amount.getAmountDoubleValue() < 0)
+    protected Money removeSign(final Money amount) {
+        if (amount != null && amount.getAmountDoubleValue() < 0) {
             return amount.negate();
-        else
-            return amount;
+        }
+        return amount;
     }
-
 }

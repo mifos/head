@@ -30,26 +30,28 @@ public class CollectionSheetCustomerLoanDto {
 
     private Integer customerId;
     private Integer accountId;
+    private Short accountStateId;
     private String productShortName;
+    private Short productId;
     private Short currencyId;
-    private BigDecimal principalDue;
-    private BigDecimal principalPaid;
-    private BigDecimal interestDue;
-    private BigDecimal interestPaid;
-    private BigDecimal penaltyDue;
-    private BigDecimal penaltyPaid;
-    private BigDecimal miscFeesDue;
-    private BigDecimal miscFeesPaid;
-    private BigDecimal miscPenaltyDue;
-    private BigDecimal miscPenaltyPaid;
+    private BigDecimal principalDue = BigDecimal.ZERO;
+    private BigDecimal principalPaid = BigDecimal.ZERO;
+    private BigDecimal interestDue = BigDecimal.ZERO;
+    private BigDecimal interestPaid = BigDecimal.ZERO;
+    private BigDecimal penaltyDue = BigDecimal.ZERO;
+    private BigDecimal penaltyPaid = BigDecimal.ZERO;
+    private BigDecimal miscFeesDue = BigDecimal.ZERO;
+    private BigDecimal miscFeesPaid = BigDecimal.ZERO;
+    private BigDecimal miscPenaltyDue = BigDecimal.ZERO;
+    private BigDecimal miscPenaltyPaid = BigDecimal.ZERO;
 
     private Double totalAccountFees = Double.valueOf("0.0");
-    
+
     // disbursement specific
     private BigDecimal disbursementAmount = BigDecimal.ZERO;
     private Short payInterestAtDisbursement = Constants.NO;
-    private Double disbursementFeeAmount = Double.valueOf("0.0");
-    
+    private Double amountDueAtDisbursement = Double.valueOf("0.0");
+
     public CollectionSheetCustomerLoanDto() {
         // default constructor for hibernate
     }
@@ -77,7 +79,7 @@ public class CollectionSheetCustomerLoanDto {
     public void setProductShortName(final String productShortName) {
         this.productShortName = productShortName;
     }
-    
+
     public Short getCurrencyId() {
         return this.currencyId;
     }
@@ -87,47 +89,69 @@ public class CollectionSheetCustomerLoanDto {
     }
 
     public void setPrincipalDue(final BigDecimal principalDue) {
-        this.principalDue = principalDue;
+        if (principalDue != null) {
+            this.principalDue = principalDue;
+        }
     }
 
     public void setPrincipalPaid(final BigDecimal principalPaid) {
-        this.principalPaid = principalPaid;
+        if (principalPaid != null) {
+            this.principalPaid = principalPaid;
+        }
     }
 
     public void setInterestDue(final BigDecimal interestDue) {
-        this.interestDue = interestDue;
+        if (interestDue != null) {
+            this.interestDue = interestDue;
+        }
     }
 
     public void setInterestPaid(final BigDecimal interestPaid) {
-        this.interestPaid = interestPaid;
+        if (interestPaid != null) {
+            this.interestPaid = interestPaid;
+        }
     }
 
     public void setMiscFeesDue(final BigDecimal miscFeesDue) {
-        this.miscFeesDue = miscFeesDue;
+        if (miscFeesDue != null) {
+            this.miscFeesDue = miscFeesDue;
+        }
     }
 
     public void setMiscFeesPaid(final BigDecimal miscFeesPaid) {
-        this.miscFeesPaid = miscFeesPaid;
+        if (miscFeesPaid != null) {
+            this.miscFeesPaid = miscFeesPaid;
+        }
     }
 
     public void setMiscPenaltyDue(final BigDecimal miscPenaltyDue) {
-        this.miscPenaltyDue = miscPenaltyDue;
+        if (miscPenaltyDue != null) {
+            this.miscPenaltyDue = miscPenaltyDue;
+        }
     }
 
     public void setMiscPenaltyPaid(final BigDecimal miscPenaltyPaid) {
-        this.miscPenaltyPaid = miscPenaltyPaid;
+        if (miscPenaltyPaid != null) {
+            this.miscPenaltyPaid = miscPenaltyPaid;
+        }
     }
 
     public void setPenaltyDue(final BigDecimal penaltyDue) {
-        this.penaltyDue = penaltyDue;
+        if (penaltyDue != null) {
+            this.penaltyDue = penaltyDue;
+        }
     }
 
     public void setPenaltyPaid(final BigDecimal penaltyPaid) {
-        this.penaltyPaid = penaltyPaid;
+        if (penaltyPaid != null) {
+            this.penaltyPaid = penaltyPaid;
+        }
     }
 
     public void setTotalAccountFees(final Double totalAccountFees) {
-        this.totalAccountFees = totalAccountFees;
+        if (totalAccountFees != null) {
+            this.totalAccountFees = totalAccountFees;
+        }
     }
 
     public void setDisbursementAmount(final BigDecimal disbursementAmount) {
@@ -142,10 +166,30 @@ public class CollectionSheetCustomerLoanDto {
         this.payInterestAtDisbursement = payInterestAtDisbursement;
     }
 
-    public void setDisbursementFeeAmount(final Double disbursementFeeAmount) {
-        this.disbursementFeeAmount = disbursementFeeAmount;
+    public Short getAccountStateId() {
+        return this.accountStateId;
     }
-    
+
+    public void setAccountStateId(final Short accountStateId) {
+        this.accountStateId = accountStateId;
+    }
+
+    public Short getProductId() {
+        return this.productId;
+    }
+
+    public void setProductId(final Short productId) {
+        this.productId = productId;
+    }
+
+    public Double getAmountDueAtDisbursement() {
+        return this.amountDueAtDisbursement;
+    }
+
+    public void setAmountDueAtDisbursement(final Double amountDueAtDisbursement) {
+        this.amountDueAtDisbursement = amountDueAtDisbursement;
+    }
+
     public Double getTotalRepaymentDue() {
 
         return principalDue.doubleValue()
@@ -158,6 +202,6 @@ public class CollectionSheetCustomerLoanDto {
     }
 
     public Double getTotalDisbursement() {
-        return disbursementAmount.doubleValue() + disbursementFeeAmount;
+        return disbursementAmount.doubleValue();
     }
 }

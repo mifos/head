@@ -93,14 +93,14 @@ public class CollectionSheetEntryViewAssembler {
             List<CollectionSheetEntryAccountFeeActionView> bulkEntryCustomerFeeScheduleViews = bulkEntryPersistence
                     .getBulkEntryFeeActionView(meetingDate, selectedCustomerSearchId, officeId,
                             AccountTypes.CUSTOMER_ACCOUNT);
-            
-            List<ClientAttendanceDto> clientAttendanceDtoList = clientAttendanceDao.findClientAttendanceForOffice(meetingDate,
-                    officeId);
+
+             List<ClientAttendanceDto> clientAttendanceDtoList = clientAttendanceDao.findClientAttendanceForOffice(
+                    meetingDate, officeId, selectedCustomerSearchId);
 
             final CollectionSheetEntryView bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(customerHierarchy,
                     formEnteredDataDto.getCustomer(), meetingDate, bulkEntryLoanScheduleViews,
                     bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews, bulkEntryCustomerFeeScheduleViews,
-                    clientAttendanceDtoList, customerAccountViewList, loanAccountViewList, savingsAccountViewList);
+                    customerAccountViewList, loanAccountViewList, savingsAccountViewList);
 
             BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent, meetingDate,
                     bulkEntrySavingsScheduleViews);

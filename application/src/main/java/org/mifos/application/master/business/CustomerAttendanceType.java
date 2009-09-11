@@ -24,8 +24,9 @@ import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.framework.persistence.Persistence;
 
 /**
- * Use {@link AttendanceType} instead.
+ * @deprecated Use {@link AttendanceType} instead.
  */
+@Deprecated
 public class CustomerAttendanceType extends Persistence {
 
     public CustomerAttendanceType() {
@@ -42,7 +43,7 @@ public class CustomerAttendanceType extends Persistence {
         return attendanceId;
     }
 
-    public void setAttendanceId(Short attendanceId) {
+    public void setAttendanceId(final Short attendanceId) {
         this.attendanceId = attendanceId;
     }
 
@@ -50,7 +51,7 @@ public class CustomerAttendanceType extends Persistence {
         return desciption;
     }
 
-    public void setDesciption(String desciption) {
+    public void setDesciption(final String desciption) {
         this.desciption = desciption;
     }
 
@@ -58,7 +59,7 @@ public class CustomerAttendanceType extends Persistence {
         return lookUpId;
     }
 
-    public void setLookUpId(Integer lookUpId) {
+    public void setLookUpId(final Integer lookUpId) {
         this.lookUpId = lookUpId;
     }
 
