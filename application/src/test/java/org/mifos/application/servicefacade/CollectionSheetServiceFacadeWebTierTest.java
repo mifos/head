@@ -21,7 +21,6 @@ package org.mifos.application.servicefacade;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.when;
@@ -127,11 +126,12 @@ public class CollectionSheetServiceFacadeWebTierTest {
     private UserContext userContext;
     private BulkEntryActionForm collectionSheetForm;
     private static final Short defaultCurrencyId = Short.valueOf("2");
+    private static MifosCurrency defaultCurrency;
     
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
          MifosLogManager.configureLogging();
-         MifosCurrency defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null, null, null, null, null);
+         defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null, null, null, null, null);
          Money.setDefaultCurrency(defaultCurrency);
     }
 
@@ -441,7 +441,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         
         // exercise test
         final CollectionSheetEntryGridDto formDto = collectionSheetServiceFacadeWebTier.translate(collectionSheetData,
-                formEnteredDataDto, null);
+                formEnteredDataDto, null, defaultCurrency);
 
         // verification
         assertThat(formDto.getTotalCustomers(), is(collectionSheetCustomer.size()));
@@ -508,7 +508,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         
         // exercise test
         final CollectionSheetEntryGridDto formDto = collectionSheetServiceFacadeWebTier.translate(collectionSheetData,
-                formEnteredDataDto, null);
+                formEnteredDataDto, null, defaultCurrency);
 
         // verification
         assertThat(formDto.getTotalCustomers(), is(collectionSheetCustomer.size()));
@@ -517,7 +517,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         final CollectionSheetEntryView collectionSheetEntryParent = formDto.getBulkEntryParent();
         assertThat(collectionSheetEntryParent, is(notNullValue()));
         
-        assertThat(collectionSheetEntryParent.getAttendence(), is(nullValue()));
+        assertThat(collectionSheetEntryParent.getAttendence(), is(Short.valueOf("0")));
         assertThat(collectionSheetEntryParent.getCountOfCustomers(), is(1));
         assertThat(collectionSheetEntryParent.getCustomerDetail().getCustomerId(), is(customerId));
         

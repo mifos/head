@@ -49,6 +49,7 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryCo
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -76,6 +77,7 @@ import org.mifos.application.servicefacade.SavingsAccountAssembler;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -287,8 +289,10 @@ public class CollectionSheetEntryAction extends BaseAction {
         final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(
                 collectionSheetEntryActionForm, dtoDecorator).toDto();
         
+        final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
+        
         final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade
-                .generateCollectionSheetEntryGridView(formEnteredDataDto);
+                .generateCollectionSheetEntryGridView(formEnteredDataDto, currency);
 
         storeOnRequestCollectionSheetEntryDto(request, collectionSheetEntry);
 

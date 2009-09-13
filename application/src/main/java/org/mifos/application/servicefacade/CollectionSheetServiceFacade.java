@@ -21,6 +21,7 @@ package org.mifos.application.servicefacade;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.security.util.UserContext;
 
 /**
@@ -40,7 +41,7 @@ public interface CollectionSheetServiceFacade {
             CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto);
 
     CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
-            CollectionSheetFormEnteredDataDto formEnteredDataDto);
+            CollectionSheetFormEnteredDataDto formEnteredDataDto, MifosCurrency currency);
 
     CollectionSheetEntryGridDto previewCollectionSheetEntry(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
             CollectionSheetDataView dataView);

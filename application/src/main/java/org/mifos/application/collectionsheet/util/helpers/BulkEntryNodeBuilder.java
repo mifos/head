@@ -32,6 +32,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.framework.util.helpers.Money;
 
 public class BulkEntryNodeBuilder {
 
@@ -90,7 +91,8 @@ public class BulkEntryNodeBuilder {
             final List<CustomerAccountView> customerAccountList,
             final List<LoanAccountView> loanAccountViewList, final List<SavingsAccountView> savingsAccountViewList) {
 
-        CollectionSheetEntryView parentNode = new CollectionSheetEntryView(parentCustomerView);
+        CollectionSheetEntryView parentNode = new CollectionSheetEntryView(parentCustomerView, new Money()
+                .getDefaultCurrency());
         List<CustomerView> immediateChildren = getImmediateCustomers(parentNode.getCustomerDetail().getCustomerId(),
                 allCustomers);
 

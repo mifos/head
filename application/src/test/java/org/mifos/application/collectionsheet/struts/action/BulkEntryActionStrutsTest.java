@@ -561,14 +561,14 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
 
-        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center));
+        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center), null);
         SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
         centerSavingsAccountView.setDepositAmountEntered("100");
         centerSavingsAccountView.setWithDrawalAmountEntered("10");
         bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
         bulkEntryParent.setCustomerAccountDetails(getCustomerAccountView(center));
 
-        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group));
+        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group), null);
         LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
         SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
         groupSavingsAccountView.setDepositAmountEntered("100");
@@ -577,7 +577,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
         bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client));
+        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client), null);
         LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
         clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
         SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);
@@ -656,15 +656,15 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434", client, Short.valueOf("16"), startDate,
                 savingsOffering1);
 
-        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center));
+        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center), null);
         bulkEntryParent.addSavingsAccountDetail(getSavingsAccountView(centerSavingsAccount));
         bulkEntryParent.setCustomerAccountDetails(getCustomerAccountView(center));
 
-        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group));
+        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group), null);
         LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
         bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
         bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
-        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client));
+        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client), null);
         LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
         bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
         bulkEntrySubChild.addSavingsAccountDetail(getSavingsAccountView(clientSavingsAccount));

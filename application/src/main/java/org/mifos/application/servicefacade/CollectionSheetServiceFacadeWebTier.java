@@ -21,6 +21,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +67,8 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.
@@ -213,7 +216,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     }
 
     public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
-            final CollectionSheetFormEnteredDataDto formEnteredDataDto) {
+            final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
 
          final CollectionSheetEntryGridDto collectionSheetGridView = collectionSheetEntryGridViewAssembler
                 .toDto(formEnteredDataDto);
@@ -236,7 +239,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         //
         // final CollectionSheetEntryGridDto translatedGridView =
         // translate(collectionSheet, formEnteredDataDto,
-        // attendanceTypesList);
+        // attendanceTypesList, currency);
         //
         // return translatedGridView;
         // } catch (SystemException e) {
@@ -248,10 +251,10 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
     public CollectionSheetEntryGridDto translate(final CollectionSheetDto collectionSheet,
             final CollectionSheetFormEnteredDataDto formEnteredDataDto,
-            final List<CustomValueListElement> attendanceTypesList) {
+            final List<CustomValueListElement> attendanceTypesList, final MifosCurrency currency) {
         
         final CollectionSheetEntryView collectionSheetEntryViewHierarchy = createEntryViewHierarchyFromCollectionSheetData(collectionSheet
-                .getCollectionSheetCustomer());
+                .getCollectionSheetCustomer(), currency);
         
         final PersonnelView loanOfficer = formEnteredDataDto.getLoanOfficer();
         final OfficeView office = formEnteredDataDto.getOffice();
@@ -347,8 +350,12 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 savingProductsSet.add(productDto);
             }
         }
+        
+        List<ProductDto> savingProductsOrderedByName = new ArrayList<ProductDto>(savingProductsSet);
+        Collections.sort(savingProductsOrderedByName, new ProductDtoComparator());
 
-        return new ArrayList<ProductDto>(savingProductsSet);
+
+        return savingProductsOrderedByName;
     }
 
     private List<ProductDto> createListOfLoanProducts(final List<CollectionSheetCustomerDto> collectionSheetCustomer) {
@@ -364,11 +371,14 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             }
         }
 
-        return new ArrayList<ProductDto>(loanProductsSet);
+        List<ProductDto> loanProductsOrderedByName = new ArrayList<ProductDto>(loanProductsSet);
+        Collections.sort(loanProductsOrderedByName, new ProductDtoComparator());
+
+        return loanProductsOrderedByName;
     }
     
     private CollectionSheetEntryView createEntryViewHierarchyFromCollectionSheetData(
-            final List<CollectionSheetCustomerDto> collectionSheetCustomerHierarchy) {
+            final List<CollectionSheetCustomerDto> collectionSheetCustomerHierarchy, final MifosCurrency currency) {
 
         final Map<Integer, SavingsAccountView> perIndividualSavingAccountsByGroupId = new HashMap<Integer, SavingsAccountView>();
         final int countOfCustomers = collectionSheetCustomerHierarchy.size();
@@ -380,13 +390,12 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                     customer.getName(), customer.getParentCustomerId(),
                     customer.getLevelId());
 
-            CollectionSheetEntryView childView = new CollectionSheetEntryView(parentCustomerDetail);
-            childView.setAttendence(null);
+            CollectionSheetEntryView childView = new CollectionSheetEntryView(parentCustomerDetail, currency);
+            childView.setAttendence(customer.getAttendanceId());
             childView.setCountOfCustomers(countOfCustomers);
 
             final Integer accountId = customer.getCollectionSheetCustomerAccount().getAccountId();
             final Integer customerId = customer.getCustomerId();
-            final Short currencyId = customer.getCollectionSheetCustomerAccount().getCurrencyId();
             final Short installmentId = null;
             final Integer actionDateId = null;
             final Date actionDate = null;
@@ -430,11 +439,9 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 final Short savInstallmentId = null;
                 final Integer savActionDateId = null;
                 final Date savActionDate = null;
-                final MifosCurrency savCurrency = new MifosCurrency(currencyId, null, null, null, null, null, null,
-                        null);
 
-                final Money savDeposit = new Money(savCurrency, customerSavingDto.getTotalDepositAmount().toString());
-                final Money savDepositPaid = new Money(savCurrency, "0.0");
+                final Money savDeposit = new Money(customerSavingDto.getTotalDepositAmount().toString());
+                final Money savDepositPaid = new Money("0.0");
 
                 final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentView(
                         savAccountId, savCustomerId, savInstallmentId, savActionDateId, savActionDate, savDeposit,
@@ -520,5 +527,13 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         }
         
         return false;
+    }
+}
+
+class ProductDtoComparator implements Comparator<ProductDto> {
+
+    @Override
+    public int compare(final ProductDto arg0, final ProductDto arg1) {
+        return arg0.getShortName().compareTo(arg1.getShortName());
     }
 }

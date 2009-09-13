@@ -89,10 +89,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final String searchId = customerHierarchy.get(0).getSearchId() + ".%";
 
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepaymentsGroupedByCustomerId = collectionSheetDao
-                .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate);
+                .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
 
         final Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> allLoanFeesGroupedByCustomerIdAndAccountId = collectionSheetDao
-                .findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId, transactionDate);
+                .findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId, transactionDate, customerId);
 
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> allAccountCollectionsByCustomerId = collectionSheetDao
                 .findAccountCollectionsOnCustomerAccount(branchId, searchId, transactionDate, customerId);
@@ -102,10 +102,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                         customerId);
 
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = collectionSheetDao
-                .findSavingsDepositsforCustomerHierarchy(branchId, searchId, transactionDate);
+                .findSavingsDepositsforCustomerHierarchy(branchId, searchId, transactionDate, customerId);
 
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
-                .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate);
+                .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
         
         final List<CollectionSheetCustomerDto> populatedCollectionSheetCustomer = new ArrayList<CollectionSheetCustomerDto>();
         for (CollectionSheetCustomerDto collectionSheetCustomer : customerHierarchy) {

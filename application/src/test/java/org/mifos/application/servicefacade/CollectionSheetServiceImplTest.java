@@ -138,7 +138,9 @@ public class CollectionSheetServiceImplTest {
 
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
-        when(collectionSheetDao.findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId + ".%", transactionDate))
+        when(
+                collectionSheetDao.findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId + ".%",
+                        transactionDate, centerId))
                 .thenReturn(loanRepaymentsDue);
 
         // exercise test
@@ -200,11 +202,13 @@ public class CollectionSheetServiceImplTest {
 
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
-        when(collectionSheetDao.findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId + ".%", transactionDate))
+        when(
+                collectionSheetDao.findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId + ".%",
+                        transactionDate, centerId))
                 .thenReturn(loanRepaymentsDue);
         when(
                 collectionSheetDao.findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId + ".%",
-                        transactionDate)).thenReturn(outstandingFeesOnLoans);
+                        transactionDate, centerId)).thenReturn(outstandingFeesOnLoans);
 
         // exercise test
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(centerId,
@@ -364,7 +368,9 @@ public class CollectionSheetServiceImplTest {
         
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
-        when(collectionSheetDao.findSavingsDepositsforCustomerHierarchy(branchId, searchId + ".%", transactionDate))
+        when(
+                collectionSheetDao.findSavingsDepositsforCustomerHierarchy(branchId, searchId + ".%", transactionDate,
+                        centerId))
                 .thenReturn(savingAccounts);
 
         // exercise test
@@ -409,7 +415,9 @@ public class CollectionSheetServiceImplTest {
 
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
-        when(collectionSheetDao.findLoanDisbursementsForCustomerHierarchy(branchId, searchId + ".%", transactionDate))
+        when(
+                collectionSheetDao.findLoanDisbursementsForCustomerHierarchy(branchId, searchId + ".%",
+                        transactionDate, centerId))
                 .thenReturn(loanDisbursements);
 
         // exercise test
@@ -456,7 +464,9 @@ public class CollectionSheetServiceImplTest {
         
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
-        when(collectionSheetDao.findLoanDisbursementsForCustomerHierarchy(branchId, searchId + ".%", transactionDate))
+        when(
+                collectionSheetDao.findLoanDisbursementsForCustomerHierarchy(branchId, searchId + ".%",
+                        transactionDate, centerId))
                 .thenReturn(loanDisbursements);
 
         // exercise test

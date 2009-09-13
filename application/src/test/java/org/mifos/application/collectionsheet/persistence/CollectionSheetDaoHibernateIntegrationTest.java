@@ -219,13 +219,15 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         loan = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
 
+        final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
         final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
 
         // exercise test
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepayments = collectionSheetDao
-                .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate);
+                .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate,
+                        customerAtTopOfHierarchyId);
 
         // verification
         assertNotNull(allLoanRepayments);
@@ -250,13 +252,15 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         loan = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
 
+        final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
         final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
 
         // exercise test
         Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> allOutstandingFeesByCustomerThenAccountId = collectionSheetDao
-                .findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId, transactionDate);
+                .findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId, transactionDate,
+                        customerAtTopOfHierarchyId);
 
         // verification
         assertNotNull(allOutstandingFeesByCustomerThenAccountId);
@@ -337,13 +341,15 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         loan = TestObjectFactory.createLoanAccountWithDisbursement("42423142341", group, AccountState.LOAN_APPROVED,
                 startDate, loanOffering, 1);
         
+        final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
         final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
 
         // exercise test
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
-                .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate);
+                .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate,
+                        customerAtTopOfHierarchyId);
 
         // verification
         assertNotNull(allLoanDisbursements);
@@ -360,13 +366,15 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     public void testShouldFindSavingAccountsDeposits() {
 
         // setup
+        final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
         final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
 
         // exercise test
         Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingAccountsByCustomerId = collectionSheetDao
-                .findSavingsDepositsforCustomerHierarchy(branchId, searchId, transactionDate);
+                .findSavingsDepositsforCustomerHierarchy(branchId, searchId, transactionDate,
+                        customerAtTopOfHierarchyId);
 
         // verification
         assertNotNull(allSavingAccountsByCustomerId);

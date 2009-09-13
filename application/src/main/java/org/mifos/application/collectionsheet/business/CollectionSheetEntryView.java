@@ -34,7 +34,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.business.View;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -62,12 +61,12 @@ public class CollectionSheetEntryView extends View {
 
     private int countOfCustomers;
 
-    public CollectionSheetEntryView(final CustomerView customerDetail) {
+    public CollectionSheetEntryView(final CustomerView customerDetail, final MifosCurrency currency) {
         this.customerDetail = customerDetail;
         loanAccountDetails = new ArrayList<LoanAccountsProductView>();
         savingsAccountDetails = new ArrayList<SavingsAccountView>();
         collectionSheetEntryChildren = new ArrayList<CollectionSheetEntryView>();
-        currency = Configuration.getInstance().getSystemConfig().getCurrency();
+        this.currency = currency;
     }
 
     public List<LoanAccountsProductView> getLoanAccountDetails() {

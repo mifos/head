@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
@@ -38,10 +38,10 @@ public interface CollectionSheetDao {
     List<CollectionSheetCustomerDto> findCustomerHierarchy(Integer customerId, Date transactionDate);
 
     Map<Integer, List<CollectionSheetCustomerLoanDto>> findAllLoanRepaymentsForCustomerHierarchy(Short branchId,
-            String searchId, Date transactionDate);
+            String searchId, Date transactionDate, Integer customerId);
 
     Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> findOutstandingFeesForLoansOnCustomerHierarchy(
-            Short branchId, String searchId, Date transactionDate);
+            Short branchId, String searchId, Date transactionDate, Integer customerId);
 
     Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> findAccountCollectionsOnCustomerAccount(
             Short branchId, String searchId, Date transactionDate, Integer customerId);
@@ -50,9 +50,9 @@ public interface CollectionSheetDao {
             Short branchId, String searchId, Date transactionDate, Integer customerId);
 
     Map<Integer, List<CollectionSheetCustomerLoanDto>> findLoanDisbursementsForCustomerHierarchy(Short branchId,
-            String searchId, Date transactionDate);
+            String searchId, Date transactionDate, Integer customerId);
 
     Map<Integer, List<CollectionSheetCustomerSavingDto>> findSavingsDepositsforCustomerHierarchy(Short branchId,
-            String searchId, Date transactionDate);
+            String searchId, Date transactionDate, Integer customerId);
 
 }
