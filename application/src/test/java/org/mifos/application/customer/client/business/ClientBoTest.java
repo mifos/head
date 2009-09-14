@@ -20,77 +20,69 @@
 
 package org.mifos.application.customer.client.business;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 
+/**
+ * I test {@link ClientBO}.
+ */
 public class ClientBoTest extends TestCase {
 
+    // class under test
+    private ClientBO client;
+    
+    @Override
     public void setUp() throws Exception {
         MifosLogManager.configureLogging();
+        client = new ClientBuilder().build();
     }
 
     public void testAddClientAttendance() {
-        ClientBO client = new ClientBO();
         Assert.assertEquals("Expecting no attendance entries on a new object", 0, client.getClientAttendances().size());
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
-        client.addClientAttendance(getClientAttendance(meetingDate.toDate()));
+        client.addClientAttendance(buildClientAttendance(meetingDate.toDate()));
         Assert.assertEquals("Expecting no attendance entries on a new object", 1, client.getClientAttendances().size());
     }
 
     public void testGetClientAttendanceForMeeting() {
-        ClientBO client = new ClientBO();
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
-        client.addClientAttendance(getClientAttendance(meetingDate.toDate()));
+        client.addClientAttendance(buildClientAttendance(meetingDate.toDate()));
         Assert.assertEquals("The value of customer attendance for the meeting : ", AttendanceType.PRESENT, client
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
-    }
-
-    private ClientBO createUpdatableClient() throws PersistenceException {
-        ClientBO client = new ClientBO();
-        CustomerPersistence customerPersistenceMock = createMock(CustomerPersistence.class);
-        expect(customerPersistenceMock.createOrUpdate(client)).andReturn(client).anyTimes();
-        replay(customerPersistenceMock);
-        client.setCustomerPersistence(customerPersistenceMock);
-
-        return client;
     }
 
     public void testHandleAttendance() throws Exception {
-        ClientBO client = createUpdatableClient();
 
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
-        client.handleAttendance(meetingDate.toDate(), AttendanceType.PRESENT);
+        client.handleAttendance(meetingDate.toDate(), AttendanceType.PRESENT.getValue(), false);
+        
         Assert.assertEquals("The size of customer attendance is : ", client.getClientAttendances().size(), 1);
         Assert.assertEquals("The value of customer attendance for the meeting : ", AttendanceType.PRESENT, client
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
-        client.handleAttendance(meetingDate.toDate(), AttendanceType.ABSENT);
+        
+        client.handleAttendance(meetingDate.toDate(), AttendanceType.ABSENT.getValue(), false);
         Assert.assertEquals("The size of customer attendance is : ", 1, client.getClientAttendances().size());
         Assert.assertEquals("The value of customer attendance for the meeting : ", AttendanceType.ABSENT, client
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
     }
 
     public void testHandleAttendanceForDifferentDates() throws Exception {
-        ClientBO client = createUpdatableClient();
 
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
-        client.handleAttendance(meetingDate.toDate(), AttendanceType.PRESENT);
+        client.handleAttendance(meetingDate.toDate(), AttendanceType.PRESENT.getValue(), false);
 
         Assert.assertEquals("The size of customer attendance is : ", client.getClientAttendances().size(), 1);
         Assert.assertEquals("The value of customer attendance for the meeting : ", AttendanceType.PRESENT, client
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
 
         DateMidnight offSetDate = getDateOffset(1);
-        client.handleAttendance(new java.sql.Date(offSetDate.getMillis()), AttendanceType.ABSENT);
+        client.handleAttendance(new java.sql.Date(offSetDate.getMillis()), AttendanceType.ABSENT.getValue(), false);
 
         Assert.assertEquals("The size of customer attendance is : ", client.getClientAttendances().size(), 2);
         Assert.assertEquals("The value of customer attendance for the meeting : ", AttendanceType.PRESENT, client
@@ -99,13 +91,13 @@ public class ClientBoTest extends TestCase {
                 .getClientAttendanceForMeeting(offSetDate.toDate()).getAttendanceAsEnum());
     }
 
-    private DateMidnight getDateOffset(int numberOfDays) {
+    private DateMidnight getDateOffset(final int numberOfDays) {
         DateMidnight currentDate = new DateTimeService().getCurrentDateMidnight();
         currentDate = currentDate.minusDays(numberOfDays);
         return currentDate;
     }
 
-    private ClientAttendanceBO getClientAttendance(java.util.Date meetingDate) {
+    private ClientAttendanceBO buildClientAttendance(final java.util.Date meetingDate) {
         ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
         clientAttendance.setAttendance(AttendanceType.PRESENT);
         clientAttendance.setMeetingDate(meetingDate);

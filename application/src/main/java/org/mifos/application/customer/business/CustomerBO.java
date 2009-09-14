@@ -162,12 +162,36 @@ public abstract class CustomerBO extends BusinessObject {
         this.masterPersistence = masterPersistence;
     }
 
+    /**
+     * default constructor for hibernate
+     */
     protected CustomerBO() {
         this(null, null, null, null, null);
         this.globalCustNum = null;
     }
+    
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal constructor for builder
+     */
+    public CustomerBO(final CustomerLevel customerLevel, final String name, final OfficeBO office,
+            final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
+            final CustomerAccountBO customerAccount) {
+        super();
+        this.customerId = null;
+        this.displayName = name;
+        this.office = office;
+        this.personnel = loanOfficer;
+        this.customerMeeting = customerMeeting;
+        this.accounts = new HashSet<AccountBO>();
+        this.accounts.add(customerAccount);
+        this.customerLevel = new CustomerLevelEntity(customerLevel);
+        this.formedByPersonnel = null;
+    }
 
-    protected CustomerBO(final Integer customerId, final CustomerLevelEntity customerLevel, final PersonnelBO formedByPersonnel,
+    protected CustomerBO(final Integer customerId, final CustomerLevelEntity customerLevel,
+            final PersonnelBO formedByPersonnel,
             final PersonnelBO personnel, final String displayName) {
         super();
         this.customerId = customerId;

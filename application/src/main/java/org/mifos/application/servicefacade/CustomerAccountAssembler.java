@@ -67,7 +67,8 @@ public class CustomerAccountAssembler {
                     final Integer accountId = customerAccountView.getAccountId();
                     
                     final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(customerAccountView
-                            .getAccountActionDates(), customerAccountView.getTotalAmountDue(), payment);
+                            .getAccountActionDates(), new Money(customerAccountView.getCustomerAccountAmountEntered()),
+                            payment);
 
                     String globalCustomerAccountNum = "Unknown";
                     try {

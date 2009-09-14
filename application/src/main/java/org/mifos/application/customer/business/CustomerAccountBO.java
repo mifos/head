@@ -28,7 +28,6 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -40,10 +39,8 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.FeeInstallment;
 import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -60,7 +57,6 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -95,7 +91,7 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     @Override
-    public void setFeePersistence(FeePersistence feePersistence) {
+    public void setFeePersistence(final FeePersistence feePersistence) {
         this.feePersistence = feePersistence;
     }
 
@@ -203,26 +199,24 @@ public class CustomerAccountBO extends AccountBO {
             for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule.getAccountFeesActionDetails()) {
                 CustomerFeeScheduleEntity customerFeeSchedule = (CustomerFeeScheduleEntity) accountFeesActionDetail;
 
-                // TODO - keithw - ideally we wouldn't want to make a payment
-                // against a fee if there was no money left to pay, but support
-                // if (balanceLeft.isGreaterThan(zeroBalance)) {
+                if (balanceLeft.isGreaterThan(zeroBalance)) {
 
-                final Money accountFeeAmountDue = customerFeeSchedule.getFeeDue();
-                if (balanceLeft.isGreaterThan(accountFeeAmountDue)) {
-                    customerFeeSchedule.makePayment(accountFeeAmountDue);
-                    balanceLeft = balanceLeft.subtract(accountFeeAmountDue);
-                    amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(accountFeeAmountDue);
-                } else if (balanceLeft.isGreaterThan(zeroBalance)) {
-                    customerFeeSchedule.makePayment(balanceLeft);
-                    balanceLeft = balanceLeft.subtract(balanceLeft);
-                    amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(balanceLeft);
+                    final Money accountFeeAmountDue = customerFeeSchedule.getFeeDue();
+                    if (balanceLeft.isGreaterThan(accountFeeAmountDue)) {
+                        customerFeeSchedule.makePayment(accountFeeAmountDue);
+                        balanceLeft = balanceLeft.subtract(accountFeeAmountDue);
+                        amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(accountFeeAmountDue);
+                    } else if (balanceLeft.isGreaterThan(zeroBalance)) {
+                        customerFeeSchedule.makePayment(balanceLeft);
+                        balanceLeft = balanceLeft.subtract(balanceLeft);
+                        amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(balanceLeft);
+                    }
+
+                    final FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(null,
+                            accountFeesActionDetail.getAccountFee(), accountFeesActionDetail.getFeeAmount());
+
+                    feeTrxns.add(feesTrxnDetailBO);
                 }
-
-                final FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(null, accountFeesActionDetail
-                        .getAccountFee(), accountFeesActionDetail.getFeeAmount());
-
-                feeTrxns.add(feesTrxnDetailBO);
-                // }
             }
 
             final CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity(accountPayment,
@@ -575,7 +569,7 @@ public class CustomerAccountBO extends AccountBO {
     private void addFeeToAccountFee(final Short feeId, final Double charge) {
         FeeBO fee = getFeePersistence().getFee(feeId);
         AccountFeesEntity accountFee = null;
-        if ((fee.isPeriodic() && !isFeeAlreadyApplied(fee)) || !fee.isPeriodic()) {
+        if (fee.isPeriodic() && !isFeeAlreadyApplied(fee) || !fee.isPeriodic()) {
             accountFee = new AccountFeesEntity(this, fee, charge, FeeStatus.ACTIVE.getValue(), new DateTimeService()
                     .getCurrentJavaDateTime(), null);
             addAccountFees(accountFee);

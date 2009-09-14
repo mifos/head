@@ -36,7 +36,6 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -52,7 +51,6 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
@@ -119,79 +117,50 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanBO extends AccountBO {
 
-    private final LoanOfferingBO loanOffering;
-
-    private final LoanSummaryEntity loanSummary;
-
-    private MaxMinLoanAmount maxMinLoanAmount;
-
-    private MaxMinNoOfInstall maxMinNoOfInstall;
-
-    private LoanPrdPersistence loanPrdPersistence;
-
-    private Money loanAmount;
-
-    private Money loanBalance;
-
-    private Short noOfInstallments;
-
-    private Date disbursementDate;
-
-    private MeetingBO loanMeeting;
-
-    private Short intrestAtDisbursement;
-
-    private GracePeriodTypeEntity gracePeriodType;
-
-    private Short gracePeriodDuration;
-
-    private Short gracePeriodPenalty;
-
-    private final LoanPerformanceHistoryEntity performanceHistory;
-
-    private InterestTypesEntity interestType;
-
-    private Double interestRate;
-
-    private FundBO fund;
-
-    private Boolean redone;
-
     /**
      * Is this used? Is it related to the activity IDs in places like
      * {@link ActivityMapper#SAVING_CANCHANGESTATETO_PARTIALAPPLICATION} or
      * {@link SecurityConstants#FUNDS_CREATE_FUNDS} ?
      */
     private Integer businessActivityId;
-
+    private Money loanAmount;
+    private Money loanBalance;
+    private Short noOfInstallments;
+    private Date disbursementDate;
+    private Short intrestAtDisbursement;
+    private Short gracePeriodDuration;
+    private Short gracePeriodPenalty;
+    private Double interestRate;
+    private Boolean redone;
     private Integer collateralTypeId;
-
     private String collateralNote;
-
     private Short groupFlag;
-
     private String stateSelected;
-
-    private Set<LoanActivityEntity> loanActivityDetails;
-
-    private LoanArrearsAgingEntity loanArrearsAgingEntity;
-
+    private Short recurMonth;
+    private Money rawAmountTotal;
+    
+    // one-to-one associations
     // For Group loan with individual monitoring
-
     private LoanBO parentAccount;
-
+    private final LoanPerformanceHistoryEntity performanceHistory;
+    private final LoanOfferingBO loanOffering;
+    private final LoanSummaryEntity loanSummary;
+    private MaxMinLoanAmount maxMinLoanAmount;
+    private MaxMinNoOfInstall maxMinNoOfInstall;
+    private MeetingBO loanMeeting;
+    private GracePeriodTypeEntity gracePeriodType;
+    private InterestTypesEntity interestType;
+    private FundBO fund;
+    private LoanArrearsAgingEntity loanArrearsAgingEntity;
+    private WeekDaysEntity monthWeek;
+    private RankOfDaysEntity monthRank;
+    
+    // associations
+    private Set<LoanActivityEntity> loanActivityDetails;
     private Set<LoanBO> loanAccountDetails;
 
-    // For Repayment Day
-
-    private WeekDaysEntity monthWeek;
-
-    private RankOfDaysEntity monthRank;
-
-    private Short recurMonth;
-
-    private Money rawAmountTotal;
-
+    // persistence
+    private LoanPrdPersistence loanPrdPersistence;
     private LoanPersistence loanPersistence = null;
 
     public LoanPersistence getLoanPersistence() {
@@ -201,10 +170,13 @@ public class LoanBO extends AccountBO {
         return loanPersistence;
     }
 
-    public void setLoanPersistence(LoanPersistence loanPersistence) {
+    public void setLoanPersistence(final LoanPersistence loanPersistence) {
         this.loanPersistence = loanPersistence;
     }
 
+    /**
+     * default constructor for hibernate usage
+     */
     protected LoanBO() {
         this(null, null, null, null, null);
         this.loanPrdPersistence = null;
@@ -212,6 +184,23 @@ public class LoanBO extends AccountBO {
         this.redone = false;
         parentAccount = null;
         loanAccountDetails = new HashSet<LoanBO>();
+    }
+    
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal constructor
+     */
+    public LoanBO(final LoanOfferingBO loanProduct, final Short numOfInstallments, final GraceType gracePeriodType,
+            final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
+            final Integer offsettingAllowable) {
+        super(accountType, accountState, customer, offsettingAllowable, null, null);
+        this.loanOffering = loanProduct;
+        this.noOfInstallments = numOfInstallments;
+        this.gracePeriodType = new GracePeriodTypeEntity(gracePeriodType);
+
+        this.loanSummary = null;
+        this.performanceHistory = null;
     }
 
     // FIXME used by test, test should try to use other constructors or factory

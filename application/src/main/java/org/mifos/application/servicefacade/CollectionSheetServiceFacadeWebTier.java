@@ -23,10 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
@@ -53,16 +51,18 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -218,35 +218,29 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
 
-         final CollectionSheetEntryGridDto collectionSheetGridView = collectionSheetEntryGridViewAssembler
-                .toDto(formEnteredDataDto);
+        // final CollectionSheetEntryGridDto collectionSheetGridView =
+        // collectionSheetEntryGridViewAssembler
+        // .toDto(formEnteredDataDto);
+        //
+        // return collectionSheetGridView;
 
-        return collectionSheetGridView;
+        final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
+                .getCustomer().getCustomerId(), formEnteredDataDto.getMeetingDate());
 
-        // FIXME - keithw - commented out code for tranlation new approach for
-        // fethcing data
-        // approx 2 days left to complete.
-        // final CollectionSheetDto collectionSheet =
-        // collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
-        // .getCustomer().getCustomerId(), formEnteredDataDto.getMeetingDate());
-        //
-        // try {
-        // final List<CustomValueListElement> attendanceTypesList =
-        // masterPersistence.getCustomValueList(
-        // MasterConstants.ATTENDENCETYPES,
-        // "org.mifos.application.master.business.CustomerAttendanceType",
-        // "attendanceId").getCustomValueListElements();
-        //
-        // final CollectionSheetEntryGridDto translatedGridView =
-        // translate(collectionSheet, formEnteredDataDto,
-        // attendanceTypesList, currency);
-        //
-        // return translatedGridView;
-        // } catch (SystemException e) {
-        // throw new MifosRuntimeException(e);
-        // } catch (ApplicationException e) {
-        // throw new MifosRuntimeException(e);
-        // }
+        try {
+            final List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(
+                    MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",
+                    "attendanceId").getCustomValueListElements();
+
+            final CollectionSheetEntryGridDto translatedGridView = translate(collectionSheet, formEnteredDataDto,
+                    attendanceTypesList, currency);
+
+            return translatedGridView;
+        } catch (SystemException e) {
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     public CollectionSheetEntryGridDto translate(final CollectionSheetDto collectionSheet,
@@ -380,7 +374,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private CollectionSheetEntryView createEntryViewHierarchyFromCollectionSheetData(
             final List<CollectionSheetCustomerDto> collectionSheetCustomerHierarchy, final MifosCurrency currency) {
 
-        final Map<Integer, SavingsAccountView> perIndividualSavingAccountsByGroupId = new HashMap<Integer, SavingsAccountView>();
         final int countOfCustomers = collectionSheetCustomerHierarchy.size();
         CollectionSheetEntryView parentView = null;
         
@@ -448,13 +441,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                         savDepositPaid);
                 savingsAccount.addAccountTrxnDetail(accountTrxnDetail);
                 
-                if (RecommendedAmountUnit.PER_INDIVIDUAL.getValue().equals(recommendedAmntUnitId)
-                        && CustomerLevel.GROUP.getValue().equals(customer.getLevelId())) {
-                    perIndividualSavingAccountsByGroupId.put(customerId, savingsAccount);
-                } else {
-                    childView.addSavingsAccountDetail(savingsAccount);
-                }
-                
                 childView.addSavingsAccountDetail(savingsAccount);
             }
 
@@ -486,18 +472,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 loanAccount.addTrxnDetails(Arrays.asList(accountTrxnDetail));
 
                 childView.addLoanAccountDetails(loanAccount);
-            }
-            
-            // handle per-individual savings accounts on groups
-            if (CustomerLevel.CLIENT.getValue().equals(customer.getLevelId())) {
-                final Integer parentCustomerId = customer.getParentCustomerId();
-                if (parentCustomerId != null) {
-                    final SavingsAccountView perIndivualSavingsApplicableToClient = perIndividualSavingAccountsByGroupId
-                            .get(parentCustomerId);
-                    if (perIndivualSavingsApplicableToClient != null) {
-                        childView.addSavingsAccountDetail(perIndivualSavingsApplicableToClient);
-                    }
-                }
             }
             
             // center-group-client hierarchy

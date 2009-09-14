@@ -39,14 +39,14 @@ import org.mifos.framework.util.helpers.StringUtils;
  */
 public class CollectionSheetEntryViewPostPreviewValidator {
 
-    public ActionErrors validate(CollectionSheetEntryView collectionSheetEntry, final ActionErrors errors,
+    public ActionErrors validate(final CollectionSheetEntryView collectionSheetEntry, final ActionErrors errors,
             final Locale locale) {
         
-        // TODO - keithw - simplify and unit test validation
+        // FIXME - keithw - simplify and unit test validation
         return validatePopulatedData(collectionSheetEntry, errors, locale);
     }
 
-    private ActionErrors validatePopulatedData(CollectionSheetEntryView parent, ActionErrors errors, Locale locale) {
+    private ActionErrors validatePopulatedData(final CollectionSheetEntryView parent, final ActionErrors errors, final Locale locale) {
         List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
 
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
@@ -70,8 +70,8 @@ public class CollectionSheetEntryViewPostPreviewValidator {
                 Double totalDisburtialAmount = accountView.getTotalDisburseAmount();
                 if (totalDueAmount.doubleValue() <= 0.0 && totalDisburtialAmount > 0.0) {
                     if (!accountView.isValidDisbursementAmount()
-                            || (!enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredDisbursalAmount
-                                    .equals(0.0))) {
+                            || !enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredDisbursalAmount
+                                    .equals(0.0)) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
@@ -79,7 +79,7 @@ public class CollectionSheetEntryViewPostPreviewValidator {
                 }
                 if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
                     if (!accountView.isValidAmountEntered()
-                            || (!enteredAmount.equals(totalDueAmount) && !enteredAmount.equals(0.0))) {
+                            || !enteredAmount.equals(totalDueAmount) && !enteredAmount.equals(0.0)) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
@@ -88,17 +88,17 @@ public class CollectionSheetEntryViewPostPreviewValidator {
                 if (totalDueAmount.doubleValue() > 0.0 && totalDisburtialAmount > 0.0) {
                     if (!accountView.isValidAmountEntered()
                             || !accountView.isValidDisbursementAmount()
-                            || (accountView.getEnteredAmount() == null)
-                            || (accountView.getDisBursementAmountEntered() == null)
-                            || (enteredAmount.equals(0.0) && !enteredDisbursalAmount.equals(0.0))
-                            || (enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0))
-                            || (enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredAmount
-                                    .equals(totalDueAmount))
-                            || (enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
-                                    .equals(totalDisburtialAmount))
-                            || (!enteredAmount.equals(totalDueAmount)
+                            || accountView.getEnteredAmount() == null
+                            || accountView.getDisBursementAmountEntered() == null
+                            || enteredAmount.equals(0.0) && !enteredDisbursalAmount.equals(0.0)
+                            || enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0)
+                            || enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredAmount
+                                    .equals(totalDueAmount)
+                            || enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
+                                    .equals(totalDisburtialAmount)
+                            || !enteredAmount.equals(totalDueAmount)
                                     && !enteredDisbursalAmount.equals(totalDisburtialAmount)
-                                    && !enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0))) {
+                                    && !enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0)) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
@@ -129,8 +129,8 @@ public class CollectionSheetEntryViewPostPreviewValidator {
             customerAccountAmountEntered = getDoubleValue(customerAccountView.getCustomerAccountAmountEntered());
         }
         if (!customerAccountView.isValidCustomerAccountAmountEntered()
-                || ((!customerAccountAmountEntered.equals(customerAccountView.getTotalAmountDue()
-                        .getAmountDoubleValue())) && (!customerAccountAmountEntered.equals(0.0)))) {
+                || !customerAccountAmountEntered.equals(customerAccountView.getTotalAmountDue()
+                        .getAmountDoubleValue()) && !customerAccountAmountEntered.equals(0.0)) {
             errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                     CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, acCollections, parent.getCustomerDetail()
                             .getDisplayName()));

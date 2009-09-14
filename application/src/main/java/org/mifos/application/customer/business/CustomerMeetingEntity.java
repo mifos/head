@@ -43,21 +43,32 @@ public class CustomerMeetingEntity extends PersistentObject {
 
     private MeetingBO updatedMeeting;
 
-    public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting) {
+    /**
+     * default constructor for hibernate usage
+     */
+    protected CustomerMeetingEntity() {
+        this.custMeetingId = null;
+        this.customer = null;
+    }
+
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal constructor for builder
+     */
+    public CustomerMeetingEntity(final MeetingBO meeting, final Short updatedFlag) {
+        this.custMeetingId = null;
+        this.meeting = meeting;
+        this.updatedFlag = updatedFlag;
+        this.customer = null;
+    }
+    
+    public CustomerMeetingEntity(final CustomerBO customer, final MeetingBO meeting) {
         meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMER_MEETING));
         this.customer = customer;
         this.meeting = meeting;
         this.custMeetingId = null;
         this.updatedFlag = YesNoFlag.NO.getValue();
-    }
-
-    /*
-     * Adding a default constructor is hibernate's requirement and should not be
-     * used to create a valid Object.
-     */
-    protected CustomerMeetingEntity() {
-        this.custMeetingId = null;
-        this.customer = null;
     }
 
     public CustomerBO getCustomer() {
@@ -68,7 +79,7 @@ public class CustomerMeetingEntity extends PersistentObject {
         return meeting;
     }
 
-    void setMeeting(MeetingBO meeting) {
+    void setMeeting(final MeetingBO meeting) {
         this.meeting = meeting;
     }
 
@@ -76,7 +87,7 @@ public class CustomerMeetingEntity extends PersistentObject {
         return updatedFlag;
     }
 
-    void setUpdatedFlag(Short updatedFlag) {
+    void setUpdatedFlag(final Short updatedFlag) {
         this.updatedFlag = updatedFlag;
     }
 
@@ -84,7 +95,7 @@ public class CustomerMeetingEntity extends PersistentObject {
         return updatedMeeting;
     }
 
-    void setUpdatedMeeting(MeetingBO updatedMeeting) {
+    void setUpdatedMeeting(final MeetingBO updatedMeeting) {
         this.updatedMeeting = updatedMeeting;
     }
 }

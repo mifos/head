@@ -24,8 +24,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
@@ -51,6 +53,8 @@ import org.mifos.framework.security.util.UserContext;
 
 public class CenterBO extends CustomerBO {
 
+    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
+    
     /*
      * Injected Persistence classes
      * 
@@ -73,15 +77,33 @@ public class CenterBO extends CustomerBO {
         return centerPersistence;
     }
 
-    public void setCenterPersistence(CenterPersistence centerPersistence) {
+    public void setCenterPersistence(final CenterPersistence centerPersistence) {
         this.centerPersistence = centerPersistence;
     }
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
+    /**
+     * default constructor for hibernate
+     */
+    protected CenterBO() {
+        super();
+    }
 
-    public CenterBO(UserContext userContext, String displayName, Address address, List<CustomFieldView> customFields,
-            List<FeeView> fees, String externalId, Date mfiJoiningDate, OfficeBO office, MeetingBO meeting,
-            PersonnelBO loanOfficer, CustomerPersistence customerPersistence) throws CustomerException {
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal constructor for builder
+     */
+    public CenterBO(final CustomerLevel customerLevel, final String name, final OfficeBO office,
+            final PersonnelBO loanOfficer,
+            final CustomerMeetingEntity customerMeeting, final CustomerAccountBO customerAccount, final String searchId) {
+        super(customerLevel, name, office, loanOfficer, customerMeeting, customerAccount);
+        this.setSearchId(searchId);
+        this.setCustomerActivationDate(this.getCreatedDate());
+    }
+
+    public CenterBO(final UserContext userContext, final String displayName, final Address address, final List<CustomFieldView> customFields,
+            final List<FeeView> fees, final String externalId, final Date mfiJoiningDate, final OfficeBO office, final MeetingBO meeting,
+            final PersonnelBO loanOfficer, final CustomerPersistence customerPersistence) throws CustomerException {
         super(userContext, displayName, CustomerLevel.CENTER, CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate,
                 address, customFields, fees, null, office, null, meeting, loanOfficer);
         validateFields(displayName, meeting, loanOfficer, office);
@@ -95,17 +117,13 @@ public class CenterBO extends CustomerBO {
         this.setCustomerActivationDate(this.getCreatedDate());
     }
 
-    protected CenterBO() {
-        super();
-    }
-
-    public static CenterBO createInstanceForTest(Integer customerId, CustomerLevelEntity customerLevel,
-            PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+    public static CenterBO createInstanceForTest(final Integer customerId, final CustomerLevelEntity customerLevel,
+            final PersonnelBO formedByPersonnel, final PersonnelBO personnel, final String displayName) {
         return new CenterBO(customerId, customerLevel, formedByPersonnel, personnel, displayName);
     }
 
-    private CenterBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel,
-            PersonnelBO personnel, String displayName) {
+    private CenterBO(final Integer customerId, final CustomerLevelEntity customerLevel, final PersonnelBO formedByPersonnel,
+            final PersonnelBO personnel, final String displayName) {
         super(customerId, customerLevel, formedByPersonnel, personnel, displayName);
     }
 
@@ -115,13 +133,13 @@ public class CenterBO extends CustomerBO {
     }
 
     @Override
-    public void updateMeeting(MeetingBO meeting) throws CustomerException {
+    public void updateMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In CenterBO::updateMeeting(), customerId: " + getCustomerId());
         saveUpdatedMeeting(meeting);
         this.update();
     }
 
-    private void validateFields(String displayName, MeetingBO meeting, PersonnelBO personnel, OfficeBO office)
+    private void validateFields(final String displayName, final MeetingBO meeting, final PersonnelBO personnel, final OfficeBO office)
             throws CustomerException {
         try {
             if (getCenterPersistence().isCenterExists(displayName)) {
@@ -136,7 +154,7 @@ public class CenterBO extends CustomerBO {
     }
 
     @Override
-    protected void validateStatusChange(Short newStatusId) throws CustomerException {
+    protected void validateStatusChange(final Short newStatusId) throws CustomerException {
         logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
         if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
             if (isAnySavingsAccountOpen()) {
@@ -156,8 +174,8 @@ public class CenterBO extends CustomerBO {
                 + getCustomerId());
     }
 
-    public void update(UserContext userContext, Short loanOfficerId, String externalId, Date mfiJoiningDate,
-            Address address, List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions)
+    public void update(final UserContext userContext, final Short loanOfficerId, final String externalId, final Date mfiJoiningDate,
+            final Address address, final List<CustomFieldView> customFields, final List<CustomerPositionView> customerPositions)
             throws Exception {
         validateFieldsForUpdate(loanOfficerId);
         setMfiJoiningDate(mfiJoiningDate);
@@ -165,13 +183,14 @@ public class CenterBO extends CustomerBO {
         super.update(userContext, externalId, address, customFields, customerPositions);
     }
 
-    protected void validateFieldsForUpdate(Short loanOfficerId) throws CustomerException {
-        if (isActive())
+    protected void validateFieldsForUpdate(final Short loanOfficerId) throws CustomerException {
+        if (isActive()) {
             validateLO(loanOfficerId);
+        }
     }
 
     @Override
-    protected boolean isActiveForFirstTime(Short oldStatus, Short newStatusId) {
+    protected boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
         return false;
     }
 
@@ -181,7 +200,7 @@ public class CenterBO extends CustomerBO {
     }
 
     @Override
-    protected void saveUpdatedMeeting(MeetingBO meeting) throws CustomerException {
+    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
         MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
         super.saveUpdatedMeeting(meeting);
         deleteMeeting(newMeeting);

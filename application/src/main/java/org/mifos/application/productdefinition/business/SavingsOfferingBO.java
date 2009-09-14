@@ -30,6 +30,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
@@ -42,48 +43,55 @@ import org.mifos.framework.util.helpers.Money;
 
 public class SavingsOfferingBO extends PrdOfferingBO {
 
-    private RecommendedAmntUnitEntity recommendedAmntUnit;
-
-    private SavingsTypeEntity savingsType;
-
-    private InterestCalcTypeEntity interestCalcType;
-
-    private final Set<PrdOfferingMeetingEntity> savingsOfferingMeetings;
-
+    private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    
     private Money recommendedAmount;
-
     private Money maxAmntWithdrawl;
-
     private Money minAmntForInt;
-
     private Double interestRate;
-
+    private RecommendedAmntUnitEntity recommendedAmntUnit;
+    private SavingsTypeEntity savingsType;
+    private InterestCalcTypeEntity interestCalcType;
     private final GLCodeEntity depositGLCode;
-
     private final GLCodeEntity interestGLCode;
-
-    private final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    
+    private final Set<PrdOfferingMeetingEntity> savingsOfferingMeetings;
 
     public SavingsOfferingBO() {
         this(null, null, null, new HashSet<PrdOfferingMeetingEntity>());
     }
+    
+    public SavingsOfferingBO(final SavingsType savingsType, final String name, final String shortName,
+            final String globalProductNumber, final Date startDate, final ApplicableTo applicableToCustomer,
+            final ProductCategoryBO category, final InterestCalcType interestCalcType, final Double interestRate,
+            final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode, final Date createdDate,
+            final Short createdByUserId) {
+        super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, createdDate,
+                createdByUserId);
+        this.interestRate = interestRate;
+        this.savingsType = new SavingsTypeEntity(savingsType);
+        this.interestCalcType = new InterestCalcTypeEntity(interestCalcType);
+        this.depositGLCode = depositGLCode;
+        this.interestGLCode = interestGLCode;
+        this.savingsOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
+    }
 
-    public SavingsOfferingBO(UserContext userContext, String prdOfferingName, String prdOfferingShortName,
-            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
-            SavingsTypeEntity savingsType, InterestCalcTypeEntity interestCalcType, MeetingBO timePerForInstcalc,
-            MeetingBO freqOfPostIntcalc, Money recommendedAmount, Double interestRate, GLCodeEntity depositGLCode,
-            GLCodeEntity interestGLCode) throws ProductDefinitionException {
+    public SavingsOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate,
+            final SavingsTypeEntity savingsType, final InterestCalcTypeEntity interestCalcType, final MeetingBO timePerForInstcalc,
+            final MeetingBO freqOfPostIntcalc, final Money recommendedAmount, final Double interestRate, final GLCodeEntity depositGLCode,
+            final GLCodeEntity interestGLCode) throws ProductDefinitionException {
         this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, null,
                 null, null, savingsType, interestCalcType, timePerForInstcalc, freqOfPostIntcalc, recommendedAmount,
                 null, null, interestRate, depositGLCode, interestGLCode);
     }
 
-    public SavingsOfferingBO(UserContext userContext, String prdOfferingName, String prdOfferingShortName,
-            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate,
-            String description, RecommendedAmntUnitEntity recommendedAmntUnit, SavingsTypeEntity savingsType,
-            InterestCalcTypeEntity interestCalcType, MeetingBO timePerForInstcalc, MeetingBO freqOfPostIntcalc,
-            Money recommendedAmount, Money maxAmntWithdrawl, Money minAmntForInt, Double interestRate,
-            GLCodeEntity depositGLCode, GLCodeEntity interestGLCode) throws ProductDefinitionException {
+    public SavingsOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+            final String description, final RecommendedAmntUnitEntity recommendedAmntUnit, final SavingsTypeEntity savingsType,
+            final InterestCalcTypeEntity interestCalcType, final MeetingBO timePerForInstcalc, final MeetingBO freqOfPostIntcalc,
+            final Money recommendedAmount, final Money maxAmntWithdrawl, final Money minAmntForInt, final Double interestRate,
+            final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode) throws ProductDefinitionException {
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
                 description);
         prdLogger.debug("creating savings product offering");
@@ -107,8 +115,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         prdLogger.debug("creating savings product offering done :" + getGlobalPrdOfferingNum());
     }
 
-    public SavingsOfferingBO(Short prdOfferingId, GLCodeEntity depositGLCode, GLCodeEntity interestGLCode,
-            HashSet<PrdOfferingMeetingEntity> savingsOfferingMeetings) {
+    public SavingsOfferingBO(final Short prdOfferingId, final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode,
+            final HashSet<PrdOfferingMeetingEntity> savingsOfferingMeetings) {
         super(prdOfferingId);
         this.depositGLCode = depositGLCode;
         this.interestGLCode = interestGLCode;
@@ -123,7 +131,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return getPrdOfferingMeeting(MeetingType.SAVINGS_INTEREST_POSTING);
     }
 
-    public void setFreqOfPostIntcalc(PrdOfferingMeetingEntity freqOfPostIntcalc) {
+    public void setFreqOfPostIntcalc(final PrdOfferingMeetingEntity freqOfPostIntcalc) {
         this.savingsOfferingMeetings.add(freqOfPostIntcalc);
     }
 
@@ -131,7 +139,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return getPrdOfferingMeeting(MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
     }
 
-    public void setTimePerForInstcalc(PrdOfferingMeetingEntity timePerForInstcalc) {
+    public void setTimePerForInstcalc(final PrdOfferingMeetingEntity timePerForInstcalc) {
         this.savingsOfferingMeetings.add(timePerForInstcalc);
     }
 
@@ -139,7 +147,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return interestRate;
     }
 
-    public void setInterestRate(Double interestRate) {
+    public void setInterestRate(final Double interestRate) {
         this.interestRate = interestRate;
     }
 
@@ -147,7 +155,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return maxAmntWithdrawl;
     }
 
-    public void setMaxAmntWithdrawl(Money maxAmntWithdrawl) {
+    public void setMaxAmntWithdrawl(final Money maxAmntWithdrawl) {
         this.maxAmntWithdrawl = maxAmntWithdrawl;
     }
 
@@ -155,7 +163,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return minAmntForInt;
     }
 
-    public void setMinAmntForInt(Money minAmntForInt) {
+    public void setMinAmntForInt(final Money minAmntForInt) {
         this.minAmntForInt = minAmntForInt;
     }
 
@@ -163,7 +171,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return recommendedAmount;
     }
 
-    void setRecommendedAmount(Money recommendedAmount) {
+    void setRecommendedAmount(final Money recommendedAmount) {
         this.recommendedAmount = recommendedAmount;
     }
 
@@ -171,7 +179,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return interestCalcType;
     }
 
-    public void setInterestCalcType(InterestCalcTypeEntity interestCalcType) {
+    public void setInterestCalcType(final InterestCalcTypeEntity interestCalcType) {
         this.interestCalcType = interestCalcType;
     }
 
@@ -179,11 +187,11 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return recommendedAmntUnit;
     }
 
-    void setRecommendedAmntUnit(RecommendedAmntUnitEntity recommendedAmntUnit) {
+    void setRecommendedAmntUnit(final RecommendedAmntUnitEntity recommendedAmntUnit) {
         this.recommendedAmntUnit = recommendedAmntUnit;
     }
 
-    public void setRecommendedAmntUnit(RecommendedAmountUnit unit) {
+    public void setRecommendedAmntUnit(final RecommendedAmountUnit unit) {
         setRecommendedAmntUnit(new RecommendedAmntUnitEntity(unit));
     }
 
@@ -195,7 +203,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return SavingsType.fromInt(savingsType.getId());
     }
 
-    public void setSavingsType(SavingsTypeEntity savingsType) {
+    public void setSavingsType(final SavingsTypeEntity savingsType) {
         this.savingsType = savingsType;
     }
 
@@ -223,12 +231,12 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return getStatus() == PrdStatus.SAVINGS_ACTIVE;
     }
 
-    public void update(Short userId, String prdOfferingName, String prdOfferingShortName,
-            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate,
-            String description, PrdStatus prdStatus, RecommendedAmntUnitEntity recommendedAmntUnit,
-            SavingsTypeEntity savingsType, InterestCalcTypeEntity interestCalcType, MeetingBO timePerForInstcalc,
-            MeetingBO freqOfPostIntcalc, Money recommendedAmount, Money maxAmntWithdrawl, Money minAmntForInt,
-            Double interestRate) throws ProductDefinitionException {
+    public void update(final Short userId, final String prdOfferingName, final String prdOfferingShortName,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+            final String description, final PrdStatus prdStatus, final RecommendedAmntUnitEntity recommendedAmntUnit,
+            final SavingsTypeEntity savingsType, final InterestCalcTypeEntity interestCalcType, final MeetingBO timePerForInstcalc,
+            final MeetingBO freqOfPostIntcalc, final Money recommendedAmount, final Money maxAmntWithdrawl, final Money minAmntForInt,
+            final Double interestRate) throws ProductDefinitionException {
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, prdStatus);
         validate(savingsType, interestCalcType, recommendedAmntUnit, timePerForInstcalc, freqOfPostIntcalc,
@@ -254,7 +262,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         prdLogger.debug("updated savings product offering done :" + getGlobalPrdOfferingNum());
     }
 
-    private PrdOfferingMeetingEntity getPrdOfferingMeeting(MeetingType meetingType) throws ProductDefinitionException {
+    private PrdOfferingMeetingEntity getPrdOfferingMeeting(final MeetingType meetingType) throws ProductDefinitionException {
         prdLogger.debug("getting product offering meeting for :" + meetingType);
         if (getSavingsOfferingMeetings() != null && getSavingsOfferingMeetings().size() > 0) {
             for (PrdOfferingMeetingEntity prdOfferingMeeting : getSavingsOfferingMeetings()) {
@@ -266,21 +274,21 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         throw new ProductDefinitionException("errors.getmeeting");
     }
 
-    private void validate(SavingsTypeEntity savingsType, InterestCalcTypeEntity interestCalcType,
-            RecommendedAmntUnitEntity recommendedAmntUnit, MeetingBO timePerForInstcalc, MeetingBO freqOfPostIntcalc,
-            Money recommendedAmount, Double interestRate, GLCodeEntity depositGLCode, GLCodeEntity interestGLCode)
+    private void validate(final SavingsTypeEntity savingsType, final InterestCalcTypeEntity interestCalcType,
+            final RecommendedAmntUnitEntity recommendedAmntUnit, final MeetingBO timePerForInstcalc, final MeetingBO freqOfPostIntcalc,
+            final Money recommendedAmount, final Double interestRate, final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode)
             throws ProductDefinitionException {
         prdLogger.debug("Validating the fields in savings Offering");
         if (savingsType == null || interestCalcType == null || timePerForInstcalc == null || freqOfPostIntcalc == null
                 || interestRate == null || depositGLCode == null || interestGLCode == null
-                || (savingsType.getId().equals(SavingsType.MANDATORY.getValue()) && recommendedAmount == null)
-                || (getPrdApplicableMasterEnum() == ApplicableTo.GROUPS && recommendedAmntUnit == null)) {
+                || savingsType.getId().equals(SavingsType.MANDATORY.getValue()) && recommendedAmount == null
+                || getPrdApplicableMasterEnum() == ApplicableTo.GROUPS && recommendedAmntUnit == null) {
             throw new ProductDefinitionException("errors.create");
         }
         prdLogger.debug("Validating the fields in savings Offering done");
     }
 
-    public static SavingsOfferingBO createInstanceForTest(Short prdOfferingId) {
+    public static SavingsOfferingBO createInstanceForTest(final Short prdOfferingId) {
         return new SavingsOfferingBO(prdOfferingId, null, null, new HashSet<PrdOfferingMeetingEntity>());
     }
 }

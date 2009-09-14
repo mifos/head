@@ -265,7 +265,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
      * Note, it invokes verifyFirstDateForWeekForGivenStartDateAndWeekDay for
      * each day of the week
      */
-    private void verifyFirstDateForWeekForGivenStartDate(Date startDate, Date[] expectedDates) throws MeetingException {
+    private void verifyFirstDateForWeekForGivenStartDate(final Date startDate, final Date[] expectedDates) throws MeetingException {
         verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.SUNDAY, startDate, expectedDates[0]);
         verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.MONDAY, startDate, expectedDates[1]);
         verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.TUESDAY, startDate, expectedDates[2]);
@@ -284,7 +284,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
      * expected date
      * 
      */
-    private void verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay weekDay, Date startDate, Date expectedDate)
+    private void verifyFirstDateForWeekForGivenStartDateAndWeekDay(final WeekDay weekDay, final Date startDate, final Date expectedDate)
             throws MeetingException {
         // Assert getFirstDateForWeek works as expected for meeting with given
         // weekDay
@@ -995,8 +995,9 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertNull(meeting);
             Assert.fail();
         } catch (MeetingException me) {
-           Assert.assertTrue(true);
-           Assert.assertEquals(MeetingConstants.INVALID_WEEKDAY, me.getKey());
+            fail("should be illegal state exception - not a checked exception");
+        } catch (IllegalStateException e) {
+            Assert.assertEquals(MeetingConstants.INVALID_WEEKDAY, e.getMessage());
         }
     }
 
@@ -1233,25 +1234,25 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(RankType.THIRD, meeting.getMeetingDetails().getWeekRank());
     }
 
-    private MeetingBO createDailyMeeting(Short recurAfer, Date startDate) throws MeetingException {
+    private MeetingBO createDailyMeeting(final Short recurAfer, final Date startDate) throws MeetingException {
         return new MeetingBO(RecurrenceType.DAILY, recurAfer, startDate, MeetingType.CUSTOMER_MEETING);
     }
 
-    private MeetingBO createWeeklyMeeting(WeekDay weekDay, Short recurAfer, Date startDate) throws MeetingException {
+    private MeetingBO createWeeklyMeeting(final WeekDay weekDay, final Short recurAfer, final Date startDate) throws MeetingException {
         return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
     }
 
-    private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate)
+    private MeetingBO createMonthlyMeetingOnDate(final Short dayNumber, final Short recurAfer, final Date startDate)
             throws MeetingException {
         return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
     }
 
-    private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate)
+    private MeetingBO createMonthlyMeetingOnWeekDay(final WeekDay weekDay, final RankType rank, final Short recurAfer, final Date startDate)
             throws MeetingException {
         return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
     }
 
-    private List createExpectedList(String dates) throws Exception {
+    private List createExpectedList(final String dates) throws Exception {
         List expectedList = new ArrayList();
         StringTokenizer tokenizer = new StringTokenizer(dates, ",");
         while (tokenizer.hasMoreTokens()) {
@@ -1261,10 +1262,11 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         return expectedList;
     }
 
-    void matchDateLists(List<Date> expectedList, List<Date> list) {
+    void matchDateLists(final List<Date> expectedList, final List<Date> list) {
        Assert.assertEquals(expectedList.size(), list.size());
-        for (int i = 0; i < expectedList.size(); i++)
-           Assert.assertEquals("Dates are invalid", expectedList.get(i), list.get(i));
+        for (int i = 0; i < expectedList.size(); i++) {
+            Assert.assertEquals("Dates are invalid", expectedList.get(i), list.get(i));
+        }
     }
 
     public void testShouldReturnDateOfNextWeekOnSameWeekdayAsConfiguredIfStartDateDayIsAfterConfiguredWeekday()

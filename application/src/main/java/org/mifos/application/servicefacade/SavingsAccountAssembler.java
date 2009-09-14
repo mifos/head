@@ -26,11 +26,9 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -80,16 +78,6 @@ public class SavingsAccountAssembler {
                     final SavingsBO account = savingsPersistence.findById(accountId);
                     final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
 
-                    final List<SavingsScheduleEntity> scheduledDeposits = new ArrayList<SavingsScheduleEntity>();
-                    final List<CollectionSheetEntryInstallmentView> scheduledSavingInstallments = savingAccountView
-                            .getAccountTrxnDetails();
-
-                    for (CollectionSheetEntryInstallmentView installment : scheduledSavingInstallments) {
-                        SavingsScheduleEntity savingsScheduledInstallment = (SavingsScheduleEntity) account
-                                .getAccountActionDate(installment.getInstallmentId());
-                        scheduledDeposits.add(savingsScheduledInstallment);
-                    }
-
                     if (amountToDeposit.getAmount() != null
                             && amountToDeposit.getAmountDoubleValue() > Double.valueOf("0.0")) {
 
@@ -98,7 +86,7 @@ public class SavingsAccountAssembler {
                         accountDeposit.setCreatedByUser(user);
 
                         try {
-                            account.deposit(accountDeposit, scheduledDeposits);
+                            account.deposit(accountDeposit);
                             storeAccountForSavingLater = true;
                         } catch (AccountException e) {
                             failedSavingsDepositAccountNums.add(account.getGlobalAccountNum());

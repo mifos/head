@@ -51,6 +51,7 @@ import org.mifos.framework.util.helpers.StringUtils;
  */
 public abstract class PrdOfferingBO extends BusinessObject {
 
+    private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
     private final Short prdOfferingId;
 
     private String prdOfferingName;
@@ -82,32 +83,56 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
     private Short prdMixFlag; // Tagging products for which mixes were defined
 
-    private final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
-
+    /**
+     * default constructor for hibernate usage
+     */
     protected PrdOfferingBO() {
         this(null, null, null, null);
-        prdApplicableMaster = null;
-        collectionProductMix = null;
-        prdOfferingNotAllowedId = null;
     }
-
-    protected PrdOfferingBO(Short prdOfferingId, String globalPrdOfferingNum, ProductTypeEntity prdType, OfficeBO office) {
+    
+    protected PrdOfferingBO(final Short prdOfferingId) {
+        this(prdOfferingId, null, null, null);
+    }
+    
+    protected PrdOfferingBO(final Short prdOfferingId, final String globalPrdOfferingNum,
+            final ProductTypeEntity prdType, final OfficeBO office) {
         this.prdOfferingId = prdOfferingId;
         this.globalPrdOfferingNum = globalPrdOfferingNum;
         this.prdType = prdType;
         this.office = office;
     }
 
-    protected PrdOfferingBO(UserContext userContext, String prdOfferingName, String prdOfferingShortName,
-            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
+    /**
+     * TODO - keithw - work in progress -
+     * 
+     * Minimal legal constructor
+     */
+    public PrdOfferingBO(final String name, final String shortName, final String globalProductNumber,
+            final Date startDate, final ApplicableTo applicableToCustomer, final ProductCategoryBO category,
+            final Date createdDate, final Short createdByUserId) {
+        this.prdOfferingName = name;
+        this.prdOfferingShortName = shortName;
+        this.globalPrdOfferingNum = globalProductNumber;
+        this.startDate = startDate;
+        this.prdApplicableMaster = new PrdApplicableMasterEntity(applicableToCustomer);
+        this.prdCategory = category;
+        this.createdDate = createdDate;
+        this.createdBy = createdByUserId;
+        this.prdOfferingId = null;
+        this.prdType = null;
+        this.office = null;
+    }
+
+    protected PrdOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate)
             throws ProductDefinitionException {
         this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, null,
                 null);
     }
 
-    protected PrdOfferingBO(UserContext userContext, String prdOfferingName, String prdOfferingShortName,
-            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate,
-            String description) throws ProductDefinitionException {
+    protected PrdOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+            final String description) throws ProductDefinitionException {
         super(userContext);
         prdLogger.debug("creating product offering");
         validateUserContext(userContext);
@@ -134,10 +159,6 @@ public abstract class PrdOfferingBO extends BusinessObject {
             throw new ProductDefinitionException(e);
         }
         prdLogger.debug("creating product offering done");
-    }
-
-    protected PrdOfferingBO(Short prdOfferingId) {
-        this(prdOfferingId, null, null, null);
     }
 
     public Short getPrdOfferingId() {
@@ -202,35 +223,35 @@ public abstract class PrdOfferingBO extends BusinessObject {
         return description;
     }
 
-    void setPrdOfferingName(String prdOfferingName) {
+    void setPrdOfferingName(final String prdOfferingName) {
         this.prdOfferingName = prdOfferingName;
     }
 
-    public void setPrdOfferingShortName(String prdOfferingShortName) {
+    public void setPrdOfferingShortName(final String prdOfferingShortName) {
         this.prdOfferingShortName = prdOfferingShortName;
     }
 
-    public void setPrdCategory(ProductCategoryBO prdCategory) {
+    public void setPrdCategory(final ProductCategoryBO prdCategory) {
         this.prdCategory = prdCategory;
     }
 
-    public void setPrdStatus(PrdStatusEntity prdStatus) {
+    public void setPrdStatus(final PrdStatusEntity prdStatus) {
         this.prdStatus = prdStatus;
     }
 
-    public void setPrdApplicableMaster(PrdApplicableMasterEntity prdApplicableMaster) {
+    public void setPrdApplicableMaster(final PrdApplicableMasterEntity prdApplicableMaster) {
         this.prdApplicableMaster = prdApplicableMaster;
     }
 
-    void setStartDate(Date startDate) {
+    void setStartDate(final Date startDate) {
         this.startDate = startDate;
     }
 
-    void setEndDate(Date endDate) {
+    void setEndDate(final Date endDate) {
         this.endDate = endDate;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -238,7 +259,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         return collectionProductMix;
     }
 
-    public void setCollectionProductMix(Set<PrdOfferingBO> collectionProductMix) {
+    public void setCollectionProductMix(final Set<PrdOfferingBO> collectionProductMix) {
         this.collectionProductMix = collectionProductMix;
     }
 
@@ -246,7 +267,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         return prdOfferingNotAllowedId;
     }
 
-    public void setPrdOfferingNotAllowedId(Set<PrdOfferingBO> prdOfferingNotAllowedId) {
+    public void setPrdOfferingNotAllowedId(final Set<PrdOfferingBO> prdOfferingNotAllowedId) {
         this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
     }
 
@@ -254,7 +275,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         return prdMixFlag;
     }
 
-    public void setPrdMixFlag(Short prdMixFlag) {
+    public void setPrdMixFlag(final Short prdMixFlag) {
         this.prdMixFlag = prdMixFlag;
     }
 
@@ -275,17 +296,17 @@ public abstract class PrdOfferingBO extends BusinessObject {
         return globalPrdOfferingNum.toString();
     }
 
-    private void vaildate(String prdOfferingName, String prdOfferingShortName, ProductCategoryBO prdCategory,
-            PrdApplicableMasterEntity prdApplicableMaster, Date startDate) throws ProductDefinitionException {
+    private void vaildate(final String prdOfferingName, final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate) throws ProductDefinitionException {
         prdLogger.debug("Validating the fields in Prd Offering");
         if (prdOfferingName == null || prdOfferingShortName == null || prdCategory == null
-                || prdApplicableMaster == null || (prdOfferingShortName.length() > 4) || startDate == null) {
+                || prdApplicableMaster == null || prdOfferingShortName.length() > 4 || startDate == null) {
             throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
         }
         prdLogger.debug("Validation of the fields in Prd Offering done.");
     }
 
-    private void validateUserContext(UserContext userContext) throws ProductDefinitionException {
+    private void validateUserContext(final UserContext userContext) throws ProductDefinitionException {
         prdLogger.debug("Validating the usercontext in Prd Offering");
         if (userContext == null) {
             throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
@@ -293,14 +314,14 @@ public abstract class PrdOfferingBO extends BusinessObject {
         prdLogger.debug("Validation of the fields in Prd Offering done.");
     }
 
-    protected void validateStartDateAgainstCurrentDate(Date startDate) throws ProductDefinitionException {
+    protected void validateStartDateAgainstCurrentDate(final Date startDate) throws ProductDefinitionException {
         if (DateUtils.getDateWithoutTimeStamp(startDate.getTime())
                 .compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
             throw new ProductDefinitionException(ProductDefinitionConstants.INVALIDSTARTDATE);
         }
     }
 
-    private void validateEndDateAgainstCurrentDate(Date startDate, Date endDate) throws ProductDefinitionException {
+    private void validateEndDateAgainstCurrentDate(final Date startDate, final Date endDate) throws ProductDefinitionException {
         if (endDate != null
                 && DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
                         DateUtils.getDateWithoutTimeStamp(endDate.getTime())) >= 0) {
@@ -308,7 +329,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         }
     }
 
-    private PrdStatusEntity getPrdStatus(Date startDate, ProductTypeEntity prdType) throws ProductDefinitionException {
+    private PrdStatusEntity getPrdStatus(final Date startDate, final ProductTypeEntity prdType) throws ProductDefinitionException {
         prdLogger.debug("getting the Product status for prdouct offering with start date :" + startDate
                 + " and product Type :" + prdType.getProductTypeID());
         PrdStatus prdStatus = null;
@@ -325,7 +346,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         }
     }
 
-    private PrdStatus getActivePrdStatus(ProductTypeEntity prdType) {
+    private PrdStatus getActivePrdStatus(final ProductTypeEntity prdType) {
         prdLogger.debug("getting the Active Product status for product Type :" + prdType.getProductTypeID());
         if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_ACTIVE;
@@ -334,7 +355,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         }
     }
 
-    private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {
+    private PrdStatus getInActivePrdStatus(final ProductTypeEntity prdType) {
         prdLogger.debug("getting the In Active Product status for product Type :" + prdType.getProductTypeID());
         if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_INACTIVE;
@@ -343,7 +364,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         }
     }
 
-    private void validateDuplicateProductOfferingName(String productOfferingName) throws ProductDefinitionException {
+    private void validateDuplicateProductOfferingName(final String productOfferingName) throws ProductDefinitionException {
         prdLogger.debug("Checking for duplicate product offering name");
         try {
             if (!new PrdOfferingPersistence().getProductOfferingNameCount(productOfferingName).equals(
@@ -355,7 +376,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         }
     }
 
-    private void validateDuplicateProductOfferingShortName(String productOfferingShortName)
+    private void validateDuplicateProductOfferingShortName(final String productOfferingShortName)
             throws ProductDefinitionException {
         prdLogger.debug("Checking for duplicate product offering short name");
         try {
@@ -368,9 +389,9 @@ public abstract class PrdOfferingBO extends BusinessObject {
         }
     }
 
-    public void update(Short userId, String prdOfferingName, String prdOfferingShortName,
-            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate,
-            String description, PrdStatus status) throws ProductDefinitionException {
+    public void update(final Short userId, final String prdOfferingName, final String prdOfferingShortName,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+            final String description, final PrdStatus status) throws ProductDefinitionException {
         vaildate(prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate);
         validateStartDateForUpdate(startDate);
         validateEndDateAgainstCurrentDate(startDate, endDate);
@@ -396,7 +417,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
     }
 
-    private void validateStartDateForUpdate(Date startDate) throws ProductDefinitionException {
+    private void validateStartDateForUpdate(final Date startDate) throws ProductDefinitionException {
         if (DateUtils.getDateWithoutTimeStamp(this.startDate.getTime()).compareTo(
                 DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
                 && DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
@@ -418,12 +439,12 @@ public abstract class PrdOfferingBO extends BusinessObject {
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
-        result = PRIME * result + ((prdOfferingId == null) ? 0 : prdOfferingId.hashCode());
+        result = PRIME * result + (prdOfferingId == null ? 0 : prdOfferingId.hashCode());
         return result;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

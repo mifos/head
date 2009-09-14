@@ -27,6 +27,8 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -83,14 +85,24 @@ public class IntegrationTestObjectMother {
         return testUser;
     }
 
-    public static void saveCustomerHierarchy(final CustomerBO center, final GroupBO group, final ClientBO client) {
+    public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group, final ClientBO client,
+            final MeetingBO meeting, final FeeBO weeklyPeriodicFee) {
         try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(meeting);
+            customerPersistence.createOrUpdate(weeklyPeriodicFee);
             customerPersistence.saveCustomer(center);
             groupPersistence.saveGroup(group);
             clientPersistence.saveClient(client);
             StaticHibernateUtil.commitTransaction();
         } catch (CustomerException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
     }
 }

@@ -34,46 +34,24 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
-import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
-import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
-import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.customer.client.persistence.ClientPersistence;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeConstants;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.servicefacade.AccountPaymentAssembler;
-import org.mifos.application.servicefacade.ClientAttendanceAssembler;
 import org.mifos.application.servicefacade.CollectionSheetDataViewAssembler;
 import org.mifos.application.servicefacade.CollectionSheetEntryDecomposedView;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDtoDecorator;
-import org.mifos.application.servicefacade.CollectionSheetEntryGridViewAssembler;
-import org.mifos.application.servicefacade.CollectionSheetEntryViewAssembler;
 import org.mifos.application.servicefacade.CollectionSheetEntryViewTranslator;
 import org.mifos.application.servicefacade.CollectionSheetErrorsView;
 import org.mifos.application.servicefacade.CollectionSheetFormEnteredDataDto;
-import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.application.servicefacade.CollectionSheetServiceFacade;
-import org.mifos.application.servicefacade.CollectionSheetServiceFacadeWebTier;
-import org.mifos.application.servicefacade.CollectionSheetServiceImpl;
-import org.mifos.application.servicefacade.CustomerAccountAssembler;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.FormEnteredDataAssembler;
-import org.mifos.application.servicefacade.LoanAccountAssembler;
-import org.mifos.application.servicefacade.SavingsAccountAssembler;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -95,60 +73,10 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
-    private final CollectionSheetServiceFacade collectionSheetServiceFacade;
-    
-    // TODO - post-spring-di - dependency inject persistence/dao classes into
-    // facade using spring.
-    private final OfficePersistence officePersistence;
-    private final MasterPersistence masterPersistence;
-    private final PersonnelPersistence personnelPersistence;
-    private final CustomerPersistence customerPersistence;
-    private final ClientPersistence clientPersistence;
-    private final BulkEntryPersistence bulkEntryPersistence;
-    private final SavingsPersistence savingsPersistence;
-    private final ClientAttendanceDao clientAttendanceDao;
-    private final LoanPersistence loanPersistence;
-    private final AccountPersistence accountPersistence;
-    private final CollectionSheetService collectionSheetService;
-    private final CollectionSheetDao collectionSheetDao;
+    private final CollectionSheetServiceFacade collectionSheetServiceFacade = DependencyInjectedServiceLocator
+            .locateCollectionSheetServiceFacade();
     
     public CollectionSheetEntryAction() {
-        
-        // TODO - post-spring-di - none of below code is need when DI used with
-        // spring
-        officePersistence = new OfficePersistence();
-        masterPersistence = new MasterPersistence();
-        personnelPersistence = new PersonnelPersistence();
-        customerPersistence = new CustomerPersistence();
-        clientPersistence = new ClientPersistence();
-        bulkEntryPersistence = new BulkEntryPersistence();
-        savingsPersistence = new SavingsPersistence();
-        clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
-        loanPersistence = new LoanPersistence();
-        accountPersistence = new AccountPersistence();
-        collectionSheetDao = new CollectionSheetDaoHibernate();
-        
-        final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler = new CollectionSheetEntryViewAssembler(
-                bulkEntryPersistence, customerPersistence, clientAttendanceDao);
-        
-        final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler = new CollectionSheetEntryGridViewAssembler(
-                customerPersistence, masterPersistence, collectionSheetEntryViewAssembler);
-        
-        final AccountPaymentAssembler accountPaymentAssembler = new AccountPaymentAssembler(personnelPersistence);
-        final SavingsAccountAssembler savingsAccountAssembler = new SavingsAccountAssembler(savingsPersistence,
-                personnelPersistence);
-        final ClientAttendanceAssembler clientAttendanceAssembler = new ClientAttendanceAssembler(clientPersistence,
-                clientAttendanceDao);
-        final LoanAccountAssembler loanAccountAssembler = new LoanAccountAssembler(loanPersistence);
-        final CustomerAccountAssembler customerAccountAssember = new CustomerAccountAssembler(customerPersistence);
-        
-        collectionSheetService = new CollectionSheetServiceImpl(clientAttendanceDao, loanPersistence,
-                accountPersistence, savingsPersistence, collectionSheetDao);
-        
-        collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence, masterPersistence,
-                personnelPersistence, customerPersistence, collectionSheetService,
-                collectionSheetEntryGridViewAssembler, clientAttendanceAssembler, loanAccountAssembler,
-                customerAccountAssember, savingsAccountAssembler, accountPaymentAssembler);
     }
 
     @Override

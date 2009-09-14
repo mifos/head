@@ -13,7 +13,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -52,26 +51,16 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     private static final Short OFFICE_WITH_BRANCH_MANAGER = Short.valueOf("3");
 
     private MeetingBO meeting;
-
     private CustomerBO center;
-
     private CustomerBO client;
-
     private CustomerBO group;
-
     private OfficeBO office;
-
     private OfficeBO branchOffice;
-
     private OfficeBO createdBranchOffice;
-
-    PersonnelBO personnel;
-
-    Name name;
-
-    CustomerPersistence customerPersistence = new CustomerPersistence();
-    PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-    OfficePersistence officePersistence = new OfficePersistence();
+    private PersonnelBO personnel;
+    private Name name;
+    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final OfficePersistence officePersistence = new OfficePersistence();
 
     @Override
     public void setUp() throws Exception {
@@ -276,7 +265,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
        Assert.assertEquals(3, personnel.size());
     }
 
-    private void createInitialObjects(Short officeId, Short personnelId) {
+    private void createInitialObjects(final Short officeId, final Short personnelId) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
 
         center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
@@ -284,17 +273,17 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
-    private PersonnelBO createPersonnel(OfficeBO office, PersonnelLevel personnelLevel) throws Exception {
+    private PersonnelBO createPersonnel(final OfficeBO office, final PersonnelLevel personnelLevel) throws Exception {
         name = new Name("XYZ", null, null, null);
         return create(personnelLevel, name, PersonnelConstants.SYSTEM_USER, office);
     }
 
-    private PersonnelBO createPersonnelWithName(OfficeBO office, PersonnelLevel personnelLevel, Name personnelName)
+    private PersonnelBO createPersonnelWithName(final OfficeBO office, final PersonnelLevel personnelLevel, final Name personnelName)
             throws Exception {
         return create(personnelLevel, personnelName, PersonnelConstants.SYSTEM_USER, office);
     }
 
-    private PersonnelBO create(PersonnelLevel personnelLevel, Name name, Short createdBy, OfficeBO office)
+    private PersonnelBO create(final PersonnelLevel personnelLevel, final Name name, final Short createdBy, final OfficeBO office)
             throws Exception {
         List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
         customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
@@ -310,7 +299,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         return personnel;
     }
 
-    private void createCustomers(CustomerStatus groupStatus, CustomerStatus clientStatus) {
+    private void createCustomers(final CustomerStatus groupStatus, final CustomerStatus clientStatus) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);
         group = TestObjectFactory.createGroupUnderCenter("group", groupStatus, center);

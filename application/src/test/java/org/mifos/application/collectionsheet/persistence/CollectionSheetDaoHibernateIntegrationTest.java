@@ -23,11 +23,8 @@ package org.mifos.application.collectionsheet.persistence;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -36,6 +33,8 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -47,9 +46,11 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -61,9 +62,8 @@ import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -73,7 +73,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  */
 public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetDaoHibernateIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetDaoHibernateIntegrationTest() throws Exception {
         super();
     }
     
@@ -81,28 +81,37 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     private CollectionSheetDao collectionSheetDao;
     
     // collaborators
+    private MeetingBO weeklyMeeting;
+    private FeeBO weeklyPeriodicFee;
     private CustomerBO center;
     private GroupBO group;
     private ClientBO client;
-    private MeetingBO meeting;
     private LoanBO loan;
     private LoanOfferingBO loanOffering;
+    private SavingsBO savingsAccount;
+    private SavingsOfferingBO savingsProduct;
     
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestObjectFactory.cleanUp(savingsAccount);
+        TestObjectFactory.cleanUp(savingsProduct);
+        
         TestObjectFactory.cleanUp(loan);
+        
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(meeting);
-        
-        
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING));
+        TestObjectFactory.cleanUp(weeklyMeeting);
+        TestObjectFactory.cleanUp(weeklyPeriodicFee);
 
+        weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+
+        weeklyPeriodicFee = new FeeBuilder().appliesToAllCustomers().withFeeAmount("100.0").withName("Maintenance Fee")
+                .withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice()).build();
+        
         center = new CenterBO(TestUtils.makeUserWithLocales(), "Center", null, null, TestObjectFactory.getFees(), null,
-                null, sampleBranchOffice(), meeting, testUser(), new CustomerPersistence());
+                null, sampleBranchOffice(), weeklyMeeting, testUser(), new CustomerPersistence());
 
         group = new GroupBO(TestUtils.makeUserWithLocales(), "Group", CustomerStatus.GROUP_ACTIVE, null, false, null,
                 null, TestObjectFactory.getCustomFields(), TestObjectFactory.getFees(), testUser(), center,
@@ -121,7 +130,16 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                         .toDate(), null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
                 spouseNameDetailView, clientDetailView, null);
         
-        IntegrationTestObjectMother.saveCustomerHierarchy(center, group, client);
+        IntegrationTestObjectMother.saveCustomerHierarchyWithMeetingAndFees(center, group, client, weeklyMeeting, weeklyPeriodicFee);
+        
+        // FIXME - keith - add savings accounts against center, group and
+        // clients
+        savingsProduct = new SavingsProductBuilder().buildForIntegrationTests();
+        savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct).build();
+
+        SavingsPersistence savingsDao = new SavingsPersistence();
+        savingsDao.createOrUpdate(savingsProduct);
+        savingsDao.createOrUpdate(savingsAccount);
         
         collectionSheetDao = new CollectionSheetDaoHibernate();
     }
@@ -131,13 +149,18 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         super.tearDown();
 
         try {
+            TestObjectFactory.cleanUp(savingsAccount);
+            TestObjectFactory.cleanUp(savingsProduct);
+            
             TestObjectFactory.cleanUp(loan);
+            
             TestObjectFactory.cleanUp(client);
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
-            TestObjectFactory.cleanUp(meeting);
+            TestObjectFactory.cleanUp(weeklyMeeting);
+            TestObjectFactory.cleanUp(weeklyPeriodicFee);
         } catch (Exception e) {
-
+           TestDatabase.resetMySQLDatabase();
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -214,7 +237,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         // setup
         Date startDate = new Date(System.currentTimeMillis());
         loanOffering = TestObjectFactory.createLoanOffering("Loancfgb", "dhsq", ApplicableTo.GROUPS, startDate,
-                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, meeting);
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, weeklyMeeting);
 
         loan = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
@@ -247,7 +270,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         // setup
         Date startDate = new Date(System.currentTimeMillis());
         loanOffering = TestObjectFactory.createLoanOffering("Loancfgb", "dhsq", ApplicableTo.GROUPS, startDate,
-                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, meeting);
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, weeklyMeeting);
 
         loan = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
@@ -337,7 +360,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         // setup
         Date startDate = new Date(System.currentTimeMillis());
         loanOffering = TestObjectFactory.createLoanOffering("Loancfgb", "dhsq", ApplicableTo.GROUPS, startDate,
-                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, meeting);
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, weeklyMeeting);
         loan = TestObjectFactory.createLoanAccountWithDisbursement("42423142341", group, AccountState.LOAN_APPROVED,
                 startDate, loanOffering, 1);
         
@@ -370,7 +393,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
         final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
-
+        
         // exercise test
         Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingAccountsByCustomerId = collectionSheetDao
                 .findSavingsDepositsforCustomerHierarchy(branchId, searchId, transactionDate,

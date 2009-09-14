@@ -36,6 +36,8 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class ProductCategoryBO extends BusinessObject {
 
+    private static final MifosLogger prdLoanLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    
     private final Short productCategoryID;
 
     private final ProductTypeEntity productType;
@@ -52,10 +54,30 @@ public class ProductCategoryBO extends BusinessObject {
 
     private PrdCategoryStatusEntity prdCategoryStatus;
 
-    private MifosLogger prdLoanLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
-
-    public ProductCategoryBO(UserContext userContext, ProductTypeEntity productType, String productCategoryName,
-            String productCategoryDesc) throws ProductDefinitionException {
+    /**
+     * default constructor for hibernate usage
+     */
+    protected ProductCategoryBO() {
+        productCategoryID = null;
+        productType = null;
+        office = null;
+        globalPrdCategoryNum = null;
+    }
+    
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal legal constructor
+     */
+    public ProductCategoryBO(final Short id, final String globalPrdCategoryNum) {
+        this.productCategoryID = id;
+        this.productType = null;
+        this.office = null;
+        this.globalPrdCategoryNum = globalPrdCategoryNum;
+    }
+    
+    public ProductCategoryBO(final UserContext userContext, final ProductTypeEntity productType, final String productCategoryName,
+            final String productCategoryDesc) throws ProductDefinitionException {
         super(userContext);
         try {
             prdLoanLogger.debug("Creating product category");
@@ -74,13 +96,6 @@ public class ProductCategoryBO extends BusinessObject {
         }
     }
 
-    protected ProductCategoryBO() {
-        productCategoryID = null;
-        productType = null;
-        office = null;
-        globalPrdCategoryNum = null;
-    }
-
     public ProductTypeEntity getProductType() {
         return productType;
     }
@@ -89,7 +104,7 @@ public class ProductCategoryBO extends BusinessObject {
         return productCategoryDesc;
     }
 
-    public void setProductCategoryDesc(String productCategoryDesc) {
+    public void setProductCategoryDesc(final String productCategoryDesc) {
         this.productCategoryDesc = productCategoryDesc;
     }
 
@@ -101,7 +116,7 @@ public class ProductCategoryBO extends BusinessObject {
         return productCategoryName;
     }
 
-    void setProductCategoryName(String productCategoryName) {
+    void setProductCategoryName(final String productCategoryName) {
         this.productCategoryName = productCategoryName;
     }
 
@@ -109,7 +124,7 @@ public class ProductCategoryBO extends BusinessObject {
         return prdCategoryStatus;
     }
 
-    void setPrdCategoryStatus(PrdCategoryStatusEntity prdCategoryStatus) {
+    void setPrdCategoryStatus(final PrdCategoryStatusEntity prdCategoryStatus) {
         this.prdCategoryStatus = prdCategoryStatus;
     }
 
@@ -134,30 +149,32 @@ public class ProductCategoryBO extends BusinessObject {
         return globalPrdOfferingNum.toString();
     }
 
-    private void validateDuplicateProductCategoryName(String productCategoryName) throws ProductDefinitionException {
+    private void validateDuplicateProductCategoryName(final String productCategoryName) throws ProductDefinitionException {
         prdLoanLogger.debug("Checking for duplicate product category name");
         try {
-            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName).equals(Integer.valueOf("0")))
+            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName).equals(Integer.valueOf("0"))) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
+            }
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
     }
 
-    private void validateDuplicateProductCategoryName(String productCategoryName, Short productCategoryId)
+    private void validateDuplicateProductCategoryName(final String productCategoryName, final Short productCategoryId)
             throws ProductDefinitionException {
         prdLoanLogger.debug("Checking for duplicate product category name");
         try {
             if (!new ProductCategoryPersistence().getProductCategory(productCategoryName, productCategoryId).equals(
-                    Integer.valueOf("0")))
+                    Integer.valueOf("0"))) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
+            }
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
     }
 
-    public void updateProductCategory(String productCategoryName, String productCategoryDesc,
-            PrdCategoryStatusEntity prdCategoryStatus) throws ProductDefinitionException {
+    public void updateProductCategory(final String productCategoryName, final String productCategoryDesc,
+            final PrdCategoryStatusEntity prdCategoryStatus) throws ProductDefinitionException {
         prdLoanLogger.debug("Updating product category name");
         validateDuplicateProductCategoryName(productCategoryName, productCategoryID);
         this.productCategoryName = productCategoryName;

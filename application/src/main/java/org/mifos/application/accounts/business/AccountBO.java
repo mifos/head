@@ -36,7 +36,6 @@ import java.util.Set;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
-import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -83,36 +82,23 @@ import org.mifos.framework.util.helpers.StringUtils;
 public class AccountBO extends BusinessObject {
 
     private final Integer accountId;
-
     protected String globalAccountNum;
-
     protected final AccountTypeEntity accountType;
-
     protected final CustomerBO customer;
-
     protected final OfficeBO office;
-
     protected PersonnelBO personnel;
-
-    protected Set<AccountNotesEntity> accountNotes;
-
-    protected Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
-
     private AccountStateEntity accountState;
-
-    private final Set<AccountFlagMapping> accountFlags;
-
-    private final Set<AccountFeesEntity> accountFees;
-
-    private final Set<AccountActionDateEntity> accountActionDates;
-
-    private Set<AccountPaymentEntity> accountPayments;
-
-    private final Set<AccountCustomFieldEntity> accountCustomFields;
-
     private Date closedDate;
-
     private Integer offsettingAllowable;
+
+    // associations
+    protected Set<AccountNotesEntity> accountNotes;
+    protected Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
+    private final Set<AccountFlagMapping> accountFlags;
+    private final Set<AccountFeesEntity> accountFees;
+    private final Set<AccountActionDateEntity> accountActionDates;
+    private Set<AccountPaymentEntity> accountPayments;
+    private final Set<AccountCustomFieldEntity> accountCustomFields;
 
     /*
      * Injected Persistence classes
@@ -224,8 +210,33 @@ public class AccountBO extends BusinessObject {
         this.personnelPersistence = personnelPersistence;
     }
 
+    /**
+     * default constructor for hibernate usage
+     */
     protected AccountBO() {
         this(null);
+    }
+    
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal legal constructor
+     */
+    public AccountBO(final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
+            final Integer offsettingAllowable, final Date createdDate, final Short createdByUserId) {
+        this.accountType = new AccountTypeEntity(accountType.getValue());
+        this.accountState = new AccountStateEntity(accountState);
+        this.customer = customer;
+        this.offsettingAllowable = offsettingAllowable;
+        this.createdDate = createdDate;
+        this.createdBy = createdByUserId;
+        
+        this.accountId = null;
+        this.office = null;
+        this.accountFlags = new HashSet<AccountFlagMapping>();
+        this.accountActionDates = new HashSet<AccountActionDateEntity>();
+        this.accountFees = new HashSet<AccountFeesEntity>();
+        this.accountCustomFields = new HashSet<AccountCustomFieldEntity>();
     }
 
     AccountBO(final Integer accountId) {

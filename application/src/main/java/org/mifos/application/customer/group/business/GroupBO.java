@@ -27,8 +27,10 @@ import java.util.Set;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -64,6 +66,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class GroupBO extends CustomerBO {
 
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
     private GroupPerformanceHistoryEntity groupPerformanceHistory;
 
     /*
@@ -89,7 +92,7 @@ public class GroupBO extends CustomerBO {
         return groupPersistence;
     }
 
-    public void setGroupPersistence(GroupPersistence groupPersistence) {
+    public void setGroupPersistence(final GroupPersistence groupPersistence) {
         this.groupPersistence = groupPersistence;
     }
 
@@ -100,16 +103,25 @@ public class GroupBO extends CustomerBO {
         return officePersistence;
     }
 
-    public void setOfficePersistence(OfficePersistence officePersistence) {
+    public void setOfficePersistence(final OfficePersistence officePersistence) {
         this.officePersistence = officePersistence;
     }
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
+    protected GroupBO() {
+        super();
+    }
 
-    public GroupBO(UserContext userContext, String displayName, CustomerStatus customerStatus, String externalId,
-            boolean trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<FeeView> fees,
-            PersonnelBO formedBy, CustomerBO parentCustomer, GroupPersistence groupPersistence,
-            OfficePersistence officePersistence) throws CustomerException {
+    public GroupBO(final CustomerLevel customerLevel, final String name, final OfficeBO office,
+            final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
+            final CustomerAccountBO customerAccount, final String searchId) {
+        super(customerLevel, name, office, loanOfficer, customerMeeting, customerAccount);
+        this.setSearchId(searchId);
+    }
+
+    public GroupBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
+            final boolean trained, final Date trainedDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final PersonnelBO formedBy, final CustomerBO parentCustomer, final GroupPersistence groupPersistence,
+            final OfficePersistence officePersistence) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, trained, trainedDate, address, customFields, fees,
                 formedBy, null, parentCustomer, null, null, groupPersistence, officePersistence);
         validateFieldsForGroupUnderCenter(parentCustomer);
@@ -117,10 +129,10 @@ public class GroupBO extends CustomerBO {
         this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
     }
 
-    public GroupBO(UserContext userContext, String displayName, CustomerStatus customerStatus, String externalId,
-            boolean trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<FeeView> fees,
-            PersonnelBO formedBy, OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer,
-            GroupPersistence groupPersistence, OfficePersistence officePersistence) throws CustomerException {
+    public GroupBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
+            final boolean trained, final Date trainedDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final PersonnelBO formedBy, final OfficeBO office, final MeetingBO meeting, final PersonnelBO loanOfficer,
+            final GroupPersistence groupPersistence, final OfficePersistence officePersistence) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, trained, trainedDate, address, customFields, fees,
                 formedBy, office, null, meeting, loanOfficer, groupPersistence, officePersistence);
         validateFieldsForGroupUnderOffice(loanOfficer, meeting, office);
@@ -128,15 +140,10 @@ public class GroupBO extends CustomerBO {
         this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
     }
 
-    protected GroupBO() {
-        super();
-        this.groupPerformanceHistory = null;
-    }
-
-    private GroupBO(UserContext userContext, String displayName, CustomerStatus customerStatus, String externalId,
-            boolean trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<FeeView> fees,
-            PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
-            PersonnelBO loanOfficer, GroupPersistence groupPersistence, OfficePersistence officePersistence)
+    private GroupBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
+            final boolean trained, final Date trainedDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final PersonnelBO formedBy, final OfficeBO office, final CustomerBO parentCustomer, final MeetingBO meeting,
+            final PersonnelBO loanOfficer, final GroupPersistence groupPersistence, final OfficePersistence officePersistence)
             throws CustomerException {
         super(userContext, displayName, CustomerLevel.GROUP, customerStatus, externalId, null, address, customFields,
                 fees, formedBy, office, parentCustomer, meeting, loanOfficer);
@@ -154,34 +161,37 @@ public class GroupBO extends CustomerBO {
         return groupPerformanceHistory;
     }
 
-    public void setGroupPerformanceHistory(GroupPerformanceHistoryEntity groupPerformanceHistory) {
-        if (groupPerformanceHistory != null)
+    public void setGroupPerformanceHistory(final GroupPerformanceHistoryEntity groupPerformanceHistory) {
+        if (groupPerformanceHistory != null) {
             groupPerformanceHistory.setGroup(this);
+        }
         this.groupPerformanceHistory = groupPerformanceHistory;
     }
 
-    public void update(UserContext userContext, String displayName, Short loanOfficerId, String externalId,
-            Short trained, Date trainedDate, Address address, List<CustomFieldView> customFields,
-            List<CustomerPositionView> customerPositions) throws Exception {
+    public void update(final UserContext userContext, final String displayName, final Short loanOfficerId, final String externalId,
+            final Short trained, final Date trainedDate, final Address address, final List<CustomFieldView> customFields,
+            final List<CustomerPositionView> customerPositions) throws Exception {
         validateFieldsForUpdate(displayName, loanOfficerId);
-        if (trained != null)
+        if (trained != null) {
             setTrained(trained);
-        else
+        } else {
             setTrained(YesNoFlag.NO.getValue());
+        }
         setTrainedDate(trainedDate);
         updateLoanOfficer(loanOfficerId);
         setDisplayName(displayName);
         super.update(userContext, externalId, address, customFields, customerPositions);
     }
 
-    public void transferToBranch(OfficeBO officeToTransfer) throws CustomerException {
+    public void transferToBranch(final OfficeBO officeToTransfer) throws CustomerException {
         validateNewOffice(officeToTransfer);
         logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() + "to branch : "
                 + officeToTransfer.getOfficeId());
         validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
 
-        if (isActive())
+        if (isActive()) {
             setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+        }
 
         makeCustomerMovementEntries(officeToTransfer);
         setPersonnel(null);
@@ -196,7 +206,7 @@ public class GroupBO extends CustomerBO {
         logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());
     }
 
-    public void transferToCenter(CenterBO newParent) throws CustomerException {
+    public void transferToCenter(final CenterBO newParent) throws CustomerException {
         validateNewCenter(newParent);
         logger.debug("In GroupBO::transferToCenter(), transfering customerId: " + getCustomerId() + "to Center Id : "
                 + newParent.getCustomerId());
@@ -205,8 +215,9 @@ public class GroupBO extends CustomerBO {
 
         if (!isSameBranch(newParent.getOffice())) {
             makeCustomerMovementEntries(newParent.getOffice());
-            if (isActive())
+            if (isActive()) {
                 setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+            }
         }
 
         changeParentCustomer(newParent);
@@ -222,29 +233,33 @@ public class GroupBO extends CustomerBO {
         }
     }
 
-    protected void saveUpdatedMeeting(MeetingBO meeting) throws CustomerException {
+    @Override
+    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In GroupBO::saveUpdatedMeeting(), customerId: " + getCustomerId());
         MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
         super.saveUpdatedMeeting(meeting);
-        if (getParentCustomer() == null)
+        if (getParentCustomer() == null) {
             deleteMeeting(newMeeting);
+        }
     }
 
     @Override
-    public void updateMeeting(MeetingBO meeting) throws CustomerException {
+    public void updateMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In GroupBO::updateMeeting(), customerId: " + getCustomerId());
         if (getParentCustomer() == null) {
             if (getCustomerMeeting() == null) {
                 this.setCustomerMeeting(createCustomerMeeting(meeting));
                 updateMeetingForClients(meeting);
-            } else
+            } else {
                 saveUpdatedMeeting(meeting);
-        } else
+            }
+        } else {
             saveUpdatedMeeting(meeting);
+        }
         update();
     }
 
-    private void updateMeetingForClients(MeetingBO meeting) throws CustomerException {
+    private void updateMeetingForClients(final MeetingBO meeting) throws CustomerException {
         Set<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
@@ -255,7 +270,7 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    public void changeStatus(Short newStatusId, Short flagId, String comment) throws CustomerException {
+    public void changeStatus(final Short newStatusId, final Short flagId, final String comment) throws CustomerException {
         Short oldStatusId = getCustomerStatus().getId();
         super.changeStatus(newStatusId, flagId, comment);
         if (oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue())
@@ -270,12 +285,14 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    protected void validateStatusChange(Short newStatusId) throws CustomerException {
+    protected void validateStatusChange(final Short newStatusId) throws CustomerException {
         logger.debug("In GroupBO::validateStatusChange(), customerId: " + getCustomerId());
-        if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue()))
+        if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue())) {
             checkIfGroupCanBeClosed();
-        if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
+        }
+        if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue())) {
             checkIfGroupCanBeActive(newStatusId);
+        }
         if (getCustomerStatus().getId().equals(CustomerStatus.GROUP_CANCELLED.getValue())
                 && newStatusId.equals(CustomerStatus.GROUP_PARTIAL.getValue())) {
             handleValidationsForCancelToPartial();
@@ -285,69 +302,80 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    protected boolean isActiveForFirstTime(Short oldStatus, Short newStatusId) {
-        return ((oldStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || oldStatus
+    protected boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
+        return (oldStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || oldStatus
                 .equals(CustomerStatus.GROUP_PENDING.getValue())) && newStatusId.equals(CustomerStatus.GROUP_ACTIVE
-                .getValue()));
+                .getValue());
     }
 
     @Override
-    protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException {
+    protected void handleActiveForFirstTime(final Short oldStatusId, final Short newStatusId) throws CustomerException {
         super.handleActiveForFirstTime(oldStatusId, newStatusId);
-        if (isActiveForFirstTime(oldStatusId, newStatusId))
+        if (isActiveForFirstTime(oldStatusId, newStatusId)) {
             this.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
+        }
     }
 
-    protected void validateFieldsForUpdate(String displayName, Short loanOfficerId) throws CustomerException {
+    protected void validateFieldsForUpdate(final String displayName, final Short loanOfficerId) throws CustomerException {
         if (getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue())
                 || getCustomerStatus().getId().equals(CustomerStatus.GROUP_HOLD.getValue())) {
             validateLO(loanOfficerId);
         }
-        if (!getDisplayName().equals(displayName))
+        if (!getDisplayName().equals(displayName)) {
             validateForDuplicateName(displayName, getOffice().getOfficeId());
+        }
 
     }
 
-    private void validateNewCenter(CenterBO toCenter) throws CustomerException {
-        if (toCenter == null)
+    private void validateNewCenter(final CenterBO toCenter) throws CustomerException {
+        if (toCenter == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
+        }
 
-        if (isSameCenter(toCenter))
+        if (isSameCenter(toCenter)) {
             throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+        }
 
-        if (!toCenter.isActive())
+        if (!toCenter.isActive()) {
             throw new CustomerException(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE);
+        }
 
         validateMeetingRecurrenceForTransfer(getCustomerMeeting().getMeeting(), toCenter.getCustomerMeeting()
                 .getMeeting());
     }
 
-    private boolean isSameCenter(CenterBO center) {
+    private boolean isSameCenter(final CenterBO center) {
         return getParentCustomer().getCustomerId().equals(center.getCustomerId());
     }
 
     private void validateForActiveAccounts() throws CustomerException {
-        if (this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen())
+        if (this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen()) {
             throw new CustomerException(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT);
+        }
         if (getChildren() != null) {
-            for (CustomerBO client : getChildren())
-                if (client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen())
+            for (CustomerBO client : getChildren()) {
+                if (client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen()) {
                     throw new CustomerException(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT);
+                }
+            }
         }
     }
 
-    private void validateNewOffice(OfficeBO officeToTransfer) throws CustomerException {
-        if (officeToTransfer == null)
+    private void validateNewOffice(final OfficeBO officeToTransfer) throws CustomerException {
+        if (officeToTransfer == null) {
             throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+        }
 
-        if (isSameBranch(officeToTransfer))
+        if (isSameBranch(officeToTransfer)) {
             throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
+        }
 
-        if (!officeToTransfer.isActive())
+        if (!officeToTransfer.isActive()) {
             throw new CustomerException(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE);
+        }
     }
 
-    private void checkIfGroupCanBeActive(Short groupStatusId) throws CustomerException {
+    private void checkIfGroupCanBeActive(final Short groupStatusId) throws CustomerException {
         if (getParentCustomer() == null || getParentCustomer().getCustomerId() == null) {
             if (getPersonnel() == null || getPersonnel().getPersonnelId() == null) {
                 throw new CustomerException(GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
@@ -402,9 +430,10 @@ public class GroupBO extends CustomerBO {
         if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
             throw new CustomerException(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
         }
-        if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0)
+        if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
             throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION, new Object[] { MessageLookup
                     .getInstance().lookupLabel(ConfigurationConstants.CLIENT, this.getUserContext()) });
+        }
     }
 
     private String generateSearchId() throws CustomerException {
@@ -424,36 +453,41 @@ public class GroupBO extends CustomerBO {
         return searchId;
     }
 
-    private void validateFields(String displayName, PersonnelBO formedBy, boolean trained, Date trainedDate)
+    private void validateFields(final String displayName, final PersonnelBO formedBy, final boolean trained, final Date trainedDate)
             throws CustomerException {
         validateFormedBy(formedBy);
-        if ((trained && trainedDate == null) || (!trained && trainedDate != null))
+        if (trained && trainedDate == null || !trained && trainedDate != null) {
             throw new CustomerException(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
-        if (getOffice() != null)
+        }
+        if (getOffice() != null) {
             validateForDuplicateName(displayName, getOffice().getOfficeId());
+        }
     }
 
-    private void validateFormedBy(PersonnelBO formedBy) throws CustomerException {
-        if (formedBy == null)
+    private void validateFormedBy(final PersonnelBO formedBy) throws CustomerException {
+        if (formedBy == null) {
             throw new CustomerException(CustomerConstants.INVALID_FORMED_BY);
+        }
 
     }
 
-    private void validateForDuplicateName(String displayName, Short officeId) throws CustomerException {
+    private void validateForDuplicateName(final String displayName, final Short officeId) throws CustomerException {
         try {
-            if (getGroupPersistence().isGroupExists(displayName, officeId))
+            if (getGroupPersistence().isGroupExists(displayName, officeId)) {
                 throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+            }
         } catch (PersistenceException e) {
             throw new CustomerException(e);
         }
     }
 
-    private void validateFieldsForGroupUnderCenter(CustomerBO parentCustomer) throws CustomerException {
-        if (parentCustomer == null)
+    private void validateFieldsForGroupUnderCenter(final CustomerBO parentCustomer) throws CustomerException {
+        if (parentCustomer == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
+        }
     }
 
-    private void validateFieldsForGroupUnderOffice(PersonnelBO loanOfficer, MeetingBO meeting, OfficeBO office)
+    private void validateFieldsForGroupUnderOffice(final PersonnelBO loanOfficer, final MeetingBO meeting, final OfficeBO office)
             throws CustomerException {
         validateOffice(office);
         if (isActive()) {
@@ -462,13 +496,15 @@ public class GroupBO extends CustomerBO {
         }
     }
 
-    private void setValues(boolean trained, Date trainedDate) throws CustomerException {
+    private void setValues(final boolean trained, final Date trainedDate) throws CustomerException {
         this.setSearchId(generateSearchId());
         this.setTrained(trained);
-        if (trained)
+        if (trained) {
             this.setTrainedDate(trainedDate);
-        if (getStatus().equals(CustomerStatus.GROUP_ACTIVE))
+        }
+        if (getStatus().equals(CustomerStatus.GROUP_ACTIVE)) {
             this.setCustomerActivationDate(this.getCreatedDate());
+        }
     }
 
     public void checkIfGroupHasActiveLoan() throws CustomerException {
@@ -478,7 +514,7 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnDisbursement(final LoanBO loan, final Money disburseAmount) throws CustomerException {
         try {
             ((GroupPerformanceHistoryEntity) getPerformanceHistory()).updateOnDisbursement(loan, disburseAmount);
         } catch (AccountException e) {
@@ -487,7 +523,7 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    public void updatePerformanceHistoryOnWriteOff(LoanBO loan) throws CustomerException {
+    public void updatePerformanceHistoryOnWriteOff(final LoanBO loan) throws CustomerException {
         GroupPerformanceHistoryEntity performanceHistory = (GroupPerformanceHistoryEntity) getPerformanceHistory();
         try {
             performanceHistory.updateOnWriteOff(loan);
@@ -497,7 +533,7 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    public void updatePerformanceHistoryOnReversal(LoanBO loan, Money lastLoanAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnReversal(final LoanBO loan, final Money lastLoanAmount) throws CustomerException {
         try {
             GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getPerformanceHistory();
             groupPerformanceHistoryEntity.updateOnReversal(loan, lastLoanAmount);
@@ -507,7 +543,7 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    public void updatePerformanceHistoryOnRepayment(LoanBO loan, Money totalAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnRepayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
         GroupPerformanceHistoryEntity performanceHistory = (GroupPerformanceHistoryEntity) getPerformanceHistory();
         try {
             performanceHistory.updateOnRepayment(loan, totalAmount);
@@ -517,10 +553,11 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    public void updatePerformanceHistoryOnLastInstlPayment(LoanBO loan, Money totalAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
         updatePerformanceHistoryOnRepayment(loan, totalAmount);
     }
 
+    @Override
     public void update() throws CustomerException {
         try {
             setUpdateDetails();

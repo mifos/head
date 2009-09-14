@@ -43,26 +43,10 @@ public class MeetingDetailsEntity extends PersistentObject {
      */
     private Short recurAfter;
 
-    private final MeetingRecurrenceEntity meetingRecurrence;
+    private MeetingRecurrenceEntity meetingRecurrence;
 
     private final MeetingBO meeting;
-
-    public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank,
-            Short recurAfter, MeetingBO meeting) throws MeetingException {
-        this.validateFields(recurAfter);
-        this.recurrenceType = recurrenceType;
-        this.recurAfter = recurAfter;
-        this.meeting = meeting;
-        if (recurrenceType.isWeekly())
-            this.meetingRecurrence = new MeetingRecurrenceEntity(weekDay, this);
-        else if (recurrenceType.isMonthly())
-            this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this);
-        else
-            this.meetingRecurrence = new MeetingRecurrenceEntity(this);
-
-        detailsId = null;
-    }
-
+    
     protected MeetingDetailsEntity() {
         detailsId = null;
         recurrenceType = null;
@@ -70,11 +54,35 @@ public class MeetingDetailsEntity extends PersistentObject {
         meeting = null;
     }
 
+    public MeetingDetailsEntity(final MeetingBO meeting, final RecurrenceType recurrenceType, final Short recurAfter) {
+        this.detailsId = null;
+        this.recurrenceType = new RecurrenceTypeEntity(recurrenceType);
+        this.meeting = meeting;
+        this.recurAfter = recurAfter;
+    }
+
+    public MeetingDetailsEntity(final RecurrenceTypeEntity recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank,
+            final Short recurAfter, final MeetingBO meeting) throws MeetingException {
+        this.validateFields(recurAfter);
+        this.recurrenceType = recurrenceType;
+        this.recurAfter = recurAfter;
+        this.meeting = meeting;
+        if (recurrenceType.isWeekly()) {
+            this.meetingRecurrence = new MeetingRecurrenceEntity(weekDay, this);
+        } else if (recurrenceType.isMonthly()) {
+            this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this);
+        } else {
+            this.meetingRecurrence = new MeetingRecurrenceEntity(this);
+        }
+
+        detailsId = null;
+    }
+
     public Short getRecurAfter() {
         return recurAfter;
     }
 
-    public void setRecurAfter(Short recurAfter) {
+    public void setRecurAfter(final Short recurAfter) {
         this.recurAfter = recurAfter;
     }
 
@@ -118,13 +126,18 @@ public class MeetingDetailsEntity extends PersistentObject {
         return getMeetingRecurrence().getDayNumber();
     }
 
-    private void validateFields(Short recurAfter) throws MeetingException {
-        if (recurAfter == null || recurAfter < 1)
+    private void validateFields(final Short recurAfter) throws MeetingException {
+        if (recurAfter == null || recurAfter < 1) {
             throw new MeetingException(MeetingConstants.INVALID_RECURAFTER);
+        }
     }
 
     public Integer getDetailsId() {
         return detailsId;
+    }
+
+    public void setMeetingRecurrence(final MeetingRecurrenceEntity meetingRecurrence) {
+        this.meetingRecurrence = meetingRecurrence;
     }
 
 }
