@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -75,6 +76,13 @@ public class SearchResultsPage extends MifosPage {
       return new LoanAccountPage(selenium);
     }
     
+    public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String savingsId){
+        String xpath = "//a[contains(@href,'<savingsId>')]";
+        selenium.click(xpath.replace("<savingsId>", savingsId));
+        waitForPageToLoad();
+        return new SavingsAccountDetailPage(selenium);
+      }
+      
     public int countSearchResults() {
         // Get first bit of orange text on search results page,
         // which should look like "11 results for"

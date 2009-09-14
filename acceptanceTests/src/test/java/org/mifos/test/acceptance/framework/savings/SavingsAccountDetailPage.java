@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.savings;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
+import org.mifos.test.acceptance.framework.loan.AccountNotesPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -44,4 +46,16 @@ public class SavingsAccountDetailPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent(savingsProduct));        
         
     }
+    public AccountAddNotesPage navigateToAddNotesPage() {
+        selenium.click("savingsaccountdetail.link.addANotes");
+        waitForPageToLoad();
+        return new AccountAddNotesPage(selenium);
+    }
+    
+    public AccountNotesPage navigateToAccountNotesPage() {
+        selenium.click("savingsaccountdetail.link.seeAllNotes");
+        waitForPageToLoad();
+        return new AccountNotesPage(selenium);
+    }
+
 }

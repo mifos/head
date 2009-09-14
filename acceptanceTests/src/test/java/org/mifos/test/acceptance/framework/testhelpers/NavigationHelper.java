@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -67,6 +68,15 @@ public class NavigationHelper {
         return loanAccountPage;
     }
     
+    public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String loanAccountID) {        
+        HomePage homePage = navigateToHomePage();
+        SearchResultsPage searchResultsPage = homePage.search(loanAccountID);
+        searchResultsPage.verifyPage();
+        SavingsAccountDetailPage savingsAccountDetailPage = searchResultsPage.navigateToSavingsAccountDetailPage(loanAccountID);
+        savingsAccountDetailPage.verifyPage();
+        
+        return savingsAccountDetailPage;
+    }
     public ClientViewDetailsPage navigateToClientViewDetailsPage(String clientName) {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(clientName);

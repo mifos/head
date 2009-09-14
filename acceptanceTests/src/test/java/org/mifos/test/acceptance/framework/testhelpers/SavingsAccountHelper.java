@@ -23,6 +23,8 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
+import org.mifos.test.acceptance.framework.loan.AccountPreviewNotesPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountEntryPage;
@@ -71,6 +73,21 @@ public class SavingsAccountHelper {
       ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
       clientsAndAccountsPage.verifyPage();
       return clientsAndAccountsPage.navigateToCreateSavingsAccountUsingLeftMenu();     
+    }
+
+    public SavingsAccountDetailPage addNoteToSavingsAccount(String testAccount, String testAccountNote) {
+            NavigationHelper helper = new NavigationHelper(selenium);
+
+            SavingsAccountDetailPage savingsAccountDetailPage = helper.navigateToSavingsAccountDetailPage(testAccount);
+            savingsAccountDetailPage.verifyPage();
+
+            AccountAddNotesPage addNotesPage = savingsAccountDetailPage.navigateToAddNotesPage();
+            addNotesPage.verifyPage();
+            AccountPreviewNotesPage previewPage = addNotesPage.submitAndNavigateToAccountAddNotesPreviewPage(testAccountNote);
+            previewPage.verifyPage();
+            savingsAccountDetailPage = previewPage.submitAndNavigateToSavingsAccountDetailPage();
+            
+            return savingsAccountDetailPage;
     }
     
 }
