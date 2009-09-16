@@ -63,7 +63,6 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
         try {
             TestObjectFactory.cleanUp(accountBO);
             TestObjectFactory.cleanUp(group);
@@ -75,6 +74,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
         } finally {
             StaticHibernateUtil.closeSession();
         }
+        super.tearDown();
     }
 
     public LoanBO createLoanAccount() {
