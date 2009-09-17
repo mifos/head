@@ -146,8 +146,6 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-
         try {
             TestObjectFactory.cleanUp(savingsAccount);
             TestObjectFactory.cleanUp(savingsProduct);
@@ -164,6 +162,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         } finally {
             StaticHibernateUtil.closeSession();
         }
+        super.tearDown();
     }
     
     public void testShouldRetrieveCustomerHierarchyWithACenterAsRootByBranchId() throws Exception {
