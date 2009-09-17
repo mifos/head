@@ -93,7 +93,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
         officeBo = officePersistence.getOffice(officeId);
         personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
     }

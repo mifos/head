@@ -128,7 +128,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     private String flowKey;
 
     @Override
-    public void tearDown() throws Exception {
+    protected void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(centerSavingsAccount);
             TestObjectFactory.cleanUp(groupSavingsAccount);
@@ -151,7 +151,6 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -163,7 +162,6 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessfulCreate() throws Exception {
-        TestDatabase.resetMySQLDatabase();
         CollectionSheetEntryGridDto bulkEntry = getSuccessfulBulkEntry();
         Calendar meetingDateCalendar = new GregorianCalendar();
         int year = meetingDateCalendar.get(Calendar.YEAR);

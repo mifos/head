@@ -97,7 +97,6 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
@@ -368,7 +367,6 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(Calendar.MARCH, calendar.get(Calendar.MONTH));
        Assert.assertEquals(2006, calendar.get(Calendar.YEAR));
        Assert.assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
-        TestDatabase.resetMySQLDatabase();
     }
 
     public void testCreateWithOfficerDisplayName() throws Exception {

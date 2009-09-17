@@ -252,6 +252,9 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetAppllicableFeesForMeetingStartingOnCurrentDate() throws Exception {
+        // FIXME some test leaves database table (apart from CUSTOMER and
+        // PRD_OFFERING) in dirty state Failures are noticed on windows xp
+        // system, the execution order differs for surefire from OS to OS.
         TestDatabase.resetMySQLDatabase();
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         CustomerAccountBO customerAccountBO = getCustomerAccountWithAllTypesOfFees();

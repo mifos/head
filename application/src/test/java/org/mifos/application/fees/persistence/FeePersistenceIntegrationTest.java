@@ -75,7 +75,6 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetUpdatedFeesForCustomer() throws Exception {
-
         // crate periodic fee
         periodicFee = TestObjectFactory.createPeriodicAmountFee("ClientPeridoicFee", FeeCategory.CLIENT, "5",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
@@ -101,7 +100,6 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testRetrieveFeesForCustomer() throws Exception {
-        TestDatabase.resetMySQLDatabase();
         fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200",
                 RecurrenceType.MONTHLY, Short.valueOf("2"));
         fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400",
