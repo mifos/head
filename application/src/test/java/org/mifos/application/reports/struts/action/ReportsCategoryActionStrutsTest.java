@@ -35,11 +35,6 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         super();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
     public void testShouldForwardToDefineNewCategoryPage() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "loadDefineNewCategoryPage");
