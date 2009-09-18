@@ -1,4 +1,3 @@
-Database version: 212
 Description:
 The expected data set for test pendingApprovalToPartialApplication 
 in ClientLoanStatusChangeTest.

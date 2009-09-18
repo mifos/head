@@ -1,4 +1,3 @@
-Database version: 207
 Description:
 Expected result data set for the test HolidayTest.
 Consists of a single holiday going from June 13th 2009 through June 18th 2009.

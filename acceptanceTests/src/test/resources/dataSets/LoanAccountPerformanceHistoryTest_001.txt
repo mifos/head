@@ -1,3 +1,2 @@
-Database version: 207
 Description:
 Expected result data set for the test LoanAccountPerformanceHistoryTest.

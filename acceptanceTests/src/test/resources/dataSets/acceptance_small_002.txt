@@ -1,4 +1,3 @@
-Database version: 206
 Description:
 This data set is derived from acceptance_small_001
 

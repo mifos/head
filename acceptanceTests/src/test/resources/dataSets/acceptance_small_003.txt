@@ -1,5 +1,3 @@
-
-Database version: 207
 Description:
 Original data (not based on any other dataset) created with Python SeleniumRC
 seed data script (seedDataManyClients.py) using the following settings:

@@ -1,4 +1,3 @@
-Database version: 213
 
 Description:
 Added following savings products to acceptance_small_004:
