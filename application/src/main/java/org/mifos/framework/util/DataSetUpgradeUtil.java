@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -43,11 +44,7 @@ import org.apache.commons.cli.PosixParser;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.DefaultDataSet;
-import org.dbunit.dataset.DefaultTable;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
 import org.dbunit.operation.DatabaseOperation;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.SqlExecutor;
@@ -65,6 +62,7 @@ public class DataSetUpgradeUtil {
     private static final String PASSWORD_OPTION_NAME = "p";
     private static final String HELP_OPTION_NAME = "h";
     private static final String DATABASE_OPTION_NAME = "d";
+    private static final String SCHEMA_FILE_OPTION_NAME = "s";
 
     // Options
     private final Options options = new Options();
@@ -74,6 +72,7 @@ public class DataSetUpgradeUtil {
     private Option helpOption;
     private Option databaseOption;
     private Option allFilesInDirecoryOption;
+    private Option schemaFileOption;
 
     // Variables for data from command line
     String dataSetName;
@@ -81,11 +80,12 @@ public class DataSetUpgradeUtil {
     String user;
     String password;
     String dataSetDirectoryName;
+    String schemaFileName = "latest-schema_last.sql";
 
     DbUnitUtilities dbUnitUtilities;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException,
-            SQLException, DatabaseUnitException {
+            SQLException, DatabaseUnitException, URISyntaxException {
         DataSetUpgradeUtil util = new DataSetUpgradeUtil();
         util.doUpgrades(args);
     }
@@ -94,9 +94,10 @@ public class DataSetUpgradeUtil {
         defineOptions();
     }
 
-    public void doUpgrades(String[] args) throws IOException, ClassNotFoundException, SQLException, DatabaseUnitException {
+    public void doUpgrades(String[] args) throws IOException, ClassNotFoundException, SQLException, DatabaseUnitException, URISyntaxException {
         parseOptions(args);
         System.out.println("Using database: " + databaseName);
+        System.out.println("Using schema file: " + schemaFileName);
         if (dataSetDirectoryName != null) {
             File directory = new File(dataSetDirectoryName);
 
@@ -121,27 +122,6 @@ public class DataSetUpgradeUtil {
         }
     }
 
-    private IDataSet replacePrdCategoryStatusTable(IDataSet dataSet) throws DataSetException {
-        ITable[] tables = dataSet.getTables();
-        DefaultDataSet newDataSet = new DefaultDataSet();
-        for (int tableNum = 0; tableNum < tables.length; ++tableNum) {
-            ITable currentTable = tables[tableNum];
-            if (currentTable.getTableMetaData().getTableName().equals("PRD_CATEGORY_STATUS")) {
-                DefaultTable newTable = new DefaultTable(currentTable.getTableMetaData());
-                newTable.addRow();
-                newTable.addRow();
-                newTable.setValue(0, "PRD_CATEGORY_STATUS_ID", new Integer(1));
-                newTable.setValue(0, "LOOKUP_ID", new Integer(114));
-                newTable.setValue(1, "PRD_CATEGORY_STATUS_ID", new Integer(2));
-                newTable.setValue(1, "LOOKUP_ID", new Integer(113));
-                newDataSet.addTable(newTable);
-            } else {
-                newDataSet.addTable(currentTable);
-            }
-        }
-        return newDataSet;
-    }
-
     private void resetDatabase(String databaseName, Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         try {
@@ -153,12 +133,16 @@ public class DataSetUpgradeUtil {
         }
     }
 
-    private void upgrade(String fileName) throws IOException, ClassNotFoundException, SQLException, DatabaseUnitException {
+    private void upgrade(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
         System.out.println("Upgrading: " + fileName);
         dbUnitUtilities = new DbUnitUtilities();
-        IDataSet dataSet = dbUnitUtilities.getDataSetFromFile(fileName);
-
-        dataSet = replacePrdCategoryStatusTable(dataSet);
+        IDataSet dataSet = null;
+        try {
+            dataSet = dbUnitUtilities.getDataSetFromFile(fileName);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         Class.forName("com.mysql.jdbc.Driver");
         Connection jdbcConnection = null;
@@ -168,7 +152,7 @@ public class DataSetUpgradeUtil {
                     "jdbc:mysql://localhost/" + databaseName + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
             jdbcConnection.setAutoCommit(false);
             resetDatabase(databaseName, jdbcConnection);
-            SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema_last.sql"), jdbcConnection);
+            SqlExecutor.execute(SqlResource.getInstance().getAsStream(schemaFileName), jdbcConnection);
             jdbcConnection.commit();
             jdbcConnection.setAutoCommit(true);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
@@ -278,6 +262,12 @@ public class DataSetUpgradeUtil {
         .withDescription( "database name (default=" + databaseName + ") this must match whatever acceptance.database points to in local.properties" )
         .create( DATABASE_OPTION_NAME );
 
+        schemaFileOption = OptionBuilder.withArgName( "schema file" )
+        .withLongOpt("schema")
+        .hasArg()
+        .withDescription( "schema file to upgrade from (default=" + schemaFileName + ")")
+        .create( SCHEMA_FILE_OPTION_NAME );
+
         helpOption = OptionBuilder
         .withLongOpt("help")
         .withDescription( "display help" )
@@ -290,9 +280,10 @@ public class DataSetUpgradeUtil {
         options.addOption(helpOption);
         options.addOption(databaseOption);
         options.addOption(allFilesInDirecoryOption);
+        options.addOption(schemaFileOption);
     }
 
-    public void parseOptions(String[] args) {
+    public void parseOptions(String[] args) throws URISyntaxException {
         // create the command line parser
         CommandLineParser parser = new PosixParser();
         try {
@@ -327,8 +318,13 @@ public class DataSetUpgradeUtil {
             if( line.hasOption( DATABASE_OPTION_NAME ) ) {
                 databaseName = line.getOptionValue(DATABASE_OPTION_NAME);
             }
-        }
-        catch( ParseException exp ) {
+            if( line.hasOption( SCHEMA_FILE_OPTION_NAME ) ) {
+                schemaFileName = line.getOptionValue(SCHEMA_FILE_OPTION_NAME);
+                if (SqlResource.getInstance().getURI(schemaFileName) == null) {
+                    fail("Unable to find schema file: " + schemaFileName);
+                }
+            }
+        } catch( ParseException exp ) {
             fail( "Parsing failed.  Reason: " + exp.getMessage() );
         }
     }
