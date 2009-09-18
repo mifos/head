@@ -355,7 +355,7 @@ public class CollectionSheetEntryAction extends BaseAction {
                 + ". Saving bulk entry data ran for approximately "
                 + (System.currentTimeMillis() - beforeSaveData) / 1000.0 + " seconds."
                 + getCustomerAccountViewLogs(decomposedViews)
-                + getLoanAccountsProductView(decomposedViews));
+                + getLoanAccountsProductViewLogs(decomposedViews));
         
     }
 
@@ -381,7 +381,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         return logMsg;    
     }
     
-    private String getLoanAccountsProductView(CollectionSheetEntryDecomposedView decomposedViews){
+    private String getLoanAccountsProductViewLogs(CollectionSheetEntryDecomposedView decomposedViews){
         String logMsg ="\nLoan Accounts Log";
         Double totalDisBursementAmountEntered = 0.0;
         Double totalEnteredAmount = 0.0;
