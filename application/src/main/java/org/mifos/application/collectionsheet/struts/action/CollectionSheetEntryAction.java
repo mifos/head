@@ -20,6 +20,7 @@
 
 package org.mifos.application.collectionsheet.struts.action;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -41,6 +42,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeView;
@@ -351,9 +353,72 @@ public class CollectionSheetEntryAction extends BaseAction {
         logger.info("after saveData(). session id:" + request.getSession().getId() + ". "
                 + getUpdateTotalsString(decomposedViews)
                 + ". Saving bulk entry data ran for approximately "
-                + (System.currentTimeMillis() - beforeSaveData) / 1000.0 + " seconds.");
+                + (System.currentTimeMillis() - beforeSaveData) / 1000.0 + " seconds."
+                + getCustomerAccountViewLogs(decomposedViews)
+                + getLoanAccountsProductView(decomposedViews));
+        
     }
 
+    private String getCustomerAccountViewLogs(CollectionSheetEntryDecomposedView decomposedViews){
+        String logMsg ="\nCustomer Accounts Log";
+        Double totalAmountDue = 0.0;
+        Double totalCustomerAccountAmountEntered = 0.0;
+        for (CustomerAccountView customerAccountView : decomposedViews.getCustomerAccountViews()) {
+            logMsg += "\nCustomer ID:"+customerAccountView.getCustomerId();
+            logMsg += "\nAccount ID:"+customerAccountView.getAccountId();
+            totalAmountDue += customerAccountView.getTotalAmountDue().getAmount().doubleValue();
+            logMsg += "\nAmount Due:"+customerAccountView.getTotalAmountDue();
+            try {
+            totalCustomerAccountAmountEntered += Double.parseDouble(customerAccountView.getCustomerAccountAmountEntered());
+            } catch (Exception e) {
+                logger.error("Error in parsing customer account amount entered !!!", e);
+            }
+            logMsg += "\nCustomer Account Amount Entered:"+customerAccountView.getCustomerAccountAmountEntered();
+        }
+        logMsg += "\nTotal Amount Due:"+totalAmountDue;
+        logMsg += "\nTotal Customer Account Amount Entered:"+totalCustomerAccountAmountEntered;
+        logMsg += "\n";
+        return logMsg;    
+    }
+    
+    private String getLoanAccountsProductView(CollectionSheetEntryDecomposedView decomposedViews){
+        String logMsg ="\nLoan Accounts Log";
+        Double totalDisBursementAmountEntered = 0.0;
+        Double totalEnteredAmount = 0.0;
+        Double totalAmountDue = 0.0;
+        Double totalDisbursalAmountDue = 0.0;
+        Double totalDisbursalAmount = 0.0;
+        for (LoanAccountsProductView loanAccountView : decomposedViews.getLoanAccountViews()) {
+            logMsg += "\nProduct Offering ID:"+loanAccountView.getPrdOfferingId();
+            logMsg += "\nProduct Offering Short Name:"+loanAccountView.getPrdOfferingShortName();
+            try{
+            totalDisBursementAmountEntered += Double.parseDouble(loanAccountView.getDisBursementAmountEntered());
+        } catch (Exception e) {
+            logger.error("Error in parsing disbursement amount entered !!!", e);
+        }
+            logMsg += "\nDisbursement Amount Entered:"+loanAccountView.getDisBursementAmountEntered();
+            try {
+            totalEnteredAmount += Double.parseDouble(loanAccountView.getEnteredAmount());
+        } catch (Exception e) {
+            logger.error("Error in parsing disbursement amount entered !!!", e);
+        }
+            logMsg += "\nEntered Amount:"+loanAccountView.getEnteredAmount();
+            totalAmountDue += loanAccountView.getTotalAmountDue();
+            logMsg += "\nAmount Due:"+loanAccountView.getTotalAmountDue();
+            totalDisbursalAmountDue += loanAccountView.getTotalDisbursalAmountDue();
+            logMsg += "\nDisbursal Amount Due:"+loanAccountView.getTotalDisbursalAmountDue();
+            totalDisbursalAmount += loanAccountView.getTotalDisburseAmount();
+            logMsg += "\nDisburse Amount:"+loanAccountView.getTotalDisburseAmount();
+        }
+        logMsg += "\nTotal Disbursement Amount Entered:"+totalDisBursementAmountEntered;
+        logMsg += "\nTotal Entered Amount:"+totalEnteredAmount;
+        logMsg += "\nTotal Amount Due:"+totalAmountDue;
+        logMsg += "\nTotal Disbursal Amount Due:"+totalDisbursalAmountDue;
+        logMsg += "\nTotal Disbursal Amount:"+totalDisbursalAmount;
+        logMsg += "\n";
+        return logMsg; 
+    }
+    
     private void logBeforeSave(final HttpServletRequest request, final BulkEntryActionForm bulkEntryActionForm,
             final CollectionSheetEntryGridDto bulkEntry) {
         String logMsg = "before saveData().";
@@ -366,96 +431,8 @@ public class CollectionSheetEntryAction extends BaseAction {
             logMsg += ", office name:" + officeView.getOfficeName();
         }
         logMsg += ", center id:" + bulkEntryActionForm.getCustomerId();
-        logMsg += ", total loan amount due:" + getLoanTotalAmountDue(bulkEntry.getBulkEntryParent());
-        logMsg += ", total loan disbursal amount due:" + getLoanTotalDisbursalAmountDue(bulkEntry.getBulkEntryParent());
-        logMsg += ", total loan disburse amount:" + getLoanTotalDisburseAmount(bulkEntry.getBulkEntryParent());
-        logMsg += ", total loan disbursement amount entered:" + getLoanTotalDisBursementAmountEntered(bulkEntry.getBulkEntryParent());
-        logMsg += ", total loan entered amount:" + getLoanTotalEnteredAmount(bulkEntry.getBulkEntryParent());
-        logMsg += ", total saving withdrawal amount entered:" + getSavingTotalWithDrawalAmountEntered(bulkEntry.getBulkEntryParent());
-        logMsg += ", total saving deposit amount entered:" + getSavingTotalDepositAmountEntered(bulkEntry.getBulkEntryParent());
-        logMsg += ", total saving deposit due:" + getSavingTotalDepositDue(bulkEntry.getBulkEntryParent());
         logMsg += ".";
         logger.info(logMsg);
-    }
-
-    private Double getLoanTotalAmountDue(CollectionSheetEntryView parent) {
-        Double totalAmountDue = 0.0;
-        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
-            totalAmountDue += accountView.getTotalAmountDue();
-        }
-        return totalAmountDue;
-    }
-
-    private Double getLoanTotalDisbursalAmountDue(CollectionSheetEntryView parent) {
-        Double totalDisbursalAmountDue = 0.0;
-        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
-            totalDisbursalAmountDue += accountView.getTotalDisbursalAmountDue();
-        }
-        return totalDisbursalAmountDue;
-    }
-
-    private Double getLoanTotalDisburseAmount(CollectionSheetEntryView parent) {
-        Double totalDisburseAmount = 0.0;
-        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
-            totalDisburseAmount += accountView.getTotalDisburseAmount();
-        }
-        return totalDisburseAmount;
-    }
-
-    private Double getLoanTotalDisBursementAmountEntered(CollectionSheetEntryView parent) {
-        Double totalDisBursementAmountEntered = 0.0;
-        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
-            try {
-                totalDisBursementAmountEntered += Double.parseDouble(accountView.getDisBursementAmountEntered());
-            } catch (NumberFormatException nfe) {
-                logger.error("Error in parsing loan disbursement amount entered !!!", nfe);
-            }
-        }
-        return totalDisBursementAmountEntered;
-    }
-
-    private Double getLoanTotalEnteredAmount(CollectionSheetEntryView parent) {
-        Double totalEnteredAmount = 0.0;
-        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
-            try {
-                totalEnteredAmount += Double.parseDouble(accountView.getEnteredAmount());
-            } catch (NumberFormatException nfe) {
-                logger.error("Error in parsing loan entered amount !!!", nfe);
-            }
-        }
-        return totalEnteredAmount;
-    }
-
-    private Double getSavingTotalWithDrawalAmountEntered(CollectionSheetEntryView parent) {
-        Double totalWithDrawalAmountEntered = 0.0;
-        for (SavingsAccountView savingsAccountView : parent.getSavingsAccountDetails()) {
-            try {
-                totalWithDrawalAmountEntered += Double.parseDouble(savingsAccountView.getWithDrawalAmountEntered());
-            } catch (NumberFormatException nfe) {
-                logger.error("Error in parsing saving withdrawal amount entered !!!", nfe);
-            }
-        }
-        return totalWithDrawalAmountEntered;
-    }
-    
-    private Double getSavingTotalDepositAmountEntered(CollectionSheetEntryView parent) {
-        Double totalDepositAmountEntered = 0.0;
-        for (SavingsAccountView savingsAccountView : parent.getSavingsAccountDetails()) {
-            try{
-            totalDepositAmountEntered += Double.parseDouble(savingsAccountView.getDepositAmountEntered());
-            } catch (NumberFormatException nfe) {
-                logger.error("Error in parsing saving deposit amount entered !!!", nfe);
-            }
-            }
-        return totalDepositAmountEntered;
-    }
-    
-    private Double getSavingTotalDepositDue(CollectionSheetEntryView parent) {
-        Double totalDepositDue = 0.0;
-        for (SavingsAccountView savingsAccountView : parent.getSavingsAccountDetails()) {
-            totalDepositDue += savingsAccountView.getTotalDepositDue();
-        }
-        return totalDepositDue;
     }
     
     private void storeOnRequestErrorAndCollectionSheetData(final HttpServletRequest request,
