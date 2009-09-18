@@ -28,6 +28,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -72,7 +73,7 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
                 null));
         ProductCategoryBO productCategoryBO = getProductCategory().get(2);
         PrdCategoryStatusEntity prdCategoryStatusEntity = (PrdCategoryStatusEntity) TestObjectFactory.getObject(
-                PrdCategoryStatusEntity.class, Short.valueOf("0"));
+                PrdCategoryStatusEntity.class, PrdCategoryStatus.INACTIVE.getValue());
         productCategoryBO.updateProductCategory("Category", "Name changed", prdCategoryStatusEntity);
         TestObjectFactory.updateObject(productCategoryBO);
         productCategoryBO = getProductCategory().get(2);

@@ -27,6 +27,7 @@ import junit.framework.Assert;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
+import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -54,30 +55,21 @@ public class PrdCategoryStatusEntityIntegrationTest extends MifosIntegrationTest
         super.tearDown();
     }
 
-    public void testGetNameFailure() {
-        prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("0"));
-        String name = prdCategoryStatusEntity.getName();
-        Assert.assertFalse("This should fail, name is Inactive", !("Inactive".equals(name)));
+    public void testGetInactiveName() {
+        prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.INACTIVE.getValue());
+        Assert.assertEquals("Inactive", prdCategoryStatusEntity.getName());
     }
 
-    public void testGetNameSuccess() {
-        prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("1"));
-        String name = prdCategoryStatusEntity.getName();
-       Assert.assertEquals("Active", name);
+    public void testGetActiveName() {
+        prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.ACTIVE.getValue());
+        Assert.assertEquals("Active", prdCategoryStatusEntity.getName());
     }
 
     public void testGetNamesSuccess() {
-        prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("1"));
+        prdCategoryStatusEntity = getPrdCategoryStatus(PrdCategoryStatus.ACTIVE.getValue());
         Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = prdCategoryStatusEntity.getNames();
         int size = lookUpValueLocaleEntitySet.size();
        Assert.assertEquals(1, size);
-    }
-
-    public void testGetNamesFailure() {
-        prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("1"));
-        Set<LookUpValueLocaleEntity> lookUpValueLocaleEntitySet = prdCategoryStatusEntity.getNames();
-        int size = lookUpValueLocaleEntitySet.size();
-        Assert.assertFalse("This should fail, the size is 1", !(size == 1));
     }
 
     private PrdCategoryStatusEntity getPrdCategoryStatus(Short id) {

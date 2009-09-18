@@ -20,9 +20,9 @@
 
 package org.mifos.test.acceptance.client;
 
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -48,7 +48,7 @@ public class AddNoteTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    private static final String startDataSet = "acceptance_small_003_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -63,7 +63,7 @@ public class AddNoteTest extends UiTestCaseBase {
     }
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void addNoteToClient() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
 
         ClientsAndAccountsHomepage clientAndAccountPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
@@ -82,7 +82,7 @@ public class AddNoteTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void addNoteToClientAndVerifyOnNotesDetailsPage() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
 
         ClientsAndAccountsHomepage clientAndAccountPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();

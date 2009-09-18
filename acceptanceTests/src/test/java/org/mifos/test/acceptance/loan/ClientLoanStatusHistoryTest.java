@@ -22,7 +22,7 @@ package org.mifos.test.acceptance.loan;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -204,7 +204,7 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyStatusHistory(String resultDataSetFile) throws Exception {
         
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(resultDataSetFile);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_STATUS_CHANGE_HISTORY });
         
         dbUnitUtilities.verifyTable(ACCOUNT_STATUS_CHANGE_HISTORY, databaseDataSet, expectedDataSet);

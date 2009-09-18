@@ -22,7 +22,7 @@ package org.mifos.test.acceptance.loan;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
@@ -118,7 +118,7 @@ public class FeeTest extends UiTestCaseBase {
     private void verifyFees(String resultDataSetFile) throws Exception {
         String[] tablesToValidate = { "LOAN_ACTIVITY_DETAILS",  "LOAN_SUMMARY" };
         
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(resultDataSetFile);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
 
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);     

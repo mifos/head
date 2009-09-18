@@ -1,9 +1,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
     classpath:xsd/spring-beans-2.5.xsd
-    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop
     classpath:xsd/spring-aop-2.5.xsd">
 
     <aop:aspectj-autoproxy />
@@ -20,7 +20,7 @@
     </bean>
 
     <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
-    <bean id="dbUnitUtilities" class="org.mifos.test.acceptance.framework.DbUnitUtilities" />
+    <bean id="dbUnitUtilities" class="org.mifos.framework.util.DbUnitUtilities" />
     <bean id="initRemote" class="org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService" />
 
 </beans>

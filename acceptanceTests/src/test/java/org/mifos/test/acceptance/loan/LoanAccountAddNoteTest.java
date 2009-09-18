@@ -26,7 +26,7 @@ import java.sql.SQLException;
 
 import org.dbunit.DatabaseUnitException;
 import org.joda.time.DateTime;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
@@ -54,7 +54,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
     
-    private static final String startDataSet = "acceptance_small_003_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
 
     private static final String TEST_ACCOUNT = "000100000000004";
     private static final String TEST_ACCOUNT_NOTE = "Acceptance Test note for Issue 2456";
@@ -94,7 +94,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     }
     
     private void initData() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
     }
     
     private LoanAccountPage addNoteToAccount() {

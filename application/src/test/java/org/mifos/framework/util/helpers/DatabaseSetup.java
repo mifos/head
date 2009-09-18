@@ -40,6 +40,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
@@ -147,7 +148,7 @@ public class DatabaseSetup {
     public static void executeScript(Connection connection, String name) throws SQLException, IOException {
         InputStream sql = SqlResource.getInstance().getAsStream(name);
         try {
-            SqlUpgrade.execute(sql, connection);
+            SqlExecutor.execute(sql, connection);
         } catch (MayflySqlException e) {
             if (e.startLineNumber() == -1) {
                 throw e;

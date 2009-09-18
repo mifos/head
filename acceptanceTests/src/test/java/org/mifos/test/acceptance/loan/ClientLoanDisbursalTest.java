@@ -22,7 +22,7 @@ package org.mifos.test.acceptance.loan;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
@@ -85,7 +85,7 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         
         String[] tablesToValidate = { "ACCOUNT_PAYMENT",  "ACCOUNT_TRXN", "ACCOUNT_STATUS_CHANGE_HISTORY" };
         
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile("ClientLoanDisbursalTest_001_result_dbunit.xml.zip");
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("ClientLoanDisbursalTest_001_result_dbunit.xml.zip");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
 
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);

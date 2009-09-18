@@ -92,7 +92,7 @@ public class LatestBaseTestCase extends TestCase {
     }
 
     private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
-        String[] sqlStatements = SqlUpgrade.readFile((InputStream) upgrade.sql().getContent());
+        String[] sqlStatements = SqlExecutor.readFile((InputStream) upgrade.sql().getContent());
         for (int i = 0; i < sqlStatements.length; i++) {
             Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues
                     .checkLookupValue(sqlStatements[i]));

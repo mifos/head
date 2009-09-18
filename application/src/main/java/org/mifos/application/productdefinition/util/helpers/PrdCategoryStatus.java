@@ -22,7 +22,7 @@ package org.mifos.application.productdefinition.util.helpers;
 
 public enum PrdCategoryStatus {
 
-    ACTIVE((short) 1), INACTIVE((short) 0);
+    ACTIVE((short) 1), INACTIVE((short) 2);
 
     Short value;
 

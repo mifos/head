@@ -21,8 +21,8 @@
 package org.mifos.test.acceptance.center;
 
 
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;

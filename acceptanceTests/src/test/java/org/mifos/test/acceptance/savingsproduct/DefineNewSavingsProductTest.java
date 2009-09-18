@@ -21,7 +21,7 @@
 package org.mifos.test.acceptance.savingsproduct;
 
 import org.dbunit.dataset.IDataSet;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
@@ -169,7 +169,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     private void verifySavingsProduct(String resultDataSetFile) throws Exception {
         String[] tablesToValidate = { "PRD_OFFERING",  "SAVINGS_OFFERING" };
         
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(resultDataSetFile);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
 
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);     

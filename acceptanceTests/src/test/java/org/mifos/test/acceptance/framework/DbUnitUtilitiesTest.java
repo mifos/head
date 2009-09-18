@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.dbunit.dataset.DataSetException;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
 
@@ -37,7 +38,7 @@ public class DbUnitUtilitiesTest {
      */
 	public void testGetDataSetFromFile() throws DataSetException, IOException, URISyntaxException {
 	    DbUnitUtilities utilities = new DbUnitUtilities();
-	    utilities.getDataSetFromFile("test directory/acceptance_small_001_dbunit.xml.zip");
+	    utilities.getDataSetFromDataSetDirectoryFile("test directory/acceptance_small_001_dbunit.xml.zip");
 	}
 }
 

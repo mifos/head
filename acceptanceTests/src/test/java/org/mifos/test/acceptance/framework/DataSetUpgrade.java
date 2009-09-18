@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -37,7 +37,7 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.operation.DatabaseOperation;
-import org.mifos.framework.persistence.SqlUpgrade;
+import org.mifos.framework.persistence.SqlExecutor;
 
 
 public class DataSetUpgrade {
@@ -45,14 +45,14 @@ public class DataSetUpgrade {
     private final String databaseUser;
     private final String databasePassword;
     private final IDataSet dataSet;
-        
+
     // Table and misc. constants
     private static final String UPGRADE_SQLS_DIR = "application/src/main/sql/";
     private static final String DATABASE_VERSION = "DATABASE_VERSION";
-    
-    public DataSetUpgrade(IDataSet dataSet, 
-                          String databaseName, 
-                          String databaseUser, 
+
+    public DataSetUpgrade(IDataSet dataSet,
+                          String databaseName,
+                          String databaseUser,
                           String databasePassword
                           ) {
         this.databaseName = databaseName;
@@ -60,17 +60,17 @@ public class DataSetUpgrade {
         this.databasePassword = databasePassword;
         this.dataSet = dataSet;
     }
-    
+
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.CloseResource"})
     // Rationale: There's no way to open new file in the loop if I don't want to
     // instansiate them there + The resource is closed.
     public void upgrade() throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException {
         // 1. Figure out what changes to apply
         // 2. Apply
-        
+
         List<String> changesToApply = getSQLsToApply(dataSet);
 
-        
+
         Class.forName("com.mysql.jdbc.Driver");
         Connection jdbcConnection = DriverManager.getConnection("jdbc:mysql://localhost/" + databaseName
                 + "?sessionVariables=FOREIGN_KEY_CHECKS=0", databaseUser, databasePassword);
@@ -81,14 +81,14 @@ public class DataSetUpgrade {
         // apply files
         for (String file : changesToApply) {
             InputStream in = new FileInputStream(UPGRADE_SQLS_DIR + file);
-            SqlUpgrade.execute(in, jdbcConnection);
+            SqlExecutor.execute(in, jdbcConnection);
         }
 
         // dump...
 
         jdbcConnection.close();
     }
-    
+
     private static List<String> getSQLsToApply(IDataSet dataSet) throws DataSetException {
         List<String> sqls = new ArrayList<String>();
         List<String> availableVersions = getAvailableVersionsAboveCurrent(getCurrentVersion(dataSet));
@@ -147,7 +147,7 @@ public class DataSetUpgrade {
 
     /**
      * Returns the version of the data set.
-     * 
+     *
      * @param dataSet
      *            The data set that is examined.
      * @return The data set version.

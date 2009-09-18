@@ -21,8 +21,8 @@
 package org.mifos.test.acceptance.loan;
 
 import org.dbunit.dataset.IDataSet;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -58,12 +58,12 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
     
-    private static final String startDataSet = "acceptance_small_003_dbunit.xml.zip";
-    private static final String clientResultDataSet = "UndoLoanDisbursal_001_result_dbunit.xml.zip";
-    private static final String groupResultDataSet = "UndoLoanDisbursal_002_result_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
+    private static final String CLIENT_RESULT_DATA_SET = "UndoLoanDisbursal_001_result_dbunit.xml.zip";
+    private static final String GROUP_RESULT_DATA_SET = "UndoLoanDisbursal_002_result_dbunit.xml.zip";
     
-    private static final String clientLoanId = "000100000000121";
-    private static final String groupLoanId = "000100000000206 ";
+    private static final String CLIENT_LOAN_ID = "000100000000121";
+    private static final String GROUP_LOAN_ID = "000100000000206 ";
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
@@ -79,26 +79,26 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void undoClientLoanDisbursal() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
         
-        undoLoanDisbursal(clientLoanId);
+        undoLoanDisbursal(CLIENT_LOAN_ID);
         
-        verifyLoanData(clientResultDataSet);
+        verifyLoanData(CLIENT_RESULT_DATA_SET);
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void undoGroupLoanDisbursal() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
         
-        undoLoanDisbursal(groupLoanId);
+        undoLoanDisbursal(GROUP_LOAN_ID);
         
-        verifyLoanData(groupResultDataSet);
+        verifyLoanData(GROUP_RESULT_DATA_SET);
     }
 
     
     @SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "unused" })
     private void verifyLoanData(String resultDataSet) throws Exception {
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(resultDataSet);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSet);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT, 
                                                                                                   ACCOUNT_FLAG_DETAIL, 
                                                                                                   ACCOUNT_NOTES, 

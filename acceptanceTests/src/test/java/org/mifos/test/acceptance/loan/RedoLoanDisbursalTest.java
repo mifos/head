@@ -20,7 +20,7 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -124,7 +124,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private void verifyRedoneLoanDisbursal(String resultDataSetFile) throws Exception {
         String[] tablesToValidate = { /*"ACCOUNT_STATUS_CHANGE_HISTORY",*/ "LOAN_ACCOUNT", "LOAN_ACTIVITY_DETAILS", "LOAN_SUMMARY", "LOAN_TRXN_DETAIL"};
         
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(resultDataSetFile);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
 
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);     

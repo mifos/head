@@ -22,8 +22,8 @@ package org.mifos.test.acceptance.holiday;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -51,7 +51,7 @@ public class HolidayTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     
     public static final String HOLIDAY = "HOLIDAY";
-    private static final String holidayResultDataSet = "HolidayTest_001_result_dbunit.xml.zip";
+    private static final String HOLIDAY_RESULT_DATA_SET = "HolidayTest_001_result_dbunit.xml.zip";
         
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
@@ -83,7 +83,7 @@ public class HolidayTest extends UiTestCaseBase {
         confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
         
-        verifyHolidayData(holidayResultDataSet);
+        verifyHolidayData(HOLIDAY_RESULT_DATA_SET);
     }
 
     public void viewHolidays() {
@@ -95,7 +95,7 @@ public class HolidayTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyHolidayData(String resultDataSetFile) throws Exception {
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(resultDataSetFile);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { HOLIDAY });
         
         dbUnitUtilities.verifyTable(HOLIDAY, databaseDataSet, expectedDataSet);

@@ -124,9 +124,9 @@ public class TestDatabase implements SessionOpener {
 
     /**
      * This is for tests where it is difficult to pass around the Session.
-     * 
+     *
      * Thus, we install it in a static in StaticHibernateUtil.
-     * 
+     *
      * Make sure to call {@link StaticHibernateUtil#resetDatabase()} from
      * tearDown.
      */
@@ -153,7 +153,7 @@ public class TestDatabase implements SessionOpener {
     /**
      * Create a database and upgrade it to the first database version with a
      * number. Should be run on an empty database (no tables).
-     * 
+     *
      * @throws IOException
      */
     public static void upgradeToFirstNumberedVersion(Connection connection) throws SQLException, IOException {
@@ -173,7 +173,7 @@ public class TestDatabase implements SessionOpener {
     /**
      * Create a database and upgrade it to the latest checkpoint database
      * version. Should be run on an empty database (no tables).
-     * 
+     *
      * @throws IOException
      */
     public static void upgradeLatestCheckpointVersion(Connection connection) throws SQLException, IOException {
@@ -191,10 +191,10 @@ public class TestDatabase implements SessionOpener {
 
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
-        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("truncate_tables.sql"), connection);
-        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
-        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
-        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("truncate_tables.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
         connection.commit();
         connection.close();
 

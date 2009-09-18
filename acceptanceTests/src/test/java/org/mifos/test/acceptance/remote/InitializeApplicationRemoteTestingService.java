@@ -25,7 +25,7 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 import org.dbunit.DatabaseUnitException;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.InitializeApplicationPage;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 

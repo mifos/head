@@ -88,7 +88,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
          * version 100). They will need to upgrade to 100 manually.
          */
         Database database = new Database();
-    try {    
+    try {
         new DatabaseVersionPersistence(database.openConnection()).read();
         Assert.fail("SQLException was expected");
     } catch (SQLException e){}
@@ -151,7 +151,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
     }
 
     public void testReadEmpty() throws Exception {
-        String[] sqlStatements = SqlUpgrade.readFile(new ByteArrayInputStream(new byte[0]));
+        String[] sqlStatements = SqlExecutor.readFile(new ByteArrayInputStream(new byte[0]));
        Assert.assertEquals(0, sqlStatements.length);
     }
 
@@ -192,7 +192,7 @@ import junit.framework.Assert;
     }
 
     private void checkSplit(String sql, String... expected) throws UnsupportedEncodingException {
-        String[] statements = SqlUpgrade.readFile(new ByteArrayInputStream(sql.getBytes("UTF-8")));
+        String[] statements = SqlExecutor.readFile(new ByteArrayInputStream(sql.getBytes("UTF-8")));
        Assert.assertEquals(expected.length, statements.length);
         for (int i = 0; i < expected.length; ++i) {
            Assert.assertEquals(expected[i], statements[i]);
@@ -201,7 +201,7 @@ import junit.framework.Assert;
 
     public void testBadUtf8() throws Exception {
         try {
-            SqlUpgrade.readFile(new ByteArrayInputStream(new byte[] { (byte) 0x80 }));
+            SqlExecutor.readFile(new ByteArrayInputStream(new byte[] { (byte) 0x80 }));
             Assert.fail();
         } catch (RuntimeException e) {
             ObjectAssert.assertInstanceOf(CharacterCodingException.class, e.getCause());
@@ -209,7 +209,7 @@ import junit.framework.Assert;
     }
 
     public void testGoodUtf8() throws Exception {
-        String[] sqlStatements = SqlUpgrade.readFile(new ByteArrayInputStream(new byte[] { (byte) 0xe2, (byte) 0x82,
+        String[] sqlStatements = SqlExecutor.readFile(new ByteArrayInputStream(new byte[] { (byte) 0xe2, (byte) 0x82,
                 (byte) 0xac }));
        Assert.assertEquals(1, sqlStatements.length);
         String euroSign = sqlStatements[0];
@@ -217,12 +217,11 @@ import junit.framework.Assert;
     }
 
     public void testExecuteStream() throws Exception {
-        SqlUpgrade persistence = new SqlUpgrade(null, -1);
         Connection conn = new Database().openConnection();
         byte[] sql = ("create table FOO(DATABASE_VERSION INTEGER);\n" + "--some comment\n"
                 + "insert into FOO(DATABASE_VERSION) VALUES(53);\n").getBytes("UTF-8");
         ByteArrayInputStream in = new ByteArrayInputStream(sql);
-        persistence.execute(in, conn);
+        SqlExecutor.execute(in, conn);
         conn.commit();
         readOneValueFromFoo(conn);
     }

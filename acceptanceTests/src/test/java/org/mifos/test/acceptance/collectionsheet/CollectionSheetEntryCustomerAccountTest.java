@@ -24,8 +24,8 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -264,7 +264,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyCollectionSheetData(String filename) throws Exception {
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(filename);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(filename);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { FEE_TRXN_DETAIL,
                                    ACCOUNT_TRXN, 
                                    LOAN_TRXN_DETAIL, 

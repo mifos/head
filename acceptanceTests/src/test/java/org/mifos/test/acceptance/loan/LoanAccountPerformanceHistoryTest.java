@@ -22,8 +22,8 @@ package org.mifos.test.acceptance.loan;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -93,7 +93,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         repayLoanConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
         
         // validate
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile("LoanAccountPerformanceHistoryTest_001_result_dbunit.xml.zip");
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("LoanAccountPerformanceHistoryTest_001_result_dbunit.xml.zip");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { CLIENT_PERFORMANCE_HISTORY });
 
         dbUnitUtilities.verifyTable(CLIENT_PERFORMANCE_HISTORY, databaseDataSet, expectedDataSet);     

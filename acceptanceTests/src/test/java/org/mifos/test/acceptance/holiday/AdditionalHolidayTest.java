@@ -22,9 +22,9 @@ package org.mifos.test.acceptance.holiday;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -337,7 +337,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyLoanSchedule (final String resultDataSet) throws Exception
     {
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(resultDataSet);
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSet);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { LOAN_SCHEDULE });
 
         dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
