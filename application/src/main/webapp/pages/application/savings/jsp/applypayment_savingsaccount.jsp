@@ -131,7 +131,7 @@ explanation of the license and how it is applied.
                 <mifos:mifoslabel name="Savings.paymentType" mandatory="Yes" isColonRequired="Yes"/>
                 </td>
                 <td>
-                <mifos:select name="savingsDepositWithdrawalForm" property="trxnTypeId" onchange="javascript:reLoad(this.form)">
+                <mifos:select name="savingsDepositWithdrawalForm" styleId="applypayment_savingsaccount.input.trxnType" property="trxnTypeId" onchange="javascript:reLoad(this.form)">
 					<c:forEach var="trxnType" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'trxnTypes')}" >
 						<html-el:option value="${trxnType.id}">${trxnType.name}</html-el:option>
 					</c:forEach>
@@ -143,7 +143,7 @@ explanation of the license and how it is applied.
                 	<mifos:mifoslabel name="Savings.enterAmount" mandatory="Yes" isColonRequired="Yes"/>
                 </td>
                 <td width="76%">
-	                <mifos:mifosdecimalinput property="amount"/>
+	                <mifos:mifosdecimalinput  styleId="applypayment_savingsaccount.input.amount" property="amount"/>
                 </td>
               </tr>
               
@@ -152,7 +152,7 @@ explanation of the license and how it is applied.
 	                <mifos:mifoslabel name="Savings.modeOfPayment" mandatory="yes" isColonRequired="Yes"/>
                 </td>
                 <td>
-                	<mifos:select name="savingsDepositWithdrawalForm" property="paymentTypeId">
+                	<mifos:select name="savingsDepositWithdrawalForm" styleId="applypayment_savingsaccount.input.paymentType" property="paymentTypeId">
 						<c:forEach var="Payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 							<html-el:option value="${Payment.id}">${Payment.name}</html-el:option>
 						</c:forEach>
@@ -164,7 +164,7 @@ explanation of the license and how it is applied.
                 	<mifos:mifoslabel keyhm="Savings.ReceiptId" isColonRequired="Yes" name="Savings.receiptId" />
                 </td>
                 <td>
-                	<mifos:mifosalphanumtext keyhm="Savings.ReceiptId" property="receiptId" />
+                	<mifos:mifosalphanumtext  styleId="applypayment_savingsaccount.input.receiptId" keyhm="Savings.ReceiptId" property="receiptId" />
                 </td>
               </tr>
               <tr>
@@ -186,11 +186,11 @@ explanation of the license and how it is applied.
               </tr>
               <tr>
                 <td align="center">
-					<html-el:submit styleClass="buttn">
+					<html-el:submit styleId="applypayment_savingsaccount.button.submit" styleClass="buttn">
 						<mifos:mifoslabel name="Savings.reviewTransaction" />
 					</html-el:submit>
                   &nbsp;
-                  <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+                  <html-el:button styleId="applypayment_savingsaccount.button.cancel" property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 							<mifos:mifoslabel name="savings.Cancel" bundle="SavingsUIResources"/>
 				  </html-el:button>
                 </td>

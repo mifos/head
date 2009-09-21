@@ -34,27 +34,6 @@ public class DisburseLoanParameters {
     private String amount;
     private String paymentType;
     
-    public String getDisbursalDateDD() {
-        return this.disbursalDateDD;
-    }
-    public void setDisbursalDateDD(String disbursalDateDD) {
-        this.disbursalDateDD = disbursalDateDD;
-    }
-    public String getDisbursalDateMM() {
-        return this.disbursalDateMM;
-    }
-    public void setDisbursalDateMM(String disbursalDateMM) {
-        this.disbursalDateMM = disbursalDateMM;
-    }
-    public String getDisbursalDateYYYY() {
-        return this.disbursalDateYYYY;
-    }
-    public void setDisbursalDateYYYY(String disbursalDateYYYY) {
-        this.disbursalDateYYYY = disbursalDateYYYY;
-    }
-    public String getReceiptId() {
-        return this.receiptId;
-    }
     public void setReceiptId(String receiptId) {
         this.receiptId = receiptId;
     }
@@ -87,6 +66,28 @@ public class DisburseLoanParameters {
     }
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public String getDisbursalDateDD() {
+        return this.disbursalDateDD;
+    }
+    public void setDisbursalDateDD(String disbursalDateDD) {
+        this.disbursalDateDD = disbursalDateDD;
+    }
+    public String getDisbursalDateMM() {
+        return this.disbursalDateMM;
+    }
+    public void setDisbursalDateMM(String disbursalDateMM) {
+        this.disbursalDateMM = disbursalDateMM;
+    }
+    public String getDisbursalDateYYYY() {
+        return this.disbursalDateYYYY;
+    }
+    public void setDisbursalDateYYYY(String disbursalDateYYYY) {
+        this.disbursalDateYYYY = disbursalDateYYYY;
+    }
+    public String getReceiptId() {
+        return this.receiptId;
     }
     
     /**

@@ -114,7 +114,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel keyhm="Savings.ReceiptId" isColonRequired="Yes" name="Savings.receiptId" />
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Savings.ReceiptId" property="receiptId" />
+									<mifos:mifosalphanumtext  styleId="closesavingsaccount.input.receiptId" keyhm="Savings.ReceiptId" property="receiptId" />
 								</td>
 							</tr>
 							<tr>
@@ -158,7 +158,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="Savings.notes" mandatory="yes" isColonRequired="yes"/>
 								</td>
 								<td>
-									<html-el:textarea property="notes" cols="37" style="width:320px; height:110px;" />
+									<html-el:textarea  styleId="closesavingsaccount.input.notes" property="notes" cols="37" style="width:320px; height:110px;" />
 								</td>
 							</tr>
 						</table>
@@ -175,11 +175,11 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr>
 								<td align="center">
-									<html-el:submit styleClass="buttn">
+									<html-el:submit styleId="closesavingsaccount.button.submit" styleClass="buttn">
 										<mifos:mifoslabel name="loan.preview" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+									<html-el:button styleId="closesavingsaccount.button.cancel" property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button>
 								</td>

@@ -88,10 +88,10 @@ explanation of the license and how it is applied.
                 <c:out value="${accountActionValue.name}"/>
                 <mifos:mifoslabel name="Savings.amount" isColonRequired="yes" />
                    <c:if test="${param.method == 'load'}">
-						<mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" value=""/>
+						<mifos:mifosdecimalinput styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" value=""/>
 					</c:if>
 					<c:if test="${param.method != 'load'}">
-						<mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/>
+						<mifos:mifosdecimalinput styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/>
 					</c:if>
 				   	<c:if test="${isLastPaymentValid == 1}">
                     &nbsp; <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
@@ -119,7 +119,7 @@ explanation of the license and how it is applied.
                 <mifos:mifoslabel name="Savings.notes" mandatory="yes"/>: <br>
                 </td>
                 <td width="95%" class="fontnormal">
-                	<html-el:textarea property="note" style="width:320px; height:110px;"/>
+                	<html-el:textarea styleId="applyadjustment.input.notes" property="note" style="width:320px; height:110px;"/>
                 </td>
               </tr>
             </table>
@@ -131,11 +131,11 @@ explanation of the license and how it is applied.
             <table width="95%" border="0" cellspacing="0" cellpadding="1">
               <tr>
                 <td align="center">
-                <html-el:submit styleClass="buttn" >
+                <html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn" >
 						<mifos:mifoslabel name="Savings.reviewAdjustment" />
 	  		    </html-el:submit>
 &nbsp;
-			    <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+			    <html-el:button styleId="applyadjustment.button.cancel" property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 			    </html-el:button>
                 </td>

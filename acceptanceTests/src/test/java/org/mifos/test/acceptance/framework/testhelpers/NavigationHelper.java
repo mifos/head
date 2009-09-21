@@ -68,11 +68,11 @@ public class NavigationHelper {
         return loanAccountPage;
     }
     
-    public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String loanAccountID) {        
+    public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String savingsAccountID) {        
         HomePage homePage = navigateToHomePage();
-        SearchResultsPage searchResultsPage = homePage.search(loanAccountID);
+        SearchResultsPage searchResultsPage = homePage.search(savingsAccountID);
         searchResultsPage.verifyPage();
-        SavingsAccountDetailPage savingsAccountDetailPage = searchResultsPage.navigateToSavingsAccountDetailPage(loanAccountID);
+        SavingsAccountDetailPage savingsAccountDetailPage = searchResultsPage.navigateToSavingsAccountDetailPage(savingsAccountID);
         savingsAccountDetailPage.verifyPage();
         
         return savingsAccountDetailPage;

@@ -186,11 +186,11 @@ explanation of the license and how it is applied.
             <table width="96%" border="0" cellspacing="0" cellpadding="1">
               <tr>
                 <td align="center">
-                <html-el:button property="submitButton" styleClass="buttn" onclick="javascript:funMakePayment(this.form)">
+                <html-el:button property="submitButton" styleId="review_transaction_savings.button.submit" styleClass="buttn" onclick="javascript:funMakePayment(this.form)">
 						<mifos:mifoslabel name="savings.Submit" bundle="SavingsUIResources"/>
 	  		    </html-el:button>
 &nbsp;
-		      <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+		      <html-el:button property="cancelButton" styleId="review_transaction_savings.button.cancel" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="savings.Cancel" bundle="SavingsUIResources"/>
 			   </html-el:button>
                 </td>

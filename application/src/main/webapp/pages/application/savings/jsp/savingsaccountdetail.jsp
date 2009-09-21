@@ -53,7 +53,8 @@ explanation of the license and how it is applied.
 								</td>
 								<td width="38%" rowspan="2" align="right" valign="top" class="fontnormal">
 									<c:if test="${BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
-										<html-el:link href="editStatusAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+										<html-el:link styleId="savingsaccountdetail.link.editAccountStatus" 
+											href="editStatusAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.editAccountStatus" />
 										</html-el:link>
 									</c:if>
@@ -96,7 +97,8 @@ explanation of the license and how it is applied.
 										test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY
 												&& (BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED ||
 												BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE)}">
-										<html-el:link href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										<html-el:link styleId="savingsaccountdetail.link.viewDepositDueDetails" 
+											href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Savings.viewDepositDueDetails" />
 										</html-el:link>
 									</c:if>
@@ -139,7 +141,8 @@ explanation of the license and how it is applied.
 								</td>
 								<td width="65%" align="right" class="fontnormal">
 									&nbsp;
-									<html-el:link href="savingsAction.do?method=getRecentActivity&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<html-el:link styleId="savingsaccountdetail.link.viewAllAccountActivity" 
+										href="savingsAction.do?method=getRecentActivity&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewAllAccountActivity" />
 									</html-el:link>
 								</td>
@@ -231,7 +234,8 @@ explanation of the license and how it is applied.
 								</td>
 								<td align="right" valign="top" class="fontnormal">
 									<c:if test="${BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
-										<html-el:link action="savingsAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}">
+										<html-el:link styleId="savingsaccountdetail.link.editAccountInformation" 
+											action="savingsAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.EditAccountInformation" />
 										</html-el:link>
 									</c:if>
@@ -247,15 +251,18 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr>
 								<td class="fontnormal">
-									<html-el:link href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<html-el:link styleId="savingsaccountdetail.link.viewTransactionHistory" 
+										href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewTransactionHistory" />
 									</html-el:link>
 									<br>
 									<span class="fontnormal"> 
-									<html-el:link href="savingsAction.do?method=loadChangeLog&entityType=Savings&entityId=${BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
+									<html-el:link styleId="savingsaccountdetail.link.viewChangeLog" 
+											href="savingsAction.do?method=loadChangeLog&entityType=Savings&entityId=${BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.viewChangeLog" />
 										</html-el:link> <br>
-									 <html-el:link href="savingsAction.do?method=getStatusHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									 <html-el:link styleId="savingsaccountdetail.link.viewStatusHistory" 
+									 		href="savingsAction.do?method=getStatusHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Savings.viewStatusHistory" />
 										</html-el:link> </span>
 								</td>
@@ -273,17 +280,20 @@ explanation of the license and how it is applied.
 								<td class="paddingL10">
 									<span class="fontnormal8pt">
 				<c:if test="${BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
-		           <html-el:link  href="savingsDepositWithdrawalAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+		           <html-el:link styleId="savingsaccountdetail.link.makeDepositWithdrawal"  
+		           		href="savingsDepositWithdrawalAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 		          	    <mifos:mifoslabel name="Savings.makeDepositWithdrawl"/>
 		           </html-el:link><br>
 
-					<html-el:link href="savingsApplyAdjustmentAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+					<html-el:link styleId="savingsaccountdetail.link.applyAdjustment" 
+						href="savingsApplyAdjustmentAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Savings.applyAdjustment" />
 					</html-el:link>
 					<br>
 				</c:if>
 				<c:if test="${BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
-											<html-el:link href="savingsClosureAction.do?method=load&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+											<html-el:link styleId="savingsaccountdetail.link.closeAccount" 
+												href="savingsClosureAction.do?method=load&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="Savings.closeAccount" />
 											</html-el:link>
 										</c:if> </span>

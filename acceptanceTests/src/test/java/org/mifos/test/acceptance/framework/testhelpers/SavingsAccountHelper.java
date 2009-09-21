@@ -31,7 +31,10 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountEntryPage
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalConfirmationPage;
+import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -88,6 +91,24 @@ public class SavingsAccountHelper {
             savingsAccountDetailPage = previewPage.submitAndNavigateToSavingsAccountDetailPage();
             
             return savingsAccountDetailPage;
+    }
+
+    public SavingsAccountDetailPage makeDepositOrWithdrawalOnSavingsAccount(String savingsAccountID, DepositWithdrawalSavingsParameters params) {
+            NavigationHelper helper = new NavigationHelper(selenium);
+             SavingsAccountDetailPage savingsAccountDetailPage = helper.navigateToSavingsAccountDetailPage(savingsAccountID);
+            
+            savingsAccountDetailPage.verifyPage();
+            
+            SavingsDepositWithdrawalPage savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
+            savingsDepositWithdrawalPage.verifyPage();
+            
+            SavingsDepositWithdrawalConfirmationPage savingsDepositWithdrawalConfirmationPage = savingsDepositWithdrawalPage.submitAndNavigateToDepositWithdrawalConfirmationPage(params);
+            savingsDepositWithdrawalConfirmationPage.verifyPage();
+            
+            savingsAccountDetailPage = savingsDepositWithdrawalConfirmationPage.submitAndNavigateToSavingsAccountDetailPage();
+            
+            return savingsAccountDetailPage;
+              
     }
     
 }
