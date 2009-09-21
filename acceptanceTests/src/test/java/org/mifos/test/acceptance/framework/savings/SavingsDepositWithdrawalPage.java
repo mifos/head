@@ -16,17 +16,18 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
       
     public SavingsDepositWithdrawalConfirmationPage submitAndNavigateToDepositWithdrawalConfirmationPage(DepositWithdrawalSavingsParameters params)
     {
-        selenium.type("trxnDateDD", params.getTrxnDateDD());
-        selenium.type("trxnDateMM", params.getTrxnDateMM());
-        selenium.type("trxnDateYY", params.getTrxnDateYYYY());
+        this.typeTextIfNotEmpty("trxnDateDD", params.getTrxnDateDD());
+        this.typeTextIfNotEmpty("trxnDateMM", params.getTrxnDateMM());
+        this.typeTextIfNotEmpty("trxnDateYY", params.getTrxnDateYYYY());
         
         selenium.select("applypayment_savingsaccount.input.trxnType", "value=" + params.getTrxnTypeValue() );
- 
-        selenium.type("applypayment_savingsaccount.input.amount", params.getAmount());
+        waitForPageToLoad();
+
+        this.typeTextIfNotEmpty("applypayment_savingsaccount.input.amount", params.getAmount());
 
         selenium.select("applypayment_savingsaccount.input.paymentType", "value=" + params.getPaymentTypeValue() );
         
-        this.typeTextIfNotEmpty("applypayment.input.receiptId", params.getReceiptId());
+        this.typeTextIfNotEmpty("applypayment_savingsaccount.input.receiptId", params.getReceiptId());
         
         this.typeTextIfNotEmpty("receiptDateDD", params.getReceiptDateDD());
         this.typeTextIfNotEmpty("receiptDateMM", params.getReceiptDateMM());
