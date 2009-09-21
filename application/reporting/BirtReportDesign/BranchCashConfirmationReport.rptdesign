@@ -3016,10 +3016,10 @@ Total.count()!=0</expression>
                                                 <expression name="valueExpr">Total.count()==0</expression>
                                             </structure>
                                         </list-property>
-                                        <method name="onRender"><![CDATA[Packages.java.util.logging.Logger.getLogger("").error("Inside on Render");
+                                        <method name="onRender"><![CDATA[
 if(Total.row()==0) 
 	this.text=0
-Packages.java.util.logging.Logger.getLogger("").error("Out of on Render");]]></method>
+]]></method>
                                         <property name="resultSetColumn">total_principal_prepayment</property>
                                     </data>
                                     <label id="953">

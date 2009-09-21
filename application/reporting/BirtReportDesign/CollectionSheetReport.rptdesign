@@ -13,9 +13,6 @@
             <property name="namespace">UI</property>
         </structure>
     </list-property>
-    <list-property name="includeScripts">
-        <property>test.js</property>
-    </list-property>
     <parameters>
         <cascading-parameter-group name="branch_loanofficer_center" id="905">
             <property name="dataSetMode">multiple</property>
