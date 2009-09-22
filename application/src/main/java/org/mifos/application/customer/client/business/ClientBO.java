@@ -36,7 +36,6 @@ import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
@@ -147,10 +146,10 @@ public class ClientBO extends CustomerBO {
      * 
      * minimal legal constructor
      */
-    public ClientBO(final CustomerLevel customerLevel, final String name, final OfficeBO office,
-            final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
-            final CustomerAccountBO customerAccount, final String searchId) {
-        super(customerLevel, name, office, loanOfficer, customerMeeting, customerAccount);
+    public ClientBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
+            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
+            final String searchId, final CustomerBO parentCustomer) {
+        super(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, parentCustomer);
         this.setSearchId(searchId);
         this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
         this.clientAttendances = new HashSet<ClientAttendanceBO>();

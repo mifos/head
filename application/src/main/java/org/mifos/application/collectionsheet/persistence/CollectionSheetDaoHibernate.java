@@ -29,11 +29,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.application.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
+import org.mifos.application.servicefacade.CollectionSheetIndividualSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
+import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
@@ -44,6 +47,12 @@ import org.mifos.framework.util.helpers.Constants;
  *
  */
 public class CollectionSheetDaoHibernate extends Persistence implements CollectionSheetDao {
+
+    private final SavingsDao savingsDao;
+
+    public CollectionSheetDaoHibernate(final SavingsDao savingsDao) {
+        this.savingsDao = savingsDao;
+    }
 
     @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerDto> findCustomerHierarchy(final Integer customerId, final Date transactionDate) {
@@ -301,42 +310,77 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         return loanDisbursementsGroupedByCustomerId;
     }
 
-    @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerSavingDto>> findSavingsDepositsforCustomerHierarchy(
-            final Short branchId, final String searchId, final Date transactionDate,
-            final Integer customerAtTopOfHierarchyId) {
+            final CustomerHierarchyParams customerHierarchyParams) {
 
-        final Map<Integer, List<CollectionSheetCustomerSavingDto>> savingsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
-
-        final Map<String, Object> topOfHierarchyQueryParameters = new HashMap<String, Object>();
-        topOfHierarchyQueryParameters.put("BRANCH_ID", branchId);
-        topOfHierarchyQueryParameters.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
-        topOfHierarchyQueryParameters.put("TRANSACTION_DATE", transactionDate);
+        final List<CollectionSheetCustomerSavingDto> mandatorySavingAccount = savingsDao
+                .findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
         
-        final List<CollectionSheetCustomerSavingDto> savingDepositsForTopCustomer = executeNamedQueryWithResultTransformer(
-                "findSavingsDepositsforCustomerAtTopOfHierarchyAsDto", topOfHierarchyQueryParameters,
-                CollectionSheetCustomerSavingDto.class);
+        final List<CollectionSheetCustomerSavingDto> voluntarySavingAccount = savingsDao
+                .findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
         
-        if (savingDepositsForTopCustomer != null) {
-            poulateSavingDeposits(savingsGroupedByCustomerId, savingDepositsForTopCustomer);
-        }
+        final List<CollectionSheetCustomerSavingDto> centerOrGroupSavingsAccountsToBePaidByClient = savingsDao
+                .findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
         
-        final Map<String, Object> withinHierarchyQueryParameters = new HashMap<String, Object>();
-        withinHierarchyQueryParameters.put("BRANCH_ID", branchId);
-        withinHierarchyQueryParameters.put("SEARCH_ID", searchId);
-        withinHierarchyQueryParameters.put("TRANSACTION_DATE", transactionDate);
+        final List<CollectionSheetCustomerSavingDto> allSavingsAccounts = new ArrayList<CollectionSheetCustomerSavingDto>();
+        allSavingsAccounts.addAll(mandatorySavingAccount);
+        allSavingsAccounts.addAll(voluntarySavingAccount);
+        allSavingsAccounts.addAll(centerOrGroupSavingsAccountsToBePaidByClient);
+        
+        return convertListToMapGroupedByCustomerId(allSavingsAccounts);
+    }
+    
+    public Map<Integer, List<CollectionSheetIndividualSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
+            final CustomerHierarchyParams customerHierarchyParams) {
 
-        final List<CollectionSheetCustomerSavingDto> savingDeposits = executeNamedQueryWithResultTransformer(
-                "findSavingsDepositsforCustomerHierarchyAsDto", withinHierarchyQueryParameters,
-                CollectionSheetCustomerSavingDto.class);
+        final List<CollectionSheetIndividualSavingDto> mandatorySavings = savingsDao
+                .findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
+        
+        final List<CollectionSheetIndividualSavingDto> voluntarySavings = savingsDao
+                .findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
-        if (savingDeposits != null) {
-            poulateSavingDeposits(savingsGroupedByCustomerId, savingDeposits);
+        final List<CollectionSheetIndividualSavingDto> allIndividualSavings = new ArrayList<CollectionSheetIndividualSavingDto>();
+        allIndividualSavings.addAll(mandatorySavings);
+        allIndividualSavings.addAll(voluntarySavings);
+
+        return convertIndividualSavingsListToMapGroupedByCustomerId(allIndividualSavings);
+    }
+    
+    
+    private Map<Integer, List<CollectionSheetIndividualSavingDto>> convertIndividualSavingsListToMapGroupedByCustomerId(
+            final List<CollectionSheetIndividualSavingDto> allIndividualSavings) {
+
+        final Map<Integer, List<CollectionSheetIndividualSavingDto>> savingsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetIndividualSavingDto>>();
+
+        for (CollectionSheetIndividualSavingDto savingsAccountDto : allIndividualSavings) {
+            final Integer customerId = savingsAccountDto.getCustomerId();
+            if (savingsGroupedByCustomerId.containsKey(customerId)) {
+                savingsGroupedByCustomerId.get(customerId).add(savingsAccountDto);
+            } else {
+                savingsGroupedByCustomerId.put(customerId, Arrays.asList(savingsAccountDto));
+            }
         }
 
         return savingsGroupedByCustomerId;
     }
-    
+
+    private Map<Integer, List<CollectionSheetCustomerSavingDto>> convertListToMapGroupedByCustomerId(
+            final List<CollectionSheetCustomerSavingDto> allSavingsAccounts) {
+        
+        final Map<Integer, List<CollectionSheetCustomerSavingDto>> savingsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
+
+        for (CollectionSheetCustomerSavingDto savingsAccountDto : allSavingsAccounts) {
+            final Integer customerId = savingsAccountDto.getCustomerId();
+            if (savingsGroupedByCustomerId.containsKey(customerId)) {
+                savingsGroupedByCustomerId.get(customerId).add(savingsAccountDto);
+            } else {
+                savingsGroupedByCustomerId.put(customerId, Arrays.asList(savingsAccountDto));
+            }
+        }
+        
+        return savingsGroupedByCustomerId;
+    }
+
     private void populateLoanDisbursement(
             final Map<Integer, List<CollectionSheetCustomerLoanDto>> loanDisbursementsGroupedByCustomerId,
             final List<CollectionSheetCustomerLoanDto> allLoanDisbursements) {
@@ -364,25 +408,6 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
                 loanAccountList.add(loanDisbursementAccount);
 
                 loanDisbursementsGroupedByCustomerId.put(customerId, loanAccountList);
-            }
-        }
-    }
-
-    private void poulateSavingDeposits(
-            final Map<Integer, List<CollectionSheetCustomerSavingDto>> savingsGroupedByCustomerId,
-            final List<CollectionSheetCustomerSavingDto> savingDeposits) {
-        for (CollectionSheetCustomerSavingDto savingAccountDeposit : savingDeposits) {
-
-            final Integer customerId = savingAccountDeposit.getCustomerId();
-
-            if (savingsGroupedByCustomerId.containsKey(customerId)) {
-                final List<CollectionSheetCustomerSavingDto> savingAccountsForCustomer = savingsGroupedByCustomerId
-                        .get(customerId);
-                savingAccountsForCustomer.add(savingAccountDeposit);
-            } else {
-                final List<CollectionSheetCustomerSavingDto> savingAccountsForCustomer = new ArrayList<CollectionSheetCustomerSavingDto>();
-                savingAccountsForCustomer.add(savingAccountDeposit);
-                savingsGroupedByCustomerId.put(customerId, savingAccountsForCustomer);
             }
         }
     }

@@ -216,27 +216,32 @@ public class AccountBO extends BusinessObject {
     protected AccountBO() {
         this(null);
     }
-    
+
     /**
      * TODO - keithw - work in progress
      * 
      * minimal legal constructor
      */
     public AccountBO(final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
-            final Integer offsettingAllowable, final Date createdDate, final Short createdByUserId) {
+            final Integer offsettingAllowable, final Set<AccountActionDateEntity> scheduledPayments,
+            final Set<AccountFeesEntity> accountFees, final OfficeBO office,
+            final PersonnelBO accountOfficer, final Date createdDate,
+            final Short createdByUserId) {
         this.accountType = new AccountTypeEntity(accountType.getValue());
         this.accountState = new AccountStateEntity(accountState);
         this.customer = customer;
         this.offsettingAllowable = offsettingAllowable;
         this.createdDate = createdDate;
         this.createdBy = createdByUserId;
+        this.accountActionDates = scheduledPayments;
+        this.accountFees = accountFees;
+        this.office = office;
+        this.personnel = accountOfficer;
         
         this.accountId = null;
-        this.office = null;
         this.accountFlags = new HashSet<AccountFlagMapping>();
-        this.accountActionDates = new HashSet<AccountActionDateEntity>();
-        this.accountFees = new HashSet<AccountFeesEntity>();
         this.accountCustomFields = new HashSet<AccountCustomFieldEntity>();
+        this.accountPayments = new LinkedHashSet<AccountPaymentEntity>();
     }
 
     AccountBO(final Integer accountId) {

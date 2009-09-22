@@ -21,18 +21,22 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -44,39 +48,53 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsAccountAssembler {
 
     private final SavingsPersistence savingsPersistence;
-    private final PersonnelPersistence personnelPersistence;
+    private final CustomerPersistence customerPersistence;
 
     public SavingsAccountAssembler(final SavingsPersistence savingsPersistence,
-            final PersonnelPersistence personnelPersistence) {
+            final CustomerPersistence customerPersistence) {
         this.savingsPersistence = savingsPersistence;
-        this.personnelPersistence = personnelPersistence;
+        this.customerPersistence = customerPersistence;
     }
 
     public List<SavingsBO> fromDto(final List<CollectionSheetEntryView> collectionSheeetEntryViews,
-            final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final Short userId,
-            final List<String> failedSavingsDepositAccountNums, final List<String> failedSavingsWithdrawalNums) {
-        
-        final List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
-        for (CollectionSheetEntryView parent : collectionSheeetEntryViews) {
+            final AccountPaymentEntity payment, final List<String> failedSavingsDepositAccountNums,
+            final List<String> failedSavingsWithdrawalNums) {
 
-            for (SavingsAccountView savingAccountView : parent.getSavingsAccountDetails()) {
+        final String receiptNumber = payment.getReceiptNumber();
+        final Date receiptDate = payment.getReceiptDate();
+        final PaymentTypeEntity paymentType = payment.getPaymentType();
+        final Date paymentDate = payment.getPaymentDate();
+        final PersonnelBO user = payment.getCreatedByUser();
 
-                final Money amountToDeposit = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
-                        savingAccountView.getDepositAmountEntered());
-                final Money amountToWithdraw = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
-                        savingAccountView.getWithDrawalAmountEntered());
+        final Map<Integer, List<SavingsAccountView>> savingAccountsViewsByCustomerId = new HashMap<Integer, List<SavingsAccountView>>();
 
-                final String receiptNumber = previousCollectionSheetEntryDto.getReceiptId();
-                final Date receiptDate = previousCollectionSheetEntryDto.getReceiptDate();
-                final PaymentTypeEntity paymentType = new PaymentTypeEntity(previousCollectionSheetEntryDto
-                        .getPaymentType().getId());
-                final Date paymentDate = previousCollectionSheetEntryDto.getTransactionDate();
+        populateMapOfSavingAccountViewsByCustomerId(collectionSheeetEntryViews, savingAccountsViewsByCustomerId);
 
-                final Integer accountId = savingAccountView.getAccountId();
-                boolean storeAccountForSavingLater = false;
-                try {
-                    final SavingsBO account = savingsPersistence.findById(accountId);
-                    final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
+        final Map<Integer, SavingsBO> savingsAccountsByAccountId = new HashMap<Integer, SavingsBO>();
+
+        for (Integer customerId : savingAccountsViewsByCustomerId.keySet()) {
+            final List<SavingsAccountView> allSavingsAssociatedWithCustomer = savingAccountsViewsByCustomerId
+                    .get(customerId);
+
+            try {
+                final CustomerBO payingCustomer = customerPersistence.getCustomer(customerId);
+
+                for (SavingsAccountView savingAccountView : allSavingsAssociatedWithCustomer) {
+
+                    final Money amountToDeposit = new Money(
+                            Configuration.getInstance().getSystemConfig().getCurrency(), savingAccountView
+                                    .getDepositAmountEntered());
+                    final Money amountToWithdraw = new Money(Configuration.getInstance().getSystemConfig()
+                            .getCurrency(), savingAccountView.getWithDrawalAmountEntered());
+
+                    final Integer accountId = savingAccountView.getAccountId();
+                    boolean storeAccountForSavingLater = false;
+                    SavingsBO account;
+                    if (savingsAccountsByAccountId.containsKey(accountId)) {
+                        account = savingsAccountsByAccountId.get(accountId);
+                    } else {
+                        account = savingsPersistence.findById(accountId);
+                    }
 
                     if (amountToDeposit.getAmount() != null
                             && amountToDeposit.getAmountDoubleValue() > Double.valueOf("0.0")) {
@@ -86,7 +104,7 @@ public class SavingsAccountAssembler {
                         accountDeposit.setCreatedByUser(user);
 
                         try {
-                            account.deposit(accountDeposit);
+                            account.deposit(accountDeposit, payingCustomer);
                             storeAccountForSavingLater = true;
                         } catch (AccountException e) {
                             failedSavingsDepositAccountNums.add(account.getGlobalAccountNum());
@@ -107,17 +125,41 @@ public class SavingsAccountAssembler {
                         }
                     }
 
+                    // FIXME - keithw - what about possibility that account
+                    // deposits ok but withdrawal causes exception... do you
+                    // allow deposit and save?
                     if (storeAccountForSavingLater) {
-                        savingsAccounts.add(account);
+                        savingsAccountsByAccountId.put(accountId, account);
                     }
-
-                } catch (PersistenceException pe) {
-                    throw new MifosRuntimeException(pe);
                 }
+            } catch (PersistenceException e) {
+                throw new MifosRuntimeException(e);
             }
         }
-        
-        return savingsAccounts;
+
+        final List<SavingsBO> savingsList = new ArrayList<SavingsBO>();
+        final Set<Entry<Integer, SavingsBO>> savingsAccounts = savingsAccountsByAccountId.entrySet();
+        for (Entry<Integer, SavingsBO> entry : savingsAccounts) {
+            savingsList.add(entry.getValue());
+        }
+        return savingsList;
+    }
+
+    private void populateMapOfSavingAccountViewsByCustomerId(
+            final List<CollectionSheetEntryView> collectionSheeetEntryViews,
+            final Map<Integer, List<SavingsAccountView>> savingAccountsViewsByCustomerId) {
+        for (CollectionSheetEntryView parent : collectionSheeetEntryViews) {
+            final Integer customerId = parent.getCustomerDetail().getCustomerId();
+
+            if (savingAccountsViewsByCustomerId.containsKey(customerId)) {
+                final List<SavingsAccountView> savingsAccountsViews = savingAccountsViewsByCustomerId.get(customerId);
+                savingsAccountsViews.addAll(parent.getSavingsAccountDetails());
+            } else {
+                final List<SavingsAccountView> savingsAccountsViews = new ArrayList<SavingsAccountView>(parent
+                        .getSavingsAccountDetails());
+                savingAccountsViewsByCustomerId.put(customerId, savingsAccountsViews);
+            }
+        }
     }
 
 }

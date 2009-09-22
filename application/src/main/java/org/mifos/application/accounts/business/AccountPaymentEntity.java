@@ -23,6 +23,7 @@ package org.mifos.application.accounts.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class AccountPaymentEntity extends PersistentObject {
 
     private Money amount;
 
-    private Set<AccountTrxnEntity> accountTrxns;
+    private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
     
     private PersonnelBO createdByUser;
 
@@ -73,9 +74,8 @@ public class AccountPaymentEntity extends PersistentObject {
         this(null, null, null, null, null, new DateTime().toDate());
     }
 
-    public AccountPaymentEntity(AccountBO account, Money amount, String receiptNumber, Date receiptDate,
-            PaymentTypeEntity paymentType, Date paymentDate) {
-        this.accountTrxns = new HashSet<AccountTrxnEntity>();
+    public AccountPaymentEntity(final AccountBO account, final Money amount, final String receiptNumber, final Date receiptDate,
+            final PaymentTypeEntity paymentType, final Date paymentDate) {
         this.paymentDate = paymentDate;
         this.account = account;
         this.receiptNumber = receiptNumber;
@@ -107,7 +107,7 @@ public class AccountPaymentEntity extends PersistentObject {
         return accountTrxns;
     }
 
-    public void setAccountTrxns(Set<AccountTrxnEntity> accountTrxns) {
+    public void setAccountTrxns(final Set<AccountTrxnEntity> accountTrxns) {
         this.accountTrxns = accountTrxns;
     }
 
@@ -135,7 +135,7 @@ public class AccountPaymentEntity extends PersistentObject {
         return amount;
     }
 
-    public void setAmount(Money amount) {
+    public void setAmount(final Money amount) {
         this.amount = amount;
     }
 
@@ -147,7 +147,7 @@ public class AccountPaymentEntity extends PersistentObject {
         return this.createdByUser;
     }
 
-    public void setCreatedByUser(PersonnelBO createdByUser) {
+    public void setCreatedByUser(final PersonnelBO createdByUser) {
         this.createdByUser = createdByUser;
     }
 
@@ -155,7 +155,7 @@ public class AccountPaymentEntity extends PersistentObject {
      * Create reverse entries of all the transactions associated with this
      * payment and adds them to the set of transactions associated.
      */
-    List<AccountTrxnEntity> reversalAdjustment(PersonnelBO personnel, String adjustmentComment) throws AccountException {
+    List<AccountTrxnEntity> reversalAdjustment(final PersonnelBO personnel, final String adjustmentComment) throws AccountException {
         List<AccountTrxnEntity> newlyAddedTrxns = null;
         this.setAmount(getAmount().subtract(getAmount()));
         logger.debug("The amount in account payment is " + getAmount().getAmountDoubleValue());
@@ -177,7 +177,7 @@ public class AccountPaymentEntity extends PersistentObject {
         return newlyAddedTrxns;
     }
 
-    private Set<AccountTrxnEntity> generateReverseAccountTransactions(PersonnelBO personnel, String adjustmentComment)
+    private Set<AccountTrxnEntity> generateReverseAccountTransactions(final PersonnelBO personnel, final String adjustmentComment)
             throws AccountException {
         Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
         for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {

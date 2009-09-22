@@ -106,10 +106,12 @@ public abstract class PrdOfferingBO extends BusinessObject {
      * TODO - keithw - work in progress -
      * 
      * Minimal legal constructor
+     * 
+     * @param productStatus
      */
     public PrdOfferingBO(final String name, final String shortName, final String globalProductNumber,
             final Date startDate, final ApplicableTo applicableToCustomer, final ProductCategoryBO category,
-            final Date createdDate, final Short createdByUserId) {
+            final PrdStatus productStatus, final Date createdDate, final Short createdByUserId) {
         this.prdOfferingName = name;
         this.prdOfferingShortName = shortName;
         this.globalPrdOfferingNum = globalProductNumber;
@@ -118,8 +120,9 @@ public abstract class PrdOfferingBO extends BusinessObject {
         this.prdCategory = category;
         this.createdDate = createdDate;
         this.createdBy = createdByUserId;
+        this.prdType = category.getProductType();
+        // this.prdStatus = new PrdStatusEntity(prdType, productStatus);
         this.prdOfferingId = null;
-        this.prdType = null;
         this.office = null;
     }
 

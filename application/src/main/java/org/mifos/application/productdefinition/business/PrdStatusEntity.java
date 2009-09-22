@@ -42,6 +42,12 @@ public class PrdStatusEntity extends PersistentObject {
         prdState = null;
     }
 
+    public PrdStatusEntity(final ProductTypeEntity prdType, final PrdStatus prdStatus) {
+        this.prdType = prdType;
+        prdState = new PrdStateEntity(prdStatus);
+        this.offeringStatusId = prdStatus.getValue();
+    }
+
     public Short getOfferingStatusId() {
         return offeringStatusId;
     }
@@ -54,7 +60,7 @@ public class PrdStatusEntity extends PersistentObject {
         return this.status;
     }
 
-    void setStatus(Short status) {
+    void setStatus(final Short status) {
         this.status = status;
     }
 

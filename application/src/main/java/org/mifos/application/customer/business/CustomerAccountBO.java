@@ -23,6 +23,7 @@ package org.mifos.application.customer.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -59,6 +60,7 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -95,9 +97,45 @@ public class CustomerAccountBO extends AccountBO {
         this.feePersistence = feePersistence;
     }
 
+    /**
+     * default constructor for hibernate usage
+     */
     protected CustomerAccountBO() {
         super();
-        // default constructor for hibernate
+    }
+
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal legal constructor
+     */
+    public CustomerAccountBO(final CustomerBO customer, final Set<AmountFeeBO> accountFees, final OfficeBO office,
+            final PersonnelBO loanOfficer, final Date createdDate, final Short createdByUserId,
+            final boolean buildForIntegrationTests) {
+        super(AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE, customer, Integer.valueOf(1),
+                new LinkedHashSet<AccountActionDateEntity>(), new HashSet<AccountFeesEntity>(), office, loanOfficer,
+                createdDate, createdByUserId);
+        this.customer.addCustomerAccount(this);
+
+        // FIXME - keithw - userContext feels redundant
+        this.userContext = customer.getUserContext();
+
+        // FIXME - keithw - ideally this setup is moved from constructor into
+        // factory method
+        for (AmountFeeBO amountFee : accountFees) {
+            AccountFeesEntity accountFeesEntity = new AccountFeesEntity(this, amountFee, amountFee.getFeeAmount()
+                    .getAmountDoubleValue());
+            this.addAccountFees(accountFeesEntity);
+        }
+
+        // FIXME - keithw - generate schedule uses dao/persistence
+        if (buildForIntegrationTests) {
+            try {
+                generateCustomerFeeSchedule(customer);
+            } catch (AccountException e) {
+                throw new IllegalStateException("Unable to setup customer fee schedule", e);
+            }
+        }
     }
 
     public CustomerAccountBO(final UserContext userContext, final CustomerBO customer, final List<FeeView> fees) throws AccountException {
@@ -112,8 +150,6 @@ public class CustomerAccountBO extends AccountBO {
             }
             generateCustomerFeeSchedule(customer);
         }
-
-        customerActivitDetails = new HashSet<CustomerActivityEntity>();
     }
 
     @Override
@@ -705,6 +741,9 @@ public class CustomerAccountBO extends AccountBO {
     public void generateCustomerAccountSystemId() throws CustomerException {
         try {
             if (getGlobalAccountNum() == null) {
+                // FIXME - keithw - Question - why get the branchGlobalNum from
+                // usercontext? why not the office globalbranchNum which is set
+                // in the userContext anyway...
                 this.setGlobalAccountNum(generateId(userContext.getBranchGlobalNum()));
             } else {
                 throw new CustomerException(AccountExceptionConstants.IDGenerationException);

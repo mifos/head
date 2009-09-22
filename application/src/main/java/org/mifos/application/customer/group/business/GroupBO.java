@@ -27,7 +27,6 @@ import java.util.Set;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
@@ -107,14 +106,24 @@ public class GroupBO extends CustomerBO {
         this.officePersistence = officePersistence;
     }
 
+    /**
+     * default constructor for hibernate usage
+     */
     protected GroupBO() {
         super();
     }
 
-    public GroupBO(final CustomerLevel customerLevel, final String name, final OfficeBO office,
-            final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
-            final CustomerAccountBO customerAccount, final String searchId) {
-        super(customerLevel, name, office, loanOfficer, customerMeeting, customerAccount);
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * minimal constructor
+     * 
+     * @param parentCustomer
+     */
+    public GroupBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
+            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
+            final String searchId, final CustomerBO parentCustomer) {
+        super(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, parentCustomer);
         this.setSearchId(searchId);
     }
 

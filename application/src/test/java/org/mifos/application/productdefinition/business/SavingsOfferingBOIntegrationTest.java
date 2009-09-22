@@ -129,13 +129,14 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testBuildSavingsOfferingWithoutData() {
         try {
-            new SavingsOfferingBO(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            new SavingsOfferingBO(null, "fake", null, null, null, null, null, null, null, null, null, Double
+                    .valueOf("0.0"), null, null);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
     }
 
-    public void testBuildSavingsOfferingWithoutName() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithoutName() throws SystemException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
         InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(InterestCalcType.AVERAGE_BALANCE);
@@ -157,7 +158,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithoutSavingsType() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithoutSavingsType() throws SystemException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(InterestCalcType.AVERAGE_BALANCE);
         MeetingBO intCalcMeeting = getMeeting();
@@ -178,7 +179,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithoutGLCode() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithoutGLCode() throws SystemException {
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(InterestCalcType.AVERAGE_BALANCE);
@@ -196,7 +197,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithShortNameGreaterThanFourDig() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithShortNameGreaterThanFourDig() throws SystemException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 
@@ -219,7 +220,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithStartDateLessThanCurrentDate() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithStartDateLessThanCurrentDate() throws SystemException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 
@@ -243,7 +244,8 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithStartDateEqualToCurrentDate() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithStartDateEqualToCurrentDate() throws SystemException,
+            ProductDefinitionException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 
@@ -288,7 +290,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testBuildSavingsOfferingWithEndDateLessThanStartDate() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithEndDateLessThanStartDate() throws SystemException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 
@@ -313,7 +315,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithDuplicatePrdOfferingName() throws SystemException, ApplicationException {
+    public void testBuildSavingsOfferingWithDuplicatePrdOfferingName() throws SystemException {
         savingsProduct = createSavingsOfferingBO("Savings Product", "SAVP");
 
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
@@ -340,8 +342,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithDuplicatePrdOfferingShortName() throws SystemException,
-            ApplicationException {
+    public void testBuildSavingsOfferingWithDuplicatePrdOfferingShortName() throws SystemException {
         savingsProduct = createSavingsOfferingBO("Savings Product", "SAVP");
 
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
@@ -368,8 +369,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithNoRecommendedAmountForMandatoryOffering() throws SystemException,
-            ApplicationException {
+    public void testBuildSavingsOfferingWithNoRecommendedAmountForMandatoryOffering() throws SystemException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 
@@ -393,8 +393,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildSavingsOfferingWithNoRecommendedAmountUnitForGroupOffering() throws SystemException,
-            ApplicationException {
+    public void testBuildSavingsOfferingWithNoRecommendedAmountUnitForGroupOffering() throws SystemException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 
@@ -447,7 +446,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testCreateSavingsOffering() throws SystemException, ApplicationException {
+    public void testCreateSavingsOffering() throws SystemException, ProductDefinitionException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 
@@ -732,7 +731,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("Min Amount Withdrawl Amount", new Money("1"), savingsProduct.getMinAmntForInt());
     }
 
-    private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName, String shortName) {
+    private SavingsOfferingBO createSavingsOfferingBO(final String prdOfferingName, final String shortName) {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         return TestObjectFactory.createSavingsProduct(prdOfferingName, shortName, ApplicableTo.CLIENTS, new Date(System
@@ -744,7 +743,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         return TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
     }
 
-    private java.sql.Date offSetCurrentDate(int noOfDays) {
+    private java.sql.Date offSetCurrentDate(final int noOfDays) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -753,7 +752,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         return new java.sql.Date(currentDateCalendar.getTimeInMillis());
     }
 
-    private java.sql.Date reduceCurrentDate(int noOfDays) {
+    private java.sql.Date reduceCurrentDate(final int noOfDays) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -762,9 +761,9 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         return new java.sql.Date(currentDateCalendar.getTimeInMillis());
     }
 
-    private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName, String shortName,
-            ApplicableTo applicableTo, Date startDate, PrdStatus offeringStatus, SavingsType savingType,
-            InterestCalcType interestCalcType) {
+    private SavingsOfferingBO createSavingsOfferingBO(final String prdOfferingName, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus, final SavingsType savingType,
+            final InterestCalcType interestCalcType) {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         return TestObjectFactory.createSavingsProduct(prdOfferingName, shortName, applicableTo, startDate,

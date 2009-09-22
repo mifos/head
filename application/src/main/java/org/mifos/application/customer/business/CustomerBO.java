@@ -90,7 +90,7 @@ public abstract class CustomerBO extends BusinessObject {
     private Date trainedDate;
     private Date mfiJoiningDate;
     private String searchId;
-    private Integer maxChildCount;
+    private Integer maxChildCount = Integer.valueOf(0);
     private Date customerActivationDate;
     private CustomerStatusEntity customerStatus;
     private Set<CustomerCustomFieldEntity> customFields;
@@ -107,7 +107,7 @@ public abstract class CustomerBO extends BusinessObject {
     private Set<CustomerHierarchyEntity> customerHierarchies;
     private Set<CustomerMovementEntity> customerMovements;
     private CustomerHistoricalDataEntity historicalData;
-    private Short blackListed;
+    private Short blackListed = YesNoFlag.NO.getValue();
     private Set<CustomerNoteEntity> customerNotes;
     private final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
     private Set<CustomerBO> children;
@@ -175,19 +175,27 @@ public abstract class CustomerBO extends BusinessObject {
      * 
      * minimal constructor for builder
      */
-    public CustomerBO(final CustomerLevel customerLevel, final String name, final OfficeBO office,
-            final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
-            final CustomerAccountBO customerAccount) {
+    public CustomerBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
+            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
+            final CustomerBO parentCustomer) {
         super();
         this.customerId = null;
         this.displayName = name;
         this.office = office;
         this.personnel = loanOfficer;
         this.customerMeeting = customerMeeting;
+        this.customerMeeting.setCustomer(this);
+        this.parentCustomer = parentCustomer;
+        
         this.accounts = new HashSet<AccountBO>();
-        this.accounts.add(customerAccount);
         this.customerLevel = new CustomerLevelEntity(customerLevel);
+        this.customerStatus = new CustomerStatusEntity(customerStatus);
         this.formedByPersonnel = null;
+        
+        // FIXME - keithw - not convinced UserContext is required along with
+        // Personnel and Office. inserting to satisfy id generation
+        this.userContext = new UserContext();
+        this.userContext.setBranchGlobalNum(office.getGlobalOfficeNum());
     }
 
     protected CustomerBO(final Integer customerId, final CustomerLevelEntity customerLevel,
@@ -1398,5 +1406,9 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
+    }
+
+    public void addCustomerAccount(final CustomerAccountBO customerAccount) {
+        this.accounts.add(customerAccount);
     }
 }

@@ -40,7 +40,7 @@ public class ClientBoTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         MifosLogManager.configureLogging();
-        client = new ClientBuilder().build();
+        client = new ClientBuilder().buildForUnitTests();
     }
 
     public void testAddClientAttendance() {

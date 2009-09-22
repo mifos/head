@@ -40,7 +40,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * I am responsible for building {@link CollectionSheetEntryView}'s
+ * 
+ * @deprecated this approach for generating collection sheet grid view is to be
+ *             removed post collection sheet refactoring work.
  */
+@Deprecated
 public class CollectionSheetEntryViewAssembler {
 
     private final BulkEntryPersistence bulkEntryPersistence;

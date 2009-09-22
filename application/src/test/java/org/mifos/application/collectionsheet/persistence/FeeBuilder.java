@@ -24,7 +24,6 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.AmountFeeBO;
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -48,15 +47,30 @@ public class FeeBuilder {
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private OfficeBO office;
     
-    public FeeBO build() {
+    public AmountFeeBO build() {
         
-        final FeeBO fee = new AmountFeeBO(feeAmount, name, category, feeFrequencyType, feeGLCode, meetingPeriodicity
-                .build(), office, createdDate, createdByUserId);
+        final AmountFeeBO fee = new AmountFeeBO(feeAmount, name, category, feeFrequencyType, feeGLCode,
+                meetingPeriodicity.build(), office, createdDate, createdByUserId);
         return fee;
     }
     
     public FeeBuilder appliesToAllCustomers() {
         this.category = FeeCategory.ALLCUSTOMERS;
+        return this;
+    }
+    
+    public FeeBuilder appliesToCenterOnly() {
+        this.category = FeeCategory.CENTER;
+        return this;
+    }
+
+    public FeeBuilder appliesToGroupsOnly() {
+        this.category = FeeCategory.GROUP;
+        return this;
+    }
+
+    public FeeBuilder appliesToClientsOnly() {
+        this.category = FeeCategory.CLIENT;
         return this;
     }
     

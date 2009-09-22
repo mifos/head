@@ -19,10 +19,12 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -33,21 +35,27 @@ import org.mifos.framework.util.helpers.Constants;
  */
 public class GroupBuilder {
     
+    private GroupBO group;
+    private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private final CustomerLevel customerLevel = CustomerLevel.GROUP;
     private String name = "Test Group";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
-    private CustomerAccountBO customerAccount;
     private PersonnelBO loanOfficer;
     private final String searchId = "1.1.1";
     private final Short updatedFlag = Constants.NO;
+    private final CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
+    private CustomerBO parentCustomer;
     
     public GroupBO build() {
-        
+
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        final GroupBO group = new GroupBO(customerLevel, name, office, loanOfficer, customerMeeting, customerAccount,
-                searchId);
-        
+        group = new GroupBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, searchId,
+                parentCustomer);
+
+        // add relationship between customer account and group.
+        customerAccountBuilder.withCustomer(group).withOffice(office).withLoanOfficer(loanOfficer).buildForIntegrationTests();
+
         return group;
     }
     
@@ -68,6 +76,16 @@ public class GroupBuilder {
 
     public GroupBuilder withLoanOfficer(final PersonnelBO withLoanOfficer) {
         this.loanOfficer = withLoanOfficer;
+        return this;
+    }
+    
+    public GroupBuilder withFee(final AmountFeeBO withFee) {
+        customerAccountBuilder.withFee(withFee);
+        return this;
+    }
+    
+    public GroupBuilder withParentCustomer(final CustomerBO withParentCustomer) {
+        this.parentCustomer = withParentCustomer;
         return this;
     }
 }

@@ -19,11 +19,12 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -34,26 +35,36 @@ import org.mifos.framework.util.helpers.Constants;
  */
 public class ClientBuilder {
     
+    private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private final CustomerLevel customerLevel = CustomerLevel.CLIENT;
     private String name = "Test Center";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
-    private OfficeBO office;
-    private CustomerAccountBO customerAccount;
+    private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxxx-112").build();
     private PersonnelBO loanOfficer;
     private final String searchId = "1.1.1.1";
     private final Short updatedFlag = Constants.NO;
+    private final CustomerStatus customerStatus = CustomerStatus.CLIENT_ACTIVE;
+    private CustomerBO parentCustomer;
     
-    // persistence classes for mocking out in unit tests
-    private CustomerPersistence customerPersistence;
     
-    public ClientBO build() {
+    public ClientBO buildForIntegrationTests() {
         
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        final ClientBO client = new ClientBO(customerLevel, name, office, loanOfficer, customerMeeting,
-                customerAccount,
-                searchId);
-        client.setCustomerPersistence(customerPersistence);
+        final ClientBO client = new ClientBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting,
+                searchId, parentCustomer);
         
+        customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer)
+                .buildForIntegrationTests();
+        return client;
+    }
+    
+    public ClientBO buildForUnitTests() {
+
+        final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
+        final ClientBO client = new ClientBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting,
+                searchId, parentCustomer);
+
+        customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer).buildForUnitTests();
         return client;
     }
     
@@ -76,9 +87,14 @@ public class ClientBuilder {
         this.loanOfficer = withLoanOfficer;
         return this;
     }
-
-    public ClientBuilder withCustomerPersistence(final CustomerPersistence customerPersistence) {
-        this.customerPersistence = customerPersistence;
+    
+    public ClientBuilder withFee(final AmountFeeBO withFee) {
+        customerAccountBuilder.withFee(withFee);
+        return this;
+    }
+    
+    public ClientBuilder withParentCustomer(final CustomerBO withParentCustomer) {
+        this.parentCustomer = withParentCustomer;
         return this;
     }
 }

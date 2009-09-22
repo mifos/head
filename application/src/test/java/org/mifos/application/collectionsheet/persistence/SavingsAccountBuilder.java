@@ -20,51 +20,133 @@
 package org.mifos.application.collectionsheet.persistence;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsPaymentStrategy;
+import org.mifos.application.accounts.savings.business.SavingsPaymentStrategyImpl;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.accounts.savings.business.SavingsTransactionActivityHelper;
+import org.mifos.application.accounts.savings.business.SavingsTransactionActivityHelperImpl;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  *
  */
 public class SavingsAccountBuilder {
-    
+
+    private final MeetingBO scheduleForInterestCalculation = new MeetingBuilder().savingsInterestCalulationSchedule()
+            .monthly().every(1).build();
     private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().buildForUnitTests();
-    
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
 
     private final AccountTypes accountType = AccountTypes.SAVINGS_ACCOUNT;
-    private final AccountState accountState = AccountState.SAVINGS_ACTIVE;
+    private AccountState accountState = AccountState.SAVINGS_ACTIVE;
     private CustomerBO customer;
     private final Integer offsettingAllowable = Integer.valueOf(1);
-    
+
     private final Double interestRate = Double.valueOf("4.0");
     private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
-    private final SavingsType savingsType = SavingsType.VOLUNTARY;
-    
+
+    private SavingsType savingsType = SavingsType.VOLUNTARY;
+    private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
+    private final Money recommendedAmount = new Money("13.0");
+    private CustomerPersistence customerDao;
+    private Money savingsBalanceAmount = new Money("0.0");
+    private SavingsTransactionActivityHelper savingsTransactionActivityHelper = new SavingsTransactionActivityHelperImpl();
+    private SavingsPaymentStrategy savingsPaymentStrategy = new SavingsPaymentStrategyImpl(
+            savingsTransactionActivityHelper);
+    private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
+    private PersonnelBO savingsOfficer;
+
     public SavingsBO build() {
-        
-        final SavingsBO savingsBO = new SavingsBO(savingsProduct, savingsType, interestRate, interestCalcType,
-                accountType, accountState, customer, offsettingAllowable, createdDate, createdByUserId);
-        
+
+        final SavingsBO savingsBO = new SavingsBO(savingsProduct, savingsType, savingsBalanceAmount,
+                savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
+                interestCalcType, accountType, accountState, customer, offsettingAllowable,
+                scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, savingsOfficer, createdDate,
+                createdByUserId);
+        savingsBO.setCustomerPersistence(customerDao);
+
         return savingsBO;
     }
-
+    
     public SavingsAccountBuilder withSavingsProduct(final SavingsOfferingBO withSavingsProduct) {
         this.savingsProduct = withSavingsProduct;
         return this;
     }
-    
+
     public SavingsAccountBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
+        return this;
+    }
+
+    public SavingsAccountBuilder mandatory() {
+        this.savingsType = SavingsType.MANDATORY;
+        return this;
+    }
+
+    public SavingsAccountBuilder voluntary() {
+        this.savingsType = SavingsType.VOLUNTARY;
+        this.recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
+        return this;
+    }
+
+    public SavingsAccountBuilder perIndividualVoluntary() {
+        this.savingsType = SavingsType.VOLUNTARY;
+        this.recommendedAmountUnit = RecommendedAmountUnit.PER_INDIVIDUAL;
+        return this;
+    }
+
+    public SavingsAccountBuilder withCustomerDao(final CustomerPersistence withCustomerDao) {
+        this.customerDao = withCustomerDao;
+        return this;
+    }
+
+    public SavingsAccountBuilder withBalanceOf(final Money withBalanceAmount) {
+        this.savingsBalanceAmount = withBalanceAmount;
+        return this;
+    }
+
+    public SavingsAccountBuilder withPaymentStrategy(final SavingsPaymentStrategy withPaymentStrategy) {
+        this.savingsPaymentStrategy = withPaymentStrategy;
+        return this;
+    }
+
+    public SavingsAccountBuilder asInActive() {
+        this.accountState = AccountState.SAVINGS_INACTIVE;
+        return this;
+    }
+
+    public SavingsAccountBuilder withPayments(final List<SavingsScheduleEntity> withPayments) {
+        this.scheduledPayments = new LinkedHashSet<AccountActionDateEntity>(withPayments);
+        return this;
+    }
+
+    public SavingsAccountBuilder withTransactionHelper(
+            final SavingsTransactionActivityHelper withTransactionActivityHelper) {
+        this.savingsTransactionActivityHelper = withTransactionActivityHelper;
+        return this;
+    }
+
+    public SavingsAccountBuilder withSavingsOfficer(final PersonnelBO withSavingsOfficer) {
+        this.savingsOfficer = withSavingsOfficer;
         return this;
     }
 }

@@ -91,8 +91,8 @@ public class LoanBOTestUtils {
      * @param globalNum
      *            Currently ignored (TODO: remove it or honor it)
      */
-    public static LoanBO createLoanAccount(String globalNum, CustomerBO customer, AccountState state, Date startDate,
-            LoanOfferingBO loanOffering) {
+    public static LoanBO createLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state, final Date startDate,
+            final LoanOfferingBO loanOffering) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
@@ -138,10 +138,10 @@ public class LoanBOTestUtils {
 
         setLoanSummary(loan, currency);
         return loan;
-    }   
+    }
     
-    public static LoanBO createIndividualLoanAccount(String globalNum, CustomerBO customer, AccountState state,
-            Date startDate, LoanOfferingBO loanOfering) {
+    public static LoanBO createIndividualLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state,
+            final Date startDate, final LoanOfferingBO loanOfering) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
@@ -191,12 +191,9 @@ public class LoanBOTestUtils {
      * Note: the manipulation done in this method looks very suspicious and
      * possibly wrong. Tests that use this method should be considered as
      * suspect.
-     * 
-     * @param globalNum
-     *            Currently ignored (TODO: remove it or honor it)
      */
-    public static LoanBO createLoanAccountWithDisbursement(String globalNum, CustomerBO customer, AccountState state,
-            Date startDate, LoanOfferingBO loanOffering, int disbursalType, Short noOfInstallments) {
+    public static LoanBO createLoanAccountWithDisbursement(final CustomerBO customer, final AccountState state,
+            final Date startDate, final LoanOfferingBO loanOffering, final int disbursalType, final Short noOfInstallments) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
@@ -332,8 +329,8 @@ public class LoanBOTestUtils {
      * v1.1 release cycle, so an attempt has not yet been made to try replacing
      * some of the occurrences of createLoanAccount with this method.
      */
-    public static LoanBO createBasicLoanAccount(CustomerBO customer, AccountState state, Date startDate,
-            LoanOfferingBO loanOffering) {
+    public static LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state, final Date startDate,
+            final LoanOfferingBO loanOffering) {
         LoanBO loan;
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
         UserContext userContext = TestUtils.makeUser();
@@ -357,25 +354,25 @@ public class LoanBOTestUtils {
         return loan;
     }
     
-    public static void setFeeAmountPaid(AccountFeesActionDetailEntity accountFeesActionDetailEntity, Money feeAmountPaid) {
+    public static void setFeeAmountPaid(final AccountFeesActionDetailEntity accountFeesActionDetailEntity, final Money feeAmountPaid) {
         ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).setFeeAmountPaid(feeAmountPaid);
     }
 
-    public static void setActionDate(AccountActionDateEntity accountActionDateEntity, java.sql.Date actionDate) {
+    public static void setActionDate(final AccountActionDateEntity accountActionDateEntity, final java.sql.Date actionDate) {
         ((LoanScheduleEntity) accountActionDateEntity).setActionDate(actionDate);
     }
 
-    public static void setDisbursementDate(AccountBO account, Date disbursementDate) {
+    public static void setDisbursementDate(final AccountBO account, final Date disbursementDate) {
         ((LoanBO) account).setDisbursementDate(disbursementDate);
     }
     
-    private static void setLoanSummary(LoanBO loan, MifosCurrency currency) {
+    private static void setLoanSummary(final LoanBO loan, final MifosCurrency currency) {
         LoanSummaryEntity loanSummary = loan.getLoanSummary();
         loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
         loanSummary.setOriginalInterest(new Money(currency, "36.0"));
     }
     
-    public static void modifyDisbursmentDate(LoanBO loan, Date disbursmentDate) {
+    public static void modifyDisbursmentDate(final LoanBO loan, final Date disbursmentDate) {
         loan.setDisbursementDate(disbursmentDate);
     }
     
@@ -456,7 +453,7 @@ public class LoanBOTestUtils {
     }
     
     public static LoanScheduleEntity[] getSortedAccountActionDateEntity(
-            Set<AccountActionDateEntity> actionDateCollection, int expectedCount) {
+            final Set<AccountActionDateEntity> actionDateCollection, final int expectedCount) {
 
         LoanScheduleEntity[] sortedList = new LoanScheduleEntity[actionDateCollection.size()];
 
@@ -469,9 +466,9 @@ public class LoanBOTestUtils {
         return sortedList;
     }
     
-    public static void modifyData(LoanScheduleEntity accntActionDate, Money penalty, Money penaltyPaid,
-            Money miscPenalty, Money miscPenaltyPaid, Money miscFee, Money miscFeePaid, Money principal,
-            Money principalPaid, Money interest, Money interestPaid) {
+    public static void modifyData(final LoanScheduleEntity accntActionDate, final Money penalty, final Money penaltyPaid,
+            final Money miscPenalty, final Money miscPenaltyPaid, final Money miscFee, final Money miscFeePaid, final Money principal,
+            final Money principalPaid, final Money interest, final Money interestPaid) {
         accntActionDate.setPenalty(penalty);
         accntActionDate.setMiscPenalty(miscPenalty);
         accntActionDate.setMiscPenaltyPaid(miscPenaltyPaid);

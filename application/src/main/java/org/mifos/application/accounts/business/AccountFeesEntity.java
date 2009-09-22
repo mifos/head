@@ -54,6 +54,9 @@ public class AccountFeesEntity extends PersistentObject {
 
     private Date lastAppliedDate;
 
+    /**
+     * default constructor for hibernate usage
+     */
     protected AccountFeesEntity() {
         super();
         accountFeeId = null;
@@ -62,7 +65,7 @@ public class AccountFeesEntity extends PersistentObject {
 
     }
 
-    public AccountFeesEntity(AccountBO account, FeeBO fee, Double feeAmount) {
+    public AccountFeesEntity(final AccountBO account, final FeeBO fee, final Double feeAmount) {
         accountFeeId = null;
         this.account = account;
         this.fees = fee;
@@ -70,8 +73,8 @@ public class AccountFeesEntity extends PersistentObject {
         this.accountFeeAmount = new Money(String.valueOf(feeAmount));
     }
 
-    public AccountFeesEntity(AccountBO account, FeeBO fees, Double feeAmount, Short feeStatus, Date statusChangeDate,
-            Date lastAppliedDate) {
+    public AccountFeesEntity(final AccountBO account, final FeeBO fees, final Double feeAmount, final Short feeStatus, final Date statusChangeDate,
+            final Date lastAppliedDate) {
         accountFeeId = null;
         this.account = account;
         this.fees = fees;
@@ -94,7 +97,7 @@ public class AccountFeesEntity extends PersistentObject {
         return accountFeeAmount;
     }
 
-    public void setAccountFeeAmount(Money accountFeeAmount) {
+    public void setAccountFeeAmount(final Money accountFeeAmount) {
         this.accountFeeAmount = accountFeeAmount;
     }
 
@@ -102,7 +105,7 @@ public class AccountFeesEntity extends PersistentObject {
         return feeAmount;
     }
 
-    public void setFeeAmount(Double feeAmount) {
+    public void setFeeAmount(final Double feeAmount) {
         this.feeAmount = feeAmount;
     }
 
@@ -121,7 +124,7 @@ public class AccountFeesEntity extends PersistentObject {
     /**
      * For hibernate.
      */
-    void setFeeStatus(Short feeStatus) {
+    void setFeeStatus(final Short feeStatus) {
         this.feeStatus = feeStatus;
     }
 
@@ -130,7 +133,7 @@ public class AccountFeesEntity extends PersistentObject {
      * {@link #changeFeesStatus(Short, Date)} and others to be created better
      * express what kinds of actions take place.
      */
-    public void setFeeStatus(FeeStatus status) {
+    public void setFeeStatus(final FeeStatus status) {
         this.feeStatus = status.getValue();
     }
 
@@ -138,7 +141,7 @@ public class AccountFeesEntity extends PersistentObject {
         return statusChangeDate;
     }
 
-    public void setStatusChangeDate(Date statusChangeDate) {
+    public void setStatusChangeDate(final Date statusChangeDate) {
         this.statusChangeDate = statusChangeDate;
     }
 
@@ -146,11 +149,11 @@ public class AccountFeesEntity extends PersistentObject {
         return lastAppliedDate;
     }
 
-    public void setLastAppliedDate(Date lastAppliedDate) {
+    public void setLastAppliedDate(final Date lastAppliedDate) {
         this.lastAppliedDate = lastAppliedDate;
     }
 
-    public void changeFeesStatus(FeeStatus status, Date changeDate) {
+    public void changeFeesStatus(final FeeStatus status, final Date changeDate) {
         this.setFeeStatus(status);
         this.setStatusChangeDate(changeDate);
     }
@@ -170,7 +173,7 @@ public class AccountFeesEntity extends PersistentObject {
         return false;
     }
 
-    public Integer getApplicableDatesCount(Date date) throws AccountException {
+    public Integer getApplicableDatesCount(final Date date) throws AccountException {
         Integer applicableDatesCount = 0;
         if (getLastAppliedDate() != null) {
             MeetingBO meetingBO = getAccount().getCustomer().getCustomerMeeting().getMeeting();

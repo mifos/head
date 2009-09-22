@@ -23,6 +23,10 @@ import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.savings.persistence.GenericDao;
+import org.mifos.application.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.application.accounts.savings.persistence.SavingsDao;
+import org.mifos.application.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
@@ -57,8 +61,14 @@ public class DependencyInjectedServiceLocator {
     private static SavingsPersistence savingsPersistence = new SavingsPersistence();
     private static LoanPersistence loanPersistence = new LoanPersistence();
     private static AccountPersistence accountPersistence = new AccountPersistence();
-    private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate();
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
+    
+    private static GenericDao genericDao = new GenericDaoHibernate();
+    private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
+    private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
+    
+    // translators
+    private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
 
     public static CollectionSheetService locateCollectionSheetService() {
 
@@ -81,7 +91,7 @@ public class DependencyInjectedServiceLocator {
 
             final AccountPaymentAssembler accountPaymentAssembler = new AccountPaymentAssembler(personnelPersistence);
             final SavingsAccountAssembler savingsAccountAssembler = new SavingsAccountAssembler(savingsPersistence,
-                    personnelPersistence);
+                    customerPersistence);
             final ClientAttendanceAssembler clientAttendanceAssembler = new ClientAttendanceAssembler(
                     clientPersistence, clientAttendanceDao);
             final LoanAccountAssembler loanAccountAssembler = new LoanAccountAssembler(loanPersistence);
@@ -90,7 +100,8 @@ public class DependencyInjectedServiceLocator {
             collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence,
                     masterPersistence, personnelPersistence, customerPersistence, collectionSheetService,
                     collectionSheetEntryGridViewAssembler, clientAttendanceAssembler, loanAccountAssembler,
-                    customerAccountAssember, savingsAccountAssembler, accountPaymentAssembler);
+                    customerAccountAssember, savingsAccountAssembler, accountPaymentAssembler,
+                    collectionSheetTranslator);
         }
         return collectionSheetServiceFacade;
     }

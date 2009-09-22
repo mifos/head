@@ -20,25 +20,14 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
@@ -66,9 +55,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.
@@ -86,6 +72,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final CustomerAccountAssembler customerAccountAssembler;
     private final SavingsAccountAssembler savingsAccountAssembler;
     private final AccountPaymentAssembler accountPaymentAssembler;
+    private final CollectionSheetDtoTranslator collectionSheetTranslator;
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,
@@ -93,7 +80,9 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler,
             final ClientAttendanceAssembler clientAttendanceAssembler, final LoanAccountAssembler loanAccountAssembler,
             final CustomerAccountAssembler customerAccountAssember,
-            final SavingsAccountAssembler savingsAccountAssembler, final AccountPaymentAssembler accountPaymentAssembler) {
+            final SavingsAccountAssembler savingsAccountAssembler,
+            final AccountPaymentAssembler accountPaymentAssembler,
+            final CollectionSheetDtoTranslator collectionSheetTranslator) {
         this.officePersistence = officePersistence;
         this.masterPersistence = masterPersistence;
         this.personnelPersistence = personnelPersistence;
@@ -105,6 +94,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         this.customerAccountAssembler = customerAccountAssember;
         this.savingsAccountAssembler = savingsAccountAssembler;
         this.accountPaymentAssembler = accountPaymentAssembler;
+        this.collectionSheetTranslator = collectionSheetTranslator;
     }
 
     public CollectionSheetEntryFormDto loadAllActiveBranchesAndSubsequentDataIfApplicable(final UserContext userContext) {
@@ -221,9 +211,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         // final CollectionSheetEntryGridDto collectionSheetGridView =
         // collectionSheetEntryGridViewAssembler
         // .toDto(formEnteredDataDto);
-        //
-        // return collectionSheetGridView;
-
+        
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
                 .getCustomer().getCustomerId(), formEnteredDataDto.getMeetingDate());
 
@@ -232,8 +220,9 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                     MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",
                     "attendanceId").getCustomValueListElements();
 
-            final CollectionSheetEntryGridDto translatedGridView = translate(collectionSheet, formEnteredDataDto,
-                    attendanceTypesList, currency);
+            
+            final CollectionSheetEntryGridDto translatedGridView = collectionSheetTranslator.toLegacyDto(
+                    collectionSheet, formEnteredDataDto, attendanceTypesList, currency);
 
             return translatedGridView;
         } catch (SystemException e) {
@@ -241,32 +230,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         } catch (ApplicationException e) {
             throw new MifosRuntimeException(e);
         }
-    }
-
-    public CollectionSheetEntryGridDto translate(final CollectionSheetDto collectionSheet,
-            final CollectionSheetFormEnteredDataDto formEnteredDataDto,
-            final List<CustomValueListElement> attendanceTypesList, final MifosCurrency currency) {
-        
-        final CollectionSheetEntryView collectionSheetEntryViewHierarchy = createEntryViewHierarchyFromCollectionSheetData(collectionSheet
-                .getCollectionSheetCustomer(), currency);
-        
-        final PersonnelView loanOfficer = formEnteredDataDto.getLoanOfficer();
-        final OfficeView office = formEnteredDataDto.getOffice();
-        final ListItem<Short> paymentType = formEnteredDataDto.getPaymentType();
-        final Date meetingDate = formEnteredDataDto.getMeetingDate();
-        final String receiptId = formEnteredDataDto.getReceiptId();
-        final Date receiptDate = formEnteredDataDto.getReceiptDate();
-
-        final List<ProductDto> loanProductDtos = createListOfLoanProducts(collectionSheet.getCollectionSheetCustomer());
-        final List<ProductDto> savingProductDtos = createListOfSavingProducts(collectionSheet
-                .getCollectionSheetCustomer());
-        
-        final CollectionSheetEntryGridDto translatedGridDto = new CollectionSheetEntryGridDto(
-                collectionSheetEntryViewHierarchy,
-                loanOfficer, office, paymentType, meetingDate, receiptId, receiptDate, loanProductDtos,
-                savingProductDtos, attendanceTypesList);
-        
-        return translatedGridDto;
     }
 
     public CollectionSheetEntryGridDto previewCollectionSheetEntry(
@@ -302,8 +265,8 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         final List<CollectionSheetEntryView> collectionSheeetEntryViews = decomposedViews
                 .getParentCollectionSheetEntryViews();
-        final List<SavingsBO> savingsAccounts = savingsAccountAssembler.fromDto(collectionSheeetEntryViews,
-                previousCollectionSheetEntryDto, userId, failedSavingsDepositAccountNums, failedSavingsWithdrawalNums);
+        final List<SavingsBO> savingsAccounts = savingsAccountAssembler.fromDto(collectionSheeetEntryViews, payment,
+                failedSavingsDepositAccountNums, failedSavingsWithdrawalNums);
 
         final List<CollectionSheetEntryView> collectionSheetEntryViews = decomposedViews
                 .getParentCollectionSheetEntryViews();
@@ -329,185 +292,5 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             paymentTypesDtoList.add(new ListItem<Short>(paymentType.getId(), paymentType.getName()));
         }
         return paymentTypesDtoList;
-    }
-
-    private List<ProductDto> createListOfSavingProducts(final List<CollectionSheetCustomerDto> collectionSheetCustomer) {
-
-        final Set<ProductDto> savingProductsSet = new HashSet<ProductDto>();
-
-        for (CollectionSheetCustomerDto collectionSheetCustomerDto : collectionSheetCustomer) {
-
-            for (CollectionSheetCustomerSavingDto saving : collectionSheetCustomerDto
-                    .getCollectionSheetCustomerSaving()) {
-
-                ProductDto productDto = new ProductDto(saving.getProductId(), saving.getProductShortName());
-                savingProductsSet.add(productDto);
-            }
-        }
-        
-        List<ProductDto> savingProductsOrderedByName = new ArrayList<ProductDto>(savingProductsSet);
-        Collections.sort(savingProductsOrderedByName, new ProductDtoComparator());
-
-
-        return savingProductsOrderedByName;
-    }
-
-    private List<ProductDto> createListOfLoanProducts(final List<CollectionSheetCustomerDto> collectionSheetCustomer) {
-
-        final Set<ProductDto> loanProductsSet = new HashSet<ProductDto>();
-
-        for (CollectionSheetCustomerDto collectionSheetCustomerDto : collectionSheetCustomer) {
-
-            for (CollectionSheetCustomerLoanDto loan : collectionSheetCustomerDto.getCollectionSheetCustomerLoan()) {
-
-                ProductDto productDto = new ProductDto(loan.getProductId(), loan.getProductShortName());
-                loanProductsSet.add(productDto);
-            }
-        }
-
-        List<ProductDto> loanProductsOrderedByName = new ArrayList<ProductDto>(loanProductsSet);
-        Collections.sort(loanProductsOrderedByName, new ProductDtoComparator());
-
-        return loanProductsOrderedByName;
-    }
-    
-    private CollectionSheetEntryView createEntryViewHierarchyFromCollectionSheetData(
-            final List<CollectionSheetCustomerDto> collectionSheetCustomerHierarchy, final MifosCurrency currency) {
-
-        final int countOfCustomers = collectionSheetCustomerHierarchy.size();
-        CollectionSheetEntryView parentView = null;
-        
-        for (CollectionSheetCustomerDto customer : collectionSheetCustomerHierarchy) {
-
-            final CustomerView parentCustomerDetail = new CustomerView(customer.getCustomerId(),
-                    customer.getName(), customer.getParentCustomerId(),
-                    customer.getLevelId());
-
-            CollectionSheetEntryView childView = new CollectionSheetEntryView(parentCustomerDetail, currency);
-            childView.setAttendence(customer.getAttendanceId());
-            childView.setCountOfCustomers(countOfCustomers);
-
-            final Integer accountId = customer.getCollectionSheetCustomerAccount().getAccountId();
-            final Integer customerId = customer.getCustomerId();
-            final Short installmentId = null;
-            final Integer actionDateId = null;
-            final Date actionDate = null;
-
-            final Money miscFee = new Money(customer.getCollectionSheetCustomerAccount()
-                    .getTotalCustomerAccountCollectionFee().toString());
-            final Money miscFeePaid = new Money("0.0");
-            final Money miscPenalty = new Money("0.0");
-            final Money miscPenaltyPaid = new Money("0.0");
-
-            final CustomerAccountView customerAccountDetails = new CustomerAccountView(customer
-                    .getCollectionSheetCustomerAccount().getAccountId(), customer.getCustomerId());
-            customerAccountDetails.setAccountId(customer.getCollectionSheetCustomerAccount()
-                    .getAccountId());
-
-            // we only create one installment fee and set the total amount due
-            // in the miscFee column for now
-            final CollectionSheetEntryInstallmentView installmentView = new CollectionSheetEntryCustomerAccountInstallmentView(
-                    accountId, customerId, installmentId, actionDateId, actionDate, miscFee, miscFeePaid, miscPenalty,
-                    miscPenaltyPaid);
-            final List<CollectionSheetEntryInstallmentView> installmentViewList = java.util.Arrays
-                    .asList(installmentView);
-            customerAccountDetails.setAccountActionDates(installmentViewList);
-
-            childView.setCustomerAccountDetails(customerAccountDetails);
-
-            // saving accounts
-            for (CollectionSheetCustomerSavingDto customerSavingDto : customer
-                    .getCollectionSheetCustomerSaving()) {
-
-                final Integer savCustomerId = customerSavingDto.getCustomerId();
-                final Integer savAccountId = customerSavingDto.getAccountId();
-                final String savingProductShortName = customerSavingDto.getProductShortName();
-                final Short savOfferingId = customerSavingDto.getProductId();
-                final Short savingsTypeId = Short.valueOf("1");
-                final Short recommendedAmntUnitId = customerSavingDto.getRecommendedAmountUnitId();
-
-                final SavingsAccountView savingsAccount = new SavingsAccountView(savAccountId, savCustomerId,
-                        savingProductShortName, savOfferingId, savingsTypeId, recommendedAmntUnitId);
-
-                final Short savInstallmentId = null;
-                final Integer savActionDateId = null;
-                final Date savActionDate = null;
-
-                final Money savDeposit = new Money(customerSavingDto.getTotalDepositAmount().toString());
-                final Money savDepositPaid = new Money("0.0");
-
-                final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentView(
-                        savAccountId, savCustomerId, savInstallmentId, savActionDateId, savActionDate, savDeposit,
-                        savDepositPaid);
-                savingsAccount.addAccountTrxnDetail(accountTrxnDetail);
-                
-                childView.addSavingsAccountDetail(savingsAccount);
-            }
-
-            // loan accounts
-            for (CollectionSheetCustomerLoanDto customerLoanDto : customer
-                    .getCollectionSheetCustomerLoan()) {
-
-                final Integer loanAccountId = customerLoanDto.getAccountId();
-                final Integer loanCustomerId = customerLoanDto.getCustomerId();
-                final String loanOfferingShortName = customerLoanDto.getProductShortName();
-                final Short loanOfferingId = customerLoanDto.getProductId();
-                final Short loanInstallmentId = null;
-                final Integer loanActionDateId = null;
-                final Date loanActionDate = null;
-                final Short loanAccountState = customerLoanDto.getAccountStateId();
-                final Short interestDeductedAtDisbursement = customerLoanDto.getPayInterestAtDisbursement();
-                final Money loanAmount = new Money(customerLoanDto.getTotalDisbursement().toString());
-
-                final Money principal = new Money(customerLoanDto.getTotalRepaymentDue().toString());
-
-                final LoanAccountView loanAccount = new LoanAccountView(loanAccountId, loanCustomerId,
-                        loanOfferingShortName, loanOfferingId, loanAccountState, interestDeductedAtDisbursement, loanAmount);
-                loanAccount.setAmountPaidAtDisbursement(customerLoanDto.getAmountDueAtDisbursement());
-
-                final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntryLoanInstallmentView(
-                        loanAccountId, loanCustomerId, loanInstallmentId, loanActionDateId, loanActionDate, principal,
-                        new Money(), new Money(), new Money(), new Money(), new Money(), new Money(), new Money(),
-                        new Money(), new Money());
-                loanAccount.addTrxnDetails(Arrays.asList(accountTrxnDetail));
-
-                childView.addLoanAccountDetails(loanAccount);
-            }
-            
-            // center-group-client hierarchy
-            if (parentView == null) {
-                parentView = childView;
-            } else {
-                addChildToAppropriateParent(parentView, childView);
-            }
-        }
-
-        return parentView;
-    }
-
-    private boolean addChildToAppropriateParent(final CollectionSheetEntryView rootNode,
-            final CollectionSheetEntryView childNodeToBeAdded) {
-
-        if (childNodeToBeAdded.getCustomerDetail().getParentCustomerId().equals(
-                rootNode.getCustomerDetail().getCustomerId())) {
-            rootNode.addChildNode(childNodeToBeAdded);
-            return true;
-        }
-
-        for (CollectionSheetEntryView child : rootNode.getCollectionSheetEntryChildren()) {
-            if (addChildToAppropriateParent(child, childNodeToBeAdded)) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-}
-
-class ProductDtoComparator implements Comparator<ProductDto> {
-
-    @Override
-    public int compare(final ProductDto arg0, final ProductDto arg1) {
-        return arg0.getShortName().compareTo(arg1.getShortName());
     }
 }

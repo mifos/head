@@ -23,10 +23,14 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -36,26 +40,29 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  */
 public class SavingsProductBuilder {
 
+    private final MeetingBO scheduleForInterestCalculationMeeting = new MeetingBuilder()
+            .savingsInterestCalulationSchedule()
+            .monthly().every(1).build();
+    private final MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
+            .monthly().every(1).build();
     private final Double interestRate = Double.valueOf("2.0");
-    private final SavingsType savingsType = SavingsType.VOLUNTARY;
+    private SavingsType savingsType = SavingsType.VOLUNTARY;
     private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
     
     // PRD_OFFERING FIELDS
-    private final String globalProductNumber = "XXXXX-1111";
+    private String globalProductNumber = "XXXXX-1111";
     private final Date startDate = new DateTime().minusDays(14).toDate();
-    private final String name = "testProduct";
+    private String name = "testProduct";
     private final String shortName = "VS2";
     private final Date createdDate = new DateTime().minusDays(14).toDate();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final GLCodeEntity depositGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
     private final GLCodeEntity interesetGLCode = new GLCodeEntity(Short.valueOf("2"), "11000");
-    
-    private final ApplicableTo applicableToCustomer = ApplicableTo.CENTERS;
-    
+    private ApplicableTo applicableToCustomer = ApplicableTo.CENTERS;
     private ProductCategoryBO category = new ProductCategoryBO(Short.valueOf("1"), "savtest");
+    private final PrdStatus productStatus = PrdStatus.SAVINGS_ACTIVE;
     
     public SavingsOfferingBO buildForUnitTests() {
-
         return build();
     }
     
@@ -68,8 +75,50 @@ public class SavingsProductBuilder {
 
     private SavingsOfferingBO build() {
         final SavingsOfferingBO savingsProduct = new SavingsOfferingBO(savingsType, name, shortName,
-                globalProductNumber, startDate, applicableToCustomer, category, interestCalcType, interestRate,
+                globalProductNumber, startDate, applicableToCustomer, category, productStatus, interestCalcType,
+                interestRate,
                 depositGLCode, interesetGLCode, createdDate, createdByUserId);
+
+         final PrdOfferingMeetingEntity scheduleForInstcalc = new PrdOfferingMeetingEntity(
+                scheduleForInterestCalculationMeeting, savingsProduct,
+                MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
+
+        final PrdOfferingMeetingEntity scheduleForInterestPosting = new PrdOfferingMeetingEntity(
+                scheduleForInterestPostingMeeting, savingsProduct, MeetingType.SAVINGS_INTEREST_POSTING);
+
+        savingsProduct.setTimePerForInstcalc(scheduleForInstcalc);
+        savingsProduct.setTimePerForInstcalc(scheduleForInterestPosting);
         return savingsProduct;
+    }
+
+    public SavingsProductBuilder withName(final String withName) {
+        this.name = withName;
+        this.globalProductNumber = "XXX-" + withName;
+        return this;
+    }
+
+    public SavingsProductBuilder appliesToCentersOnly() {
+        this.applicableToCustomer = ApplicableTo.CENTERS;
+        return this;
+    }
+
+    public SavingsProductBuilder appliesToGroupsOnly() {
+        this.applicableToCustomer = ApplicableTo.GROUPS;
+        return this;
+    }
+    
+    public SavingsProductBuilder appliesToClientsOnly() {
+        this.applicableToCustomer = ApplicableTo.CLIENTS;
+        return this;
+    }
+
+    public SavingsProductBuilder mandatory() {
+        this.savingsType = SavingsType.MANDATORY;
+        return this;
+    }
+
+    public SavingsProductBuilder voluntary() {
+        this.savingsType = SavingsType.VOLUNTARY;
+        return this;
     }
 }

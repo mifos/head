@@ -32,10 +32,8 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -179,15 +177,4 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         }
 
     }
-    
-    public void shouldGetX() throws Exception {
-
-        Date now = new Date();
-        String searchString = "1.1.%";
-        Short officeId = Short.valueOf("1");
-        
-        List<CollectionSheetEntryAccountFeeActionView> installmentViews = new BulkEntryPersistence()
-                .getBulkEntryFeeActionView(now, searchString, officeId, AccountTypes.LOAN_ACCOUNT);
-    }
-
 }

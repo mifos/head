@@ -59,6 +59,11 @@ public class MeetingBuilder {
         this.recurrenceType = RecurrenceType.WEEKLY;
         return this;
     }
+    
+    public MeetingBuilder monthly() {
+        this.recurrenceType = RecurrenceType.MONTHLY;
+        return this;
+    }
 
     public MeetingBuilder every(final Integer recurrence) {
         this.recurAfter = recurrence.shortValue();
@@ -77,6 +82,16 @@ public class MeetingBuilder {
     
     public MeetingBuilder periodicFeeMeeting() {
         this.meetingType = MeetingType.PERIODIC_FEE;
+        return this;
+    }
+    
+    public MeetingBuilder savingsInterestCalulationSchedule() {
+        this.meetingType = MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD;
+        return this;
+    }
+    
+    public MeetingBuilder savingsInterestPostingSchedule() {
+        this.meetingType = MeetingType.SAVINGS_INTEREST_POSTING;
         return this;
     }
 

@@ -32,17 +32,11 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsActivityEntity extends PersistentObject {
 
     private final Integer id;
-
     private final PersonnelBO trxnCreatedBy;
-
     private final AccountBO account;
-
     private final Timestamp trxnCreatedDate;
-
     private final AccountActionEntity activity;
-
     private final Money amount;
-
     private final Money balanceAmount;
 
     protected SavingsActivityEntity() {
@@ -53,11 +47,10 @@ public class SavingsActivityEntity extends PersistentObject {
         this.amount = null;
         this.balanceAmount = null;
         this.trxnCreatedDate = null;
-
     }
 
-    public SavingsActivityEntity(PersonnelBO trxnCreatedBy, AccountActionEntity activity, Money amount,
-            Money balanceAmount, Date trxnDate, AccountBO account) {
+    public SavingsActivityEntity(final PersonnelBO trxnCreatedBy, final AccountActionEntity activity, final Money amount,
+            final Money balanceAmount, final Date trxnDate, final AccountBO account) {
         id = null;
         this.trxnCreatedBy = trxnCreatedBy;
         this.activity = activity;
@@ -96,5 +89,4 @@ public class SavingsActivityEntity extends PersistentObject {
     public Timestamp getTrxnCreatedDate() {
         return trxnCreatedDate;
     }
-
 }

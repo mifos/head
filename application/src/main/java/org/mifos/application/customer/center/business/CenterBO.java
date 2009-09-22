@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
@@ -93,10 +92,10 @@ public class CenterBO extends CustomerBO {
      * 
      * minimal constructor for builder
      */
-    public CenterBO(final CustomerLevel customerLevel, final String name, final OfficeBO office,
-            final PersonnelBO loanOfficer,
-            final CustomerMeetingEntity customerMeeting, final CustomerAccountBO customerAccount, final String searchId) {
-        super(customerLevel, name, office, loanOfficer, customerMeeting, customerAccount);
+    public CenterBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
+            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
+            final String searchId) {
+        super(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, null);
         this.setSearchId(searchId);
         this.setCustomerActivationDate(this.getCreatedDate());
     }

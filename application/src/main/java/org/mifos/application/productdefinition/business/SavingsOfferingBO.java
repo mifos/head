@@ -57,17 +57,23 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     
     private final Set<PrdOfferingMeetingEntity> savingsOfferingMeetings;
 
+    /**
+     * default constructor for hibernate usuage
+     */
     public SavingsOfferingBO() {
         this(null, null, null, new HashSet<PrdOfferingMeetingEntity>());
     }
     
+    /**
+     * TODO - keithw - work in progress
+     */
     public SavingsOfferingBO(final SavingsType savingsType, final String name, final String shortName,
             final String globalProductNumber, final Date startDate, final ApplicableTo applicableToCustomer,
-            final ProductCategoryBO category, final InterestCalcType interestCalcType, final Double interestRate,
-            final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode, final Date createdDate,
-            final Short createdByUserId) {
-        super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, createdDate,
-                createdByUserId);
+            final ProductCategoryBO category, final PrdStatus productStatus, final InterestCalcType interestCalcType,
+            final Double interestRate, final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode,
+            final Date createdDate, final Short createdByUserId) {
+        super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, productStatus,
+                createdDate, createdByUserId);
         this.interestRate = interestRate;
         this.savingsType = new SavingsTypeEntity(savingsType);
         this.interestCalcType = new InterestCalcTypeEntity(interestCalcType);

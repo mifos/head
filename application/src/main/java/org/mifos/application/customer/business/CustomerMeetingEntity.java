@@ -34,13 +34,9 @@ public class CustomerMeetingEntity extends PersistentObject {
     @SuppressWarnings("unused")
     // see .hbm.xml file
     private final Integer custMeetingId;
-
     private MeetingBO meeting;
-
-    private final CustomerBO customer;
-
+    private CustomerBO customer;
     private Short updatedFlag;
-
     private MeetingBO updatedMeeting;
 
     /**
@@ -60,7 +56,6 @@ public class CustomerMeetingEntity extends PersistentObject {
         this.custMeetingId = null;
         this.meeting = meeting;
         this.updatedFlag = updatedFlag;
-        this.customer = null;
     }
     
     public CustomerMeetingEntity(final CustomerBO customer, final MeetingBO meeting) {
@@ -97,5 +92,9 @@ public class CustomerMeetingEntity extends PersistentObject {
 
     void setUpdatedMeeting(final MeetingBO updatedMeeting) {
         this.updatedMeeting = updatedMeeting;
+    }
+
+    public void setCustomer(final CustomerBO customer) {
+        this.customer = customer;
     }
 }

@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
@@ -87,6 +88,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         final Short branchId = customerHierarchy.get(0).getBranchId();
         final String searchId = customerHierarchy.get(0).getSearchId() + ".%";
+        
+        final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerId, branchId,
+                searchId, transactionDate);
 
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepaymentsGroupedByCustomerId = collectionSheetDao
                 .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
@@ -101,11 +105,15 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                 .findOutstandingFeesForCustomerAccountOnCustomerHierarchy(branchId, searchId, transactionDate,
                         customerId);
 
-        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = collectionSheetDao
-                .findSavingsDepositsforCustomerHierarchy(branchId, searchId, transactionDate, customerId);
-
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
                 .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
+        
+        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = collectionSheetDao
+                .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
+        
+        final Map<Integer, List<CollectionSheetIndividualSavingDto>> allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = collectionSheetDao
+                .findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams);
+        
         
         final List<CollectionSheetCustomerDto> populatedCollectionSheetCustomer = new ArrayList<CollectionSheetCustomerDto>();
         for (CollectionSheetCustomerDto collectionSheetCustomer : customerHierarchy) {
@@ -123,6 +131,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             final List<CollectionSheetCustomerSavingDto> associatedSavingAccount = allSavingsDepositsGroupedByCustomerId
                     .get(customerInHierarchyId);
             
+            final List<CollectionSheetIndividualSavingDto> associatedIndividualSavingsAccounts = allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId
+                    .get(customerInHierarchyId);
+            
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollections = allAccountCollectionsByCustomerId
                     .get(customerInHierarchyId);
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollectionFees = feesAssociatedWithAccountCollectionsByCustomerId
@@ -132,9 +143,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                     customerAccountCollections,
                     customerAccountCollectionFees);
 
-            populatedCollectionSheetCustomer.add(populateCollectionSheetCustomer(collectionSheetCustomer,
+            populatedCollectionSheetCustomer.add(createNullSafeCollectionSheetCustomer(collectionSheetCustomer,
                     associatedLoanRepayments, outstandingFeesOnLoanRepayments, associatedLoanDisbursements,
-                    associatedSavingAccount, customerAccount));
+                    associatedSavingAccount, associatedIndividualSavingsAccounts, customerAccount));
         }
 
         return new CollectionSheetDto(populatedCollectionSheetCustomer);
@@ -189,18 +200,21 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                 customerAccountCollections.get(0).getAccountCollectionPayment());
     }
 
-    private CollectionSheetCustomerDto populateCollectionSheetCustomer(
+    @SuppressWarnings("unchecked")
+    private CollectionSheetCustomerDto createNullSafeCollectionSheetCustomer(
             final CollectionSheetCustomerDto collectionSheetCustomer,
             final List<CollectionSheetCustomerLoanDto> associatedLoanRepayments,
             final Map<Integer, List<CollectionSheetLoanFeeDto>> outstandingFeesOnLoanRepayments,
             final List<CollectionSheetCustomerLoanDto> allLoanDisbursements,
             final List<CollectionSheetCustomerSavingDto> associatedSavingAccount,
+            final List<CollectionSheetIndividualSavingDto> associatedIndividualSavingsAccounts,
             final CollectionSheetCustomerAccountDto customerAccount) {
         
-        List<CollectionSheetCustomerSavingDto> savingAccounts = new ArrayList<CollectionSheetCustomerSavingDto>();
-        if (associatedSavingAccount != null) {
-            savingAccounts = associatedSavingAccount;
-        }
+        final List<CollectionSheetCustomerSavingDto> savingAccounts = (List<CollectionSheetCustomerSavingDto>) ObjectUtils
+                .defaultIfNull(associatedSavingAccount, new ArrayList<CollectionSheetCustomerSavingDto>());
+        
+        final List<CollectionSheetIndividualSavingDto> individualSavingAccounts = (List<CollectionSheetIndividualSavingDto>) ObjectUtils
+                .defaultIfNull(associatedIndividualSavingsAccounts, new ArrayList<CollectionSheetIndividualSavingDto>());
 
         if (outstandingFeesOnLoanRepayments == null) {
 
@@ -213,10 +227,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             if (allLoanDisbursements != null) {
                 loanRepaymentsAndDisbursements.addAll(allLoanDisbursements);
             }
-
             
             return new CollectionSheetCustomerDto(collectionSheetCustomer, loanRepaymentsAndDisbursements,
-                    savingAccounts, customerAccount);
+                    savingAccounts, individualSavingAccounts, customerAccount);
         }
 
         final List<CollectionSheetCustomerLoanDto> loanRepaymentsAndDisbursementsWithFees = new ArrayList<CollectionSheetCustomerLoanDto>();
@@ -236,7 +249,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
 
         return new CollectionSheetCustomerDto(collectionSheetCustomer, loanRepaymentsAndDisbursementsWithFees,
-                savingAccounts, customerAccount);
+                savingAccounts, individualSavingAccounts, customerAccount);
     }
 
     private CollectionSheetCustomerLoanDto populateCollectionSheetCustomerLoan(final CollectionSheetCustomerLoanDto loan,

@@ -74,7 +74,7 @@ public class CustomerAccountAssembler {
                     try {
                         final CustomerAccountBO account = findCustomerAccountByIdWithLoanSchedulesInitialized(accountId);
                         globalCustomerAccountNum = account.getGlobalAccountNum();
-                        account.applyPayment(accountPaymentDataView, true);
+                        account.applyPayment(accountPaymentDataView, false);
                         customerAccountList.add(account);
                     } catch (AccountException ae) {
                         logger.warn("Payment of loan on account [" + globalCustomerAccountNum

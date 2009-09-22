@@ -131,11 +131,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
             final InterestType interestType,
             final Double minInterestRate,
             final Double maxInterestRate, final Double defaultInterestRate, final Short interestPaidAtDisbursement,
-            final Short principalDueLastInstallment, final String name, final String shortName,
+            final Short principalDueLastInstallment, final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO,
+            final String name, final String shortName,
             final String globalProductNumber, final Date startDate, final ApplicableTo applicableToCustomer,
-            final ProductCategoryBO category) {
+            final ProductCategoryBO category, final PrdStatus productStatus) {
         
-        super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, null, null);
+        super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, productStatus, null,
+                null);
         this.interestTypes = new InterestTypesEntity(interestType);
         this.principalGLcode = principalGLcode;
         this.interestGLcode = interestGLCode;
@@ -144,7 +146,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.defInterestRate = defaultInterestRate;
         this.intDedDisbursement = interestPaidAtDisbursement;
         this.prinDueLastInst = principalDueLastInstallment;
-        this.noOfInstallSameForAllLoan = null;
+        this.noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
+        this.noOfInstallSameForAllLoan.add(noOfInstallSameForAllLoanBO);
         this.noOfInstallFromLoanCycle = null;
         this.noOfInstallFromLastLoan = null;
         this.loanOfferingFunds = null;

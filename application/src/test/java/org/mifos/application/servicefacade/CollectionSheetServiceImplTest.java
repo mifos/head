@@ -342,14 +342,15 @@ public class CollectionSheetServiceImplTest {
 
         // setup
         final Date transactionDate = new Date();
-
         final Integer centerId = Integer.valueOf(3);
+        final String searchId = "1.1";
+        final Short branchId = Short.valueOf("6");
+        final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(centerId, branchId,
+                searchId + ".%", transactionDate);
+
         final String name = "center";
         final Short level = Short.valueOf("3");
-        final String searchId = "1.1";
         final Short attendance = AttendanceType.ABSENT.getValue();
-        final Short branchId = Short.valueOf("6");
-
         final CollectionSheetCustomerDto center = new CollectionSheetCustomerDto(centerId, name, level, searchId,
                 attendance, branchId);
 
@@ -369,8 +370,7 @@ public class CollectionSheetServiceImplTest {
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
         when(
-                collectionSheetDao.findSavingsDepositsforCustomerHierarchy(branchId, searchId + ".%", transactionDate,
-                        centerId))
+                collectionSheetDao.findSavingsDepositsforCustomerHierarchy(customerHierarchyParams))
                 .thenReturn(savingAccounts);
 
         // exercise test

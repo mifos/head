@@ -36,12 +36,12 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -54,8 +54,8 @@ import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -1681,14 +1681,16 @@ public class TestObjectFactory {
 
     public static LoanBO createLoanAccountWithDisbursement(final String globalNum, final CustomerBO customer, final AccountState state,
             final Date startDate, final LoanOfferingBO loanOfering, final int disbursalType) {
-        // loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
-        LoanBO loan = LoanBOTestUtils.createLoanAccountWithDisbursement(globalNum, customer, state, startDate,
+
+        final LoanBO loan = LoanBOTestUtils.createLoanAccountWithDisbursement(customer, state, startDate,
                 loanOfering, disbursalType, Short.valueOf("6"));
+        
         try {
             loan.save();
         } catch (AccountException e) {
             throw new RuntimeException(e);
         }
+        
         StaticHibernateUtil.commitTransaction();
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }

@@ -19,10 +19,11 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -33,19 +34,25 @@ import org.mifos.framework.util.helpers.Constants;
  */
 public class CenterBuilder {
     
+    private CenterBO center;
+    private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Center";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
-    private CustomerAccountBO customerAccount;
     private PersonnelBO loanOfficer;
     private final String searchId = "1.1";
     private final Short updatedFlag = Constants.NO;
+    private final CustomerStatus customerStatus = CustomerStatus.CENTER_ACTIVE;
     
     public CenterBO build() {
-        
+
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        final CenterBO center = new CenterBO(CustomerLevel.CENTER, name, office, loanOfficer, customerMeeting,
-                customerAccount, searchId);
+        center = new CenterBO(CustomerLevel.CENTER, customerStatus, name, office, loanOfficer, customerMeeting,
+                searchId);
+
+        // add relationship between customer account and customer.
+        customerAccountBuilder.withCustomer(center).withOffice(office).withLoanOfficer(loanOfficer).buildForIntegrationTests();
+
         return center;
     }
 
@@ -66,6 +73,11 @@ public class CenterBuilder {
 
     public CenterBuilder withLoanOfficer(final PersonnelBO withLoanOfficer) {
         this.loanOfficer = withLoanOfficer;
+        return this;
+    }
+
+    public CenterBuilder withFee(final AmountFeeBO withFee) {
+        customerAccountBuilder.withFee(withFee);
         return this;
     }
 }

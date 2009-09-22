@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldView;
@@ -58,6 +59,13 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelBO extends BusinessObject {
 
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
+
+    public static PersonnelBO ALL_PERSONNEL = new PersonnelBO();
+    static {
+        ALL_PERSONNEL.setDisplayName("ALL");
+    }
+    
     private final Short personnelId;
 
     private PersonnelLevelEntity level;
@@ -102,21 +110,13 @@ public class PersonnelBO extends BusinessObject {
 
     private Set<PersonnelNotesEntity> personnelNotes;
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
-
-    public static PersonnelBO ALL_PERSONNEL = new PersonnelBO();
-    static {
-        ALL_PERSONNEL.setDisplayName("ALL");
-    }
-
-    public PersonnelBO(PersonnelLevel level, OfficeBO office, Integer title, Short preferredLocale, String password,
-            String userName, String emailId, List<RoleBO> roles, List<CustomFieldView> customFields, Name name,
-            String governmentIdNumber, Date dob, Integer maritalStatus, Integer gender, Date dateOfJoiningMFI,
-            Date dateOfJoiningBranch, Address address, Short createdBy) throws PersistenceException,
+    public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
+            final String userName, final String emailId, final List<RoleBO> roles, final List<CustomFieldView> customFields, final Name name,
+            final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender, final Date dateOfJoiningMFI,
+            final Date dateOfJoiningBranch, final Address address, final Short createdBy) throws PersistenceException,
             ValidationException {
         super();
-        setCreateDetails(createdBy, new DateTimeService().getCurrentJavaDateTime());
-        logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
+        setCreateDetails(createdBy, new DateTime().toDate());
         this.displayName = name.getDisplayName();
         verifyFields(userName, governmentIdNumber, dob);
         this.level = new PersonnelLevelEntity(level);
@@ -160,7 +160,7 @@ public class PersonnelBO extends BusinessObject {
         this.personnelNotes = new HashSet<PersonnelNotesEntity>();
     }
 
-    public PersonnelBO(Short personnelId, String userName, String displayName, PersonnelLevelEntity level) {
+    public PersonnelBO(final Short personnelId, final String userName, final String displayName, final PersonnelLevelEntity level) {
         this.personnelId = personnelId;
         this.userName = userName;
         this.displayName = displayName;
@@ -181,7 +181,7 @@ public class PersonnelBO extends BusinessObject {
         return customFields;
     }
 
-    public void setCustomFields(Set<PersonnelCustomFieldEntity> customFields) {
+    public void setCustomFields(final Set<PersonnelCustomFieldEntity> customFields) {
         this.customFields = customFields;
     }
 
@@ -221,7 +221,7 @@ public class PersonnelBO extends BusinessObject {
         return personnelDetails;
     }
 
-    public void setPersonnelDetails(PersonnelDetailsEntity personnelDetails) {
+    public void setPersonnelDetails(final PersonnelDetailsEntity personnelDetails) {
         this.personnelDetails = personnelDetails;
     }
 
@@ -261,7 +261,7 @@ public class PersonnelBO extends BusinessObject {
         return personnelRoles;
     }
 
-    public void setPersonnelRoles(Set<PersonnelRoleEntity> personnelRoles) {
+    public void setPersonnelRoles(final Set<PersonnelRoleEntity> personnelRoles) {
         this.personnelRoles = personnelRoles;
     }
 
@@ -281,7 +281,7 @@ public class PersonnelBO extends BusinessObject {
         return passwordChanged;
     }
 
-    public void setPasswordChanged(Short passwordChanged) {
+    public void setPasswordChanged(final Short passwordChanged) {
         this.passwordChanged = passwordChanged;
     }
 
@@ -289,7 +289,7 @@ public class PersonnelBO extends BusinessObject {
         return searchId;
     }
 
-    void setSearchId(String searchId) {
+    void setSearchId(final String searchId) {
         this.searchId = searchId;
     }
 
@@ -297,55 +297,55 @@ public class PersonnelBO extends BusinessObject {
         return encriptedPassword;
     }
 
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(final String displayName) {
         this.displayName = displayName;
     }
 
-    public void setEmailId(String emailId) {
+    public void setEmailId(final String emailId) {
         this.emailId = emailId;
     }
 
-    void setGlobalPersonnelNum(String globalPersonnelNum) {
+    void setGlobalPersonnelNum(final String globalPersonnelNum) {
         this.globalPersonnelNum = globalPersonnelNum;
     }
 
-    void setLastLogin(Date lastLogin) {
+    void setLastLogin(final Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 
-    void setLevel(PersonnelLevelEntity level) {
+    void setLevel(final PersonnelLevelEntity level) {
         this.level = level;
     }
 
-    public void setMaxChildCount(Integer maxChildCount) {
+    public void setMaxChildCount(final Integer maxChildCount) {
         this.maxChildCount = maxChildCount;
     }
 
-    void setOffice(OfficeBO office) {
+    void setOffice(final OfficeBO office) {
         this.office = office;
     }
 
-    public void setPersonnelMovements(Set<PersonnelMovementEntity> personnelMovements) {
+    public void setPersonnelMovements(final Set<PersonnelMovementEntity> personnelMovements) {
         this.personnelMovements = personnelMovements;
     }
 
-    public void setPersonnelNotes(Set<PersonnelNotesEntity> personnelNotes) {
+    public void setPersonnelNotes(final Set<PersonnelNotesEntity> personnelNotes) {
         this.personnelNotes = personnelNotes;
     }
 
-    public void setPreferredLocale(SupportedLocalesEntity preferredLocale) {
+    public void setPreferredLocale(final SupportedLocalesEntity preferredLocale) {
         this.preferredLocale = preferredLocale;
     }
 
-    void setStatus(PersonnelStatusEntity status) {
+    void setStatus(final PersonnelStatusEntity status) {
         this.status = status;
     }
 
-    public void setTitle(Integer title) {
+    public void setTitle(final Integer title) {
         this.title = title;
     }
 
-    private void updateCustomFields(List<CustomFieldView> customfields) {
+    private void updateCustomFields(final List<CustomFieldView> customfields) {
         if (this.customFields != null && customfields != null) {
             for (CustomFieldView fieldView : customfields) {
                 for (PersonnelCustomFieldEntity fieldEntity : this.customFields) {
@@ -357,7 +357,7 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    public void setEncriptedPassword(byte[] encryptedPassword) {
+    public void setEncriptedPassword(final byte[] encryptedPassword) {
         this.encriptedPassword = encryptedPassword;
     }
 
@@ -369,13 +369,13 @@ public class PersonnelBO extends BusinessObject {
         return PersonnelStatus.getPersonnelStatus(status.getId());
     }
 
-    public void addPersonnelMovement(PersonnelMovementEntity personnelMovement) {
+    public void addPersonnelMovement(final PersonnelMovementEntity personnelMovement) {
         if (personnelMovement != null) {
             this.personnelMovements.add(personnelMovement);
         }
     }
 
-    private void addPersonnelNotes(PersonnelNotesEntity personnelNotes) {
+    private void addPersonnelNotes(final PersonnelNotesEntity personnelNotes) {
         this.personnelNotes.add(personnelNotes);
     }
 
@@ -391,7 +391,7 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    public void addNotes(Short userId, PersonnelNotesEntity personnelNotes) throws PersonnelException {
+    public void addNotes(final Short userId, final PersonnelNotesEntity personnelNotes) throws PersonnelException {
         setUpdateDetails(userId);
         addPersonnelNotes(personnelNotes);
         try {
@@ -401,7 +401,7 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    private String generateGlobalPersonnelNum(String officeGlobalNum, int maxPersonnelId) {
+    private String generateGlobalPersonnelNum(final String officeGlobalNum, final int maxPersonnelId) {
         logger.debug("Passed office global no is : ".concat(officeGlobalNum).concat(
                 " and maxpersonnelid is : " + maxPersonnelId));
         String userId = "";
@@ -415,13 +415,13 @@ public class PersonnelBO extends BusinessObject {
         return userGlobalNum;
     }
 
-    private byte[] getEncryptedPassword(String password) {
+    private byte[] getEncryptedPassword(final String password) {
         byte[] encryptedPassword = null;
         encryptedPassword = EncryptionService.getInstance().createEncryptedPassword(password);
         return encryptedPassword;
     }
 
-    private void verifyFields(String userName, String governmentIdNumber, Date dob) throws ValidationException,
+    private void verifyFields(final String userName, final String governmentIdNumber, final Date dob) throws ValidationException,
             PersistenceException {
 
         PersonnelPersistence persistence = new PersonnelPersistence();
@@ -444,10 +444,10 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    public void update(PersonnelStatus newStatus, PersonnelLevel newLevel, OfficeBO office, Integer title,
-            Short preferredLocale, String password, String emailId, List<RoleBO> roles,
-            List<CustomFieldView> customFields, Name name, Integer maritalStatus, Integer gender, Address address,
-            Short updatedById) throws PersonnelException {
+    public void update(final PersonnelStatus newStatus, final PersonnelLevel newLevel, final OfficeBO office, final Integer title,
+            final Short preferredLocale, final String password, final String emailId, final List<RoleBO> roles,
+            final List<CustomFieldView> customFields, final Name name, final Integer maritalStatus, final Integer gender, final Address address,
+            final Short updatedById) throws PersonnelException {
         logger.debug("update in personnelBO called with values: " + newLevel + office.getOfficeId() + title + " "
                 + preferredLocale + " " + updatedById);
         MasterPersistence masterPersistence = new MasterPersistence();
@@ -496,7 +496,7 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    private void updatePersonnelRoles(List<RoleBO> roles) {
+    private void updatePersonnelRoles(final List<RoleBO> roles) {
         this.personnelRoles.clear();
         if (roles != null) {
             for (RoleBO role : roles) {
@@ -506,8 +506,8 @@ public class PersonnelBO extends BusinessObject {
 
     }
 
-    public void update(String emailId, Name name, Integer maritalStatus, Integer gender, Address address,
-            Short preferredLocale, Short updatedById) throws PersonnelException {
+    public void update(final String emailId, final Name name, final Integer maritalStatus, final Integer gender, final Address address,
+            final Short preferredLocale, final Short updatedById) throws PersonnelException {
 
         this.emailId = emailId;
         if (preferredLocale != null && preferredLocale != 0) {
@@ -523,8 +523,8 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    public void updatePersonnelDetails(Name name, Integer maritalStatus, Integer gender, Address address,
-            Date dateOfJoiningBranch) throws PersonnelException {
+    public void updatePersonnelDetails(final Name name, final Integer maritalStatus, final Integer gender, final Address address,
+            final Date dateOfJoiningBranch) {
         if (getPersonnelDetails() != null) {
             getPersonnelDetails().updateDetails(name, maritalStatus, gender, address, dateOfJoiningBranch);
         }
@@ -543,7 +543,7 @@ public class PersonnelBO extends BusinessObject {
         return notes;
     }
 
-    private void validateForUpdate(PersonnelStatus newStatus, OfficeBO newOffice, PersonnelLevel newLevel)
+    private void validateForUpdate(final PersonnelStatus newStatus, final OfficeBO newOffice, final PersonnelLevel newLevel)
             throws PersonnelException {
 
         if (!level.getId().equals(newLevel.getValue())) {
@@ -559,7 +559,7 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    private void validateStatusChange(PersonnelStatus newStatus, PersonnelLevel newLevel, OfficeBO newOffice)
+    private void validateStatusChange(final PersonnelStatus newStatus, final PersonnelLevel newLevel, final OfficeBO newOffice)
             throws PersonnelException {
 
         try {
@@ -569,7 +569,7 @@ public class PersonnelBO extends BusinessObject {
                     throw new PersonnelException(PersonnelConstants.STATUS_CHANGE_EXCEPTION);
                 }
             } else if (getStatusAsEnum() == PersonnelStatus.INACTIVE && newStatus.equals(PersonnelStatus.ACTIVE)
-                    && !(newOffice.isActive())) {
+                    && !newOffice.isActive()) {
                 Object values[] = new Object[1];
                 values[0] = newOffice.getOfficeId();
                 throw new PersonnelException(PersonnelConstants.INACTIVE_BRANCH, values);
@@ -580,7 +580,7 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    private void validateOfficeTransfer(OfficeBO newOffice, PersonnelLevel newLevel) throws PersonnelException {
+    private void validateOfficeTransfer(final OfficeBO newOffice, final PersonnelLevel newLevel) throws PersonnelException {
         try {
 
             if (newLevel.equals(PersonnelLevel.LOAN_OFFICER)) {
@@ -601,7 +601,7 @@ public class PersonnelBO extends BusinessObject {
 
     }
 
-    private void validateUserHierarchyChange(PersonnelLevel newLevel, OfficeBO officeId) throws PersonnelException {
+    private void validateUserHierarchyChange(final PersonnelLevel newLevel, final OfficeBO officeId) throws PersonnelException {
         try {
             if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())
                     && newLevel.equals(PersonnelLevel.NON_LOAN_OFFICER)) {
@@ -610,7 +610,7 @@ public class PersonnelBO extends BusinessObject {
                 }
             } else if (level.getId().equals(PersonnelLevel.NON_LOAN_OFFICER.getValue())
                     && newLevel.equals(PersonnelLevel.LOAN_OFFICER)
-                    && (!officeId.getLevel().getId().equals(OfficeLevel.BRANCHOFFICE.getValue()))) {
+                    && !officeId.getLevel().getId().equals(OfficeLevel.BRANCHOFFICE.getValue())) {
                 Object values[] = new Object[1];
                 values[0] = globalPersonnelNum;
                 throw new PersonnelException(PersonnelConstants.LO_ONLY_IN_BRANCHES, values);
@@ -633,7 +633,7 @@ public class PersonnelBO extends BusinessObject {
         return movement;
     }
 
-    private void makePersonalMovementEntries(OfficeBO newOffice, Short updatedById) {
+    private void makePersonalMovementEntries(final OfficeBO newOffice, final Short updatedById) {
         PersonnelMovementEntity currentPersonnelMovement = getActiveCustomerMovement();
         if (currentPersonnelMovement == null) {
             currentPersonnelMovement = new PersonnelMovementEntity(this, getCreatedDate());
@@ -655,7 +655,7 @@ public class PersonnelBO extends BusinessObject {
         return getLevelEnum() == PersonnelLevel.LOAN_OFFICER;
     }
 
-    public UserContext login(String password) throws PersonnelException {
+    public UserContext login(final String password) throws PersonnelException {
         logger.debug("Trying to login");
         UserContext userContext = null;
         if (!isActive()) {
@@ -674,7 +674,7 @@ public class PersonnelBO extends BusinessObject {
         return userContext;
     }
 
-    public void updatePassword(String oldPassword, String newPassword, Short updatedById) throws PersonnelException {
+    public void updatePassword(final String oldPassword, final String newPassword, final Short updatedById) throws PersonnelException {
         logger.debug("Trying to updatePassword");
         byte[] encryptedPassword = getEncryptedPassword(oldPassword, newPassword);
         this.setEncriptedPassword(encryptedPassword);
@@ -691,7 +691,7 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    public void updatePassword(String newPassword, Short updatedById) throws PersistenceException {
+    public void updatePassword(final String newPassword, final Short updatedById) throws PersistenceException {
         byte[] encryptedPassword = getEncryptedPassword(newPassword);
         this.setEncriptedPassword(encryptedPassword);
         this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
@@ -702,7 +702,7 @@ public class PersonnelBO extends BusinessObject {
         new PersonnelPersistence().createOrUpdate(this);
     }
 
-    public void unlockPersonnel(Short updatedById) throws PersonnelException {
+    public void unlockPersonnel(final Short updatedById) throws PersonnelException {
         logger.debug("Trying to unlock Personnel");
         if (isLocked()) {
             this.unLock();
@@ -748,7 +748,7 @@ public class PersonnelBO extends BusinessObject {
         logger.debug("No of tries reseted successfully");
     }
 
-    private boolean isPasswordValid(String password) throws PersonnelException {
+    private boolean isPasswordValid(final String password) throws PersonnelException {
         logger.debug("Checking password valid or not");
         try {
             return EncryptionService.getInstance().verifyPassword(password, getEncriptedPassword());
@@ -802,7 +802,7 @@ public class PersonnelBO extends BusinessObject {
         return roles;
     }
 
-    private byte[] getEncryptedPassword(String oldPassword, String newPassword) throws PersonnelException {
+    private byte[] getEncryptedPassword(final String oldPassword, final String newPassword) throws PersonnelException {
         logger.debug("Matching oldpassword with entered password.");
         byte[] newEncryptedPassword = null;
         if (isPasswordValid(oldPassword)) {

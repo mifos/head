@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -157,7 +158,6 @@ public class LoanBO extends AccountBO {
     
     // associations
     private Set<LoanActivityEntity> loanActivityDetails;
-    private Set<LoanBO> loanAccountDetails;
 
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
@@ -183,7 +183,6 @@ public class LoanBO extends AccountBO {
         this.loanActivityDetails = new HashSet<LoanActivityEntity>();
         this.redone = false;
         parentAccount = null;
-        loanAccountDetails = new HashSet<LoanBO>();
     }
     
     /**
@@ -194,7 +193,9 @@ public class LoanBO extends AccountBO {
     public LoanBO(final LoanOfferingBO loanProduct, final Short numOfInstallments, final GraceType gracePeriodType,
             final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
             final Integer offsettingAllowable) {
-        super(accountType, accountState, customer, offsettingAllowable, null, null);
+        super(accountType, accountState, customer, offsettingAllowable, new LinkedHashSet<AccountActionDateEntity>(),
+                new HashSet<AccountFeesEntity>(), null, null,
+                null, null);
         this.loanOffering = loanProduct;
         this.noOfInstallments = numOfInstallments;
         this.gracePeriodType = new GracePeriodTypeEntity(gracePeriodType);
@@ -2637,14 +2638,6 @@ public class LoanBO extends AccountBO {
 
     public Money getNetOfSaving() {
         return getRemainingPrincipalAmount().subtract(getCustomer().getSavingsBalance());
-    }
-
-    public Set<LoanBO> getLoanAccountDetails() {
-        return loanAccountDetails;
-    }
-
-    public void setLoanAccountDetails(final Set<LoanBO> loanAccountDetails) {
-        this.loanAccountDetails = loanAccountDetails;
     }
 
     public LoanBO getParentAccount() {

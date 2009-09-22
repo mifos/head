@@ -20,6 +20,7 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
@@ -27,13 +28,14 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -86,11 +88,14 @@ public class IntegrationTestObjectMother {
     }
 
     public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group, final ClientBO client,
-            final MeetingBO meeting, final FeeBO weeklyPeriodicFee) {
+            final MeetingBO meeting, final AmountFeeBO weeklyPeriodicFeeForCenterOnly,
+            final AmountFeeBO weeklyPeriodicFeeForGroupOnly, final AmountFeeBO weeklyPeriodicFeeForClientsOnly) {
         try {
             StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(meeting);
-            customerPersistence.createOrUpdate(weeklyPeriodicFee);
+            customerPersistence.createOrUpdate(weeklyPeriodicFeeForCenterOnly);
+            customerPersistence.createOrUpdate(weeklyPeriodicFeeForGroupOnly);
+            customerPersistence.createOrUpdate(weeklyPeriodicFeeForClientsOnly);
             customerPersistence.saveCustomer(center);
             groupPersistence.saveGroup(group);
             clientPersistence.saveClient(client);
@@ -101,6 +106,46 @@ public class IntegrationTestObjectMother {
         } catch (PersistenceException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+    
+    public static void cleanCustomerHierarchyWithMeetingAndFees(final ClientBO client, final GroupBO group,
+            final CustomerBO center, final MeetingBO weeklyMeeting) {
+        try {
+            TestObjectFactory.cleanUp(client);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+            TestObjectFactory.cleanUp(weeklyMeeting);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void saveSavingsProductAndAssociatedSavingsAccounts(final SavingsOfferingBO savingsProduct,
+            final SavingsBO... relatedSavingsAccounts) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(savingsProduct);
+            for (SavingsBO savingAccount : relatedSavingsAccounts) {
+                customerPersistence.createOrUpdate(savingAccount);
+            }
+            StaticHibernateUtil.commitTransaction();
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void cleanSavingsProductAndAssociatedSavingsAccounts(final SavingsBO... savingsAccount) {
+
+        try {
+            for (SavingsBO savingsBO : savingsAccount) {
+                TestObjectFactory.cleanUp(savingsBO);
+            }
         } finally {
             StaticHibernateUtil.closeSession();
         }
