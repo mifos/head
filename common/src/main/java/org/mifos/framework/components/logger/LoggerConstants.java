@@ -75,8 +75,6 @@ public interface LoggerConstants {
      */
     String AUDITLOGGER = "org.mifos.framework.components.audit";
 
-    String BULKENTRYLOGGER = "org.mifos.application.collectionsheet";
-
     /**
      * Logger for Collection Sheet Generation
      */

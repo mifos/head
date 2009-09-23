@@ -41,7 +41,7 @@ import org.mifos.framework.util.LocalizationConverter;
 
 public class CollectionSheetEntryView extends View {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
     
     private boolean hasChild;
 

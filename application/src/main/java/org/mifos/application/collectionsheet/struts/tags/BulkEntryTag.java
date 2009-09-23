@@ -47,7 +47,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 
 public class BulkEntryTag extends BodyTagSupport {
 
-    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
+    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
 
     @SuppressWarnings("unchecked")
     @Override

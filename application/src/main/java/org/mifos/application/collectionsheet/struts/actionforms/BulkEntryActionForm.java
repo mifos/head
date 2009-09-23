@@ -52,7 +52,7 @@ import org.mifos.framework.util.helpers.StringUtils;
  */
 public class BulkEntryActionForm extends BaseActionForm {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
     private String customerId;
     private String loanOfficerId;
     private String paymentId;
