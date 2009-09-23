@@ -37,15 +37,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.joda.time.LocalDate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -66,7 +63,6 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.BasicGroupInfo;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
-import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
@@ -82,10 +78,8 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -170,29 +164,6 @@ public class CustomerPersistence extends Persistence {
 
     }
 
-    public List<ProductDto> getLoanProducts(final Date meetingDate, final String searchId, final Short personnelId)
-            throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("meetingDate", meetingDate);
-        queryParameters.put("searchId", searchId + "%");
-        queryParameters.put("personnelId", personnelId);
-        return executeNamedQuery(NamedQueryConstants.BULKENTRYPRODUCTS, queryParameters);
-    }
-
-    public List<ProductDto> getSavingsProducts(final Date meetingDate, final String searchId, final Short personnelId)
-            throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("meetingDate", meetingDate);
-        queryParameters.put("searchId", searchId + "%");
-        queryParameters.put("personnelId", personnelId);
-        return executeNamedQuery(NamedQueryConstants.BULKENTRYSAVINGSPRODUCTS, queryParameters);
-    }
-
-    /*
-     * FIXME - keithw - why is java.sql.date being used/returned throughout the
-     * system? refactor away from this in favour of java.util.Date (use this in
-     * hibernate type info)
-     */
     public Date getLastMeetingDateForCustomer(final Integer customerId) throws PersistenceException {
         Date meetingDate = null;
         Date actionDate = new DateTimeService().getCurrentJavaSqlDate();
@@ -1102,77 +1073,5 @@ public class CustomerPersistence extends Persistence {
             totalLoan = (BigDecimal) queryResult[1];
         }
         return new Money(totalLoan);
-    }
-
-    public List<CustomerView> findCustomerHierarchyForOfficeBySearchId(final Short branchId, final String searchId) {
-
-        final HashMap<String, Object> centerQueryParameters = new HashMap<String, Object>();
-        centerQueryParameters.put("SEARCH_STRING", searchId);
-        centerQueryParameters.put("OFFICE_ID", branchId);
-
-        try {
-            final CustomerView center = (CustomerView) execUniqueResultNamedQuery("findCenterForOfficeBySearchId",
-                    centerQueryParameters);
-
-            final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-            queryParameters.put("SEARCH_STRING", searchId + ".%");
-            queryParameters.put("OFFICE_ID", branchId);
-
-            final List<CustomerView> centerChildren = executeNamedQuery(
-                    "findOrderedCustomerHierarchyForOfficeBySearchId", queryParameters);
-
-            List<CustomerView> customerHierarchy = new ArrayList<CustomerView>(centerChildren);
-            customerHierarchy.add(0, center);
-
-            return customerHierarchy;
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
-    }
-
-    public List<LoanAccountView> findAllActiveLoansForHierarchy(final Short branchId, final String searchId,
-            final java.util.Date transactionDate) {
-
-        final String hqlQuery = "select new org.mifos.application.accounts.loan.util.helpers.LoanAccountView(la.accountId, c.customerId, lo.prdOfferingShortName, lo.prdOfferingId, la.accountState.id, la.intrestAtDisbursement, la.loanAmount) "
-                + "from LoanBO la "
-                + "join la.customer as c "
-                + "join la.loanOffering as lo "
-                + "where c.office.officeId = "
-                + branchId + " and c.searchId like '" + searchId + ".%' " + "and c.customerStatus.id in (3,4,9,10,13) "
-                + "and (la.accountState.id in (5, 9) or (la.accountState.id in (3, 4) and date('"
-                + new LocalDate(transactionDate) + "') >= la.disbursementDate)) " + "order by c.searchId";
-
-
-        return executeNonUniqueHqlQuery(hqlQuery);
-    }
-
-    public List<SavingsAccountView> findAllActiveSavingsUnderCenter(final Short branchId, final String searchId) {
-        final String hqlQuery = "select new org.mifos.application.accounts.savings.util.helpers.SavingsAccountView(sa.accountId, c.customerId, so.prdOfferingShortName, so.prdOfferingId, so.savingsType.id, so.recommendedAmntUnit.id) "
-                + "from SavingsBO sa "
-                + "join sa.customer as c "
-                + "join sa.savingsOffering as so "
-                + "where c.office.officeId = "
-                + branchId + " and c.searchId like '" + searchId + ".%' " + "and c.customerStatus.id in (3,4,9,10,13) "
-                + "and sa.accountState.id="
-                + AccountState.SAVINGS_ACTIVE.getValue() + " order by c.searchId";
-
-        return executeNonUniqueHqlQuery(hqlQuery);
-    }
-
-    public List<CustomerAccountView> findAllCustomerAccountsForHierarchy(final Short branchId, final String searchId) {
-        
-        final String hqlQuery = "select new org.mifos.application.customer.util.helpers.CustomerAccountView(ca.accountId, c.customerId)"
-                + "from CustomerAccountBO ca "
-                + "join ca.customer as c"
-                + " where c.office.officeId = "
-                + branchId
-                + " and (c.searchId = '"
-                + searchId
-                + "' or c.searchId like '"
-                + searchId
-                + ".%') "
-                + "and c.customerStatus.id in (3,4,9,10,13) order by c.searchId";
-
-        return executeNonUniqueHqlQuery(hqlQuery);
     }
 }

@@ -26,7 +26,10 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
 /**
  * This is the class which is invoked by the scheduler.The run method of this
  * task is invoked by the scheduler.
+ * 
+ * @deprecated - this batch job task is no longer used in task.xml
  */
+@Deprecated
 public class CollectionSheetTask extends MifosTask {
 
     @Override

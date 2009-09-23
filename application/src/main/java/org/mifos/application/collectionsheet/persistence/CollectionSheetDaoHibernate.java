@@ -34,7 +34,6 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollect
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
-import org.mifos.application.servicefacade.CollectionSheetIndividualSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.core.MifosRuntimeException;
@@ -330,38 +329,20 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         return convertListToMapGroupedByCustomerId(allSavingsAccounts);
     }
     
-    public Map<Integer, List<CollectionSheetIndividualSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
+    public Map<Integer, List<CollectionSheetCustomerSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
 
-        final List<CollectionSheetIndividualSavingDto> mandatorySavings = savingsDao
+        final List<CollectionSheetCustomerSavingDto> mandatorySavings = savingsDao
                 .findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
         
-        final List<CollectionSheetIndividualSavingDto> voluntarySavings = savingsDao
+        final List<CollectionSheetCustomerSavingDto> voluntarySavings = savingsDao
                 .findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
-        final List<CollectionSheetIndividualSavingDto> allIndividualSavings = new ArrayList<CollectionSheetIndividualSavingDto>();
+        final List<CollectionSheetCustomerSavingDto> allIndividualSavings = new ArrayList<CollectionSheetCustomerSavingDto>();
         allIndividualSavings.addAll(mandatorySavings);
         allIndividualSavings.addAll(voluntarySavings);
 
-        return convertIndividualSavingsListToMapGroupedByCustomerId(allIndividualSavings);
-    }
-    
-    
-    private Map<Integer, List<CollectionSheetIndividualSavingDto>> convertIndividualSavingsListToMapGroupedByCustomerId(
-            final List<CollectionSheetIndividualSavingDto> allIndividualSavings) {
-
-        final Map<Integer, List<CollectionSheetIndividualSavingDto>> savingsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetIndividualSavingDto>>();
-
-        for (CollectionSheetIndividualSavingDto savingsAccountDto : allIndividualSavings) {
-            final Integer customerId = savingsAccountDto.getCustomerId();
-            if (savingsGroupedByCustomerId.containsKey(customerId)) {
-                savingsGroupedByCustomerId.get(customerId).add(savingsAccountDto);
-            } else {
-                savingsGroupedByCustomerId.put(customerId, Arrays.asList(savingsAccountDto));
-            }
-        }
-
-        return savingsGroupedByCustomerId;
+        return convertListToMapGroupedByCustomerId(allIndividualSavings);
     }
 
     private Map<Integer, List<CollectionSheetCustomerSavingDto>> convertListToMapGroupedByCustomerId(

@@ -82,9 +82,6 @@ public class CollectionSheetServiceFacadeWebTierTest {
     private CollectionSheetService collectionSheetService;
 
     @Mock
-    private CollectionSheetEntryGridViewAssembler collectionSheetGridViewAssembler;
-
-    @Mock
     private ClientAttendanceAssembler clientAttendanceAssembler;
 
     @Mock
@@ -133,7 +130,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
         collectionSheetServiceFacadeWebTier = new CollectionSheetServiceFacadeWebTier(officePersistence,
                 masterPersistence, personnelPersistence, customerPersistence, collectionSheetService,
-                collectionSheetGridViewAssembler, clientAttendanceAssembler, loanAccountAssembler,
+                clientAttendanceAssembler, loanAccountAssembler,
                 customerAccountAssembler, savingsAccountAssembler, accountPaymentAssembler, collectionSheetTranslator);
     }
 

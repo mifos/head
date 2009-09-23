@@ -28,21 +28,6 @@
 		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field" />
 		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" access="field" />
 	</class>
-
-	<query name="account.getAllInstallmentsForAllSavingsAccounts">
-		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView(
-			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
-			accountAction.actionDateId,accountAction.actionDate,
-			accountAction.deposit,accountAction.depositPaid
-			) from org.mifos.application.accounts.savings.business.SavingsScheduleEntity as accountAction,
-			org.mifos.application.customer.business.CustomerBO as customer 
-			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
-			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
-			accountAction.account.accountId,accountAction.actionDate
-		]]>
-	</query>
 			
 	<query name="account.getAllSavingSchedules">
 		<![CDATA[ from org.mifos.application.accounts.savings.business.SavingsScheduleEntity savingSchedule

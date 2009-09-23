@@ -55,6 +55,11 @@ import org.mifos.framework.util.helpers.Predicate;
 import org.springframework.core.io.ClassPathResource;
 
 // public interface for services used by collection sheet report
+/**
+ * 
+ * @deprecated keithw - don't think that this is useful anymore???
+ */
+@Deprecated
 public class CollectionSheetReportService implements ICollectionSheetReportService {
     private final OfficeBusinessService officeBusinessService;
     private final CollectionSheetService collectionSheetService;
@@ -62,10 +67,10 @@ public class CollectionSheetReportService implements ICollectionSheetReportServi
     private final ReportProductOfferingService reportProductOfferingService;
     private final CascadingReportParameterService cascadingReportParameterService;
 
-    CollectionSheetReportService(CollectionSheetService collectionSheetService,
-            OfficeBusinessService officeBusinessService, AccountBusinessService accountBusinessService,
-            ReportProductOfferingService reportProductOfferingService,
-            CascadingReportParameterService cascadingReportParameterService) {
+    CollectionSheetReportService(final CollectionSheetService collectionSheetService,
+            final OfficeBusinessService officeBusinessService, final AccountBusinessService accountBusinessService,
+            final ReportProductOfferingService reportProductOfferingService,
+            final CascadingReportParameterService cascadingReportParameterService) {
         super();
         this.collectionSheetService = collectionSheetService;
         this.officeBusinessService = officeBusinessService;
@@ -81,8 +86,8 @@ public class CollectionSheetReportService implements ICollectionSheetReportServi
                         new ReportsParameterService(), new PersonnelBusinessService(), new CustomerBusinessService()));
     }
 
-    public List<CollectionSheetReportDTO> getCollectionSheets(Integer branchId, Integer officerId, Integer customerId,
-            Date meetingDate) throws Exception {
+    public List<CollectionSheetReportDTO> getCollectionSheets(final Integer branchId, final Integer officerId, final Integer customerId,
+            final Date meetingDate) throws Exception {
         OfficeBO office = officeBusinessService.getOffice(NumberUtils.convertIntegerToShort(branchId));
         List<CustomerBO> applicableCustomers = cascadingReportParameterService.getApplicableCustomers(
                 convertIntegerToShort(branchId), convertIntegerToShort(officerId), customerId);
@@ -94,8 +99,8 @@ public class CollectionSheetReportService implements ICollectionSheetReportServi
         return collectionSheetReport;
     }
 
-    private List<CollectionSheetReportDTO> collectCenterLevelData(OfficeBO office, CustomerBO center,
-            java.sql.Date meetingDate) throws Exception {
+    private List<CollectionSheetReportDTO> collectCenterLevelData(final OfficeBO office, final CustomerBO center,
+            final java.sql.Date meetingDate) throws Exception {
         List<CollectionSheetReportDTO> collectionSheets = new ArrayList<CollectionSheetReportDTO>();
         List<CollSheetCustBO> centerCollectionSheets = collectionSheetService
                 .getCollectionSheetForCustomerOnMeetingDate(meetingDate, center.getCustomerId(), center.getPersonnel()
@@ -108,8 +113,8 @@ public class CollectionSheetReportService implements ICollectionSheetReportServi
         return collectionSheets;
     }
 
-    private List<CollectionSheetReportDTO> collectGroupLevelData(OfficeBO office, CustomerBO customer,
-            java.sql.Date meetingDate, List<CollSheetCustBO> groupCollectionSheets) throws Exception {
+    private List<CollectionSheetReportDTO> collectGroupLevelData(final OfficeBO office, final CustomerBO customer,
+            final java.sql.Date meetingDate, final List<CollSheetCustBO> groupCollectionSheets) throws Exception {
         LoanOfferingBO loanOffering1 = reportProductOfferingService.getLoanOffering1();
         LoanOfferingBO loanOffering2 = reportProductOfferingService.getLoanOffering2();
         SavingsOfferingBO savingsOffering1 = reportProductOfferingService.getSavingsOffering1();
@@ -138,30 +143,30 @@ public class CollectionSheetReportService implements ICollectionSheetReportServi
         return collectionSheetReport;
     }
 
-    CollSheetLnDetailsEntity getLoanProduct(CollSheetCustBO collectionSheet, final LoanOfferingBO productOffering)
+    CollSheetLnDetailsEntity getLoanProduct(final CollSheetCustBO collectionSheet, final LoanOfferingBO productOffering)
             throws Exception {
         return CollectionUtils.find(collectionSheet.getCollectionSheetLoanDetails(),
                 new Predicate<CollSheetLnDetailsEntity>() {
-                    public boolean evaluate(CollSheetLnDetailsEntity loanDetail) throws Exception {
+                    public boolean evaluate(final CollSheetLnDetailsEntity loanDetail) throws Exception {
                         return ((LoanBO) accountBusinessService.getAccount(loanDetail.getAccountId()))
                                 .isOfProductOffering(productOffering);
                     }
                 });
     }
 
-    CollSheetSavingsDetailsEntity getSavingProduct(CollSheetCustBO collectionSheet,
+    CollSheetSavingsDetailsEntity getSavingProduct(final CollSheetCustBO collectionSheet,
             final SavingsOfferingBO productOffering) throws Exception {
         return CollectionUtils.find(collectionSheet.getCollSheetSavingsDetails(),
                 new Predicate<CollSheetSavingsDetailsEntity>() {
-                    public boolean evaluate(CollSheetSavingsDetailsEntity savingDetail) throws Exception {
+                    public boolean evaluate(final CollSheetSavingsDetailsEntity savingDetail) throws Exception {
                         return ((SavingsBO) accountBusinessService.getAccount(savingDetail.getAccountId()))
                                 .isOfProductOffering(productOffering);
                     }
                 });
     }
 
-    public List<CollectionSheetReportData> getReportData(Integer branchId, String meetingDate, Integer personnelId,
-            Integer centerId) throws ServiceException {
+    public List<CollectionSheetReportData> getReportData(final Integer branchId, final String meetingDate, final Integer personnelId,
+            final Integer centerId) throws ServiceException {
         try {
             Date meetingDateAsDate = ReportUtils.parseReportDate(meetingDate);
             return collectionSheetService.extractReportData(branchId, meetingDateAsDate, personnelId, centerId);
@@ -170,7 +175,7 @@ public class CollectionSheetReportService implements ICollectionSheetReportServi
         }
     }
 
-    public boolean displaySignatureColumn(Integer columnNumber) throws ServiceException {
+    public boolean displaySignatureColumn(final Integer columnNumber) throws ServiceException {
         return reportProductOfferingService.displaySignatureColumn(columnNumber);
     }
 }

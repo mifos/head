@@ -36,15 +36,15 @@ public class PpiSurveyInstanceTest extends TestCase {
     public void testComputeScore() {
         PPISurveyInstance instance = new PPISurveyInstance();
         instance.setSurveyResponses(createSurveyResponses());
-       Assert.assertEquals(instance.computeScore(), 12);
+        Assert.assertEquals(instance.computeScore(), 12);
     }
 
     public void testLikelihoodsAfterInitialize() throws Exception {
         PPISurveyInstance instance = createPPISurveyInstance();
-       Assert.assertEquals(20.0, instance.getBottomHalfBelowPovertyLinePercent(), DELTA);
-       Assert.assertEquals(55.0, instance.getTopHalfBelowPovertyLinePercent(), DELTA);
-       Assert.assertEquals(25.0, instance.getAbovePovertyLinePercent(), DELTA);
-       Assert.assertEquals(75.0, instance.getBelowPovertyLine(), DELTA);
+        Assert.assertEquals(20.0, instance.getBottomHalfBelowPovertyLinePercent(), DELTA);
+        Assert.assertEquals(55.0, instance.getTopHalfBelowPovertyLinePercent(), DELTA);
+        Assert.assertEquals(25.0, instance.getAbovePovertyLinePercent(), DELTA);
+        Assert.assertEquals(75.0, instance.getBelowPovertyLine(), DELTA);
     }
 
     private Set<SurveyResponse> createSurveyResponses() {
@@ -55,7 +55,7 @@ public class PpiSurveyInstanceTest extends TestCase {
         return responses;
     }
 
-    private MockSurveyResponse createMockResponse(int points) {
+    private MockSurveyResponse createMockResponse(final int points) {
         MockSurveyResponse r = new MockSurveyResponse();
         r.setPoints(points);
         return r;

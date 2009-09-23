@@ -511,7 +511,8 @@ public abstract class CustomerBO extends BusinessObject {
 
     /**
      * FIXME - keithw - find {@link CustomerAccountBO} using DAO/Persistence
-     * rather than looping over all accounts
+     * rather than looping over all accounts (should it not be a one-to-one
+     * relationship anyway?)
      * 
      * @deprecated
      */
@@ -524,48 +525,6 @@ public abstract class CustomerBO extends BusinessObject {
             }
         }
         return customerAccount;
-    }
-
-    /**
-     * TODO - keithw - delete me delete me post collection sheet refactoring
-     * work
-     * 
-     * @deprecated
-     */
-    @Deprecated
-    public List<LoanBO> getActiveAndApprovedLoanAccounts(final Date transactionDate) {
-        List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
-        for (AccountBO account : accounts) {
-            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-                AccountState state = account.getState();
-                LoanBO loan = (LoanBO) account;
-                if (state == AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
-                        || state == AccountState.LOAN_ACTIVE_IN_BAD_STANDING) {
-                    loanAccounts.add(loan);
-                } else if (state == AccountState.LOAN_APPROVED || state == AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) {
-                    if (transactionDate.compareTo(loan.getDisbursementDate()) >= 0) {
-                        loanAccounts.add(loan);
-                    }
-                }
-            }
-        }
-        return loanAccounts;
-    }
-
-    /**
-     * TODO - keithw - delete me post collection sheet refactoring work
-     * 
-     * @deprecated
-     */
-    @Deprecated
-    public List<SavingsBO> getActiveSavingsAccounts() {
-        List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
-        for (AccountBO account : accounts) {
-            if (account.getType() == AccountTypes.SAVINGS_ACCOUNT && account.getState() == AccountState.SAVINGS_ACTIVE) {
-                savingsAccounts.add((SavingsBO) account);
-            }
-        }
-        return savingsAccounts;
     }
 
     public List<CustomerNoteEntity> getRecentCustomerNotes() {

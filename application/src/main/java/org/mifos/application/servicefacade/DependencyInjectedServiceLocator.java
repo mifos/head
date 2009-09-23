@@ -28,7 +28,6 @@ import org.mifos.application.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
@@ -57,7 +56,6 @@ public class DependencyInjectedServiceLocator {
     private static PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static CustomerPersistence customerPersistence = new CustomerPersistence();
     private static ClientPersistence clientPersistence = new ClientPersistence();
-    private static BulkEntryPersistence bulkEntryPersistence = new BulkEntryPersistence();
     private static SavingsPersistence savingsPersistence = new SavingsPersistence();
     private static LoanPersistence loanPersistence = new LoanPersistence();
     private static AccountPersistence accountPersistence = new AccountPersistence();
@@ -83,11 +81,6 @@ public class DependencyInjectedServiceLocator {
 
         if (collectionSheetServiceFacade == null) {
             collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
-            final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler = new CollectionSheetEntryViewAssembler(
-                    bulkEntryPersistence, customerPersistence, clientAttendanceDao);
-
-            final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler = new CollectionSheetEntryGridViewAssembler(
-                    customerPersistence, masterPersistence, collectionSheetEntryViewAssembler);
 
             final AccountPaymentAssembler accountPaymentAssembler = new AccountPaymentAssembler(personnelPersistence);
             final SavingsAccountAssembler savingsAccountAssembler = new SavingsAccountAssembler(savingsPersistence,
@@ -99,7 +92,7 @@ public class DependencyInjectedServiceLocator {
 
             collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence,
                     masterPersistence, personnelPersistence, customerPersistence, collectionSheetService,
-                    collectionSheetEntryGridViewAssembler, clientAttendanceAssembler, loanAccountAssembler,
+                    clientAttendanceAssembler, loanAccountAssembler,
                     customerAccountAssember, savingsAccountAssembler, accountPaymentAssembler,
                     collectionSheetTranslator);
         }

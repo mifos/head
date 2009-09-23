@@ -41,9 +41,16 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.util.helpers.QueryParamConstants;
+import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
+/**
+ * no longer used in relation to Collection sheet functionality
+ * 
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ */
+@Deprecated
 public class CollectionSheetPersistence extends Persistence {
 
     public CollectionSheetPersistence() {
@@ -55,7 +62,7 @@ public class CollectionSheetPersistence extends Persistence {
      * parameter and the status of the customer is either active or hold. Also
      * they should have at least one active loan or Savings or Customer account
      */
-    public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date) throws PersistenceException {
+    public List<AccountActionDateEntity> getCustFromAccountActionsDate(final Date date) throws PersistenceException {
         Map<String, Object> params = Collections.singletonMap(CollectionSheetConstants.MEETING_DATE, (Object) date);
         List<List<String>> actionDateQueries = new ArrayList<List<String>>();
         actionDateQueries.add(Arrays.asList(COLLECTION_SHEET_CUSTOMERS_WITH_SPECIFIED_MEETING_DATE_AS_SQL,
@@ -75,7 +82,7 @@ public class CollectionSheetPersistence extends Persistence {
      * Get list of account objects which are in the state approved or disbursed
      * to loan officer and have disbursal date same as the date passed.
      */
-    public List<LoanBO> getLnAccntsWithDisbursalDate(Date date) throws PersistenceException {
+    public List<LoanBO> getLnAccntsWithDisbursalDate(final Date date) throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE, Collections.singletonMap(
                 CollectionSheetConstants.MEETING_DATE, date));
     }
@@ -84,9 +91,10 @@ public class CollectionSheetPersistence extends Persistence {
     // http://opensource.atlassian.com/projects/hibernate/browse/HHH-1985
     private static final int MAX_LIST_SIZE_FOR_HIBERNATE_IN_CLAUSE = 5000;
 
-    public List convertIdsToObjectUsingQuery(List<Integer> ids, String queryName) {
-        if (ids.isEmpty())
+    public List convertIdsToObjectUsingQuery(final List<Integer> ids, final String queryName) {
+        if (ids.isEmpty()) {
             return new ArrayList();
+        }
         List<List> parts = splitListIntoParts(ids, MAX_LIST_SIZE_FOR_HIBERNATE_IN_CLAUSE);
         Query query = createdNamedQuery(queryName);
         List result = new ArrayList();

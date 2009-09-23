@@ -20,9 +20,18 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
+import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
+// FIXME - keithw - ask about CollectionSheetReportParameterCachingTask
+/**
+ * 
+ * @deprecated keithw - don't think that this task is useful anymore???
+ * 
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ */
+@Deprecated
 public class CollectionSheetReportParameterCachingTask extends MifosTask {
 
     @Override

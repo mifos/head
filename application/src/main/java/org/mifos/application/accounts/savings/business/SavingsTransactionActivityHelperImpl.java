@@ -46,6 +46,18 @@ public class SavingsTransactionActivityHelperImpl implements SavingsTransactionA
     }
 
     @Override
+    public SavingsActivityEntity createSavingsActivityForWithdrawal(final AccountPaymentEntity payment,
+            final Money savingsBalance, final SavingsBO savingsBO) {
+
+        final AccountActionEntity savingsAccountWithdrawalAction = new AccountActionEntity(
+                AccountActionTypes.SAVINGS_WITHDRAWAL);
+        final SavingsActivityEntity savingsActivity = new SavingsActivityEntity(payment.getCreatedByUser(),
+                savingsAccountWithdrawalAction, payment.getAmount(), savingsBalance, payment.getPaymentDate(),
+                savingsBO);
+        return savingsActivity;
+    }
+
+    @Override
     public SavingsTrxnDetailEntity createSavingsTrxnForDeposit(final AccountPaymentEntity payment, final Money amount,
             final CustomerBO payingCustomer, final SavingsScheduleEntity savingsInstallment, final Money savingsBalance) {
 
@@ -64,5 +76,17 @@ public class SavingsTransactionActivityHelperImpl implements SavingsTransactionA
                 installmentNumber, "", new SavingsPersistence());
 
         return accountTrxnBO;
+    }
+
+    @Override
+    public SavingsTrxnDetailEntity createSavingsTrxnForWithdrawal(final AccountPaymentEntity payment,
+            final Money amountToWithdraw, final CustomerBO payingCustomer, final Money accountBalance) {
+
+        final Date transactionDate = payment.getPaymentDate();
+        final PersonnelBO createdBy = payment.getCreatedByUser();
+
+        return new SavingsTrxnDetailEntity(payment, payingCustomer, AccountActionTypes.SAVINGS_WITHDRAWAL,
+                amountToWithdraw, accountBalance, createdBy, transactionDate, transactionDate, null, "",
+                new SavingsPersistence());
     }
 }

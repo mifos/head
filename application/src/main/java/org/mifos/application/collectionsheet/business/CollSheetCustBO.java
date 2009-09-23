@@ -28,11 +28,18 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ * @deprecated collection sheets not used as a domain concept.
+ * 
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ */
+@Deprecated
 public class CollSheetCustBO extends BusinessObject {
 
     private Long collSheetCustId;
@@ -79,8 +86,8 @@ public class CollSheetCustBO extends BusinessObject {
 
     private Short loanOfficerId;
 
-    public CollSheetCustBO(Integer custId, String custDisplayName, Short custLevel, Short custOfficeId,
-            String searchId, Short loanOfficerId) {
+    public CollSheetCustBO(final Integer custId, final String custDisplayName, final Short custLevel, final Short custOfficeId,
+            final String searchId, final Short loanOfficerId) {
         super();
         initFields(custId, custDisplayName, custLevel, custOfficeId, searchId, loanOfficerId);
     }
@@ -89,8 +96,8 @@ public class CollSheetCustBO extends BusinessObject {
         this(null, null, null, null, null, null);
     }
 
-    private void initFields(Integer custId, String custDisplayName, Short custLevel, Short custOfficeId,
-            String searchId, Short loanOfficerId) {
+    private void initFields(final Integer custId, final String custDisplayName, final Short custLevel, final Short custOfficeId,
+            final String searchId, final Short loanOfficerId) {
         this.custId = custId;
         this.custDisplayName = custDisplayName;
         this.custLevel = custLevel;
@@ -101,8 +108,8 @@ public class CollSheetCustBO extends BusinessObject {
         collSheetSavingsDetails = new HashSet<CollSheetSavingsDetailsEntity>();
     }
 
-    public void populateInstanceForTest(Integer custId, String custDisplayName, Short custLevel, Short custOfficeId,
-            String searchId, Short loanOfficerId) {
+    public void populateInstanceForTest(final Integer custId, final String custDisplayName, final Short custLevel, final Short custOfficeId,
+            final String searchId, final Short loanOfficerId) {
         initFields(custId, custDisplayName, custLevel, custOfficeId, searchId, loanOfficerId);
     }
 
@@ -110,7 +117,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collSheetCustId;
     }
 
-    public void setCollSheetCustId(Long collSheetCustId) {
+    public void setCollSheetCustId(final Long collSheetCustId) {
         this.collSheetCustId = collSheetCustId;
     }
 
@@ -118,7 +125,7 @@ public class CollSheetCustBO extends BusinessObject {
         return custAccntFee;
     }
 
-    public void setCustAccntFee(Money custAccntFee) {
+    public void setCustAccntFee(final Money custAccntFee) {
         this.custAccntFee = custAccntFee;
     }
 
@@ -126,7 +133,7 @@ public class CollSheetCustBO extends BusinessObject {
         return custAccntId;
     }
 
-    public void setCustAccntId(Integer custAccntId) {
+    public void setCustAccntId(final Integer custAccntId) {
         this.custAccntId = custAccntId;
     }
 
@@ -134,7 +141,7 @@ public class CollSheetCustBO extends BusinessObject {
         return custAccntPenalty;
     }
 
-    public void setCustAccntPenalty(Money custAccntPenalty) {
+    public void setCustAccntPenalty(final Money custAccntPenalty) {
         this.custAccntPenalty = custAccntPenalty;
     }
 
@@ -142,7 +149,7 @@ public class CollSheetCustBO extends BusinessObject {
         return custDisplayName;
     }
 
-    public void setCustDisplayName(String custDisplayName) {
+    public void setCustDisplayName(final String custDisplayName) {
         this.custDisplayName = custDisplayName;
     }
 
@@ -150,7 +157,7 @@ public class CollSheetCustBO extends BusinessObject {
         return custId;
     }
 
-    public void setCustId(Integer custId) {
+    public void setCustId(final Integer custId) {
         this.custId = custId;
     }
 
@@ -158,7 +165,7 @@ public class CollSheetCustBO extends BusinessObject {
         return custLevel;
     }
 
-    public void setCustLevel(Short custLevel) {
+    public void setCustLevel(final Short custLevel) {
         this.custLevel = custLevel;
     }
 
@@ -166,7 +173,7 @@ public class CollSheetCustBO extends BusinessObject {
         return totalDueSavingsLoan;
     }
 
-    public void setTotalDueSavingsLoan(Money totalDueSavingsLoan) {
+    public void setTotalDueSavingsLoan(final Money totalDueSavingsLoan) {
         this.totalDueSavingsLoan = totalDueSavingsLoan;
     }
 
@@ -174,7 +181,7 @@ public class CollSheetCustBO extends BusinessObject {
         return custOfficeId;
     }
 
-    public void setCustOfficeId(Short custOfficeId) {
+    public void setCustOfficeId(final Short custOfficeId) {
         this.custOfficeId = custOfficeId;
     }
 
@@ -182,7 +189,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectionSheet;
     }
 
-    public void setCollectionSheet(CollectionSheetBO collectionSheet) {
+    public void setCollectionSheet(final CollectionSheetBO collectionSheet) {
         this.collectionSheet = collectionSheet;
     }
 
@@ -197,7 +204,7 @@ public class CollSheetCustBO extends BusinessObject {
      *            - Object to be compared for equality.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         CollSheetCustBO collectionSheetCustomerObj = (CollSheetCustBO) obj;
         if (null != collSheetCustId && null != collectionSheetCustomerObj.getCollSheetCustId()) {
             return collSheetCustId.equals(collectionSheetCustomerObj.getCollSheetCustId());
@@ -220,7 +227,7 @@ public class CollSheetCustBO extends BusinessObject {
      * This method populates customer details from the passed in customer
      * object.
      */
-    public void populateCustomerDetails(CustomerBO customer) {
+    public void populateCustomerDetails(final CustomerBO customer) {
         this.custId = customer.getCustomerId();
         this.custLevel = customer.getCustomerLevel().getId();
         this.custDisplayName = customer.getDisplayName();
@@ -237,11 +244,11 @@ public class CollSheetCustBO extends BusinessObject {
         return searchId;
     }
 
-    public void setSearchId(String searchId) {
+    public void setSearchId(final String searchId) {
         this.searchId = searchId;
     }
 
-    public void populateAccountDetails(AccountActionDateEntity accountActionDateEntity) {
+    public void populateAccountDetails(final AccountActionDateEntity accountActionDateEntity) {
         if (accountActionDateEntity instanceof CustomerScheduleEntity) {
             CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) accountActionDateEntity;
             this.custAccntId = accountActionDate.getAccount().getAccountId();
@@ -259,7 +266,7 @@ public class CollSheetCustBO extends BusinessObject {
      * collectionSheetLoanDetailSet. It also sets the bidirectional
      * relationship. If the set is null it instantates a new HashSet.
      */
-    public void addCollectionSheetLoanDetail(CollSheetLnDetailsEntity collectionSheetLoanDetail) {
+    public void addCollectionSheetLoanDetail(final CollSheetLnDetailsEntity collectionSheetLoanDetail) {
         MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
                 "inside add collection sheet loan detail method");
         collectionSheetLoanDetail.setCollectionSheetCustomer(this);
@@ -284,7 +291,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectionSheetLoanDetails;
     }
 
-    public void setCollectionSheetLoanDetails(Set<CollSheetLnDetailsEntity> collectionSheetLoanDetailsSet) {
+    public void setCollectionSheetLoanDetails(final Set<CollSheetLnDetailsEntity> collectionSheetLoanDetailsSet) {
         this.collectionSheetLoanDetails = collectionSheetLoanDetailsSet;
     }
 
@@ -292,7 +299,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collSheetSavingsDetails;
     }
 
-    public void setCollSheetSavingsDetails(Set<CollSheetSavingsDetailsEntity> collSheetSavingsDetails) {
+    public void setCollSheetSavingsDetails(final Set<CollSheetSavingsDetailsEntity> collSheetSavingsDetails) {
         this.collSheetSavingsDetails = collSheetSavingsDetails;
     }
 
@@ -301,7 +308,7 @@ public class CollSheetCustBO extends BusinessObject {
      * collectionSheetSavingsDetail Set. It also sets the bidirectional
      * relationship.
      */
-    public void addCollectionSheetSavingsDetail(CollSheetSavingsDetailsEntity collectionSheetSavingsDetail) {
+    public void addCollectionSheetSavingsDetail(final CollSheetSavingsDetailsEntity collectionSheetSavingsDetail) {
         collectionSheetSavingsDetail.setCollectionSheetCustomer(this);
         this.collectiveSavingsAmntDue = new Money().add(collectiveSavingsAmntDue).add(
                 collectionSheetSavingsDetail.getRecommendedAmntDue())
@@ -314,7 +321,7 @@ public class CollSheetCustBO extends BusinessObject {
 
     }
 
-    private void addToTotalSavingsForAccount(Integer accountId, Money accountSavingsAmntDue) {
+    private void addToTotalSavingsForAccount(final Integer accountId, final Money accountSavingsAmntDue) {
         Money totalAmountDueForAccount = new Money();
         if (null == totalSavingsAmountForAccount) {
             totalSavingsAmountForAccount = new HashMap<Integer, Money>();
@@ -327,7 +334,7 @@ public class CollSheetCustBO extends BusinessObject {
         }
     }
 
-    public Money getTotalSavingsForAccount(Integer accountId) {
+    public Money getTotalSavingsForAccount(final Integer accountId) {
         Money totalAmountDueForAccount = new Money();
         if (totalSavingsAmountForAccount.containsKey(accountId)) {
             totalAmountDueForAccount = totalSavingsAmountForAccount.get(accountId);
@@ -335,7 +342,7 @@ public class CollSheetCustBO extends BusinessObject {
         return totalAmountDueForAccount;
     }
 
-    public CollSheetLnDetailsEntity getLoanDetailsForAccntId(Integer accountId) {
+    public CollSheetLnDetailsEntity getLoanDetailsForAccntId(final Integer accountId) {
         if (null != collectionSheetLoanDetails && collectionSheetLoanDetails.size() > 0) {
             for (CollSheetLnDetailsEntity collSheetLnDetail : collectionSheetLoanDetails) {
                 if (collSheetLnDetail.getAccountId().equals(accountId)) {
@@ -347,7 +354,7 @@ public class CollSheetCustBO extends BusinessObject {
         return null;
     }
 
-    public CollSheetSavingsDetailsEntity getSavingsDetailsForAccntId(Integer accountId) {
+    public CollSheetSavingsDetailsEntity getSavingsDetailsForAccntId(final Integer accountId) {
         if (null != collSheetSavingsDetails && collSheetSavingsDetails.size() > 0) {
             for (CollSheetSavingsDetailsEntity collSheetSavingDetail : collSheetSavingsDetails) {
                 if (collSheetSavingDetail.getAccountId().equals(accountId)) {
@@ -363,7 +370,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectiveAccntCharges;
     }
 
-    public void setCollectiveAccntCharges(Money collectiveAccntCharges) {
+    public void setCollectiveAccntCharges(final Money collectiveAccntCharges) {
         this.collectiveAccntCharges = collectiveAccntCharges;
     }
 
@@ -371,7 +378,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectiveLoanAmntDue;
     }
 
-    public void setCollectiveLoanAmntDue(Money collectiveLoanAmntDue) {
+    public void setCollectiveLoanAmntDue(final Money collectiveLoanAmntDue) {
         this.collectiveLoanAmntDue = collectiveLoanAmntDue;
     }
 
@@ -379,7 +386,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectiveLoanDisbursal;
     }
 
-    public void setCollectiveLoanDisbursal(Money collectiveLoanDisbursal) {
+    public void setCollectiveLoanDisbursal(final Money collectiveLoanDisbursal) {
         this.collectiveLoanDisbursal = collectiveLoanDisbursal;
     }
 
@@ -387,7 +394,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectiveNetCashIn;
     }
 
-    public void setCollectiveNetCashIn(Money collectiveNetCashIn) {
+    public void setCollectiveNetCashIn(final Money collectiveNetCashIn) {
         this.collectiveNetCashIn = collectiveNetCashIn;
     }
 
@@ -395,7 +402,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectiveSavingsAmntDue;
     }
 
-    public void setCollectiveSavingsAmntDue(Money collectiveSavingsAmntDue) {
+    public void setCollectiveSavingsAmntDue(final Money collectiveSavingsAmntDue) {
         this.collectiveSavingsAmntDue = collectiveSavingsAmntDue;
     }
 
@@ -403,7 +410,7 @@ public class CollSheetCustBO extends BusinessObject {
         return collectiveTotalCollection;
     }
 
-    public void setCollectiveTotalCollection(Money collectiveTotalCollection) {
+    public void setCollectiveTotalCollection(final Money collectiveTotalCollection) {
         this.collectiveTotalCollection = collectiveTotalCollection;
     }
 
@@ -411,11 +418,11 @@ public class CollSheetCustBO extends BusinessObject {
         return parentCustomerId;
     }
 
-    public void setParentCustomerId(Integer parentCustomerId) {
+    public void setParentCustomerId(final Integer parentCustomerId) {
         this.parentCustomerId = parentCustomerId;
     }
 
-    public void addCollectiveTotalsForChild(CollSheetCustBO collSheetCustomer) {
+    public void addCollectiveTotalsForChild(final CollSheetCustBO collSheetCustomer) {
         this.collectiveAccntCharges = new Money().add(collectiveAccntCharges).add(
                 collSheetCustomer.getCollectiveAccntCharges());
         this.collectiveLoanAmntDue = new Money().add(collectiveLoanAmntDue).add(
@@ -434,7 +441,7 @@ public class CollSheetCustBO extends BusinessObject {
         return loanOfficerId;
     }
 
-    public void setLoanOfficerId(Short loanOfficerId) {
+    public void setLoanOfficerId(final Short loanOfficerId) {
         this.loanOfficerId = loanOfficerId;
     }
 

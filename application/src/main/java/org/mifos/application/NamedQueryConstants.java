@@ -387,7 +387,6 @@ public interface NamedQueryConstants {
 
     /** Account */
     public String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
-    public String BULKENTRYPRODUCTS = "Customer.getLoanProductForCustomer";
     public String GET_LAST_MEETINGDATE_FOR_CUSTOMER = "accounts.getLastMeetingDateforCustomer";
 
     public String ACCOUNT_GETNEXTINSTALLMENTIDS = "account.GetNextInstallmentIds";
@@ -427,7 +426,6 @@ public interface NamedQueryConstants {
     public String GET_CURRENCY = "getCurrency";
 
     // BulkEntry
-    public String BULKENTRYSAVINGSPRODUCTS = "Customer.getSavingsProductForCustomer";
     public String GET_FEE_AMOUNT_AT_DISBURSEMENT = "accounts.getFeeAmountAtDisbursement";
 
     /* custom fields */
@@ -509,15 +507,6 @@ public interface NamedQueryConstants {
     public String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE = "retrieveCustomerFeesByCategoryType";
     public String RETRIEVE_CUSTOMER_FEES = "retrieveCustomerFees";
     public String RETRIEVE_PRODUCT_FEES = "retrieveProductFees";
-
-    public String ALL_LOAN_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllLoanAcounts";
-    public String ALL_SAVINGS_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllSavingsAccounts";
-    public String ALL_CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllCustomerAcounts";
-    public String CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForCustomerAcount";
-
-    public String ALL_LOAN_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllLoanAcounts";
-    public String ALL_CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllCustomerAccounts";
-    public String CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForCustomerAccount";
 
     public String APPLICABLE_LOAN_OFFERINGS = "loanOffering.getApplicableProduts";
 

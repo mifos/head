@@ -111,7 +111,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = collectionSheetDao
                 .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
         
-        final Map<Integer, List<CollectionSheetIndividualSavingDto>> allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = collectionSheetDao
+        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = collectionSheetDao
                 .findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams);
         
         
@@ -131,7 +131,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             final List<CollectionSheetCustomerSavingDto> associatedSavingAccount = allSavingsDepositsGroupedByCustomerId
                     .get(customerInHierarchyId);
             
-            final List<CollectionSheetIndividualSavingDto> associatedIndividualSavingsAccounts = allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId
+            final List<CollectionSheetCustomerSavingDto> associatedIndividualSavingsAccounts = allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId
                     .get(customerInHierarchyId);
             
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollections = allAccountCollectionsByCustomerId
@@ -207,14 +207,14 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             final Map<Integer, List<CollectionSheetLoanFeeDto>> outstandingFeesOnLoanRepayments,
             final List<CollectionSheetCustomerLoanDto> allLoanDisbursements,
             final List<CollectionSheetCustomerSavingDto> associatedSavingAccount,
-            final List<CollectionSheetIndividualSavingDto> associatedIndividualSavingsAccounts,
+            final List<CollectionSheetCustomerSavingDto> associatedIndividualSavingsAccounts,
             final CollectionSheetCustomerAccountDto customerAccount) {
         
         final List<CollectionSheetCustomerSavingDto> savingAccounts = (List<CollectionSheetCustomerSavingDto>) ObjectUtils
                 .defaultIfNull(associatedSavingAccount, new ArrayList<CollectionSheetCustomerSavingDto>());
         
-        final List<CollectionSheetIndividualSavingDto> individualSavingAccounts = (List<CollectionSheetIndividualSavingDto>) ObjectUtils
-                .defaultIfNull(associatedIndividualSavingsAccounts, new ArrayList<CollectionSheetIndividualSavingDto>());
+        final List<CollectionSheetCustomerSavingDto> individualSavingAccounts = (List<CollectionSheetCustomerSavingDto>) ObjectUtils
+                .defaultIfNull(associatedIndividualSavingsAccounts, new ArrayList<CollectionSheetCustomerSavingDto>());
 
         if (outstandingFeesOnLoanRepayments == null) {
 

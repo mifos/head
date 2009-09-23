@@ -20,6 +20,14 @@
 
 package org.mifos.application.collectionsheet.business;
 
+import org.mifos.application.servicefacade.CollectionSheetService;
+
+/**
+ * @deprecated collection sheets not used as a domain concept.
+ * 
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ */
+@Deprecated
 public class CollectionSheetCustomerBOFixture {
 
     public static CollSheetCustBO createCollectionSheet() {

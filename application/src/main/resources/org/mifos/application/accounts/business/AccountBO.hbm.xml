@@ -1126,16 +1126,14 @@
 	</sql-query>
 	
     <sql-query name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
-		<return-scalar column="parentCustomerId" type="integer" />
+        <return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
-		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="productId" type="short" />
 		<return-scalar column="productShortName" type="string" />
 		<return-scalar column="depositDue" type="big_decimal" />
 		<return-scalar column="depositPaid" type="big_decimal" />
 		<![CDATA[
-		    select c.customer_id as parentCustomerId,
-         	a.account_id as accountId,
+		    select a.account_id as accountId,
          	sse.customer_id as customerId,
          	po.prd_offering_id as productId, 
 		    po.prd_offering_short_name as productShortName,
@@ -1152,22 +1150,20 @@
 			and c.status_id in (3,4,9,10,13)
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
-			group by c.customer_id, a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
-      		order by c.customer_id, a.account_id, sse.customer_id
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
 	
 	<sql-query name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
-		<return-scalar column="parentCustomerId" type="integer" />
+	    <return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
-		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="productId" type="short" />
 		<return-scalar column="productShortName" type="string" />
 		<return-scalar column="depositDue" type="big_decimal" />
 		<return-scalar column="depositPaid" type="big_decimal" />
 		<![CDATA[
-		    select c.customer_id as parentCustomerId,
-         	a.account_id as accountId,
+		    select a.account_id as accountId,
          	sse.customer_id as customerId,
          	po.prd_offering_id as productId, 
 		    po.prd_offering_short_name as productShortName,
@@ -1185,22 +1181,20 @@
 			and c.status_id in (3,4,9,10,13)
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
-			group by c.customer_id, a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
-      		order by c.customer_id, a.account_id, sse.customer_id
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
 	
 	<sql-query name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
-		<return-scalar column="parentCustomerId" type="integer" />
-		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
 		<return-scalar column="productShortName" type="string" />
 		<return-scalar column="depositDue" type="big_decimal" />
 		<return-scalar column="depositPaid" type="big_decimal" />
 		<![CDATA[
-		    select c.customer_id as parentCustomerId,
-         	a.account_id as accountId,
+		    select a.account_id as accountId,
          	sse.customer_id as customerId,
          	po.prd_offering_id as productId, 
 		   	po.prd_offering_short_name as productShortName,
@@ -1217,22 +1211,20 @@
 			and c.status_id in (3,4,9,10,13)
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
-			group by c.customer_id, a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
-      		order by c.customer_id, a.account_id, sse.customer_id
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
 	
 	<sql-query name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
-		<return-scalar column="parentCustomerId" type="integer" />
-		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
 		<return-scalar column="productShortName" type="string" />
 		<return-scalar column="depositDue" type="big_decimal" />
 		<return-scalar column="depositPaid" type="big_decimal" />
 		<![CDATA[
-		    select c.customer_id as parentCustomerId,
-         	a.account_id as accountId,
+		    select a.account_id as accountId,
          	sse.customer_id as customerId,
          	po.prd_offering_id as productId, 
 		    po.prd_offering_short_name as productShortName,
@@ -1250,8 +1242,8 @@
 			and c.status_id in (3,4,9,10,13)
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
-			group by c.customer_id, a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
-      		order by c.customer_id, a.account_id, sse.customer_id
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
 	

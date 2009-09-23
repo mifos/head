@@ -182,7 +182,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
             }
 
             // special savings accounts to be paid individually by clients
-            for (CollectionSheetIndividualSavingDto clientIndividualSavingsAccount : customer
+            for (CollectionSheetCustomerSavingDto clientIndividualSavingsAccount : customer
                     .getIndividualSavingAccounts()) {
 
                 final Integer savCustomerId = clientIndividualSavingsAccount.getCustomerId();

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
-import org.mifos.application.servicefacade.CollectionSheetIndividualSavingDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 
 /**
@@ -120,71 +119,56 @@ public class SavingsDaoHibernate implements SavingsDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CollectionSheetIndividualSavingDto> findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
+    public List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
 
         final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
         topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
         topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
 
-        final List<CollectionSheetIndividualSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetIndividualSavingDto>) baseDao
+        final List<CollectionSheetCustomerSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
                         "findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy",
-                        topOfHierarchyParameters, CollectionSheetIndividualSavingDto.class);
+                        topOfHierarchyParameters, CollectionSheetCustomerSavingDto.class);
 
         final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
         restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
         restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
 
-        final List<CollectionSheetIndividualSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetIndividualSavingDto>) baseDao
+        final List<CollectionSheetCustomerSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
                         "findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy",
-                        restOfHierarchyParameters, CollectionSheetIndividualSavingDto.class);
+                        restOfHierarchyParameters, CollectionSheetCustomerSavingDto.class);
 
-        return nullSafeIndividualSavings(centerOrPerIndividualGroupSavingsOnRootCustomer,
+        return nullSafeSavingsHierarchy(centerOrPerIndividualGroupSavingsOnRootCustomer,
                 perIndividualGroupSavingsOnRestOfHierarchy);
     }
 
     @SuppressWarnings("unchecked")
-    public List<CollectionSheetIndividualSavingDto> findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
+    public List<CollectionSheetCustomerSavingDto> findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
         final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
         topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
         topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
 
-        final List<CollectionSheetIndividualSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetIndividualSavingDto>) baseDao
+        final List<CollectionSheetCustomerSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
                         "findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy",
-                        topOfHierarchyParameters, CollectionSheetIndividualSavingDto.class);
+                        topOfHierarchyParameters, CollectionSheetCustomerSavingDto.class);
 
         final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
         restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
         restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
 
-        final List<CollectionSheetIndividualSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetIndividualSavingDto>) baseDao
+        final List<CollectionSheetCustomerSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
                         "findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy",
-                        restOfHierarchyParameters, CollectionSheetIndividualSavingDto.class);
+                        restOfHierarchyParameters, CollectionSheetCustomerSavingDto.class);
 
-        return nullSafeIndividualSavings(centerOrPerIndividualGroupSavingsOnRootCustomer,
+        return nullSafeSavingsHierarchy(centerOrPerIndividualGroupSavingsOnRootCustomer,
                 perIndividualGroupSavingsOnRestOfHierarchy);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CollectionSheetIndividualSavingDto> nullSafeIndividualSavings(
-            final List<CollectionSheetIndividualSavingDto> rootInidividualSavings,
-            final List<CollectionSheetIndividualSavingDto> restIfIndividualSavings) {
-
-        List<CollectionSheetIndividualSavingDto> nullSafeSavings = (List<CollectionSheetIndividualSavingDto>) ObjectUtils
-                .defaultIfNull(rootInidividualSavings, new ArrayList<CollectionSheetIndividualSavingDto>());
-
-        List<CollectionSheetIndividualSavingDto> nullSafeRest = (List<CollectionSheetIndividualSavingDto>) ObjectUtils
-                .defaultIfNull(restIfIndividualSavings, new ArrayList<CollectionSheetIndividualSavingDto>());
-
-        nullSafeSavings.addAll(nullSafeRest);
-        return nullSafeSavings;
     }
 
     @SuppressWarnings("unchecked")

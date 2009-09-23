@@ -27,23 +27,4 @@
 		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeeBO" access="field"/>
 
 	</class>
-	
-	
-	<query name="account.getAllAccountFeeForAllInstallmentsForAllLoanAcounts">
-		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView(
-			feeAction.accountActionDate.actionDateId, feeAction.fee.feeId,
-			feeAction.feeAmount, feeAction.feeAmountPaid
-			) from org.mifos.application.accounts.loan.business.LoanScheduleEntity as accountAction,
-			org.mifos.application.customer.business.CustomerBO as customer,
-			org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity as feeAction 
-			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
-			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.id in (3,4,9,10,13) 
-			and accountAction.actionDateId = feeAction.accountActionDate.actionDateId
-			order by customer.customerId,
-			accountAction.account.accountId,accountAction.actionDate,feeAction.accountActionDate.actionDateId
-		]]>
-	</query>
-
 </hibernate-mapping>

@@ -96,8 +96,7 @@ public class SavingsAccountAssembler {
                         account = savingsPersistence.findById(accountId);
                     }
 
-                    if (amountToDeposit.getAmount() != null
-                            && amountToDeposit.getAmountDoubleValue() > Double.valueOf("0.0")) {
+                    if (amountToDeposit.getAmount() != null) {
 
                         final AccountPaymentEntity accountDeposit = new AccountPaymentEntity(account, amountToDeposit,
                                 receiptNumber, receiptDate, paymentType, paymentDate);
@@ -111,23 +110,19 @@ public class SavingsAccountAssembler {
                         }
                     }
 
-                    if (amountToWithdraw.getAmount() != null
-                            && amountToWithdraw.getAmountDoubleValue() > Double.valueOf("0.0")) {
+                    if (amountToWithdraw.getAmount() != null) {
                         final AccountPaymentEntity accountWithdrawal = new AccountPaymentEntity(account,
                                 amountToWithdraw, receiptNumber, receiptDate, paymentType, paymentDate);
                         accountWithdrawal.setCreatedByUser(user);
 
                         try {
-                            account.withdraw(accountWithdrawal);
+                            account.withdraw(accountWithdrawal, payingCustomer);
                             storeAccountForSavingLater = true;
                         } catch (AccountException e) {
                             failedSavingsWithdrawalNums.add(account.getGlobalAccountNum());
                         }
                     }
 
-                    // FIXME - keithw - what about possibility that account
-                    // deposits ok but withdrawal causes exception... do you
-                    // allow deposit and save?
                     if (storeAccountForSavingLater) {
                         savingsAccountsByAccountId.put(accountId, account);
                     }

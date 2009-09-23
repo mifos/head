@@ -34,6 +34,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  *
@@ -45,6 +46,7 @@ public class SavingsProductBuilder {
             .monthly().every(1).build();
     private final MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
             .monthly().every(1).build();
+    private Money maxAmountOfWithdrawal = new Money("50.0");
     private final Double interestRate = Double.valueOf("2.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
@@ -76,10 +78,9 @@ public class SavingsProductBuilder {
     private SavingsOfferingBO build() {
         final SavingsOfferingBO savingsProduct = new SavingsOfferingBO(savingsType, name, shortName,
                 globalProductNumber, startDate, applicableToCustomer, category, productStatus, interestCalcType,
-                interestRate,
-                depositGLCode, interesetGLCode, createdDate, createdByUserId);
+                interestRate, maxAmountOfWithdrawal, depositGLCode, interesetGLCode, createdDate, createdByUserId);
 
-         final PrdOfferingMeetingEntity scheduleForInstcalc = new PrdOfferingMeetingEntity(
+        final PrdOfferingMeetingEntity scheduleForInstcalc = new PrdOfferingMeetingEntity(
                 scheduleForInterestCalculationMeeting, savingsProduct,
                 MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 
@@ -119,6 +120,11 @@ public class SavingsProductBuilder {
 
     public SavingsProductBuilder voluntary() {
         this.savingsType = SavingsType.VOLUNTARY;
+        return this;
+    }
+
+    public SavingsProductBuilder withMaxWithdrawalAmount(final Money withMaxWithdrawal) {
+        this.maxAmountOfWithdrawal = withMaxWithdrawal;
         return this;
     }
 }

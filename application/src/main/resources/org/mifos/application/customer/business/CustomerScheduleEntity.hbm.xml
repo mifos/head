@@ -45,38 +45,6 @@
 		</set>
 
 	</class>
-
-	<query name="account.getAllInstallmentsForAllCustomerAcounts">
-		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView(
-			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
-			accountAction.actionDateId,accountAction.actionDate,
-			accountAction.miscFee,accountAction.miscFeePaid,
-			accountAction.miscPenalty,accountAction.miscPenaltyPaid
-			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,
-			org.mifos.application.customer.business.CustomerBO as customer 
-			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
-			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
-			accountAction.account.accountId,accountAction.actionDate
-		]]>
-	</query>
-
-	<query name="account.getAllInstallmentsForCustomerAcount">
-		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView(
-			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
-			accountAction.actionDateId,accountAction.actionDate,
-			accountAction.miscFee,accountAction.miscFeePaid,
-			accountAction.miscPenalty,accountAction.miscPenaltyPaid
-			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,
-			org.mifos.application.customer.business.CustomerBO as customer 
-			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
-			and customer.searchId=:SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
-			accountAction.account.accountId,accountAction.actionDate
-		]]>
-	</query>
 	
 	<query name="getYesterdaysInstallmentForActiveCustomers">
 		<![CDATA[

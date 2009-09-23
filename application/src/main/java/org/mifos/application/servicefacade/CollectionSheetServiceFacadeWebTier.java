@@ -66,7 +66,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final PersonnelPersistence personnelPersistence;
     private final CustomerPersistence customerPersistence;
     private final CollectionSheetService collectionSheetService;
-    private final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler;
     private final ClientAttendanceAssembler clientAttendanceAssembler;
     private final LoanAccountAssembler loanAccountAssembler;
     private final CustomerAccountAssembler customerAccountAssembler;
@@ -77,7 +76,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
-            final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler,
             final ClientAttendanceAssembler clientAttendanceAssembler, final LoanAccountAssembler loanAccountAssembler,
             final CustomerAccountAssembler customerAccountAssember,
             final SavingsAccountAssembler savingsAccountAssembler,
@@ -88,7 +86,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         this.personnelPersistence = personnelPersistence;
         this.customerPersistence = customerPersistence;
         this.collectionSheetService = collectionSheetService;
-        this.collectionSheetEntryGridViewAssembler = collectionSheetEntryGridViewAssembler;
         this.clientAttendanceAssembler = clientAttendanceAssembler;
         this.loanAccountAssembler = loanAccountAssembler;
         this.customerAccountAssembler = customerAccountAssember;
@@ -207,10 +204,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
     public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
-
-        // final CollectionSheetEntryGridDto collectionSheetGridView =
-        // collectionSheetEntryGridViewAssembler
-        // .toDto(formEnteredDataDto);
         
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
                 .getCustomer().getCustomerId(), formEnteredDataDto.getMeetingDate());

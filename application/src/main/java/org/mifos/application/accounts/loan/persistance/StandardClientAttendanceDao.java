@@ -20,7 +20,6 @@
 
 package org.mifos.application.accounts.loan.persistance;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +27,7 @@ import java.util.Map;
 import org.hibernate.Session;
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -48,24 +45,6 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
     public StandardClientAttendanceDao(final MasterPersistence masterPersistence) {
         this.masterPersistence = masterPersistence;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<ClientAttendanceDto> findClientAttendanceForOffice(final Date meetingDate, final Short officeId,
-            final String searchId) {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("MEETING_DATE", meetingDate);
-        queryParameters.put("OFFICE_ID", officeId);
-        queryParameters.put("SEARCH_ID", searchId + ".%");
-
-        try {
-            List<ClientAttendanceDto> queryResult = masterPersistence.executeNamedQuery("ClientAttendance.getAttendanceForOffice",
-                    queryParameters);
-            
-            return queryResult;
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
     }
 
     public ClientAttendanceBO findClientAttendance(final Integer clientId, final LocalDate meetingDate) {

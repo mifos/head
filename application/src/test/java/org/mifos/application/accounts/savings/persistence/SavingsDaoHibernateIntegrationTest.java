@@ -42,7 +42,6 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
-import org.mifos.application.servicefacade.CollectionSheetIndividualSavingDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -268,7 +267,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void testShouldReturnEmptyListWhenNoMandatorySavingsAccountsForCentersOrGroupsWithPerIndividualStatusExist() {
 
         // exercise test
-        List<CollectionSheetIndividualSavingDto> mandatorySavingAccounts = savingsDao
+        List<CollectionSheetCustomerSavingDto> mandatorySavingAccounts = savingsDao
                 .findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
@@ -291,7 +290,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 secondSavingsAccount);
 
         // exercise test
-        List<CollectionSheetIndividualSavingDto> mandatorySavingAccounts = savingsDao
+        List<CollectionSheetCustomerSavingDto> mandatorySavingAccounts = savingsDao
                 .findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
@@ -301,7 +300,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void testShouldReturnEmptyListWhenNoVoluntarySavingsAccountsForCentersOrGroupsWithPerIndividualStatusExist() {
 
         // exercise test
-        List<CollectionSheetIndividualSavingDto> mandatorySavingAccounts = savingsDao
+        List<CollectionSheetCustomerSavingDto> mandatorySavingAccounts = savingsDao
                 .findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
@@ -324,10 +323,10 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 secondSavingsAccount);
 
         // exercise test
-        List<CollectionSheetIndividualSavingDto> mandatorySavingAccounts = savingsDao
+        List<CollectionSheetCustomerSavingDto> voluntarySavingAccountsForPaymentByIndividuals = savingsDao
                 .findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        assertThat(mandatorySavingAccounts.size(), is(1));
+        assertThat(voluntarySavingAccountsForPaymentByIndividuals.size(), is(1));
     }
 }

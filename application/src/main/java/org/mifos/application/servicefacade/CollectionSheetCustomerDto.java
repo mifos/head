@@ -36,7 +36,7 @@ public class CollectionSheetCustomerDto {
     private CollectionSheetCustomerAccountDto collectionSheetCustomerAccount;
     private List<CollectionSheetCustomerLoanDto> collectionSheetCustomerLoan = new ArrayList<CollectionSheetCustomerLoanDto>();
     private List<CollectionSheetCustomerSavingDto> collectionSheetCustomerSaving = new ArrayList<CollectionSheetCustomerSavingDto>();
-    private List<CollectionSheetIndividualSavingDto> individualSavingAccounts = new ArrayList<CollectionSheetIndividualSavingDto>();
+    private List<CollectionSheetCustomerSavingDto> individualSavingAccounts = new ArrayList<CollectionSheetCustomerSavingDto>();
     
     public CollectionSheetCustomerDto() {
         // Default empty constructor for hibernate
@@ -58,7 +58,7 @@ public class CollectionSheetCustomerDto {
     public CollectionSheetCustomerDto(final CollectionSheetCustomerDto collectionSheetCustomer,
             final List<CollectionSheetCustomerLoanDto> collectionSheetCustomerLoan,
             final List<CollectionSheetCustomerSavingDto> collectionSheetCustomerSaving,
-            final List<CollectionSheetIndividualSavingDto> individualSavingAccounts,
+            final List<CollectionSheetCustomerSavingDto> individualSavingAccounts,
             final CollectionSheetCustomerAccountDto collectionSheetCustomerAccount) {
         this.customerId = collectionSheetCustomer.getCustomerId();
         this.name = collectionSheetCustomer.getName();
@@ -137,7 +137,7 @@ public class CollectionSheetCustomerDto {
         return this.collectionSheetCustomerAccount;
     }
 
-    public List<CollectionSheetIndividualSavingDto> getIndividualSavingAccounts() {
+    public List<CollectionSheetCustomerSavingDto> getIndividualSavingAccounts() {
         return this.individualSavingAccounts;
     }
 }

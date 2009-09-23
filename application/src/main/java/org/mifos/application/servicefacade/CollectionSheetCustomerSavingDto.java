@@ -102,4 +102,12 @@ public class CollectionSheetCustomerSavingDto {
     public Double getTotalDepositAmount() {
         return depositDue.subtract(depositPaid).doubleValue();
     }
+
+    public BigDecimal getDepositDue() {
+        return this.depositDue;
+    }
+
+    public BigDecimal getDepositPaid() {
+        return this.depositPaid;
+    }
 }

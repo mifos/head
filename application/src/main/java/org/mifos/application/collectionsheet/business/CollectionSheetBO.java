@@ -34,6 +34,7 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetPersiste
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -41,6 +42,12 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
+/**
+ * @deprecated collection sheets not used as a domain concept.
+ * 
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ */
+@Deprecated
 public class CollectionSheetBO extends BusinessObject {
 
     private static final int CUSTOMER_ID_MAP_INITIAL_CAPACITY = 10000;
@@ -69,15 +76,15 @@ public class CollectionSheetBO extends BusinessObject {
         return collectionSheetPersistence;
     }
 
-    public void setCollectionSheetPersistence(CollectionSheetPersistence collectionSheetPersistence) {
+    public void setCollectionSheetPersistence(final CollectionSheetPersistence collectionSheetPersistence) {
         this.collectionSheetPersistence = collectionSheetPersistence;
     }
 
-    private Map<Integer, CollSheetCustBO> collectionSheetCustomerLookup = new HashMap<Integer, CollSheetCustBO>(
+    private final Map<Integer, CollSheetCustBO> collectionSheetCustomerLookup = new HashMap<Integer, CollSheetCustBO>(
             CUSTOMER_ID_MAP_INITIAL_CAPACITY);
 
-    public void populateTestInstance(Date collSheetDate, Date runDate, Set<CollSheetCustBO> collectionSheetCustomers,
-            Short statusFlag) {
+    public void populateTestInstance(final Date collSheetDate, final Date runDate, final Set<CollSheetCustBO> collectionSheetCustomers,
+            final Short statusFlag) {
         this.collSheetDate = collSheetDate;
         this.runDate = runDate;
         this.collectionSheetCustomers = collectionSheetCustomers;
@@ -91,7 +98,7 @@ public class CollectionSheetBO extends BusinessObject {
         return collSheetDate;
     }
 
-    public void setCollSheetDate(Date collSheetDate) {
+    public void setCollSheetDate(final Date collSheetDate) {
         this.collSheetDate = collSheetDate;
     }
 
@@ -99,7 +106,7 @@ public class CollectionSheetBO extends BusinessObject {
         return collSheetID;
     }
 
-    public void setCollSheetID(Integer collSheetID) {
+    public void setCollSheetID(final Integer collSheetID) {
         this.collSheetID = collSheetID;
     }
 
@@ -107,7 +114,7 @@ public class CollectionSheetBO extends BusinessObject {
         return runDate;
     }
 
-    public void setRunDate(Date runDate) {
+    public void setRunDate(final Date runDate) {
         this.runDate = runDate;
     }
 
@@ -115,7 +122,7 @@ public class CollectionSheetBO extends BusinessObject {
         return statusFlag;
     }
 
-    public void setStatusFlag(Short statusFlag) {
+    public void setStatusFlag(final Short statusFlag) {
         this.statusFlag = statusFlag;
     }
 
@@ -123,7 +130,7 @@ public class CollectionSheetBO extends BusinessObject {
         return collectionSheetCustomers;
     }
 
-    public void setCollectionSheetCustomers(Set<CollSheetCustBO> collectionSheetCustomerSet) {
+    public void setCollectionSheetCustomers(final Set<CollSheetCustBO> collectionSheetCustomerSet) {
         this.collectionSheetCustomers = collectionSheetCustomerSet;
     }
 
@@ -133,7 +140,7 @@ public class CollectionSheetBO extends BusinessObject {
      * and adds the collectionsheetCustomer object to it setting the
      * bidirectional relation ship.
      */
-    public void addCollectionSheetCustomer(CollSheetCustBO collectionSheetCustomer) {
+    public void addCollectionSheetCustomer(final CollSheetCustBO collectionSheetCustomer) {
         collectionSheetCustomer.setCollectionSheet(this);
         if (null == collectionSheetCustomers) {
             collectionSheetCustomers = new HashSet<CollSheetCustBO>();
@@ -148,7 +155,7 @@ public class CollectionSheetBO extends BusinessObject {
      *         collectionSheetCustomers with the same customerId else returns
      *         null.
      */
-    public CollSheetCustBO getCollectionSheetCustomerForCustomerId(Integer customerId) {
+    public CollSheetCustBO getCollectionSheetCustomerForCustomerId(final Integer customerId) {
         return collectionSheetCustomerLookup.get(customerId);
     }
 
@@ -160,7 +167,7 @@ public class CollectionSheetBO extends BusinessObject {
      * the customer record first and then adds the collectionSheetloandetails
      * object to the customer record.
      */
-    public void addLoanDetailsForDisbursal(List<LoanBO> loanWithDisbursalDate) {
+    public void addLoanDetailsForDisbursal(final List<LoanBO> loanWithDisbursalDate) {
         if (null != loanWithDisbursalDate && loanWithDisbursalDate.size() > 0) {
             for (LoanBO loan : loanWithDisbursalDate) {
                 CollSheetLnDetailsEntity collSheetLnDetail = null;
@@ -236,7 +243,7 @@ public class CollectionSheetBO extends BusinessObject {
      * @throws ApplicationException
      * @throws SystemException
      */
-    void populateCustomerLoanAndSavingsDetails(List<AccountActionDateEntity> accountActionDates)
+    void populateCustomerLoanAndSavingsDetails(final List<AccountActionDateEntity> accountActionDates)
             throws SystemException, ApplicationException {
         long cumulative = 0, count = 0;
         for (AccountActionDateEntity accountActionDate : accountActionDates) {
@@ -282,12 +289,12 @@ public class CollectionSheetBO extends BusinessObject {
      * This sets the collection sheet record with the status id passed and then
      * updates the record in the database.
      */
-    public void update(Short statusId) throws PersistenceException {
+    public void update(final Short statusId) throws PersistenceException {
         this.statusFlag = statusId;
         getCollectionSheetPersistence().createOrUpdate(this);
     }
 
-    public void populateAccountActionDates(List<AccountActionDateEntity> accountActionDates) throws SystemException,
+    public void populateAccountActionDates(final List<AccountActionDateEntity> accountActionDates) throws SystemException,
             ApplicationException {
         populateCustomerLoanAndSavingsDetails(accountActionDates);
         MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after populate customers");

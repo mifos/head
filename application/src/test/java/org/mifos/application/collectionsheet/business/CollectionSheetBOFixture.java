@@ -22,8 +22,15 @@ package org.mifos.application.collectionsheet.business;
 
 import java.util.HashSet;
 
+import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.util.helpers.DateUtils;
 
+/**
+ * @deprecated not used
+ * 
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ */
+@Deprecated
 public class CollectionSheetBOFixture {
 
     public static CollectionSheetBO createCollectionSheet() {

@@ -67,25 +67,6 @@
 
 	</class>
 	
-	
-	
-	<query name="account.getAllInstallmentsForAllLoanAcounts">
-		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView(
-			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
-			accountAction.actionDateId,accountAction.actionDate,accountAction.principal,accountAction.principalPaid,
-			accountAction.interest,accountAction.interestPaid,accountAction.miscFee,
-			accountAction.miscFeePaid,accountAction.penalty,accountAction.penaltyPaid,
-			accountAction.miscPenalty,accountAction.miscPenaltyPaid
-			) from org.mifos.application.accounts.loan.business.LoanScheduleEntity as accountAction,
-			org.mifos.application.customer.business.CustomerBO as customer 
-			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
-			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
-			accountAction.account.accountId,accountAction.actionDate
-		]]>
-	</query>
-	
 	<query name="account.getAllLoanSchedules">
 		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanScheduleEntity loanSchedule
 				 where loanSchedule.actionDate >= date(:FROM_DATE)

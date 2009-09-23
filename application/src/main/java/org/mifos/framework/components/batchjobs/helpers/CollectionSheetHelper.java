@@ -53,15 +53,18 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * for the next date but lets say due to some reason this gets delayed and runs
  * after 0:00 hrs in which it would generate collection sheet data for the next
  * day and todays data would be lost.
+ * 
+ * @deprecated this batch job is no longer invoked on task.xml
  */
+@Deprecated
 public class CollectionSheetHelper extends TaskHelper {
 
-    public CollectionSheetHelper(MifosTask mifosTask) {
+    public CollectionSheetHelper(final MifosTask mifosTask) {
         super(mifosTask);
         setLogger(MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER));
     }
 
-    public CollectionSheetBO getNewCollectionSheet(Date currentDate) throws PersistenceException {
+    public CollectionSheetBO getNewCollectionSheet(final Date currentDate) throws PersistenceException {
         Calendar meeting = new GregorianCalendar();
         meeting.setTimeInMillis(currentDate.getTime());
         meeting.roll(Calendar.DATE, getDaysInAdvance());
@@ -81,7 +84,7 @@ public class CollectionSheetHelper extends TaskHelper {
      * tries to update the database with status failed.
      */
     @Override
-    public void execute(long timeInMillis) throws BatchJobException {
+    public void execute(final long timeInMillis) throws BatchJobException {
         List<String> errorList = new ArrayList<String>();
         Date currentDate = new Date(timeInMillis);
         CollectionSheetBO collectionSheet = null;
@@ -109,15 +112,16 @@ public class CollectionSheetHelper extends TaskHelper {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-        if (errorList.size() > 0)
+        if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
     }
 
     /**
      * It queries the database for valid customers which have the meeting date
      * tomorrow and populates its corresponding fields with the data.
      */
-    private void generateCollectionSheetForDate(CollectionSheetBO collectionSheet) throws SystemException,
+    private void generateCollectionSheetForDate(final CollectionSheetBO collectionSheet) throws SystemException,
             ApplicationException {
         List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
                 .getCustFromAccountActionsDate(collectionSheet.getCollSheetDate());

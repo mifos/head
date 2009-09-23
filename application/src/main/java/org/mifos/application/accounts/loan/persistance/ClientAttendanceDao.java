@@ -20,18 +20,13 @@
 
 package org.mifos.application.accounts.loan.persistance;
 
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.framework.persistence.DataAccessObject;
 
 public interface ClientAttendanceDao extends DataAccessObject {
-
-    public List<ClientAttendanceDto> findClientAttendanceForOffice(Date meetingDate, Short officeId,
-            String selectedCustomerSearchId);
 
     public ClientAttendanceBO findClientAttendance(Integer clientId, LocalDate meetingDate);
 

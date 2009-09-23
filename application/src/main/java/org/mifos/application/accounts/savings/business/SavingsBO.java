@@ -39,9 +39,6 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.business.service.activity.BaseFinancialActivity;
-import org.mifos.application.accounts.financial.business.service.activity.SavingsWithdrawalFinancialActivity;
-import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
@@ -1084,9 +1081,9 @@ public class SavingsBO extends AccountBO {
         if (amountToDeposit.getAmountDoubleValue() <= 0.0) {
             return;
         }
-        
+
         final Money savingsBalanceBeforeDeposit = new Money(this.savingsBalance.getAmount());
-        
+
         savingsBalance = savingsBalance.add(amountToDeposit);
         savingsPerformance.setPaymentDetails(amountToDeposit);
 
@@ -1095,30 +1092,30 @@ public class SavingsBO extends AccountBO {
         // date?
         final SavingsActivityEntity savingsActivity = savingsTransactionActivityHelper.createSavingsActivityForDeposit(
                 payment.getCreatedByUser(), amountToDeposit, this.savingsBalance, transactionDate, this);
-        
+
         addSavingsActivityDetails(savingsActivity);
         addAccountPayment(payment);
         setAccountState(new AccountStateEntity(AccountState.SAVINGS_ACTIVE));
-        
+
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = findAllUnpaidInstallmentsForPayingCustomerUpTo(
                 transactionDate, payingCustomer.getCustomerId());
 
         // make scheduled payments (if any) and make an unscheduled payment
         // with any amount remaining
-        final Money amountRemaining = this.savingsPaymentStrategy.makeScheduledPayments(payment, unpaidDepositsForPayingCustomer,
-                payingCustomer, SavingsType.fromInt(this.savingsType.getId()), savingsBalanceBeforeDeposit);
-        
+        final Money amountRemaining = this.savingsPaymentStrategy.makeScheduledPayments(payment,
+                unpaidDepositsForPayingCustomer, payingCustomer, SavingsType.fromInt(this.savingsType.getId()),
+                savingsBalanceBeforeDeposit);
+
         if (depositAmountIsInExcess(amountRemaining)) {
             final SavingsTrxnDetailEntity excessDepositTrxn = this.savingsTransactionActivityHelper
-                    .createSavingsTrxnForDeposit(payment,
-                    amountRemaining, payingCustomer, null, savingsBalance);
+                    .createSavingsTrxnForDeposit(payment, amountRemaining, payingCustomer, null, savingsBalance);
             payment.addAccountTrxn(excessDepositTrxn);
         }
 
         buildFinancialEntries(payment.getAccountTrxns());
     }
 
-    public void withdraw(final AccountPaymentEntity payment) throws AccountException {
+    public void withdraw(final AccountPaymentEntity payment, final CustomerBO payingCustomer) throws AccountException {
 
         final Money amountToWithdraw = payment.getAmount();
         if (amountToWithdraw.getAmountDoubleValue() > savingsBalance.getAmountDoubleValue()) {
@@ -1130,38 +1127,22 @@ public class SavingsBO extends AccountBO {
             throw new AccountException("errors.exceedmaxwithdrawal", new String[] { getGlobalAccountNum() });
         }
 
-        // for withdrawal always set accountState to be active/approved for
-        // savings accounts
         final AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
         this.setAccountState(accountStateEntity);
+        this.addAccountPayment(payment);
 
         savingsBalance = savingsBalance.subtract(amountToWithdraw);
         savingsPerformance.setWithdrawDetails(amountToWithdraw);
 
-        final AccountActionEntity savingsAccountWithdrawalAction = new AccountActionEntity(
-                AccountActionTypes.SAVINGS_WITHDRAWAL);
-
-        final Date transactionDate = payment.getPaymentDate();
-        final PersonnelBO createdBy = payment.getCreatedByUser();
-
-        final SavingsTrxnDetailEntity accountTrxnBO = new SavingsTrxnDetailEntity(payment, customer,
-                AccountActionTypes.SAVINGS_WITHDRAWAL, amountToWithdraw, this.savingsBalance, createdBy,
-                transactionDate, transactionDate, null, "", getSavingsPersistence());
-
-        payment.addAccountTrxn(accountTrxnBO);
-        addAccountPayment(payment);
-
-        final SavingsActivityEntity savingsActivity = new SavingsActivityEntity(personnel,
-                savingsAccountWithdrawalAction, amountToWithdraw, this.savingsBalance, transactionDate, this);
-
+        final SavingsActivityEntity savingsActivity = this.savingsTransactionActivityHelper
+                .createSavingsActivityForWithdrawal(payment, this.savingsBalance, this);
         addSavingsActivityDetails(savingsActivity);
 
-        final BaseFinancialActivity baseFinancialActivity = new SavingsWithdrawalFinancialActivity(accountTrxnBO);
-        try {
-            baseFinancialActivity.buildAccountEntries();
-        } catch (FinancialException e) {
-            throw new AccountException("errors.unexpected", e);
-        }
+        final SavingsTrxnDetailEntity accountTrxnBO = this.savingsTransactionActivityHelper
+                .createSavingsTrxnForWithdrawal(payment, amountToWithdraw, payingCustomer, this.savingsBalance);
+        payment.addAccountTrxn(accountTrxnBO);
+
+        buildFinancialEntries(payment.getAccountTrxns());
     }
 
     /**
