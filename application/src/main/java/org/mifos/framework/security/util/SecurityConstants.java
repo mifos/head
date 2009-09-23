@@ -487,4 +487,6 @@ public interface SecurityConstants {
     public final short CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT = 231;
 
     public final Short CAN_VIEW_BRANCH_REPORT = 232;
+    
+    public final short CAN_IMPORT_TRANSACTIONS = 233;
 }

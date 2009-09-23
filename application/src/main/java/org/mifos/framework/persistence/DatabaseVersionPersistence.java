@@ -62,7 +62,7 @@ import org.mifos.framework.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 215;
+    public static final int APPLICATION_VERSION = 216;
     public static final int FIRST_NUMBERED_VERSION = 100;
     public static final int LATEST_CHECKPOINT_VERSION = 174;
     private final Connection connection;
@@ -121,6 +121,7 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade209());
         register(register, new Upgrade211());
         register(register, new Upgrade213());
+        register216(register);
         return Collections.unmodifiableMap(register);
     }
 
@@ -307,6 +308,14 @@ public class DatabaseVersionPersistence {
                 SecurityConstants.CAN_VIEW_BRANCH_REPORT), new AddActivity(204,
                 "Permissions-CanViewBranchProgressReport", SecurityConstants.CAN_VIEW_BRANCH_REPORT,
                 SecurityConstants.ANALYSIS)));
+    }
+    
+    /**
+     * Adds activity/role/permission data for transactions import bulk settings.
+     */
+    private static void register216(Map<Integer, Upgrade> register) {
+        register(register, new AddActivity(216, "Permissions-CanImportTransactions",
+                SecurityConstants.CAN_IMPORT_TRANSACTIONS, SecurityConstants.BULK));
     }
 
     public DatabaseVersionPersistence() {
