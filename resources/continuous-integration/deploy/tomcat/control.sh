@@ -4,7 +4,7 @@
 # description: Provides easy control of Hudson-deployed tomcat instance(s)
 
 # Variables for use within this script
-DEPLOY_ROOT=$HOME/mifos-$JOB_NAME-deploy
+DEPLOY_ROOT=$HOME/deploys/mifos-$JOB_NAME-deploy
 JVM_TMPDIR=/tmp/hudson-$JOB_NAME-tomcat-tmp
 # Variables for use by children/successors of this script
 export CATALINA_HOME=$DEPLOY_ROOT/tomcat6
