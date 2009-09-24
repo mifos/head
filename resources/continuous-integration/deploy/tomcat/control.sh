@@ -16,13 +16,26 @@ export MIFOS_CONF=$DEPLOY_ROOT/mifos_conf
 
 [ -d $JVM_TMPDIR ] || mkdir -p $JVM_TMPDIR || exit 1
 
+start_tomcat() {
+        $CATALINA_HOME/bin/startup.sh
+}
+
+stop_tomcat() {
+        if [ -e $CATALINA_PID ]
+        then
+            $CATALINA_HOME/bin/shutdown.sh -force
+            rm -f $CATALINA_PID
+        else
+            $CATALINA_HOME/bin/shutdown.sh
+        fi
+}
+
 case $1 in
 start)
-        $CATALINA_HOME/bin/startup.sh
+        start_tomcat
         ;;
 stop)  
-        $CATALINA_HOME/bin/shutdown.sh -force
-        rm -f $CATALINA_PID
+        stop_tomcat
         ;;
 status)  
         if [ -e $CATALINA_PID ]
@@ -33,9 +46,9 @@ status)
         fi
         ;;
 restart)
-        $CATALINA_HOME/bin/shutdown.sh
+        stop_tomcat
         sleep 1
-        $CATALINA_HOME/bin/startup.sh
+        start_tomcat
         ;;
 *)
         echo "Usage: $0 {start|stop|status}"
