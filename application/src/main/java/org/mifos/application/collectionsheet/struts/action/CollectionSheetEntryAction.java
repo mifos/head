@@ -20,7 +20,6 @@
 
 package org.mifos.application.collectionsheet.struts.action;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -36,9 +35,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
@@ -177,7 +174,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     
     /**
      * This method retrieves the last meeting date for the chosen customer. This
-     * meeting date is put as the default date for the tranasaction date in the
+     * meeting date is put as the default date for the transaction date in the
      * search criteria
      * 
      */
@@ -354,69 +351,49 @@ public class CollectionSheetEntryAction extends BaseAction {
                 + getUpdateTotalsString(decomposedViews)
                 + ". Saving bulk entry data ran for approximately "
                 + (System.currentTimeMillis() - beforeSaveData) / 1000.0 + " seconds."
-                + getCustomerAccountViewLogs(decomposedViews)
-                + getLoanAccountsProductViewLogs(decomposedViews));
+                + getAmmountTotalLogs(decomposedViews));
         
     }
 
-    private String getCustomerAccountViewLogs(CollectionSheetEntryDecomposedView decomposedViews){
-        String logMsg ="\nCustomer Accounts Log";
-        Double totalAmountDue = 0.0;
+    private String getAmmountTotalLogs(CollectionSheetEntryDecomposedView decomposedViews) {
+        String logMsg = "";
+        Double totalCustomerAccountAmountDue = 0.0;
         Double totalCustomerAccountAmountEntered = 0.0;
+        Double totalLoanDisBursementAmountEntered = 0.0;
+        Double totalLoanEnteredAmount = 0.0;
+        Double totalLoanAmountDue = 0.0;
+        Double totalLoanDisbursalAmountDue = 0.0;
+        Double totalLoanDisbursalAmount = 0.0;
+
         for (CustomerAccountView customerAccountView : decomposedViews.getCustomerAccountViews()) {
-            logMsg += "\nCustomer ID:"+customerAccountView.getCustomerId();
-            logMsg += "\nAccount ID:"+customerAccountView.getAccountId();
-            totalAmountDue += customerAccountView.getTotalAmountDue().getAmount().doubleValue();
-            logMsg += "\nAmount Due:"+customerAccountView.getTotalAmountDue();
-            try {
-            totalCustomerAccountAmountEntered += Double.parseDouble(customerAccountView.getCustomerAccountAmountEntered());
-            } catch (Exception e) {
-                logger.error("Error in parsing customer account amount entered !!!", e);
+            if (customerAccountView.getCustomerAccountAmountEntered() != null) {
+                totalCustomerAccountAmountEntered += Double.parseDouble(customerAccountView
+                        .getCustomerAccountAmountEntered());
             }
-            logMsg += "\nCustomer Account Amount Entered:"+customerAccountView.getCustomerAccountAmountEntered();
+            totalCustomerAccountAmountDue += customerAccountView.getTotalAmountDue().getAmount().doubleValue();
         }
-        logMsg += "\nTotal Amount Due:"+totalAmountDue;
-        logMsg += "\nTotal Customer Account Amount Entered:"+totalCustomerAccountAmountEntered;
-        logMsg += "\n";
-        return logMsg;    
-    }
-    
-    private String getLoanAccountsProductViewLogs(CollectionSheetEntryDecomposedView decomposedViews){
-        String logMsg ="\nLoan Accounts Log";
-        Double totalDisBursementAmountEntered = 0.0;
-        Double totalEnteredAmount = 0.0;
-        Double totalAmountDue = 0.0;
-        Double totalDisbursalAmountDue = 0.0;
-        Double totalDisbursalAmount = 0.0;
-        for (LoanAccountsProductView loanAccountView : decomposedViews.getLoanAccountViews()) {
-            logMsg += "\nProduct Offering ID:"+loanAccountView.getPrdOfferingId();
-            logMsg += "\nProduct Offering Short Name:"+loanAccountView.getPrdOfferingShortName();
-            try{
-            totalDisBursementAmountEntered += Double.parseDouble(loanAccountView.getDisBursementAmountEntered());
-        } catch (Exception e) {
-            logger.error("Error in parsing disbursement amount entered !!!", e);
+
+        for (LoanAccountsProductView loanAccountsProductView : decomposedViews.getLoanAccountViews()) {
+            if (loanAccountsProductView.getDisBursementAmountEntered() != null) {
+                totalLoanDisBursementAmountEntered += Double.parseDouble(loanAccountsProductView
+                        .getDisBursementAmountEntered());
+            }
+            if (loanAccountsProductView.getEnteredAmount() != null) {
+                totalLoanEnteredAmount += Double.parseDouble(loanAccountsProductView.getEnteredAmount());
+            }
+            totalLoanAmountDue += loanAccountsProductView.getTotalAmountDue();
+            totalLoanDisbursalAmountDue += loanAccountsProductView.getTotalDisbursalAmountDue();
+            totalLoanDisbursalAmount += loanAccountsProductView.getTotalDisburseAmount();
         }
-            logMsg += "\nDisbursement Amount Entered:"+loanAccountView.getDisBursementAmountEntered();
-            try {
-            totalEnteredAmount += Double.parseDouble(loanAccountView.getEnteredAmount());
-        } catch (Exception e) {
-            logger.error("Error in parsing disbursement amount entered !!!", e);
-        }
-            logMsg += "\nEntered Amount:"+loanAccountView.getEnteredAmount();
-            totalAmountDue += loanAccountView.getTotalAmountDue();
-            logMsg += "\nAmount Due:"+loanAccountView.getTotalAmountDue();
-            totalDisbursalAmountDue += loanAccountView.getTotalDisbursalAmountDue();
-            logMsg += "\nDisbursal Amount Due:"+loanAccountView.getTotalDisbursalAmountDue();
-            totalDisbursalAmount += loanAccountView.getTotalDisburseAmount();
-            logMsg += "\nDisburse Amount:"+loanAccountView.getTotalDisburseAmount();
-        }
-        logMsg += "\nTotal Disbursement Amount Entered:"+totalDisBursementAmountEntered;
-        logMsg += "\nTotal Entered Amount:"+totalEnteredAmount;
-        logMsg += "\nTotal Amount Due:"+totalAmountDue;
-        logMsg += "\nTotal Disbursal Amount Due:"+totalDisbursalAmountDue;
-        logMsg += "\nTotal Disbursal Amount:"+totalDisbursalAmount;
-        logMsg += "\n";
-        return logMsg; 
+        logMsg += ", totalDisBursementAmountEntered:" + totalLoanDisBursementAmountEntered;
+        logMsg += ", totalDisbursalAmount:" + totalLoanDisbursalAmount;
+        logMsg += ", totalEnteredAmount:" + totalLoanEnteredAmount;
+        logMsg += ", totalAmountDue:" + totalLoanAmountDue;
+        logMsg += ", totalDisbursalAmountDue:" + totalLoanDisbursalAmountDue;
+        logMsg += ", totalCustomerAccountAmountEntered:" + totalCustomerAccountAmountEntered;
+        logMsg += ", totalCustomerAccountAmountDue:" + totalCustomerAccountAmountDue;
+
+        return logMsg;
     }
     
     private void logBeforeSave(final HttpServletRequest request, final BulkEntryActionForm bulkEntryActionForm,
