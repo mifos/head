@@ -218,8 +218,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     private PaymentData createPaymentViewObject(final AccountBO accountBO) {
         PaymentData paymentData = PaymentData.createPaymentData(new Money(TestObjectFactory.getMFICurrency(), "212.0"),
                 accountBO.getPersonnel(), Short.valueOf("1"), new Date(System.currentTimeMillis()));
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("423423");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("423423");
         return paymentData;
     }
 

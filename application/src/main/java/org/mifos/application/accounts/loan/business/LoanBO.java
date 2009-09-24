@@ -886,9 +886,9 @@ public class LoanBO extends AccountBO {
      * @deprecated use {@link LoanBO#disburseLoan(AccountPaymentEntity)}
      */
     @Deprecated
-    public void disburseLoan(final String recieptNum, final Date transactionDate, final Short paymentTypeId, final PersonnelBO personnel,
+    public void disburseLoan(final String receiptNum, final Date transactionDate, final Short paymentTypeId, final PersonnelBO personnel,
             final Date receiptDate, final Short rcvdPaymentTypeId) throws AccountException {
-        disburseLoan(recieptNum, transactionDate, paymentTypeId, personnel, receiptDate, rcvdPaymentTypeId, true);
+        disburseLoan(receiptNum, transactionDate, paymentTypeId, personnel, receiptDate, rcvdPaymentTypeId, true);
     }
 
     /**
@@ -900,7 +900,7 @@ public class LoanBO extends AccountBO {
         disburseLoan(null, getDisbursementDate(), rcvdPaymentTypeId, personnel, null, rcvdPaymentTypeId, persistChange);
     }
 
-    private void disburseLoan(final String recieptNum, final Date transactionDate, final Short paymentTypeId, final PersonnelBO personnel,
+    private void disburseLoan(final String receiptNum, final Date transactionDate, final Short paymentTypeId, final PersonnelBO personnel,
             final Date receiptDate, final Short rcvdPaymentTypeId, final boolean persistChange) throws AccountException {
 
         addLoanActivity(buildLoanActivity(this.loanAmount, personnel, AccountConstants.LOAN_DISBURSAL, transactionDate));
@@ -922,12 +922,12 @@ public class LoanBO extends AccountBO {
 
         AccountPaymentEntity accountPaymentEntity = null;
         if (this.isInterestDeductedAtDisbursement()) {
-            accountPaymentEntity = payInterestAtDisbursement(recieptNum, transactionDate, rcvdPaymentTypeId, personnel,
+            accountPaymentEntity = payInterestAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId, personnel,
                     receiptDate);
         } else {
             try {
                 if (getLoanPersistence().getFeeAmountAtDisbursement(this.getAccountId()) > 0.0) {
-                    accountPaymentEntity = insertOnlyFeeAtDisbursement(recieptNum, transactionDate, rcvdPaymentTypeId,
+                    accountPaymentEntity = insertOnlyFeeAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId,
                             personnel);
                 }
             } catch (MifosRuntimeException e) {
@@ -935,7 +935,7 @@ public class LoanBO extends AccountBO {
             }
         }
         if (accountPaymentEntity == null) {
-            accountPaymentEntity = new AccountPaymentEntity(this, this.loanAmount, recieptNum, transactionDate,
+            accountPaymentEntity = new AccountPaymentEntity(this, this.loanAmount, receiptNum, transactionDate,
                     new PaymentTypeEntity(paymentTypeId), new DateTime().toDate());
         } else {
             accountPaymentEntity.setAmount(this.loanAmount.subtract(accountPaymentEntity.getAmount()));
@@ -988,7 +988,7 @@ public class LoanBO extends AccountBO {
         return amount;
     }
 
-    public void makeEarlyRepayment(final Money totalAmount, final String receiptNumber, final Date recieptDate, final String paymentTypeId,
+    public void makeEarlyRepayment(final Money totalAmount, final String receiptNumber, final Date receiptDate, final String paymentTypeId,
             final Short personnelId) throws AccountException {
         try {
             MasterPersistence masterPersistence = new MasterPersistence();
@@ -996,7 +996,7 @@ public class LoanBO extends AccountBO {
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
-                    recieptDate, new PaymentTypeEntity(Short.valueOf(paymentTypeId)), new DateTimeService()
+                    receiptDate, new PaymentTypeEntity(Short.valueOf(paymentTypeId)), new DateTimeService()
                             .getCurrentJavaDateTime());
             addAccountPayment(accountPaymentEntity);
 
@@ -1374,7 +1374,7 @@ public class LoanBO extends AccountBO {
         final AccountActionDateEntity lastAccountAction = getLastInstallmentAccountAction();
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
                 paymentData
-                .getRecieptNum(), paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData.getPaymentTypeId()),
+                .getReceiptNum(), paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData.getPaymentTypeId()),
                 paymentData.getTransactionDate());
 
         java.sql.Date paymentDate = new java.sql.Date(paymentData.getTransactionDate().getTime());
@@ -2282,7 +2282,7 @@ public class LoanBO extends AccountBO {
         loanSummary.setOriginalPenalty(penalty);
     }
 
-    private AccountPaymentEntity payInterestAtDisbursement(final String recieptNum, final Date transactionDate,
+    private AccountPaymentEntity payInterestAtDisbursement(final String receiptNum, final Date transactionDate,
             final Short paymentTypeId, final PersonnelBO personnel, final Date receiptDate) throws AccountException {
 
         AccountActionDateEntity firstInstallment = null;
@@ -2296,7 +2296,7 @@ public class LoanBO extends AccountBO {
         installmentsToBePaid.add(firstInstallment);
 
         PaymentData paymentData = getLoanAccountPaymentData(((LoanScheduleEntity) firstInstallment)
-                .getTotalDueWithFees(), personnel, recieptNum, paymentTypeId, receiptDate,
+                .getTotalDueWithFees(), personnel, receiptNum, paymentTypeId, receiptDate,
                 transactionDate);
 
         return makePayment(paymentData);
@@ -2368,7 +2368,7 @@ public class LoanBO extends AccountBO {
         return amount;
     }
 
-    private AccountPaymentEntity insertOnlyFeeAtDisbursement(final String recieptNum, final Date recieptDate, final Short paymentTypeId,
+    private AccountPaymentEntity insertOnlyFeeAtDisbursement(final String receiptNum, final Date receiptDate, final Short paymentTypeId,
             final PersonnelBO personnel) {
 
         Money totalPayment = new Money();
@@ -2380,8 +2380,8 @@ public class LoanBO extends AccountBO {
 
         loanSummary.updateFeePaid(totalPayment);
 
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalPayment, recieptNum,
-                recieptDate, new PaymentTypeEntity(paymentTypeId), new DateTime().toDate());
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalPayment, receiptNum,
+                receiptDate, new PaymentTypeEntity(paymentTypeId), new DateTime().toDate());
 
         LoanTrxnDetailEntity loanTrxnDetailEntity = null;
 
@@ -2393,21 +2393,21 @@ public class LoanBO extends AccountBO {
         }
 
         loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, AccountActionTypes.FEE_REPAYMENT, Short.valueOf("0"),
-                recieptDate, personnel, recieptDate, totalPayment, "-", null, new Money(), new Money(), new Money(),
+                receiptDate, personnel, receiptDate, totalPayment, "-", null, new Money(), new Money(), new Money(),
                 new Money(), new Money(), applicableAccountFees, getLoanPersistence());
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 
         addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), personnel,
-                AccountConstants.PAYMENT_RCVD, recieptDate));
+                AccountConstants.PAYMENT_RCVD, receiptDate));
         return accountPaymentEntity;
     }
 
     private PaymentData getLoanAccountPaymentData(final Money totalAmount,
-            final PersonnelBO personnel, final String recieptId, final Short paymentId, final Date receiptDate, final Date transactionDate) {
+            final PersonnelBO personnel, final String receiptId, final Short paymentId, final Date receiptDate, final Date transactionDate) {
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
-        paymentData.setRecieptDate(receiptDate);
-        paymentData.setRecieptNum(recieptId);
+        paymentData.setReceiptDate(receiptDate);
+        paymentData.setReceiptNum(receiptId);
         return paymentData;
     }
 

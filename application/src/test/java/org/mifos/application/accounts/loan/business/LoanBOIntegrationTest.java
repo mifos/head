@@ -2177,8 +2177,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         PaymentData paymentData = PaymentData.createPaymentData(new Money(Configuration.getInstance().getSystemConfig()
                 .getCurrency(), "212.0"), accountBO.getPersonnel(), Short.valueOf("1"), startDate);
-        paymentData.setRecieptDate(startDate);
-        paymentData.setRecieptNum("5435345");
+        paymentData.setReceiptDate(startDate);
+        paymentData.setReceiptNum("5435345");
 
         accountBO.applyPaymentWithPersist(paymentData);
         TestObjectFactory.flushandCloseSession();
@@ -5008,8 +5008,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         PaymentData paymentData = PaymentData.createPaymentData(new Money(Configuration.getInstance().getSystemConfig()
                 .getCurrency(), "212.0"), accountBO.getPersonnel(), Short.valueOf("1"), startDate);
-        paymentData.setRecieptDate(startDate);
-        paymentData.setRecieptNum("5435345");
+        paymentData.setReceiptDate(startDate);
+        paymentData.setReceiptNum("5435345");
 
         accountBO.applyPaymentWithPersist(paymentData);
         StaticHibernateUtil.commitTransaction();

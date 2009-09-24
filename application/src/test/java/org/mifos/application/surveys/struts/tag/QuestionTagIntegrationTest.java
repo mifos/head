@@ -50,8 +50,6 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
     public void setUp() throws Exception {
         super.setUp();
         result = new XmlBuilder();
-        // FIXME why there are 2 setup
-        super.setUp();
         database = TestDatabase.makeStandard();
         StaticHibernateUtil.closeSession();
         AuditInterceptor interceptor = new AuditInterceptor();

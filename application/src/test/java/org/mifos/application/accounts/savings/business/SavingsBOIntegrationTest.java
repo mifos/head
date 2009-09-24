@@ -2186,8 +2186,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(client1);
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("34244");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("34244");
         boolean persist = true;
         savings.withdraw(paymentData, persist);
        Assert.assertEquals(0.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
@@ -2213,8 +2213,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(client1);
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("34244");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("34244");
         AccountActionDateEntity accountActionDate = savings.getAccountActionDate(Short.valueOf("1"));
 
         SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);
@@ -2244,8 +2244,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(client1);
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("34244");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("34244");
         AccountActionDateEntity accountActionDate = savings.getAccountActionDate(Short.valueOf("1"));
 
         SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);
@@ -2284,8 +2284,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(group);
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("34244");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("34244");
         paymentData.addAccountPaymentData(getSavingsPaymentdata(null));
         savings.applyPaymentWithPersist(paymentData);
 
@@ -2319,8 +2319,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(client1);
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("34244");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("34244");
         try {
             boolean persist = true;
             savings.withdraw(paymentData, persist);

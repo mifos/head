@@ -179,7 +179,7 @@ public class CustomerAccountBO extends AccountBO {
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
 
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
-                paymentData.getRecieptNum(), paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData
+                paymentData.getReceiptNum(), paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData
                         .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
 
         Money balanceLeft = paymentData.getTotalAmount();

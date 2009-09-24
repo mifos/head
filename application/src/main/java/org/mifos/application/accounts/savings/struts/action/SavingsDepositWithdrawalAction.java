@@ -229,8 +229,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
         PaymentData paymentData = PaymentData.createPaymentData(actionForm.getAmountValue(), new PersonnelPersistence()
                 .getPersonnel(uc.getId()), Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);
-        paymentData.setRecieptDate(receiptDate);
-        paymentData.setRecieptNum(actionForm.getReceiptId());
+        paymentData.setReceiptDate(receiptDate);
+        paymentData.setReceiptNum(actionForm.getReceiptId());
         CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance()
                 .getBusinessService(BusinessServiceName.Customer);
         paymentData.setCustomer(customerService.getCustomer(Integer.valueOf(actionForm.getCustomerId())));

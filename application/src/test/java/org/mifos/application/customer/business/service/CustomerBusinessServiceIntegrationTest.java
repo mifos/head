@@ -844,8 +844,8 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savingsBO.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(customer);
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("34244");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("34244");
         AccountActionDateEntity accountActionDate = savingsBO.getAccountActionDate(Short.valueOf("1"));
 
         SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);

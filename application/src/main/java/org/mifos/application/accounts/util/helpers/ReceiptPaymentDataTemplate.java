@@ -22,9 +22,9 @@ package org.mifos.application.accounts.util.helpers;
 
 import java.util.Date;
 
-public interface RecieptPaymentDataTemplate extends PaymentDataTemplate {
+public interface ReceiptPaymentDataTemplate extends PaymentDataTemplate {
 
-    public String getPaymentRecieptNumber();
+    public String getPaymentReceiptNumber();
 
-    public Date getPaymentRecieptDate();
+    public Date getPaymentReceiptDate();
 }

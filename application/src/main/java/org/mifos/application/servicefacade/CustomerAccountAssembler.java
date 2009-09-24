@@ -99,8 +99,8 @@ public class CustomerAccountAssembler {
         final Date transactionDate = payment.getPaymentDate();
 
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
-        paymentData.setRecieptDate(receiptDate);
-        paymentData.setRecieptNum(receiptNum);
+        paymentData.setReceiptDate(receiptDate);
+        paymentData.setReceiptNum(receiptNum);
 
         for (CollectionSheetEntryInstallmentView actionDate : accountActions) {
             CustomerAccountPaymentData customerAccountPaymentData = new CustomerAccountPaymentData(actionDate);

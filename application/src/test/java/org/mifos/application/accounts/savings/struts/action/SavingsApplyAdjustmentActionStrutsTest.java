@@ -326,8 +326,8 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         PaymentData paymentData = PaymentData.createPaymentData(new Money("100"), savings.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(group);
-        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-        paymentData.setRecieptNum("34244");
+        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
+        paymentData.setReceiptNum("34244");
         AccountActionDateEntity accountActionDate = null;
         paymentData.addAccountPaymentData(new SavingsPaymentData(accountActionDate));
         savings.applyPaymentWithPersist(paymentData);

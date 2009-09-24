@@ -25,9 +25,9 @@ public class RepayLoanParameters {
     
     private String modeOfRepayment;
     private String receiptId;
-    private String recieptDateDD;
-    private String recieptDateMM;
-    private String recieptDateYYYY;
+    private String receiptDateDD;
+    private String receiptDateMM;
+    private String receiptDateYYYY;
     
     public String getModeOfRepayment() {
         return this.modeOfRepayment;
@@ -41,23 +41,23 @@ public class RepayLoanParameters {
     public void setReceiptId(String receiptId) {
         this.receiptId = receiptId;
     }
-    public String getRecieptDateDD() {
-        return this.recieptDateDD;
+    public String getReceiptDateDD() {
+        return this.receiptDateDD;
     }
-    public void setRecieptDateDD(String recieptDateDD) {
-        this.recieptDateDD = recieptDateDD;
+    public void setReceiptDateDD(String receiptDateDD) {
+        this.receiptDateDD = receiptDateDD;
     }
-    public String getRecieptDateMM() {
-        return this.recieptDateMM;
+    public String getReceiptDateMM() {
+        return this.receiptDateMM;
     }
-    public void setRecieptDateMM(String recieptDateMM) {
-        this.recieptDateMM = recieptDateMM;
+    public void setReceiptDateMM(String receiptDateMM) {
+        this.receiptDateMM = receiptDateMM;
     }
-    public String getRecieptDateYYYY() {
-        return this.recieptDateYYYY;
+    public String getReceiptDateYYYY() {
+        return this.receiptDateYYYY;
     }
-    public void setRecieptDateYYYY(String recieptDateYYYY) {
-        this.recieptDateYYYY = recieptDateYYYY;
+    public void setReceiptDateYYYY(String receiptDateYYYY) {
+        this.receiptDateYYYY = receiptDateYYYY;
     }
     
     /**

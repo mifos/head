@@ -47,7 +47,7 @@ explanation of the license and how it is applied.
 		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
-		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}" onsubmit="return validateMyForm(recieptDate,recieptDateFormat,recieptDateYY)">
+		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}" onsubmit="return validateMyForm(receiptDate,receiptDateFormat,receiptDateYY)">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -135,7 +135,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel keyhm="Loan.ReceiptDate" isColonRequired="Yes" name="loan.receiptdate" />
 								</td>
 								<td class="fontnormal">
-									<date:datetag keyhm="Loan.ReceiptDate" property="recieptDate" />
+									<date:datetag keyhm="Loan.ReceiptDate" property="receiptDate" />
 								</td>
 							</tr>
 						</table>

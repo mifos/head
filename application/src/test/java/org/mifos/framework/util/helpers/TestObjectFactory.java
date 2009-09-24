@@ -1763,12 +1763,12 @@ public class TestObjectFactory {
     }
 
     public static PaymentData getCustomerAccountPaymentDataView(final List<AccountActionDateEntity> accountActions,
-            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String recieptNum, final Short paymentId,
+            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String receiptNum, final Short paymentId,
             final Date receiptDate, final Date transactionDate) {
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
         paymentData.setCustomer(customer);
-        paymentData.setRecieptDate(receiptDate);
-        paymentData.setRecieptNum(recieptNum);
+        paymentData.setReceiptDate(receiptDate);
+        paymentData.setReceiptNum(receiptNum);
         for (AccountActionDateEntity actionDate : accountActions) {
             CustomerAccountPaymentData customerAccountPaymentData = new CustomerAccountPaymentData(actionDate);
             paymentData.addAccountPaymentData(customerAccountPaymentData);
@@ -1862,12 +1862,12 @@ public class TestObjectFactory {
     }
 
     public static PaymentData getLoanAccountPaymentData(final List<AccountActionDateEntity> accountActions,
-            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String recieptNum, final Short paymentId,
+            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String receiptNum, final Short paymentId,
             final Date receiptDate, final Date transactionDate) {
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
         paymentData.setCustomer(customer);
-        paymentData.setRecieptDate(receiptDate);
-        paymentData.setRecieptNum(recieptNum);
+        paymentData.setReceiptDate(receiptDate);
+        paymentData.setReceiptNum(receiptNum);
         return paymentData;
     }
 

@@ -125,7 +125,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="loan.receiptdate" keyhm="Loan.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>&nbsp;
 								</td>
 								<td class="fontnormal">
-								<c:out value="${sessionScope.repayLoanActionForm.recieptDate}" />
+								<c:out value="${sessionScope.repayLoanActionForm.receiptDate}" />
 								
 								</td>
 				            </tr>

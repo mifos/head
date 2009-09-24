@@ -45,7 +45,7 @@ public class PaymentData {
 
     private String receiptNum;
 
-    private Date recieptDate;
+    private Date receiptDate;
 
     private Short paymentTypeId;
 
@@ -64,14 +64,14 @@ public class PaymentData {
     }
 
     private PaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId, Date transactionDate,
-            String recieptNum, Date recieptDate) {
+            String receiptNum, Date receiptDate) {
         accountPayments = new ArrayList<AccountPaymentData>();
         setTotalAmount(totalAmount);
         setPersonnel(personnel);
         setPaymentTypeId(paymentId);
         setTransactionDate(transactionDate);
-        setRecieptNum(recieptNum);
-        setRecieptDate(recieptDate);
+        setReceiptNum(receiptNum);
+        setReceiptDate(receiptDate);
     }
 
     public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId,
@@ -79,9 +79,9 @@ public class PaymentData {
         return new PaymentData(totalAmount, personnel, paymentId, transactionDate);
     }
 
-    public static PaymentData createRecieptPaymentData(RecieptPaymentDataTemplate template) throws InvalidDateException {
+    public static PaymentData createReceiptPaymentData(ReceiptPaymentDataTemplate template) throws InvalidDateException {
         return new PaymentData(template.getTotalAmount(), template.getPersonnel(), template.getPaymentTypeId(),
-                template.getTransactionDate(), template.getPaymentRecieptNumber(), template.getPaymentRecieptDate());
+                template.getTransactionDate(), template.getPaymentReceiptNumber(), template.getPaymentReceiptDate());
     }
 
     public static PaymentData createPaymentData(PaymentDataTemplate template) throws InvalidDateException {
@@ -101,11 +101,11 @@ public class PaymentData {
         return personnel;
     }
 
-    public Date getRecieptDate() {
-        return recieptDate;
+    public Date getReceiptDate() {
+        return receiptDate;
     }
 
-    public String getRecieptNum() {
+    public String getReceiptNum() {
         return receiptNum;
     }
 
@@ -133,14 +133,12 @@ public class PaymentData {
         this.paymentTypeId = paymentTypeId;
     }
 
-    // FIXME: misspelled
-    public void setRecieptDate(Date recieptDate) {
-        this.recieptDate = recieptDate;
+    public void setReceiptDate(Date receiptDate) {
+        this.receiptDate = receiptDate;
     }
 
-    // FIXME: misspelled
-    public void setRecieptNum(String recieptNum) {
-        this.receiptNum = recieptNum;
+    public void setReceiptNum(String receiptNum) {
+        this.receiptNum = receiptNum;
     }
 
     private void setTotalAmount(Money totalAmount) {

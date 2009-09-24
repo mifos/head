@@ -33,7 +33,7 @@ public class RepayLoanActionForm extends ValidatorActionForm {
     private String accountId;
     private Money amount;
     private String receiptNumber;
-    private String recieptDate;
+    private String receiptDate;
     private String dateOfPayment;
     private String paymentTypeId;
 
@@ -80,12 +80,12 @@ public class RepayLoanActionForm extends ValidatorActionForm {
         this.receiptNumber = receiptNumber;
     }
 
-    public String getRecieptDate() {
-        return recieptDate;
+    public String getReceiptDate() {
+        return receiptDate;
     }
 
-    public void setRecieptDate(String recieptDate) {
-        this.recieptDate = recieptDate;
+    public void setReceiptDate(String receiptDate) {
+        this.receiptDate = receiptDate;
     }
 
     @Override

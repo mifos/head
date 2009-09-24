@@ -993,8 +993,8 @@ public class SavingsBO extends AccountBO {
         List<AccountPaymentData> accountPayments = paymentData.getAccountPayments();
 
         CustomerBO customer = paymentData.getCustomer();
-        AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, paymentData.getRecieptNum(),
-                paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData.getPaymentTypeId()),
+        AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, paymentData.getReceiptNum(),
+                paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData.getPaymentTypeId()),
                 new DateTimeService().getCurrentJavaDateTime());
         if (this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE)) {
             try {
@@ -1164,7 +1164,7 @@ public class SavingsBO extends AccountBO {
         savingsPerformance.setWithdrawDetails(totalAmount);
         CustomerBO customer = accountPaymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, accountPaymentData
-                .getRecieptNum(), accountPaymentData.getRecieptDate(), new PaymentTypeEntity(accountPaymentData
+                .getReceiptNum(), accountPaymentData.getReceiptDate(), new PaymentTypeEntity(accountPaymentData
                 .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
 
         SavingsTrxnDetailEntity accountTrxnBO;

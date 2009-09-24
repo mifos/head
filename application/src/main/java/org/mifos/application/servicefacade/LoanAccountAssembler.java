@@ -103,8 +103,8 @@ public class LoanAccountAssembler {
 
                             PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, payment
                                     .getCreatedByUser(), payment.getPaymentType().getId(), payment.getPaymentDate());
-                            paymentData.setRecieptDate(payment.getReceiptDate());
-                            paymentData.setRecieptNum(payment.getReceiptNumber());
+                            paymentData.setReceiptDate(payment.getReceiptDate());
+                            paymentData.setReceiptNum(payment.getReceiptNumber());
 
                             account.applyPayment(paymentData, false);
                             loans.add(account);

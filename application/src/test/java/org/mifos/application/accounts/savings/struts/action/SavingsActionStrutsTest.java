@@ -532,8 +532,8 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
      * PaymentData.createPaymentData(enteredAmount, savings .getPersonnel(),
      * Short.valueOf("1"), new Date(System .currentTimeMillis()));
      * paymentData.setCustomer(group); long curTime =
-     * System.currentTimeMillis(); paymentData.setRecieptDate(new
-     * Date(curTime)); paymentData.setRecieptNum("34244");
+     * System.currentTimeMillis(); paymentData.setReceiptDate(new
+     * Date(curTime)); paymentData.setReceiptNum("34244");
      * AccountActionDateEntity accountActionDate = savings
      * .getAccountActionDate(Short.valueOf("1"));
      * 

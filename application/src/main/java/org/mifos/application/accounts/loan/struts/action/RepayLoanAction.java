@@ -107,9 +107,9 @@ public class RepayLoanAction extends BaseAction {
         checkVersionMismatch(loanBOInSession.getVersionNo(), loanBO.getVersionNo());
         RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
         Date receiptDate = null;
-        if (repayLoanActionForm.getRecieptDate() != null && repayLoanActionForm.getRecieptDate() != "")
+        if (repayLoanActionForm.getReceiptDate() != null && repayLoanActionForm.getReceiptDate() != "")
             receiptDate = new Date(DateUtils.getLocaleDate(uc.getPreferredLocale(),
-                    repayLoanActionForm.getRecieptDate()).getTime());
+                    repayLoanActionForm.getReceiptDate()).getTime());
         loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(), repayLoanActionForm.getReceiptNumber(),
                 receiptDate, repayLoanActionForm.getPaymentTypeId(), uc.getId());
         return mapping.findForward(Constants.UPDATE_SUCCESS);
@@ -146,7 +146,7 @@ public class RepayLoanAction extends BaseAction {
     private void clearActionForm(ActionForm form) {
         RepayLoanActionForm actionForm = (RepayLoanActionForm) form;
         actionForm.setReceiptNumber(null);
-        actionForm.setRecieptDate(null);
+        actionForm.setReceiptDate(null);
         actionForm.setPaymentTypeId(null);
     }
 }

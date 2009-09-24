@@ -477,10 +477,10 @@ public class AccountBO extends BusinessObject {
 
         PaymentData paymentData = PaymentData.createPaymentData(amount, personnel, paymentTypeId, trxnDate);
         if (receiptDate != null) {
-            paymentData.setRecieptDate(receiptDate);
+            paymentData.setReceiptDate(receiptDate);
         }
         if (receiptId != null) {
-            paymentData.setRecieptNum(receiptId);
+            paymentData.setReceiptNum(receiptId);
         }
 
         for (AccountActionDateEntity installment : getTotalInstallmentsDue()) {
