@@ -20,7 +20,19 @@
 
 package org.mifos.application.productdefinition.business;
 
+import java.util.Date;
+import java.util.List;
+
+import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.master.business.InterestTypesEntity;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.Money;
 
 public class LoanOfferingTestUtils {
 
@@ -192,5 +204,24 @@ public class LoanOfferingTestUtils {
         }
         return loanPrdActionForm;
 
+    }
+    
+    public static LoanOfferingBO createInstanceForTest(final UserContext userContext, final String prdOfferingName,
+            final String prdOfferingShortName, final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
+            final Date startDate, final Date endDate, final String description, final GracePeriodTypeEntity gracePeriodType,
+            final Short gracePeriodDuration, final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
+            final Short maxNoInstallments, final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter,
+            final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees,
+            final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode)
+            throws ProductDefinitionException {
+        LoanOfferingBO loanOffering = new LoanOfferingBO(userContext, prdOfferingName, prdOfferingShortName,
+                prdCategory, prdApplicableMaster, new DateTimeService().getCurrentJavaDateTime(), endDate, description,
+                gracePeriodType, gracePeriodDuration, interestTypes, minLoanAmount, maxLoanAmount, defaultLoanAmount,
+                maxInterestRate, minInterestRate, defInterestRate, maxNoInstallments, minNoInstallments,
+                defNoInstallments, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, meeting,
+                principalGLcode, interestGLcode);
+        loanOffering.setStartDate(startDate);
+        return loanOffering;
     }
 }

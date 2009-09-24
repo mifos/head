@@ -62,7 +62,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
@@ -241,7 +240,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Money loanAmount = new Money("300");
         Double interestRate = new Double(1.2);
         Short installments = new Short((short) 6);
-        LoanOfferingBO loanOffering = LoanOfferingBO.createInstanceForTest(userContext, "TestLoanOffering", "TLO",
+        LoanOfferingBO loanOffering = LoanOfferingTestUtils.createInstanceForTest(userContext, "TestLoanOffering", "TLO",
                 productCategory, prdApplicableMaster, loanProductStartDate, null, null, gracePeriodType, (short) 0,
                 interestType, loanAmount, loanAmount, loanAmount, interestRate, interestRate, interestRate,
                 installments, installments, installments, true, interestDeductedAtDisbursement,

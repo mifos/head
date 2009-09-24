@@ -62,7 +62,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
 
@@ -1147,24 +1146,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     // FIXME: move this into test code.
-    public static LoanOfferingBO createInstanceForTest(final UserContext userContext, final String prdOfferingName,
-            final String prdOfferingShortName, final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
-            final Date startDate, final Date endDate, final String description, final GracePeriodTypeEntity gracePeriodType,
-            final Short gracePeriodDuration, final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
-            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
-            final Short maxNoInstallments, final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter,
-            final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees,
-            final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode)
-            throws ProductDefinitionException {
-        LoanOfferingBO loanOffering = new LoanOfferingBO(userContext, prdOfferingName, prdOfferingShortName,
-                prdCategory, prdApplicableMaster, new DateTimeService().getCurrentJavaDateTime(), endDate, description,
-                gracePeriodType, gracePeriodDuration, interestTypes, minLoanAmount, maxLoanAmount, defaultLoanAmount,
-                maxInterestRate, minInterestRate, defInterestRate, maxNoInstallments, minNoInstallments,
-                defNoInstallments, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, meeting,
-                principalGLcode, interestGLcode);
-        loanOffering.setStartDate(startDate);
-        return loanOffering;
-    }
+   
 
     public void setLoanAmountSameForAllLoan(final LoanAmountSameForAllLoanBO loanAmountSameForAllLoan) {
         getLoanAmountSameForAllLoan().clear();
