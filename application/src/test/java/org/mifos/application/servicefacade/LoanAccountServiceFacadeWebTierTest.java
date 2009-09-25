@@ -273,4 +273,14 @@ public class LoanAccountServiceFacadeWebTierTest {
                 interestDueForNextInstallment(BigDecimal.TEN, BigDecimal.ZERO, loanBO, true);
         assertThat(interestDue.doubleValue(), is(0d));
     }
+
+    @Test
+    public void interestDueForNextInstallmentShouldReturnZeroIfNextInstallmentIsNull() {
+        LoanScheduleEntity loanScheduleEntity = null;
+        when(loanBO.getDetailsOfNextInstallment()).thenReturn(loanScheduleEntity);
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
+        BigDecimal interestDue = ((LoanAccountServiceFacadeWebTier) loanAccountServiceFacade).
+                interestDueForNextInstallment(BigDecimal.TEN, BigDecimal.ZERO, loanBO, false);
+        assertThat(interestDue.doubleValue(), is(0d));
+    }
 }

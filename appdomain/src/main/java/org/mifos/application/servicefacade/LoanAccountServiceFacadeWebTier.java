@@ -897,20 +897,19 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     BigDecimal interestDueForNextInstallment(BigDecimal totalRepaymentAmount, BigDecimal waivedAmount,
                                              LoanBO loan, boolean waiveInterest) {
-        if (loan.isDecliningBalanceInterestRecalculation()) {
-            if (waiveInterest) {
-                return BigDecimal.ZERO;
+        BigDecimal result = BigDecimal.ZERO;
+        if (!waiveInterest) {
+            if (loan.isDecliningBalanceInterestRecalculation()) {
+                result = totalRepaymentAmount.subtract(waivedAmount);
             } else {
-                return totalRepaymentAmount.subtract(waivedAmount);
-            }
-        } else {
-            if (waiveInterest) {
-                return BigDecimal.ZERO;
-            } else {
-                LoanScheduleEntity nextInstallment = (LoanScheduleEntity) loan.getDetailsOfNextInstallment();
-                return nextInstallment.getInterestDue().getAmount();
+                AccountActionDateEntity nextInstallment = loan.getDetailsOfNextInstallment();
+                if (nextInstallment != null) {
+                    LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) nextInstallment;
+                    result = loanScheduleEntity.getInterestDue().getAmount();
+                }
             }
         }
+        return result;
     }
 
     public LoanInformationDto retrieveLoanInformation(String globalAccountNum) {
