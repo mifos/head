@@ -28,12 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ConfigLocale;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
+import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -47,6 +49,7 @@ import org.mifos.core.MifosException;
  * during acceptance and integration tests.
  */
 public class StandardTestingService implements TestingService {
+    private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
     private final ConfigurationLocator configurationLocator;
 
     public StandardTestingService() {
@@ -84,7 +87,7 @@ public class StandardTestingService implements TestingService {
             overrides.load(new FileInputStream(overridesFile));
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
-            System.err.println("StandardTestingService: local overrides not found.");
+            LOG.info("local overrides not found.");
         }
 
         mifosSpecific.putAll(overrides);
@@ -100,7 +103,7 @@ public class StandardTestingService implements TestingService {
             settingsFilenames.add(optionalOverrides);
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
-            System.err.println("StandardTestingService: no local overrides in use.");
+            LOG.info("no local overrides in use.");
         }
         return settingsFilenames.toArray(new String[] {});
     }
