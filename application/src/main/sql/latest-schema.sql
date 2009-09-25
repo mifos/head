@@ -3992,7 +3992,7 @@ CREATE TABLE report_datasource (
   PRIMARY KEY  (DATASOURCE_ID),
   UNIQUE (NAME),
   UNIQUE (NAME)
-) ENGINE=InnoDB CHARACTER SET latin1;
+) ENGINE=InnoDB CHARACTER SET utf8;
 
 CREATE TABLE report_jasper_map (
   REPORT_ID smallint auto_increment NOT NULL,
@@ -4019,7 +4019,7 @@ CREATE TABLE report_parameter (
   UNIQUE (NAME),
   UNIQUE (NAME),
   INDEX DATASOURCE_ID (DATASOURCE_ID)
-) ENGINE=MyISAM CHARACTER SET latin1;
+) ENGINE=InnoDB CHARACTER SET utf8;
 
 CREATE TABLE report_parameter_map (
   REPORT_ID int default '0' NOT NULL,
@@ -4031,7 +4031,7 @@ CREATE TABLE report_parameter_map (
   PRIMARY KEY  (MAP_ID),
   INDEX REPORT_ID (REPORT_ID),
   INDEX PARAMETER_ID (PARAMETER_ID)
-) ENGINE=MyISAM CHARACTER SET latin1;
+) ENGINE=InnoDB CHARACTER SET utf8;
 -- end tables for the Reports Mini Portal
 
 -- start tables for surveys module
