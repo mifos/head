@@ -9,3 +9,5 @@ application/src/main/sql/latest-schema_last.sql
 *.xmind
 docs/
 .resources
+*.ipr
+*.iws
