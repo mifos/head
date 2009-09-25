@@ -27,7 +27,6 @@ import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.reports.business.service.CascadingReportParameterService;
 import org.mifos.application.reports.business.service.ReportServiceFactory;
 import org.mifos.application.reports.ui.SelectionItem;
-import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -35,12 +34,8 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 /**
- * 
- * @deprecated keithw - don't think that this task is useful anymore???
- * 
- * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ * @see CollectionSheetReportParameterCachingTask
  */
-@Deprecated
 public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 
     private static final Integer MIFOS_USER_ID = new Integer(1);
@@ -50,7 +45,7 @@ public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
     }
 
     @Override
-    public void execute(final long timeInMillis) throws BatchJobException {
+    public void execute(@SuppressWarnings("unused") final long timeInMillis) throws BatchJobException {
         CascadingReportParameterService cascadingReportParameterService = ReportServiceFactory
                 .getCascadingReportParameterService();
         cascadingReportParameterService.invalidate();

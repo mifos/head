@@ -33,6 +33,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.GenericDao;
 import org.mifos.application.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.accounts.savings.persistence.SavingsDao;
@@ -44,15 +45,17 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
+import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -64,7 +67,6 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
 
     public CollectionSheetDaoHibernateIntegrationTest() throws Exception {
         super();
-        TestDatabase.resetMySQLDatabase();
     }
 
     // class under test
@@ -81,6 +83,10 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     private CustomerBO center;
     private GroupBO group;
     private ClientBO client;
+    private SavingsBO savingsAccount;
+    private SavingsOfferingBO savingsProduct;
+    private SavingsOfferingBO savingsProduct2;
+    private SavingsBO savingsAccount2;
     private LoanBO loan;
     private LoanOfferingBO loanOffering;
 
@@ -121,6 +127,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     protected void tearDown() throws Exception {
         super.tearDown();
 
+        IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount, savingsAccount2);
         TestObjectFactory.cleanUp(loan);
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeetingAndFees(client, group, center, weeklyMeeting);
     }
@@ -264,7 +271,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         assertThat(loanFeesAgainstGroupAccountLoan.get(0).getTotalFeeAmountDue(), is(Double.valueOf("100.0")));
     }
 
-    public void testShouldFindAccountCollectionFeesForCustomerAccountsXXX() {
+    public void testShouldFindAccountCollectionFeesForCustomerAccounts() {
 
         // setup
         final Short branchId = center.getOffice().getOfficeId();
@@ -346,4 +353,38 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         assertThat(loanDisbursements.get(0).getTotalDisbursement(), is(Double.valueOf("300.0")));
         assertThat(loanDisbursements.get(0).getAmountDueAtDisbursement(), is(Double.valueOf("30.0")));
     }
+    
+    public void testShouldFindSavingsDepositsforCustomerHierarchy() {
+
+        // setup
+        savingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly().buildForIntegrationTests();
+        savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
+                .withCustomer(center).build();
+        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
+        
+        savingsProduct2 = new SavingsProductBuilder().withName("product2").mandatory().appliesToCentersOnly()
+                .buildForIntegrationTests();
+        savingsAccount2 = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct2).withCustomer(
+                center).build();
+        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct2, savingsAccount2);
+        
+        final Integer customerAtTopOfHierarchyId = center.getCustomerId();
+        final Short branchId = center.getOffice().getOfficeId();
+        final String searchId = center.getSearchId() + ".%";
+        final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
+        
+        final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerAtTopOfHierarchyId,
+                branchId, searchId, transactionDate);
+
+        // exercise test
+        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allLoanDisbursements = collectionSheetDao
+                .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
+
+        // verification
+        final List<CollectionSheetCustomerSavingDto> loanDisbursements = allLoanDisbursements
+                .get(center
+                .getCustomerId());
+        assertThat(loanDisbursements.size(), is(2));
+    }
+    
 }

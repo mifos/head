@@ -355,7 +355,9 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             if (savingsGroupedByCustomerId.containsKey(customerId)) {
                 savingsGroupedByCustomerId.get(customerId).add(savingsAccountDto);
             } else {
-                savingsGroupedByCustomerId.put(customerId, Arrays.asList(savingsAccountDto));
+                List<CollectionSheetCustomerSavingDto> savingsDtoList = new ArrayList<CollectionSheetCustomerSavingDto>();
+                savingsDtoList.add(savingsAccountDto);
+                savingsGroupedByCustomerId.put(customerId, savingsDtoList);
             }
         }
         

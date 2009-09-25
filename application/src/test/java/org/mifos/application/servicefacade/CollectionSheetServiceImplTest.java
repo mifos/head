@@ -363,9 +363,14 @@ public class CollectionSheetServiceImplTest {
         savingAccount.setAccountId(savingAccountId);
         savingAccount.setDepositDue(BigDecimal.valueOf(Double.valueOf("25.0")));
         
+        final CollectionSheetCustomerSavingDto savingAccount2 = new CollectionSheetCustomerSavingDto();
+        savingAccount2.setAccountId(savingAccountId);
+        savingAccount2.setDepositDue(BigDecimal.valueOf(Double.valueOf("25.0")));
+        
         
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> savingAccounts = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
         savingAccounts.put(centerId, Arrays.asList(savingAccount));
+        savingAccounts.put(centerId, Arrays.asList(savingAccount2));
         
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);

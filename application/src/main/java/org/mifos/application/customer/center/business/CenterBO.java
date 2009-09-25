@@ -52,7 +52,7 @@ import org.mifos.framework.security.util.UserContext;
 
 public class CenterBO extends CustomerBO {
 
-    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
     
     /*
      * Injected Persistence classes
