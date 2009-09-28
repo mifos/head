@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:46-0700\n"
-"PO-Revision-Date: 2009-08-25 21:47-0700\n"
+"PO-Revision-Date: 2009-09-08 20:51-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -285,11 +285,11 @@ msgstr ""
 
 #: admin.sysinfo.datetime
 msgid "Date and Time"
-msgstr ""
+msgstr "ថ្ងៃនិងម៉ោង"
 
 #: admin.sysinfo.datetime.iso8601
 msgid "Date and Time in ISO8601 format"
-msgstr ""
+msgstr "ថ្ងៃនិងម៉ោង គឺនៅក្នុងទំរង់ISO8601"
 
 #: admin.sysinfo.driver
 msgid "Database Driver / Version"
@@ -337,145 +337,147 @@ msgstr ""
 
 #: admin.sysusers
 msgid "System users"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់ប្រព័ន្ធ"
 
 #: admin.templates
 msgid "templates"
-msgstr ""
+msgstr "ទំរង់"
 
 #: admin.unableToDetermineConfigurationSource
 msgid "Unable to determine configuration source."
-msgstr ""
+msgstr "មិនអាចកំនត់ប្រភពនៃការកែច្នៃបានទេ"
 
 #: admin.upload
 msgid "upload"
-msgstr ""
+msgstr "ដាក់បញ្ចូល"
 
 #: admin.uploadReportTemplate
 msgctxt "admin.uploadReportTemplate"
 msgid "Upload report template"
-msgstr ""
+msgstr "ដាក់បញ្ចូលទំរង់របស់របាយការ"
 
 #: admin.uploadreporttemplate
 msgctxt "admin.uploadreporttemplate"
 msgid "Upload report template"
-msgstr ""
+msgstr "ដាក់បញ្ចូលទំរង់របស់របាយការ"
 
 #: admin.viewLoanProducts
 msgctxt "admin.viewLoanProducts"
 msgid "View {0} products"
-msgstr ""
+msgstr "បើកមើលផលិតផល{0}"
 
 #: admin.viewPPI
 msgid "View PPI settings"
-msgstr ""
+msgstr "បើកមើលកាបង្កើតPPI"
 
 #: admin.viewProductsMix
 msgid "View products mix"
-msgstr ""
+msgstr "បើកមើលផលិតផលចំរុះ"
 
 #: admin.viewSavingsProducts
 msgctxt "admin.viewSavingsProducts"
 msgid "View {0} products"
-msgstr ""
+msgstr "បើកមើលផលិតផល{0}"
 
 #: admin.view_additional_fields
 msgid "View Additional Fields"
-msgstr ""
+msgstr "បើកមើលប្រឡោះបន្ថែម"
 
 #: admin.view_reports_category
 msgctxt "admin.view_reports_category"
 msgid "View reports category"
-msgstr ""
+msgstr "បើកមើលផ្នែកៗនៃរបាយការ"
 
 #: admin.viewadministrativedocuments
 msgid "View administrative documents"
-msgstr ""
+msgstr "បើកមើលឯកសារដ្ឋបាល"
 
 #: admin.viewcheklists
 msgid "View checklists"
-msgstr ""
+msgstr "ពិនិត្យមើលតារាងត្រួតពិនិត្យ"
 
 #: admin.viewfees
 msgid "View fees"
-msgstr ""
+msgstr "បើកមើលតំលៃសេវា"
 
 #: admin.viewfunds
 msgid "View funds"
-msgstr ""
+msgstr "ពិនិត្យមើលថវិការ"
 
 #: admin.viewholidays
 msgid "View holidays"
-msgstr ""
+msgstr "ពិនិត្យមើលថ្ចៃឈប់សំរាក"
 
 #: admin.viewlate/dordef
 msgid "View lateness/dormancy definition"
-msgstr ""
+msgstr "ពិនិត្យមើលភាពយឺតយ៉ាវ/និយមន័យនៃគណនីដែលគ្មានចលនា"
 
 #: admin.viewloanprd
 msgid "View loan products"
-msgstr ""
+msgstr "ពិនិត្យមើលផលិតផលកំចី"
 
 #: admin.viewoff
 msgid "View offices"
-msgstr ""
+msgstr "ពិនិត្យមើលទីស្នាក់កា"
 
 #: admin.viewoffhier
 msgid "View office hierarchy"
-msgstr ""
+msgstr "ពិនិត្យមើលឋានានុក្រម្យនៃទីស្នាក់ការ"
 
 #: admin.vieworganizationsettings
 msgid "View organization settings"
-msgstr ""
+msgstr "ពិនិត្យមើលការបង្កើតអង្គភាព"
 
 #: admin.viewprdcat
 msgid "View product categories"
-msgstr ""
+msgstr "ពិនិត្យមើលផ្នែកៗនៃផលិតផល"
 
 #: admin.viewquestions
 msgid "View question bank"
-msgstr ""
+msgstr "ពិនិត្យមើលប្រអប់សំនួរ"
 
 #: admin.viewreports
 msgid "View reports"
-msgstr ""
+msgstr "បើកមើលរបាយការ"
 
 #: admin.viewsavprds
 msgid "View savings products"
-msgstr ""
+msgstr "ពិនិត្យមើលផលិតផលសន្សំ"
 
 #: admin.viewsurvey
 msgid "View surveys"
-msgstr ""
+msgstr "ពិនិត្យមើលការស្ទង់មតិមហាជន"
 
 #: admin.viewsysusers
 msgid "View system users"
-msgstr ""
+msgstr "ពិនិត្យមើលអ្នកប្រើប្រាស់ប្រពន្ធ័"
 
 #: admin.welcometomifos
 msgid "Welcome to mifos administrative area. Click on a link below to begin."
-msgstr ""
+msgstr "ផ្នែករដ្ឋបាលម៉ាយហ្វូសសូមស្វាគមន៍។ចុចលើអាស័យដ្ឋានខាងក្រោមដើម្បីចាប់ផ្តើម"
 
 #: error.activity.not.allowed
 msgid ""
 "You do not have permissions to perform this activity. Contact your system "
 "administrator to grant you the required permissions and try again."
 msgstr ""
+"អ្នកពុំមានសិទ្ធិដើម្បីធ្វើសកម្មភាពនេះទេ។​ទាក់ទងទៅអ្នកគ្រប់គ្រងប្រព័ន្ធដើម្បី"
+"អោយគេផ្តល់សិទ្ធិគ្រប់គ្រាន់​​ហើយសាកល្បងម្តងទៀត"
 
 #: errors.prefix
 msgid "<li>"
-msgstr ""
+msgstr "<li>"
 
 #: errors.suffix
 msgid "</li>"
-msgstr ""
+msgstr "<li>"
 
 #: exception.framework.DoubleSubmitException
 msgctxt "exception.framework.DoubleSubmitException"
 msgid "The action is not permissible."
-msgstr ""
+msgstr "សកម្មភាពនេះគឺមិនមានការអនុញ្ញាត្តិទេ"
 
 #: exception.framework.PageExpiredException
 msgctxt "exception.framework.PageExpiredException"
 msgid "The action is not permissible."
-msgstr ""
+msgstr "សកម្មភាពនេះគឺមិនមានការអនុញ្ញាត្តិទេ"
