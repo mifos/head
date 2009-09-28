@@ -8,7 +8,7 @@ DEPLOY_ROOT=$HOME/deploys/mifos-$JOB_NAME-deploy
 JVM_TMPDIR=/tmp/hudson-$JOB_NAME-tomcat-tmp
 # Variables for use by children/successors of this script
 export CATALINA_HOME=$DEPLOY_ROOT/tomcat6
-export CATALINA_OPTS="-Xmx512m -Djava.io.tmpdir=$JVM_TMPDIR -Djava.awt.headless=true"
+export CATALINA_OPTS="-Xmx512m -XX:MaxPermSize=128m -Djava.io.tmpdir=$JVM_TMPDIR -Djava.awt.headless=true"
 export CATALINA_PID=$DEPLOY_ROOT/tomcat.pid
 export MIFOS_CONF=$DEPLOY_ROOT/mifos_conf
 
