@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:46-0700\n"
-"PO-Revision-Date: 2009-08-21 03:14-0700\n"
+"PO-Revision-Date: 2009-09-28 22:28-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -34,166 +34,173 @@ msgstr ""
 
 #: error.noMoreDynamicActivityId
 msgid "ActivityId exceed the range, can not add any more."
-msgstr ""
+msgstr "មិនអាចបន្ងែមបានទៀតទេ កូដនៃប្រតិបត្តិការលើសពីតារាង "
 
 #: error.reportActivityIdIsNull
 msgid ""
 "The report ActivityId is NULL, so you can not edit any information of this "
 "report."
 msgstr ""
+"កូដប្រតិបត្តិការណ៍នៃរបាយការណ៍គឺមោឃះ "
+"ដូច្នេះអ្នកមិនអាចកែតំរូវពត៍មានណាមួយទេនៃរបាយការណ៍នេះ"
 
 #: error.reportAlreadyExist
 msgid ""
 "The report already exists in this category. Please enter unique report info."
 msgstr ""
+"របាយការណ៍គឺមានរួចហើយនៅក្នុងប្រភេទនេះ សូមដាក់បញ្ចូលនូវពត៍មានដោយឡែកនៃរបាយការណ៍"
 
 #: error.reportInfoNotEdit
 msgid ""
 "You have not edited the report info. Please edit the report or click Cancel "
 "to return to the View reports page."
 msgstr ""
+"អ្នកមិនបានកែតំរូវពត៍មានរបាយការណ៍ទេ សូមកែតំរូវរបាយការណ៍ "
+"ឬចុចបោះបង់ដើម្បីត្រលប់ទៅបើកមើលទំពរ៍នៃរបាយការណ៍"
 
 #: error.status
 msgid "Please choose a status."
-msgstr ""
+msgstr "សូមជ្រើសរើសលក្ខ័ណ"
 
 #: error.titleAlreadyExist
 msgid "This title already exists,please choose another title."
-msgstr ""
+msgstr "ចំនងជើងនេះគឺមានរួចហើយ សូមជ្រើសរើសចំណងជើងផ្សេងទៀត"
 
 #: error.titleName
 msgid "Please specify report title."
-msgstr ""
+msgstr "សូមបញ្ជាក់ចំនងជើងនៃរបាយការណ៍"
 
 #: errors.footer
 msgid "</UL>"
-msgstr ""
+msgstr "</UL>"
 
 #: errors.header
 msgid "<UL>"
-msgstr ""
+msgstr "<UL>"
 
 #: errors.prefix
 msgid "<LI>"
-msgstr ""
+msgstr "<LI>"
 
 #: errors.suffix
 msgid "</LI>"
-msgstr ""
+msgstr "</LI>"
 
 #: reports.Admin
 msgid "Admin"
-msgstr ""
+msgstr "រដ្ឋបាល"
 
 #: reports.ReportTemplate
 msgid "Report Template"
-msgstr ""
+msgstr "គំរូនៃរបាយការណ៍"
 
 #: reports.ShowWhenStatus
 msgid "Show when Status"
-msgstr ""
+msgstr "បង្ហាញនៅពេលដែលលក្ខ័ណ"
 
 #: reports.accountType
 msgid "Account Type"
-msgstr ""
+msgstr "ប្រភេទនៃគណនី"
 
 #: reports.active
 msgid "Active"
-msgstr ""
+msgstr "សកម្ម"
 
 #: reports.add
 msgid "Add"
-msgstr ""
+msgstr "បន្ថែម"
 
 #: reports.addreportsds
 msgid "Add DataSource"
-msgstr ""
+msgstr "បន្ងែមប្រភពនៃទិន្ន័យ"
 
 #: reports.addreportsparams
 msgid "Add Parameters"
-msgstr ""
+msgstr "បន្ថែមដែនកំនត់"
 
 #: reports.admindocumenttitle
 msgid "Administrative Document Title"
-msgstr ""
+msgstr "ចំនងជើងនៃឯកសាររដ្ឋបាល"
 
 #: reports.administerreports
 msgid "Administer reports"
-msgstr ""
+msgstr "របាយការណ៍រដ្ឋបាល"
 
 #: reports.administrativeDocumentDetails
 msgid "Administrative document details"
-msgstr ""
+msgstr "លំអិតនៃឯកសាររដ្ឋបាល"
 
 #: reports.administrativedocument
 msgid "Administrative Document"
-msgstr ""
+msgstr "ឯកសារដ្ឋបាល"
 
 #: reports.administrativedocuments
 msgid "Administrative documents"
-msgstr ""
+msgstr "ឯកសារដ្ឋបាល"
 
 #: reports.cancel
 msgid "Cancel"
-msgstr ""
+msgstr "បោះបង់"
 
 #: reports.category
 msgid "Category"
-msgstr ""
+msgstr "ក្រុម"
 
 #: reports.changeReportInfo
 msgid ""
 "Click on the Edit link to make changes to report's status, category, or "
 "report design document"
 msgstr ""
+"ចុចលើពាក្យកែតំរូវដែលភ្ជាប់ដើម្បីធ្វើការប្តូទៅលក្ខ័ណ ប្រភេទ "
+"ឬរបៀបនៃការរៀបចំឯកសាររបស់របាយការណ៍ "
 
 #: reports.classname
 msgid "Classname"
-msgstr ""
+msgstr "ឈ្មោះថ្នាក់"
 
 #: reports.clickCancel
 msgid "Click Cancel to return to Admin page without submitting information."
-msgstr ""
+msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័ររដ្ឋបាលដោយមិនចាំបាច់បញ្ជូនពត៍មាន"
 
 #: reports.clickSubmit
 msgid "Click Submit if you are satisfied or click Edit to make changes."
-msgstr ""
+msgstr "ចុចបញ្ជូនប្រសិនបើអ្នកពេញចិត្ត ឬចុចកែប្រែដើម្បីធ្វើការផ្លាស់ប្តូ"
 
 #: reports.createNewReportInfo
 msgid "To install a new BIRT report, click on {0}."
-msgstr ""
+msgstr "ដើម្បីតំឡើងរបាយការណ៍BIRTថ្មីសូមចុចលើ{0}."
 
 #: reports.data
 msgid "Data"
-msgstr ""
+msgstr "ទិន្ន័យ"
 
 #: reports.description
 msgid "Description"
-msgstr ""
+msgstr "ការពិពណ៍នា"
 
 #: reports.details
 msgid "Report details"
-msgstr ""
+msgstr "លំអិតនៃរបាយការណ៍"
 
 #: reports.documentInformation
 msgid "Document information"
-msgstr ""
+msgstr "ឯកសារពត៍មាន"
 
 #: reports.dot
 msgid "."
-msgstr ""
+msgstr "."
 
 #: reports.download
 msgid "Download"
-msgstr ""
+msgstr "យកចេញ"
 
 #: reports.downloadadminDocuments
 msgid "Download administrative document"
-msgstr ""
+msgstr "យកឯកសាររដ្ឋបាលចេញពីក្នុងប្រព័ន្ធ"
 
 #: reports.driver
 msgid "Driver"
-msgstr ""
+msgstr "អ្នកបើកបរ"
 
 #: reports.dsname
 msgid "Datasource Name"
@@ -201,86 +208,90 @@ msgstr ""
 
 #: reports.edit
 msgid "Edit"
-msgstr ""
+msgstr "កែតំរូវ"
 
 #: reports.editDocumentInformation
 msgid "Edit document information"
-msgstr ""
+msgstr "កែពត៍មានរបស់ឯកសារ"
 
 #: reports.editReportInformation
 msgctxt "reports.editReportInformation"
 msgid "Edit report information"
-msgstr ""
+msgstr "កែពត៍មានរបាយការណ៍"
 
 #: reports.editinformation
 msgctxt "reports.editinformation"
 msgid "Edit report information"
-msgstr ""
+msgstr "កែពត៍មានរបាយការណ៍"
 
 #: reports.editreporttips
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "report details without submitting information."
 msgstr ""
+"បំពេញប្រលោះខាងក្រោម រួចចុចបើកមើល។ចុចបោះបង់ដើម្បីត្រលប់ទៅលំអិតនៃរបាយការណ៍ដោយម"
+"ិនចាំបាច់បញ្ជូនពត៍មាន"
 
 #: reports.editreporttipswithasterisk
 msgctxt "reports.editreporttipswithasterisk"
 msgid "Fields marked with an asterisk are required."
-msgstr ""
+msgstr "ប្រលោះដែលមានសញ្ញាផ្កាយគឺតំរូវអោយមានពត៍មានបំពេញ"
 
 #: reports.enterDocumentInformation
 msgid "Enter document information"
-msgstr ""
+msgstr "ដាក់បញ្ជូលពត៍មានរបស់ឯកសារ"
 
 #: reports.enterRInformation
 msgid "Enter report information"
-msgstr ""
+msgstr "ដាក់បញ្ចូលពត៍មាននៃរបាយការណ៍"
 
 #: reports.exportformat
 msgid "Select one of the following Export Format"
-msgstr ""
+msgstr "ជ្រើសរើសមួយនៃទំរង់ដែលបានដកចេញពីខាងក្រោម"
 
 #: reports.inactive
 msgid "Inactive"
-msgstr ""
+msgstr "អសកម្ម"
 
 #: reports.information
 msgid "Report information"
-msgstr ""
+msgstr "ពត៍មានរបាយការណ៍"
 
 #: reports.instructions
 msgid ""
 "Welcome to mifos reports area. Click on a report name below to view the "
 "report"
 msgstr ""
+"សូមស្វាគមន៍ការមកពិនិត្យរបាយការណ៍ម៉ាយហ្វូស។ចុចលើឈ្មោះរបាយការណ៍ខាងក្រោមដើម្បីប"
+"ើកមើលរបាយការណ៍"
 
 #: reports.labelAdministrativeDocument
 msgid "Select Administrative Document"
-msgstr ""
+msgstr "ជ្រើសរើសឯកសាររដ្ឋបាល"
 
 #: reports.labelCategory
 msgid "Report category"
-msgstr ""
+msgstr "ប្រភេទនៃរបាយការណ៍"
 
 #: reports.labelReportStatus
 msgid "Report Status"
-msgstr ""
+msgstr "លក្ខ័ណនៃរបាយការណ៍"
 
 #: reports.labelSelectTemplate
 msgid "Select report template"
-msgstr ""
+msgstr "ជ្រើសរើ់សគំរូនៃរបាយការណ៍"
 
 #: reports.labelTitle
 msgid "Report title"
-msgstr ""
+msgstr "ចំណងជើងនៃរបាយការណ៍"
 
 #: reports.linkviewreport
 msgid "View reports"
-msgstr ""
+msgstr "បើកមើលរបាយការណ៍"
 
 #: reports.linkviewtemplate
 msgid "View Template"
-msgstr ""
+msgstr "បើកមើ់លទំរង់គំរូ"
 
 #: reports.listds
 msgid "List Datasources"
@@ -288,130 +299,136 @@ msgstr ""
 
 #: reports.listparams
 msgid "List Parameters"
-msgstr ""
+msgstr "តារាងនៃដែនកំណត់"
 
 #: reports.listparamsmap
 msgid "Map Parameter and Report"
-msgstr ""
+msgstr "ផែនទីនៃដែនកំនត់និងរបាយការណ៍"
 
 #: reports.listreports
 msgid "List Reports"
-msgstr ""
+msgstr "តារាងនៃរបាយការណ៍"
 
 #: reports.listuserparam
 msgid "Enter Parameters"
-msgstr ""
+msgstr "ដាក់បញ្ចូលដែនកំនត់"
 
 #: reports.markedFieldStatement
 msgctxt "reports.markedFieldStatement"
 msgid "Fields marked with an asterisk are required."
-msgstr ""
+msgstr "ប្រឡោះដែលមានសញ្ញាផ្កាយគឺតំរូវអោយបំពេញ"
 
 #: reports.newReportLinkText
 msgid "upload a new report"
-msgstr ""
+msgstr "ដាក់បញ្ចូលរបាយការណ៍ថ្មីមួយទៅក្នុងប្រព័ន្ធ"
 
 #: reports.or
 msgid "or"
-msgstr ""
+msgstr "ឬ"
 
 #: reports.parameters
 msgid "Parameters"
-msgstr ""
+msgstr "ដែនកំនត់"
 
 #: reports.paramname
 msgid "Parameter Name"
-msgstr ""
+msgstr "ឈ្មោះនៃដែនកំនត់"
 
 #: reports.password
 msgid "Password"
-msgstr ""
+msgstr "ពាក្យសំងាត់"
 
 #: reports.preview
 msgid "Preview"
-msgstr ""
+msgstr "ពិនិត្យមើលជាមុន"
 
 #: reports.previewreporttips
 msgid ""
 "Review the fields below. Then click Submit. Click Cancel to return to report "
 "details without submitting information."
 msgstr ""
+"បើកមើលប្រឡោះខាងក្រោម។រួចចុចបញ្ជូន។ចុចបោះបង់ដើម្បីត្រលប់ទៅពត៍មានលំអិតនៃរបាយកា"
+"រណ៍ដោយមិនចាំបាច់បញ្ជូនពត៍មានថែម"
 
 #: reports.reports
 msgid "Reports"
-msgstr ""
+msgstr "របាយការណ៍"
 
 #: reports.review&submit
 msgid "Review & submit"
-msgstr ""
+msgstr "ពិនិត្យឡើងវិញ និង​បញ្ជូន"
 
 #: reports.reviewStatement
 msgid "Review the information below."
-msgstr ""
+msgstr "ពិនិត្យនូវពត៍មានខាងក្រោម"
 
 #: reports.selectReport
 msgid "To select, click on a report from the list below."
-msgstr ""
+msgstr "ដើម្បីជ្រើសរើស សូមចុចលើរបាយការណ៍មួយពីតារាងខាងក្រោម"
 
 #: reports.statement
 msgid ""
 "Complete the fields below. Click Cancel to return to Admin without "
 "submitting information."
 msgstr ""
+"បំពេញនូវប្រឡោះខាងក្រោម "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅរដ្ឋបាលដោយមិនចាំបាច់បញ្ជូនពត៍មាន"
 
 #: reports.status
 msgid "status"
-msgstr ""
+msgstr "លក្ខ័ណ"
 
 #: reports.submit
 msgid "Submit"
-msgstr ""
+msgstr "បញ្ជូន"
 
 #: reports.summaryandreport
 msgid "Client Summary & History Report"
-msgstr ""
+msgstr "សង្ខេបនៃអតិថិជន​ និងប្រវត្តិនៃរបាយការណ៍"
 
 #: reports.title
 msgid "Title"
-msgstr ""
+msgstr "ចំនងជើង"
 
 #: reports.toeditclickon
 msgid ""
 "To edit click on the Edit link, to download click on Download admin document "
 "link or to"
 msgstr ""
+"ដើម្បីកែតំរូវសូមចុចលើពាក្យកែតំរូវដែលបានភ្ជាប់មកជាមួយ។ដើម្បីយកឯកសារចេញសូមចុចល"
+"ើ់ពាក្យយកចេញឯកសាររដ្ឋបាលដែលភ្ជាប់ជាមួយឬទៅ"
 
 #: reports.type
 msgid "Type"
-msgstr ""
+msgstr "ប្រភេទ"
 
 #: reports.upload
 msgid "Upload"
-msgstr ""
+msgstr "ដាក់បញ្ចូល"
 
 #: reports.uploadAdministrativeDocument
 msgid "Upload administrative document"
-msgstr ""
+msgstr "ដាក់បញ្ចូលឯកសាររដ្ឋបាល"
 
 #: reports.uploadReport
 msgid "Upload report"
-msgstr ""
+msgstr "ដាក់បញ្ជូលរបាយការណ៍"
 
 #: reports.upload_report
 msgid "Upload Report"
-msgstr ""
+msgstr "ដាក់បញ្ជូលរបាយការណ៍"
 
 #: reports.uploadanewadmindoc
 msgid "upload a new administrative document"
-msgstr ""
+msgstr "ដាក់បញ្ចូលឯកសាររដ្ឋបាលថ្មីមួយ"
 
 #: reports.url
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: reports.username
 msgid "Username"
-msgstr ""
+msgstr "ឈ្មោះអ្នកប្រើប្រាស់"
 
 #: reports.viewreportsds
 msgid "View DataSource"
@@ -419,4 +436,4 @@ msgstr ""
 
 #: reports.viewreportsparams
 msgid "View Parameter"
-msgstr ""
+msgstr "បើកមើលដែនកំនត់"
