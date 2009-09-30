@@ -37,10 +37,10 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbur
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationIssueBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
+import org.mifos.application.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence;
 
 public class BranchCashConfirmationReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 

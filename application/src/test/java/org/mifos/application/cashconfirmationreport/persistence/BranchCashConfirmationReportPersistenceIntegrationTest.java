@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.report.branchcashconfirmation.persistence;
+package org.mifos.application.cashconfirmationreport.persistence;
 
 import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
 
@@ -36,6 +36,7 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbur
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationIssueBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
+import org.mifos.application.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;

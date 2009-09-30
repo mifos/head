@@ -30,7 +30,7 @@
 	<bean id="branchReportPersistence"
 		class="org.mifos.application.branchreport.persistence.BranchReportPersistence" />
 	<bean id="branchCashConfirmationReportPersistence"
-		class="org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence">
+		class="org.mifos.application.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence">
 		<constructor-arg ref="prdOfferingPersistence" />
 	</bean>
 	<bean id="reportProductOfferingService"

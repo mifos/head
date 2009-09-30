@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.report.branchcashconfirmation.persistence;
+package org.mifos.application.cashconfirmationreport.persistence;
 
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_CASH_CONFIRMATION_CENTER_RECOVERIES;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_CASH_CONFIRMATION_DISBURSEMENTS;
