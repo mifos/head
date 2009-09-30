@@ -13,7 +13,7 @@
     </issueManagement>
     <ciManagement>
         <system>Hudson</system>
-        <url>https://newneem.mifos.org:8843/hudson/view/Main/</url>
+        <url>https://ci.mifos.org/hudson/</url>
     </ciManagement>
     <licenses>
         <license>
