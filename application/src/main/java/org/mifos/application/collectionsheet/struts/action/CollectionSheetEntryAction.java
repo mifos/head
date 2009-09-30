@@ -273,15 +273,22 @@ public class CollectionSheetEntryAction extends BaseAction {
         final CollectionSheetErrorsView collectionSheetErrors = this.collectionSheetServiceFacade.saveCollectionSheet(
                 previousCollectionSheetEntryDto, decomposedViews, getUserContext(request).getId());
 
-        storeOnRequestErrorAndCollectionSheetData(request, decomposedViews, collectionSheetErrors);
+        logAfterSave(request, decomposedViews, System.currentTimeMillis() - beforeSaveData, collectionSheetErrors
+                .isDatabaseError());
 
-        logAfterSave(request, decomposedViews, beforeSaveData);
+        storeOnRequestErrorAndCollectionSheetData(request, decomposedViews, collectionSheetErrors);
 
         request.setAttribute(CollectionSheetEntryConstants.CENTER, previousCollectionSheetEntryDto.getBulkEntryParent()
                 .getCustomerDetail().getDisplayName());
 
         setErrorMessagesIfErrorsExist(request, collectionSheetErrors);
 
+        /*
+         * Visit CREATESUCCESS if user entered data that breaks business rules,
+         * such as withdrawing more than the total amount in a savings account.
+         * Is this intended? It seems like we wouldn't want to even call
+         * saveCollectionSheet if business rules were violated in this manner.
+         */
         return mapping.findForward(CollectionSheetEntryConstants.CREATESUCCESS);
     }
 
@@ -329,29 +336,40 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         final StringBuilder builder = new StringBuilder();
         final ActionErrors actionErrors = new ActionErrors();
-        if (collectionSheetErrors.getSavingsDepNames().size() > 0
+        final boolean savingsOrCollectionsErrors = collectionSheetErrors.getSavingsDepNames().size() > 0
                 || collectionSheetErrors.getSavingsWithNames().size() > 0
-                || collectionSheetErrors.getCustomerAccountNumbers().size() > 0) {
+                || collectionSheetErrors.getCustomerAccountNumbers().size() > 0;
+        final boolean persistenceError =  collectionSheetErrors.isDatabaseError();
+        if (savingsOrCollectionsErrors) {
             getErrorString(builder, collectionSheetErrors.getSavingsDepNames(), savingsDeposit);
             getErrorString(builder, collectionSheetErrors.getSavingsWithNames(), savingsWithdrawal);
             getErrorString(builder, collectionSheetErrors.getCustomerAccountNumbers(), acCollection);
             builder.append("<br><br>");
             actionErrors.add(CollectionSheetEntryConstants.ERRORSUPDATE, new ActionMessage(
                     CollectionSheetEntryConstants.ERRORSUPDATE, builder.toString()));
+        }
+
+        if (persistenceError) {
+            actionErrors.add(CollectionSheetEntryConstants.DATABASE_ERROR, new ActionMessage(
+                    CollectionSheetEntryConstants.DATABASE_ERROR, collectionSheetErrors.getDatabaseError()));
+        }
+        
+        if (savingsOrCollectionsErrors || persistenceError) {
             request.setAttribute(Globals.ERROR_KEY, actionErrors);
         }
     }
 
     private void logAfterSave(final HttpServletRequest request,
-            final CollectionSheetEntryDecomposedView decomposedViews, final long beforeSaveData) {
+            final CollectionSheetEntryDecomposedView decomposedViews, final long elapsedTimeInMillis,
+            final boolean isDatabaseError) {
         logger.info("after saveData(). session id:" + request.getSession().getId() + ". "
                 + getUpdateTotalsString(decomposedViews) + ". Saving bulk entry data ran for approximately "
-                + (System.currentTimeMillis() - beforeSaveData) / 1000.0 + " seconds."
-                + getAmmountTotalLogs(decomposedViews));
+                + elapsedTimeInMillis / 1000.0 + " seconds." + getAmountTotalLogs(decomposedViews)
+                + ". isDatabaseError=" + isDatabaseError);
 
     }
 
-    private String getAmmountTotalLogs(CollectionSheetEntryDecomposedView decomposedViews) {
+    private String getAmountTotalLogs(CollectionSheetEntryDecomposedView decomposedViews) {
         String logMsg = "";
         Double totalCustomerAccountAmountDue = 0.0;
         Double totalCustomerAccountAmountEntered = 0.0;

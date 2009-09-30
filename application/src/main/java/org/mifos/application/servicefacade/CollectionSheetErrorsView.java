@@ -22,21 +22,25 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 /**
- * I am a DTO for tracking problems with savings and customer accounts during a
- * collection sheet save/create.
+ * I am a DTO for tracking problems with savings/customer accounts and
+ * persisting to the database during a collection sheet save/create.
  */
 public class CollectionSheetErrorsView {
 
     private final List<String> savingsDepNames;
     private final List<String> savingsWithNames;
     private final List<String> customerAccountNumbers;
+    private final boolean isDatabaseError;
+    private final Throwable databaseError;
 
-    public CollectionSheetErrorsView(List<String> savingsDepNames,
-            List<String> savingsWithNames,
-            final List<String> customerAccountNumbers) {
+    public CollectionSheetErrorsView(final List<String> savingsDepNames, final List<String> savingsWithNames,
+            final List<String> customerAccountNumbers, final boolean databaseErrorOccurred,
+            final Throwable databaseError) {
         this.savingsDepNames = savingsDepNames;
         this.savingsWithNames = savingsWithNames;
         this.customerAccountNumbers = customerAccountNumbers;
+        this.isDatabaseError = databaseErrorOccurred;
+        this.databaseError = databaseError;
     }
 
     public List<String> getSavingsDepNames() {
@@ -49,5 +53,13 @@ public class CollectionSheetErrorsView {
 
     public List<String> getCustomerAccountNumbers() {
         return this.customerAccountNumbers;
+    }
+
+    public boolean isDatabaseError() {
+        return this.isDatabaseError;
+    }
+
+    public Throwable getDatabaseError() {
+        return this.databaseError;
     }
 }

@@ -286,7 +286,7 @@
             <forward name="get_success" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp"/>
             <forward name="preview_success" path="/pages/application/collectionsheet/jsp/bulkentry_preview.jsp"/>
             <forward name="create_success" path="/pages/application/collectionsheet/jsp/bulkentryconfirmation.jsp"/>
-            <forward name="create_failure" path="/pages/application/collectionsheet/jsp/bulkentryconfirmation.jsp"/>
+            <forward name="create_failure" path="/pages/application/collectionsheet/jsp/bulkentry_preview.jsp"/>
             <forward name="previous_success" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp"/>
             <forward name="get_failure" path="/pages/application/collectionsheet/jsp/bulkentry.jsp"/>
             <forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=bulkentrypage"/>

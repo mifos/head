@@ -29,10 +29,12 @@ public interface CollectionSheetEntryConstants {
     public String LOADLOANOFFICERS = "loadLoanOfficers";
     public String LOADCUSTOMERS = "loadCustomers";
 
+    // FIXME: add underbars for readability
     public String LOADSUCCESS = "load_success";
     public String GETSUCCESS = "get_success";
     public String PREVIEWSUCCESS = "preview_success";
     public String CREATESUCCESS = "create_success";
+    public String CREATE_FAILURE = "create_failure";
     public String PREVIOUSSUCCESS = "previous_success";
     public String GET_FAILURE = "get_failure";
 
@@ -74,6 +76,7 @@ public interface CollectionSheetEntryConstants {
     public String INVALIDDATE = "errors.invaliddate";
     public String MEETINGDATEEXCEPTION = "errors.meetingdate";
     public String ERRORSUPDATE = "errors.update";
+    public String DATABASE_ERROR = "errors.database";
     public String REFRESH = "refresh";
 
     public String PRESENT = "1";

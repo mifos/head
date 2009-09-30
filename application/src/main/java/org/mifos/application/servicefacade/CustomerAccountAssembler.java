@@ -40,9 +40,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- *
- */
 public class CustomerAccountAssembler {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(CustomerAccountAssembler.class.getName());
@@ -70,16 +67,14 @@ public class CustomerAccountAssembler {
                             .getAccountActionDates(), new Money(customerAccountView.getCustomerAccountAmountEntered()),
                             payment);
 
-                    String globalCustomerAccountNum = "Unknown";
                     try {
                         final CustomerAccountBO account = findCustomerAccountByIdWithLoanSchedulesInitialized(accountId);
-                        globalCustomerAccountNum = account.getGlobalAccountNum();
                         account.applyPayment(accountPaymentDataView, false);
                         customerAccountList.add(account);
                     } catch (AccountException ae) {
-                        logger.warn("Payment of loan on account [" + globalCustomerAccountNum
+                        logger.warn("Payment of collection/fee on account [" + accountId
                                 + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
-                        failedCustomerAccountPaymentNums.add(globalCustomerAccountNum);
+                        failedCustomerAccountPaymentNums.add(accountId.toString());
                     }
                 }
             }

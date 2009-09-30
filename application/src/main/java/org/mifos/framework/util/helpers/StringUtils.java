@@ -58,6 +58,7 @@ public class StringUtils {
 
     /**
      * TODO: delegate to !{@link #isNullOrEmpty(String)} and then inline.
+     * @deprecated
      */
     public static boolean isNullAndEmptySafe(String stringToBeChecked) {
         return (stringToBeChecked != null) && !isEmpty(stringToBeChecked);

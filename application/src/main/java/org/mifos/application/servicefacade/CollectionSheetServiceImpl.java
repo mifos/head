@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
@@ -34,12 +35,8 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-/**
- *
- */
 public class CollectionSheetServiceImpl implements CollectionSheetService {
 
     private final ClientAttendanceDao clientAttendanceDao;
@@ -73,9 +70,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             savingsPersistence.save(savingAccounts);
 
             StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
+            throw e;
         } finally {
             StaticHibernateUtil.closeSession();
         }

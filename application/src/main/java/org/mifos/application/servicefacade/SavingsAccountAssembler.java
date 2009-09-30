@@ -39,13 +39,13 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- *
- */
 public class SavingsAccountAssembler {
+    private static final MifosLogger logger = MifosLogManager.getLogger(SavingsAccountAssembler.class.getName());
 
     private final SavingsPersistence savingsPersistence;
     private final CustomerPersistence customerPersistence;
@@ -106,7 +106,9 @@ public class SavingsAccountAssembler {
                             account.deposit(accountDeposit, payingCustomer);
                             storeAccountForSavingLater = true;
                         } catch (AccountException e) {
-                            failedSavingsDepositAccountNums.add(account.getGlobalAccountNum());
+                            logger.warn("Savings deposit on account [" + account.getAccountId()
+                                    + "] failed. Account changes will not be persisted due to: " + e.getMessage());
+                            failedSavingsDepositAccountNums.add(account.getAccountId().toString());
                         }
                     }
 
@@ -119,7 +121,9 @@ public class SavingsAccountAssembler {
                             account.withdraw(accountWithdrawal, payingCustomer);
                             storeAccountForSavingLater = true;
                         } catch (AccountException e) {
-                            failedSavingsWithdrawalNums.add(account.getGlobalAccountNum());
+                            logger.warn("Savings withdrawl on account [" + account.getAccountId()
+                                    + "] failed. Account changes will not be persisted due to: " + e.getMessage());
+                            failedSavingsWithdrawalNums.add(account.getAccountId().toString());
                         }
                     }
 

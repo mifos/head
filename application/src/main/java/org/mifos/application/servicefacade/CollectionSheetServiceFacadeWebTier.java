@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -49,6 +50,9 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -60,6 +64,7 @@ import org.mifos.framework.util.helpers.DateUtils;
  * Default implementation of {@link CollectionSheetServiceFacade}.
  */
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
 
     private final OfficePersistence officePersistence;
     private final MasterPersistence masterPersistence;
@@ -204,7 +209,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
     public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
-        
+
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
                 .getCustomer().getCustomerId(), formEnteredDataDto.getMeetingDate());
 
@@ -213,7 +218,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                     MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",
                     "attendanceId").getCustomValueListElements();
 
-            
             final CollectionSheetEntryGridDto translatedGridView = collectionSheetTranslator.toLegacyDto(
                     collectionSheet, formEnteredDataDto, attendanceTypesList, currency);
 
@@ -273,10 +277,20 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         final List<AccountBO> customerAccounts = customerAccountAssembler.fromDto(customerAccountViews, payment,
                 failedCustomerAccountPaymentNums);
 
-        collectionSheetService.saveCollectionSheet(clientAttendances, loanAccounts, customerAccounts, savingsAccounts);
+        boolean databaseErrorOccurred = false;
+        Throwable databaseError = null;
+
+        try {
+            collectionSheetService.saveCollectionSheet(clientAttendances, loanAccounts, customerAccounts,
+                    savingsAccounts);
+        } catch (HibernateException e) {
+            logger.error("database error saving collection sheet", e);
+            databaseErrorOccurred = true;
+            databaseError = e;
+        }
 
         return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
-                failedCustomerAccountPaymentNums);
+                failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
     }
 
     private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<MasterDataEntity> paymentTypesList) {
