@@ -29,6 +29,7 @@ public class BundleKeyTest extends TestCase {
 
     private BundleKey bundleKey = null;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         Locale locale = new Locale("EN");
