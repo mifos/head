@@ -36,11 +36,11 @@ public class BundleKeyTest extends TestCase {
     }
 
     public void testHashCode() {
-       Assert.assertEquals(905023, bundleKey.hashCode());
+        Assert.assertEquals(905023, bundleKey.hashCode());
     }
 
     public void testEqualsObject() {
-       Assert.assertTrue(bundleKey.equals(bundleKey));
+        Assert.assertTrue(bundleKey.equals(bundleKey));
         Assert.assertFalse(bundleKey.equals(null));
         Locale locale = new Locale("EN");
         Assert.assertFalse(bundleKey.equals(new BundleKey(locale, "wrongKey")));
