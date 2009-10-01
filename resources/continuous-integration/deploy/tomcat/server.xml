@@ -21,7 +21,7 @@
     <Connector port="8085" protocol="HTTP/1.1" connectionTimeout="20000" />
     <Engine name="Catalina" defaultHost="localhost">
       <Host name="localhost"  appBase="webapps"
-            unpackWARs="false" autoDeploy="true"
+            unpackWARs="true" autoDeploy="true"
             xmlValidation="false" xmlNamespaceAware="false"/>
     </Engine>
   </Service>
