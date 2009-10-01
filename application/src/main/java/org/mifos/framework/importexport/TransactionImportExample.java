@@ -33,6 +33,10 @@ public class TransactionImportExample implements TransactionImport {
     public List<String> parseTransactions(BufferedReader input) {
         List<String> errors = new ArrayList<String>();
         List<ImportRow> dataToImport = new ArrayList<ImportRow>();
+        // TODO: look up Mifos account IDs based on contents of import
+        // make injectable: whatever is used to do lookups should be injectable
+        // "getMifosLoanIdFromLegacyLoanId" or something
+
         // TODO: call api, passing in dataToImport
         return errors;
     }

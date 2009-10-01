@@ -44,6 +44,10 @@ public class TransactionImportTest extends TestCase {
         transactionImport = null;
         super.tearDown();
     }
+    
+    public void testGoodImport() {
+        assertTrue("unimplemented", false);
+    }
 
     public void testMissingData() {
         BufferedReader input = new BufferedReader(new StringReader("blah"));
