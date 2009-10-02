@@ -21,31 +21,39 @@
 package org.mifos.application.customer.business;
 
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 
 public class CustomerBOTestUtils {
 
-    public static void setCustomerStatus(CustomerBO customer, CustomerStatusEntity customerStatusEntity) {
+    public static void setCustomerStatus(final CustomerBO customer, final CustomerStatusEntity customerStatusEntity) {
         customer.setCustomerStatus(customerStatusEntity);
     }
 
-    public static void setCustomerMeeting(CustomerBO customer, CustomerMeetingEntity customerMeeting) {
+    public static void setCustomerMeeting(final CustomerBO customer, final CustomerMeetingEntity customerMeeting) {
         customer.setCustomerMeeting(customerMeeting);
     }
 
-    public static void setPersonnel(CustomerBO customer, PersonnelBO personnel) {
+    public static void setPersonnel(final CustomerBO customer, final PersonnelBO personnel) {
         customer.setPersonnel(personnel);
     }
 
-    public static void setDisplayName(CustomerBO customer, String displayName) {
+    public static void setDisplayName(final CustomerBO customer, final String displayName) {
         customer.setDisplayName(displayName);
     }
 
-    public static void setUpdatedFlag(CustomerMeetingEntity customerMeetingEntity, Short updatedFlag) {
+    public static void setUpdatedFlag(final CustomerMeetingEntity customerMeetingEntity, final Short updatedFlag) {
         customerMeetingEntity.setUpdatedFlag(updatedFlag);
     }
 
-    public static void addFeesTrxnDetail(CustomerTrxnDetailEntity accountTrxnEntity, FeesTrxnDetailEntity feeTrxn) {
+    public static void setUpdatedMeeting(final CustomerMeetingEntity customerMeetingEntity,
+            final MeetingBO updatedMeeting) {
+        customerMeetingEntity.setUpdatedFlag(YesNoFlag.YES.getValue());
+        customerMeetingEntity.setUpdatedMeeting(updatedMeeting);
+    }
+
+    public static void addFeesTrxnDetail(final CustomerTrxnDetailEntity accountTrxnEntity, final FeesTrxnDetailEntity feeTrxn) {
         accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
     }
 

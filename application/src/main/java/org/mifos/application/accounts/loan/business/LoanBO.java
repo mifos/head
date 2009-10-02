@@ -124,6 +124,7 @@ public class LoanBO extends AccountBO {
      * {@link SecurityConstants#FUNDS_CREATE_FUNDS} ?
      */
     private Integer businessActivityId;
+    
     private Money loanAmount;
     private Money loanBalance;
     private Short noOfInstallments;

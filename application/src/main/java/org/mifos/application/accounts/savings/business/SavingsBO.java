@@ -1911,7 +1911,7 @@ public class SavingsBO extends AccountBO {
 
     private void updateSavingsSchedule(final Short nextInstallmentId, final List<Date> meetingDates) {
         short installmentId = nextInstallmentId;
-        for (int count = nextInstallmentId; count < meetingDates.size(); count++) {
+        for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 
             if (accountActionDate != null) {
