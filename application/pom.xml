@@ -587,11 +587,6 @@
             <version>1.1.2</version>
         </dependency>
         <dependency>
-            <groupId>jspsmart</groupId>
-            <artifactId>jspsmart</artifactId>
-            <version>20050208</version>
-        </dependency>
-        <dependency>
             <groupId>struts</groupId>
             <artifactId>struts</artifactId>
             <version>1.2.7</version>
