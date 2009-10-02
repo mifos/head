@@ -280,7 +280,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
         xml.startTag("p");
         xml.startTag("a", "href",
-                "http://mifos.org/developers/wiki/ConfiguringMifos#customizing-your-database-connection");
+                "http://www.mifos.org/knowledge/support/deploying-mifos/configuration/guide");
         xml.text("More about configuring your database connection.");
         xml.endTag("a");
         xml.endTag("p");
