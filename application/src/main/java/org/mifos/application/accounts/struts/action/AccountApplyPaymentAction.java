@@ -139,6 +139,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 
         try {
             Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
+            Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
 
             if (!account.isTrxnDateValid(trxnDate))
                 throw new AccountException("errors.invalidTxndate");
@@ -152,7 +153,6 @@ public class AccountApplyPaymentAction extends BaseAction {
                 amount = account.getTotalPaymentDue();
             }
 
-            Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
             PaymentData paymentData = account.createPaymentData(uc, amount, trxnDate, actionForm.getReceiptId(),
                     receiptDate, Short.valueOf(actionForm.getPaymentTypeId()));
             account.applyPaymentWithPersist(paymentData);
