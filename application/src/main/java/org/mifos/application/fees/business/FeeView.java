@@ -90,7 +90,7 @@ public class FeeView extends View {
 
     public Double getAmountMoney() {
 
-        return LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount);
+        return new LocalizationConverter().getDoubleValueForCurrentLocale(amount);
     }
 
     public void setAmount(String amount) {

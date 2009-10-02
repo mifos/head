@@ -133,7 +133,7 @@ public class FiscalCalendarRulesTest extends TestCase {
         Calendar calendar = new GregorianCalendar(pdt);
         try {
             Locale savedLocale = Localization.getInstance().getMainLocale();
-            LocalizationConverter.getInstance().setCurrentLocale(Locale.US);
+            new LocalizationConverter().setCurrentLocale(Locale.US);
             SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
             // Keith: DateFormat must be set to the same timezone as the
             // calendar
@@ -145,7 +145,7 @@ public class FiscalCalendarRulesTest extends TestCase {
             calendar.setTime(thursday);
             String out = thursday.toString();
             out.contains("A");
-            LocalizationConverter.getInstance().setCurrentLocale(savedLocale);
+            new LocalizationConverter().setCurrentLocale(savedLocale);
         } catch (Exception e) {
 
         }

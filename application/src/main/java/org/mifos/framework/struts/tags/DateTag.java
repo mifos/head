@@ -120,7 +120,7 @@ public class DateTag extends BaseInputTag {
             // this line will be put back when date is localized Locale locale =
             // userContext.getPreferredLocale();
             // the following line will be removed when date is localized
-            Locale locale = LocalizationConverter.getInstance().getDateLocale();
+            Locale locale = new LocalizationConverter().getDateLocale();
             String output = render(locale, currentDateValue);
             TagUtils.getInstance().write(pageContext, output);
         }
@@ -202,7 +202,7 @@ public class DateTag extends BaseInputTag {
 
     String getUserFormat(Locale locale) {
         // the following line will be removed when date is localized
-        locale = LocalizationConverter.getInstance().getDateLocale();
+        locale = new LocalizationConverter().getDateLocale();
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
         return ((SimpleDateFormat) df).toPattern();
     }
@@ -226,7 +226,7 @@ public class DateTag extends BaseInputTag {
 
         dateFunction.append("onBlur,");
         dateFunction.append("makeDateString(");
-        String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+        String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
         StringTokenizer tokenizer = new StringTokenizer(format, dateSeparator);
         while (tokenizer.hasMoreTokens()) {
             String ch = tokenizer.nextToken();

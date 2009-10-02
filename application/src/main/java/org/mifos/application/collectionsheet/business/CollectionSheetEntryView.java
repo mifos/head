@@ -240,7 +240,7 @@ public class CollectionSheetEntryView extends View {
                 savingsAccountView.setWithDrawalAmountEntered(withDrawalAmountEnteredValue);
                 try {
                     if (depositAmountEnteredValue != null && !"".equals(depositAmountEnteredValue.trim())) {
-                        LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(depositAmountEnteredValue);
+                        new LocalizationConverter().getDoubleValueForCurrentLocale(depositAmountEnteredValue);
                         savingsAccountView.setValidDepositAmountEntered(true);
                     }
                 } catch (NumberFormatException nfe) {
@@ -248,7 +248,7 @@ public class CollectionSheetEntryView extends View {
                 }
                 try {
                     if (withDrawalAmountEnteredValue != null && !"".equals(withDrawalAmountEnteredValue.trim())) {
-                        LocalizationConverter.getInstance()
+                        new LocalizationConverter()
                                 .getDoubleValueForCurrentLocale(withDrawalAmountEnteredValue);
                         savingsAccountView.setValidWithDrawalAmountEntered(true);
                     }
@@ -266,7 +266,7 @@ public class CollectionSheetEntryView extends View {
                 loanAccountView.setDisBursementAmountEntered(disbursementAmount);
                 try {
                     if (null != enteredAmountValue) {
-                        LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(enteredAmountValue);
+                        new LocalizationConverter().getDoubleValueForCurrentLocale(enteredAmountValue);
                     }
                     loanAccountView.setValidAmountEntered(true);
                 } catch (NumberFormatException ne) {
@@ -274,7 +274,7 @@ public class CollectionSheetEntryView extends View {
                 }
                 try {
                     if (null != disbursementAmount) {
-                        LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(disbursementAmount);
+                        new LocalizationConverter().getDoubleValueForCurrentLocale(disbursementAmount);
                     }
                     loanAccountView.setValidDisbursementAmount(true);
                 } catch (NumberFormatException ne) {
@@ -288,7 +288,7 @@ public class CollectionSheetEntryView extends View {
     public void setCustomerAccountAmountEntered(final String customerAccountAmountEntered) {
         customerAccountDetails.setCustomerAccountAmountEntered(customerAccountAmountEntered);
         try {
-            LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(customerAccountAmountEntered);
+            new LocalizationConverter().getDoubleValueForCurrentLocale(customerAccountAmountEntered);
             customerAccountDetails.setValidCustomerAccountAmountEntered(true);
         } catch (NumberFormatException nfe) {
             customerAccountDetails.setValidCustomerAccountAmountEntered(false);

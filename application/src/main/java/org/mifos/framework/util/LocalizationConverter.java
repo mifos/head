@@ -23,45 +23,39 @@ package org.mifos.framework.util;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Locale;
-import org.mifos.config.Localization;
 import java.text.ParsePosition;
-import org.mifos.config.AccountingRules;
-
 import java.text.SimpleDateFormat;
-import org.mifos.framework.util.helpers.ConversionResult;
-import org.mifos.framework.util.helpers.ConversionError;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import org.mifos.config.AccountingRules;
+import org.mifos.config.Localization;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.ConversionResult;
 
 public class LocalizationConverter {
-    private static DecimalFormat currentDecimalFormat;
-    private static DecimalFormat currentDecimalFormatForMoney;
-    private static DecimalFormat currentDecimalFormatForInterest;
-    private static String dateSeparator;
-    private static Locale currentLocale;
-    private static char decimalFormatSymbol;
-    private static short digitsAfterDecimalForMoney;
-    private static short digitsBeforeDecimalForMoney;
-    private static short digitsAfterDecimalForInterest;
-    private static short digitsBeforeDecimalForInterest;
+    private DecimalFormat currentDecimalFormat;
+    private DecimalFormat currentDecimalFormatForMoney;
+    private DecimalFormat currentDecimalFormatForInterest;
+    private String dateSeparator;
+    private Locale currentLocale;
+    private char decimalFormatSymbol;
+    private short digitsAfterDecimalForMoney;
+    private short digitsBeforeDecimalForMoney;
+    private short digitsAfterDecimalForInterest;
+    private short digitsBeforeDecimalForInterest;
     // the decimalFormatLocale is introduced because the double format is not
     // supported for
     // 1.1 realease yet and the English format is still used no matter what the
     // configured locale is
-    private static Locale decimalFormatLocale;
+    private Locale decimalFormatLocale;
     // the dateLocale is introduced because the date format is not supported for
     // 1.1 realease yet and the English format is still used no matter what the
     // configured locale is
-    private static Locale dateLocale;
+    private Locale dateLocale;
 
-    private static final LocalizationConverter localizationConverter = new LocalizationConverter();
-
-    public static LocalizationConverter getInstance() {
-        return localizationConverter;
-    }
-
-    private LocalizationConverter() {
+    public LocalizationConverter() {
         currentLocale = Localization.getInstance().getMainLocale();
         digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal();
         digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
@@ -82,8 +76,10 @@ public class LocalizationConverter {
         return dateLocale;
     }
 
-    // for testing purpose only, and for testing the decimalFormatLocale will be
-    // the configured locale
+    /**
+     * @deprecated Members are no longer static, hence, this no longer works for
+     *             unit tests. No replacement available.
+     */
     public void setCurrentLocale(Locale locale) {
         currentLocale = locale;
         decimalFormatLocale = locale;
@@ -109,7 +105,7 @@ public class LocalizationConverter {
     }
 
     private DecimalFormat buildDecimalFormat(Short digitsBefore, Short digitsAfter, DecimalFormat decimalFormat) {
-        StringBuffer pattern = new StringBuffer();
+        StringBuilder pattern = new StringBuilder();
         for (short i = 0; i < digitsBefore; i++)
             pattern.append('#');
         pattern.append(decimalFormat.getDecimalFormatSymbols().getDecimalSeparator());
@@ -189,7 +185,6 @@ public class LocalizationConverter {
     private List<ConversionError> checkDigits(Short digitsBefore, Short digitsAfter, ConversionError errorDigitsBefore,
             ConversionError errorDigitsAfter, String number) {
         List<ConversionError> errors = new ArrayList();
-        ;
         char temp;
         ConversionError error = null;
         for (int i = 0; i < number.length(); i++)
@@ -247,9 +242,6 @@ public class LocalizationConverter {
     // this method will become private after all the validation is done in
     // struct
     public Double getDoubleValueForCurrentLocale(String doubleValueString) {
-
-        if (currentDecimalFormatForMoney == null)
-            loadDecimalFormats();
         Double dNum = null;
         try {
             ParsePosition pp = new ParsePosition(0);
@@ -266,40 +258,27 @@ public class LocalizationConverter {
     }
 
     public String getDoubleStringForMoney(Double dNumber) {
-        if (currentDecimalFormatForMoney == null)
-            loadDecimalFormats();
         return currentDecimalFormatForMoney.format(dNumber);
     }
 
     public String getDoubleStringForInterest(Double dNumber) {
-        if (currentDecimalFormatForInterest == null)
-            loadDecimalFormats();
         return currentDecimalFormatForInterest.format(dNumber);
     }
 
     public String getDoubleValueString(Double dNumber) {
-        if (currentDecimalFormat == null)
-            loadDecimalFormats();
         return currentDecimalFormat.format(dNumber);
     }
 
     public String getDateSeparatorForCurrentLocale() {
-        if (dateSeparator == null)
-            dateSeparator = getDateSeparator();
-
         return dateSeparator;
-
     }
 
     private String getDateSeparator() {
-        if (currentLocale == null)
-            throw new RuntimeException("The current locale is not set for LocalizationConverter.");
         Locale[] locales = DateFormat.getInstance().getAvailableLocales();
         // decimalFormatLocale is the English locale used temporarily because
         // 1.1 release doesn't
         // support date/time/double localization yet
-        boolean find = supportThisLocale(locales, dateLocale);
-        if (find == false)
+        if (!supportThisLocale(locales, dateLocale))
             throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
                     + " and language code: " + dateLocale.getLanguage());
 
@@ -318,14 +297,11 @@ public class LocalizationConverter {
     }
 
     public DateFormat getDateFormat() {
-        if (currentLocale == null)
-            throw new RuntimeException("The current locale is not set for LocalizationConverter.");
         // dateLocale is the English locale used temporarily because 1.1 release
         // doesn't
         // support date/time/double localization yet
         Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-        boolean find = supportThisLocale(locales, dateLocale);
-        if (find == false)
+        if (!supportThisLocale(locales, dateLocale))
             throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
                     + " and language code: " + dateLocale.getLanguage());
 

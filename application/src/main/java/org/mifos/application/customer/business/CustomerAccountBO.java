@@ -144,7 +144,7 @@ public class CustomerAccountBO extends AccountBO {
             for (FeeView feeView : fees) {
                 FeeBO fee = getFeePersistence().getFee(feeView.getFeeIdValue());
 
-                this.addAccountFees(new AccountFeesEntity(this, fee, LocalizationConverter.getInstance()
+                this.addAccountFees(new AccountFeesEntity(this, fee, new LocalizationConverter()
                         .getDoubleValueForCurrentLocale(feeView.getAmount())));
 
             }

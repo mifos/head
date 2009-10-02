@@ -33,9 +33,9 @@ public class MifosDoubleConverter implements Converter {
         if (value != null && type != null && !"".equals(value)) {
             try {
                 if (value instanceof String) {
-                    returnValue = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale((String) value);
+                    returnValue = new LocalizationConverter().getDoubleValueForCurrentLocale((String) value);
                 } else {
-                    returnValue = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(value.toString());
+                    returnValue = new LocalizationConverter().getDoubleValueForCurrentLocale(value.toString());
                 }
             } catch (NumberFormatException ne) {
                 ne.printStackTrace();

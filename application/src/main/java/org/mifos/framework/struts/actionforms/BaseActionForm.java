@@ -73,7 +73,7 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected ConversionResult parseDoubleForMoney(String doubleString) {
-        return LocalizationConverter.getInstance().parseDoubleForMoney(doubleString);
+        return new LocalizationConverter().parseDoubleForMoney(doubleString);
 
     }
 
@@ -98,7 +98,7 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected ConversionResult parseDoubleForInterest(String doubleString) {
-        return LocalizationConverter.getInstance().parseDoubleForInterest(doubleString);
+        return new LocalizationConverter().parseDoubleForInterest(doubleString);
 
     }
 
@@ -125,7 +125,7 @@ public class BaseActionForm extends ValidatorActionForm {
 
     protected String getStringValue(Double value) {
         // return value != null ? String.valueOf(value) : null;
-        return value != null ? LocalizationConverter.getInstance().getDoubleValueString(value) : null;
+        return value != null ? new LocalizationConverter().getDoubleValueString(value) : null;
     }
 
     protected String getStringValue(Short value) {

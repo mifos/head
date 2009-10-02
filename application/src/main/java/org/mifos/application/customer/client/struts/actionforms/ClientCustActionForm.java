@@ -400,7 +400,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     public String getDateOfBirth() {
         if (StringUtils.isNullAndEmptySafe(dateOfBirthDD) && StringUtils.isNullAndEmptySafe(dateOfBirthMM)
                 && StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
-            String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+            String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator + dateOfBirthYY;
 
         } else {

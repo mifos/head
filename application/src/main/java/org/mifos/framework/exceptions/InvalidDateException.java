@@ -31,6 +31,11 @@ public class InvalidDateException extends MifosException {
         super(ExceptionConstants.INVALIDDATEEXCEPTION);
         this.dateString = dateStr;
     }
+    
+    public InvalidDateException(String dateStr, Throwable cause) {
+        super(ExceptionConstants.INVALIDDATEEXCEPTION, cause);
+        this.dateString = dateStr;
+    }
 
     public String getDateString() {
         return dateString;

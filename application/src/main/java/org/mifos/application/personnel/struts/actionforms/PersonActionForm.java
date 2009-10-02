@@ -156,7 +156,7 @@ public class PersonActionForm extends BaseActionForm {
         if (StringUtils.isNullAndEmptySafe(dateOfJoiningMFIDD) && StringUtils.isNullAndEmptySafe(dateOfJoiningMFIMM)
                 && StringUtils.isNullAndEmptySafe(dateOfJoiningMFIYY)) {
 
-            String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+            String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dateOfJoiningMFIDD + dateSeparator + dateOfJoiningMFIMM + dateSeparator + dateOfJoiningMFIYY;
 
         } else {
@@ -180,7 +180,7 @@ public class PersonActionForm extends BaseActionForm {
             return null;
         } else {
 
-            String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+            String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dobDD + dateSeparator + dobMM + dateSeparator + dobYY;
 
         }

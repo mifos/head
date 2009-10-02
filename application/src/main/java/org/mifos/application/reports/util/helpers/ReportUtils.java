@@ -32,7 +32,7 @@ public class ReportUtils {
     }
 
     public static String toDisplayDate(Date date) {
-        return LocalizationConverter.getInstance().getDateFormatWithFullYear().format(date);
+        return new LocalizationConverter().getDateFormatWithFullYear().format(date);
     }
 
     public static String reportDatePattern() {

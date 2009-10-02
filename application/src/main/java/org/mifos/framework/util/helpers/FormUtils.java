@@ -25,7 +25,7 @@ import org.mifos.framework.util.LocalizationConverter;
 public class FormUtils {
 
     public static Double getDoubleValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance()
+        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 

@@ -297,7 +297,7 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected Double getDoubleValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance()
+        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 
@@ -330,11 +330,11 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected String getDoubleStringForMoney(Double dNumber) {
-        return LocalizationConverter.getInstance().getDoubleStringForMoney(dNumber);
+        return new LocalizationConverter().getDoubleStringForMoney(dNumber);
     }
 
     protected String getDoubleStringForInterest(Double dNumber) {
-        return LocalizationConverter.getInstance().getDoubleStringForInterest(dNumber);
+        return new LocalizationConverter().getDoubleStringForInterest(dNumber);
     }
 
     protected Date getDateFromString(String strDate, Locale locale) throws InvalidDateException {

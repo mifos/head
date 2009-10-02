@@ -59,7 +59,7 @@ public class CustomerAccountAssembler {
 
                 final String amount = customerAccountView.getCustomerAccountAmountEntered();
                 if (null != amount
-                        && !LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount).equals(0.0)) {
+                        && !new LocalizationConverter().getDoubleValueForCurrentLocale(amount).equals(0.0)) {
 
                     final Integer accountId = customerAccountView.getAccountId();
                     

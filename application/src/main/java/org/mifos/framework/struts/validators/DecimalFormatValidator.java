@@ -67,7 +67,7 @@ public class DecimalFormatValidator {
         if (null != fieldToBeValidated && fieldToBeValidated != "") {
             try {
 
-                validatableField = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(
+                validatableField = new LocalizationConverter().getDoubleValueForCurrentLocale(
                         fieldToBeValidated);
                 validatableField = Math.abs(validatableField);
                 // get the format against which it has to be validated

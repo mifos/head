@@ -130,7 +130,7 @@ public class LoanAccountAssembler {
     }
     
     private Double getDoubleValue(final String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance()
+        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 }

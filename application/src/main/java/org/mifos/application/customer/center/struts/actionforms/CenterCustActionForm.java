@@ -50,7 +50,7 @@ public class CenterCustActionForm extends CustomerActionForm {
                 || StringUtils.isNullOrEmpty(mfiJoiningDateYY))
             return null;
 
-        String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+        String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
         return mfiJoiningDateDD + dateSeparator + mfiJoiningDateMM + dateSeparator + mfiJoiningDateYY;
     }
 

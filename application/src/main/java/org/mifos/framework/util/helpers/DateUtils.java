@@ -58,11 +58,11 @@ public class DateUtils {
     // this configured locale is not used for 1.1 but later
     // private final static Locale internalLocale = Localization.getInstance()
     // .getMainLocale();
-    private static Locale internalLocale = LocalizationConverter.getInstance().getDateLocale();
-    private static String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+    private static Locale internalLocale = new LocalizationConverter().getDateLocale();
+    private static String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
 
     public static void refreshInternalLocale() {
-        internalLocale = LocalizationConverter.getInstance().getDateLocale();
+        internalLocale = new LocalizationConverter().getDateLocale();
     }
 
     public static String convertUserToDbFmt(String userDate, String userPattern) throws InvalidDateException {
@@ -241,7 +241,7 @@ public class DateUtils {
         String month = "";
         String year = "";
         String token;
-        String separator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+        String separator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
 
         MFIfmt = convertToDateTagFormat(MFIfmt);
         StringTokenizer stfmt = new StringTokenizer(format, separator);
@@ -625,7 +625,7 @@ public class DateUtils {
 
     public static DateFormat getLocalizedDateFormat() {
         try {
-            return LocalizationConverter.getInstance().getDateFormat();
+            return new LocalizationConverter().getDateFormat();
         } catch (RuntimeException e) {
             return DateUtils.DEFAULT_DATE_FORMAT;
         }
