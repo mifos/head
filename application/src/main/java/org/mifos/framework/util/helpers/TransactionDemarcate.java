@@ -29,7 +29,7 @@ import org.mifos.framework.struts.action.BaseAction;
 
 /**
  * This interface is used to annotate methods in the struts action class for
- * transaction boundries specifying when a new transaction is begining so that
+ * transaction boundaries specifying when a new transaction is beginning so that
  * based on that a token can be generated and saved in the session or removed
  * from the session. 1.saveToken - It saves a new token in the session.
  * 2.validateAndResetToken - It validates the token and then resets the token.

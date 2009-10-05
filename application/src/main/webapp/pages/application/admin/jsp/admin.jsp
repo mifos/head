@@ -210,6 +210,21 @@ while(enn.hasMoreElements()){
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td>
+							<span class="headingorange"><mifos:mifoslabel name="admin.importexport.title" bundle="adminUIResources" /></span>
+							<table width="90%" border="0" cellspacing="0" cellpadding="0">
+								<tr class="fontnormal">
+									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+									<td width="97%">
+										<a id="admin.link.viewSystemInfo" href="manageImportAction.do?method=load">
+										<mifos:mifoslabel name="admin.importexport.importtransactions" bundle="adminUIResources" /></a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					</table>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>
 							<span class="headingorange"><mifos:mifoslabel name="admin.sysinfo.title" bundle="adminUIResources" /></span>
 							<table width="90%" border="0" cellspacing="0" cellpadding="0">
 								<tr class="fontnormal">
