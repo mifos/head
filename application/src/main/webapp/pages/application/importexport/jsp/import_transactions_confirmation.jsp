@@ -43,7 +43,7 @@ explanation of the license and how it is applied.
                 <mifos:mifoslabel name="admin.importexport.has_been_imported" bundle="adminUIResources" /><br>
                 <br>
                 <font class="fontnormalRedBold"> <html-el:messages id="import.confirm.message"
-                    bundle="adminUIResources" /> <html-el:errors id="import.confirm.message" bundle="adminUIResources" />
+                    bundle="adminUIResources" /> <html-el:errors bundle="adminUIResources" />
                 </font> </span> <html-el:link href="manageImportAction.do?method=load">
                     <mifos:mifoslabel name="admin.importexport.importtransactions" bundle="adminUIResources" />
                 </html-el:link> <span class="fontnormal"><br>
