@@ -215,7 +215,7 @@ while(enn.hasMoreElements()){
 								<tr class="fontnormal">
 									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 									<td width="97%">
-										<a id="admin.link.viewSystemInfo" href="manageImportAction.do?method=load">
+										<a id="admin.link.manageImports" href="manageImportAction.do?method=load">
 										<mifos:mifoslabel name="admin.importexport.importtransactions" bundle="adminUIResources" /></a></td>
 								</tr>
 							</table>

@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
     <tiles:put name="body" type="string">
-        <span id="page.id" title="importTransactions" />
+        <span id="page.id" title="import.transactions.confirm" />
         <table width="98%" border="0" cellspacing="0" cellpadding="3">
             <tr>
                 <td class="headingorange"><span id="importexport.label.importsuccess"> <mifos:mifoslabel
@@ -42,8 +42,9 @@ explanation of the license and how it is applied.
                 <span class="fontnormal"> <c:out value="${importTransactionsForm.importTransactionsFileName}" />
                 <mifos:mifoslabel name="admin.importexport.has_been_imported" bundle="adminUIResources" /><br>
                 <br>
-                <font class="fontnormalRedBold"> <html-el:messages id="abc" bundle="bulkEntryUIResources" /> <html-el:errors
-                    bundle="bulkEntryUIResources" /> </font> </span> <html-el:link href="manageImportAction.do?method=load">
+                <font class="fontnormalRedBold"> <html-el:messages id="import.confirm.message"
+                    bundle="adminUIResources" /> <html-el:errors id="import.confirm.message" bundle="adminUIResources" />
+                </font> </span> <html-el:link href="manageImportAction.do?method=load">
                     <mifos:mifoslabel name="admin.importexport.importtransactions" bundle="adminUIResources" />
                 </html-el:link> <span class="fontnormal"><br>
                 <br>
