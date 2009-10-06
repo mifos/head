@@ -37,6 +37,8 @@ import org.mifos.application.importexport.struts.actionforms.ImportTransactionsA
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 
@@ -47,6 +49,14 @@ import org.mifos.framework.struts.action.BaseAction;
  */
 
 public class ImportTransactionsAction extends BaseAction {
+    
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("manageImportAction");
+        security.allow("import_load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("import_results", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("import_confirm", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        return security;
+    }
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {

@@ -89,24 +89,30 @@ explanation of the license and how it is applied.
                                     <td><font class="fontnormalRedBold"> <html-el:errors /> </font></td>
                                 </tr>
                             </table>
-                            <br>
-                            <table>
+                            <br />
+                            <br />
+                            <table align="center" >
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.importformat" mandatory="yes"
                                         bundle="adminUIResources" /></td>
-                                    <td><select name="importTransactionsType">
-                                        <option value="">-- Select --</option>
-                                        <option value="Bank A">Bank A</option>
-                                        <option value="Bank B">Bank B</option>
-                                    </select></td>
+                                      
+                                    <!-- FIXME: these "style" should be inside css framework -->
+                                    <td><html-el:select style="width:200px;" property="importTransactionsType">
+                                        <html-el:option value="">-- Select --</html-el:option>
+                                        <html-el:option value="Bank A">Bank A</html-el:option>
+                                        <html-el:option value="Bank B">Bank B</html-el:option>
+                                    </html-el:select></td>
+                                    <td width="50%"></td>
                                 </tr>
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.selectimportfile"
                                         mandatory="yes" isColonRequired="Yes" bundle="adminUIResources" /></td>
-                                    <td><html-el:file property="importTransactionsFile" /></td>
+                                    <td><html-el:file property="importTransactionsFile"/></td>
                                 </tr>
                             </table>
-                            <br>
+                            <br />
+                            <br />
+                            <br />
                             <table width="90%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center" class="blueline">&nbsp;</td>
@@ -116,7 +122,7 @@ explanation of the license and how it is applied.
                             <table width="90%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center"><html-el:submit styleClass="buttn">
-                                        <mifos:mifoslabel name="configuration.preview"></mifos:mifoslabel>
+                                        <mifos:mifoslabel name="configuration.review"></mifos:mifoslabel>
                                     </html-el:submit> &nbsp; <html-el:submit onclick="this.form.action='AdminAction.do?method=load'"
                                         property="cancelButton" value="Cancel" styleClass="cancelbuttn">
                                         <mifos:mifoslabel name="configuration.cancel" />
