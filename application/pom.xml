@@ -33,9 +33,9 @@
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
         <maven.surefire.memory>-Xmx1024m</maven.surefire.memory>
         <!--
-        Don't search System.getProperty("conf.dir") for
-        local.properties; no need. It is only used to override
-        settings in acceptanceDatabase.properties.
+            Don't search System.getProperty("conf.dir") for
+            local.properties; no need. It is only used to override
+            settings in acceptanceDatabase.properties.
         -->
 
     </properties>
@@ -95,7 +95,8 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-                                    <sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                    <sqlCommand>DROP DATABASE IF EXISTS
+                                        ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -105,7 +106,8 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-                                    <sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                    <sqlCommand>CREATE DATABASE
+                                        ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -184,7 +186,8 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-                                    <sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                    <sqlCommand>DROP DATABASE IF EXISTS
+                                        ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -194,7 +197,8 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-                                    <sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                    <sqlCommand>CREATE DATABASE
+                                        ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -397,14 +401,15 @@
             <version>1.5.3</version>
         </dependency>
         <dependency>
-            <!-- This dependency overrides the earlier version
-		 of Rhino included by spring modules (?).  The
-		 earlier version of Rhino is incompatible with BIRT.
-	         - keithr@alum.mit.edu -->
+            <!--
+                This dependency overrides the earlier version of Rhino
+                included by spring modules (?). The earlier version of
+                Rhino is incompatible with BIRT. - keithr@alum.mit.edu
+            -->
             <groupId>rhino</groupId>
-	    <artifactId>js</artifactId>
-	    <version>1.7R2</version>
-	</dependency>
+            <artifactId>js</artifactId>
+            <version>1.7R2</version>
+        </dependency>
         <dependency>
             <groupId>org.springmodules</groupId>
             <artifactId>spring-modules-cache</artifactId>
@@ -642,9 +647,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-        	<groupId>org.mockito</groupId>
-        	<artifactId>mockito-all</artifactId>
-        	<scope>test</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -796,7 +801,8 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <sqlCommand>DROP DATABASE IF EXISTS ${integration.database}</sqlCommand>
+                            <sqlCommand>DROP DATABASE IF EXISTS
+                                ${integration.database}</sqlCommand>
                         </configuration>
                     </execution>
                     <execution>
@@ -806,7 +812,8 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <sqlCommand>CREATE DATABASE ${integration.database}</sqlCommand>
+                            <sqlCommand>CREATE DATABASE
+                                ${integration.database}</sqlCommand>
                         </configuration>
                     </execution>
                     <execution>
@@ -845,33 +852,33 @@
                     </excludes>
                     <reportsDirectory>${project.build.directory}/surefire-reports/unit</reportsDirectory>
                 </configuration>
-              <executions>
-               <execution>
-                  <id>integration-test</id>
-                  <phase>integration-test</phase>
-                  <goals>
-                     <goal>test</goal>
-                  </goals>
-                  <configuration>
-                    <testNGArtifactName>null</testNGArtifactName>
-                    <printSummary>false</printSummary>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <!-- override exclude integration test classes    -->
-                     <excludes>
-                        <exclude>none</exclude>
-                     </excludes>
-                     <includes>
-                        <include>**/*IntegrationTest.java</include>
-                        <include>**/*StrutsTest.java</include>
-                     </includes>
-                     <systemProperties>
-                        <mifos.test.mode>integration</mifos.test.mode>
-                    </systemProperties>
-                    <argLine>${maven.surefire.memory}</argLine>
-                     <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
-                  </configuration>
-               </execution>
-             </executions>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <testNGArtifactName>null</testNGArtifactName>
+                            <printSummary>false</printSummary>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- override exclude integration test classes    -->
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*IntegrationTest.java</include>
+                                <include>**/*StrutsTest.java</include>
+                            </includes>
+                            <systemProperties>
+                                <mifos.test.mode>integration</mifos.test.mode>
+                            </systemProperties>
+                            <argLine>${maven.surefire.memory}</argLine>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo.jspc</groupId>
@@ -893,9 +900,10 @@
                 <configuration>
                     <includeInProject>false</includeInProject>
                     <!--
-                    we'll still catch noncompliance with taglibs even if
-                    this is false, and if it is true, the compiled JSPs are
-                    included in the project (even if includeInProject=false!)
+                        we'll still catch noncompliance with taglibs
+                        even if this is false, and if it is true, the
+                        compiled JSPs are included in the project (even
+                        if includeInProject=false!)
                     -->
                     <compile>false</compile>
                     <!-- makes output cleaner (less verbose) -->
@@ -931,9 +939,10 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <!--
-                TODO: change to upstream buildnumber-maven-plugin version once
-                at least 1.0-beta-4 is released. Note that
-                versionInfo.properties must be updated when this is changed.
+                    TODO: change to upstream buildnumber-maven-plugin
+                    version once at least 1.0-beta-4 is released. Note
+                    that versionInfo.properties must be updated when
+                    this is changed.
                 -->
                 <version>1.0-mifos-alpha-1</version>
                 <executions>
