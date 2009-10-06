@@ -786,6 +786,7 @@
                     <username>${integration.database.user}</username>
                     <password>${integration.database.password}</password>
                     <autocommit>true</autocommit>
+                    <skip>${maven.test.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
