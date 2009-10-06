@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:46-0700\n"
-"PO-Revision-Date: 2009-09-23 02:33-0700\n"
+"PO-Revision-Date: 2009-09-30 22:02-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -270,103 +270,105 @@ msgstr ""
 
 #: holiday.holidayShortName
 msgid "Holiday short name"
-msgstr ""
+msgstr "ឈ្មោះជាអក្សរកាត់របស់ថ្ងៃឈប់សំរាក"
 
 #: holiday.holidayType
 msgid "Holiday type"
-msgstr ""
+msgstr "ប្រភេទនៃថ្ងៃឈប់សំរាក"
 
 #: holiday.labelAddHolidayNow
 msgid "Add Holiday"
-msgstr ""
+msgstr "បន្ថែមថ្ងៃឈប់សំរាក"
 
 #: holiday.labelAddNew
 msgid "Define new"
-msgstr ""
+msgstr "កំនត់ថ្មី"
 
 #: holiday.labelAddNewHoliday
 msgid "Add a new holiday -"
-msgstr ""
+msgstr "បន្ថែមថ្ងៃឈប់សំរាក"
 
 #: holiday.labelAddNewHolidayNow
 msgid "Add a new holiday"
-msgstr ""
+msgstr "បន្ថែមថ្ងៃឈប់សំរាកថ្មី"
 
 #: holiday.labelAdditionInformation
 msgid "Additional information"
-msgstr ""
+msgstr "បន្ថែមពត៍មានថ្មី"
 
 #: holiday.labelAddress
 msgid "Address"
-msgstr ""
+msgstr "អស័យដ្ឋាន"
 
 #: holiday.labelAddress1
 msgid "Address 1\\:"
-msgstr ""
+msgstr "អស័យដ្ឋាន១"
 
 #: holiday.labelAddress2
 msgid "Address 2\\:"
-msgstr ""
+msgstr "អស័យដ្ឋាន២"
 
 #: holiday.labelAddress3
 msgid "Address 3\\:"
-msgstr ""
+msgstr "អស័យដ្ឋាន៣"
 
 #: holiday.labelAreaHoliday
 msgid "Area holiday"
-msgstr ""
+msgstr "ផ្នែកនៃថ្ងៃឈប់សំរាក"
 
 #: holiday.labelBranchHoliday
 msgid "Branch holiday"
-msgstr ""
+msgstr "សាខានៃថ្ងៃឈប់សំរាក"
 
 #: holiday.labelChangeStatus
 msgid "Change Status\\:"
-msgstr ""
+msgstr "ប្តូលក្ខ័ណ"
 
 #: holiday.labelCheckLevelIncluded
 msgid "Check the levels to be included."
-msgstr ""
+msgstr "ពិនិត្យមើលកំរិតដើម្បីបញ្ចូល"
 
 #: holiday.labelCity
 msgid "City\\:"
-msgstr ""
+msgstr "ទីក្រុង"
 
 #: holiday.labelCompleteTheFields
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Admin without submitting information."
 msgstr ""
+"បំពេញប្រឡោះខាងក្រោម រួចចុចបើកមើល "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅរដ្ឋបាលដោយមិនចាំបាច់បញ្ជូនពត៍មាន"
 
 #: holiday.labelCountry
 msgid "Country\\:"
-msgstr ""
+msgstr "ប្រទេស"
 
 #: holiday.labelCreatedSuccessfully
 msgid "You have successfully added a new holiday"
-msgstr ""
+msgstr "អ្នកបានបន្ថែមថ្ងៃឈប់សំរាកថ្មីបានសំរេចហើយ"
 
 #: holiday.labelEditHolidayInfo
 msgctxt "holiday.labelEditHolidayInfo"
 msgid "Edit holiday information"
-msgstr ""
+msgstr "កែតំរូវពត៍មាននៃថ្ងៃឈប់សំរាក"
 
 #: holiday.labelEnterHolidayInformation
 msgid "Enter holiday information"
-msgstr ""
+msgstr "ដាក់បញ្ចូលពត៍មាននៃថ្ងៃឈប់សំរាក"
 
 #: holiday.labelFieldsMarkedWithAsterisk
 msgctxt "holiday.labelFieldsMarkedWithAsterisk"
 msgid "Fields marked with an asterisk are required."
-msgstr ""
+msgstr "ប្រឡោះដែលមានសញ្ញាផ្កាយគឺតំរូវអោយមានពត៍មាន"
 
 #: holiday.labelHeadHoliday
 msgid "Head holiday"
-msgstr ""
+msgstr "ប្រធានផ្នែកថ្ងៃឈប់សំរាក"
 
 #: holiday.labelHolidayAddress
 msgid "Holiday address"
-msgstr ""
+msgstr "អាស័យដ្ឋាននៃថ្ងឈប់សំរាក"
 
 #: holiday.labelHolidayAssignedNumber
 msgid "holiday has been assigned the system ID number\\:"
@@ -388,35 +390,35 @@ msgstr ""
 
 #: holiday.labelHolidayInformation
 msgid "Holiday  information"
-msgstr ""
+msgstr "ថ្ងៃឈប់សំរាក ពត៍មាន"
 
 #: holiday.labelHolidayName
 msgid "Holiday Name\\:"
-msgstr ""
+msgstr "ឈ្មោះថ្ងៃឈប់សំរាក"
 
 #: holiday.labelHolidayShortName
 msgid "Holiday short name\\:"
-msgstr ""
+msgstr "ឈ្មោះជាអក្សរកាត់របស់ថ្ងៃឈប់សំរាក"
 
 #: holiday.labelHolidayType
 msgid "Holiday type\\:"
-msgstr ""
+msgstr "ប្រភេទនៃថ្ងៃឈប់សំរាក"
 
 #: holiday.labelHolidaysForYear
 msgid "Holidays for year"
-msgstr ""
+msgstr "ថ្ងៃឈប់សំរាកប្រចាំឆ្នាំ"
 
 #: holiday.labelLinkAdmin
 msgid "Admin"
-msgstr ""
+msgstr "រដ្ឋបាល"
 
 #: holiday.labelLinkClickHere
 msgid "Click here to"
-msgstr ""
+msgstr "ចុចទីនេះដើម្បី"
 
 #: holiday.labelLinkHolidays
 msgid "Holidays"
-msgstr ""
+msgstr "ថ្ងៃឈប់សំរាក"
 
 #: holiday.labelLinkListOrganizationalHolidays
 msgid "Below is the list of organization wide holidays."
@@ -424,11 +426,11 @@ msgstr ""
 
 #: holiday.labelLinkViewHolidays
 msgid "View Holidays"
-msgstr ""
+msgstr "បើកមើលថ្ងៃឈប់សំរាក"
 
 #: holiday.labelLinkViewHolidaysOrganizationWide
 msgid "Organization Wide"
-msgstr ""
+msgstr "ទំហំនៃអង្គភាព"
 
 #: holiday.labelLinkViewOfficeHolidays
 msgid "Office Specific Holidays"
@@ -443,51 +445,53 @@ msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Holiday Details Page without submitting information."
 msgstr ""
+"បំពេញប្រឡោះខាងក្រោម រួចចុចបើកមើល ចុចបោះបង់ដើម្បីត្រលប់ទៅទំពរ័ពត៍មានលំអិតនៃថ្"
+"ងៃឈប់សំរាកដោយមិនចាំបាច់ដាក់បញ្ជូនពត៍មាន"
 
 #: holiday.labelMaxMinLevel
 msgid "The holiday hierarchy can have minimum two and maximum five levels"
-msgstr ""
+msgstr "ឋានានុក្រម្យនៃថ្ងៃឈប់សំរាកគឺអាច២ជាកំរិតអប្បបរិមាឬ៥ជាកំរិតអតិបរិមា"
 
 #: holiday.labelNo
 msgid "No"
-msgstr ""
+msgstr "ទេ"
 
 #: holiday.labelNote
 msgid "Note\\:"
-msgstr ""
+msgstr "កំនត់ចំណាំ"
 
 #: holiday.labelNoteInstruction
 msgid ""
 "The highest and lowest hierarchy levels cannot be removed from the system."
-msgstr ""
+msgstr "កំរិតនៃឋានានុក្រម្យដែលខ្ពស់បំផុតនិងទាបបំផុតមិនអាចយកចេញពីក្នុងប្រព័ន្ធ"
 
 #: holiday.labelParentHoliday
 msgid "Parent holiday\\:"
-msgstr ""
+msgstr "ថ្ងៃឈប់សំរាករបស់អានាព្យាបាល"
 
 #: holiday.labelPleaseNote
 msgid "Please note\\:"
-msgstr ""
+msgstr "សូមចំណាំ"
 
 #: holiday.labelPostalCode
 msgid "Postal Code\\:"
-msgstr ""
+msgstr "លេខកូដរបស់ក្រសួងប្រៃសណីយ"
 
 #: holiday.labelPresent
 msgid "present"
-msgstr ""
+msgstr "បច្ចុប្បន្ន"
 
 #: holiday.labelPreviewHoliday
 msgid "Preview Holiday"
-msgstr ""
+msgstr "ពិនិត្យមើលថ្ងៃឈប់សំរាក"
 
 #: holiday.labelPreviewHolidayInformation
 msgid "Preview holiday information"
-msgstr ""
+msgstr "ពិនិត្យមើលពត៍មានថ្ងៃឈប់សំរាក"
 
 #: holiday.labelRegionalHoliday
 msgid "Regional holiday"
-msgstr ""
+msgstr "ថ្ងៃឈប់សំរាកនៃតំបន់"
 
 #: holiday.labelReviewAndSubmit
 msgid "Review &amp; submit"
@@ -495,11 +499,11 @@ msgstr ""
 
 #: holiday.labelState
 msgid "State\\:"
-msgstr ""
+msgstr "ស្ថានភាព"
 
 #: holiday.labelStatus
 msgid "Status"
-msgstr ""
+msgstr "លក្ខ័ណ"
 
 #: holiday.labelSubRegionalHoliday
 msgid "Sub Regional holiday"
@@ -507,49 +511,50 @@ msgstr ""
 
 #: holiday.labelTelephone
 msgid "Telephone\\:"
-msgstr ""
+msgstr "ទូរស័ព្ទ"
 
 #: holiday.labelViewHolidayAddNewHoliday
 msgid "Click to view"
-msgstr ""
+msgstr "ចុចដើម្បីបើកមើល"
 
 #: holiday.labelViewHolidayDetails
 msgid "View holiday details now"
-msgstr ""
+msgstr "បើកមើលពត៍មានលំអិតនៃថ្ងៃឈប់សំរាកឥឡូវនេះ"
 
 #: holiday.labelViewHolidayHierarchy
 msgid "View holiday hierarchy"
-msgstr ""
+msgstr "ពិនិត្យមើលឋានានុក្រម្បនៃថ្ងៃឈប់សំរាក"
 
 #: holiday.labelViewHolidayInstruction
 msgid "Click on an office below to view and add holidays for the office"
 msgstr ""
+"ចុចលើទីស្នាក់កាខាងក្រោមដើម្បីបើកមើលនិងបន្ថែមថ្ងៃឈប់សំរាកសំរាប់ទីស្នាក់ការ"
 
 #: holiday.mandatory_selectbox
 msgid "Please select {0}."
-msgstr ""
+msgstr "សូមជ្រើសរើស"
 
 #: holiday.mandatory_textbox
 msgctxt "holiday.mandatory_textbox"
 msgid "Please specify {0}."
-msgstr ""
+msgstr "សូមបញ្ជាក់{0}."
 
 #: holiday.numberOfMembersPerGroup
 msgid "Number of Members per Group"
-msgstr ""
+msgstr "ចំនួននៃសមាជិកសំរាប់ក្រុមនីមួយៗ"
 
 #: holiday.numberOfMembersPerKendra
 msgid "Number of Members per Kendra"
-msgstr ""
+msgstr "ចំនួននៃសមាជិកសំរាប់កិនដ្រា"
 
 #: holiday.parentHoliday
 msgid "Parent holiday"
-msgstr ""
+msgstr "ថ្ងៃឈប់សំរាកអានាព្យាបាល"
 
 #: holiday.shortName.displayname
 msgid "Please specify an Holiday short name."
-msgstr ""
+msgstr "សូមបញ្ជាក់ឈ្មោះជាអក្សរកាត់របស់ថ្ងៃឈប់សំរាក"
 
 #: holiday.title
 msgid "Mifos"
-msgstr ""
+msgstr "ម៉ាយហ្វូស"
