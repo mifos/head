@@ -23,16 +23,44 @@ package org.mifos.accounts.api;
 import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.util.helpers.PaymentTypes;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.Money;
 
 /*
  * A service class implementation to expose basic functions on loans.
  * As an external API, this class should not expose business objects, on DTOs. 
  */
 public class StandardLoanAccountService implements LoanAccountService {
+    private AccountPersistence accountPersistence;
+    
+    public AccountPersistence getAccountPersistence() {
+        return this.accountPersistence;
+    }
 
-    public void makeLoanPayment(UserReferenceDTO userMakingPayment, BigDecimal paymentAmount, LocalDate paymentDate,
-            PaymentTypes paymentType, String comment) {
+    public void setAccountPersistence(AccountPersistence accountPersistence) {
+        this.accountPersistence = accountPersistence;
+    }
+
+    public void makeLoanPayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
+        AccountBO account = getAccountPersistence().getAccount(accountPaymentParametersDTO.account.getAccountId());
+        
+        if (!account.isTrxnDateValid(accountPaymentParametersDTO.paymentDate.toDateMidnight().toDate()))
+            throw new AccountException("errors.invalidTxndate");
+
+        Money amount = new Money(accountPaymentParametersDTO.paymentAmount);
+
+        PaymentData paymentData = account.createPaymentData(accountPaymentParametersDTO.userMakingPayment.getUserId(), amount, accountPaymentParametersDTO.paymentDate.toDateMidnight().toDate(), null,
+                null, accountPaymentParametersDTO.paymentType.getValue());
+                
+        account.applyPayment(paymentData);
+        
+        getAccountPersistence().createOrUpdate(account);
 
     }
 

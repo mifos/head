@@ -432,6 +432,11 @@ public class AccountBO extends BusinessObject {
         }
     }
 
+    public final void applyPayment(final PaymentData paymentData) throws AccountException {
+        AccountPaymentEntity accountPayment = makePayment(paymentData);
+        addAccountPayment(accountPayment);
+        buildFinancialEntries(accountPayment.getAccountTrxns());
+    }    
     /*
      * Take raw PaymentData (usually from a web page) and enter it into Mifos.
      */
@@ -440,9 +445,7 @@ public class AccountBO extends BusinessObject {
      * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
     public final void applyPayment(final PaymentData paymentData, final boolean persistChanges) throws AccountException {
-        AccountPaymentEntity accountPayment = makePayment(paymentData);
-        addAccountPayment(accountPayment);
-        buildFinancialEntries(accountPayment.getAccountTrxns());
+        applyPayment(paymentData);
         if (persistChanges) {
             try {
                 getAccountPersistence().createOrUpdate(this);
@@ -462,9 +465,14 @@ public class AccountBO extends BusinessObject {
 
     public PaymentData createPaymentData(final UserContext userContext, final Money amount, final Date trxnDate, final String receiptId,
             final Date receiptDate, final Short paymentTypeId) {
+        return createPaymentData(userContext.getId(), amount, trxnDate, receiptId, receiptDate, paymentTypeId);
+    }
+    
+    public PaymentData createPaymentData(final Short personnelId, final Money amount, final Date trxnDate, final String receiptId,
+            final Date receiptDate, final Short paymentTypeId) {
         PersonnelBO personnel;
         try {
-            personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
+            personnel = getPersonnelPersistence().getPersonnel(personnelId);
         } catch (PersistenceException e) {
             // Generally this is the UserContext id, which shouldn't ever
             // be invalid
