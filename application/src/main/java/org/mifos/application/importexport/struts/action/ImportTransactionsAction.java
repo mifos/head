@@ -52,9 +52,9 @@ public class ImportTransactionsAction extends BaseAction {
     
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("manageImportAction");
-        security.allow("import_load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
-        security.allow("import_results", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
-        security.allow("import_confirm", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("upload", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("confirm", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
         return security;
     }
 

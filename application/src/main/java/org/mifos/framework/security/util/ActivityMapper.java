@@ -76,6 +76,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.struts.action.FeeAction;
 import org.mifos.application.fund.struts.action.FundAction;
 import org.mifos.application.holiday.struts.action.HolidayAction;
+import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
 import org.mifos.application.login.struts.action.LoginAction;
 import org.mifos.application.meeting.struts.action.MeetingAction;
 import org.mifos.application.personnel.struts.action.PersonAction;
@@ -253,6 +254,7 @@ public class ActivityMapper {
         parseActionSecurity(ReportsCategoryAction.getSecurity());
         parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
         parseActionSecurity(SystemInfoAction.getSecurity());
+        parseActionSecurity(ImportTransactionsAction.getSecurity());
         parseActionSecurity(ViewOrganizationSettingsAction.getSecurity());
     }
 
