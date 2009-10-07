@@ -261,7 +261,7 @@
     </action-mappings>
 
     <controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor"
-                contentType="text/html; charset=UTF-8"></controller>
+                contentType="text/html; charset=UTF-8" maxFileSize="4M" ></controller>
 
     <plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin"/>
     <plug-in className="org.apache.struts.tiles.TilesPlugin">

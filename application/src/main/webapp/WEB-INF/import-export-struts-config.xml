@@ -25,11 +25,5 @@
 
   </action-mappings>
 
-	  <!--
-	  This is where you set the maximum size of file, -1 is an unlimited size. If you
-	  don't specify this here, it defaults to -1.
-	  -->
-  <controller maxFileSize="4M"/>
-
   <message-resources parameter="org.mifos.config.localizedResources.adminUIResources"/>
 </struts-config>
