@@ -651,6 +651,16 @@
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-spi</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${artifactId}</finalName>

@@ -97,11 +97,13 @@ explanation of the license and how it is applied.
                                         bundle="adminUIResources" /></td>
                                       
                                     <!-- FIXME: these "style" should be inside css framework -->
-                                    <td><html-el:select style="width:200px;" property="importTransactionsType">
-                                        <html-el:option value="">-- Select --</html-el:option>
-                                        <html-el:option value="Bank A">Bank A</html-el:option>
-                                        <html-el:option value="Bank B">Bank B</html-el:option>
-                                    </html-el:select></td>
+                                    <td>
+                                    <mifos:select property="importPluginName">
+										<c:forEach items="${requestScope.importPlugins}" var="pluginName">
+											<html-el:option value="${pluginName}">${pluginName}</html-el:option>
+										</c:forEach>
+									</mifos:select>
+                                    </td>
                                     <td width="50%"></td>
                                 </tr>
                                 <tr class="fontnormal">

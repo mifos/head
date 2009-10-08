@@ -37,6 +37,7 @@ import org.mifos.application.importexport.struts.actionforms.ImportTransactionsA
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.plugin.PluginManager;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
@@ -49,7 +50,7 @@ import org.mifos.framework.struts.action.BaseAction;
  */
 
 public class ImportTransactionsAction extends BaseAction {
-    
+
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("manageImportAction");
         security.allow("load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
@@ -60,6 +61,7 @@ public class ImportTransactionsAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        request.setAttribute("importPlugins", new PluginManager().getImportPluginNames());
         return mapping.findForward("import_load");
     }
 
@@ -79,7 +81,7 @@ public class ImportTransactionsAction extends BaseAction {
         FormFile importTransationsFile = importTransactionsForm.getImportTransactionsFile();
 
         // Use this to apply specific parsing implementation
-        String importTransactionsType = importTransactionsForm.getImportTransactionsType();
+        String importPluginName = importTransactionsForm.getImportPluginName();
 
         try {
             // retrieve the file data
@@ -98,7 +100,7 @@ public class ImportTransactionsAction extends BaseAction {
             List<String> importTransactionsErrors = new ArrayList<String>();
             // FIXME dummy code
             boolean errorListIsNotEmpty = true;
-            
+
             if (errorListIsNotEmpty) {
                 String errorHeading = "The following rows contains errors and will not be imported.";
                 importTransactionsErrors.add(errorHeading);

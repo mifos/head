@@ -44,7 +44,7 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
  */
 public class ImportTransactionsActionForm extends BaseActionForm {
 
-    private String importTransactionsType;
+    private String importPluginName;
 
     private FormFile importTransactionsFile;
 
@@ -54,13 +54,13 @@ public class ImportTransactionsActionForm extends BaseActionForm {
     
     private String importTransactionsStatus;
 
-    public String getImportTransactionsType() {
-        return this.importTransactionsType;
+    public String getImportPluginName() {
+        return this.importPluginName;
     }
 
 
-    public void setImportTransactionsType(String importTransactionsType) {
-        this.importTransactionsType = importTransactionsType;
+    public void setImportPluginName(String importPluginName) {
+        this.importPluginName = importPluginName;
     }
 
 
@@ -113,8 +113,8 @@ public class ImportTransactionsActionForm extends BaseActionForm {
 
         ActionErrors errors = new ActionErrors();
         
-        if((importTransactionsType != null) && (importTransactionsType.length() < 1)){
-            errors.add("importTransactionsType", new ActionMessage("errors.importexport.mandatory_selectbox"));
+        if((importPluginName != null) && (importPluginName.length() < 1)){
+            errors.add("importPluginName", new ActionMessage("errors.importexport.mandatory_selectbox"));
         }
         
         // has the maximum length been exceeded?
@@ -129,5 +129,3 @@ public class ImportTransactionsActionForm extends BaseActionForm {
 
     }
 }
-
-
