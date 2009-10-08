@@ -29,6 +29,8 @@
         <module>userInterface</module>
         <module>application</module>
         <module>acceptanceTests</module>
+        <module>spi</module>
+        <module>api</module>
     </modules>
 
     <!--

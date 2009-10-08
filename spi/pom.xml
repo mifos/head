@@ -2,9 +2,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
     <artifactId>mifos-spi</artifactId>
-    <name>Mifos Service Provider Interface</name>
+    <name>Mifos - Service Provider Interface</name>
     <version>1.0</version>
     <description>Interfaces to implement for creating plugins which run inside Mifos.</description>
+
+    <parent>
+        <groupId>org.mifos</groupId>
+        <artifactId>mifos-parent</artifactId>
+        <version>1.4-SNAPSHOT</version>
+    </parent>
+
     <build>
         <resources>
             <resource>

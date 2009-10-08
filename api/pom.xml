@@ -2,9 +2,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
     <artifactId>mifos-api</artifactId>
-    <name>Mifos Application Programming Interface</name>
+    <name>Mifos - Application Programming Interface</name>
     <version>1.0</version>
     <description>Provides an external API for communicating with and controlling Mifos.</description>
+
+    <parent>
+        <groupId>org.mifos</groupId>
+        <artifactId>mifos-parent</artifactId>
+        <version>1.4-SNAPSHOT</version>
+    </parent>
+
     <build>
         <resources>
             <resource>
