@@ -23,10 +23,10 @@ package org.mifos.core;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.apache.commons.cli.CommandLine;
@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
         "PMD.SingularField" })
 // Option fields could be local, but for consistency keep them at the class
 // level
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DM_EXIT","DM_CONVERT_CASE" }, justification = "Command line tool exit")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DM_EXIT", "DM_CONVERT_CASE" }, justification = "Command line tool exit")
 public class PseudoLocalizationGenerator {
     private static final Logger LOG = Logger.getLogger(PseudoLocalizationGenerator.class);
     private static final String PREFIX = "@@@";
@@ -217,6 +217,17 @@ class SortedProperties extends Properties {
 
     private static final long serialVersionUID = 5657650728102821923L;
 
+    /**
+     * To be compatible with version control systems, we need to sort properties
+     * before storing them to disk. Otherwise each change may lead to problems
+     * by diff against previous version - because Property entries are randomly
+     * distributed (it's a map).
+     * 
+     * @param keySet
+     *            non null set instance to sort
+     * @return non null list which contains all given keys, sorted
+     *         lexicographically. The list may be empty if given set was empty
+     */
     @Override
     @SuppressWarnings("unchecked")
     public Enumeration keys() {
