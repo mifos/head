@@ -37,8 +37,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 @SuppressWarnings( { "PMD.SystemPrintln", // as a command line utility
@@ -48,7 +46,7 @@ import org.apache.log4j.Logger;
 // level
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DM_EXIT","DM_CONVERT_CASE" }, justification = "Command line tool exit")
 public class PseudoLocalizationGenerator {
-    private static Logger LOG;
+    private static final Logger LOG = Logger.getLogger(PseudoLocalizationGenerator.class);
     private static final String PREFIX = "@@@";
     private static final String SUFFIX = "^^^";
 
@@ -68,9 +66,6 @@ public class PseudoLocalizationGenerator {
     private Option directoryOption;
 
     public PseudoLocalizationGenerator() {
-        BasicConfigurator.configure();
-        Logger.getLogger(PseudoLocalizationGenerator.class).setLevel(Level.INFO);
-        LOG = Logger.getLogger(PseudoLocalizationGenerator.class);
         defineOptions();
     }
 
