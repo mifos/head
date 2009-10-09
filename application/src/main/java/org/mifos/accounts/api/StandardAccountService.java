@@ -23,7 +23,7 @@ package org.mifos.accounts.api;
 import java.util.List;
 
 import org.mifos.api.accounts.AccountPaymentParametersDTO;
-import org.mifos.api.accounts.LoanAccountService;
+import org.mifos.api.accounts.AccountService;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -36,7 +36,7 @@ import org.mifos.framework.util.helpers.Money;
  * A service class implementation to expose basic functions on loans.
  * As an external API, this class should not expose business objects, on DTOs. 
  */
-public class StandardLoanAccountService implements LoanAccountService {
+public class StandardAccountService implements AccountService {
     private AccountPersistence accountPersistence;
     
     public AccountPersistence getAccountPersistence() {
@@ -47,21 +47,21 @@ public class StandardLoanAccountService implements LoanAccountService {
         this.accountPersistence = accountPersistence;
     }
 
-    public void makeLoanPayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
+    public void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
         StaticHibernateUtil.startTransaction();
-        makeLoanPaymentNoCommit(accountPaymentParametersDTO);
+        makePaymentNoCommit(accountPaymentParametersDTO);
         StaticHibernateUtil.commitTransaction();
     }
 
-    public void makeLoanPayments(List<AccountPaymentParametersDTO> accountPaymentParametersDTOs) throws PersistenceException, AccountException {
+    public void makePayments(List<AccountPaymentParametersDTO> accountPaymentParametersDTOs) throws PersistenceException, AccountException {
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDTO accountPaymentParametersDTO: accountPaymentParametersDTOs) {
-            makeLoanPaymentNoCommit(accountPaymentParametersDTO);            
+            makePaymentNoCommit(accountPaymentParametersDTO);            
         }
         StaticHibernateUtil.commitTransaction();
     }
     
-    public void makeLoanPaymentNoCommit(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
+    public void makePaymentNoCommit(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
         AccountBO account = getAccountPersistence().getAccount(accountPaymentParametersDTO.account.getAccountId());
         
         if (!account.isTrxnDateValid(accountPaymentParametersDTO.paymentDate.toDateMidnight().toDate()))

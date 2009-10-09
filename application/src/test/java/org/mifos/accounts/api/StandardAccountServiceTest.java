@@ -66,9 +66,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class StandardLoanAccountServiceTest {
+public class StandardAccountServiceTest {
 
-    private StandardLoanAccountService standardLoanAccountService;
+    private StandardAccountService standardAccountService;
     
     @Mock
     private AccountPersistence accountPersistence;
@@ -97,8 +97,8 @@ public class StandardLoanAccountServiceTest {
         
     @Before
     public void setup() throws AccountException {
-        standardLoanAccountService = new StandardLoanAccountService();
-        standardLoanAccountService.setAccountPersistence(accountPersistence);
+        standardAccountService = new StandardAccountService();
+        standardAccountService.setAccountPersistence(accountPersistence);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setAccountPersistence(accountPersistence);
         accountBO.setCustomerPersistence(customerPersistence);

@@ -21,8 +21,8 @@
 package org.mifos.api.accounts;
 
 
-public interface LoanAccountService {
+public interface AccountService {
 
-    public void makeLoanPayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws Exception;
+    public void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws Exception;
 
 }
