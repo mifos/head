@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.apache.commons.cli.CommandLine;
@@ -55,7 +55,7 @@ public class PseudoLocalizationGenerator {
     private static final String DIRECTORY_OPTION_NAME = "d";
     private static final String HELP_OPTION_NAME = "h";
 
-    private String locale = "is";
+    private String locale = "is_IS";
     private String baseFileName = "messages";
     private String directory = "";
 
@@ -115,7 +115,7 @@ public class PseudoLocalizationGenerator {
 
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream(directory + baseFileName + "_" + locale + "_" + locale.toUpperCase() + ".properties");
+            out = new FileOutputStream(directory + baseFileName + "_" + locale + ".properties");
             defaultProps.store(out, "---Auto Generated Properties---");
         } finally {
             out.close();
@@ -219,10 +219,10 @@ class SortedProperties extends Properties {
 
     @Override
     @SuppressWarnings("unchecked")
-    public synchronized Enumeration keys() {
-        Vector v = new Vector(keySet());
-        Collections.sort(v);
-        return v.elements();
+    public Enumeration keys() {
+        ArrayList list = new ArrayList(keySet());
+        Collections.sort(list);
+        return Collections.enumeration(list);
     }
 
 }
