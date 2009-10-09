@@ -23,7 +23,10 @@ package org.mifos.core;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.apache.commons.cli.CommandLine;
@@ -34,17 +37,18 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 @SuppressWarnings( { "PMD.SystemPrintln", // as a command line utility
-                                          // System.out output seems ok
+        // System.out output seems ok
         "PMD.SingularField" })
 // Option fields could be local, but for consistency keep them at the class
 // level
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DM_EXIT" }, justification = "Command line tool exit")
 public class PseudoLocalizationGenerator {
-    private static final Log LOG = LogFactory.getLog(PseudoLocalizationGenerator.class);
+    private static Logger LOG;
     private static final String PREFIX = "@@@";
     private static final String SUFFIX = "^^^";
 
@@ -64,6 +68,9 @@ public class PseudoLocalizationGenerator {
     private Option directoryOption;
 
     public PseudoLocalizationGenerator() {
+        BasicConfigurator.configure();
+        Logger.getLogger(PseudoLocalizationGenerator.class).setLevel(Level.INFO);
+        LOG = Logger.getLogger(PseudoLocalizationGenerator.class);
         defineOptions();
     }
 
@@ -89,7 +96,7 @@ public class PseudoLocalizationGenerator {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     // doesn't seem like an issue for a small utility like this
     public void generatePseudoLocalization() throws IOException {
-        Properties defaultProps = new Properties();
+        SortedProperties defaultProps = new SortedProperties();
         FileInputStream in = null;
 
         try {
@@ -110,15 +117,10 @@ public class PseudoLocalizationGenerator {
             buffer.append(SUFFIX);
             defaultProps.setProperty(key, buffer.toString());
         }
-        for (Entry<Object, Object> entry : defaultProps.entrySet()) {
-            String key = (String) entry.getKey();
-            String value = (String) entry.getValue();
-            LOG.info(key + "=" + value);
-        }
 
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream(directory + baseFileName + "_" + locale + ".properties");
+            out = new FileOutputStream(directory + baseFileName + "_" + locale + "_" + locale.toUpperCase() + ".properties");
             defaultProps.store(out, "---Auto Generated Properties---");
         } finally {
             out.close();
@@ -210,4 +212,22 @@ public class PseudoLocalizationGenerator {
     public void setDirectory(String directory) {
         this.directory = directory;
     }
+}
+
+/**
+ * Sorted properties file. This implementation requires that store() internally
+ * calls keys().
+ */
+class SortedProperties extends Properties {
+
+    private static final long serialVersionUID = 5657650728102821923L;
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public synchronized Enumeration keys() {
+        Vector v = new Vector(keySet());
+        Collections.sort(v);
+        return v.elements();
+    }
+
 }
