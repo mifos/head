@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
         "PMD.SingularField" })
 // Option fields could be local, but for consistency keep them at the class
 // level
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DM_EXIT" }, justification = "Command line tool exit")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DM_EXIT","DM_CONVERT_CASE" }, justification = "Command line tool exit")
 public class PseudoLocalizationGenerator {
     private static Logger LOG;
     private static final String PREFIX = "@@@";
