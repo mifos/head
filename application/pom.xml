@@ -239,7 +239,7 @@
         <repository>
             <id>maven-repository.mifos.org</id>
             <name>Mifos Maven Repository</name>
-            <url>http://neem.mifos.org/maven/</url>
+            <url>http://maven.mifos.org/maven/</url>
         </repository>
         <repository>
             <id>maven2-repository.dev.java.net</id>
@@ -265,7 +265,7 @@
         <pluginRepository>
             <id>maven-repository.mifos.org</id>
             <name>Mifos Maven Repository</name>
-            <url>http://neem.mifos.org/maven/</url>
+            <url>http://maven.mifos.org/maven/</url>
         </pluginRepository>
     </pluginRepositories>
 
