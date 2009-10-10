@@ -94,7 +94,7 @@ explanation of the license and how it is applied.
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.importformat"
                                         isColonRequired="Yes" bundle="adminUIResources" /> <c:out
-                                        value="${importTransactionsForm.importTransactionsType}" /></td>
+                                        value="${importTransactionsForm.importPluginName}" /></td>
                                 </tr>
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.importfilename"
