@@ -148,8 +148,20 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testFindBySystemId() throws Exception {
         LoanPersistence loanPersistance = new LoanPersistence();
         LoanBO loanBO = loanPersistance.findBySystemId(loanAccount.getGlobalAccountNum());
-        Assert.assertEquals(loanBO.getGlobalAccountNum(), loanAccount.getGlobalAccountNum());
-        Assert.assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());
+        Assert.assertEquals(loanAccount.getGlobalAccountNum(), loanBO.getGlobalAccountNum());
+        Assert.assertEquals(loanAccount.getAccountId(), loanBO.getAccountId());
+    }
+
+    public void testFindByExternalId() throws Exception {
+        String externalId = "ABC";
+        StaticHibernateUtil.startTransaction();
+        loanAccount.setExternalId(externalId);
+        StaticHibernateUtil.commitTransaction();
+        
+        LoanPersistence loanPersistance = new LoanPersistence();
+        LoanBO loanBO = loanPersistance.findByExternalId(loanAccount.getExternalId());
+        Assert.assertEquals(externalId, loanBO.getExternalId());
+        Assert.assertEquals(loanAccount.getAccountId(), loanBO.getAccountId());
     }
 
     public void testFindIndividualLoans() throws Exception {

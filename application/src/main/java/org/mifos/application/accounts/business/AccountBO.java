@@ -83,6 +83,7 @@ public class AccountBO extends BusinessObject {
 
     private final Integer accountId;
     protected String globalAccountNum;
+    private String externalId;
     protected final AccountTypeEntity accountType;
     protected final CustomerBO customer;
     protected final OfficeBO office;
@@ -1577,5 +1578,12 @@ public class AccountBO extends BusinessObject {
 
     public boolean isActiveLoanAccount() {
         return AccountState.fromShort(accountState.getId()).isActiveLoanAccountState();
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId= externalId;        
+    }
+    public String getExternalId() {
+        return externalId;        
     }
 }

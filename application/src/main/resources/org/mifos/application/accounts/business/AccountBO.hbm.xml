@@ -16,6 +16,8 @@
         <property name="offsettingAllowable" column="OFFSETTING_ALLOWABLE" type="integer" />
 		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM"
 			access="field" />
+		<property name="externalId" column="EXTERNAL_ID"
+			access="field" />		
 		<property name="createdBy" column="CREATED_BY" not-null="true"
 			update="false" lazy="true" />
 		<property name="createdDate" column="CREATED_DATE"
@@ -304,6 +306,10 @@
 	<query name="accounts.findLoanBySystemId">
 		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO account 
 			where account.globalAccountNum = :globalAccountNumber ]]>
+	</query>
+	<query name="accounts.findLoanByExternalId">
+		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO account 
+			where account.externalId = :externalId ]]>
 	</query>
 		<query name="accounts.findIndividualLoans">
 		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO account

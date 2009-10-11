@@ -99,6 +99,14 @@ public class LoanPersistence extends Persistence {
         return queryResult == null ? null : (LoanBO) queryResult;
     }
 
+    public LoanBO findByExternalId(final String externalId) throws PersistenceException {
+        Map<String, String> queryParameters = new HashMap<String, String>();
+        queryParameters.put("externalId", externalId);
+        Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.FIND_LOAN_ACCOUNT_BY_EXTERNAL_ID,
+                queryParameters);
+        return queryResult == null ? null : (LoanBO) queryResult;
+    }
+    
     @SuppressWarnings("unchecked")
     public List<LoanBO> findIndividualLoans(final String accountId) throws PersistenceException {
         Map<String, Integer> queryParameters = new HashMap<String, Integer>();
