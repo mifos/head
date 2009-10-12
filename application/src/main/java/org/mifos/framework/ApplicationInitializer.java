@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -38,6 +39,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -53,6 +55,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.plugin.PluginManager;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.ActivityMapper;
@@ -61,6 +64,7 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.spi.TransactionImport;
 
 /**
  * This class should prepare all the sub-systems that are required by the app.
@@ -193,7 +197,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
-
+                    
+                    List<String> pluginsLoaded = new PluginManager().getImportPluginNames();
+                    if (!pluginsLoaded.isEmpty()) {
+                        LOG.info("loaded plugins: " + pluginsLoaded);
+                    }
                 }
             }
         } catch (Exception e) {

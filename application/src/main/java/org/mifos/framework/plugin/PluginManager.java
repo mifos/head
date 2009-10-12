@@ -22,25 +22,17 @@ package org.mifos.framework.plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 
-import org.mifos.config.ConfigurationManager;
 import org.mifos.spi.TransactionImport;
 
 public class PluginManager {
-    public List<String> getImportPluginNames() throws ClassNotFoundException, InstantiationException,
-            IllegalAccessException {
+    public List<String> getImportPluginNames() {
         List<String> pluginNames = new ArrayList<String>();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        // FIXME: externalize "Importers"
-        for (String fullyQualifiedImporterClassName : configMgr.getStringArray("Importers")) {
-            Class<? extends TransactionImport> clazz = Class.forName(fullyQualifiedImporterClassName).asSubclass(
-                    TransactionImport.class);
-            TransactionImport importer = clazz.newInstance();
-            pluginNames.add(importer.getDisplayName());
-        }
-        if (pluginNames.size() < 1) {
-            // FIXME: externalize "NO IMPORT PLUGINS FOUND"
-            pluginNames.add("NO IMPORT PLUGINS FOUND");
+        ServiceLoader<TransactionImport> importLoader = ServiceLoader.load(TransactionImport.class);
+        for (TransactionImport ti : importLoader) {
+            System.err.println("PLUGINTEST: found plugin: " + ti.getDisplayName());
+            pluginNames.add(ti.getDisplayName());
         }
         return pluginNames;
     }
