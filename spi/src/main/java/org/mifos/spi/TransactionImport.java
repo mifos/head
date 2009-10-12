@@ -40,7 +40,7 @@ public abstract class TransactionImport {
     /**
      * @return version number of this implementation
      */
-    final String getVersion() throws IOException {
+    public final String getVersion() throws IOException {
         Properties p = new Properties();
         p.load(this.getClass().getResourceAsStream("/version.properties"));
         return p.getProperty("version");
