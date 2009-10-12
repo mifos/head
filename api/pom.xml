@@ -3,7 +3,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-api</artifactId>
     <name>Mifos - Application Programming Interface</name>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <description>Provides an external API for communicating with and controlling Mifos.</description>
 
     <parent>
@@ -13,12 +13,6 @@
     </parent>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
 
         <plugins>
             <plugin>

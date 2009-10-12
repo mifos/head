@@ -21,33 +21,22 @@
 package org.mifos.spi;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Service Provider Interface (SPI) for importing bank transactions.
  */
-public abstract class TransactionImport {
+public interface TransactionImport {
     /**
      * Parse transaction import data and return errors encountered or an empty
      * list.
      * 
      * @return error messages, if any, but never <code>null</code>
      */
-    public abstract List<String> parseTransactions(BufferedReader input);
-
-    /**
-     * @return version number of this implementation
-     */
-    public final String getVersion() throws IOException {
-        Properties p = new Properties();
-        p.load(this.getClass().getResourceAsStream("/version.properties"));
-        return p.getProperty("version");
-    }
+    List<String> parseTransactions(BufferedReader input);
 
     /**
      * @return friendly name for this implementation
      */
-    public abstract String getDisplayName();
+    String getDisplayName();
 }
