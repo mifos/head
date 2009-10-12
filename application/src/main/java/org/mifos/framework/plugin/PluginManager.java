@@ -31,7 +31,6 @@ public class PluginManager {
         List<String> pluginNames = new ArrayList<String>();
         ServiceLoader<TransactionImport> importLoader = ServiceLoader.load(TransactionImport.class);
         for (TransactionImport ti : importLoader) {
-            System.err.println("PLUGINTEST: found plugin: " + ti.getDisplayName());
             pluginNames.add(ti.getDisplayName());
         }
         return pluginNames;
