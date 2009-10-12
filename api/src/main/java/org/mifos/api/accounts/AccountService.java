@@ -20,9 +20,8 @@
 
 package org.mifos.api.accounts;
 
-
 public interface AccountService {
 
-    public void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws Exception;
+    void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws Exception;
 
 }
