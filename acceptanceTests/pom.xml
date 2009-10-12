@@ -112,6 +112,7 @@
                             <execution>
                                 <phase>process-resources</phase>
                                 <configuration>
+                                    <skip>${maven.test.skip}</skip>
                                     <tasks>
                                         <copy todir="${tomcat.home.directory}/conf" overwrite="true">
                                             <fileset dir="${basedir}/src/test/containers/${container.name}" />
@@ -401,7 +402,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <skip>false</skip>
+                            <skip>${maven.test.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -434,6 +435,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>${maven.test.skip}</skip>
                     <wait>${cargo.wait}</wait>
                     <container>
                         <containerId>${container.name}</containerId>
@@ -477,6 +479,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>${maven.test.skip}</skip>
                     <background>${selenium.background}</background>
                     <port>${selenium.port}</port>
                     <logOutput>${selenium.log.output}</logOutput>
