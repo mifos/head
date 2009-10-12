@@ -325,6 +325,7 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
+                            <skip>${maven.test.skip}</skip>
                             <srcFiles>
                                 <srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
