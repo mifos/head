@@ -70,6 +70,8 @@ public class AccountPaymentEntity extends PersistentObject {
     
     private PersonnelBO createdByUser;
 
+    private String comment;
+
     protected AccountPaymentEntity() {
         this(null, null, null, null, null, new DateTime().toDate());
     }
@@ -194,5 +196,13 @@ public class AccountPaymentEntity extends PersistentObject {
     @Override
     public String toString() {
         return "{" + paymentId + ", " + account + ", " + paymentType + ", " + amount + "}";
+    }
+
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

@@ -48,6 +48,8 @@ public class PaymentData {
     private Date receiptDate;
 
     private Short paymentTypeId;
+    
+    private String comment;
 
     /*
      * Holds information including the installment this payment is to be applied
@@ -152,4 +154,14 @@ public class PaymentData {
     public void addAccountPaymentData(AccountPaymentData accountPaymentData) {
         accountPayments.add(accountPaymentData);
     }
+
+    public String getComment() {
+        return this.comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    
 }

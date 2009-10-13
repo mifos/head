@@ -21,9 +21,6 @@
 package org.mifos.accounts.api;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 import junit.framework.Assert;
 
@@ -33,21 +30,14 @@ import org.mifos.api.accounts.AccountReferenceDTO;
 import org.mifos.api.accounts.PaymentTypeDTO;
 import org.mifos.api.accounts.UserReferenceDTO;
 import org.mifos.application.accounts.AccountIntegrationTestCase;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-/**
- * @author van
- *
- */
+
 public class StandardAccountServiceIntegrationTest extends AccountIntegrationTestCase {
 
     private StandardAccountService standardAccountService;
@@ -63,19 +53,41 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     }
     
     public void testMakePayment() throws Exception {
+        String paymentAmount = "700";
         standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDTO accountPaymentParametersDTO = new AccountPaymentParametersDTO(
                 new UserReferenceDTO(accountBO.getPersonnel().getPersonnelId()), 
                 new AccountReferenceDTO(accountBO.getAccountId()), 
-                new BigDecimal("700"), 
+                new BigDecimal(paymentAmount), 
                 new LocalDate(), 
                 PaymentTypeDTO.CASH,"");
         standardAccountService.makePayment(accountPaymentParametersDTO);
 
         TestObjectFactory.updateObject(accountBO);
-        Assert.assertEquals("The amount returned for the payment should have been 700", 700.0, accountBO.getLastPmntAmnt());
+        Assert.assertEquals("The amount returned for the payment should have been " + paymentAmount, 
+                Double.parseDouble(paymentAmount), accountBO.getLastPmntAmnt());
+    }
+
+    public void testMakePaymentComment() throws Exception {
+        String paymentAmount = "700";
+        String comment = "test comment";
+        standardAccountService = new StandardAccountService();
+        standardAccountService.setAccountPersistence(new AccountPersistence());
+
+        AccountPaymentParametersDTO accountPaymentParametersDTO = new AccountPaymentParametersDTO(
+                new UserReferenceDTO(accountBO.getPersonnel().getPersonnelId()), 
+                new AccountReferenceDTO(accountBO.getAccountId()), 
+                new BigDecimal(paymentAmount), 
+                new LocalDate(), 
+                PaymentTypeDTO.CASH,
+                comment);
+        standardAccountService.makePayment(accountPaymentParametersDTO);
+
+        TestObjectFactory.updateObject(accountBO);
+        Assert.assertEquals("We should get the comment back",
+                comment, accountBO.getLastPmnt().getComment());
     }
     
     public void testLookupLoanIdFromExternalId() throws Exception {

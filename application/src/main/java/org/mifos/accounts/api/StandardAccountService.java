@@ -83,6 +83,7 @@ public class StandardAccountService implements AccountService {
 
         PaymentData paymentData = account.createPaymentData(accountPaymentParametersDTO.userMakingPayment.getUserId(), amount, accountPaymentParametersDTO.paymentDate.toDateMidnight().toDate(), null,
                 null, accountPaymentParametersDTO.paymentType.getValue());
+        paymentData.setComment(accountPaymentParametersDTO.comment);
                 
         account.applyPayment(paymentData);
         

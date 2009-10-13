@@ -1377,6 +1377,7 @@ public class LoanBO extends AccountBO {
                 paymentData
                 .getReceiptNum(), paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData.getPaymentTypeId()),
                 paymentData.getTransactionDate());
+        accountPayment.setComment(paymentData.getComment());
 
         java.sql.Date paymentDate = new java.sql.Date(paymentData.getTransactionDate().getTime());
 

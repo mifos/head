@@ -27,6 +27,7 @@
 		 <column name="CURRENCY_ID" /> 
 		 <column name="AMOUNT" />
 		</property>
+		<property name="comment" column="COMMENT" type="string" access="field"/>
 		<many-to-one name="paymentType" column="PAYMENT_TYPE_ID"
 			class="org.mifos.application.master.business.PaymentTypeEntity"
 			cascade="none" update="false" insert="true" access="field"/>
