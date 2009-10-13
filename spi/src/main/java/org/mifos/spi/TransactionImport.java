@@ -23,20 +23,50 @@ package org.mifos.spi;
 import java.io.BufferedReader;
 import java.util.List;
 
+import org.mifos.api.accounts.AccountService;
+import org.mifos.api.accounts.UserReferenceDTO;
+
 /**
  * Service Provider Interface (SPI) for importing bank transactions.
  */
-public interface TransactionImport {
+public abstract class TransactionImport {
+    private AccountService accountService;
+    private UserReferenceDTO userReferenceDTO;
+
     /**
      * Parse transaction import data and return errors encountered or an empty
      * list.
      * 
      * @return error messages, if any, but never <code>null</code>
      */
-    List<String> parseTransactions(BufferedReader input);
+    public abstract List<String> parseTransactions(final BufferedReader input);
 
     /**
      * @return friendly name for this implementation
      */
-    String getDisplayName();
+    public abstract String getDisplayName();
+
+    /**
+     * Mifos will call this method to provide an {@link AccountService} for use
+     * by the import plugin prior to calling parseTransactions.
+     */
+    public void setAccountService(final AccountService accountService) {
+        this.accountService = accountService;
+    }
+    
+    protected AccountService getAccountService() {
+        return accountService;
+    }
+
+    /**
+     * Mifos will call this method to provide a {@link UserReferenceDTO} for use
+     * by the import plugin prior to calling parseTransactions.
+     */
+    public void setUserReferenceDTO(final UserReferenceDTO userReferenceDTO) {
+        this.userReferenceDTO = userReferenceDTO;
+    }
+    
+    protected UserReferenceDTO getUserReferenceDTO() {
+        return userReferenceDTO;
+    }
 }

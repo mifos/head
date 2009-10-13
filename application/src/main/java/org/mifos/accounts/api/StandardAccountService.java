@@ -32,9 +32,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 
-/*
+/**
  * A service class implementation to expose basic functions on loans.
- * As an external API, this class should not expose business objects, on DTOs. 
+ * As an external API, this class should not expose business objects, only DTOs. 
  */
 public class StandardAccountService implements AccountService {
     private AccountPersistence accountPersistence;
@@ -45,12 +45,6 @@ public class StandardAccountService implements AccountService {
 
     public void setAccountPersistence(AccountPersistence accountPersistence) {
         this.accountPersistence = accountPersistence;
-    }
-
-    public void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
-        StaticHibernateUtil.startTransaction();
-        makePaymentNoCommit(accountPaymentParametersDTO);
-        StaticHibernateUtil.commitTransaction();
     }
 
     public void makePayments(List<AccountPaymentParametersDTO> accountPaymentParametersDTOs) throws PersistenceException, AccountException {

@@ -46,4 +46,11 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+    	<dependency>
+    		<groupId>org.mifos</groupId>
+    		<artifactId>mifos-api</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+    	</dependency>
+    </dependencies>
 </project>

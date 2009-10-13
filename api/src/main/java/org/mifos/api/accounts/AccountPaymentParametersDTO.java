@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 public class AccountPaymentParametersDTO {
-    public UserReferenceDTO userMakingPayment;
-    public AccountReferenceDTO account;
-    public BigDecimal paymentAmount;
-    public LocalDate paymentDate;
-    public LocalDate receiptDate;
-    public String receiptId;
-    public PaymentTypeDTO paymentType;
-    public String comment;
+    public final UserReferenceDTO userMakingPayment;
+    public final AccountReferenceDTO account;
+    public final BigDecimal paymentAmount;
+    public final LocalDate paymentDate;
+    public final LocalDate receiptDate;
+    public final String receiptId;
+    public final PaymentTypeDTO paymentType;
+    public final String comment;
 
     public AccountPaymentParametersDTO(UserReferenceDTO userMakingPayment, AccountReferenceDTO account,
             BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDTO paymentType, String comment) {
@@ -20,6 +20,8 @@ public class AccountPaymentParametersDTO {
         this.paymentAmount = paymentAmount;
         this.paymentDate = paymentDate;
         this.paymentType = paymentType;
+        this.receiptDate = null;
+        this.receiptId = null;
         this.comment = comment;
     }
 
@@ -36,6 +38,5 @@ public class AccountPaymentParametersDTO {
         this.paymentType = paymentType;
         this.comment = comment;
     }
-    
-    
+
 }
