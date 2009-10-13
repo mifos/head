@@ -23,9 +23,12 @@ package org.mifos.accounts.api;
 import java.util.List;
 
 import org.mifos.api.accounts.AccountPaymentParametersDTO;
+import org.mifos.api.accounts.AccountReferenceDTO;
 import org.mifos.api.accounts.AccountService;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -38,7 +41,16 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class StandardAccountService implements AccountService {
     private AccountPersistence accountPersistence;
+    private LoanPersistence loanPersistence;
     
+    public LoanPersistence getLoanPersistence() {
+        return this.loanPersistence;
+    }
+
+    public void setLoanPersistence(LoanPersistence loanPersistence) {
+        this.loanPersistence = loanPersistence;
+    }
+
     public AccountPersistence getAccountPersistence() {
         return this.accountPersistence;
     }
@@ -47,6 +59,12 @@ public class StandardAccountService implements AccountService {
         this.accountPersistence = accountPersistence;
     }
 
+    public void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
+        StaticHibernateUtil.startTransaction();
+        makePaymentNoCommit(accountPaymentParametersDTO);            
+        StaticHibernateUtil.commitTransaction();
+    }
+    
     public void makePayments(List<AccountPaymentParametersDTO> accountPaymentParametersDTOs) throws PersistenceException, AccountException {
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDTO accountPaymentParametersDTO: accountPaymentParametersDTOs) {
@@ -70,6 +88,11 @@ public class StandardAccountService implements AccountService {
         
         getAccountPersistence().createOrUpdate(account);
 
+    }
+
+    public AccountReferenceDTO lookupLoanAccountReferenceFromExternalId(String externalId) throws PersistenceException {
+        LoanBO loan = getLoanPersistence().findByExternalId(externalId);
+        return new AccountReferenceDTO(loan.getAccountId());
     }
 
 }

@@ -23,5 +23,8 @@ package org.mifos.api.accounts;
 import java.util.List;
 
 public interface AccountService {
-    void makePayments(List<AccountPaymentParametersDTO> accountPaymentParametersDTO) throws Exception;
+    void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws Exception;
+    void makePayments(List<AccountPaymentParametersDTO> accountPaymentParametersDTOs) throws Exception;
+    AccountReferenceDTO lookupLoanAccountReferenceFromExternalId(String externalId) throws Exception;
+    
 }
