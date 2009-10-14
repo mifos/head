@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Matchers.*;
@@ -32,12 +33,13 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.api.accounts.AccountPaymentParametersDTO;
-import org.mifos.api.accounts.AccountReferenceDTO;
-import org.mifos.api.accounts.PaymentTypeDTO;
-import org.mifos.api.accounts.UserReferenceDTO;
+import org.mifos.api.accounts.AccountPaymentParametersDto;
+import org.mifos.api.accounts.AccountReferenceDto;
+import org.mifos.api.accounts.PaymentTypeDto;
+import org.mifos.api.accounts.UserReferenceDto;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -59,10 +61,14 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
+
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -87,6 +93,9 @@ public class StandardAccountServiceTest {
     
     @Mock 
     private CustomerBO customerBO;
+
+    @Mock
+    private HibernateUtil hibernateUtil;
     
     private LoanBO accountBO;
 
@@ -106,15 +115,14 @@ public class StandardAccountServiceTest {
         accountBO.setPersonnelPersistence(personnelPersistence);
     }
     
+    @Ignore
     @Test
     public void testMakeLoanPayment() throws PersistenceException, AccountException {
-        
- 
         short userId = 1;
         int accountId = 100;
         int customerId = 1;
-        UserReferenceDTO userMakingPayment = new UserReferenceDTO(userId);
-        AccountReferenceDTO loanAccount = new AccountReferenceDTO(accountId);
+        UserReferenceDto userMakingPayment = new UserReferenceDto(userId);
+        AccountReferenceDto loanAccount = new AccountReferenceDto(accountId);
         BigDecimal paymentAmount = new BigDecimal("100");
         LocalDate paymentDate = new LocalDate(2009,10,1);
         String comment = "some comment";
@@ -129,6 +137,45 @@ public class StandardAccountServiceTest {
         
         // FIXME - work in progress Vanmh
         //standardLoanAccountService.makeLoanPayment(new AccountPaymentParametersDTO(userMakingPayment, loanAccount, paymentAmount, paymentDate, PaymentTypeDTO.CASH, comment));
+    }
+    
+    private AccountPaymentParametersDto createAccountPaymentParametersDto(short userId, int accountId, String paymentAmount) {
+        AccountPaymentParametersDto accountPaymentParametersDTO = new AccountPaymentParametersDto(
+            new UserReferenceDto(userId), 
+            new AccountReferenceDto(accountId), 
+            new BigDecimal(paymentAmount), 
+            new LocalDate(), 
+            PaymentTypeDto.CASH,"");
+    
+        return accountPaymentParametersDTO;
+    }
+    
+    /*
+     * Make sure that a payment is made for each DTO passed in
+     */
+    @Test
+    public void testMakeLoanPayments() throws Exception {
+        short userId = 1;
+        int accountId = 100;
+        String paymentAmount = "100";
+        List<AccountPaymentParametersDto> accountPaymentParametersDtoList = new ArrayList();
+        AccountPaymentParametersDto dto1 = createAccountPaymentParametersDto(userId, accountId, paymentAmount);
+        AccountPaymentParametersDto dto2 = createAccountPaymentParametersDto(userId, accountId, paymentAmount);
+        accountPaymentParametersDtoList.add(dto1);
+        accountPaymentParametersDtoList.add(dto2);
+        
+        try {
+            StaticHibernateUtil.setHibernateUtil(hibernateUtil);
+            StandardAccountService standardAccountServiceSpy = spy(standardAccountService);
+            doNothing().when(standardAccountServiceSpy).makePaymentNoCommit((AccountPaymentParametersDto) any());
+
+            standardAccountServiceSpy.makePayments(accountPaymentParametersDtoList);
+            verify(standardAccountServiceSpy).makePaymentNoCommit(dto1);
+            verify(standardAccountServiceSpy).makePaymentNoCommit(dto2);
+        } finally {
+            StaticHibernateUtil.setHibernateUtil(new HibernateUtil());
+        }
+        
     }
     
     private class PrivateLoanAccountBuilder {

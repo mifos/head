@@ -24,14 +24,14 @@ import java.io.BufferedReader;
 import java.util.List;
 
 import org.mifos.api.accounts.AccountService;
-import org.mifos.api.accounts.UserReferenceDTO;
+import org.mifos.api.accounts.UserReferenceDto;
 
 /**
  * Service Provider Interface (SPI) for importing bank transactions.
  */
 public abstract class TransactionImport {
     private AccountService accountService;
-    private UserReferenceDTO userReferenceDTO;
+    private UserReferenceDto userReferenceDTO;
 
     /**
      * Parse transaction import data and return errors encountered or an empty
@@ -59,14 +59,14 @@ public abstract class TransactionImport {
     }
 
     /**
-     * Mifos will call this method to provide a {@link UserReferenceDTO} for use
+     * Mifos will call this method to provide a {@link UserReferenceDto} for use
      * by the import plugin prior to calling parseTransactions.
      */
-    public void setUserReferenceDTO(final UserReferenceDTO userReferenceDTO) {
+    public void setUserReferenceDTO(final UserReferenceDto userReferenceDTO) {
         this.userReferenceDTO = userReferenceDTO;
     }
     
-    protected UserReferenceDTO getUserReferenceDTO() {
+    protected UserReferenceDto getUserReferenceDTO() {
         return userReferenceDTO;
     }
 }

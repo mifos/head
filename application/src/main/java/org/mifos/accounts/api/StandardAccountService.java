@@ -22,8 +22,8 @@ package org.mifos.accounts.api;
 
 import java.util.List;
 
-import org.mifos.api.accounts.AccountPaymentParametersDTO;
-import org.mifos.api.accounts.AccountReferenceDTO;
+import org.mifos.api.accounts.AccountPaymentParametersDto;
+import org.mifos.api.accounts.AccountReferenceDto;
 import org.mifos.api.accounts.AccountService;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -59,31 +59,31 @@ public class StandardAccountService implements AccountService {
         this.accountPersistence = accountPersistence;
     }
 
-    public void makePayment(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
+    public void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) throws PersistenceException, AccountException {
         StaticHibernateUtil.startTransaction();
-        makePaymentNoCommit(accountPaymentParametersDTO);            
+        makePaymentNoCommit(accountPaymentParametersDto);            
         StaticHibernateUtil.commitTransaction();
     }
     
-    public void makePayments(List<AccountPaymentParametersDTO> accountPaymentParametersDTOs) throws PersistenceException, AccountException {
+    public void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws PersistenceException, AccountException {
         StaticHibernateUtil.startTransaction();
-        for (AccountPaymentParametersDTO accountPaymentParametersDTO: accountPaymentParametersDTOs) {
+        for (AccountPaymentParametersDto accountPaymentParametersDTO: accountPaymentParametersDtoList) {
             makePaymentNoCommit(accountPaymentParametersDTO);            
         }
         StaticHibernateUtil.commitTransaction();
     }
     
-    public void makePaymentNoCommit(AccountPaymentParametersDTO accountPaymentParametersDTO) throws PersistenceException, AccountException {
-        AccountBO account = getAccountPersistence().getAccount(accountPaymentParametersDTO.account.getAccountId());
+    public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto) throws PersistenceException, AccountException {
+        AccountBO account = getAccountPersistence().getAccount(accountPaymentParametersDto.account.getAccountId());
         
-        if (!account.isTrxnDateValid(accountPaymentParametersDTO.paymentDate.toDateMidnight().toDate()))
+        if (!account.isTrxnDateValid(accountPaymentParametersDto.paymentDate.toDateMidnight().toDate()))
             throw new AccountException("errors.invalidTxndate");
 
-        Money amount = new Money(accountPaymentParametersDTO.paymentAmount);
+        Money amount = new Money(accountPaymentParametersDto.paymentAmount);
 
-        PaymentData paymentData = account.createPaymentData(accountPaymentParametersDTO.userMakingPayment.getUserId(), amount, accountPaymentParametersDTO.paymentDate.toDateMidnight().toDate(), null,
-                null, accountPaymentParametersDTO.paymentType.getValue());
-        paymentData.setComment(accountPaymentParametersDTO.comment);
+        PaymentData paymentData = account.createPaymentData(accountPaymentParametersDto.userMakingPayment.getUserId(), amount, accountPaymentParametersDto.paymentDate.toDateMidnight().toDate(), null,
+                null, accountPaymentParametersDto.paymentType.getValue());
+        paymentData.setComment(accountPaymentParametersDto.comment);
                 
         account.applyPayment(paymentData);
         
@@ -91,9 +91,9 @@ public class StandardAccountService implements AccountService {
 
     }
 
-    public AccountReferenceDTO lookupLoanAccountReferenceFromExternalId(String externalId) throws PersistenceException {
+    public AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws PersistenceException {
         LoanBO loan = getLoanPersistence().findByExternalId(externalId);
-        return new AccountReferenceDTO(loan.getAccountId());
+        return new AccountReferenceDto(loan.getAccountId());
     }
 
 }

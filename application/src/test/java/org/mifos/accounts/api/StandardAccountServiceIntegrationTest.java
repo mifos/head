@@ -25,10 +25,10 @@ import java.math.BigDecimal;
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
-import org.mifos.api.accounts.AccountPaymentParametersDTO;
-import org.mifos.api.accounts.AccountReferenceDTO;
-import org.mifos.api.accounts.PaymentTypeDTO;
-import org.mifos.api.accounts.UserReferenceDTO;
+import org.mifos.api.accounts.AccountPaymentParametersDto;
+import org.mifos.api.accounts.AccountReferenceDto;
+import org.mifos.api.accounts.PaymentTypeDto;
+import org.mifos.api.accounts.UserReferenceDto;
 import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -57,13 +57,13 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
-        AccountPaymentParametersDTO accountPaymentParametersDTO = new AccountPaymentParametersDTO(
-                new UserReferenceDTO(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDTO(accountBO.getAccountId()), 
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
+                new AccountReferenceDto(accountBO.getAccountId()), 
                 new BigDecimal(paymentAmount), 
                 new LocalDate(), 
-                PaymentTypeDTO.CASH,"");
-        standardAccountService.makePayment(accountPaymentParametersDTO);
+                PaymentTypeDto.CASH,"");
+        standardAccountService.makePayment(accountPaymentParametersDto);
 
         TestObjectFactory.updateObject(accountBO);
         Assert.assertEquals("The amount returned for the payment should have been " + paymentAmount, 
@@ -76,14 +76,14 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
-        AccountPaymentParametersDTO accountPaymentParametersDTO = new AccountPaymentParametersDTO(
-                new UserReferenceDTO(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDTO(accountBO.getAccountId()), 
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
+                new AccountReferenceDto(accountBO.getAccountId()), 
                 new BigDecimal(paymentAmount), 
                 new LocalDate(), 
-                PaymentTypeDTO.CASH,
+                PaymentTypeDto.CASH,
                 comment);
-        standardAccountService.makePayment(accountPaymentParametersDTO);
+        standardAccountService.makePayment(accountPaymentParametersDto);
 
         TestObjectFactory.updateObject(accountBO);
         Assert.assertEquals("We should get the comment back",
@@ -100,8 +100,8 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
         standardAccountService.setLoanPersistence(new LoanPersistence());
         
-        AccountReferenceDTO accountReferenceDTO = standardAccountService.lookupLoanAccountReferenceFromExternalId(externalId);
+        AccountReferenceDto accountReferenceDto = standardAccountService.lookupLoanAccountReferenceFromExternalId(externalId);
 
-        Assert.assertEquals(accountBO.getAccountId().intValue(), accountReferenceDTO.getAccountId());
+        Assert.assertEquals(accountBO.getAccountId().intValue(), accountReferenceDto.getAccountId());
     }       
 }

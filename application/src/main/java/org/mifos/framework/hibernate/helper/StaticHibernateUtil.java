@@ -34,6 +34,10 @@ public class StaticHibernateUtil {
 
     private static HibernateUtil hibernateUtil;
 
+    public static void setHibernateUtil(HibernateUtil hibernateUtil) {
+        StaticHibernateUtil.hibernateUtil = hibernateUtil;
+    }
+
     /**
      * This method must be called before using Hibernate!
      */

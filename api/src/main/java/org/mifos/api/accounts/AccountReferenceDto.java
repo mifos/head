@@ -24,10 +24,10 @@ package org.mifos.api.accounts;
  * A Data Transfer Object to hold a reference to an account.
  *
  */
-public class AccountReferenceDTO {
+public class AccountReferenceDto {
     int accountId;
 
-    public AccountReferenceDTO(int accountId) {
+    public AccountReferenceDto(int accountId) {
         this.accountId = accountId;
     }
 

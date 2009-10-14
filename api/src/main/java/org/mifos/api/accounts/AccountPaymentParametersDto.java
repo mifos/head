@@ -23,18 +23,18 @@ package org.mifos.api.accounts;
 import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
-public class AccountPaymentParametersDTO {
-    public final UserReferenceDTO userMakingPayment;
-    public final AccountReferenceDTO account;
+public class AccountPaymentParametersDto {
+    public final UserReferenceDto userMakingPayment;
+    public final AccountReferenceDto account;
     public final BigDecimal paymentAmount;
     public final LocalDate paymentDate;
     public final LocalDate receiptDate;
     public final String receiptId;
-    public final PaymentTypeDTO paymentType;
+    public final PaymentTypeDto paymentType;
     public final String comment;
 
-    public AccountPaymentParametersDTO(UserReferenceDTO userMakingPayment, AccountReferenceDTO account,
-            BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDTO paymentType, String comment) {
+    public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
+            BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
         this.userMakingPayment = userMakingPayment;
         this.account = account;
         this.paymentAmount = paymentAmount;
@@ -45,9 +45,9 @@ public class AccountPaymentParametersDTO {
         this.comment = comment;
     }
 
-    public AccountPaymentParametersDTO(UserReferenceDTO userMakingPayment, AccountReferenceDTO account,
+    public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
             BigDecimal paymentAmount, LocalDate paymentDate, LocalDate receiptDate, String receiptId,
-            PaymentTypeDTO paymentType, String comment) {
+            PaymentTypeDto paymentType, String comment) {
         super();
         this.userMakingPayment = userMakingPayment;
         this.account = account;

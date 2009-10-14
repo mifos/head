@@ -20,27 +20,25 @@
 
 package org.mifos.api.accounts;
 
-public enum PaymentTypeDTO {
-    CASH((short) 1), VOUCHER((short) 2), CHEQUE((short) 3);
+/**
+ * A Data Transfer Object to hold a reference to a Mifos user.
+ * A Mifos user is currently represented as a PersonnelBO.
+ *
+ */
+public class UserReferenceDto {
 
-    Short value;
+    Short userId;
 
-    PaymentTypeDTO(Short value) {
-        this.value = value;
+    public Short getUserId() {
+        return this.userId;
     }
 
-    public Short getValue() {
-        return value;
+    public void setUserId(Short userId) {
+        this.userId = userId;
     }
 
-    public static PaymentTypeDTO getPaymentType(int value) {
-        for (PaymentTypeDTO paymentType : PaymentTypeDTO.values()) {
-            if (paymentType.value == value) {
-                return paymentType;
-            }
-        }
-        throw new RuntimeException("can't find payment type " + value);
+    public UserReferenceDto(short userId) {
+        this.userId = userId;
     }
-
 
 }
