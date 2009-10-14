@@ -91,26 +91,6 @@ public class LatestBaseTestCase extends TestCase {
         return database.dataStore();
     }
 
-    protected void upgradeDB(int fromVersion, Connection connection) throws Exception {
-        for (int currentVersion = fromVersion; currentVersion < APPLICATION_VERSION; ++currentVersion) {
-            int higherVersion = currentVersion + 1;
-            try {
-                upgradeDB(connection, higherVersion);
-            } catch (Exception failure) {
-                throw new Exception("Cannot upgrade to " + higherVersion, failure);
-            }
-        }
-    }
-
-    protected void upgradeDB(Connection connection, int nextVersion) throws Exception {
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
-        Upgrade upgrade = persistence.findUpgrade(nextVersion);
-        if (upgrade instanceof SqlUpgrade)
-            assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
-
-        upgrade.upgrade(connection);
-    }
-    
     private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
         String[] sqlStatements = SqlExecutor.readFile((InputStream) upgrade.sql().getContent());
         for (int i = 0; i < sqlStatements.length; i++) {
