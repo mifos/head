@@ -1084,12 +1084,12 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenOnlyCustomerAccountChargesAreDue()
             throws Exception {
-        
+
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.saveCustomer(center);
-        
+
         CustomerAccountBO customerAccount = center.getCustomerAccount();
 
         final Money fiftyAmount = new Money("50.0");
@@ -1163,7 +1163,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 customerSchedule.setMiscPenalty(seventyAmount);
             }
             if (customerSchedule.getInstallmentId() == 3) {
-                applyPeriodicFees(customerSchedule, extraAccountFeesEntity.getFees().getFeeId(), new Money("8"));
+                CustomerAccountBOTestUtils.applyPeriodicFees(customerSchedule, extraAccountFeesEntity.getFees()
+                        .getFeeId(), new Money("8"));
             }
         }
         Date transactionDate = incrementCurrentDate(14);
@@ -1218,7 +1219,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             throw new Exception("Expected one AccountPaymentEntity, found none or more than one");
         }
     }
-
 
     /*
      * Create a center with a default weekly maintenance fee of 100.
