@@ -86,7 +86,7 @@ public class CustomerAccountBO extends AccountBO {
 
     @Override
     public FeePersistence getFeePersistence() {
-        if(feePersistence == null){
+        if (feePersistence == null) {
             feePersistence = new FeePersistence();
         }
         return feePersistence;
@@ -138,7 +138,8 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    public CustomerAccountBO(final UserContext userContext, final CustomerBO customer, final List<FeeView> fees) throws AccountException {
+    public CustomerAccountBO(final UserContext userContext, final CustomerBO customer, final List<FeeView> fees)
+            throws AccountException {
         super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
         if (fees != null) {
             for (FeeView feeView : fees) {
@@ -178,87 +179,68 @@ public class CustomerAccountBO extends AccountBO {
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
 
-        final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
-                paymentData.getReceiptNum(), paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData
-                        .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
+        Money totalPaid = paymentData.getTotalAmount();
+        final Money zeroBalance = new Money(totalPaid.getCurrency(), "0.0");
 
-        Money balanceLeft = paymentData.getTotalAmount();
-        final Money zeroBalance = new Money(balanceLeft.getCurrency(), "0.0");
+        if (totalPaid.equals(zeroBalance)) {
+            throw new AccountException("errors.update",
+                    new String[] { "Attempting to pay a customer account balance of zero for customer: "
+                            + paymentData.getCustomer().getGlobalCustNum() });
+        }
 
-        // FIXME - keithw - this was added to support current functionality
-        // which however means that even if the
-        // scheduled payment for account is zero, we still must iterate over it
-        // and set it to be paid.
-        // ideally we just want an algorithm that keeps paying of customer
-        // account fees until no money is left.
-        // TODO - keithw - question: Do we handle overpayment of account
-        // collection fees which seems odd.
         final List<CustomerScheduleEntity> customerAccountPayments = findAllUnpaidInstallmentsUpTo(paymentData
                 .getTransactionDate());
 
         if (customerAccountPayments.isEmpty()) {
-            // FIXME - keithw - here is where we believe we can easily remove
-            // the
-            // need for batch job (GenerateMeetingsForCustomerAndSavingsTask)
-            // for customer accounts
-
-            // TODO - keithw - no unpaid scheduled installments exist - should
-            // we
-            // just create one rather than breaking down (remove need for
-            // batch job that goes and creates 10 more schedules etc)
             throw new AccountException("errors.update", new String[] { getGlobalAccountNum() });
         }
 
+        Money totalAllUnpaidInstallments = new Money(totalPaid.getCurrency(), "0.0");
+        for (CustomerScheduleEntity customerSchedule : customerAccountPayments) {
+            totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerSchedule.getMiscFee());
+            totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerSchedule.getMiscPenalty());
+            for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule.getAccountFeesActionDetails()) {
+                CustomerFeeScheduleEntity customerFeeSchedule = (CustomerFeeScheduleEntity) accountFeesActionDetail;
+                totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerFeeSchedule.getFeeAmount());
+            }
+        }
+        if (!totalPaid.equals(totalAllUnpaidInstallments)) {
+            throw new AccountException(
+                    "errors.update",
+                    new String[] { "Attempting to pay a customer account balance that does not equal the total outstanding amount for customer: "
+                            + paymentData.getCustomer().getGlobalCustNum() });
+        }
+
+        final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
+                paymentData.getReceiptNum(), paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData
+                        .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
+
         for (CustomerScheduleEntity customerSchedule : customerAccountPayments) {
 
-            final Money totalDue = customerSchedule.getTotalDueWithFees();
-
-            if (totalDue.isGreaterThan(balanceLeft)) {
-                customerSchedule.setPaymentStatus(PaymentStatus.UNPAID);
-            } else {
-                customerSchedule.setPaymentStatus(PaymentStatus.PAID);
-            }
+            customerSchedule.setPaymentStatus(PaymentStatus.PAID);
             customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
+            customerSchedule.setMiscFeePaid(customerSchedule.getMiscFee());
+            customerSchedule.setMiscPenaltyPaid(customerSchedule.getMiscPenalty());
 
-            Money amountPaidInTotalThisTransaction = new Money("0.0");
-
-            final Money miscFeeAmountPaid = payMiscFee(balanceLeft, zeroBalance, customerSchedule);
-            balanceLeft = balanceLeft.subtract(miscFeeAmountPaid);
-            amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(miscFeeAmountPaid);
-
-            final Money miscPenaltyAmountPaid = payPenaltyFee(balanceLeft, zeroBalance, customerSchedule);
-            balanceLeft = balanceLeft.subtract(miscPenaltyAmountPaid);
-            amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(miscPenaltyAmountPaid);
-
-            // pay off as much of account fees as possible.
             final List<FeesTrxnDetailEntity> feeTrxns = new ArrayList<FeesTrxnDetailEntity>();
             for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule.getAccountFeesActionDetails()) {
                 CustomerFeeScheduleEntity customerFeeSchedule = (CustomerFeeScheduleEntity) accountFeesActionDetail;
 
-                if (balanceLeft.isGreaterThan(zeroBalance)) {
-
-                    final Money accountFeeAmountDue = customerFeeSchedule.getFeeDue();
-                    if (balanceLeft.isGreaterThan(accountFeeAmountDue)) {
-                        customerFeeSchedule.makePayment(accountFeeAmountDue);
-                        balanceLeft = balanceLeft.subtract(accountFeeAmountDue);
-                        amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(accountFeeAmountDue);
-                    } else if (balanceLeft.isGreaterThan(zeroBalance)) {
-                        customerFeeSchedule.makePayment(balanceLeft);
-                        balanceLeft = balanceLeft.subtract(balanceLeft);
-                        amountPaidInTotalThisTransaction = amountPaidInTotalThisTransaction.add(balanceLeft);
-                    }
-
-                    final FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(null,
-                            accountFeesActionDetail.getAccountFee(), accountFeesActionDetail.getFeeAmount());
-
-                    feeTrxns.add(feesTrxnDetailBO);
-                }
+                customerFeeSchedule.makePayment(customerFeeSchedule.getFeeDue());
+                final FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(null, customerFeeSchedule
+                        .getAccountFee(), customerFeeSchedule.getFeeAmountPaid());
+                feeTrxns.add(feesTrxnDetailBO);
             }
 
+            Money customerScheduleAmountPaid = new Money(totalPaid.getCurrency(), "0.0");
+            customerScheduleAmountPaid = customerScheduleAmountPaid.add(customerSchedule.getMiscFeePaid());
+            customerScheduleAmountPaid = customerScheduleAmountPaid.add(customerSchedule.getMiscPenaltyPaid());
+            
             final CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity(accountPayment,
-                    AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT, customerSchedule.getInstallmentId(), customerSchedule.getActionDate(),
-                    paymentData.getPersonnel(), paymentData.getTransactionDate(), amountPaidInTotalThisTransaction,
-                    AccountConstants.PAYMENT_RCVD, null, miscFeeAmountPaid, miscPenaltyAmountPaid, getFeePersistence());
+                    AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT, customerSchedule.getInstallmentId(),
+                    customerSchedule.getActionDate(), paymentData.getPersonnel(), paymentData.getTransactionDate(),
+                    customerScheduleAmountPaid, AccountConstants.PAYMENT_RCVD, null, customerSchedule
+                            .getMiscFeePaid(), customerSchedule.getMiscPenaltyPaid(), getFeePersistence());
 
             for (FeesTrxnDetailEntity feesTrxnDetailEntity : feeTrxns) {
                 accountTrxn.addFeesTrxnDetail(feesTrxnDetailEntity);
@@ -299,7 +281,8 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     @Override
-    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns) throws AccountException {
+    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns)
+            throws AccountException {
         if (null != reversedTrxns && reversedTrxns.size() > 0) {
             Money totalAmountAdj = new Money();
             for (AccountTrxnEntity accntTrxn : reversedTrxns) {
@@ -388,8 +371,8 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    private CustomerActivityEntity buildCustomerActivity(final Money amount, final String description, final Short personnelId)
-            throws AccountException {
+    private CustomerActivityEntity buildCustomerActivity(final Money amount, final String description,
+            final Short personnelId) throws AccountException {
         try {
             PersonnelBO personnel = null;
             if (personnelId != null) {
@@ -405,8 +388,8 @@ public class CustomerAccountBO extends AccountBO {
     @Override
     public void updateAccountActivity(@SuppressWarnings("unused") final Money principal,
             @SuppressWarnings("unused") final Money interest, final Money fee,
-            @SuppressWarnings("unused") final Money penalty, final Short personnelId,
-            final String description) throws AccountException {
+            @SuppressWarnings("unused") final Money penalty, final Short personnelId, final String description)
+            throws AccountException {
         addCustomerActivity(buildCustomerActivity(fee, description, personnelId));
     }
 
@@ -473,9 +456,9 @@ public class CustomerAccountBO extends AccountBO {
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
             if (accountActionDate != null) {
                 Date meetingDate = meetingDates.get(installmentId - 1); // meeting
-                                                                        // dates
-                                                                        // are
-                                                                        // zero-based
+                // dates
+                // are
+                // zero-based
                 ((CustomerScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
             }
             installmentId++;
@@ -617,8 +600,8 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    private void applyPeriodicFee(final FeeBO fee, final Money charge, final List<AccountActionDateEntity> dueInstallments)
-            throws AccountException {
+    private void applyPeriodicFee(final FeeBO fee, final Money charge,
+            final List<AccountActionDateEntity> dueInstallments) throws AccountException {
         AccountFeesEntity accountFee = getAccountFee(fee, charge.getAmountDoubleValue());
         accountFee.setAccountFeeAmount(charge);
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
@@ -632,8 +615,8 @@ public class CustomerAccountBO extends AccountBO {
         accountFee.setFeeStatus(FeeStatus.ACTIVE);
     }
 
-    private void applyOneTimeFee(final FeeBO fee, final Money charge, final AccountActionDateEntity accountActionDateEntity)
-            throws AccountException {
+    private void applyOneTimeFee(final FeeBO fee, final Money charge,
+            final AccountActionDateEntity accountActionDateEntity) throws AccountException {
         CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
         AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge.getAmountDoubleValue(), FeeStatus.ACTIVE
                 .getValue(), new DateTimeService().getCurrentJavaDateTime(), null);
@@ -649,14 +632,15 @@ public class CustomerAccountBO extends AccountBO {
         accountFee.setFeeStatus(FeeStatus.ACTIVE);
     }
 
-    private void applyMiscCharge(final Short chargeType, final Money charge, final AccountActionDateEntity accountActionDateEntity)
-            throws AccountException {
+    private void applyMiscCharge(final Short chargeType, final Money charge,
+            final AccountActionDateEntity accountActionDateEntity) throws AccountException {
         CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
         customerScheduleEntity.applyMiscCharge(chargeType, charge);
         updateCustomerActivity(chargeType, charge, "");
     }
 
-    private void updateCustomerActivity(final Short chargeType, final Money charge, final String comments) throws AccountException {
+    private void updateCustomerActivity(final Short chargeType, final Money charge, final String comments)
+            throws AccountException {
         try {
             PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
             CustomerActivityEntity customerActivityEntity = null;
@@ -858,23 +842,6 @@ public class CustomerAccountBO extends AccountBO {
                 throw new BatchJobException(e);
             }
         }
-    }
-
-    private Money payMiscFee(final Money balanceLeft, final Money zeroBalance,
-            final CustomerScheduleEntity accountAction) {
-
-        Money amountPaid = new Money("0.0");
-
-        final Money miscFeeDue = accountAction.getMiscFeeDue();
-        if (balanceLeft.isGreaterThan(miscFeeDue)) {
-            amountPaid = miscFeeDue;
-            accountAction.setMiscFeePaid(accountAction.getMiscFeePaid().add(miscFeeDue));
-        } else if (balanceLeft.isGreaterThan(zeroBalance)) {
-            accountAction.setMiscFeePaid(accountAction.getMiscFeePaid().add(balanceLeft));
-            amountPaid = balanceLeft;
-        }
-
-        return amountPaid;
     }
 
     private Money payPenaltyFee(final Money balanceLeft, final Money zeroBalance,

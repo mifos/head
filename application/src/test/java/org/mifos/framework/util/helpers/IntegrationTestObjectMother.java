@@ -87,6 +87,19 @@ public class IntegrationTestObjectMother {
         return testUser;
     }
 
+    public static void saveCustomer(final CustomerBO center) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.saveCustomer(center);
+            StaticHibernateUtil.commitTransaction();
+        } catch (CustomerException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+    
     public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group, final ClientBO client,
             final MeetingBO meeting, final AmountFeeBO weeklyPeriodicFeeForCenterOnly,
             final AmountFeeBO weeklyPeriodicFeeForGroupOnly, final AmountFeeBO weeklyPeriodicFeeForClientsOnly) {

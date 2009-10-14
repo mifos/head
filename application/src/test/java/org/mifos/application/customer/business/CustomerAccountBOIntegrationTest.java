@@ -24,6 +24,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
@@ -37,7 +39,6 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountTestUtils;
@@ -52,6 +53,8 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -73,6 +76,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -218,8 +222,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO = TestObjectFactory.getObject(CustomerAccountBO.class, customerAccountBO.getAccountId());
         client = customerAccountBO.getCustomer();
         customerAccountBO.setUserContext(userContext);
-        List<AccountTrxnEntity> reversedTrxns = AccountTestUtils.reversalAdjustment(
-                "payment adjustment done", customerAccountBO.getLastPmnt());
+        List<AccountTrxnEntity> reversedTrxns = AccountTestUtils.reversalAdjustment("payment adjustment done",
+                customerAccountBO.getLastPmnt());
         customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
         for (AccountTrxnEntity accntTrxn : reversedTrxns) {
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
@@ -980,6 +984,242 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    public void testAccountTrxnsAreZeroWhenOnlyCustomerAccountFeesAreDueForMultipleInstallments() throws Exception {
+        createCenter();
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+
+        Date transactionDate = incrementCurrentDate(14);
+        PaymentData paymentData = PaymentData.createPaymentData(new Money("300"), center.getPersonnel(), Short
+                .valueOf("1"), transactionDate);
+        paymentData.setCustomer(center);
+
+        customerAccount.makePayment(paymentData);
+        // Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
+
+    }
+
+    public void testAccountExceptionThrownForAZeroCustomerAccountPayment() throws Exception {
+        createCenter();
+        String expectedErrorMessage = "Attempting to pay a customer account balance of zero for customer: "
+                + center.getGlobalCustNum();
+        verifyExpectedMessageThrown(center, new Money("0.0"), 1, expectedErrorMessage);
+    }
+
+    public void testAccountExceptionThrownForAPaymentNotEqualToTheTotalOutstandingCustomerAccountAmount()
+            throws Exception {
+        createCenter();
+        String expectedErrorMessage = "Attempting to pay a customer account balance that does not equal the total outstanding amount for customer: "
+                + center.getGlobalCustNum();
+        verifyExpectedMessageThrown(center, new Money("299.99"), 14, expectedErrorMessage);
+    }
+
+    public void testAccountExceptionThrownForAPaymentWithNoOutstandingCustomerAccountInstallments() throws Exception {
+
+        createCenter();
+        verifyExpectedMessageThrown(center, new Money("8.54"), -2, center.getCustomerAccount().getGlobalAccountNum());
+    }
+
+    private void verifyExpectedMessageThrown(final CustomerBO customer, final Money paymentAmount,
+            final Integer numberOfDaysForward, final String expectedErrorMessage) throws Exception {
+        CustomerAccountBO customerAccount = customer.getCustomerAccount();
+
+        Date transactionDate = incrementCurrentDate(numberOfDaysForward);
+        PaymentData paymentData = PaymentData.createPaymentData(paymentAmount, customer.getPersonnel(), Short
+                .valueOf("1"), transactionDate);
+        paymentData.setCustomer(customer);
+
+        String actualErrorMessage = "No Error Message";
+        try {
+            customerAccount.makePayment(paymentData);
+        } catch (AccountException e) {
+            actualErrorMessage = (String) e.getValues()[0];
+        }
+        Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
+    }
+
+    public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenOnlyCustomerAccountFeesAreDue() throws Exception {
+        createCenter();
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+
+        Date transactionDate = incrementCurrentDate(14);
+        PaymentData paymentData = PaymentData.createPaymentData(new Money("300"), center.getPersonnel(), Short
+                .valueOf("1"), transactionDate);
+        paymentData.setCustomer(center);
+        customerAccount.applyPaymentWithPersist(paymentData);
+        StaticHibernateUtil.commitTransaction();
+
+        if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
+            for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
+
+                final Money zeroAmount = new Money("0.0");
+                final Money OneHundredAmount = new Money("100.0");
+
+                if (accountPaymentEntity.getAccountTrxns() != null
+                        && accountPaymentEntity.getAccountTrxns().size() == 3) {
+                    for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()) {
+                        CustomerTrxnDetailEntity customerTrxnDetailEntity = (CustomerTrxnDetailEntity) accountTrxnEntity;
+                        Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getAmount());
+                        Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getTotalAmount());
+                        Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getMiscFeeAmount());
+                        Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getMiscPenaltyAmount());
+
+                        if (customerTrxnDetailEntity.getFeesTrxnDetails() != null
+                                && customerTrxnDetailEntity.getFeesTrxnDetails().size() == 1) {
+                            for (FeesTrxnDetailEntity feesTrxnDetailEntity : customerTrxnDetailEntity
+                                    .getFeesTrxnDetails()) {
+                                Assert.assertEquals(OneHundredAmount, feesTrxnDetailEntity.getFeeAmount());
+                            }
+                        } else {
+                            throw new Exception("Expected one FeesTrxnDetailEntity, found none or more than one");
+                        }
+                    }
+                } else {
+                    throw new Exception("Expected three CustomerTrxnDetailEntity, found none or not three");
+                }
+            }
+        } else {
+            throw new Exception("Expected one AccountPaymentEntity, found none or more than one");
+        }
+    }
+
+    public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenOnlyCustomerAccountChargesAreDue()
+            throws Exception {
+        
+        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").withOffice(sampleBranchOffice())
+                .withLoanOfficer(testUser()).build();
+        IntegrationTestObjectMother.saveCustomer(center);
+        
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+
+        final Money fiftyAmount = new Money("50.0");
+        final Money seventyAmount = new Money("70.0");
+        final Money oneHundredTwentyAmount = new Money("120.0");
+        final Money twoHundredFortyAmount = new Money("240.0");
+        for (AccountActionDateEntity accountActionDateEntity : customerAccount.getAccountActionDates()) {
+            CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
+            if (customerSchedule.getInstallmentId() != 2) {
+                customerSchedule.setMiscFee(fiftyAmount);
+                customerSchedule.setMiscPenalty(seventyAmount);
+            }
+        }
+        Date transactionDate = incrementCurrentDate(14);
+        PaymentData paymentData = PaymentData.createPaymentData(twoHundredFortyAmount, center.getPersonnel(), Short
+                .valueOf("1"), transactionDate);
+        paymentData.setCustomer(center);
+        customerAccount.applyPaymentWithPersist(paymentData);
+        StaticHibernateUtil.commitTransaction();
+
+        if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
+            for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
+
+                final Money zeroAmount = new Money(accountPaymentEntity.getAmount().getCurrency(), "0.0");
+
+                if (accountPaymentEntity.getAccountTrxns() != null
+                        && accountPaymentEntity.getAccountTrxns().size() == 3) {
+                    for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()) {
+                        CustomerTrxnDetailEntity customerTrxnDetailEntity = (CustomerTrxnDetailEntity) accountTrxnEntity;
+
+                        if (customerTrxnDetailEntity.getInstallmentId() != 2) {
+                            Assert.assertEquals(oneHundredTwentyAmount, customerTrxnDetailEntity.getAmount());
+                            Assert.assertEquals(oneHundredTwentyAmount, customerTrxnDetailEntity.getTotalAmount());
+                            Assert.assertEquals(fiftyAmount, customerTrxnDetailEntity.getMiscFeeAmount());
+                            Assert.assertEquals(seventyAmount, customerTrxnDetailEntity.getMiscPenaltyAmount());
+                        } else {
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getAmount());
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getTotalAmount());
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getMiscFeeAmount());
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getMiscPenaltyAmount());
+                        }
+                        Assert.assertEquals(0, customerTrxnDetailEntity.getFeesTrxnDetails().size());
+                    }
+                } else {
+                    throw new Exception("Expected three CustomerTrxnDetailEntity, found none or not three");
+                }
+            }
+        } else {
+            throw new Exception("Expected one AccountPaymentEntity, found none or more than one");
+        }
+    }
+
+    public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenBothCustomerAccountChargesAndFeesAreDue()
+            throws Exception {
+        createCenter();
+        FeeBO extraFee = TestObjectFactory.createPeriodicAmountFee("extra fee", FeeCategory.ALLCUSTOMERS, "5.5",
+                RecurrenceType.WEEKLY, Short.valueOf("1"));
+
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+        AccountFeesEntity extraAccountFeesEntity = new AccountFeesEntity(customerAccount, extraFee, 11.66);
+        customerAccount.getAccountFees().add(extraAccountFeesEntity);
+
+        final Money eightAmount = new Money("8.0");
+        final Money fiftyAmount = new Money("50.0");
+        final Money seventyAmount = new Money("70.0");
+        final Money oneHundredTwentyAmount = new Money("120.0");
+        for (AccountActionDateEntity accountActionDateEntity : customerAccount.getAccountActionDates()) {
+            CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
+            if (customerSchedule.getInstallmentId() == 2) {
+                customerSchedule.setMiscFee(fiftyAmount);
+                customerSchedule.setMiscPenalty(seventyAmount);
+            }
+            if (customerSchedule.getInstallmentId() == 3) {
+                applyPeriodicFees(customerSchedule, extraAccountFeesEntity.getFees().getFeeId(), new Money("8"));
+            }
+        }
+        Date transactionDate = incrementCurrentDate(14);
+        PaymentData paymentData = PaymentData.createPaymentData(new Money("428"), center.getPersonnel(), Short
+                .valueOf("1"), transactionDate);
+        paymentData.setCustomer(center);
+        customerAccount.applyPaymentWithPersist(paymentData);
+        StaticHibernateUtil.commitTransaction();
+
+        if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
+            for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
+
+                final Money zeroAmount = new Money(accountPaymentEntity.getAmount().getCurrency(), "0.0");
+                final Money OneHundredAmount = new Money(accountPaymentEntity.getAmount().getCurrency(), "100.0");
+
+                if (accountPaymentEntity.getAccountTrxns() != null
+                        && accountPaymentEntity.getAccountTrxns().size() == 3) {
+                    for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()) {
+                        CustomerTrxnDetailEntity customerTrxnDetailEntity = (CustomerTrxnDetailEntity) accountTrxnEntity;
+
+                        if (customerTrxnDetailEntity.getInstallmentId() == 2) {
+                            Assert.assertEquals(oneHundredTwentyAmount, customerTrxnDetailEntity.getAmount());
+                            Assert.assertEquals(oneHundredTwentyAmount, customerTrxnDetailEntity.getTotalAmount());
+                            Assert.assertEquals(fiftyAmount, customerTrxnDetailEntity.getMiscFeeAmount());
+                            Assert.assertEquals(seventyAmount, customerTrxnDetailEntity.getMiscPenaltyAmount());
+                        } else {
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getAmount());
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getTotalAmount());
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getMiscFeeAmount());
+                            Assert.assertEquals(zeroAmount, customerTrxnDetailEntity.getMiscPenaltyAmount());
+                        }
+                        if (customerTrxnDetailEntity.getFeesTrxnDetails() != null
+                                && customerTrxnDetailEntity.getFeesTrxnDetails().size() < 3) {
+                            for (FeesTrxnDetailEntity feesTrxnDetailEntity : customerTrxnDetailEntity
+                                    .getFeesTrxnDetails()) {
+                                if (feesTrxnDetailEntity.getAccountFees().getAccountFeeId() == extraAccountFeesEntity
+                                        .getAccountFeeId()) {
+                                    Assert.assertEquals(eightAmount, feesTrxnDetailEntity.getFeeAmount());
+                                } else {
+                                    Assert.assertEquals(OneHundredAmount, feesTrxnDetailEntity.getFeeAmount());
+                                }
+                            }
+                        } else {
+                            throw new Exception("Expected one FeesTrxnDetailEntity, found none or more than two");
+                        }
+                    }
+                } else {
+                    throw new Exception("Expected three CustomerTrxnDetailEntity, found none or not three");
+                }
+            }
+        } else {
+            throw new Exception("Expected one AccountPaymentEntity, found none or more than one");
+        }
+    }
+
+
     /*
      * Create a center with a default weekly maintenance fee of 100.
      */
@@ -1032,15 +1272,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
-                AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(),
-                TestObjectFactory.getPersonnel(userContext.getId()), currentDate, TestObjectFactory
-                        .getMoneyForMFICurrency(300), "payment done", null, TestObjectFactory
-                        .getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100),
-                        masterPersistenceService);
+                AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(), TestObjectFactory
+                        .getPersonnel(userContext.getId()), currentDate, TestObjectFactory.getMoneyForMFICurrency(300),
+                "payment done", null, TestObjectFactory.getMoneyForMFICurrency(100), TestObjectFactory
+                        .getMoneyForMFICurrency(100), masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
-            CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity, TestObjectFactory
-                    .getMoneyForMFICurrency(100));
+            CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,
+                    TestObjectFactory.getMoneyForMFICurrency(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
                     .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());
             accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
