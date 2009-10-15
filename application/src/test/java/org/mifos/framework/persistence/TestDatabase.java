@@ -171,17 +171,6 @@ public class TestDatabase implements SessionOpener {
     }
 
     /**
-     * Create a database and upgrade it to the latest checkpoint database
-     * version. Should be run on an empty database (no tables).
-     *
-     * @throws IOException
-     */
-    public static void upgradeLatestCheckpointVersion(Connection connection) throws SQLException, IOException {
-        executeScript(connection, "latest-schema-checkpoint.sql");
-        executeScript(connection, "latest-data-checkpoint.sql");
-    }
-
-    /**
      * This method was added to work around integration test inter- and
      * intradependencies. Once these dependencies are eliminated (hopefully
      * Summer 2009), this method should be eliminated as well.

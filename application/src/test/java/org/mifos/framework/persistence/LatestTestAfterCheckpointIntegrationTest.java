@@ -20,12 +20,22 @@
 
 package org.mifos.framework.persistence;
 
+import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
@@ -33,8 +43,8 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /*
  * This class runs tests on database upgrade scripts (both SQL
@@ -52,34 +62,49 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * fixes to be made to recent upgrades when necessary.
  */
 
-public class LatestTestAfterCheckpointIntegrationTest extends LatestBaseTestCase {
+public class LatestTestAfterCheckpointIntegrationTest {
 
-    private Connection connection;
+    private static Connection connection;
 
-    public LatestTestAfterCheckpointIntegrationTest() {
+    @BeforeClass
+    public static void beforeClass() {
         MifosLogManager.configureLogging();
         StaticHibernateUtil.initialize();
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
-        DatabaseSetup.executeScript(connection, "mifosdroptables.sql");
+        dropLatestDatabase(connection);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() {
         StaticHibernateUtil.flushAndCloseSession();
     }
 
+    @AfterClass
+    public static void afterClass() throws Exception {
+        // Cleaning the database
+        connection = StaticHibernateUtil.getSessionTL().connection();
+        connection.setAutoCommit(false);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
+        connection.commit();
+        FinancialInitializer.initialize();
+    }
+
+    @Test
     public void testSimple() throws Exception {
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
         loadLatest(connection);
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
         IDataSet latestDump = dbUnitConnection.createDataSet();
-
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
         applyUpgrades(connection);
@@ -87,40 +112,26 @@ public class LatestTestAfterCheckpointIntegrationTest extends LatestBaseTestCase
         Assertion.assertEquals(latestDump, upgradeDump);
     }
 
-    private void applyUpgrades(Connection connection) throws Exception {
-        connection.createStatement().execute("create table foo(x integer)");
-        connection.createStatement().execute("insert into foo(x) values(5)");
-        connection.createStatement().execute("alter table foo add column y integer default 7");
-        connection.commit();
-    }
-
-    private void loadLatest(Connection connection) throws Exception {
-        connection.createStatement().execute("create table foo(x integer, y integer default 7)");
-        connection.createStatement().execute("insert into foo(x, y) values(5,7)");
-        connection.commit();
-    }
-
+    @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
-        DatabaseSetup.executeScript(connection, "latest-schema.sql");
-        DatabaseSetup.executeScript(connection, "latest-data.sql");
+        createLatestDatabaseWithLatestData(connection);
         Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection)
                 .read());
-
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
         IDataSet latestDump = dbUnitConnection.createDataSet();
-
-        DatabaseSetup.executeScript(connection, "mifosdroptables.sql");
-        TestDatabase.upgradeLatestCheckpointVersion(connection);
+        dropLatestDatabase(connection);
+        createLatestCheckPointDatabaseWithLatestData(connection);
         TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, connection);
         IDataSet upgradeDump = dbUnitConnection.createDataSet();
         Assertion.assertEquals(latestDump, upgradeDump);
     }
-
+    
+    @Test
     public void testDropTables() throws Exception {
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
         IDataSet blankDB = dbUnitConnection.createDataSet();
-        DatabaseSetup.executeScript(connection, "latest-schema.sql");
-        DatabaseSetup.executeScript(connection, "mifosdroptables.sql");
+        createLatestDatabase(connection);
+        dropLatestDatabase(connection);
         IDataSet cleanedDB = dbUnitConnection.createDataSet();
         Assertion.assertEquals(blankDB, cleanedDB);
     }
@@ -130,19 +141,19 @@ public class LatestTestAfterCheckpointIntegrationTest extends LatestBaseTestCase
      * right order to deal with foreign keys. I'm not sure we fully succeed,
      * however.
      */
+    @Test
     public void testDropTablesWithData() throws Exception {
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
         IDataSet blankDB = dbUnitConnection.createDataSet();
-        DatabaseSetup.executeScript(connection, "latest-schema.sql");
-        DatabaseSetup.executeScript(connection, "latest-data.sql");
-        DatabaseSetup.executeScript(connection, "mifosdroptables.sql");
+        createLatestDatabaseWithLatestData(connection);
+        dropLatestDatabase(connection);
         IDataSet cleanedDB = dbUnitConnection.createDataSet();
         Assertion.assertEquals(blankDB, cleanedDB);
     }
-
+    
+    @Test
     public void testAfterLookupValuesAfterCheckpoint() throws Exception {
-
-        TestDatabase.upgradeLatestCheckpointVersion(connection);
+        createLatestCheckPointDatabaseWithLatestData(connection);
         int nextLookupId = largestLookupId(connection) + 1;
         connection.createStatement().execute(
                 "insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " + "VALUES(" + nextLookupId
@@ -151,8 +162,9 @@ public class LatestTestAfterCheckpointIntegrationTest extends LatestBaseTestCase
                 "insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " + "VALUES(1," + nextLookupId
                         + ",'Martian')");
 
-        upgradeDB(LATEST_CHECKPOINT_VERSION, connection);
+        upgrade(LATEST_CHECKPOINT_VERSION, connection);
         connection.commit();
+        
         // Assert that custom values have been retained
         ResultSet rs = connection.createStatement().executeQuery(
                 "select * from lookup_value where lookup_id=" + nextLookupId);
@@ -166,15 +178,84 @@ public class LatestTestAfterCheckpointIntegrationTest extends LatestBaseTestCase
         Assert.assertEquals(1, rs.getInt("locale_id"));
         Assert.assertEquals("Martian", rs.getString("lookup_value"));
         rs.close();
-        
-        //FIXME these steps are required to clear database after the test class finish execution
-        // Required is a exit method where these scripts should be excuted
+
+    }
+
+    private void upgrade(int fromVersion, Connection connection) throws Exception {
+        for (int currentVersion = fromVersion; currentVersion < APPLICATION_VERSION; ++currentVersion) {
+            int higherVersion = currentVersion + 1;
+            try {
+                upgrade(connection, higherVersion);
+            } catch (Exception failure) {
+                throw new Exception("Cannot upgrade to " + higherVersion, failure);
+            }
+        }
+    }
+
+    private void upgrade(Connection connection, int nextVersion) throws Exception {
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
+        Upgrade upgrade = persistence.findUpgrade(nextVersion);
+        if (upgrade instanceof SqlUpgrade)
+            assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
+
+        upgrade.upgrade(connection);
+    }
+
+    private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
+        String[] sqlStatements = SqlExecutor.readFile((InputStream) upgrade.sql().getContent());
+        for (int i = 0; i < sqlStatements.length; i++) {
+            Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues
+                    .checkLookupValue(sqlStatements[i]));
+            Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup value locales", HardcodedValues
+                    .checkLookupValueLocale(sqlStatements[i]));
+        }
+    }
+
+    private int largestLookupId(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
+        if (!results.next()) {
+            throw new SystemException(SystemException.DEFAULT_KEY,
+                    "Did not find an existing lookup_id in lookup_value table");
+        }
+        int largestLookupId = results.getInt(1);
+        results.close();
+        statement.close();
+        return largestLookupId;
+    }
+
+    private void dropLatestDatabase(Connection connection) throws Exception {
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
+        connection.commit();
+    }
+    
+    private void applyUpgrades(Connection connection) throws Exception {
+        connection.createStatement().execute("create table foo(x integer)");
+        connection.createStatement().execute("insert into foo(x) values(5)");
+        connection.createStatement().execute("alter table foo add column y integer default 7");
+        connection.commit();
+    }
+
+    private void loadLatest(Connection connection) throws Exception {
+        connection.createStatement().execute("create table foo(x integer, y integer default 7)");
+        connection.createStatement().execute("insert into foo(x, y) values(5,7)");
+        connection.commit();
+    }
+    
+    private void createLatestDatabaseWithLatestData(Connection connection) throws Exception {
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
         connection.commit();
-        FinancialInitializer.initialize();
+    }
+    
+    private void createLatestDatabase(Connection connection) throws Exception {
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
+        connection.commit();
+    }
+    
+    private void createLatestCheckPointDatabaseWithLatestData(Connection connection) throws Exception {
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema-checkpoint.sql"), connection);
+        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data-checkpoint.sql"), connection);
+        connection.commit();
     }
 }

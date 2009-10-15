@@ -55,18 +55,7 @@ public class LatestBaseTestCase extends TestCase {
         DatabaseSetup.executeScript(database, "latest-data.sql");
     }
 
-    protected int largestLookupId(Connection connection) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
-        if (!results.next()) {
-            throw new SystemException(SystemException.DEFAULT_KEY,
-                    "Did not find an existing lookup_id in lookup_value table");
-        }
-        int largestLookupId = results.getInt(1);
-        results.close();
-        statement.close();
-        return largestLookupId;
-    }
+
 
     protected DataStore upgrade(int fromVersion, DataStore current) throws Exception {
         for (int currentVersion = fromVersion; currentVersion < APPLICATION_VERSION; ++currentVersion) {
@@ -89,26 +78,6 @@ public class LatestBaseTestCase extends TestCase {
 
         upgrade.upgrade(database.openConnection());
         return database.dataStore();
-    }
-
-    protected void upgradeDB(int fromVersion, Connection connection) throws Exception {
-        for (int currentVersion = fromVersion; currentVersion < APPLICATION_VERSION; ++currentVersion) {
-            int higherVersion = currentVersion + 1;
-            try {
-                upgradeDB(connection, higherVersion);
-            } catch (Exception failure) {
-                throw new Exception("Cannot upgrade to " + higherVersion, failure);
-            }
-        }
-    }
-
-    protected void upgradeDB(Connection connection, int nextVersion) throws Exception {
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
-        Upgrade upgrade = persistence.findUpgrade(nextVersion);
-        if (upgrade instanceof SqlUpgrade)
-            assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
-
-        upgrade.upgrade(connection);
     }
     
     private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
