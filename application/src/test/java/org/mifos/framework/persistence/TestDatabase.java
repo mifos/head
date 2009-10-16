@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -124,9 +125,9 @@ public class TestDatabase implements SessionOpener {
 
     /**
      * This is for tests where it is difficult to pass around the Session.
-     *
+     * 
      * Thus, we install it in a static in StaticHibernateUtil.
-     *
+     * 
      * Make sure to call {@link StaticHibernateUtil#resetDatabase()} from
      * tearDown.
      */
@@ -153,7 +154,7 @@ public class TestDatabase implements SessionOpener {
     /**
      * Create a database and upgrade it to the first database version with a
      * number. Should be run on an empty database (no tables).
-     *
+     * 
      * @throws IOException
      */
     public static void upgradeToFirstNumberedVersion(Connection connection) throws SQLException, IOException {
@@ -193,6 +194,44 @@ public class TestDatabase implements SessionOpener {
         // invalidate *other* unit tests that assume this method has been
         // called.
         FinancialInitializer.initialize();
+    }
+
+    /**
+     * MySQL specific schema dump generation
+     * 
+     * @return database structure as String dump
+     * @throws Exception
+     */
+    public static String getAllTablesStructureDump() throws Exception {
+        String tablesDumpList = "";
+        Connection connection = getJDBCConnection();
+        ResultSet rs = connection.createStatement().executeQuery("SHOW TABLES");
+        while (rs.next()) {
+            String tableDump = getTableStructureDump(rs.getString(1), connection);
+            tablesDumpList += tableDump;
+        }
+        connection.close();
+        return tablesDumpList;
+    }
+
+    private static String getTableStructureDump(String tableName, Connection connection) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        ResultSet rs = connection.createStatement().executeQuery("DESCRIBE " + tableName);
+        sb.append(tableName).append(" ");
+        while (rs.next()) {
+            sb.append("\n").append(rs.getString(1)).append(" ");
+            sb.append(rs.getString(2)).append(" ");
+            sb.append(rs.getString(3)).append(" NULL ");
+            sb.append(rs.getString(4)).append(" KEY ");
+            if(rs.getString(5) != null) {
+            sb.append(rs.getString(5)).append(" ");
+            }
+            if(rs.getString(6) != null) {
+            sb.append(rs.getString(6)).append(",");
+            }
+        }
+        sb.append(";").append("\n");
+        return sb.toString();
     }
 
     // FIXME Use Spring Managed Connection
