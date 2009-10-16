@@ -27,9 +27,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 
-/**
- *
- */
 public interface CollectionSheetService {
 
     void saveCollectionSheet(List<ClientAttendanceBO> clientAttendances, List<LoanBO> loanAccounts,
