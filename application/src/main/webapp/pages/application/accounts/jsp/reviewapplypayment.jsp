@@ -49,7 +49,6 @@ explanation of the license and how it is applied.
 	}
 </SCRIPT>
 		<html-el:form method="post" action="/applyPaymentAction.do?method=applyPayment">
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -80,7 +79,7 @@ explanation of the license and how it is applied.
 				<tr>
 					<td width="100%" colspan="2" class="headingorange"><span
 						class="heading"><c:out value="${param.prdOfferingName}" /> # <c:out
-						value="${BusinessKey.globalAccountNum}" /> - </span> <mifos:mifoslabel
+						value="${param.globalAccountNum}" /> - </span> <mifos:mifoslabel
 						name="accounts.reviewtransaction" /></td>
 				</tr>
 				<tr>
@@ -117,7 +116,7 @@ explanation of the license and how it is applied.
 					<td class="fontnormal"><c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 						<c:if
 							test="${payment.id == sessionScope.applyPaymentActionForm.paymentTypeId}">
-							<c:out value="${payment.name}" />
+							<c:out value="${payment.displayValue}" />
 						</c:if>
 					</c:forEach></td>
 				</tr>
@@ -176,7 +175,7 @@ explanation of the license and how it is applied.
 			</table>
 						<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}" />
 						<html-el:hidden property="input" value="${param.input}" />
-						<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />
+						<html-el:hidden property="accountId" value="${param.accountId}" />
 						<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 						<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			</html-el:form>

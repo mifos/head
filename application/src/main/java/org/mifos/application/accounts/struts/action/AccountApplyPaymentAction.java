@@ -28,21 +28,27 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.application.accounts.business.AccountBO;
+import org.joda.time.LocalDate;
+import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.accounts.servicefacade.AccountPaymentDto;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
+import org.mifos.accounts.servicefacade.AccountTypeDto;
+import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
+import org.mifos.api.accounts.AccountPaymentParametersDto;
+import org.mifos.api.accounts.AccountReferenceDto;
+import org.mifos.api.accounts.PaymentTypeDto;
+import org.mifos.api.accounts.UserReferenceDto;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
@@ -57,6 +63,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountApplyPaymentAction extends BaseAction {
+    AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
+    StandardAccountService standardAccountService = null;
+    
     AccountBusinessService accountBusinessService = null;
 
     LoanBusinessService loanBusinessService = null;
@@ -64,8 +73,13 @@ public class AccountApplyPaymentAction extends BaseAction {
     private AccountPersistence accountPersistence = new AccountPersistence();
 
     public AccountApplyPaymentAction() {
+        standardAccountService = new StandardAccountService(accountPersistence, new LoanPersistence());
     }
 
+    public StandardAccountService getStandardAccountService() {
+        return standardAccountService;
+    }
+    
     @Override
     protected BusinessService getService() throws ServiceException {
         return getAccountBusinessService();
@@ -88,26 +102,24 @@ public class AccountApplyPaymentAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
         clearActionForm(actionForm);
         actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
-        AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
-        account.setUserContext(uc);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
-        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
-        String input = request.getParameter(Constants.INPUT);
-        if (input != null && input.trim() != Constants.EMPTY_STRING) {
-            if (input.equals(Constants.LOAN)) {
-                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
-                        .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
-                        request);
-            } else {
-                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
-                        .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.fee.getValue()), request);
-            }
-        }
-        actionForm.setAmount(account.getTotalPaymentDue());
+        
+        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
+                new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
+                request.getParameter(Constants.INPUT), userContext.getLocaleId(),
+                new UserReferenceDto(userContext.getId()));
+                
+        SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.version, request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.accountType.name(), request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_ID, Integer.valueOf(actionForm.getAccountId()), request);
+        
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, 
+                accountPaymentDto.paymentTypeList, request);
+
+        actionForm.setAmount(accountPaymentDto.totalPaymentDue);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -126,14 +138,20 @@ public class AccountApplyPaymentAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward applyPayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws ApplicationException, CustomerException, ServiceException {
-        AccountBO savedAccount = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
-        AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
-        checkVersionMismatch(savedAccount.getVersionNo(), account.getVersionNo());
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+            HttpServletResponse response) throws NumberFormatException, Exception {
+        Integer savedAccountVersion = (Integer)SessionUtils.getAttribute(Constants.ACCOUNT_VERSION, request);
+        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
 
-        if (!account.isPaymentPermitted(uc)) {
+        AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
+        AccountReferenceDto accountReferenceDto = new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId()));
+        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
+                accountReferenceDto,
+                request.getParameter(Constants.INPUT), userContext.getLocaleId(),
+                new UserReferenceDto(userContext.getId()));
+        
+        checkVersionMismatch(savedAccountVersion, accountPaymentDto.version);
+        
+        if (!accountServiceFacade.isPaymentPermitted(accountReferenceDto, userContext)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
 
@@ -141,23 +159,24 @@ public class AccountApplyPaymentAction extends BaseAction {
             Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
             Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
 
-            ////////
-            if (!account.isTrxnDateValid(trxnDate))
-                throw new AccountException("errors.invalidTxndate");
-
-            account.setVersionNo(savedAccount.getVersionNo());
-
-            Money amount;
-            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+            Money amount = new Money("0");
+            if (accountPaymentDto.accountType.equals(AccountTypeDto.LOAN_ACCOUNT)) {
                 amount = actionForm.getAmount();
             } else {
-                amount = account.getTotalPaymentDue();
+                amount = accountPaymentDto.totalPaymentDue;
             }
-
-            PaymentData paymentData = account.createPaymentData(uc, amount, trxnDate, actionForm.getReceiptId(),
-                    receiptDate, Short.valueOf(actionForm.getPaymentTypeId()));
-            account.applyPaymentWithPersist(paymentData);
-            //////////
+             
+            AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                    new UserReferenceDto(userContext.getId()),
+                    new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
+                    amount.getAmount(),
+                    new LocalDate(trxnDate.getTime()),
+                    (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
+                    actionForm.getReceiptId(),
+                    PaymentTypeDto.getPaymentType(Integer.valueOf(actionForm.getPaymentTypeId())),
+                    "");
+            
+            getStandardAccountService().makePayment(accountPaymentParametersDto);
             
             return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
         } catch (InvalidDateException ide) {
@@ -178,10 +197,11 @@ public class AccountApplyPaymentAction extends BaseAction {
     }
 
     private String getForward(String input) {
-        if (input.equals(Constants.LOAN))
+        if (input.equals(Constants.LOAN)) {
             return ActionForwards.loan_detail_page.toString();
-        else
-            return "applyPayment_success";
+        }
+
+        return "applyPayment_success";
     }
 
     private AccountBusinessService getAccountBusinessService() {

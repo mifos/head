@@ -81,6 +81,10 @@ public interface Constants {
     public static final String USER_CONTEXT_KEY = "UserContext";
     public static final String ACTIVITYCONTEXT = "ActivityContext";
     public static final String BUSINESS_KEY = "BusinessKey";
+    
+    public static final String ACCOUNT_TYPE = "AccountType";    
+    public static final String ACCOUNT_VERSION = "AccountVersion";
+    public static final String ACCOUNT_ID = "AccountId";
 
     public static final String FIELD_CONFIGURATION = "FieldConfiguration";
 

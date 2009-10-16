@@ -32,17 +32,18 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String input;
@@ -113,8 +114,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
                 if (null != errors2 && !errors2.isEmpty())
                     errors.add(errors2);
             }
-            String accountType = request.getParameter("accountType");
-            if (accountType != null && Short.valueOf(accountType).equals(AccountTypes.LOAN_ACCOUNT.getValue())) {
+            String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
+            if (accountType != null && accountType.equals(AccountTypeDto.LOAN_ACCOUNT.name())) {
                 if (amount == null || amount.getAmountDoubleValue() <= 0.0) {
                     errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                             resources.getString("accounts.amt")));

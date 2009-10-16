@@ -51,7 +51,8 @@ explanation of the license and how it is applied.
 		<html-el:form method="post"
 			action="/applyPaymentAction.do?method=preview"
 			focus="paymentTypeId">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountType')}" var="AccountType" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountId')}" var="AccountId" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -112,7 +113,7 @@ explanation of the license and how it is applied.
 								mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></span></td>
 							<td width="76%">
 							<c:choose>
-								<c:when test="${BusinessKey.accountType.accountTypeId==1}">
+								<c:when test="${AccountType=='LOAN_ACCOUNT'}">
 								<mifos:mifosdecimalinput property="amount"
 								styleId="applypayment.input.amount"
 								name="applyPaymentActionForm" />
@@ -132,7 +133,7 @@ explanation of the license and how it is applied.
 							<td class="fontnormal"><mifos:select
 								name="applyPaymentActionForm" styleId="applypayment.input.paymentType" property="paymentTypeId">
 								<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
-									<html-el:option value="${PT.id}">${PT.name}</html-el:option>
+									<html-el:option value="${PT.id}">${PT.displayValue}</html-el:option>
 								</c:forEach>
 							</mifos:select></td>
 						</tr>
@@ -159,7 +160,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="center"><c:choose>
 								<c:when
-									test="${(BusinessKey.accountType.accountTypeId!=1) && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
+									test="${(AccountType!='LOAN_ACCOUNT') && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
 									<html-el:submit styleId="applypayment.button.submit" styleClass="buttn" disabled="true"
 										property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
@@ -197,7 +198,8 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="input" value="${param.input}" />
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
-			<html-el:hidden property="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+			<html-el:hidden property="accountType" value="${AccountType}" />			
+			<html-el:hidden property="accountId" value="${AccountId}" />
 		</html-el:form>
 		<html-el:form action="customerAccountAction.do?method=load">
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />

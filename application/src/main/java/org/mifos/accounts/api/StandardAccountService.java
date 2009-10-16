@@ -43,6 +43,15 @@ public class StandardAccountService implements AccountService {
     private AccountPersistence accountPersistence;
     private LoanPersistence loanPersistence;
     
+    public StandardAccountService() {
+        
+    }
+    
+    public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence) {
+        this.accountPersistence = accountPersistence;
+        this.loanPersistence = loanPersistence;
+    }
+    
     public LoanPersistence getLoanPersistence() {
         return this.loanPersistence;
     }

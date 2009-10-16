@@ -1278,23 +1278,6 @@ public class AccountBO extends BusinessObject {
 
     }
 
-    public boolean isPaymentPermitted(final UserContext userContext) {
-        CustomerLevel customerLevel = null;
-        if (getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            customerLevel = getCustomer().getLevel();
-        }
-
-        Short personnelId = null;
-        if (getPersonnel() != null) {
-            personnelId = getPersonnel().getPersonnelId();
-        } else {
-            personnelId = userContext.getId();
-        }
-
-        return ActivityMapper.getInstance().isPaymentPermittedForAccounts(getType(), customerLevel, userContext,
-                getOffice().getOfficeId(), personnelId);
-    }
-
     protected List<AccountTrxnEntity> getAccountTrxnsOrderByTrxnCreationDate() {
         List<AccountTrxnEntity> accountTrxnList = new ArrayList<AccountTrxnEntity>();
         for (AccountPaymentEntity payment : getAccountPayments()) {

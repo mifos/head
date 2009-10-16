@@ -34,6 +34,7 @@ import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActi
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -145,29 +146,23 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(Constants.PREVIEW_SUCCESS);
     }
 
-    public void testApplyPaymentPreviewWithNoAmount() throws InvalidDateException {
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        setRequestPathInfo("/applyPaymentAction");
-        String currentDate = DateUtils.makeDateAsSentFromBrowser();
-        addRequestDateParameter("receiptDate", currentDate);
-        addRequestDateParameter("transactionDate", currentDate);
-        addRequestParameter("paymentTypeId", "1");
-        addRequestParameter("method", "preview");
-        addRequestParameter("accountType", "1");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-        verifyInputForward();
-    }
-
     public void testApplyPaymentForLoan() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
+
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount(new Money("212"));
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
+        
+        SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountBO.getVersionNo(),request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, 
+                AccountTypes.getAccountType(accountBO.getAccountType().getAccountTypeId()).name(),request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_ID, accountBO.getAccountId(),request);
+         
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+
         setRequestPathInfo("/applyPaymentAction");
         addRequestParameter("input", "loan");
         addRequestParameter("method", "applyPayment");
@@ -191,7 +186,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO = createLoanAccount();
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
+
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount(new Money("212"));
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
@@ -216,9 +211,14 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
     public void testApplyPaymentAndRetrievalForLoanWhenStatusIsChanged() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
+        
+        SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountBO.getVersionNo(),request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, 
+                AccountTypes.getAccountType(accountBO.getAccountType().getAccountTypeId()).name(),request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_ID, accountBO.getAccountId(),request);
+                 
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount(new Money("212"));
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
@@ -261,9 +261,14 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
     public void testApplyPaymentForLoanWhenReceiptDateisNull() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
+
+        SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountBO.getVersionNo(),request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, 
+                AccountTypes.getAccountType(accountBO.getAccountType().getAccountTypeId()).name(),request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_ID, accountBO.getAccountId(),request);
+                 
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount(new Money("212"));
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
