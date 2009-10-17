@@ -102,6 +102,9 @@ public class StandardAccountService implements AccountService {
 
     public AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws PersistenceException {
         LoanBO loan = getLoanPersistence().findByExternalId(externalId);
+        if (null == loan) {
+            throw new PersistenceException("loan not found for external id " + externalId);
+        }
         return new AccountReferenceDto(loan.getAccountId());
     }
 

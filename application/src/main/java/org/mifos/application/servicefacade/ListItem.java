@@ -26,15 +26,15 @@ import java.io.Serializable;
  */
 public class ListItem<T> implements Serializable {
 
-    private final Short id;
+    private final T id;
     private final String displayValue;
 
-    public ListItem(Short id, String displayValue) {
+    public ListItem(T id, String displayValue) {
         this.id = id;
         this.displayValue = displayValue;
     }
 
-    public Short getId() {
+    public T getId() {
         return this.id;
     }
 

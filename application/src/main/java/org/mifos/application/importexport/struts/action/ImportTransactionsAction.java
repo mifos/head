@@ -20,9 +20,11 @@
 
 package org.mifos.application.importexport.struts.action;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.mifos.api.accounts.UserReferenceDto;
 import org.mifos.application.importexport.struts.actionforms.ImportTransactionsActionForm;
+import org.mifos.application.servicefacade.ListItem;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
@@ -42,6 +46,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.spi.TransactionImport;
 
 /**
  * This class takes the {@link ImportTransactionsActionForm} and retrieves file
@@ -61,7 +66,11 @@ public class ImportTransactionsAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        request.setAttribute("importPlugins", new PluginManager().getImportPluginNames());
+        final List<ListItem<String>> importPlugins = new ArrayList<ListItem<String>>(); 
+        for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
+            importPlugins.add(new ListItem<String>(ti.getClass().getName(), ti.getDisplayName()));
+        }
+        request.setAttribute("importPlugins", importPlugins);
         return mapping.findForward("import_load");
     }
 
@@ -70,46 +79,44 @@ public class ImportTransactionsAction extends BaseAction {
 
         // this line is here for when the input page is upload-utf8.jsp,
         // it sets the correct character encoding for the response
-        String encoding = request.getCharacterEncoding();
+        final String encoding = request.getCharacterEncoding();
         if ((encoding != null) && (encoding.equalsIgnoreCase("utf-8"))) {
             response.setContentType("text/html; charset=utf-8");
         }
 
-        ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
+        final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
 
         // retrieve the file representation
-        FormFile importTransationsFile = importTransactionsForm.getImportTransactionsFile();
+        final FormFile importTransationsFile = importTransactionsForm.getImportTransactionsFile();
 
         // Use this to apply specific parsing implementation
-        String importPluginName = importTransactionsForm.getImportPluginName();
+        final String importPluginClassname = importTransactionsForm.getImportPluginName();
 
         try {
             // retrieve the file data
             InputStream stream = importTransationsFile.getInputStream();
             importTransactionsForm.setImportTransactionsFileName(importTransationsFile.getFileName());
 
-            // TODO Do import processing with the input stream
-            // PARSE the data
-            // Required for UI
+            final TransactionImport ti = new PluginManager().getImportPlugin(importPluginClassname);
+            final UserReferenceDto userReferenceDTO = new UserReferenceDto(getUserContext(request).getId());
+            ti.setUserReferenceDTO(userReferenceDTO);
+            final List<String> importTransactionsErrors = ti.parseTransactions(new BufferedReader(new InputStreamReader(stream)));
 
-            // // Generate Import Status Message
-            String importTransactionsStatus = "It should tell how many row can be imported or appear to be parsed correctly";
+            /* TODO: externalize this string */
+            /* TODO: get # ok rows from import plugin */
+            final String importTransactionsStatus = "400 rows contained no errors and will be imported.";
             importTransactionsForm.setImportTransactionsStatus(importTransactionsStatus);
 
-            // // Generate error List
-            List<String> importTransactionsErrors = new ArrayList<String>();
-            // FIXME dummy code
-            boolean errorListIsNotEmpty = true;
-
-            if (errorListIsNotEmpty) {
-                String errorHeading = "The following rows contains errors and will not be imported.";
-                importTransactionsErrors.add(errorHeading);
-                importTransactionsErrors.add("- Row 13 is missing data.");
-                importTransactionsErrors.add("- Serial value of Row 26 does not follow expected format.");
-                importTransactionsForm.setImportTransactionsErrors(importTransactionsErrors);
+            final List<String> errorsForDisplay = new ArrayList<String>();
+            if (!importTransactionsErrors.isEmpty()) {
+                /* TODO: externalize error heading */
+                final String errorHeading = "The following rows contains errors and will not be imported.";
+                errorsForDisplay.add(errorHeading);
+                errorsForDisplay.addAll(importTransactionsErrors);
+                importTransactionsForm.setImportTransactionsErrors(errorsForDisplay);
             }
-            request.setAttribute("importTransactionsErrors", importTransactionsErrors);
-            // // close the stream
+            request.setAttribute("importTransactionsErrors", errorsForDisplay);
+
             stream.close();
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
@@ -130,7 +137,6 @@ public class ImportTransactionsAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        // TODO Auto-generated method stub
         return new DummyImportTransactionService();
     }
 

@@ -99,8 +99,8 @@ explanation of the license and how it is applied.
                                     <!-- FIXME: these "style" should be inside css framework -->
                                     <td>
                                     <mifos:select property="importPluginName">
-										<c:forEach items="${requestScope.importPlugins}" var="pluginName">
-											<html-el:option value="${pluginName}">${pluginName}</html-el:option>
+										<c:forEach items="${requestScope.importPlugins}" var="plugin">
+											<html-el:option value="${plugin.id}">${plugin.displayValue}</html-el:option>
 										</c:forEach>
 									</mifos:select>
                                     </td>

@@ -24,13 +24,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.spi.TransactionImport;
 
 public class PluginManager {
+    /**
+     * Returns specified import plugin or null.
+     */
+    public TransactionImport getImportPlugin(String importPluginClassname) {
+        TransactionImport plugin = null;
+        for (TransactionImport ti : loadImportPlugins()) {
+            if (ti.getClass().getName().equals(importPluginClassname)) {
+                plugin = ti;
+            }
+        }
+        return plugin;
+    }
+
+    /**
+     * Returns list of import plugins. Note that {@link ServiceLoader} caches
+     * loads, so multiple invocations should not incur extra overhead.
+     */
+    public List<TransactionImport> loadImportPlugins() {
+        List<TransactionImport> plugins = new ArrayList<TransactionImport>();
+        ServiceLoader<TransactionImport> loader = ServiceLoader.load(TransactionImport.class);
+        for (TransactionImport ti : loader) {
+            ti.setAccountService(new StandardAccountService(new AccountPersistence(), new LoanPersistence()));
+            plugins.add(ti);
+        }
+        return plugins;
+    }
+
     public List<String> getImportPluginNames() {
         List<String> pluginNames = new ArrayList<String>();
-        ServiceLoader<TransactionImport> importLoader = ServiceLoader.load(TransactionImport.class);
-        for (TransactionImport ti : importLoader) {
+        List<TransactionImport> plugins = loadImportPlugins();
+        for (TransactionImport ti : plugins) {
             pluginNames.add(ti.getDisplayName());
         }
         return pluginNames;
