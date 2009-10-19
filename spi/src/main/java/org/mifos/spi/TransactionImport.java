@@ -21,7 +21,6 @@
 package org.mifos.spi;
 
 import java.io.BufferedReader;
-import java.util.List;
 
 import org.mifos.api.accounts.AccountService;
 import org.mifos.api.accounts.UserReferenceDto;
@@ -31,15 +30,24 @@ import org.mifos.api.accounts.UserReferenceDto;
  */
 public abstract class TransactionImport {
     private AccountService accountService;
-    private UserReferenceDto userReferenceDTO;
+    private UserReferenceDto userReferenceDto;
 
     /**
-     * Parse transaction import data and return errors encountered or an empty
-     * list.
+     * Parses transaction import data and return an object encapsulating parse
+     * results. This method shall not write to the database, e.g., shall not
+     * call {@link AccountService#makePayments(java.util.List)}.
      * 
-     * @return error messages, if any, but never <code>null</code>
+     * @return initialized {@link ParseResultDto} object. Never
+     *         <code>null</code>.
      */
-    public abstract List<String> parseTransactions(final BufferedReader input);
+    public abstract ParseResultDto parse(final BufferedReader input);
+
+    /**
+     * Parses transaction import data and call the API to transactions in the
+     * database. This method shall write to the database, e.g., may call
+     * {@link AccountService#makePayments(java.util.List)}.
+     */
+    public abstract void store(final BufferedReader input) throws Exception;
 
     /**
      * @return friendly name for this implementation
@@ -48,25 +56,25 @@ public abstract class TransactionImport {
 
     /**
      * Mifos will call this method to provide an {@link AccountService} for use
-     * by the import plugin prior to calling parseTransactions.
+     * by the import plugin prior to calling {@link #parse} and {@link #store}.
      */
     public void setAccountService(final AccountService accountService) {
         this.accountService = accountService;
     }
-    
+
     protected AccountService getAccountService() {
         return accountService;
     }
 
     /**
      * Mifos will call this method to provide a {@link UserReferenceDto} for use
-     * by the import plugin prior to calling parseTransactions.
+     * by the import plugin prior to calling {@link #parse} and {@link #store}.
      */
-    public void setUserReferenceDTO(final UserReferenceDto userReferenceDTO) {
-        this.userReferenceDTO = userReferenceDTO;
+    public void setUserReferenceDto(final UserReferenceDto userReferenceDto) {
+        this.userReferenceDto = userReferenceDto;
     }
-    
-    protected UserReferenceDto getUserReferenceDTO() {
-        return userReferenceDTO;
+
+    protected UserReferenceDto getUserReferenceDto() {
+        return userReferenceDto;
     }
 }

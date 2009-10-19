@@ -21,11 +21,15 @@ explanation of the license and how it is applied.
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
 
 <tiles:insert definition=".create">
     <tiles:put name="body" type="string">
@@ -103,11 +107,24 @@ explanation of the license and how it is applied.
                                 </tr>
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.importstatus"
-                                        isColonRequired="Yes" bundle="adminUIResources" /> <c:out
-                                        value="${importTransactionsForm.importTransactionsStatus}" /></td>
+                                        isColonRequired="Yes" bundle="adminUIResources" />
+                                    <c:choose>
+                                        <c:when test="${0 == requestScope.numSuccessfulRows}">
+                                            <fmt:message key="admin.importexport.zeroImportableRows"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <fmt:message key="admin.importexport.successfulImportRows">
+                                                <fmt:param><c:out value="${requestScope.numSuccessfulRows}" /></fmt:param>
+                                            </fmt:message>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
                                 </tr>
                                 <tr class="fontnormalred">
                                     <td><br />
+                                    <c:if test="${!empty importTransactionsErrors}">
+                                    	<fmt:message key="admin.importexport.rowsWithErrors"/>
+                                    </c:if>
                                     <br />
                                     <c:forEach var="error" items="${importTransactionsForm.importTransactionsErrors}">
                                         <br />

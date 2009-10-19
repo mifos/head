@@ -46,6 +46,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.spi.ParseResultDto;
 import org.mifos.spi.TransactionImport;
 
 /**
@@ -99,23 +100,16 @@ public class ImportTransactionsAction extends BaseAction {
 
             final TransactionImport ti = new PluginManager().getImportPlugin(importPluginClassname);
             final UserReferenceDto userReferenceDTO = new UserReferenceDto(getUserContext(request).getId());
-            ti.setUserReferenceDTO(userReferenceDTO);
-            final List<String> importTransactionsErrors = ti.parseTransactions(new BufferedReader(new InputStreamReader(stream)));
-
-            /* TODO: externalize this string */
-            /* TODO: get # ok rows from import plugin */
-            final String importTransactionsStatus = "400 rows contained no errors and will be imported.";
-            importTransactionsForm.setImportTransactionsStatus(importTransactionsStatus);
+            ti.setUserReferenceDto(userReferenceDTO);
+            final ParseResultDto importResult = ti.parse(new BufferedReader(new InputStreamReader(stream)));
 
             final List<String> errorsForDisplay = new ArrayList<String>();
-            if (!importTransactionsErrors.isEmpty()) {
-                /* TODO: externalize error heading */
-                final String errorHeading = "The following rows contains errors and will not be imported.";
-                errorsForDisplay.add(errorHeading);
-                errorsForDisplay.addAll(importTransactionsErrors);
+            if (!importResult.parseErrors.isEmpty()) {
+                errorsForDisplay.addAll(importResult.parseErrors);
                 importTransactionsForm.setImportTransactionsErrors(errorsForDisplay);
             }
             request.setAttribute("importTransactionsErrors", errorsForDisplay);
+            request.setAttribute("numSuccessfulRows", importResult.successfullyParsedRows.size());
 
             stream.close();
         } catch (FileNotFoundException fnfe) {
@@ -125,6 +119,7 @@ public class ImportTransactionsAction extends BaseAction {
         }
 
         // destroy the temporary file created
+        /* TODO: or keep it around? or write a different temp file the session knows about? */
         importTransationsFile.destroy();
 
         return mapping.findForward("import_results");
@@ -132,6 +127,7 @@ public class ImportTransactionsAction extends BaseAction {
 
     public ActionForward confirm(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        /* TODO: call store() */
         return mapping.findForward("import_confirm");
     }
 
