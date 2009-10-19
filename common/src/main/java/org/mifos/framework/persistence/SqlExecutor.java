@@ -34,27 +34,45 @@ import java.util.ArrayList;
 /**
  * Utility methods for running SQL from files
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.AssignmentInOperand", "PMD.AppendCharacterWithChar", "PMD.AvoidThrowingRawExceptionTypes", "PMD.DoNotThrowExceptionInFinally"})
+@SuppressWarnings( { "PMD.CyclomaticComplexity", "PMD.AssignmentInOperand", "PMD.AppendCharacterWithChar",
+        "PMD.AvoidThrowingRawExceptionTypes", "PMD.DoNotThrowExceptionInFinally" })
 public class SqlExecutor {
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"}, justification="The resource is closed and the string cannot be static.")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION",
+            "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" }, justification = "The resource is closed and the string cannot be static.")
     @SuppressWarnings("PMD.CloseResource")
     // Rationale: It's closed.
     public static void execute(InputStream stream, Connection conn) throws SQLException {
         String[] sqls = readFile(stream);
+        boolean wasAutoCommit = conn.getAutoCommit();
+
+        // Entring: Set auto commit false if auto commit was true
+        if (wasAutoCommit) {
+            conn.setAutoCommit(false);
+        }
+
         Statement statement = conn.createStatement();
         for (String sql : sqls) {
-            statement.executeUpdate(sql);
+            statement.addBatch(sql);
         }
+        statement.executeBatch();
         statement.close();
+
+        // Leaving: Set auto commit true if auto commit was true
+        if (wasAutoCommit) {
+            conn.commit();
+            conn.setAutoCommit(true);
+        }
     }
 
     /**
      * Closes the stream when done.
-     *
+     * 
      * @return individual statements
      * */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.AssignmentInOperand", "PMD.AppendCharacterWithChar", "PMD.AvoidThrowingRawExceptionTypes", "PMD.DoNotThrowExceptionInFinally"})
-    // Rationale: If the Apache Ant team thinks it's OK, we do too. Perhaps bad reasoning, but inshallah.
+    @SuppressWarnings( { "PMD.CyclomaticComplexity", "PMD.AssignmentInOperand", "PMD.AppendCharacterWithChar",
+            "PMD.AvoidThrowingRawExceptionTypes", "PMD.DoNotThrowExceptionInFinally" })
+    // Rationale: If the Apache Ant team thinks it's OK, we do too. Perhaps bad
+    // reasoning, but inshallah.
     public static String[] readFile(InputStream stream) {
         // mostly ripped from
         // http://svn.apache.org/viewvc/ant/core/trunk/src/main/org/apache/tools/ant/taskdefs/SQLExec.java

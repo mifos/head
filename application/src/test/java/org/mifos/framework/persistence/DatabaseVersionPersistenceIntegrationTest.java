@@ -36,92 +36,115 @@ import java.util.Map;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 import junitx.framework.StringAssert;
-import net.sourceforge.mayfly.Database;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.testng.annotations.Test;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
-public class DatabaseVersionPersistenceTest extends TestCase {
+public class DatabaseVersionPersistenceIntegrationTest {
 
-    public void setUp() throws Exception {
+    private static Connection connection;
+
+    @BeforeClass
+    public static void init() throws Exception {
         MifosLogManager.configureLogging();
+        StaticHibernateUtil.initialize();
+        connection = StaticHibernateUtil.getSessionTL().connection();
     }
 
+    @AfterClass
+    public static void destroy() throws Exception {
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+        StaticHibernateUtil.flushAndCloseSession();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        connection.createStatement().execute("drop table if exists DATABASE_VERSION");
+    }
+
+    @Test
     public void testReadSuccess() throws Exception {
-        Database database = new Database();
-        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
-        new DatabaseVersionPersistence(database.openConnection()).read();
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+        new DatabaseVersionPersistence(connection).read();
     }
 
+    @Test
     public void testReadTwoRows() throws Exception {
-        Database database = new Database();
-        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
-        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(54)");
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(54)");
         try {
-            new DatabaseVersionPersistence(database.openConnection()).read();
+            new DatabaseVersionPersistence(connection).read();
             Assert.fail();
         } catch (RuntimeException e) {
-           Assert.assertEquals("too many rows in DATABASE_VERSION", e.getMessage());
+            Assert.assertEquals("too many rows in DATABASE_VERSION", e.getMessage());
         }
     }
 
+    @Test
     public void testReadNoRows() throws Exception {
-        Database database = new Database();
-        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
         try {
-            new DatabaseVersionPersistence(database.openConnection()).read();
+            new DatabaseVersionPersistence(connection).read();
             Assert.fail();
         } catch (RuntimeException e) {
-           Assert.assertEquals("No row in DATABASE_VERSION", e.getMessage());
+            Assert.assertEquals("No row in DATABASE_VERSION", e.getMessage());
         }
     }
 
+    @Test
     public void testReadNoTable() throws Exception {
         /*
          * This is the case where the user has an old database (from before
          * version 100). They will need to upgrade to 100 manually.
          */
-        Database database = new Database();
-    try {
-        new DatabaseVersionPersistence(database.openConnection()).read();
-        Assert.fail("SQLException was expected");
-    } catch (SQLException e){}
+        try {
+            new DatabaseVersionPersistence(connection).read();
+            Assert.fail("SQLException was expected");
+        } catch (SQLException e) {
+        }
     }
 
+    @Test
     public void testWrite() throws Exception {
-        Database database = DummyUpgrade.databaseWithVersionTable(53);
-        new DatabaseVersionPersistence(database.openConnection()).write(77);
-       Assert.assertEquals(77, new DatabaseVersionPersistence(database.openConnection()).read());
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+        new DatabaseVersionPersistence(connection).write(77);
+        Assert.assertEquals(77, new DatabaseVersionPersistence(connection).read());
     }
 
+    @Test
     public void testIsNotVersioned() throws Exception {
-        Database database = TestDatabase.makeDatabase();
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(database.openConnection());
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
         Assert.assertFalse(persistence.isVersioned());
 
-        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(43)");
-       Assert.assertTrue(persistence.isVersioned());
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(43)");
+        Assert.assertTrue(persistence.isVersioned());
     }
 
+    @Test
     public void testNoUpgrade() throws Exception {
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(null);
         List<Upgrade> scripts = persistence.scripts(88, 88);
-       Assert.assertEquals(0, scripts.size());
+        Assert.assertEquals(0, scripts.size());
     }
 
+    @Test
     public void testUpgrade() throws Exception {
         DatabaseVersionPersistence persistence = sqlFor89And90();
         List<Upgrade> scripts = persistence.scripts(90, 88);
-       Assert.assertEquals(2, scripts.size());
-       Assert.assertEquals("upgrade_to_89.sql", ((SqlUpgrade) scripts.get(0)).sql().getPath());
-       Assert.assertEquals("upgrade_to_90.sql", ((SqlUpgrade) scripts.get(1)).sql().getPath());
+        Assert.assertEquals(2, scripts.size());
+        Assert.assertEquals("upgrade_to_89.sql", ((SqlUpgrade) scripts.get(0)).sql().getPath());
+        Assert.assertEquals("upgrade_to_90.sql", ((SqlUpgrade) scripts.get(1)).sql().getPath());
     }
 
     private DatabaseVersionPersistence sqlFor89And90() {
@@ -140,27 +163,31 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         };
     }
 
+    @Test
     public void testDetectDowngrade() throws Exception {
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(null);
         try {
             persistence.scripts(87, 88);
             Assert.fail();
         } catch (UnsupportedOperationException e) {
-           Assert.assertEquals("your database needs to be downgraded from 88 to 87", e.getMessage());
+            Assert.assertEquals("your database needs to be downgraded from 88 to 87", e.getMessage());
         }
     }
 
+    @Test
     public void testReadEmpty() throws Exception {
         String[] sqlStatements = SqlExecutor.readFile(new ByteArrayInputStream(new byte[0]));
-       Assert.assertEquals(0, sqlStatements.length);
+        Assert.assertEquals(0, sqlStatements.length);
     }
 
+    @Test
     public void testBlankLines() throws Exception {
         checkSplit("command\n\n\n\n\n\n\n", "\ncommand");
         checkSplit("command;\n", "\ncommand");
         checkSplit("command;\n\n\n\n\n\n\n", "\ncommand");
     }
 
+    @Test
     public void testSlashStarComments() throws Exception {
         checkSplit("/* foo; bar */", "\n/* foo; bar */");
 
@@ -171,12 +198,13 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         checkSplit("/* foo;\n bar */", "\n/* foo", "\nbar */");
     }
 
+    @Test
     public void testComments() throws Exception {
         /*
-         * Many of the details here, like what comments get swallowed and
-import junit.framework.Assert;
-         * placement of whitespace, aren't very important. It just seems better
-         * to have tests so we know what the code is doing.
+         * Many of the details here, like what comments get swallowed and import
+         * junit.framework.Assert; placement of whitespace, aren't very
+         * important. It just seems better to have tests so we know what the
+         * code is doing.
          */
         checkSplit("-- ignore me");
         checkSplit("// ignore me");
@@ -186,6 +214,7 @@ import junit.framework.Assert;
         checkSplit("insert into foo(x) values('x--y')", "\ninsert into foo(x) values('x--y')\n");
     }
 
+    @Test
     public void testSplitIntoTwo() throws Exception {
         checkSplit("foo;\nbar\n", "\nfoo", "\nbar");
         checkSplit("foo;\nbar;\n", "\nfoo", "\nbar");
@@ -193,12 +222,13 @@ import junit.framework.Assert;
 
     private void checkSplit(String sql, String... expected) throws UnsupportedEncodingException {
         String[] statements = SqlExecutor.readFile(new ByteArrayInputStream(sql.getBytes("UTF-8")));
-       Assert.assertEquals(expected.length, statements.length);
+        Assert.assertEquals(expected.length, statements.length);
         for (int i = 0; i < expected.length; ++i) {
-           Assert.assertEquals(expected[i], statements[i]);
+            Assert.assertEquals(expected[i], statements[i]);
         }
     }
 
+    @Test
     public void testBadUtf8() throws Exception {
         try {
             SqlExecutor.readFile(new ByteArrayInputStream(new byte[] { (byte) 0x80 }));
@@ -208,29 +238,34 @@ import junit.framework.Assert;
         }
     }
 
+    @Test
     public void testGoodUtf8() throws Exception {
         String[] sqlStatements = SqlExecutor.readFile(new ByteArrayInputStream(new byte[] { (byte) 0xe2, (byte) 0x82,
                 (byte) 0xac }));
-       Assert.assertEquals(1, sqlStatements.length);
+        Assert.assertEquals(1, sqlStatements.length);
         String euroSign = sqlStatements[0];
-       Assert.assertEquals("\n\u20AC", euroSign);
+        Assert.assertEquals("\n\u20AC", euroSign);
     }
 
+    @Test
     public void testExecuteStream() throws Exception {
-        Connection conn = new Database().openConnection();
+        connection.createStatement().execute("drop table if exists FOO");
         byte[] sql = ("create table FOO(DATABASE_VERSION INTEGER);\n" + "--some comment\n"
                 + "insert into FOO(DATABASE_VERSION) VALUES(53);\n").getBytes("UTF-8");
         ByteArrayInputStream in = new ByteArrayInputStream(sql);
-        SqlExecutor.execute(in, conn);
-        conn.commit();
-        readOneValueFromFoo(conn);
+        SqlExecutor.execute(in, connection);
+        connection.commit();
+        readOneValueFromFoo(connection);
     }
 
+    @Test
     public void testUpgradeDatabase() throws Exception {
-        Database database = new Database();
-        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
-        Connection connection = database.openConnection();
+        // Created in upgrade 79
+        connection.createStatement().execute("drop table if exists FOO");
+        // Created in upgrade 80
+        connection.createStatement().execute("drop table if exists BAR");
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
         connection.setAutoCommit(false);
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
         persistence.upgradeDatabase(connection, 80);
@@ -242,19 +277,18 @@ import junit.framework.Assert;
     private void readOneValueFromFoo(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet results = statement.executeQuery("select * from FOO");
-       Assert.assertTrue(results.next());
+        Assert.assertTrue(results.next());
         int valueFromFoo = results.getInt(1);
-       Assert.assertEquals(53, valueFromFoo);
+        Assert.assertEquals(53, valueFromFoo);
         Assert.assertFalse(results.next());
         results.close();
         statement.close();
     }
 
+    @Test
     public void testErrorWrapping() throws Exception {
-        Database database = new Database();
-        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
-        Connection connection = database.openConnection();
+        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
         Upgrade upgrade = new Upgrade(79) {
 
             @Override
@@ -263,20 +297,19 @@ import junit.framework.Assert;
             }
 
         };
-        DatabaseVersionPersistence persistence = javaOnlyPersistence(database, upgrade);
+        DatabaseVersionPersistence persistence = javaOnlyPersistence(connection, upgrade);
         try {
             persistence.upgradeDatabase(connection, 79);
             Assert.fail();
         } catch (RuntimeException e) {
-           Assert.assertEquals("error in upgrading to 79", e.getMessage());
-           Assert.assertEquals("tried but failed", e.getCause().getMessage());
+            Assert.assertEquals("error in upgrading to 79", e.getMessage());
+            Assert.assertEquals("tried but failed", e.getCause().getMessage());
         }
     }
 
+    @Test
     public void testNotJavaOrSql() throws Exception {
-        Database database = new Database();
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(database.openConnection(),
-                Collections.EMPTY_MAP) {
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection, Collections.EMPTY_MAP) {
             @Override
             URL getSqlResourceLocation(String name) {
                 return null;
@@ -291,32 +324,31 @@ import junit.framework.Assert;
         }
     }
 
+    @Test
     public void testJavaOnly() throws Exception {
-        Database database = new Database();
-        DatabaseVersionPersistence persistence = javaOnlyPersistence(database);
+        DatabaseVersionPersistence persistence = javaOnlyPersistence(connection);
         DummyUpgrade found = (DummyUpgrade) persistence.findUpgrade(69);
         found.upgrade(null);
-       Assert.assertEquals("upgrade to 69\n", found.getLog());
+        Assert.assertEquals("upgrade to 69\n", found.getLog());
     }
 
+    @Test
     public void testJavaConditional() throws Exception {
-        Database database = new Database();
-        DatabaseVersionPersistence persistence = conditionalPersistence(database);
+        DatabaseVersionPersistence persistence = conditionalPersistence(connection);
         SqlUpgrade found = persistence.findUpgradeScript(10, CONDITIONAL_UPGRADE_10_NAME);
-       Assert.assertTrue(found != null);
+        Assert.assertTrue(found != null);
         SqlUpgrade found_downgrade = persistence.findUpgradeScript(10, CONDITIONAL_DOWNGRADE_10_NAME);
-       Assert.assertTrue(found_downgrade != null);
+        Assert.assertTrue(found_downgrade != null);
     }
 
-    private DatabaseVersionPersistence javaOnlyPersistence(Database database) {
-        return javaOnlyPersistence(database, new DummyUpgrade(69));
+    private DatabaseVersionPersistence javaOnlyPersistence(Connection connection) {
+        return javaOnlyPersistence(connection, new DummyUpgrade(69));
     }
 
-    private DatabaseVersionPersistence javaOnlyPersistence(Database database, Upgrade upgrade) {
+    private DatabaseVersionPersistence javaOnlyPersistence(Connection connection, Upgrade upgrade) {
         Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
         DatabaseVersionPersistence.register(registrations, upgrade);
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(database.openConnection(),
-                registrations) {
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection, registrations) {
             @Override
             URL getSqlResourceLocation(String name) {
                 return null;
@@ -325,23 +357,22 @@ import junit.framework.Assert;
         return persistence;
     }
 
+    @Test
     public void testJavaAndSql() throws Exception {
-        Database database = new Database();
-        DatabaseVersionPersistence persistence = javaAndSqlPersistence(database);
+        DatabaseVersionPersistence persistence = javaAndSqlPersistence(connection);
 
         try {
             persistence.findUpgrade(69);
             Assert.fail();
         } catch (IllegalStateException e) {
-           Assert.assertEquals("Found upgrade to 69 both in java and in upgrade_to_69.sql", e.getMessage());
+            Assert.assertEquals("Found upgrade to 69 both in java and in upgrade_to_69.sql", e.getMessage());
         }
     }
 
-    private DatabaseVersionPersistence javaAndSqlPersistence(Database database) {
+    private DatabaseVersionPersistence javaAndSqlPersistence(Connection connection) {
         Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
         DatabaseVersionPersistence.register(registrations, new DummyUpgrade(69));
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(database.openConnection(),
-                registrations) {
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection, registrations) {
             @Override
             URL getSqlResourceLocation(String name) {
                 if ("upgrade_to_69.sql".equals(name)) {
@@ -361,8 +392,8 @@ import junit.framework.Assert;
     private static String CONDITIONAL_UPGRADE_10_NAME = "upgrade_to_10_conditional.sql";
     private static String CONDITIONAL_DOWNGRADE_10_NAME = "downgrade_from_10_conditional.sql";
 
-    private DatabaseVersionPersistence conditionalPersistence(Database database) {
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(database.openConnection()) {
+    private DatabaseVersionPersistence conditionalPersistence(Connection connection) {
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection) {
             @Override
             public URL getSqlResourceLocation(String name) {
                 if (CONDITIONAL_UPGRADE_10_NAME.equals(name) || CONDITIONAL_DOWNGRADE_10_NAME.equals(name)) {
@@ -379,6 +410,7 @@ import junit.framework.Assert;
         return persistence;
     }
 
+    @Test
     public void testDuplicateRegistration() throws Exception {
         Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();
         DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
@@ -386,7 +418,7 @@ import junit.framework.Assert;
             DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
             Assert.fail();
         } catch (IllegalStateException e) {
-           Assert.assertEquals("already have an upgrade to 70", e.getMessage());
+            Assert.assertEquals("already have an upgrade to 70", e.getMessage());
         }
     }
 }

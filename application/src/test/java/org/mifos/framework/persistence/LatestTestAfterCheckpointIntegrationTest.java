@@ -66,28 +66,21 @@ public class LatestTestAfterCheckpointIntegrationTest {
     private static Connection connection;
 
     @BeforeClass
-    public static void beforeClass() {
+    public static void beforeClass() throws Exception {
         MifosLogManager.configureLogging();
         StaticHibernateUtil.initialize();
+        connection = StaticHibernateUtil.getSessionTL().connection();
+        connection.setAutoCommit(false);
     }
 
     @Before
     public void setUp() throws Exception {
-        connection = StaticHibernateUtil.getSessionTL().connection();
-        connection.setAutoCommit(false);
-        dropLatestDatabase(connection);
-    }
-
-    @After
-    public void tearDown() {
-        StaticHibernateUtil.flushAndCloseSession();
+        dropLatestDatabase();
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
         // Cleaning the database
-        connection = StaticHibernateUtil.getSessionTL().connection();
-        connection.setAutoCommit(false);
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
@@ -95,33 +88,34 @@ public class LatestTestAfterCheckpointIntegrationTest {
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
         connection.commit();
         FinancialInitializer.initialize();
+        StaticHibernateUtil.flushAndCloseSession();
     }
 
     @Test
     public void testSimple() throws Exception {
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
-        loadLatest(connection);
+        loadLatest();
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
         IDataSet latestDump = dbUnitConnection.createDataSet();
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
-        applyUpgrades(connection);
+        applyUpgrades();
         IDataSet upgradeDump = dbUnitConnection.createDataSet();
         Assertion.assertEquals(latestDump, upgradeDump);
     }
 
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
-        createLatestDatabaseWithLatestData(connection);
+        createLatestDatabaseWithLatestData();
         
         Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection)
                 .read());
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
         IDataSet latestDataDump = dbUnitConnection.createDataSet();
         String latestDump = TestDatabase.getAllTablesStructureDump();
-        dropLatestDatabase(connection);
-        createLatestCheckPointDatabaseWithLatestData(connection);
+        dropLatestDatabase();
+        createLatestCheckPointDatabaseWithLatestData();
         TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, connection);
 
         String upgradeDump = TestDatabase.getAllTablesStructureDump();
@@ -134,8 +128,8 @@ public class LatestTestAfterCheckpointIntegrationTest {
     @Test
     public void testDropTables() throws Exception {
         String blankDB = TestDatabase.getAllTablesStructureDump();
-        createLatestDatabase(connection);
-        dropLatestDatabase(connection);
+        createLatestDatabase();
+        dropLatestDatabase();
         String cleanedDB = TestDatabase.getAllTablesStructureDump();
         Assert.assertEquals(blankDB, cleanedDB);
     }
@@ -148,16 +142,16 @@ public class LatestTestAfterCheckpointIntegrationTest {
     @Test
     public void testDropTablesWithData() throws Exception {
         String blankDB = TestDatabase.getAllTablesStructureDump();
-        createLatestDatabaseWithLatestData(connection);
-        dropLatestDatabase(connection);
+        createLatestDatabaseWithLatestData();
+        dropLatestDatabase();
         String cleanedDB = TestDatabase.getAllTablesStructureDump();
         Assert.assertEquals(blankDB, cleanedDB);
     }
 
     @Test
     public void testAfterLookupValuesAfterCheckpoint() throws Exception {
-        createLatestCheckPointDatabaseWithLatestData(connection);
-        int nextLookupId = largestLookupId(connection) + 1;
+        createLatestCheckPointDatabaseWithLatestData();
+        int nextLookupId = largestLookupId() + 1;
         connection.createStatement().execute(
                 "insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " + "VALUES(" + nextLookupId
                         + ", 19,'TestLookUpName')");
@@ -165,7 +159,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
                 "insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " + "VALUES(1," + nextLookupId
                         + ",'Martian')");
 
-        upgrade(LATEST_CHECKPOINT_VERSION, connection);
+        upgradeAllFromVersion(LATEST_CHECKPOINT_VERSION);
         connection.commit();
 
         // Assert that custom values have been retained
@@ -184,18 +178,18 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     }
 
-    private void upgrade(int fromVersion, Connection connection) throws Exception {
+    private void upgradeAllFromVersion(int fromVersion) throws Exception {
         for (int currentVersion = fromVersion; currentVersion < APPLICATION_VERSION; ++currentVersion) {
             int higherVersion = currentVersion + 1;
             try {
-                upgrade(connection, higherVersion);
+                upgradeNextVersion(higherVersion);
             } catch (Exception failure) {
                 throw new Exception("Cannot upgrade to " + higherVersion, failure);
             }
         }
     }
 
-    private void upgrade(Connection connection, int nextVersion) throws Exception {
+    private void upgradeNextVersion(int nextVersion) throws Exception {
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
         Upgrade upgrade = persistence.findUpgrade(nextVersion);
         if (upgrade instanceof SqlUpgrade)
@@ -214,7 +208,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         }
     }
 
-    private int largestLookupId(Connection connection) throws SQLException {
+    private int largestLookupId() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
         if (!results.next()) {
@@ -227,36 +221,36 @@ public class LatestTestAfterCheckpointIntegrationTest {
         return largestLookupId;
     }
 
-    private void dropLatestDatabase(Connection connection) throws Exception {
+    private void dropLatestDatabase() throws Exception {
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
         connection.commit();
     }
 
-    private void applyUpgrades(Connection connection) throws Exception {
+    private void applyUpgrades() throws Exception {
         connection.createStatement().execute("create table foo(x integer)");
         connection.createStatement().execute("insert into foo(x) values(5)");
         connection.createStatement().execute("alter table foo add column y integer default 7");
         connection.commit();
     }
 
-    private void loadLatest(Connection connection) throws Exception {
+    private void loadLatest() throws Exception {
         connection.createStatement().execute("create table foo(x integer, y integer default 7)");
         connection.createStatement().execute("insert into foo(x, y) values(5,7)");
         connection.commit();
     }
 
-    private void createLatestDatabaseWithLatestData(Connection connection) throws Exception {
+    private void createLatestDatabaseWithLatestData() throws Exception {
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
         connection.commit();
     }
 
-    private void createLatestDatabase(Connection connection) throws Exception {
+    private void createLatestDatabase() throws Exception {
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
         connection.commit();
     }
 
-    private void createLatestCheckPointDatabaseWithLatestData(Connection connection) throws Exception {
+    private void createLatestCheckPointDatabaseWithLatestData() throws Exception {
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema-checkpoint.sql"), connection);
         SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data-checkpoint.sql"), connection);
         connection.commit();

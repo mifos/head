@@ -28,9 +28,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import net.sourceforge.mayfly.MayflySqlException;
-import net.sourceforge.mayfly.UnimplementedException;
-
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
@@ -113,15 +110,6 @@ public class Upgrade213 extends Upgrade {
                 throw new SystemException(SystemException.DEFAULT_KEY, "Query failed for SQL " + sql);
             }
             numFields = results.getInt(1);
-
-        } catch (MayflySqlException e) {
-            if (e.getMessage().contains("no table STATISTICS")) {
-                getLogger().info(
-                        "Ignoring MayflySqlException. Mayfly doesn't have an INFORMATION_SCHEMA database,"
-                                + " so that table cannot be used to check extant indexes.");
-            } else {
-                throw e;
-            }
         } finally {
             statement.close();
         }
@@ -144,20 +132,11 @@ public class Upgrade213 extends Upgrade {
         final URI infoURL;
         try {
             URI mysqlOnly;
-            try {
-                /*
-                 * TODO: Very similar to code in SystemInfo. Consider
-                 * refactoring.
-                 */
-                mysqlOnly = new URI(connection.getMetaData().getURL());
-            } catch (UnimplementedException mayflyUnimplementedException) {
-                getLogger().info(
-                        "Mayfly does not support DatabaseMetaData.getURL(). Will try fetching this"
-                                + " information from database configuration files.");
-                String dbUrl = new StandardTestingService().getDatabaseConnectionSettings().getProperty(
-                        "hibernate.connection.url");
-                mysqlOnly = new URI(dbUrl);
-            }
+            /*
+             * TODO: Very similar to code in SystemInfo. Consider refactoring.
+             */
+            mysqlOnly = new URI(connection.getMetaData().getURL());
+
             infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
             databaseName = infoURL.getPath();
 
@@ -167,8 +146,6 @@ public class Upgrade213 extends Upgrade {
                 throw new SQLException("Cannot obtain database name");
             }
 
-        } catch (IOException e) {
-            throw new SQLException(e);
         } catch (URISyntaxException e) {
             throw new SQLException(e);
         }

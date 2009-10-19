@@ -23,17 +23,13 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /**

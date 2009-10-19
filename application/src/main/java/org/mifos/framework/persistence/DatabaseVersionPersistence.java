@@ -49,7 +49,6 @@ import org.mifos.application.master.persistence.Upgrade208;
 import org.mifos.application.master.persistence.Upgrade209;
 import org.mifos.application.master.persistence.Upgrade211;
 import org.mifos.application.master.persistence.Upgrade213;
-import org.mifos.application.master.persistence.Upgrade217;
 import org.mifos.application.productdefinition.business.AddInterestCalcRule;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.Upgrade127;
@@ -123,7 +122,6 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade211());
         register(register, new Upgrade213());
         register216(register);
-        register(register, new Upgrade217());
         return Collections.unmodifiableMap(register);
     }
 
