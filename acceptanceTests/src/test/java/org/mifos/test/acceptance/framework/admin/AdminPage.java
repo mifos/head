@@ -221,4 +221,16 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new DefineLabelsPage(selenium);
     }
+
+    public ViewRolesPage navigateToViewRolesPage() {
+        selenium.click("admin.link.manageRoles");
+        waitForPageToLoad();
+        return new ViewRolesPage(selenium);
+    }
+
+    public AdminPage failNavigationToSystemInfoPage() {
+        selenium.click("admin.link.viewSystemInfo");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
+    }
 }
