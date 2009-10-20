@@ -526,6 +526,13 @@ explanation of the license and how it is applied.
 										style="width:320px; height:110px;">
 									</mifos:textarea></td>
 								</tr>
+                                <tr class="fontnormal">
+                                    <td align="right" valign="top" class="fontnormal"><mifos:mifoslabel
+                                        keyhm="accounts.externalId" name="accounts.externalId"
+                                        isColonRequired="yes" bundle="accountsUIResources" /></td>
+                                    <td valign="top"><mifos:mifosalphanumtext property="externalId">
+                                    </mifos:mifosalphanumtext></td>
+                                </tr>
 
 							</table>
 							<br>

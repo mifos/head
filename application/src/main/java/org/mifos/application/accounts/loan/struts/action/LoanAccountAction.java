@@ -742,6 +742,8 @@ public class LoanAccountAction extends AccountAppAction {
                     loanActionForm.getCustomFields(), loanActionForm.getMaxLoanAmountValue(), loanActionForm
                             .getMinLoanAmountValue(), loanActionForm.getMaxNoInstallmentsValue(), loanActionForm
                             .getMinNoInstallmentsValue(), isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+            loan.setExternalId(loanActionForm.getExternalId());
+            logger.debug("Loan redo, External account ID = "+ loan.getExternalId());
         } else {
             loan = LoanBO.createLoan(getUserContext(request), loanOffering, customer,
                     AccountState.LOAN_PARTIAL_APPLICATION, loanActionForm.loanAmountValue(), loanActionForm
@@ -753,6 +755,8 @@ public class LoanAccountAction extends AccountAppAction {
                     loanActionForm.getCustomFields(), loanActionForm.getMaxLoanAmountValue(), loanActionForm
                             .getMinLoanAmountValue(), loanActionForm.getMaxNoInstallmentsValue(), loanActionForm
                             .getMinNoInstallmentsValue(), isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+            loan.setExternalId(loanActionForm.getExternalId());
+            logger.debug("Loan create, External account ID = "+ loan.getExternalId());
         }
         loan.setBusinessActivityId(loanActionForm.getBusinessActivityIdValue());
         loan.setCollateralNote(loanActionForm.getCollateralNote());
@@ -1044,6 +1048,8 @@ public class LoanAccountAction extends AccountAppAction {
                 request).getLocaleId());
         loanActionForm.setInstallmentRange(loanBO.getMaxMinNoOfInstall());
         loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
+        loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
+        loanActionForm.setExternalId(loanBO.getExternalId());
         SessionUtils.setAttribute(LOANOFFERING, loanOffering, request);
         loadUpdateMasterData(request);
 
@@ -1298,7 +1304,8 @@ public class LoanAccountAction extends AccountAppAction {
         if (isRepaymentIndepOfMeetingEnabled) {
             newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanAccountActionForm, customer);
         }
-
+        
+        loanBO.setExternalId(loanAccountActionForm.getExternalId());
         loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue(), loanAccountActionForm.getNoOfInstallmentsValue(),
                 loanAccountActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()),

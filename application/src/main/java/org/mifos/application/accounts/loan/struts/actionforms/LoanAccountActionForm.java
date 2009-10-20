@@ -130,6 +130,8 @@ public class LoanAccountActionForm extends BaseActionForm {
     private String loanOfferingFund;
 
     private String gracePeriodDuration;
+    
+    private String externalId;
 
     private String businessActivityId;
 
@@ -289,6 +291,14 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     public void setGracePeriod(String gracePeriod) {
         this.gracePeriod = gracePeriod;
+    }
+
+    public String getExternalId() {
+        return this.externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getAccountId() {

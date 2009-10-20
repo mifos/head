@@ -171,7 +171,12 @@ explanation of the license and how it is applied.
 								value="${sessionScope.loanAccountActionForm.collateralNote}" />
 							<br>
 						</tr>
-						<tr>
+                        <tr id="accounts.externalId">
+                            <td class="fontnormalbold"><mifos:mifoslabel name="accounts.externalId"
+                                keyhm="accounts.externalId" isColonRequired="yes" isManadatoryIndicationNotRequired="no" />
+                            &nbsp; <span class="fontnormal"><c:out value="${sessionScope.loanAccountActionForm.externalId}" /> </span></td>
+                        </tr>
+                        <tr>
 							<td class="fontnormal">
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<span class="fontnormalbold"><mifos:mifoslabel name="loan.additionalInfo" bundle="loanUIResources"/></span><br>
