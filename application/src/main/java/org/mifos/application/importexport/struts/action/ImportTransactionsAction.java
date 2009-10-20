@@ -20,8 +20,11 @@
 
 package org.mifos.application.importexport.struts.action;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +33,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -40,6 +44,8 @@ import org.mifos.application.importexport.struts.actionforms.ImportTransactionsA
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.plugin.PluginManager;
 import org.mifos.framework.security.util.ActionSecurity;
@@ -56,9 +62,13 @@ import org.mifos.spi.TransactionImport;
  */
 
 public class ImportTransactionsAction extends BaseAction {
+    private static final MifosLogger logger = MifosLogManager.getLogger(ImportTransactionsAction.class.getName());
+
+    static final String IMPORT_TEMPORARY_FILENAME = "importTemporaryFilename";
+    static final String IMPORT_PLUGIN_CLASSNAME = "importPluginClassname";
 
     public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("manageImportAction");
+        final ActionSecurity security = new ActionSecurity("manageImportAction");
         security.allow("load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
         security.allow("upload", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
         security.allow("confirm", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
@@ -67,7 +77,8 @@ public class ImportTransactionsAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        final List<ListItem<String>> importPlugins = new ArrayList<ListItem<String>>(); 
+        clearOurSessionVariables(request.getSession());
+        final List<ListItem<String>> importPlugins = new ArrayList<ListItem<String>>();
         for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
             importPlugins.add(new ListItem<String>(ti.getClass().getName(), ti.getDisplayName()));
         }
@@ -77,58 +88,90 @@ public class ImportTransactionsAction extends BaseAction {
 
     public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
-        // this line is here for when the input page is upload-utf8.jsp,
-        // it sets the correct character encoding for the response
-        final String encoding = request.getCharacterEncoding();
-        if ((encoding != null) && (encoding.equalsIgnoreCase("utf-8"))) {
-            response.setContentType("text/html; charset=utf-8");
-        }
-
         final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
 
-        // retrieve the file representation
-        final FormFile importTransationsFile = importTransactionsForm.getImportTransactionsFile();
-
-        // Use this to apply specific parsing implementation
+        final FormFile importTransactionsFile = importTransactionsForm.getImportTransactionsFile();
         final String importPluginClassname = importTransactionsForm.getImportPluginName();
+        request.getSession().setAttribute(IMPORT_PLUGIN_CLASSNAME, importPluginClassname);
 
-        try {
-            // retrieve the file data
-            InputStream stream = importTransationsFile.getInputStream();
-            importTransactionsForm.setImportTransactionsFileName(importTransationsFile.getFileName());
+        InputStream stream = importTransactionsFile.getInputStream();
+        String tempFilename = saveImportAsTemporaryFile(importTransactionsFile.getInputStream());
+        request.getSession().setAttribute(IMPORT_TEMPORARY_FILENAME, tempFilename);
+        importTransactionsForm.setImportTransactionsFileName(importTransactionsFile.getFileName());
 
-            final TransactionImport ti = new PluginManager().getImportPlugin(importPluginClassname);
-            final UserReferenceDto userReferenceDTO = new UserReferenceDto(getUserContext(request).getId());
-            ti.setUserReferenceDto(userReferenceDTO);
-            final ParseResultDto importResult = ti.parse(new BufferedReader(new InputStreamReader(stream)));
+        final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
+        final ParseResultDto importResult = ti.parse(new BufferedReader(new InputStreamReader(stream)));
 
-            final List<String> errorsForDisplay = new ArrayList<String>();
-            if (!importResult.parseErrors.isEmpty()) {
-                errorsForDisplay.addAll(importResult.parseErrors);
-                importTransactionsForm.setImportTransactionsErrors(errorsForDisplay);
-            }
-            request.setAttribute("importTransactionsErrors", errorsForDisplay);
-            request.setAttribute("numSuccessfulRows", importResult.successfullyParsedRows.size());
-
-            stream.close();
-        } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        final List<String> errorsForDisplay = new ArrayList<String>();
+        if (!importResult.parseErrors.isEmpty()) {
+            errorsForDisplay.addAll(importResult.parseErrors);
+            importTransactionsForm.setImportTransactionsErrors(errorsForDisplay);
         }
+        request.setAttribute("importTransactionsErrors", errorsForDisplay);
+        request.setAttribute("numSuccessfulRows", importResult.successfullyParsedRows.size());
 
-        // destroy the temporary file created
-        /* TODO: or keep it around? or write a different temp file the session knows about? */
-        importTransationsFile.destroy();
+        stream.close();
+
+        importTransactionsFile.destroy();
 
         return mapping.findForward("import_results");
     }
 
+    private TransactionImport getInitializedImportPlugin(String importPluginClassname, Short userId) {
+        final TransactionImport ti = new PluginManager().getImportPlugin(importPluginClassname);
+        final UserReferenceDto userReferenceDTO = new UserReferenceDto(userId);
+        ti.setUserReferenceDto(userReferenceDTO);
+        return ti;
+    }
+
+    /**
+     * This will fail if we ever cluster Mifos dynamic Web requests.
+     */
+    private String saveImportAsTemporaryFile(InputStream input) throws IOException {
+        File tempFile = File.createTempFile(this.getClass().getSimpleName(), null);
+        FileOutputStream out = new FileOutputStream(tempFile);
+        BufferedInputStream in = new BufferedInputStream(input);
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+        return tempFile.getCanonicalPath();
+    }
+
     public ActionForward confirm(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        /* TODO: call store() */
+        final String tempFilename = (String) request.getSession().getAttribute(IMPORT_TEMPORARY_FILENAME);
+        final String importPluginClassname = (String) request.getSession().getAttribute(IMPORT_PLUGIN_CLASSNAME);
+        clearOurSessionVariables(request.getSession());
+        final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
+        File tempFile = new File(tempFilename);
+
+        BufferedReader importReader = new BufferedReader(new FileReader(tempFile));
+        final ParseResultDto importResult = ti.parse(importReader);
+        importReader.close();
+
+        importReader = new BufferedReader(new FileReader(tempFile));
+        ti.store(importReader);
+        importReader.close();
+
+        logger.info(importResult.successfullyParsedRows.size() + " transactions imported.");
+
+        tempFile.delete();
         return mapping.findForward("import_confirm");
+    }
+
+    /**
+     * Used to remove our (this action's) temporaries after use to keep them
+     * from accumulating in the session. This probably breaks the "back" button.
+     * Using hidden form fields to persist temporaries might be more
+     * user-friendly.
+     */
+    private void clearOurSessionVariables(HttpSession session) {
+        session.removeAttribute(IMPORT_TEMPORARY_FILENAME);
+        session.removeAttribute(IMPORT_PLUGIN_CLASSNAME);
     }
 
     @Override
@@ -137,7 +180,6 @@ public class ImportTransactionsAction extends BaseAction {
     }
 
     class DummyImportTransactionService implements BusinessService {
-
         @Override
         public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
             return null;

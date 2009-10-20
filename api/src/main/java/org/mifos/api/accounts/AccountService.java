@@ -22,9 +22,12 @@ package org.mifos.api.accounts;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 public interface AccountService {
     void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) throws Exception;
     void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
     AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws Exception;
+    boolean isValidTransactionDate(int accountId, LocalDate paymentDate) throws Exception;
     
 }

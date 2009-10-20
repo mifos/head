@@ -74,6 +74,10 @@ public abstract class TransactionImport {
         this.userReferenceDto = userReferenceDto;
     }
 
+    /**
+     * Represents the user in the Mifos system responsible for creating the
+     * transactions.
+     */
     protected UserReferenceDto getUserReferenceDto() {
         return userReferenceDto;
     }
