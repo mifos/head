@@ -27,7 +27,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import junit.framework.Assert;
-import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,9 +34,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- *
- */
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigurationLocatorTest {
 
@@ -90,9 +86,5 @@ public class ConfigurationLocatorTest {
         // verification
         Assert.assertNotNull(configurationDirectory);
         Assert.assertEquals(EXPECTED_PATH, configurationDirectory);
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ConfigurationLocatorTest.class);
     }
 }
