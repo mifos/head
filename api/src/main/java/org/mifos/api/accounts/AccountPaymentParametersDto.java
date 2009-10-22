@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 public class AccountPaymentParametersDto {
+    /* TODO: only use getters for access */
     public final UserReferenceDto userMakingPayment;
     public final AccountReferenceDto account;
     public final BigDecimal paymentAmount;
