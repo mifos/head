@@ -20,14 +20,17 @@
 
 package org.mifos.accounts.api;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyShort;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Matchers.*;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -49,10 +52,6 @@ import org.mifos.application.collectionsheet.persistence.LoanAccountBuilder;
 import org.mifos.application.collectionsheet.persistence.LoanProductBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -63,13 +62,9 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
-
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class StandardAccountServiceTest {
@@ -105,7 +100,7 @@ public class StandardAccountServiceTest {
     }
         
     @Before
-    public void setup() throws AccountException {
+    public void setup() {
         standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(accountPersistence);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
