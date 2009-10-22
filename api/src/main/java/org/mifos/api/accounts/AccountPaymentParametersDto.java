@@ -24,15 +24,14 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 public class AccountPaymentParametersDto {
-    /* TODO: only use getters for access */
-    public final UserReferenceDto userMakingPayment;
-    public final AccountReferenceDto account;
-    public final BigDecimal paymentAmount;
-    public final LocalDate paymentDate;
-    public final LocalDate receiptDate;
-    public final String receiptId;
-    public final PaymentTypeDto paymentType;
-    public final String comment;
+    private final UserReferenceDto userMakingPayment;
+    private final AccountReferenceDto account;
+    private final BigDecimal paymentAmount;
+    private final LocalDate paymentDate;
+    private final LocalDate receiptDate;
+    private final String receiptId;
+    private final PaymentTypeDto paymentType;
+    private final String comment;
 
     public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
             BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
@@ -58,6 +57,38 @@ public class AccountPaymentParametersDto {
         this.receiptId = receiptId;
         this.paymentType = paymentType;
         this.comment = comment;
+    }
+
+    public UserReferenceDto getUserMakingPayment() {
+        return this.userMakingPayment;
+    }
+
+    public AccountReferenceDto getAccount() {
+        return this.account;
+    }
+
+    public BigDecimal getPaymentAmount() {
+        return this.paymentAmount;
+    }
+
+    public LocalDate getPaymentDate() {
+        return this.paymentDate;
+    }
+
+    public LocalDate getReceiptDate() {
+        return this.receiptDate;
+    }
+
+    public String getReceiptId() {
+        return this.receiptId;
+    }
+
+    public PaymentTypeDto getPaymentType() {
+        return this.paymentType;
+    }
+
+    public String getComment() {
+        return this.comment;
     }
 
 }

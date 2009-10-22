@@ -32,11 +32,11 @@ import org.mifos.framework.util.helpers.Money;
  *
  */
 public class AccountPaymentDto {
-    public final AccountTypeDto accountType;
-    public final int version;
-    public final List<ListItem<Short>> paymentTypeList;
-    public final Money totalPaymentDue;
-    public final UserReferenceDto userMakingPayment;
+    private final AccountTypeDto accountType;
+    private final int version;
+    private final List<ListItem<Short>> paymentTypeList;
+    private final Money totalPaymentDue;
+    private final UserReferenceDto userMakingPayment;
     
     public AccountPaymentDto(AccountTypeDto accountType, int version, List<ListItem<Short>> paymentTypeList,
             Money totalPaymentDue, UserReferenceDto userMakingPayment) {
@@ -47,4 +47,25 @@ public class AccountPaymentDto {
         this.userMakingPayment = userMakingPayment;
     }
 
+    public AccountTypeDto getAccountType() {
+        return this.accountType;
+    }
+
+    public int getVersion() {
+        return this.version;
+    }
+
+    public List<ListItem<Short>> getPaymentTypeList() {
+        return this.paymentTypeList;
+    }
+
+    public Money getTotalPaymentDue() {
+        return this.totalPaymentDue;
+    }
+
+    public UserReferenceDto getUserMakingPayment() {
+        return this.userMakingPayment;
+    }
+
+    
 }

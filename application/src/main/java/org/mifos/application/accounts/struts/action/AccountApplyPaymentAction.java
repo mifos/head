@@ -112,14 +112,14 @@ public class AccountApplyPaymentAction extends BaseAction {
                 request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()));
                 
-        SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.version, request);
-        SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.accountType.name(), request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.getVersion(), request);
+        SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.getAccountType().name(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_ID, Integer.valueOf(actionForm.getAccountId()), request);
         
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, 
-                accountPaymentDto.paymentTypeList, request);
+                accountPaymentDto.getPaymentTypeList(), request);
 
-        actionForm.setAmount(accountPaymentDto.totalPaymentDue);
+        actionForm.setAmount(accountPaymentDto.getTotalPaymentDue());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -149,7 +149,7 @@ public class AccountApplyPaymentAction extends BaseAction {
                 request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()));
         
-        checkVersionMismatch(savedAccountVersion, accountPaymentDto.version);
+        checkVersionMismatch(savedAccountVersion, accountPaymentDto.getVersion());
         
         if (!accountServiceFacade.isPaymentPermitted(accountReferenceDto, userContext)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
@@ -160,10 +160,10 @@ public class AccountApplyPaymentAction extends BaseAction {
             Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
 
             Money amount = new Money("0");
-            if (accountPaymentDto.accountType.equals(AccountTypeDto.LOAN_ACCOUNT)) {
+            if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
                 amount = actionForm.getAmount();
             } else {
-                amount = accountPaymentDto.totalPaymentDue;
+                amount = accountPaymentDto.getTotalPaymentDue();
             }
              
             AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(

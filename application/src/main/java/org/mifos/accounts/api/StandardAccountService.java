@@ -87,18 +87,18 @@ public class StandardAccountService implements AccountService {
 
     public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
-        final int accountId = accountPaymentParametersDto.account.getAccountId();
+        final int accountId = accountPaymentParametersDto.getAccount().getAccountId();
         final AccountBO account = getAccountPersistence().getAccount(accountId);
-        if (!isValidTransactionDate(accountId, accountPaymentParametersDto.paymentDate)) {
+        if (!isValidTransactionDate(accountId, accountPaymentParametersDto.getPaymentDate())) {
             throw new AccountException("errors.invalidTxndate");
         }
 
-        Money amount = new Money(accountPaymentParametersDto.paymentAmount);
+        Money amount = new Money(accountPaymentParametersDto.getPaymentAmount());
 
-        PaymentData paymentData = account.createPaymentData(accountPaymentParametersDto.userMakingPayment.getUserId(),
-                amount, accountPaymentParametersDto.paymentDate.toDateMidnight().toDate(), null, null,
-                accountPaymentParametersDto.paymentType.getValue());
-        paymentData.setComment(accountPaymentParametersDto.comment);
+        PaymentData paymentData = account.createPaymentData(accountPaymentParametersDto.getUserMakingPayment().getUserId(),
+                amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(), null, null,
+                accountPaymentParametersDto.getPaymentType().getValue());
+        paymentData.setComment(accountPaymentParametersDto.getComment());
 
         account.applyPayment(paymentData);
 

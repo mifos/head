@@ -25,7 +25,7 @@ package org.mifos.api.accounts;
  *
  */
 public class AccountReferenceDto {
-    int accountId;
+    private final int accountId;
 
     public AccountReferenceDto(int accountId) {
         this.accountId = accountId;
@@ -34,11 +34,5 @@ public class AccountReferenceDto {
     public int getAccountId() {
         return this.accountId;
     }
-
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
-    }
-    
-    
 
 }

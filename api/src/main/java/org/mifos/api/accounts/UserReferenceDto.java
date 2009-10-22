@@ -26,19 +26,14 @@ package org.mifos.api.accounts;
  *
  */
 public class UserReferenceDto {
-
-    Short userId;
-
-    public Short getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(Short userId) {
-        this.userId = userId;
-    }
+    private short userId;
 
     public UserReferenceDto(short userId) {
         this.userId = userId;
+    }
+
+    public short getUserId() {
+        return this.userId;
     }
 
 }

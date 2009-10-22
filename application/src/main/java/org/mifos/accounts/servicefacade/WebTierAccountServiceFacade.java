@@ -50,9 +50,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception {
         AccountBO account = new AccountBusinessService().getAccount(Integer.valueOf(accountReferenceDto.getAccountId()));
         
-        UserReferenceDto accountUser = userReferenceDto;
+        UserReferenceDto accountUser = null;
         if (account.getPersonnel() != null) {
-            accountUser.setUserId(account.getPersonnel().getPersonnelId());
+            accountUser = new UserReferenceDto(account.getPersonnel().getPersonnelId());
+        } else {
+            accountUser = userReferenceDto;
         }
         AccountPaymentDto accountPaymentDto = new AccountPaymentDto(
                 AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId()),
