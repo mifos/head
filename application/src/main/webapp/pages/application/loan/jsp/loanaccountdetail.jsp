@@ -403,16 +403,21 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<mifos:mifoslabel name="loan.collateral_notes"
 								keyhm="Loan.CollateralNotes" isColonRequired="yes"
 								isManadatoryIndicationNotRequired="yes" />&nbsp;<br>
-							<c:out value="${BusinessKey.collateralNote}" /></td>
+							<c:out value="${BusinessKey.collateralNote}" />
+                            <br /></td>
 						</tr>
 						<script>
 							if(document.getElementById("Loan.CollateralType").style.display=="none" &&
 								document.getElementById("Loan.CollateralNotes").style.display=="none")
 									document.getElementById("collateral").style.display="none";
 						</script>
-						
-									
-					<!-- Administrative documents -->
+                        <tr id="accounts.externalId">
+                            <td class="fontnormalbold"><mifos:mifoslabel name="accounts.externalId"
+                                keyhm="accounts.externalId" isColonRequired="yes" isManadatoryIndicationNotRequired="no" />
+                            &nbsp; <span class="fontnormal"><c:out value="${sessionScope.loanAccountActionForm.externalId}" /> </span></td>
+                        </tr>
+                        
+                        <!-- Administrative documents -->
 	              	<%
 					 if(isDisplay) {
 				    %>
