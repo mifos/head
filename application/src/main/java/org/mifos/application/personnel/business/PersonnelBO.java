@@ -82,7 +82,7 @@ public class PersonnelBO extends BusinessObject {
 
     private Integer maxChildCount;
 
-    private byte[] encriptedPassword;
+    private byte[] encryptedPassword;
 
     private final String userName;
 
@@ -148,7 +148,7 @@ public class PersonnelBO extends BusinessObject {
         this.passwordChanged = Constants.NO;
         this.locked = LockStatus.UNLOCK.getValue();
         this.noOfTries = 0;
-        this.encriptedPassword = getEncryptedPassword(password);
+        this.encryptedPassword = getEncryptedPassword(password);
         this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
     }
 
@@ -293,8 +293,8 @@ public class PersonnelBO extends BusinessObject {
         this.searchId = searchId;
     }
 
-    public byte[] getEncriptedPassword() {
-        return encriptedPassword;
+    public byte[] getEncryptedPassword() {
+        return encryptedPassword;
     }
 
     public void setDisplayName(final String displayName) {
@@ -357,8 +357,8 @@ public class PersonnelBO extends BusinessObject {
         }
     }
 
-    public void setEncriptedPassword(final byte[] encryptedPassword) {
-        this.encriptedPassword = encryptedPassword;
+    public void setEncryptedPassword(final byte[] encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
     }
 
     public PersonnelStatusEntity getStatus() {
@@ -476,7 +476,7 @@ public class PersonnelBO extends BusinessObject {
         this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
 
         if (StringUtils.isNullAndEmptySafe(password)) {
-            this.encriptedPassword = getEncryptedPassword(password);
+            this.encryptedPassword = getEncryptedPassword(password);
         }
         this.emailId = emailId;
         if (title != null && title.intValue() == 0) {
@@ -677,7 +677,7 @@ public class PersonnelBO extends BusinessObject {
     public void updatePassword(final String oldPassword, final String newPassword, final Short updatedById) throws PersonnelException {
         logger.debug("Trying to updatePassword");
         byte[] encryptedPassword = getEncryptedPassword(oldPassword, newPassword);
-        this.setEncriptedPassword(encryptedPassword);
+        this.setEncryptedPassword(encryptedPassword);
         this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
         if (this.getLastLogin() == null) {
             this.setLastLogin(new DateTimeService().getCurrentJavaDateTime());
@@ -693,7 +693,7 @@ public class PersonnelBO extends BusinessObject {
 
     public void updatePassword(final String newPassword, final Short updatedById) throws PersistenceException {
         byte[] encryptedPassword = getEncryptedPassword(newPassword);
-        this.setEncriptedPassword(encryptedPassword);
+        this.setEncryptedPassword(encryptedPassword);
         this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
         if (this.getLastLogin() == null) {
             this.setLastLogin(new DateTimeService().getCurrentJavaDateTime());
@@ -751,7 +751,7 @@ public class PersonnelBO extends BusinessObject {
     private boolean isPasswordValid(final String password) throws PersonnelException {
         logger.debug("Checking password valid or not");
         try {
-            return EncryptionService.getInstance().verifyPassword(password, getEncriptedPassword());
+            return EncryptionService.getInstance().verifyPassword(password, getEncryptedPassword());
         } catch (SystemException se) {
             throw new PersonnelException(se);
         }
@@ -810,7 +810,7 @@ public class PersonnelBO extends BusinessObject {
         } else {
             throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
         }
-        logger.debug("New encripted password returned.");
+        logger.debug("New encrypted password returned.");
         return newEncryptedPassword;
     }
 

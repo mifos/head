@@ -731,7 +731,7 @@ msgstr "Nom"
 msgid "Email"
 msgstr "Email"
 
-#: Personnel.encriptedPassword
+#: Personnel.encryptedPassword
 msgid "Password"
 msgstr "Mot de passe"
 

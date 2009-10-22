@@ -732,7 +732,7 @@ msgstr "اسم"
 msgid "Email"
 msgstr ""
 
-#: Personnel.encriptedPassword
+#: Personnel.encryptedPassword
 msgid "Password"
 msgstr ""
 

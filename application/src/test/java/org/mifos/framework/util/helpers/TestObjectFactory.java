@@ -1519,7 +1519,7 @@ public class TestObjectFactory {
     private static UserContext getUserContext() throws SystemException, ApplicationException {
         byte[] password = EncryptionService.getInstance().createEncryptedPassword("mifos");
         PersonnelBO personnel = getPersonnel(PersonnelConstants.SYSTEM_USER);
-        personnel.setEncriptedPassword(password);
+        personnel.setEncryptedPassword(password);
         updateObject(personnel);
         return personnel.login("mifos");
     }

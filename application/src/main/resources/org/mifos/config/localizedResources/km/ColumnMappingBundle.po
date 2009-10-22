@@ -731,7 +731,7 @@ msgstr "ឈ្មោះ"
 msgid "Email"
 msgstr "អាស្រយដ្ឋានសារ"
 
-#: Personnel.encriptedPassword
+#: Personnel.encryptedPassword
 msgid "Password"
 msgstr "លេខសម្ងាត់"
 

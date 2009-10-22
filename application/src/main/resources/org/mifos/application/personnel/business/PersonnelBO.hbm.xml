@@ -37,7 +37,7 @@
 		<property name="searchId" column="SEARCH_ID" type="string" />
 		<property name="maxChildCount" column="MAX_CHILD_COUNT"
 			type="integer" />
-		<property name="encriptedPassword" column="PASSWORD"
+		<property name="encryptedPassword" column="PASSWORD"
 			type="binary" access="field" />
 		<property name="userName" column="LOGIN_NAME" unique="true"
 			type="string" access="field" />

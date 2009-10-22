@@ -183,7 +183,7 @@
 		<propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
 		<propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
 		<propertyName name="userName" parentName="personnel" doNotLog="yes" />
-		<propertyName name="encriptedPassword" parentName="personnel" doNotLog="yes" />
+		<propertyName name="encryptedPassword" parentName="personnel" doNotLog="yes" />
 		<propertyName name="locked" parentName="personnel" doNotLog="yes" />
 		<propertyName name="passwordChanged" parentName="personnel" doNotLog="yes" />
 		<propertyName name="title" parentName="personnel" doNotLog="yes" />
@@ -314,7 +314,7 @@
 		<propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
 		<propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
 		<propertyName name="userName" parentName="personnel" doNotLog="yes" />
-		<propertyName name="encriptedPassword" parentName="personnel" doNotLog="yes" />
+		<propertyName name="encryptedPassword" parentName="personnel" doNotLog="yes" />
 		<propertyName name="locked" parentName="personnel" doNotLog="yes" />
 		<propertyName name="passwordChanged" parentName="personnel" doNotLog="yes" />
 		<propertyName name="title" parentName="personnel" doNotLog="yes" />
@@ -518,7 +518,7 @@
 		<propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
 		<propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
 		<propertyName name="userName" parentName="personnel" doNotLog="yes" />
-		<propertyName name="encriptedPassword" parentName="personnel" doNotLog="yes" />
+		<propertyName name="encryptedPassword" parentName="personnel" doNotLog="yes" />
 		<propertyName name="locked" parentName="personnel" doNotLog="yes" />
 		<propertyName name="passwordChanged" parentName="personnel" doNotLog="yes" />
 		<propertyName name="title" parentName="personnel" doNotLog="yes" />
@@ -828,7 +828,7 @@
 		<propertyName name="name"  parentName="role"   displayKey="Personnel.role"/>
 		<propertyName name="displayName" displayKey="Personnel.displayName" />
 		<propertyName name="userName" displayKey="Personnel.displayName" />
-        <propertyName name="encriptedPassword"  displayKey="Personnel.encriptedPassword" />
+        <propertyName name="encryptedPassword"  displayKey="Personnel.encryptedPassword" />
 
     	<propertyName name="localeId"  parentName="preferredLocale"  doNotLog="yes" />
 		<propertyName name="localeName"  parentName="preferredLocale"  doNotLog="yes"/>
