@@ -24,10 +24,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +50,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.UnicodeUtil;
 import org.mifos.spi.ParseResultDto;
 import org.mifos.spi.TransactionImport;
 
@@ -94,13 +93,13 @@ public class ImportTransactionsAction extends BaseAction {
         final String importPluginClassname = importTransactionsForm.getImportPluginName();
         request.getSession().setAttribute(IMPORT_PLUGIN_CLASSNAME, importPluginClassname);
 
-        InputStream stream = importTransactionsFile.getInputStream();
-        String tempFilename = saveImportAsTemporaryFile(importTransactionsFile.getInputStream());
+        final InputStream stream = importTransactionsFile.getInputStream();
+        final String tempFilename = saveImportAsTemporaryFile(importTransactionsFile.getInputStream());
         request.getSession().setAttribute(IMPORT_TEMPORARY_FILENAME, tempFilename);
         importTransactionsForm.setImportTransactionsFileName(importTransactionsFile.getFileName());
 
         final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
-        final ParseResultDto importResult = ti.parse(new BufferedReader(new InputStreamReader(stream)));
+        final ParseResultDto importResult = ti.parse(UnicodeUtil.getUnicodeAwareBufferedReader(tempFilename));
 
         final List<String> errorsForDisplay = new ArrayList<String>();
         if (!importResult.parseErrors.isEmpty()) {
@@ -147,19 +146,18 @@ public class ImportTransactionsAction extends BaseAction {
         final String importPluginClassname = (String) request.getSession().getAttribute(IMPORT_PLUGIN_CLASSNAME);
         clearOurSessionVariables(request.getSession());
         final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
-        File tempFile = new File(tempFilename);
 
-        BufferedReader importReader = new BufferedReader(new FileReader(tempFile));
-        final ParseResultDto importResult = ti.parse(importReader);
-        importReader.close();
+        BufferedReader in = UnicodeUtil.getUnicodeAwareBufferedReader(tempFilename);
+        final ParseResultDto importResult = ti.parse(in);
+        in.close();
 
-        importReader = new BufferedReader(new FileReader(tempFile));
-        ti.store(importReader);
-        importReader.close();
+        in = UnicodeUtil.getUnicodeAwareBufferedReader(tempFilename);
+        ti.store(in);
+        in.close();
 
         logger.info(importResult.successfullyParsedRows.size() + " transactions imported.");
 
-        tempFile.delete();
+        new File(tempFilename).delete();
         return mapping.findForward("import_confirm");
     }
 

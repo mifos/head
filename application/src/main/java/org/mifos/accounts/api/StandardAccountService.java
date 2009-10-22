@@ -20,12 +20,13 @@
 
 package org.mifos.accounts.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.mifos.api.accounts.AccountPaymentParametersDto;
 import org.mifos.api.accounts.AccountReferenceDto;
 import org.mifos.api.accounts.AccountService;
+import org.mifos.api.accounts.InvalidPaymentReason;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -69,6 +70,7 @@ public class StandardAccountService implements AccountService {
         this.accountPersistence = accountPersistence;
     }
 
+    @Override
     public void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) throws PersistenceException,
             AccountException {
         StaticHibernateUtil.startTransaction();
@@ -76,6 +78,7 @@ public class StandardAccountService implements AccountService {
         StaticHibernateUtil.commitTransaction();
     }
 
+    @Override
     public void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList)
             throws PersistenceException, AccountException {
         StaticHibernateUtil.startTransaction();
@@ -89,7 +92,8 @@ public class StandardAccountService implements AccountService {
             throws PersistenceException, AccountException {
         final int accountId = accountPaymentParametersDto.getAccount().getAccountId();
         final AccountBO account = getAccountPersistence().getAccount(accountId);
-        if (!isValidTransactionDate(accountId, accountPaymentParametersDto.getPaymentDate())) {
+        List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
+        if (validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
             throw new AccountException("errors.invalidTxndate");
         }
 
@@ -116,10 +120,14 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
-    public boolean isValidTransactionDate(int accountId, LocalDate transactionDate) throws PersistenceException,
+    public List<InvalidPaymentReason> validatePayment(AccountPaymentParametersDto payment) throws PersistenceException,
             AccountException {
-        AccountBO account = getAccountPersistence().getAccount(accountId);
-        return account.isTrxnDateValid(transactionDate.toDateMidnight().toDate());
+        List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
+        AccountBO accountBo = getAccountPersistence().getAccount(payment.getAccount().getAccountId());
+        if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
+            errors.add(InvalidPaymentReason.INVALID_DATE);
+        }
+        return errors;
     }
 
 }

@@ -21,12 +21,14 @@
 package org.mifos.accounts.api;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
 import org.mifos.api.accounts.AccountPaymentParametersDto;
 import org.mifos.api.accounts.AccountReferenceDto;
+import org.mifos.api.accounts.InvalidPaymentReason;
 import org.mifos.api.accounts.PaymentTypeDto;
 import org.mifos.api.accounts.UserReferenceDto;
 import org.mifos.application.accounts.AccountIntegrationTestCase;
@@ -68,6 +70,38 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         TestObjectFactory.updateObject(accountBO);
         Assert.assertEquals("The amount returned for the payment should have been " + paymentAmount, 
                 Double.parseDouble(paymentAmount), accountBO.getLastPmntAmnt());
+    }
+
+    public void testValidateValidPayment() throws Exception {
+        String paymentAmount = "700";
+        standardAccountService = new StandardAccountService();
+        standardAccountService.setAccountPersistence(new AccountPersistence());
+
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
+                new AccountReferenceDto(accountBO.getAccountId()), 
+                new BigDecimal(paymentAmount), 
+                new LocalDate(), 
+                PaymentTypeDto.CASH,"");
+        List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
+
+        Assert.assertEquals(0, errors.size());
+    }
+
+    public void testValidatePaymentWithInvalidDate() throws Exception {
+        String paymentAmount = "700";
+        standardAccountService = new StandardAccountService();
+        standardAccountService.setAccountPersistence(new AccountPersistence());
+
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
+                new AccountReferenceDto(accountBO.getAccountId()), 
+                new BigDecimal(paymentAmount), 
+                new LocalDate(1980, 1, 1), 
+                PaymentTypeDto.CASH,"");
+        List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
+
+        Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_DATE));
     }
 
     public void testMakePaymentComment() throws Exception {
