@@ -12,9 +12,9 @@
         <version>1.4-SNAPSHOT</version>
     </parent>
     <scm>
-        <url>https://mifos.dev.java.net/svn/mifos/</url>
-        <connection>scm:svn:https://guest@mifos.dev.java.net/svn/mifos/</connection>
-        <developerConnection>scm:svn:https://guest@mifos.dev.java.net/svn/mifos/</developerConnection>
+        <url>https://mifos.svn.sourceforge.net/svnroot/mifos</url>
+        <connection>scm:svn:https://mifos.svn.sourceforge.net/svnroot/mifos</connection>
+        <developerConnection>scm:svn:https://mifos.svn.sourceforge.net/svnroot/mifos</developerConnection>
     </scm>
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
