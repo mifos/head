@@ -36,6 +36,8 @@ import org.mifos.application.configuration.util.helpers.LookupOptionData;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -94,9 +96,7 @@ public class LookupOptionsAction extends BaseAction {
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.usertitle"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS)) {
-            request
-                    .setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources
-                            .getString("configuration.maritalstatus"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.maritalstatus"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_MARITAL_STATUS);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY)) {
             String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, userContext);
@@ -115,9 +115,7 @@ public class LookupOptionsAction extends BaseAction {
                     .getString("configuration.businessactivity"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE)) {
-            request
-                    .setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources
-                            .getString("configuration.purposeofloan"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.purposeofloan"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE)) {
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources
@@ -130,6 +128,9 @@ public class LookupOptionsAction extends BaseAction {
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)) {
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.officertitle"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_OFFICER_TITLE);
+        } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.paymentmodes"));
+            request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_PAYMENT_TYPE);
         }
     }
 
@@ -169,6 +170,9 @@ public class LookupOptionsAction extends BaseAction {
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)) {
             assert (lookupOptionsActionForm.getOfficerTitleList().length == 1);
             selectedValue = lookupOptionsActionForm.getOfficerTitleList()[0];
+        } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
+            assert (lookupOptionsActionForm.getPaymentTypeList().length == 1);
+            selectedValue = lookupOptionsActionForm.getPaymentTypeList()[0];
         }
         return selectedValue;
 
@@ -189,8 +193,10 @@ public class LookupOptionsAction extends BaseAction {
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY)
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE)
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE)
-                || configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED) || configurationEntity
-                .equals(ConfigurationConstants.CONFIG_OFFICER_TITLE));
+                || configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED) 
+                || configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)
+                || configurationEntity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)
+                );
         setLookupType(configurationEntity, request);
         data.setValueListId(Short.parseShort(SessionUtils.getAttribute(configurationEntity, request).toString()));
         if (addOrEdit.equals("add")) {
@@ -262,6 +268,8 @@ public class LookupOptionsAction extends BaseAction {
             lookupOptionsActionForm.setHandicappeds(valueList.getCustomValueListElements());
         else if (configurationEntity.equals(MasterConstants.OFFICER_TITLES))
             lookupOptionsActionForm.setOfficerTitles(valueList.getCustomValueListElements());
+        else if (configurationEntity.equals(MasterConstants.PAYMENT_TYPE))
+            lookupOptionsActionForm.setPaymentTypes(valueList.getCustomValueListElements());
         else
             throw new Exception("Invalid configuration type in LookupOptionAction. Type is " + configurationEntity);
     }
@@ -298,6 +306,7 @@ public class LookupOptionsAction extends BaseAction {
         request.setAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE,
                 ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
         request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
+        request.setAttribute(ConfigurationConstants.CONFIG_PAYMENT_TYPE, ConfigurationConstants.CONFIG_PAYMENT_TYPE);
 
     }
 
@@ -344,6 +353,8 @@ public class LookupOptionsAction extends BaseAction {
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_HANDICAPPED);
         PopulateConfigurationListBox(MasterConstants.OFFICER_TITLES, masterPersistence, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_OFFICER_TITLE);
+        PopulateConfigurationListBox(MasterConstants.PAYMENT_TYPE, masterPersistence, localeId, request,
+                lookupOptionsActionForm, ConfigurationConstants.CONFIG_PAYMENT_TYPE);
 
         logger.debug("Outside load method");
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -385,13 +396,25 @@ public class LookupOptionsAction extends BaseAction {
         return mapping.findForward(actionForward.toString());
     }
 
-    private void UpdateDatabase(LookupOptionData data) throws PersistenceException {
+    private void UpdateDatabase(LookupOptionData data, String entity) throws PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();
-        if (data.getLookupId() > 0)
+        if (data.getLookupId() > 0) {
             masterPersistence.updateValueListElementForLocale(data.getLookupId(), data.getLookupValue());
-        else
-            masterPersistence.addValueListElementForLocale(DynamicLookUpValueCreationTypes.LookUpOption, data
-                    .getValueListId(), data.getLookupValue());
+        } else {
+            LookUpValueEntity newLookupValue =  masterPersistence.addValueListElementForLocale(
+                    DynamicLookUpValueCreationTypes.LookUpOption, data.getValueListId(), 
+                    data.getLookupValue());
+            
+            /*
+             * Add a special case for payment types since we not only need to create a new
+             * lookup value but also a new PaymentTypeEntity when adding an entry
+             */
+            if (entity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
+                PaymentTypeEntity newPaymentType = new PaymentTypeEntity(newLookupValue);
+                new MasterPersistence().createOrUpdate(newPaymentType);
+            }
+            
+        }
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
@@ -403,7 +426,9 @@ public class LookupOptionsAction extends BaseAction {
         LookupOptionData data = (LookupOptionData) SessionUtils.getAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA,
                 request);
         data.setLookupValue(lookupOptionsActionForm.getLookupValue());
-        UpdateDatabase(data);
+        String entity = request.getParameter(ConfigurationConstants.ENTITY);
+        UpdateDatabase(data, entity);
+
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 

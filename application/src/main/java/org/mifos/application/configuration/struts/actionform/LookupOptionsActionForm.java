@@ -55,6 +55,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
     private String businessActivity;
     private String purposeOfLoan;
     private String collateralType;
+    private String paymentType;
 
     private List<CustomValueListElement> salutations;
     private List<CustomValueListElement> userTitles;
@@ -67,7 +68,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
     private List<CustomValueListElement> officerTitles;
     private List<CustomValueListElement> handicappeds;
     private List<CustomValueListElement> collateralTypes;
-
+    private List<CustomValueListElement> paymentTypes;
+    
     private String[] salutationList;
     private String[] userTitleList;
     private String[] maritalStatusList;
@@ -78,7 +80,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
     private String[] purposeOfLoanList;
     private String[] officerTitleList;
     private String[] handicappedList;
-    private String[] collateralTypeList;
+    private String[] collateralTypeList;    
+    private String[] paymentTypeList;
     private String lookupValue;
 
     public String getLookupValue() {
@@ -273,6 +276,31 @@ public class LookupOptionsActionForm extends BaseActionForm {
         this.collateralTypes = collateralTypes;
     }
 
+    
+    public String getPaymentType() {
+        return this.paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public List<CustomValueListElement> getPaymentTypes() {
+        return this.paymentTypes;
+    }
+
+    public void setPaymentTypes(List<CustomValueListElement> paymentTypes) {
+        this.paymentTypes = paymentTypes;
+    }
+
+    public String[] getPaymentTypeList() {
+        return this.paymentTypeList;
+    }
+
+    public void setPaymentTypeList(String[] paymentTypeList) {
+        this.paymentTypeList = paymentTypeList;
+    }
+
     public LookupOptionsActionForm() {
         super();
 
@@ -317,6 +345,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
             return (containsOneNonNullElement(getHandicappedList()));
         } else if (listName.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)) {
             return (containsOneNonNullElement(getOfficerTitleList()));
+        } else if (listName.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
+            return (containsOneNonNullElement(getPaymentTypeList()));
         }
         throw new RuntimeException("Got unexpected constant: \"" + listName + "\"");
     }
@@ -339,6 +369,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
         request.setAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE,
                 ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
         request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
+        request.setAttribute(ConfigurationConstants.CONFIG_PAYMENT_TYPE,
+                ConfigurationConstants.CONFIG_PAYMENT_TYPE);
     }
 
     private void checkOneList(List<CustomValueListElement> list, ActionErrors errors, String entity) {
@@ -378,6 +410,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
             checkOneList(officerTitles, errors, entity);
         } else if (entity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE)) {
             checkOneList(userTitles, errors, entity);
+        } else if (entity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
+            checkOneList(paymentTypes, errors, entity);            
         } else {
             throw new RuntimeException("Unrecognized configuration entity \"" + entity + "\".");
         }
@@ -409,6 +443,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
             setOfficerTitles(list);
         } else if (entity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE)) {
             setUserTitles(list);
+        } else if (entity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
+            setPaymentTypes(list);            
         } else {
             throw new RuntimeException("Unrecognized configuration entity \"" + entity + "\".");
         }
@@ -486,6 +522,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
         this.handicappeds = null;
         this.collateralTypes = null;
         this.lookupValue = null;
+        this.paymentType = null;
 
     }
 
@@ -592,6 +629,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
             entityType = resources.getString("configuration.citizenship");
         } else if (entity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE)) {
             entityType = resources.getString("configuration.collateraltype");
+        } else if (entity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
+            entityType = resources.getString("configuration.paymentmodes");
         } else if (entity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL)) {
             entityType = resources.getString("configuration.educationlevel");
         } else if (entity.equals(ConfigurationConstants.CONFIG_ETHNICITY)) {

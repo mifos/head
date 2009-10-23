@@ -45,9 +45,13 @@ public abstract class MasterDataEntity extends PersistentObject {
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
 
-    public MasterDataEntity() {
+    public MasterDataEntity(LookUpValueEntity lookUpValueEntity) {
+        this.lookUpValue = lookUpValueEntity;
     }
 
+    public MasterDataEntity() {        
+    }
+    
     public MasterDataEntity(Short id) {
         this.id = id;
     }

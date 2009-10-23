@@ -31,6 +31,10 @@ public class PaymentTypeEntity extends MasterDataEntity {
     public PaymentTypeEntity(Short id) {
         super(id);
     }
+    
+    public PaymentTypeEntity(LookUpValueEntity lookUpValueEntity) {
+        super(lookUpValueEntity);
+    }
 
     public void update(String name) {
         setName(name);

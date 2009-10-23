@@ -527,6 +527,49 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top" width="18%">
+									<span class="mandatorytext"></span>
+									<mifos:mifoslabel name="configuration.paymentmodes"
+										isColonRequired="Yes" />
+								</td>
+								<td>
+									<table border="0" cellpadding="0" cellspacing="0" width="81%">
+										<tr>
+											<td width="15%">
+												<mifos:MifosValueList name="lookupoptionsactionform"
+													property="paymentTypeList" property2="PaymentTypes"
+													size="5" style="width:136px;">
+												</mifos:MifosValueList>
+												<br />
+
+											</td>
+											<td align="left" valign="top" width="31%">
+												<br />
+												<html-el:submit property="btnAddPaymentType"
+													styleClass="insidebuttn"
+													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigPaymentType.value, 'add');">
+													<mifos:mifoslabel name="configuration.add" />
+												</html-el:submit>
+												<br>
+												<html-el:submit property="btnEditPaymentType"
+													styleClass="insidebuttn"
+													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigPaymentType.value, 'edit');">
+													<mifos:mifoslabel name="configuration.edit" />
+												</html-el:submit>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top">
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+							</tr>
 						</table>
 
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
@@ -576,6 +619,8 @@ explanation of the license and how it is applied.
 				value="${requestScope.ConfigCollateralType}" />
 			<html-el:hidden property="ConfigEthnicity"
 				value="${requestScope.ConfigEthnicity}" />
+			<html-el:hidden property="ConfigPaymentType"
+				value="${requestScope.ConfigPaymentType}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

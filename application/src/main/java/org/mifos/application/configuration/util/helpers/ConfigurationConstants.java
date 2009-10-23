@@ -75,6 +75,7 @@ public interface ConfigurationConstants {
     public static final String CONFIG_BUSINESS_ACTIVITY = "ConfigBusinessActivity";
     public static final String CONFIG_LOAN_PURPOSE = "ConfigPurposeOfLoan";
     public static final String CONFIG_COLLATERAL_TYPE = "ConfigCollateralType";
+    public static final String CONFIG_PAYMENT_TYPE = "ConfigPaymentType";
     public static final String CONFIG_ETHNICITY = "ConfigEthnicity";
     public static final String NO_VALUE_ERROR = "errorNoValueMessage";
     public static final String DUPLICATE_VALUE_ERROR = "errorDuplicateValueMessage";
