@@ -1173,18 +1173,6 @@
 				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
 				<arg key="configuration.center" />
 			</field>
-			<field property="cash" depends="required">
-				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
-				<arg key="configuration.cash" />
-			</field>
-			<field property="check" depends="required">
-				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
-				<arg key="configuration.check" />
-			</field>
-			<field property="vouchers" depends="required">
-				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
-				<arg key="configuration.vouchers" />
-			</field>
 			<field property="loans" depends="required">
 				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
 				<arg key="configuration.loans" />

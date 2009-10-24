@@ -70,8 +70,7 @@ public class LabelConfigurationActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         verifyActionErrors(new String[] { "Please specify Head office.", "Please specify Regional office.",
                 "Please specify Sub regional office.", "Please specify Area office.", "Please specify Branch office.",
-                "Please specify Client.", "Please specify Group.", "Please specify Center.", "Please specify Cash.",
-                "Please specify Check.", "Please specify Vouchers.", "Please specify Loans.",
+                "Please specify Client.", "Please specify Group.", "Please specify Center.", "Please specify Loans.",
                 "Please specify Savings.", "Please specify State.", "Please specify Postal code.",
                 "Please specify Ethnicity.", "Please specify Citizenship.", "Please specify Handicapped.",
                 "Please specify Government ID.", "Please specify Address 1.", "Please specify Address 2.",
@@ -99,9 +98,6 @@ public class LabelConfigurationActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("client", "Member-Changed");
         addRequestParameter("group", "Group-Changed");
         addRequestParameter("center", "Kendra-Changed");
-        addRequestParameter("cash", "Cash-Changed");
-        addRequestParameter("check", "Cheque-Changed");
-        addRequestParameter("vouchers", "Voucher-Changed");
         addRequestParameter("loans", "Loan-Changed");
         addRequestParameter("savings", "Margin Money-Changed");
         addRequestParameter("state", "State-Changed");
@@ -151,9 +147,6 @@ public class LabelConfigurationActionStrutsTest extends MifosMockStrutsTestCase 
        Assert.assertEquals("Member-Changed", labelConfigurationActionForm.getClient());
        Assert.assertEquals("Group-Changed", labelConfigurationActionForm.getGroup());
        Assert.assertEquals("Kendra-Changed", labelConfigurationActionForm.getCenter());
-       Assert.assertEquals("Cash-Changed", labelConfigurationActionForm.getCash());
-       Assert.assertEquals("Cheque-Changed", labelConfigurationActionForm.getCheck());
-       Assert.assertEquals("Voucher-Changed", labelConfigurationActionForm.getVouchers());
        Assert.assertEquals("Loan-Changed", labelConfigurationActionForm.getLoans());
        Assert.assertEquals("Margin Money-Changed", labelConfigurationActionForm.getSavings());
        Assert.assertEquals("State-Changed", labelConfigurationActionForm.getState());
@@ -196,9 +189,6 @@ public class LabelConfigurationActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("client", "Member");
         addRequestParameter("group", "Group");
         addRequestParameter("center", "Kendra");
-        addRequestParameter("cash", "Cash");
-        addRequestParameter("check", "Cheque");
-        addRequestParameter("vouchers", "Voucher");
         addRequestParameter("loans", "Loan");
         addRequestParameter("savings", "Savings");
         addRequestParameter("state", "State");
@@ -293,9 +283,6 @@ public class LabelConfigurationActionStrutsTest extends MifosMockStrutsTestCase 
        Assert.assertEquals("Member", labelConfigurationActionForm.getClient());
        Assert.assertEquals("Group", labelConfigurationActionForm.getGroup());
        Assert.assertEquals("Kendra", labelConfigurationActionForm.getCenter());
-       Assert.assertEquals("Cash", labelConfigurationActionForm.getCash());
-       Assert.assertEquals("Cheque", labelConfigurationActionForm.getCheck());
-       Assert.assertEquals("Voucher", labelConfigurationActionForm.getVouchers());
        Assert.assertEquals("Loan", labelConfigurationActionForm.getLoans());
        Assert.assertEquals("Savings", labelConfigurationActionForm.getSavings());
        Assert.assertEquals("State", labelConfigurationActionForm.getState());

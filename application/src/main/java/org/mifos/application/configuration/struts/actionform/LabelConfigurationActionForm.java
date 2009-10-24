@@ -49,12 +49,6 @@ public class LabelConfigurationActionForm extends BaseActionForm {
 
     private String center;
 
-    private String cash;
-
-    private String check;
-
-    private String vouchers;
-
     private String loans;
 
     private String savings;
@@ -203,28 +197,12 @@ public class LabelConfigurationActionForm extends BaseActionForm {
         this.cancel = cancel;
     }
 
-    public String getCash() {
-        return cash;
-    }
-
-    public void setCash(String cash) {
-        this.cash = cash;
-    }
-
     public String getCenter() {
         return center;
     }
 
     public void setCenter(String center) {
         this.center = center;
-    }
-
-    public String getCheck() {
-        return check;
-    }
-
-    public void setCheck(String check) {
-        this.check = check;
     }
 
     public String getCitizenship() {
@@ -435,14 +413,6 @@ public class LabelConfigurationActionForm extends BaseActionForm {
         this.subRegionalOffice = subRegionalOffice;
     }
 
-    public String getVouchers() {
-        return vouchers;
-    }
-
-    public void setVouchers(String vouchers) {
-        this.vouchers = vouchers;
-    }
-
     @Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         super.reset(mapping, request);
@@ -473,9 +443,6 @@ public class LabelConfigurationActionForm extends BaseActionForm {
         this.client = null;
         this.group = null;
         this.center = null;
-        this.cash = null;
-        this.check = null;
-        this.vouchers = null;
         this.loans = null;
         this.savings = null;
         this.state = null;

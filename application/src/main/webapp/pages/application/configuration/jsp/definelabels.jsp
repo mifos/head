@@ -149,42 +149,6 @@ explanation of the license and how it is applied.
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormalbold">
-									<mifos:mifoslabel name="configuration.paymentmodes" />
-									<br>
-									<br>
-								</td>
-							</tr>
-							<tr class="fontnormal">
-								<td width="30%" align="right">
-									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="configuration.cash" isColonRequired="Yes" />
-								</td>
-								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext styleId="definelabels.input.cash" property="cash" />
-								</td>
-							</tr>
-							<tr class="fontnormal">
-								<td align="right">
-									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="configuration.check" isColonRequired="Yes" />
-								</td>
-								<td valign="top">
-									<mifos:mifosalphanumtext styleId="definelabels.input.check" property="check" />
-								</td>
-							</tr>
-							<tr class="fontnormal">
-								<td align="right">
-									<mifos:mifoslabel name="configuration.vouchers" isColonRequired="Yes" />
-								</td>
-								<td valign="top">
-									<mifos:mifosalphanumtext styleId="definelabels.input.vouchers" property="vouchers" />
-								</td>
-							</tr>
-						</table>
-						<br>
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td colspan="2" class="fontnormalbold">
 									<mifos:mifoslabel name="configuration.prdtypes" />
 									<br>
 									<br>

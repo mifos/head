@@ -21,6 +21,7 @@
 package org.mifos.application.configuration.struts.action;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,8 +45,6 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.business.service.OfficeHierarchyBusinessService;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -106,7 +105,6 @@ public class LabelConfigurationAction extends BaseAction {
         setOfficeLevelsInForm(labelConfigurationActionForm, userContext.getLocaleId());
         setGracePeriodTypesInForm(labelConfigurationActionForm, userContext.getLocaleId());
         setLookupDataInForm(labelConfigurationActionForm, userContext);
-        setPaymentModesInForm(labelConfigurationActionForm, userContext.getLocaleId());
         setStatusDataInForm(labelConfigurationActionForm, userContext.getLocaleId());
         logger.debug("Outside load method");
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -148,7 +146,6 @@ public class LabelConfigurationAction extends BaseAction {
         updateStatusData(labelConfigurationActionForm, userContext.getLocaleId(), values);
         updateOfficeData(labelConfigurationActionForm, userContext.getLocaleId());
         updateGracePeriodTypes(labelConfigurationActionForm, userContext.getLocaleId());
-        updatePaymentModes(labelConfigurationActionForm, userContext.getLocaleId());
 
         StaticHibernateUtil.commitTransaction();
         MifosConfiguration.getInstance().init();
@@ -248,21 +245,6 @@ public class LabelConfigurationAction extends BaseAction {
         }
     }
 
-    private void setPaymentModesInForm(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId)
-            throws Exception {
-        List<MasterDataEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class, localeId);
-        for (MasterDataEntity masterDataEntity : paymentTypes) {
-            PaymentTypeEntity paymentType = (PaymentTypeEntity) masterDataEntity;
-            if (paymentType.getId().equals(PaymentTypes.CASH.getValue())) {
-                labelConfigurationActionForm.setCash(paymentType.getName());
-            } else if (paymentType.getId().equals(PaymentTypes.VOUCHER.getValue())) {
-                labelConfigurationActionForm.setVouchers(paymentType.getName());
-            } else if (paymentType.getId().equals(PaymentTypes.CHEQUE.getValue())) {
-                labelConfigurationActionForm.setCheck(paymentType.getName());
-            }
-        }
-    }
-
     private void setStatusDataInForm(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId)
             throws Exception {
         List<AccountStateEntity> accountStateEntityList = new AccountBusinessService()
@@ -335,21 +317,6 @@ public class LabelConfigurationAction extends BaseAction {
                 gracePeriodType.update(labelConfigurationActionForm.getPrincipalOnlyGrace());
             } else if (gracePeriodType.getId().equals(GraceType.GRACEONALLREPAYMENTS.getValue())) {
                 gracePeriodType.update(labelConfigurationActionForm.getGraceOnAllRepayments());
-            }
-        }
-    }
-
-    private void updatePaymentModes(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId)
-            throws Exception {
-        List<MasterDataEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class, localeId);
-        for (MasterDataEntity masterDataEntity : paymentTypes) {
-            PaymentTypeEntity paymentType = (PaymentTypeEntity) masterDataEntity;
-            if (paymentType.getId().equals(PaymentTypes.CASH.getValue())) {
-                paymentType.update(labelConfigurationActionForm.getCash());
-            } else if (paymentType.getId().equals(PaymentTypes.VOUCHER.getValue())) {
-                paymentType.update(labelConfigurationActionForm.getVouchers());
-            } else if (paymentType.getId().equals(PaymentTypes.CHEQUE.getValue())) {
-                paymentType.update(labelConfigurationActionForm.getCheck());
             }
         }
     }
