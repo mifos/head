@@ -47,7 +47,7 @@ public class ConfigurationManagerTest extends TestCase {
     private static final String badKey = "Bad Key";
 
     public static void init() throws Exception {
-        MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
+        MifosLogManager.configureLogging();
     }
 
     public void setUp() {

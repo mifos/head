@@ -321,7 +321,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
         meetingDate = DateUtils.getDate(2000, Calendar.JANUARY, 1);
         meetingDateStr = "01/01/2000";
         sqlMeetingDate = DateUtils.convertToSqlDate(meetingDate);
-        MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
+        MifosLogManager.configureLogging();
         collectionSheetServiceMock = createMock(CollectionSheetService.class);
         officeBusinessServiceMock = createMock(OfficeBusinessService.class);
         personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);

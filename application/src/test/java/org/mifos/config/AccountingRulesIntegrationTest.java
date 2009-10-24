@@ -62,7 +62,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
 
     @BeforeClass
     public static void init() throws Exception {
-        MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
+        MifosLogManager.configureLogging();
     }
 
     @Test

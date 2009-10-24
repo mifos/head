@@ -56,7 +56,7 @@ public class FiscalCalendarRulesTest extends TestCase {
     private static String savedConfigWorkingDays = null;
 
     public static void init() {
-        MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
+        MifosLogManager.configureLogging();
         configMgr = ConfigurationManager.getInstance();
         savedConfigWorkingDays = configMgr.getProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays).toString();
         savedConfigWorkingDays = savedConfigWorkingDays.replace("[", "");
