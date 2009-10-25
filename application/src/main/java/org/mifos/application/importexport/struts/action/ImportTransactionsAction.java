@@ -21,8 +21,8 @@
 package org.mifos.application.importexport.struts.action;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +50,6 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.UnicodeUtil;
 import org.mifos.spi.ParseResultDto;
 import org.mifos.spi.TransactionImport;
 
@@ -99,7 +98,7 @@ public class ImportTransactionsAction extends BaseAction {
         importTransactionsForm.setImportTransactionsFileName(importTransactionsFile.getFileName());
 
         final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
-        final ParseResultDto importResult = ti.parse(UnicodeUtil.getUnicodeAwareBufferedReader(tempFilename));
+        final ParseResultDto importResult = ti.parse(importTransactionsFile.getInputStream());
 
         final List<String> errorsForDisplay = new ArrayList<String>();
         if (!importResult.parseErrors.isEmpty()) {
@@ -147,13 +146,9 @@ public class ImportTransactionsAction extends BaseAction {
         clearOurSessionVariables(request.getSession());
         final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
 
-        BufferedReader in = UnicodeUtil.getUnicodeAwareBufferedReader(tempFilename);
-        final ParseResultDto importResult = ti.parse(in);
-        in.close();
+        final ParseResultDto importResult = ti.parse(new FileInputStream(tempFilename));
 
-        in = UnicodeUtil.getUnicodeAwareBufferedReader(tempFilename);
-        ti.store(in);
-        in.close();
+        ti.store(new FileInputStream(tempFilename));
 
         logger.info(importResult.successfullyParsedRows.size() + " transactions imported.");
 

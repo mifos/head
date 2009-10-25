@@ -20,7 +20,7 @@
 
 package org.mifos.spi;
 
-import java.io.BufferedReader;
+import java.io.InputStream;
 
 import org.mifos.api.accounts.AccountService;
 import org.mifos.api.accounts.UserReferenceDto;
@@ -40,14 +40,14 @@ public abstract class TransactionImport {
      * @return initialized {@link ParseResultDto} object. Never
      *         <code>null</code>.
      */
-    public abstract ParseResultDto parse(final BufferedReader input);
+    public abstract ParseResultDto parse(final InputStream input);
 
     /**
      * Parses transaction import data and call the API to transactions in the
      * database. This method shall write to the database, e.g., may call
      * {@link AccountService#makePayments(java.util.List)}.
      */
-    public abstract void store(final BufferedReader input) throws Exception;
+    public abstract void store(final InputStream input) throws Exception;
 
     /**
      * @return friendly name for this implementation
