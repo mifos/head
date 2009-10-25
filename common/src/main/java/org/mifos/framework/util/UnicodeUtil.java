@@ -219,7 +219,11 @@ public class UnicodeUtil {
     }
 
     public static BufferedReader getUnicodeAwareBufferedReader(String file) throws IOException {
-        UnicodeInputStream in = new UnicodeInputStream(new FileInputStream(file), System.getProperty("file.encoding"));
+        return getUnicodeAwareBufferedReader(new FileInputStream(file));
+    }
+
+    public static BufferedReader getUnicodeAwareBufferedReader(InputStream stream) throws IOException {
+        UnicodeInputStream in = new UnicodeInputStream(stream, System.getProperty("file.encoding"));
         return new BufferedReader(new InputStreamReader(in, in.getEncoding()));
     }
 }
