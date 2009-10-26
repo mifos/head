@@ -20,6 +20,8 @@
 
 package org.mifos.framework.persistence;
 
+import java.sql.Connection;
+
 import junit.framework.Assert;
 import net.sourceforge.mayfly.Database;
 
@@ -52,14 +54,14 @@ public class PersistenceIntegrationTest extends MifosIntegrationTestCase {
          * even get that far (having trouble inserting into a table with an
          * auto-increment column).
          */
-        SessionFactory factory = DatabaseSetup.mayflySessionFactory();
-        Database database = new Database(DatabaseSetup.getStandardStore());
-        Session firstSession = factory.openSession(database.openConnection());
+        SessionFactory factory = StaticHibernateUtil.getSessionFactory();
+        Connection connection = StaticHibernateUtil.getSessionTL().connection();
+        Session firstSession = factory.openSession(StaticHibernateUtil.getSessionTL().connection());
 
         GLCodeEntity firstEntity = new GLCodeEntity((short) 77, "code1");
         firstSession.save(firstEntity);
 
-        Session secondSession = factory.openSession(database.openConnection());
+        Session secondSession = factory.openSession(connection);
        Assert.assertEquals("code1", firstEntity.getGlcode());
 
         GLCodeEntity refetched = (GLCodeEntity) secondSession.get(GLCodeEntity.class, firstEntity.getGlcodeId());

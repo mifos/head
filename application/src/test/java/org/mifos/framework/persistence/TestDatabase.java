@@ -158,17 +158,17 @@ public class TestDatabase implements SessionOpener {
      * @throws IOException
      */
     public static void upgradeToFirstNumberedVersion(Connection connection) throws SQLException, IOException {
-        executeScript(connection, "mifosdbcreationscript.sql");
-        executeScript(connection, "mifosmasterdata.sql");
-        executeScript(connection, "rmpdbcreationscript.sql");
-        executeScript(connection, "rmpmasterdata.sql");
-        executeScript(connection, "Iteration13-DBScripts25092006.sql");
-        executeScript(connection, "Iteration14-DDL-DBScripts10102006.sql");
-        executeScript(connection, "Iteration14-DML-DBScripts10102006.sql");
-        executeScript(connection, "Iteration15-DDL-DBScripts24102006.sql");
-        executeScript(connection, "Iteration15-DBScripts20061012.sql");
-        executeScript(connection, "add-version.sql");
-        executeScript(connection, "Index.sql");
+        executeScript("mifosdbcreationscript.sql", connection);
+        executeScript("mifosmasterdata.sql", connection);
+        executeScript("rmpdbcreationscript.sql", connection);
+        executeScript("rmpmasterdata.sql", connection);
+        executeScript("Iteration13-DBScripts25092006.sql", connection);
+        executeScript("Iteration14-DDL-DBScripts10102006.sql", connection);
+        executeScript("Iteration14-DML-DBScripts10102006.sql", connection);
+        executeScript("Iteration15-DDL-DBScripts24102006.sql", connection);
+        executeScript("Iteration15-DBScripts20061012.sql", connection);
+        executeScript("add-version.sql", connection);
+        executeScript("Index.sql", connection);
     }
 
     /**
@@ -181,10 +181,10 @@ public class TestDatabase implements SessionOpener {
 
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("truncate_tables.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
+        executeScript("truncate_tables.sql", connection);
+        executeScript("latest-data.sql", connection);
+        executeScript("custom_data.sql", connection);
+        executeScript("testdbinsertionscript.sql", connection);
         connection.commit();
         connection.close();
 

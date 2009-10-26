@@ -30,13 +30,13 @@ import org.testng.annotations.Test;
 public class UpgradeTest extends TestCase {
 
     public void testIncrementVersion() throws Exception {
-        Database database = DummyUpgrade.databaseWithVersionTable(53);
+        Database database = databaseWithVersionTable(53);
         new DummyUpgrade(54).upgradeVersion(database.openConnection());
        Assert.assertEquals(54, new DatabaseVersionPersistence(database.openConnection()).read());
     }
 
     public void testNotReadyToIncrement() throws Exception {
-        Database database = DummyUpgrade.databaseWithVersionTable(53);
+        Database database = databaseWithVersionTable(53);
         new DummyUpgrade(55).upgradeVersion(database.openConnection());
        Assert.assertEquals(53, new DatabaseVersionPersistence(database.openConnection()).read());
     }
@@ -51,5 +51,12 @@ public class UpgradeTest extends TestCase {
         Assert.assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
         invalidKey = "";
         Assert.assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
+    }
+    
+    private static Database databaseWithVersionTable(int version) {
+        Database database = TestDatabase.makeDatabase();
+        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" + version + ")");
+        return database;
     }
 }

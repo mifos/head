@@ -36,7 +36,7 @@ public class Upgrader {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "mysql");
         connection.setAutoCommit(false);
 
-        DatabaseSetup.executeScript(connection, "mifosdroptables.sql");
+        DatabaseSetup.executeScript("mifosdroptables.sql", connection);
         TestDatabase.upgradeToFirstNumberedVersion(connection);
         TestDatabase.runUpgradeScripts(connection);
     }

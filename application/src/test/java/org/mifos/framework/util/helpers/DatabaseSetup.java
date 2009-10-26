@@ -28,8 +28,6 @@ import java.sql.SQLException;
 
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.JdbcDriver;
-import net.sourceforge.mayfly.MayflyException;
-import net.sourceforge.mayfly.MayflySqlException;
 import net.sourceforge.mayfly.datastore.DataStore;
 
 import org.hibernate.SessionFactory;
@@ -42,7 +40,6 @@ import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
-import org.mifos.framework.persistence.SqlUpgrade;
 
 public class DatabaseSetup {
     private static DataStore standardMayflyStore;
@@ -117,9 +114,7 @@ public class DatabaseSetup {
         // Should be the same as the files in build.xml
         executeScript(database, "latest-schema.sql");
         executeScript(database, "latest-data.sql");
-
         executeScript(database, "testdbinsertionscript.sql");
-
         return database.dataStore();
     }
 
@@ -129,14 +124,7 @@ public class DatabaseSetup {
 
         try {
             database.executeScript(sql);
-        } catch (MayflyException e) {
-            if (e.startLineNumber() == -1) {
-                throw e;
-            } else {
-                throw new RuntimeException("error at line " + e.startLineNumber() + " column " + e.startColumn()
-                        + " in file " + name, e);
-            }
-        } finally {
+        }  finally {
             try {
                 sql.close();
             } catch (IOException e) {
@@ -145,19 +133,9 @@ public class DatabaseSetup {
         }
     }
 
-    public static void executeScript(Connection connection, String name) throws SQLException, IOException {
+    public static void executeScript(String name, Connection connection) throws SQLException, IOException {
         InputStream sql = SqlResource.getInstance().getAsStream(name);
-        try {
-            SqlExecutor.execute(sql, connection);
-        } catch (MayflySqlException e) {
-            if (e.startLineNumber() == -1) {
-                throw e;
-            } else {
-                String failingCommand = e.failingCommand();
-                throw new RuntimeException("error at line " + e.startLineNumber() + " column " + e.startColumn()
-                        + " in file " + name + (failingCommand == null ? "" : "\ncommand was: " + failingCommand), e);
-            }
-        }
+        SqlExecutor.execute(sql, connection);
     }
 
 }

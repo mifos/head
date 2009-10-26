@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import net.sourceforge.mayfly.Database;
-
 final class DummyUpgrade extends Upgrade {
     private StringBuilder log = new StringBuilder();
 
@@ -44,13 +42,6 @@ final class DummyUpgrade extends Upgrade {
 
     String getLog() {
         return log.toString();
-    }
-
-    public static Database databaseWithVersionTable(int version) {
-        Database database = TestDatabase.makeDatabase();
-        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" + version + ")");
-        return database;
     }
 
 }

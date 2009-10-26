@@ -99,7 +99,14 @@ public class CompositeUpgradeTest extends TestCase {
     }
 
     private Connection simpleDatabase(int version) {
-        Database database = DummyUpgrade.databaseWithVersionTable(version);
+        Database database = databaseWithVersionTable(version);
         return database.openConnection();
+    }
+    
+    private static Database databaseWithVersionTable(int version) {
+        Database database = TestDatabase.makeDatabase();
+        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" + version + ")");
+        return database;
     }
 }

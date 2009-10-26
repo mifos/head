@@ -22,6 +22,7 @@ package org.mifos.framework.persistence;
 
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION;
+import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -35,7 +36,6 @@ import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -81,11 +81,11 @@ public class LatestTestAfterCheckpointIntegrationTest {
     @AfterClass
     public static void afterClass() throws Exception {
         // Cleaning the database
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
+        executeScript("mifosdroptables.sql", connection);
+        executeScript("latest-schema.sql", connection);
+        executeScript("latest-data.sql", connection);
+        executeScript("custom_data.sql", connection);
+        executeScript("testdbinsertionscript.sql", connection);
         connection.commit();
         FinancialInitializer.initialize();
         StaticHibernateUtil.flushAndCloseSession();
@@ -222,7 +222,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void dropLatestDatabase() throws Exception {
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
+        executeScript("mifosdroptables.sql", connection);
         connection.commit();
     }
 
@@ -240,19 +240,19 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void createLatestDatabaseWithLatestData() throws Exception {
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
+        executeScript("latest-schema.sql", connection);
+        executeScript("latest-data.sql", connection);
         connection.commit();
     }
 
     private void createLatestDatabase() throws Exception {
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
+        executeScript("latest-schema.sql", connection);
         connection.commit();
     }
 
     private void createLatestCheckPointDatabaseWithLatestData() throws Exception {
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-schema-checkpoint.sql"), connection);
-        SqlExecutor.execute(SqlResource.getInstance().getAsStream("latest-data-checkpoint.sql"), connection);
+        executeScript("latest-schema-checkpoint.sql", connection);
+        executeScript("latest-data-checkpoint.sql", connection);
         connection.commit();
     }
 
