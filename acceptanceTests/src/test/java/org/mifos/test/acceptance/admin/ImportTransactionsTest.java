@@ -88,7 +88,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
 
         
      }
-
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyImportTransactions(String expectedDataSetFile) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(expectedDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_PAYMENT, 
