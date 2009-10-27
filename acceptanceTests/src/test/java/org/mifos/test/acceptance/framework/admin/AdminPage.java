@@ -233,4 +233,10 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new AdminPage(selenium);
     }
+
+    public ImportTransactionsPage navigateToImportTransactionsPage() {
+        selenium.click("admin.link.manageImports");
+        waitForPageToLoad();
+        return new ImportTransactionsPage(selenium);
+    }
 }

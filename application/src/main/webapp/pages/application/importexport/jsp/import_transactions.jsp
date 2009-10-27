@@ -123,10 +123,10 @@ explanation of the license and how it is applied.
                             <br>
                             <table width="90%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td align="center"><html-el:submit styleClass="buttn">
+                                    <td align="center"><html-el:submit styleId="import_transactions.button.review" styleClass="buttn">
                                         <mifos:mifoslabel name="configuration.review"></mifos:mifoslabel>
                                     </html-el:submit> &nbsp; <html-el:submit onclick="this.form.action='AdminAction.do?method=load'"
-                                        property="cancelButton" value="Cancel" styleClass="cancelbuttn">
+                                        property="cancelButton" value="Cancel" styleId="import_transactions.button.cancel" styleClass="cancelbuttn">
                                         <mifos:mifoslabel name="configuration.cancel" />
                                     </html-el:submit></td>
                                 </tr>
