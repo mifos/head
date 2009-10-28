@@ -414,7 +414,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                         <tr id="accounts.externalId">
                             <td class="fontnormalbold"><mifos:mifoslabel name="accounts.externalId"
                                 keyhm="accounts.externalId" isColonRequired="yes" isManadatoryIndicationNotRequired="no" />
-                            &nbsp; <span class="fontnormal"><c:out value="${sessionScope.loanAccountActionForm.externalId}" /> </span></td>
+                            &nbsp; <span class="fontnormal"><c:out value="${BusinessKey.externalId}" /> </span></td>
                         </tr>
                         
                         <!-- Administrative documents -->
