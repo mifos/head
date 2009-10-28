@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-08 20:09+0530\n"
+"POT-Creation-Date: 2009-10-26 16:58-0700\n"
 "PO-Revision-Date: 2009-09-15 20:48-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -900,8 +900,9 @@ msgid "Can edit report information"
 msgstr "អាចកែពត៍មាននៃរបាយការណ៍"
 
 #: Permissions-CanEditSavingsProductInstances
+#, fuzzy
 msgid "Can edit Savings product instances"
-msgstr ""
+msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
 
 #: Permissions-CanEditSelfInformation
 msgid "Can edit self information"

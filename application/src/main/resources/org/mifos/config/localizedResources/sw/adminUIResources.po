@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-08 20:09+0530\n"
+"POT-Creation-Date: 2009-10-26 16:59-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -190,6 +190,18 @@ msgstr ""
 
 #: admin.importexport.importstatus
 msgid "Import Status"
+msgstr ""
+
+#: admin.importexport.rowsWithErrors
+msgid "The following row(s) contain errors and will not be imported:"
+msgstr ""
+
+#: admin.importexport.zeroImportableRows
+msgid "No valid rows were found."
+msgstr ""
+
+#: admin.importexport.successfulImportRows
+msgid "{0} rows contained no errors and will be imported."
 msgstr ""
 
 #: admin.importexport.importtransactions
