@@ -23,16 +23,20 @@ package org.mifos.accounts.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.api.accounts.AccountPaymentParametersDto;
-import org.mifos.api.accounts.AccountReferenceDto;
-import org.mifos.api.accounts.AccountService;
-import org.mifos.api.accounts.InvalidPaymentReason;
+import org.mifos.accounts.api.AccountPaymentParametersDto;
+import org.mifos.accounts.api.AccountReferenceDto;
+import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.api.InvalidPaymentReason;
+import org.mifos.accounts.api.PaymentTypeDto;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -44,14 +48,17 @@ import org.mifos.framework.util.helpers.Money;
 public class StandardAccountService implements AccountService {
     private AccountPersistence accountPersistence;
     private LoanPersistence loanPersistence;
+    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
 
     public StandardAccountService() {
 
     }
 
-    public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence) {
+    public StandardAccountService(AccountPersistence accountPersistence, 
+            LoanPersistence loanPersistence, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
         this.accountPersistence = accountPersistence;
         this.loanPersistence = loanPersistence;
+        this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
     }
 
     public LoanPersistence getLoanPersistence() {
@@ -68,6 +75,14 @@ public class StandardAccountService implements AccountService {
 
     public void setAccountPersistence(AccountPersistence accountPersistence) {
         this.accountPersistence = accountPersistence;
+    }
+
+    public AcceptedPaymentTypePersistence getAcceptedPaymentTypePersistence() {
+        return this.acceptedPaymentTypePersistence;
+    }
+
+    public void setAcceptedPaymentTypePersistence(AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
+        this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
     }
 
     @Override
@@ -128,6 +143,26 @@ public class StandardAccountService implements AccountService {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
         return errors;
+    }
+
+    public List<PaymentTypeDto> getFeePaymentTypes() throws Exception {
+        return getPaymentTypes(TrxnTypes.fee.getValue());        
+    }
+    
+    @Override
+    public List<PaymentTypeDto> getLoanPaymentTypes() throws Exception {
+        return getPaymentTypes(TrxnTypes.loan_repayment.getValue());
+    }
+    
+    private List<PaymentTypeDto> getPaymentTypes(short transactionType) throws Exception {
+        final Short IGNORED_LOCALE_ID = 1; 
+        List<PaymentTypeEntity> paymentTypeEntities = getAcceptedPaymentTypePersistence().
+            getAcceptedPaymentTypesForATransaction(IGNORED_LOCALE_ID, transactionType);
+        List<PaymentTypeDto> paymentTypeDtos = new ArrayList<PaymentTypeDto>();
+        for (PaymentTypeEntity paymentTypeEntity : paymentTypeEntities) {
+            paymentTypeDtos.add(new PaymentTypeDto(paymentTypeEntity.getId(), paymentTypeEntity.getName()));
+        }
+        return paymentTypeDtos;
     }
 
 }

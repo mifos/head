@@ -23,8 +23,8 @@ package org.mifos.accounts.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.api.accounts.AccountReferenceDto;
-import org.mifos.api.accounts.UserReferenceDto;
+import org.mifos.accounts.api.AccountReferenceDto;
+import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
@@ -102,5 +102,6 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 account.getOffice().getOfficeId(), personnelId);
     }
 
+    
     
 }

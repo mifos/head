@@ -18,29 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.api.accounts;
+package org.mifos.accounts.api;
 
-public enum PaymentTypeDto {
-    CASH((short) 1), VOUCHER((short) 2), CHEQUE((short) 3);
+public class PaymentTypeDto {
+    private final short value;
+    private final String name;
 
-    Short value;
-
-    PaymentTypeDto(Short value) {
+    /*
+     * Only allow these to be constructed within this package and
+     * then passed back out to constrain what is passed in.
+     */
+    PaymentTypeDto(short value, String name) {
         this.value = value;
+        this.name = name;
     }
 
-    public Short getValue() {
+    public short getValue() {
         return value;
     }
-
-    public static PaymentTypeDto getPaymentType(int value) {
-        for (PaymentTypeDto paymentType : PaymentTypeDto.values()) {
-            if (paymentType.value == value) {
-                return paymentType;
-            }
-        }
-        throw new RuntimeException("can't find payment type " + value);
+    
+    public String getName() {
+        return name;
     }
-
 
 }

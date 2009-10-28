@@ -22,8 +22,8 @@ package org.mifos.spi;
 
 import java.io.InputStream;
 
-import org.mifos.api.accounts.AccountService;
-import org.mifos.api.accounts.UserReferenceDto;
+import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.api.UserReferenceDto;
 
 /**
  * Service Provider Interface (SPI) for importing bank transactions.

@@ -39,10 +39,10 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.api.accounts.AccountPaymentParametersDto;
-import org.mifos.api.accounts.AccountReferenceDto;
-import org.mifos.api.accounts.PaymentTypeDto;
-import org.mifos.api.accounts.UserReferenceDto;
+import org.mifos.accounts.api.AccountPaymentParametersDto;
+import org.mifos.accounts.api.AccountReferenceDto;
+import org.mifos.accounts.api.PaymentTypeDto;
+import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -140,7 +140,7 @@ public class StandardAccountServiceTest {
             new AccountReferenceDto(accountId), 
             new BigDecimal(paymentAmount), 
             new LocalDate(), 
-            PaymentTypeDto.CASH,"");
+            new PaymentTypeDto((short)1,"CASH"),"");
     
         return accountPaymentParametersDTO;
     }

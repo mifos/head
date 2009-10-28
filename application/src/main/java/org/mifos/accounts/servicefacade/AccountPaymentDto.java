@@ -22,7 +22,7 @@ package org.mifos.accounts.servicefacade;
 
 import java.util.List;
 
-import org.mifos.api.accounts.UserReferenceDto;
+import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.framework.util.helpers.Money;
 

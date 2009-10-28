@@ -37,7 +37,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import org.mifos.api.accounts.UserReferenceDto;
+import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.application.importexport.struts.actionforms.ImportTransactionsActionForm;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.framework.business.BusinessObject;

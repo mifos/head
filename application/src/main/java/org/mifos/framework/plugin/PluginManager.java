@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.spi.TransactionImport;
@@ -51,7 +52,8 @@ public class PluginManager {
         List<TransactionImport> plugins = new ArrayList<TransactionImport>();
         ServiceLoader<TransactionImport> loader = ServiceLoader.load(TransactionImport.class);
         for (TransactionImport ti : loader) {
-            ti.setAccountService(new StandardAccountService(new AccountPersistence(), new LoanPersistence()));
+            ti.setAccountService(new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
+                    new AcceptedPaymentTypePersistence()));
             plugins.add(ti);
         }
         return plugins;

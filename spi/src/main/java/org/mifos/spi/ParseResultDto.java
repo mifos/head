@@ -22,7 +22,7 @@ package org.mifos.spi;
 
 import java.util.List;
 
-import org.mifos.api.accounts.AccountPaymentParametersDto;
+import org.mifos.accounts.api.AccountPaymentParametersDto;
 
 public class ParseResultDto {
     public final List<String> parseErrors;

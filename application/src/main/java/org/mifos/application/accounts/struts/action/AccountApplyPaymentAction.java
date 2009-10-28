@@ -21,6 +21,7 @@
 package org.mifos.application.accounts.struts.action;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,15 +30,16 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.api.AccountPaymentParametersDto;
+import org.mifos.accounts.api.AccountReferenceDto;
+import org.mifos.accounts.api.PaymentTypeDto;
 import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
-import org.mifos.api.accounts.AccountPaymentParametersDto;
-import org.mifos.api.accounts.AccountReferenceDto;
-import org.mifos.api.accounts.PaymentTypeDto;
-import org.mifos.api.accounts.UserReferenceDto;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
@@ -48,6 +50,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -63,17 +66,18 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountApplyPaymentAction extends BaseAction {
-    AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
-    StandardAccountService standardAccountService = null;
-    
-    AccountBusinessService accountBusinessService = null;
-
-    LoanBusinessService loanBusinessService = null;
-
+    private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
+    private StandardAccountService standardAccountService = null;  
+    private AccountBusinessService accountBusinessService = null;
+    private LoanBusinessService loanBusinessService = null;
     private AccountPersistence accountPersistence = new AccountPersistence();
+    private List<PaymentTypeDto> loanPaymentTypeDtos;
+    private List<PaymentTypeDto> feePaymentTypeDtos;
 
-    public AccountApplyPaymentAction() {
-        standardAccountService = new StandardAccountService(accountPersistence, new LoanPersistence());
+    public AccountApplyPaymentAction() throws Exception {
+        standardAccountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence());
+        loanPaymentTypeDtos = standardAccountService.getLoanPaymentTypes();
+        feePaymentTypeDtos = standardAccountService.getFeePaymentTypes();
     }
 
     public StandardAccountService getStandardAccountService() {
@@ -158,12 +162,15 @@ public class AccountApplyPaymentAction extends BaseAction {
         try {
             Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
             Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
+            PaymentTypeDto paymentTypeDto;
 
             Money amount = new Money("0");
             if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
                 amount = actionForm.getAmount();
+                paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
             } else {
                 amount = accountPaymentDto.getTotalPaymentDue();
+                paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
             }
              
             AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
@@ -173,7 +180,7 @@ public class AccountApplyPaymentAction extends BaseAction {
                     new LocalDate(trxnDate.getTime()),
                     (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
                     actionForm.getReceiptId(),
-                    PaymentTypeDto.getPaymentType(Integer.valueOf(actionForm.getPaymentTypeId())),
+                    paymentTypeDto,
                     "");
             
             getStandardAccountService().makePayment(accountPaymentParametersDto);
@@ -184,6 +191,25 @@ public class AccountApplyPaymentAction extends BaseAction {
         }
     }
 
+    private PaymentTypeDto getLoanPaymentTypeDtoForId(short id) {
+        for (PaymentTypeDto paymentTypeDto : loanPaymentTypeDtos) {
+            if (paymentTypeDto.getValue() == id) {
+                return paymentTypeDto;
+            }
+        }
+        throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + id);
+    }
+    
+    private PaymentTypeDto getFeePaymentTypeDtoForId(short id) {
+        for (PaymentTypeDto paymentTypeDto : feePaymentTypeDtos) {
+            if (paymentTypeDto.getValue() == id) {
+                return paymentTypeDto;
+            }
+        }
+        throw new MifosRuntimeException("Expected fee PaymentTypeDto not found for id: " + id);
+        
+    }
+    
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {

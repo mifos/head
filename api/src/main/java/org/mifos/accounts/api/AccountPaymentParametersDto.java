@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.api.accounts;
+package org.mifos.accounts.api;
 
 import java.math.BigDecimal;
 import org.joda.time.LocalDate;

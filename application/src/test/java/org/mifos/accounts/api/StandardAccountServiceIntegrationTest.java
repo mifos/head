@@ -26,11 +26,12 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
-import org.mifos.api.accounts.AccountPaymentParametersDto;
-import org.mifos.api.accounts.AccountReferenceDto;
-import org.mifos.api.accounts.InvalidPaymentReason;
-import org.mifos.api.accounts.PaymentTypeDto;
-import org.mifos.api.accounts.UserReferenceDto;
+import org.mifos.accounts.api.AccountPaymentParametersDto;
+import org.mifos.accounts.api.AccountReferenceDto;
+import org.mifos.accounts.api.InvalidPaymentReason;
+import org.mifos.accounts.api.PaymentTypeDto;
+import org.mifos.accounts.api.UserReferenceDto;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -43,6 +44,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class StandardAccountServiceIntegrationTest extends AccountIntegrationTestCase {
 
     private StandardAccountService standardAccountService;
+    private List<PaymentTypeDto> paymentTypeDtos;
+    private PaymentTypeDto defaultPaymentType;
     
     public StandardAccountServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -51,12 +54,15 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        standardAccountService = new StandardAccountService(new AccountPersistence(),
+                new LoanPersistence(), new AcceptedPaymentTypePersistence());
+        paymentTypeDtos = standardAccountService.getLoanPaymentTypes();   
+        defaultPaymentType = paymentTypeDtos.get(0);
         StaticHibernateUtil.commitTransaction();
     }
     
     public void testMakePayment() throws Exception {
         String paymentAmount = "700";
-        standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
@@ -64,7 +70,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
                 new AccountReferenceDto(accountBO.getAccountId()), 
                 new BigDecimal(paymentAmount), 
                 new LocalDate(), 
-                PaymentTypeDto.CASH,"");
+                defaultPaymentType,"");
         standardAccountService.makePayment(accountPaymentParametersDto);
 
         TestObjectFactory.updateObject(accountBO);
@@ -74,7 +80,6 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
     public void testValidateValidPayment() throws Exception {
         String paymentAmount = "700";
-        standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
@@ -82,7 +87,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
                 new AccountReferenceDto(accountBO.getAccountId()), 
                 new BigDecimal(paymentAmount), 
                 new LocalDate(), 
-                PaymentTypeDto.CASH,"");
+                defaultPaymentType,"");
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 
         Assert.assertEquals(0, errors.size());
@@ -90,7 +95,6 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
     public void testValidatePaymentWithInvalidDate() throws Exception {
         String paymentAmount = "700";
-        standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
@@ -98,7 +102,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
                 new AccountReferenceDto(accountBO.getAccountId()), 
                 new BigDecimal(paymentAmount), 
                 new LocalDate(1980, 1, 1), 
-                PaymentTypeDto.CASH,"");
+                defaultPaymentType,"");
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 
         Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_DATE));
@@ -107,7 +111,6 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     public void testMakePaymentComment() throws Exception {
         String paymentAmount = "700";
         String comment = "test comment";
-        standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
@@ -115,7 +118,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
                 new AccountReferenceDto(accountBO.getAccountId()), 
                 new BigDecimal(paymentAmount), 
                 new LocalDate(), 
-                PaymentTypeDto.CASH,
+                defaultPaymentType,
                 comment);
         standardAccountService.makePayment(accountPaymentParametersDto);
 
@@ -130,7 +133,6 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         accountBO.save();
         StaticHibernateUtil.commitTransaction();
         
-        standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(new AccountPersistence());
         standardAccountService.setLoanPersistence(new LoanPersistence());
         
