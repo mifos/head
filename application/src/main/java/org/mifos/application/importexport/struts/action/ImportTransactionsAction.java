@@ -150,6 +150,13 @@ public class ImportTransactionsAction extends BaseAction {
 
         ti.store(new FileInputStream(tempFilename));
 
+      /*FIXME enable after test
+       * final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
+        final String importTransactionsFileName = importTransactionsForm.getImportTransactionsFileName();
+        final UserContext userContext = getUserContext(request);
+        ImportedFilesServiceFacade importedFilesServiceFacade = new WebTierImportedFilesServiceFacede();
+        importedFilesServiceFacade.saveImportedFileName(userContext, importTransactionsFileName);*/
+        
         logger.info(importResult.successfullyParsedRows.size() + " transactions imported.");
 
         new File(tempFilename).delete();

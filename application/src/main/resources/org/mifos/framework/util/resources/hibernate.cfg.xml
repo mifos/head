@@ -28,6 +28,9 @@
 		<!-- Batch Jobs -->
 		<mapping resource="org/mifos/framework/components/batchjobs/business/Task.hbm.xml" />
 
+        <!-- M2 style objects importexport-->
+        <mapping resource="org/mifos/application/importexport/business/ImportedFilesEntity.hbm.xml" />
+
 		<!-- M2 style objects for office-->
 
 		<mapping resource="org/mifos/application/office/business/OfficeBO.hbm.xml" />

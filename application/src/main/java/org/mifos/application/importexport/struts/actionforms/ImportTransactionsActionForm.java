@@ -125,6 +125,18 @@ public class ImportTransactionsActionForm extends BaseActionForm {
         } else if((importTransactionsFile != null) && (importTransactionsFile.getFileName().length() < 1)){
             errors.add("importTransactionsFile", new ActionMessage("errors.importexport.mandatory_file"));
         }
+        
+        /*FIXME Enable after testing
+         * ImportedFilesServiceFacade importedFilesServiceFacade = new WebTierImportedFilesServiceFacede();
+        try {
+            if (importedFilesServiceFacade.isImportTransactionFileNamePermitted(importTransactionsFileName)) {
+                errors.add("importTransactionsFile", new ActionMessage("errors.importexport.already_submitted"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        
         return errors.isEmpty() ? null : errors;
 
     }
