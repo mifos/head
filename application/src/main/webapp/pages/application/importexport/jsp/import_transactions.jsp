@@ -104,12 +104,11 @@ explanation of the license and how it is applied.
 										</c:forEach>
 									</mifos:select>
                                     </td>
-                                    <td width="50%"></td>
                                 </tr>
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.selectimportfile"
                                         mandatory="yes" isColonRequired="Yes" bundle="adminUIResources" /></td>
-                                    <td><html-el:file property="importTransactionsFile"/></td>
+                                    <td><html-el:file size="70" property="importTransactionsFile"/></td>
                                 </tr>
                             </table>
                             <br />
