@@ -105,8 +105,15 @@ public class ImportTransactionsAction extends BaseAction {
             errorsForDisplay.addAll(importResult.parseErrors);
             importTransactionsForm.setImportTransactionsErrors(errorsForDisplay);
         }
+        
+        boolean submitButtonDisabled = false;
+        if(importResult.successfullyParsedRows.size() <= 0) {
+            submitButtonDisabled = true;
+        }
+        
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
         request.setAttribute("numSuccessfulRows", importResult.successfullyParsedRows.size());
+        request.setAttribute("submitButtonDisabled", submitButtonDisabled);
 
         stream.close();
 

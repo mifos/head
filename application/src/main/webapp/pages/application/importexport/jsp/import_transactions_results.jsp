@@ -28,13 +28,13 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
-<fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
+<fmt:setLocale value='${sessionScope["LOCALE"]}' />
+<fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources" />
 
 <tiles:insert definition=".create">
     <tiles:put name="body" type="string">
-        <span id="page.id" title="import.transactions.results" /> <html-el:form action="/manageImportAction.do?method=confirm"
-            enctype="multipart/form-data">
+        <span id="page.id" title="import.transactions.results" /> <html-el:form
+            action="/manageImportAction.do?method=confirm" enctype="multipart/form-data">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -107,25 +107,24 @@ explanation of the license and how it is applied.
                                 </tr>
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.importstatus"
-                                        isColonRequired="Yes" bundle="adminUIResources" />
-                                    <c:choose>
+                                        isColonRequired="Yes" bundle="adminUIResources" /> <c:choose>
                                         <c:when test="${0 == requestScope.numSuccessfulRows}">
-                                            <fmt:message key="admin.importexport.zeroImportableRows"/>
+                                            <fmt:message key="admin.importexport.zeroImportableRows" />
                                         </c:when>
                                         <c:otherwise>
                                             <fmt:message key="admin.importexport.successfulImportRows">
-                                                <fmt:param><c:out value="${requestScope.numSuccessfulRows}" /></fmt:param>
+                                                <fmt:param>
+                                                    <c:out value="${requestScope.numSuccessfulRows}" />
+                                                </fmt:param>
                                             </fmt:message>
                                         </c:otherwise>
-                                    </c:choose>
-                                    </td>
+                                    </c:choose></td>
                                 </tr>
                                 <tr class="fontnormalred">
                                     <td><br />
                                     <c:if test="${!empty importTransactionsErrors}">
-                                    	<fmt:message key="admin.importexport.rowsWithErrors"/>
-                                    </c:if>
-                                    <br />
+                                        <fmt:message key="admin.importexport.rowsWithErrors" />
+                                    </c:if> <br />
                                     <c:forEach var="error" items="${importTransactionsForm.importTransactionsErrors}">
                                         <br />
                                         <c:out value="${error}" />
@@ -148,10 +147,22 @@ explanation of the license and how it is applied.
                             <br>
                             <table width="90%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td align="center"><html-el:submit styleId="import_transactions_results.button.submit" styleClass="buttn">
-                                        <mifos:mifoslabel name="configuration.submit"></mifos:mifoslabel>
-                                    </html-el:submit> &nbsp; <html-el:submit onclick="this.form.action='AdminAction.do?method=load'"
-                                        property="cancelButton" styleId="import_transactions_results.button.cancel" value="Cancel" styleClass="cancelbuttn">
+                                    <td align="center"><c:choose>
+                                        <c:when test="${requestScope.submitButtonDisabled}">
+                                            <html-el:submit disabled="true"
+                                                styleId="import_transactions_results.button.submit" styleClass="disabledbuttn">
+                                                <mifos:mifoslabel name="configuration.submit"></mifos:mifoslabel>
+                                            </html-el:submit>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <html-el:submit styleId="import_transactions_results.button.submit"
+                                                styleClass="buttn">
+                                                <mifos:mifoslabel name="configuration.submit"></mifos:mifoslabel>
+                                            </html-el:submit>
+                                        </c:otherwise>
+                                    </c:choose> &nbsp; <html-el:submit onclick="this.form.action='AdminAction.do?method=load'"
+                                        property="cancelButton" styleId="import_transactions_results.button.cancel"
+                                        value="Cancel" styleClass="cancelbuttn">
                                         <mifos:mifoslabel name="configuration.cancel" />
                                     </html-el:submit></td>
                                 </tr>
