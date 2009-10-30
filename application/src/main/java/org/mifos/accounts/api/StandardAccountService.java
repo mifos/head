@@ -23,17 +23,13 @@ package org.mifos.accounts.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.accounts.api.AccountPaymentParametersDto;
-import org.mifos.accounts.api.AccountReferenceDto;
-import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.api.InvalidPaymentReason;
-import org.mifos.accounts.api.PaymentTypeDto;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -54,8 +50,8 @@ public class StandardAccountService implements AccountService {
 
     }
 
-    public StandardAccountService(AccountPersistence accountPersistence, 
-            LoanPersistence loanPersistence, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
+    public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
+            AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
         this.accountPersistence = accountPersistence;
         this.loanPersistence = loanPersistence;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
@@ -114,9 +110,9 @@ public class StandardAccountService implements AccountService {
 
         Money amount = new Money(accountPaymentParametersDto.getPaymentAmount());
 
-        PaymentData paymentData = account.createPaymentData(accountPaymentParametersDto.getUserMakingPayment().getUserId(),
-                amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(), null, null,
-                accountPaymentParametersDto.getPaymentType().getValue());
+        PaymentData paymentData = account.createPaymentData(accountPaymentParametersDto.getUserMakingPayment()
+                .getUserId(), amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(), null,
+                null, accountPaymentParametersDto.getPaymentType().getValue());
         paymentData.setComment(accountPaymentParametersDto.getComment());
 
         account.applyPayment(paymentData);
@@ -142,22 +138,31 @@ public class StandardAccountService implements AccountService {
         if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
+        if (AccountTypes.getAccountType(accountBo.getAccountType().getAccountTypeId()) == AccountTypes.LOAN_ACCOUNT) {
+            if (!getLoanPaymentTypes().contains(payment.getPaymentType())) {
+                errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
+            }
+        } else if (AccountTypes.getAccountType(accountBo.getAccountType().getAccountTypeId()) == AccountTypes.CUSTOMER_ACCOUNT) {
+            if (!getFeePaymentTypes().contains(payment.getPaymentType())) {
+                errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
+            }
+        }
         return errors;
     }
 
-    public List<PaymentTypeDto> getFeePaymentTypes() throws Exception {
-        return getPaymentTypes(TrxnTypes.fee.getValue());        
+    public List<PaymentTypeDto> getFeePaymentTypes() throws PersistenceException {
+        return getPaymentTypes(TrxnTypes.fee.getValue());
     }
-    
+
     @Override
-    public List<PaymentTypeDto> getLoanPaymentTypes() throws Exception {
+    public List<PaymentTypeDto> getLoanPaymentTypes() throws PersistenceException {
         return getPaymentTypes(TrxnTypes.loan_repayment.getValue());
     }
-    
-    private List<PaymentTypeDto> getPaymentTypes(short transactionType) throws Exception {
-        final Short IGNORED_LOCALE_ID = 1; 
-        List<PaymentTypeEntity> paymentTypeEntities = getAcceptedPaymentTypePersistence().
-            getAcceptedPaymentTypesForATransaction(IGNORED_LOCALE_ID, transactionType);
+
+    private List<PaymentTypeDto> getPaymentTypes(short transactionType) throws PersistenceException {
+        final Short IGNORED_LOCALE_ID = 1;
+        List<PaymentTypeEntity> paymentTypeEntities = getAcceptedPaymentTypePersistence()
+                .getAcceptedPaymentTypesForATransaction(IGNORED_LOCALE_ID, transactionType);
         List<PaymentTypeDto> paymentTypeDtos = new ArrayList<PaymentTypeDto>();
         for (PaymentTypeEntity paymentTypeEntity : paymentTypeEntities) {
             paymentTypeDtos.add(new PaymentTypeDto(paymentTypeEntity.getId(), paymentTypeEntity.getName()));

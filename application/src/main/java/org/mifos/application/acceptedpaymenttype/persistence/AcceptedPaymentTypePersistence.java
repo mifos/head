@@ -61,7 +61,8 @@ public class AcceptedPaymentTypePersistence extends Persistence {
     }
 
     public List<PaymentTypeEntity> getAcceptedPaymentTypesForATransaction(Short localeId, Short transactionId)
-            throws Exception {
+            throws PersistenceException
+            {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("transactionId", transactionId);

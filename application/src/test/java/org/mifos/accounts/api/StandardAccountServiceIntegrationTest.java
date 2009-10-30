@@ -140,4 +140,20 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
         Assert.assertEquals(accountBO.getAccountId().intValue(), accountReferenceDto.getAccountId());
     }       
+
+    public void testValidatePaymentWithInvalidPaymentType() throws Exception {
+        String paymentAmount = "700";
+        standardAccountService.setAccountPersistence(new AccountPersistence());
+        PaymentTypeDto invalidPaymentType = new PaymentTypeDto((short)-1, "pseudo payment type! Not cash, check, etc.");
+
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
+                new AccountReferenceDto(accountBO.getAccountId()), 
+                new BigDecimal(paymentAmount), 
+                new LocalDate(), 
+                invalidPaymentType,"");
+        List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
+
+        Assert.assertTrue(errors.contains(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE));
+    }
 }

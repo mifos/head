@@ -151,11 +151,11 @@ public class ImportTransactionsAction extends BaseAction {
         final String tempFilename = (String) request.getSession().getAttribute(IMPORT_TEMPORARY_FILENAME);
         final String importPluginClassname = (String) request.getSession().getAttribute(IMPORT_PLUGIN_CLASSNAME);
         clearOurSessionVariables(request.getSession());
-        final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
+        final TransactionImport transactionImport = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
 
-        final ParseResultDto importResult = ti.parse(new FileInputStream(tempFilename));
+        final ParseResultDto importResult = transactionImport.parse(new FileInputStream(tempFilename));
 
-        ti.store(new FileInputStream(tempFilename));
+        transactionImport.store(new FileInputStream(tempFilename));
 
       /*FIXME enable after test
        * final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;

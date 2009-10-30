@@ -178,10 +178,10 @@ public class AccountApplyPaymentAction extends BaseAction {
                     new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
                     amount.getAmount(),
                     new LocalDate(trxnDate.getTime()),
-                    (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
-                    actionForm.getReceiptId(),
                     paymentTypeDto,
-                    "");
+                    "",
+                    (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
+                    actionForm.getReceiptId());
             
             getStandardAccountService().makePayment(accountPaymentParametersDto);
             

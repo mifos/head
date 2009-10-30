@@ -20,13 +20,13 @@
 
 package org.mifos.accounts.api;
 
-
 /**
- * The Enum InvalidPaymentReason lists the reasons a payment
- * can be rejected as invalid.
+ * The Enum InvalidPaymentReason lists the reasons a payment can be rejected as
+ * invalid.
  */
 public enum InvalidPaymentReason {
-    
     /** The payment is invalid because the payment date is invalid. */
-    INVALID_DATE;
+    INVALID_DATE,
+    /** The payment is invalid because the payment type is not supported. */
+    UNSUPPORTED_PAYMENT_TYPE;
 }

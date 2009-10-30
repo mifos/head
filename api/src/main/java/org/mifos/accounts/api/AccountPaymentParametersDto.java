@@ -66,7 +66,7 @@ public class AccountPaymentParametersDto {
      */
     public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
             BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
-        this(userMakingPayment, account, paymentAmount, paymentDate, null, null, paymentType, comment);
+        this(userMakingPayment, account, paymentAmount, paymentDate, paymentType, comment, null, null);
     }
 
     /**
@@ -76,23 +76,47 @@ public class AccountPaymentParametersDto {
      * @param account the account the payment is made to
      * @param paymentAmount the payment amount
      * @param paymentDate the payment date
-     * @param receiptDate the receipt date
-     * @param receiptId the receipt id
      * @param paymentType the payment type
      * @param comment the comment associated with the payment
+     * @param receiptDate the receipt date
+     * @param receiptId the receipt id
      */
     public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
-            BigDecimal paymentAmount, LocalDate paymentDate, LocalDate receiptDate, String receiptId,
-            PaymentTypeDto paymentType, String comment) {
+            BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment,
+            LocalDate receiptDate, String receiptId) {
         super();
+        if (null == userMakingPayment) {
+            throw new IllegalArgumentException("userMakingPayment cannot be null");
+        }
         this.userMakingPayment = userMakingPayment;
+        
+        if (null == account) {
+            throw new IllegalArgumentException("account cannot be null");
+        }
         this.account = account;
+        
+        if (null == paymentAmount) {
+            throw new IllegalArgumentException("paymentAmount cannot be null");
+        }
         this.paymentAmount = paymentAmount;
+        
+        if (null == paymentDate) {
+            throw new IllegalArgumentException("paymentDate cannot be null");
+        }
         this.paymentDate = paymentDate;
+        
+        if (null == paymentType) {
+            throw new IllegalArgumentException("paymentType cannot be null");
+        }
+        this.paymentType = paymentType;
+        
+        if (null == comment) {
+            throw new IllegalArgumentException("comment cannot be null");
+        }
+        this.comment = comment;
+        
         this.receiptDate = receiptDate;
         this.receiptId = receiptId;
-        this.paymentType = paymentType;
-        this.comment = comment;
     }
 
     /**

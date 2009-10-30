@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
+	<classpathentry kind="src" output="api/target/test-classes" path="api/src/test/java"/>
 	<classpathentry kind="src" path="spi/src/main/java"/>
 	<classpathentry kind="src" path="api/src/main/java"/>
 	<classpathentry kind="src" output="application/target/mifos-webapp/WEB-INF/freemarker" path="userInterface/src/main/resources/org/mifos/ui/freemarker/core"/>
