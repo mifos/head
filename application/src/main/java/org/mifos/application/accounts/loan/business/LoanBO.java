@@ -937,7 +937,7 @@ public class LoanBO extends AccountBO {
         }
         if (accountPaymentEntity == null) {
             accountPaymentEntity = new AccountPaymentEntity(this, this.loanAmount, receiptNum, transactionDate,
-                    new PaymentTypeEntity(paymentTypeId), new DateTime().toDate());
+                    getPaymentTypeEntity(paymentTypeId), new DateTime().toDate());
         } else {
             accountPaymentEntity.setAmount(this.loanAmount.subtract(accountPaymentEntity.getAmount()));
         }
@@ -997,7 +997,7 @@ public class LoanBO extends AccountBO {
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
-                    receiptDate, new PaymentTypeEntity(Short.valueOf(paymentTypeId)), new DateTimeService()
+                    receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), new DateTimeService()
                             .getCurrentJavaDateTime());
             addAccountPayment(accountPaymentEntity);
 
@@ -1085,7 +1085,7 @@ public class LoanBO extends AccountBO {
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
-                    null, new PaymentTypeEntity(Short.valueOf("1")), new DateTimeService().getCurrentJavaDateTime());
+                    null, getPaymentTypeEntity(Short.valueOf("1")), new DateTimeService().getCurrentJavaDateTime());
             this.addAccountPayment(accountPaymentEntity);
             makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
@@ -1109,7 +1109,7 @@ public class LoanBO extends AccountBO {
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
-                    null, new PaymentTypeEntity(Short.valueOf("1")), new DateTimeService().getCurrentJavaDateTime());
+                    null, getPaymentTypeEntity(Short.valueOf("1")), new DateTimeService().getCurrentJavaDateTime());
             this.addAccountPayment(accountPaymentEntity);
             makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
                     AccountActionTypes.LOAN_RESCHEDULED, currentUser);
@@ -1375,7 +1375,7 @@ public class LoanBO extends AccountBO {
         final AccountActionDateEntity lastAccountAction = getLastInstallmentAccountAction();
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
                 paymentData
-                .getReceiptNum(), paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData.getPaymentTypeId()),
+                .getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()),
                 paymentData.getTransactionDate());
         accountPayment.setComment(paymentData.getComment());
 
@@ -2383,7 +2383,7 @@ public class LoanBO extends AccountBO {
         loanSummary.updateFeePaid(totalPayment);
 
         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalPayment, receiptNum,
-                receiptDate, new PaymentTypeEntity(paymentTypeId), new DateTime().toDate());
+                receiptDate, getPaymentTypeEntity(paymentTypeId), new DateTime().toDate());
 
         LoanTrxnDetailEntity loanTrxnDetailEntity = null;
 
@@ -3944,5 +3944,15 @@ public class LoanBO extends AccountBO {
 
     public void setIntrestAtDisbursement(final Short intrestAtDisbursement) {
         this.intrestAtDisbursement = intrestAtDisbursement;
+    }
+    
+    /*
+     * In order to do audit logging, we need to get the name of the PaymentTypeEntity.
+     * A new instance constructed with the paymentTypeId is not good enough for this,
+     * we need to get the lookup value loaded so that we can resolve the name of the
+     * PaymentTypeEntity.
+     */
+    private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
+        return (PaymentTypeEntity)getLoanPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 }

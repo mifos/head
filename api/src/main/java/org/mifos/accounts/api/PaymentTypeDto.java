@@ -20,23 +20,48 @@
 
 package org.mifos.accounts.api;
 
+
+/**
+ * The Class PaymentTypeDto represents a type of payment (such 
+ * as cash or cheque) that can be used to make a payment. 
+ */
 public class PaymentTypeDto {
+    
+    /** The value of the internal ID used for this payment type. */
     private final short value;
+    
+    /** The name of the payment type. */
     private final String name;
 
     /*
      * Only allow these to be constructed within this package and
      * then passed back out to constrain what is passed in.
      */
+    /**
+     * Instantiates a new payment type dto.
+     * 
+     * @param value the ID value
+     * @param name the name
+     */
     PaymentTypeDto(short value, String name) {
         this.value = value;
         this.name = name;
     }
 
+    /**
+     * Gets the ID value.
+     * 
+     * @return the value
+     */
     public short getValue() {
         return value;
     }
     
+    /**
+     * Gets the name.
+     * 
+     * @return the name
+     */
     public String getName() {
         return name;
     }

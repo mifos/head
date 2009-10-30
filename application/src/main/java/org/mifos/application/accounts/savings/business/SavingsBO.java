@@ -994,7 +994,7 @@ public class SavingsBO extends AccountBO {
 
         CustomerBO customer = paymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, paymentData.getReceiptNum(),
-                paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData.getPaymentTypeId()),
+                paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()),
                 new DateTimeService().getCurrentJavaDateTime());
         if (this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE)) {
             try {
@@ -1164,7 +1164,7 @@ public class SavingsBO extends AccountBO {
         savingsPerformance.setWithdrawDetails(totalAmount);
         CustomerBO customer = accountPaymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, accountPaymentData
-                .getReceiptNum(), accountPaymentData.getReceiptDate(), new PaymentTypeEntity(accountPaymentData
+                .getReceiptNum(), accountPaymentData.getReceiptDate(), getPaymentTypeEntity(accountPaymentData
                 .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
 
         SavingsTrxnDetailEntity accountTrxnBO;
@@ -2072,4 +2072,14 @@ public class SavingsBO extends AccountBO {
 
         return customerSchedulePayments;
     }
+    
+    /*
+     * In order to do audit logging, we need to get the name of the PaymentTypeEntity.
+     * A new instance constructed with the paymentTypeId is not good enough for this,
+     * we need to get the lookup value loaded so that we can resolve the name of the
+     * PaymentTypeEntity.
+     */
+    private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
+        return (PaymentTypeEntity)getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+    }    
 }

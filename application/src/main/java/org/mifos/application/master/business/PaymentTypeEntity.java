@@ -20,7 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.application.master.util.helpers.PaymentTypes;
 
 public class PaymentTypeEntity extends MasterDataEntity {
 
@@ -28,6 +27,13 @@ public class PaymentTypeEntity extends MasterDataEntity {
         super();
     }
 
+    /**
+     * Creates a PaymentTypeEntity with just an id and no associated
+     * name.  Beware that this cannot be used in a situation where getName()
+     * may be called.  getName() may be called by the audit logger,
+     * so this should not be used if the audit logger may be called.
+     * 
+     */
     public PaymentTypeEntity(Short id) {
         super(id);
     }
@@ -42,6 +48,6 @@ public class PaymentTypeEntity extends MasterDataEntity {
 
     @Override
     public String toString() {
-        return PaymentTypes.getPaymentType(getId()).toString();
+        return getName();
     }
 }

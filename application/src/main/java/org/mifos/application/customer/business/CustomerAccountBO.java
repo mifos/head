@@ -212,7 +212,7 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
-                paymentData.getReceiptNum(), paymentData.getReceiptDate(), new PaymentTypeEntity(paymentData
+                paymentData.getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData
                         .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
 
         for (CustomerScheduleEntity customerSchedule : customerAccountPayments) {
@@ -919,4 +919,13 @@ public class CustomerAccountBO extends AccountBO {
             throw new AccountException(e);
         }
     }
+    /*
+     * In order to do audit logging, we need to get the name of the PaymentTypeEntity.
+     * A new instance constructed with the paymentTypeId is not good enough for this,
+     * we need to get the lookup value loaded so that we can resolve the name of the
+     * PaymentTypeEntity.
+     */
+    private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
+        return (PaymentTypeEntity)getFeePersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+    }    
 }

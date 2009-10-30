@@ -21,16 +21,28 @@
 package org.mifos.accounts.api;
 
 /**
- * A Data Transfer Object to hold a reference to an account.
- *
+ * The Class AccountReferenceDto is a Data Transfer Object 
+ * that holds a reference to an account.
  */
 public class AccountReferenceDto {
+    
+    /** The account id. */
     private final int accountId;
 
+    /**
+     * Instantiates a new account reference dto.
+     * 
+     * @param accountId the account id
+     */
     public AccountReferenceDto(int accountId) {
         this.accountId = accountId;
     }
 
+    /**
+     * Gets the account id.
+     * 
+     * @return the account id
+     */
     public int getAccountId() {
         return this.accountId;
     }
