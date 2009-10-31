@@ -35,14 +35,54 @@ import org.mifos.framework.business.BusinessObject;
  * 
  * TODO: Rename this class to ChartOfAccountsBO (what else needs to change other
  * than COABO.hbm.xml and the stuff which an Eclipse rename will find?).
+ * 
+ *  <p>Mifos's functional specification defines the Chart of Accounts (CoA) as "the list of accounts
+ *  in the general ledger, systematically classified by title and number [the accounts General
+ *  Ledger number, or GLCode]. In that context this class is misnamed, since an
+ *  instance represents <em>one</em> account in the CoA.
+ *  
+ *  <p>To further add to the confusion, the term "category" sometimes refers to an account
+ *  and at other times to a grouping of accounts. Mifos's default COA includes four
+ *  categories, ASSET, EXPENDITURE, LIABILITY, and INCOME. Each has several subcategories in
+ *  the default CoA.
+ *  
+ *  <p>Graphically speaking, the CoA is a forest of trees, headed by the four categories.
+ *  Each account (COABO instance) can have zero or more subcategories (COABO instances)
+ *  and zero or one parent (the head categories have no parent). If that's not confusing
+ *  enough, only the head COABO instances have non-null <code>categoryType</code> fields, equal
+ *  to one of the four strings listed above. The field is null for subcategories (child accounts).
+ *  
+ *  <p>Navigation around this graph is accomplished using two fields:
+ *  
+ *  <ul>
+ *  <li><code>subCategories</code> represents the set of child accounts of this
+ *  account, although technically it is a  Set of COAHierarchyEntity.</li>
+ *  <li><code>coaHierarchy</code> is an entity (<code>COAHierarchyEntity</code>) that
+ *  points to the parent account of this account.</li>
+ *  <ul>
+ *  
+ *  <p>This is not an optimal -- part of the navigation logic is in this class, and part
+ *  is in the <code>COAHierarchyEntity</code>. The hierachical structure of the CoA should be separated
+ *  from the accounts themselves. A better way would be to put all chart navigation
+ *  into the <code>COAHierarchyEntity</code> instead of half and half.
  */
+
 public class COABO extends BusinessObject {
 
     private Short accountId;
 
     private String accountName;
 
-    /** Child accounts are also called subcategories. */
+    /** 
+     * The Set of <code>COAHierarchyEntity</code> objects that are
+     * immediate children of this account. Does not include recursive
+     * descendants (see method getSubCategories). There is no setter for this
+     * field, it is populated by Hibernate -- see query "COABO.getAllCoa" in
+     * COABO.hbm.xml.
+     * 
+     * TODO: retype this field as Set<COAHierarchyEntity>
+     * 
+     */
     private Set subCategory;
 
     private GLCodeEntity associatedGlcode;
@@ -136,6 +176,17 @@ public class COABO extends BusinessObject {
             this.categoryType = categoryType.toString();
         }
     }
+    
+  /**
+   * As of 2009-10-27, this method is never used outside of test cases its use in
+   * getAssociatedChartOfAccounts, so should not be public.
+   * 
+   * TODO Make this method private.
+   * 
+   * @return the set of leaf (bottom-most) descendant accounts of this account,
+   * or an empty set if this account has no subcategories (children)
+   * 
+   */
 
     public Set<COABO> getCurrentSubCategory() {
         Set<COABO> applicableCOA = new HashSet<COABO>();
@@ -154,7 +205,8 @@ public class COABO extends BusinessObject {
     }
 
     /**
-     * Get a list of the subcategories of this account ordered by GLCode.
+     * @return a list of the immediate subcategories (immediate child accounts) of this account, 
+     * ordered by GLCode. If the account has no subcategories, return an empty list.
      */
     public List<COABO> getSubCategoryCOABOs() {
         List<COABO> subCategories = new ArrayList<COABO>();
@@ -181,6 +233,12 @@ public class COABO extends BusinessObject {
         return currentHiearchy.getCoa();
 
     }
+    
+    /**
+     *
+     * @return If the account has no subcategories, return this account, 
+     * otherwise return the leaf (bottom-most) descendants of this account.
+     */
 
     public Set<COABO> getAssociatedChartOfAccounts() {
         Set<COABO> applicableCOA = new HashSet<COABO>();
