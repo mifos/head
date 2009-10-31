@@ -147,6 +147,9 @@ public class StandardAccountService implements AccountService {
                 errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
             }
         }
+        if (!accountBo.paymentAmountIsValid(new Money(payment.getPaymentAmount()))) {
+            errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
+        }
         return errors;
     }
 

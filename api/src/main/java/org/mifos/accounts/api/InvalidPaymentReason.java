@@ -28,5 +28,7 @@ public enum InvalidPaymentReason {
     /** The payment is invalid because the payment date is invalid. */
     INVALID_DATE,
     /** The payment is invalid because the payment type is not supported. */
-    UNSUPPORTED_PAYMENT_TYPE;
+    UNSUPPORTED_PAYMENT_TYPE,
+    /** The payment is invalid because the payment amount is not valid. */
+    INVALID_PAYMENT_AMOUNT;
 }

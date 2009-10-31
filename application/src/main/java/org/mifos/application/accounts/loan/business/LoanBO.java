@@ -116,6 +116,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
+import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
+
 public class LoanBO extends AccountBO {
 
     /**
@@ -1360,11 +1362,13 @@ public class LoanBO extends AccountBO {
      */
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
-
+        
+        if (!paymentAmountIsValid(paymentData.getTotalAmount())) {
+            throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });            
+        }
+        
         final LoanPaymentTypes loanPaymentTypes = getLoanPaymentType(paymentData.getTotalAmount());
-        if (loanPaymentTypes == null) {
-            throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });
-        } else if (loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
+        if (loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
             handlePartialPayment(paymentData);
         } else if (loanPaymentTypes.equals(LoanPaymentTypes.FULL_PAYMENT)) {
             handleFullPayment(paymentData);
@@ -2411,6 +2415,19 @@ public class LoanBO extends AccountBO {
         paymentData.setReceiptDate(receiptDate);
         paymentData.setReceiptNum(receiptId);
         return paymentData;
+    }
+    
+    /**
+     * Validate that a given payment amount is valid.  Payments greater than the
+     * total outstanding amount due on the loan are not valid.
+     * 
+     * @param amount the amount of a payment
+     * @return true if the payment amount will be accepted
+     */
+    @Override
+    public boolean paymentAmountIsValid(final Money amount) {
+        Money totalRepayableAmount = getTotalRepayableAmount();
+        return amount.isLessThan(totalRepayableAmount) || amount.equals(totalRepayableAmount);
     }
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {

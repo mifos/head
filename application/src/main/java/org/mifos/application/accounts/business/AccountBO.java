@@ -1569,4 +1569,13 @@ public class AccountBO extends BusinessObject {
     public String getExternalId() {
         return externalId;        
     }
+    
+    /**
+     * Return true if a given payment amount valid for this account.
+     * @param amount the payment amount to validate.
+     * 
+     */
+    public boolean paymentAmountIsValid(final Money amount) {
+        return true;
+    }    
 }
