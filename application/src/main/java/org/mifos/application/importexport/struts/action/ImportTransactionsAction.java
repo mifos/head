@@ -75,6 +75,8 @@ public class ImportTransactionsAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
+        importTransactionsForm.clear();
         clearOurSessionVariables(request.getSession());
         final List<ListItem<String>> importPlugins = new ArrayList<ListItem<String>>();
         for (TransactionImport ti : new PluginManager().loadImportPlugins()) {

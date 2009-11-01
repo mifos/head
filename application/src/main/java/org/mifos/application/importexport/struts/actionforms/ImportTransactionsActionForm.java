@@ -105,6 +105,14 @@ public class ImportTransactionsActionForm extends BaseActionForm {
     }
 
 
+    public void clear() {
+        this.importPluginName = null;
+        this.importTransactionsFile = null;
+        this.importTransactionsFileName = null;
+        this.importTransactionsErrors = null;
+        this.importTransactionsStatus = null;
+    }
+
     /**
      * Check to make sure the client hasn't exceeded the maximum allowed upload
      * size inside of this validate method.
