@@ -23,12 +23,17 @@ package org.mifos.application.importexport.servicefacade;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.business.service.ImportedFilesService;
 import org.mifos.application.importexport.business.service.StandardImportedFilesService;
+import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 
-public class WebTierImportedFilesServiceFacede implements ImportedFilesServiceFacade {
+public class WebTierImportTransactionsServiceFacede implements ImportTransactionsServiceFacade {
 
+    private static final MifosLogger logger = MifosLogManager.getLogger(WebTierImportTransactionsServiceFacede.class.getName());
+    
     private ImportedFilesService importedFilesService;
     
     private PersonnelPersistence personnelPersistence;
@@ -56,8 +61,12 @@ public class WebTierImportedFilesServiceFacede implements ImportedFilesServiceFa
     }
 
     @Override
-    public boolean isImportTransactionFileNamePermitted(String importTransactionsFileName) throws Exception {
-        if (getImportedFilesService().getImportedFileByName(importTransactionsFileName) == null) {
+    public boolean isAlreadyImported(String importTransactionsFileName) throws Exception {
+        ImportedFilesEntity importedFile = getImportedFilesService().getImportedFileByName(importTransactionsFileName);
+        if (importedFile != null) {
+            logger.debug(importTransactionsFileName + " has already been submitted");
+            logger.debug("Submitted by" + importedFile.getSubmittedBy());
+            logger.debug("Submitted on" + importedFile.getSubmittedOn());
             return true;
         }
         return false;

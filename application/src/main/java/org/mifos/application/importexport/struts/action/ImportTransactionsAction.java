@@ -38,6 +38,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.mifos.accounts.api.UserReferenceDto;
+import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
+import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacede;
 import org.mifos.application.importexport.struts.actionforms.ImportTransactionsActionForm;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.framework.business.BusinessObject;
@@ -97,7 +99,6 @@ public class ImportTransactionsAction extends BaseAction {
         final InputStream stream = importTransactionsFile.getInputStream();
         final String tempFilename = saveImportAsTemporaryFile(importTransactionsFile.getInputStream());
         request.getSession().setAttribute(IMPORT_TEMPORARY_FILENAME, tempFilename);
-        importTransactionsForm.setImportTransactionsFileName(importTransactionsFile.getFileName());
 
         final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
         final ParseResultDto importResult = ti.parse(importTransactionsFile.getInputStream());
@@ -105,7 +106,6 @@ public class ImportTransactionsAction extends BaseAction {
         final List<String> errorsForDisplay = new ArrayList<String>();
         if (!importResult.parseErrors.isEmpty()) {
             errorsForDisplay.addAll(importResult.parseErrors);
-            importTransactionsForm.setImportTransactionsErrors(errorsForDisplay);
         }
         
         boolean submitButtonDisabled = false;
@@ -159,12 +159,11 @@ public class ImportTransactionsAction extends BaseAction {
 
         transactionImport.store(new FileInputStream(tempFilename));
 
-      /*FIXME enable after test
-       * final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
-        final String importTransactionsFileName = importTransactionsForm.getImportTransactionsFileName();
+        final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
+        final String importTransactionsFileName = importTransactionsForm.getImportTransactionsFile().getFileName();
         final UserContext userContext = getUserContext(request);
-        ImportedFilesServiceFacade importedFilesServiceFacade = new WebTierImportedFilesServiceFacede();
-        importedFilesServiceFacade.saveImportedFileName(userContext, importTransactionsFileName);*/
+        ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacede();
+        importedFilesServiceFacade.saveImportedFileName(userContext, importTransactionsFileName);
         
         logger.info(importResult.successfullyParsedRows.size() + " transactions imported.");
 

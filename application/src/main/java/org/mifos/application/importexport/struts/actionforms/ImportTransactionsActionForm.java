@@ -31,6 +31,8 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.upload.MultipartRequestHandler;
+import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
+import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacede;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 /**
@@ -48,12 +50,6 @@ public class ImportTransactionsActionForm extends BaseActionForm {
     private String importPluginName;
 
     private FormFile importTransactionsFile;
-
-    private String importTransactionsFileName;
-    
-    private List<String> importTransactionsErrors;
-    
-    private String importTransactionsStatus;
 
     public String getImportPluginName() {
         return this.importPluginName;
@@ -75,42 +71,9 @@ public class ImportTransactionsActionForm extends BaseActionForm {
     }
 
 
-    public String getImportTransactionsFileName() {
-        return this.importTransactionsFileName;
-    }
-
-
-    public void setImportTransactionsFileName(String importTransactionsFileName) {
-        this.importTransactionsFileName = importTransactionsFileName;
-    }
-
-
-    public List<String> getImportTransactionsErrors() {
-        return this.importTransactionsErrors;
-    }
-
-
-    public void setImportTransactionsErrors(List<String> importTransactionsErrors) {
-        this.importTransactionsErrors = importTransactionsErrors;
-    }
-
-
-    public String getImportTransactionsStatus() {
-        return this.importTransactionsStatus;
-    }
-
-
-    public void setImportTransactionsStatus(String importTransactionsStatus) {
-        this.importTransactionsStatus = importTransactionsStatus;
-    }
-
-
     public void clear() {
         this.importPluginName = null;
         this.importTransactionsFile = null;
-        this.importTransactionsFileName = null;
-        this.importTransactionsErrors = null;
-        this.importTransactionsStatus = null;
     }
 
     /**
@@ -151,16 +114,18 @@ public class ImportTransactionsActionForm extends BaseActionForm {
             errors.add("importTransactionsFile", new ActionMessage("errors.importexport.mandatory_file"));
         }
         
-        /*FIXME Enable after testing
-         * ImportedFilesServiceFacade importedFilesServiceFacade = new WebTierImportedFilesServiceFacede();
+
+        ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacede();
         try {
-            if (importedFilesServiceFacade.isImportTransactionFileNamePermitted(importTransactionsFileName)) {
+            
+            if (importTransactionsFile.getFileName() != null 
+                    && importedFilesServiceFacade.isAlreadyImported(importTransactionsFile.getFileName())) {
                 errors.add("importTransactionsFile", new ActionMessage("errors.importexport.already_submitted"));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
         
         return errors;
 

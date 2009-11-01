@@ -103,7 +103,7 @@ explanation of the license and how it is applied.
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.importfilename"
                                         isColonRequired="Yes" bundle="adminUIResources" /> <c:out
-                                        value="${importTransactionsForm.importTransactionsFileName}" /></td>
+                                        value="${importTransactionsForm.importTransactionsFile.fileName}" /></td>
                                 </tr>
                                 <tr class="fontnormal">
                                     <td><mifos:mifoslabel name="admin.importexport.importstatus"
@@ -125,7 +125,7 @@ explanation of the license and how it is applied.
                                     <c:if test="${!empty importTransactionsErrors}">
                                         <fmt:message key="admin.importexport.rowsWithErrors" />
                                     </c:if> <br />
-                                    <c:forEach var="error" items="${importTransactionsForm.importTransactionsErrors}">
+                                    <c:forEach var="error" items="${requestScope.importTransactionsErrors}">
                                         <br />
                                         <c:out value="${error}" />
                                     </c:forEach></td>
