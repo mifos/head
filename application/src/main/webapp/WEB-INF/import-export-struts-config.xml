@@ -16,7 +16,7 @@
             scope="session" 
             validate="true" 
             parameter="method"
-            input="/pages/application/importexport/jsp/import_transactions.jsp" >
+            input="/manageImportAction.do?method=load" >
 
       <forward name="import_load" path="/pages/application/importexport/jsp/import_transactions.jsp"/>
       <forward name="import_results" path="/pages/application/importexport/jsp/import_transactions_results.jsp"/>

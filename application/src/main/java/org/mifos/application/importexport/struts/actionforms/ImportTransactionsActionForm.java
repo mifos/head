@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -112,7 +113,23 @@ public class ImportTransactionsActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
-        
+
+        // Do not validate if validation is not for upload
+        if (!request.getParameter("method").equals("upload")) {
+            // request.getAttribute("methodCalled") is a way to track which method was called earlier current method
+            // we check if methodCalled was upload then set ERROR_KEY and not directly return (ActionErrors) errors.
+            // otherwise loal -> validate -> load will be held a cycle
+            // In some action class this is done using a seperate validate method
+            // Using validate in Action classes creates confusion.
+            if (request.getAttribute("methodCalled")!=null && request.getAttribute("methodCalled").equals("upload")) {
+                request.setAttribute(Globals.ERROR_KEY, request.getAttribute("uploadErrors"));
+            }
+            return null;
+        }
+
+        request.setAttribute("methodCalled", request.getParameter("method"));
+        request.setAttribute("uploadErrors", errors);
+
         if((importPluginName != null) && (importPluginName.length() < 1)){
             errors.add("importPluginName", new ActionMessage("errors.importexport.mandatory_selectbox"));
         }
@@ -137,7 +154,7 @@ public class ImportTransactionsActionForm extends BaseActionForm {
             e.printStackTrace();
         }*/
         
-        return errors.isEmpty() ? null : errors;
+        return errors;
 
     }
 }
