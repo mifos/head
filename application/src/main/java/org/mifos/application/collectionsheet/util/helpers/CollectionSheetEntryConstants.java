@@ -33,6 +33,7 @@ public interface CollectionSheetEntryConstants {
     public String LOADSUCCESS = "load_success";
     public String GETSUCCESS = "get_success";
     public String PREVIEWSUCCESS = "preview_success";
+    public String PREVIEWFAILURE = "preview_failure";
     public String CREATESUCCESS = "create_success";
     public String CREATE_FAILURE = "create_failure";
     public String PREVIOUSSUCCESS = "previous_success";

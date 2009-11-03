@@ -250,6 +250,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         if (errorsFromValidation.size() > 0) {
             this.addErrors(request, errorsFromValidation);
+            return mapping.findForward(CollectionSheetEntryConstants.PREVIEWFAILURE);
         }
 
         return mapping.findForward(CollectionSheetEntryConstants.PREVIEWSUCCESS);

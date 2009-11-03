@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.collectionsheet;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -27,30 +27,36 @@ import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 public class CollectionSheetEntryEnterDataPage extends AbstractPage {
-	
+
     public static final int ATTENDANCE_P = 1;
     public static final int ATTENDANCE_A = 2;
     public static final int ATTENDANCE_AA = 3;
     public static final int ATTENDANCE_L = 4;
 
-	public CollectionSheetEntryEnterDataPage() {
-		super();
-	}
+    public CollectionSheetEntryEnterDataPage() {
+        super();
+    }
 
-	public CollectionSheetEntryEnterDataPage(Selenium selenium) {
-		super(selenium);
-	}
-	
+    public CollectionSheetEntryEnterDataPage(Selenium selenium) {
+        super(selenium);
+    }
+
     public CollectionSheetEntryEnterDataPage verifyPage() {
         this.verifyPage("BulkEntryData");
-		return this;
-	}
+        return this;
+    }
 
-	public CollectionSheetEntryPreviewDataPage submitAndGotoCollectionSheetEntryPreviewDataPage() {
-		selenium.click("id=bulkentry_data.button.preview");
-		waitForPageToLoad();
-		return new CollectionSheetEntryPreviewDataPage(selenium);
-	}
+    public CollectionSheetEntryPreviewDataPage submitAndGotoCollectionSheetEntryPreviewDataPage() {
+        selenium.click("id=bulkentry_data.button.preview");
+        waitForPageToLoad();
+        return new CollectionSheetEntryPreviewDataPage(selenium);
+    }
+
+    public CollectionSheetEntryEnterDataPage clickPreviewButton() {
+        selenium.click("id=bulkentry_data.button.preview");
+        waitForPageToLoad();
+        return new CollectionSheetEntryEnterDataPage(selenium);
+    }
 
     public CollectionSheetEntryEnterDataPage enterAccountValue(int row, int column, double amount) {
         selenium.type("enteredAmount[" + row + "][" + column + "]", Double.toString(amount));
@@ -74,7 +80,7 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 
     public void verifyAccountValue(int row, int col, double fee) {
         Assert.assertEquals(selenium.getValue("customerAccountAmountEntered[" + row + "][" + col + "]"),  Double.toString(fee));
-      
+
     }
 
     public HomePage cancel() {
@@ -85,11 +91,11 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 
     public void verifyCustomerAccountValue(int row, int col, double amount) {
         Assert.assertEquals(selenium.getValue("customerAccountAmountEntered[" + row + "][" + col + "]"), Double.toString(amount));
-        
+
     }
     public void verifyLoanAmountValue(int row, int col, double amount) {
         Assert.assertEquals(selenium.getValue("enteredAmount[" + row + "][" + col + "]"), Double.toString(amount));
-        
+
     }
 
 }
