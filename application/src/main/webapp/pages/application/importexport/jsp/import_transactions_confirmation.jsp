@@ -44,7 +44,7 @@ explanation of the license and how it is applied.
 				<td class="fontnormalbold"><mifos:mifoslabel
 					name="configuration.please_note" isColonRequired="Yes" /> <span
 					class="fontnormal"> <c:out
-					value="${importTransactionsForm.importTransactionsFileName}" /> <mifos:mifoslabel
+					value="${importTransactionsForm.importTransactionsFile.fileName}" /> <mifos:mifoslabel
 					name="admin.importexport.has_been_imported"
 					bundle="adminUIResources" /><br>
 				<br>
