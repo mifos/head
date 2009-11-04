@@ -20,6 +20,7 @@
  
 package org.mifos.test.acceptance.client;
 
+import org.mifos.config.ClientRules;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -127,7 +128,12 @@ public class ClientTest extends UiTestCaseBase {
     public void createClientWithMoreThanMaximumAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
                 "acceptance_small_003_dbunit.xml.zip",
-                dataSource, selenium);   
+                dataSource, selenium);
+        if(ClientRules.isAgeCheckDisabled()){
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setAgeCheckDisabled(false);
+        }
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -140,7 +146,12 @@ public class ClientTest extends UiTestCaseBase {
     public void createClientWithLessThanMinimumAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
                 "acceptance_small_003_dbunit.xml.zip",
-                dataSource, selenium);   
+                dataSource, selenium);
+        if(ClientRules.isAgeCheckDisabled()){
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setAgeCheckDisabled(false);
+        }
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();

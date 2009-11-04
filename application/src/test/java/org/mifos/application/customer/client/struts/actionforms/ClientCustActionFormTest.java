@@ -106,6 +106,11 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testLessThanMinimumAge() throws Exception {
+        if(ClientRules.isAgeCheckDisabled()){
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setAgeCheckDisabled(false);
+        }
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
         form.setDateOfBirthYY("1999");
@@ -117,6 +122,11 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testMoreThanMaximumAge() throws Exception {
+        if(ClientRules.isAgeCheckDisabled()){
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setAgeCheckDisabled(false);
+        }
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
         form.setDateOfBirthYY("1940");
