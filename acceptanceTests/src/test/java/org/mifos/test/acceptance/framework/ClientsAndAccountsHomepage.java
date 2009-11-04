@@ -110,7 +110,8 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         formParameters.setSpouseFirstName("father");
         formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
        
-        CreateClientEnterMfiDataPage clientMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage(formParameters);
+        clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
+        CreateClientEnterMfiDataPage clientMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
 
         CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         mfiFormParameters.setLoanOfficerId(loanOfficer);
@@ -133,6 +134,26 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         clientViewDetailsPage.verifyHandicapped(formParameters.getHandicapped());
         return clientViewDetailsPage;
     }  
+    
+    public CreateClientEnterPersonalDataPage createClient(String loanOfficer, String officeName, String dd, String mm, String yy){ 
+        GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
+        ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        formParameters.setFirstName("test");
+        formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+        formParameters.setDateOfBirthDD(dd);
+        formParameters.setDateOfBirthMM(mm);
+        formParameters.setDateOfBirthYYYY(yy);
+        formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+        formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        formParameters.setHandicapped("Yes");
+        formParameters.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        formParameters.setSpouseFirstName("father");
+        formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
+        return clientPersonalDataPage.create(formParameters);
+    }
 
     // TODO is this not in SearchHelper?
     public ClientSearchResultsPage searchForClient(String searchString)

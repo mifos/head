@@ -48,7 +48,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
@@ -56,11 +56,12 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
@@ -312,18 +313,26 @@ public class ClientCustActionForm extends CustomerActionForm {
                 errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                         .getString("Customer.DateOfBirth")));
             }
+        } else if (!isValid(getDateOfBirthDD()) || !isValid(getDateOfBirthMM()) || !isValid(getDateOfBirthYY())) {
+            errors.add(ClientConstants.INVALID_DOB_EXCEPTION, new ActionMessage(ClientConstants.INVALID_DOB_EXCEPTION));
         }
 
         else {
             try {
                 Date date = DateUtils.getDateAsSentFromBrowser(getDateOfBirth());
+                setAge(DateUtils.DateDiffInYears(DateUtils.getDateAsSentFromBrowser(getDateOfBirth())));
                 if (DateUtils.whichDirection(date) > 0) {
                     errors.add(ClientConstants.FUTURE_DOB_EXCEPTION, new ActionMessage(
                             ClientConstants.FUTURE_DOB_EXCEPTION));
+                } else if (!ClientRules.isAgeCheckDisabled()) {
+                    if (getAge() > ClientRules.getMaximumAgeForNewClient()
+                            || getAge() < ClientRules.getMinimumAgeForNewClient()) {
+                        errors.add(ClientConstants.INVALID_AGE, new ActionMessage(ClientConstants.INVALID_AGE,
+                                ClientRules.getMinimumAgeForNewClient(), ClientRules.getMaximumAgeForNewClient()));
+                    }
                 }
-            }
 
-            catch (InvalidDateException e) {
+            } catch (InvalidDateException e) {
                 errors.add(ClientConstants.INVALID_DOB_EXCEPTION, new ActionMessage(
                         ClientConstants.INVALID_DOB_EXCEPTION));
             }
@@ -445,6 +454,16 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public void setDateOfBirthYY(String dateOfBirthYY) {
         this.dateOfBirthYY = dateOfBirthYY;
+    }
+
+    private boolean isValid(Object input) {
+        try {
+            String inputString = (String) input;
+            int result = Integer.parseInt(inputString);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

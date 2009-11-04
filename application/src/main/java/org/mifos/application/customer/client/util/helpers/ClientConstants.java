@@ -38,7 +38,7 @@ public interface ClientConstants {
 
     public static final Short CLIENT_NAME_TYPE = NameType.CLIENT.getValue();
     public static final Short SPOUSE_NAME_TYPE = NameType.SPOUSE.getValue();
-
+        
     public static final String CLIENTVO = "clientVO";
     /** Request parameter names */
     public static final String SALUTATION_ENTITY = "salutationEntity";
@@ -155,6 +155,7 @@ public interface ClientConstants {
     public static final String TRAINED_CHECKED = "Client.TrainedCheckbox";
     public static final String FUTURE_DOB_EXCEPTION = "Client.FutureDOB";
     public static final String INVALID_DOB_EXCEPTION = "Client.InvalidDOB";
+    public static final String INVALID_AGE="Client.InvalidAge";
     public static final String FLAG_EXCEPTION = "Client.FlagException";
     public static final String CLIENT_HISTORICAL_DATA_PAGE = "loadHistoricalData_success";
 
@@ -178,4 +179,5 @@ public interface ClientConstants {
     public static final String CUSTOMERLOANACCOUNTSINUSE = "customerLoanAccountsInUse";
     public static final String CUSTOMERSAVINGSACCOUNTSINUSE = "customerSavingsAccountsInUse";
 
+    
 }

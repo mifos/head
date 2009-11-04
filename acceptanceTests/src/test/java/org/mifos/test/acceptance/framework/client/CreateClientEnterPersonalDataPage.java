@@ -26,7 +26,7 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateClientEnterPersonalDataPage extends MifosPage {
 
-	public CreateClientEnterPersonalDataPage() {
+    public CreateClientEnterPersonalDataPage() {
 		super();
 	}
 
@@ -171,8 +171,8 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         }
         
     }
- 
-    public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage(SubmitFormParameters parameters) {
+    
+    public CreateClientEnterPersonalDataPage create(SubmitFormParameters parameters) {
         selectValueIfNotZero("clientName.salutation", parameters.getSalutation());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.lastName", parameters.getLastName());
@@ -189,8 +189,20 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.spouseFirstName", parameters.getSpouseFirstName());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.spouseLastName", parameters.getSpouseLastName());
         
+        return this;
+        
+    }
+    
+    public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage() {
         selenium.click("create_ClientPersonalInfo.button.continue");
         waitForPageToLoad();
         return new CreateClientEnterMfiDataPage(selenium);
-    }    
+    }
+    
+    /* It to should fail to load next page due to an induced error*/
+    public CreateClientEnterPersonalDataPage dontLoadNext() {
+        selenium.click("create_ClientPersonalInfo.button.continue");
+        waitForPageToLoad();
+        return new CreateClientEnterPersonalDataPage(selenium);
+    }
 }

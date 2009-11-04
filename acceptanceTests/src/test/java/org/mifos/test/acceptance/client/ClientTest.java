@@ -29,6 +29,9 @@ import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +43,10 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"smoke","client","acceptance","ui"})
-
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
+    CustomPropertiesHelper propertiesHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -58,6 +61,7 @@ public class ClientTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
+        propertiesHelper = new CustomPropertiesHelper(selenium);
     }
 
     @AfterMethod
@@ -85,7 +89,6 @@ public class ClientTest extends UiTestCaseBase {
                 dataSource, selenium);        
 
         ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
-
         ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("Stu1232993852651");
         searchResultsPage.verifyPage();
         ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToSearchResult("Stu1232993852651 Client1232993852651: ID 0002-000000003");
@@ -105,5 +108,44 @@ public class ClientTest extends UiTestCaseBase {
         clientDetailsPage = mfiPreviewPage.submit();
         assertTextFoundOnPage("extID123");
         assertTextFoundOnPage("15/12/2008");
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createClientWithCorrectAgeTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+                "acceptance_small_003_dbunit.xml.zip",
+                dataSource, selenium);   
+        propertiesHelper.setMinimumAgeForClients(18);
+        propertiesHelper.setMaximumAgeForClients(60);
+        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227","11","12","1987");
+        CreateClientEnterMfiDataPage nextPage=clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        nextPage.verifyPage("CreateClientMfiInfo");
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createClientWithMoreThanMaximumAgeTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+                "acceptance_small_003_dbunit.xml.zip",
+                dataSource, selenium);   
+        propertiesHelper.setMinimumAgeForClients(18);
+        propertiesHelper.setMaximumAgeForClients(60);
+        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227","11","12","1940");
+        CreateClientEnterPersonalDataPage nextPage=clientPersonalDataPage.dontLoadNext();
+        nextPage.verifyPage("CreateClientPersonalInfo");
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createClientWithLessThanMinimumAgeTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+                "acceptance_small_003_dbunit.xml.zip",
+                dataSource, selenium);   
+        propertiesHelper.setMinimumAgeForClients(18);
+        propertiesHelper.setMaximumAgeForClients(60);
+        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227","11","12","1995");
+        CreateClientEnterPersonalDataPage nextPage=clientPersonalDataPage.dontLoadNext();
+        nextPage.verifyPage("CreateClientPersonalInfo");
     }
 }

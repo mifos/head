@@ -49,4 +49,22 @@ public class CustomPropertiesHelper {
     public void setDigitsAfterDecimal(int digits) {
         selenium.open(UPDATE_PAGE + "?AccountingRules.DigitsAfterDecimal=" + digits);
     }
+    
+    /**
+     * Sets the minimum age constraint for the clients
+     * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
+     * @param minimumAge The minimum age for clients.
+     */
+    public void setMinimumAgeForClients(int minimumAge) {
+        selenium.open(UPDATE_PAGE + "?ClientRules.MinimumAgeForNewClients=" + minimumAge);
+    }
+    
+    /**
+     * Sets the maximum age constraint for the clients
+     * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
+     * @param maximumAge The maximum age for clients.
+     */
+    public void setMaximumAgeForClients(int maximumAge) {
+        selenium.open(UPDATE_PAGE + "?ClientRules.MaximumAgeForNewClients=" + maximumAge);
+    }
 }

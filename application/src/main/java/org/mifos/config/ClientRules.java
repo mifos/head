@@ -40,9 +40,14 @@ public class ClientRules {
     public static final String ClientRulesNameSequence = "ClientRules.NameSequence";
     public static final String ClientCanExistOutsideGroupKey = "ClientCanExistOutsideGroup";
     public static final String GroupCanApplyLoansKey = "GroupCanApplyLoans";
+    public static final String MaximumAgeForNewClients = "ClientRules.MaximumAgeForNewClients";
+    public static final String MinimumAgeForNewClients = "ClientRules.MinimumAgeForNewClients";
     private static Boolean centerHierarchyExists;
     private static Boolean groupCanApplyLoans;
     private static Boolean clientCanExistOutsideGroup;
+    private static int minimumAgeForNewClient;
+    private static int maximumAgeForNewClient;
+    private static boolean ageCheckDisabled;
 
     /**
      * A name sequence is the order in which client names are displayed.
@@ -59,6 +64,20 @@ public class ClientRules {
     private static Set<String> allowedNameParts;
 
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+
+    private static ConfigurationPersistence configPersistence;
+
+    public static ConfigurationPersistence getConfigPersistence() {
+        if (configPersistence == null) {
+            configPersistence = new ConfigurationPersistence();
+        }
+
+        return configPersistence;
+    }
+
+    public static void setConfigPersistence(ConfigurationPersistence configPersistence) {
+        ClientRules.configPersistence = configPersistence;
+    }
 
     static {
         allowedNameParts = new HashSet<String>();
@@ -92,6 +111,7 @@ public class ClientRules {
         groupCanApplyLoans = getGroupCanApplyLoans();
         clientCanExistOutsideGroup = getClientCanExistOutsideGroup();
         nameSequence = getNameSequence();
+        initializeAges();
     }
 
     public static Boolean getCenterHierarchyExists() {
@@ -128,15 +148,14 @@ public class ClientRules {
     }
 
     private static boolean getGroupCanApplyLoansFromConfig() throws ConfigurationException {
-        ConfigurationPersistence configPersistence = new ConfigurationPersistence();
         boolean cfgValue;
         try {
-            int dbValue = configPersistence.getConfigurationKeyValueInteger(GroupCanApplyLoansKey).getValue();
+            int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(GroupCanApplyLoansKey).getValue();
             ConfigurationManager configMgr = ConfigurationManager.getInstance();
             cfgValue = configMgr.getBoolean(ClientRulesGroupCanApplyLoans);
 
             if (dbValue == Constants.NO && cfgValue == true) {
-                configPersistence.updateConfigurationKeyValueInteger(GroupCanApplyLoansKey, Constants.YES);
+                getConfigPersistence().updateConfigurationKeyValueInteger(GroupCanApplyLoansKey, Constants.YES);
             } else if (dbValue == Constants.YES && cfgValue == false) {
                 // Trying to override db value of "true/yes" with "false/no"
                 // in the config file violates business rules.
@@ -151,15 +170,15 @@ public class ClientRules {
     }
 
     private static boolean getClientCanExistOutsideGroupFromConfig() throws ConfigurationException {
-        ConfigurationPersistence configPersistence = new ConfigurationPersistence();
         boolean cfgValue;
         try {
-            int dbValue = configPersistence.getConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey).getValue();
+            int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey)
+                    .getValue();
             ConfigurationManager configMgr = ConfigurationManager.getInstance();
             cfgValue = configMgr.getBoolean(ClientRulesClientCanExistOutsideGroup);
 
             if (dbValue == Constants.NO && cfgValue == true) {
-                configPersistence.updateConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey, Constants.YES);
+                getConfigPersistence().updateConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey, Constants.YES);
             } else if (dbValue == Constants.YES && cfgValue == false) {
                 // Trying to override db value of "true/yes" with "false/no"
                 // in the config file violates business rules.
@@ -230,4 +249,90 @@ public class ClientRules {
     public static boolean isValidNameSequence() {
         return isValidNameSequence(getNameSequence());
     }
+
+    /*
+     * will initialize the client minimum age and maximum age constants, Also if
+     * both of them are set to zero it will initialize the client constants.age
+     * check to zero
+     */
+    public static void initializeAges() throws ConfigurationException {
+        setMinimumAgeForNewClient(getMinimumAge());
+        setMaximumAgeForNewClient(getMaximumAge());
+        if (getMaximumAge() < getMinimumAge()) {
+            throw new ConfigurationException("The minimum age for clients cannot be greater than the maximum age in "
+                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+        }
+
+        if ((getMaximumAgeForNewClient() == 0) && (getMinimumAgeForNewClient() == 0)) {
+            setAgeCheckDisabled(true);
+        }
+    }
+
+    public static int getMinimumAgeForNewClient() {
+        return minimumAgeForNewClient;
+    }
+
+    public static void setMinimumAgeForNewClient(int minimumAgeForNewClient) {
+        ClientRules.minimumAgeForNewClient = minimumAgeForNewClient;
+    }
+
+    public static int getMaximumAgeForNewClient() {
+        return maximumAgeForNewClient;
+    }
+
+    public static void setMaximumAgeForNewClient(int maximumAgeForNewClient) {
+        ClientRules.maximumAgeForNewClient = maximumAgeForNewClient;
+    }
+
+    public static boolean isAgeCheckDisabled() {
+        return ageCheckDisabled;
+    }
+
+    public static void setAgeCheckDisabled(boolean ageCheckDisabled) {
+        ClientRules.ageCheckDisabled = ageCheckDisabled;
+    }
+
+    /*
+     * reads the maximum age specified in the application configuration file,
+     * Also Checks if its in the range of 0 to 150
+     */
+    public static int getMinimumAge() throws ConfigurationException {
+        int minimumAge = 0;
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        if (configMgr.containsKey(ClientRules.MinimumAgeForNewClients))
+            minimumAge = Integer.parseInt(configMgr.getString(ClientRules.MinimumAgeForNewClients));
+        else
+            throw new ConfigurationException("The Minimum Age for a client is not defined in "
+                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+
+        if (minimumAge < 0 || minimumAge > 150)
+            throw new ConfigurationException("The Minimum Age defined in the "
+                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
+                    + "is not within the acceptable range (0 to 150)");
+
+        return minimumAge;
+
+    }
+
+    /*
+     * Gets the minimum age specified in the application configuration file,
+     * Also Checks if its in the range of 0 to 150
+     */
+    public static int getMaximumAge() throws ConfigurationException {
+        int maximumAge = 0;
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        if (configMgr.containsKey(ClientRules.MaximumAgeForNewClients))
+            maximumAge = Integer.parseInt(configMgr.getString(ClientRules.MaximumAgeForNewClients));
+        else
+            throw new ConfigurationException("The Maximum Age for a client is not defined in "
+                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+
+        if (maximumAge > 150 || maximumAge < 0)
+            throw new ConfigurationException("The Maximum Age defined in the "
+                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
+                    + "is not within the acceptable range (0 to 150)");
+        return maximumAge;
+
+    }
+
 }
