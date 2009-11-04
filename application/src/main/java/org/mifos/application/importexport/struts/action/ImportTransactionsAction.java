@@ -107,12 +107,12 @@ public class ImportTransactionsAction extends BaseAction {
         if (!importResult.parseErrors.isEmpty()) {
             errorsForDisplay.addAll(importResult.parseErrors);
         }
-        
+
         boolean submitButtonDisabled = false;
-        if(importResult.successfullyParsedRows.size() <= 0) {
+        if (importResult.successfullyParsedRows.size() <= 0) {
             submitButtonDisabled = true;
         }
-        
+
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
         request.setAttribute("numSuccessfulRows", importResult.successfullyParsedRows.size());
         request.setAttribute("submitButtonDisabled", submitButtonDisabled);
@@ -153,19 +153,27 @@ public class ImportTransactionsAction extends BaseAction {
         final String tempFilename = (String) request.getSession().getAttribute(IMPORT_TEMPORARY_FILENAME);
         final String importPluginClassname = (String) request.getSession().getAttribute(IMPORT_PLUGIN_CLASSNAME);
         clearOurSessionVariables(request.getSession());
-        final TransactionImport transactionImport = getInitializedImportPlugin(importPluginClassname, getUserContext(request).getId());
+        final TransactionImport transactionImport = getInitializedImportPlugin(importPluginClassname, getUserContext(
+                request).getId());
 
         final ParseResultDto importResult = transactionImport.parse(new FileInputStream(tempFilename));
+        final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
+        final String importTransactionsFileName = importTransactionsForm.getImportTransactionsFile().getFileName();
+
+        if (null != importResult.parseErrors && !importResult.parseErrors.isEmpty()) {
+            for (String error : importResult.parseErrors) {
+                logger.warn(importTransactionsFileName + ": " + error);
+            }
+        }
 
         transactionImport.store(new FileInputStream(tempFilename));
 
-        final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
-        final String importTransactionsFileName = importTransactionsForm.getImportTransactionsFile().getFileName();
         final UserContext userContext = getUserContext(request);
         ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacede();
         importedFilesServiceFacade.saveImportedFileName(userContext, importTransactionsFileName);
-        
-        logger.info(importResult.successfullyParsedRows.size() + " transactions imported.");
+
+        logger.info(importResult.successfullyParsedRows.size() + " transaction(s) imported from "
+                + importTransactionsFileName + ".");
 
         new File(tempFilename).delete();
         return mapping.findForward("import_confirm");
