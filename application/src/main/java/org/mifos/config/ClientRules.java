@@ -268,12 +268,21 @@ public class ClientRules {
         }
     }
 
+    private static void updateAgeCheckDisabled() {
+        if ((getMaximumAgeForNewClient() == 0) && (getMinimumAgeForNewClient() == 0)) {
+            setAgeCheckDisabled(true);
+        } else {
+            setAgeCheckDisabled(false);           
+        }
+    }
+    
     public static int getMinimumAgeForNewClient() {
         return minimumAgeForNewClient;
     }
 
     public static void setMinimumAgeForNewClient(int minimumAgeForNewClient) {
         ClientRules.minimumAgeForNewClient = minimumAgeForNewClient;
+        updateAgeCheckDisabled();        
     }
 
     public static int getMaximumAgeForNewClient() {
@@ -282,6 +291,7 @@ public class ClientRules {
 
     public static void setMaximumAgeForNewClient(int maximumAgeForNewClient) {
         ClientRules.maximumAgeForNewClient = maximumAgeForNewClient;
+        updateAgeCheckDisabled();        
     }
 
     public static boolean isAgeCheckDisabled() {

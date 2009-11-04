@@ -43,6 +43,9 @@ public class ClientCustActionFormTest extends TestCase {
 
     private ClientCustActionForm form;
     private ActionErrors errors;
+    private int minimumAgeForNewClientBeforeTestRun;
+    private int maximumAgeForNewClientBeforeTestRun;
+    private boolean ageCheckDisabledBeforeTestRun;
 
     @Override
     public void setUp() throws Exception {
@@ -63,6 +66,10 @@ public class ClientCustActionFormTest extends TestCase {
 
         ClientRules.setConfigPersistence(configPersistence);
         ClientRules.init();
+        minimumAgeForNewClientBeforeTestRun = ClientRules.getMinimumAgeForNewClient();
+        maximumAgeForNewClientBeforeTestRun = ClientRules.getMaximumAgeForNewClient();
+        ageCheckDisabledBeforeTestRun = ClientRules.isAgeCheckDisabled();
+        
     }
 
     public void testGoodDate() throws Exception {
@@ -106,11 +113,10 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testLessThanMinimumAge() throws Exception {
-        if(ClientRules.isAgeCheckDisabled()){
-            ClientRules.setMinimumAgeForNewClient(18);
-            ClientRules.setMaximumAgeForNewClient(60);
-            ClientRules.setAgeCheckDisabled(false);
-        }
+        ClientRules.setMinimumAgeForNewClient(18);
+        ClientRules.setMaximumAgeForNewClient(60);
+        ClientRules.setAgeCheckDisabled(false);
+
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
         form.setDateOfBirthYY("1999");
@@ -122,11 +128,10 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testMoreThanMaximumAge() throws Exception {
-        if(ClientRules.isAgeCheckDisabled()){
-            ClientRules.setMinimumAgeForNewClient(18);
-            ClientRules.setMaximumAgeForNewClient(60);
-            ClientRules.setAgeCheckDisabled(false);
-        }
+        ClientRules.setMinimumAgeForNewClient(18);
+        ClientRules.setMaximumAgeForNewClient(60);
+        ClientRules.setAgeCheckDisabled(false);
+
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
         form.setDateOfBirthYY("1940");
@@ -141,6 +146,9 @@ public class ClientCustActionFormTest extends TestCase {
     public void tearDown() {
         form = null;
         errors = null;
+        ClientRules.setMinimumAgeForNewClient(minimumAgeForNewClientBeforeTestRun);
+        ClientRules.setMaximumAgeForNewClient(maximumAgeForNewClientBeforeTestRun);
+        ClientRules.setAgeCheckDisabled(ageCheckDisabledBeforeTestRun);
     }
 
 }

@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.core.MifosException;
 import org.mifos.framework.business.LogUtils;
@@ -49,47 +50,14 @@ public class CustomPropertiesUpdateController extends AbstractController {
         if (TestMode.MAIN == getTestingService().getTestMode()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
-            String languageCode = request.getParameter("Localization.LanguageCode");
-            String countryCode = request.getParameter("Localization.CountryCode");
-            if (neitherAreNull(languageCode, countryCode)) {
-                try {
-                    testingService.setLocale(languageCode, countryCode);
-                    model.put("localeResult", "languageCode: " + languageCode + " countryCode: " + countryCode);
-                } catch (MifosException e) {
-                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    errorMessages.add("This language code and country code combination are not supported by Mifos.");
-                }
-            } else if (onlyOneIsNull(languageCode, countryCode)) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                errorMessages.add("You must include both Localization.LanguageCode and Localization.CountryCode as parameters!");
-            }
+            handleLocalization(request, response, errorMessages, model);
             
-            String numberOfInterestDays = request.getParameter(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
-            String digitsAfterDecimal = request.getParameter(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
-            String digitsAfterDecimalForInterest = request.getParameter(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
-            String maxInterest = request.getParameter(AccountingRulesConstants.MAX_INTEREST);
-            String minInterest = request.getParameter(AccountingRulesConstants.MIN_INTEREST);
-            String backDatedTransactionsAllowed = request.getParameter(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
-            try {
-                AccountingRulesParameters accountingRulesParameters = new AccountingRulesParameters();
-                accountingRulesParameters.setParameters(numberOfInterestDays, digitsAfterDecimal, digitsAfterDecimalForInterest, maxInterest, minInterest, backDatedTransactionsAllowed);
-                testingService.setAccountingRules(accountingRulesParameters);
-                model.put("accountingRulesResult", accountingRulesParameters.toString());
-            } catch (MifosException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                errorMessages.add("Something was wrong with your Accounting Rules parameters: " + new LogUtils().getStackTrace(e) );
-            }
+            handleAccountingRules(request, response, errorMessages, model);
 
-            String workingDays = request.getParameter("FiscalCalendarRules.WorkingDays");
-            String scheduleTypeForMeetingOnHoliday = request.getParameter("FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday");
-            try {
-                testingService.setFiscalCalendarRules(workingDays, scheduleTypeForMeetingOnHoliday);
-                model.put("fiscalCalendarRulesResult", "workingDays: " + workingDays + " scheduleTypeForMeetingOnHoliday: " + scheduleTypeForMeetingOnHoliday);
-            } catch (MifosException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                errorMessages.add("Something was wrong with your Fiscal Calendar Rules parameters: " + new LogUtils().getStackTrace(e) );
-            }
- 
+            handleCalendarRules(request, response, errorMessages, model);
+
+            handleMinMaxClientAge(request, response, errorMessages, model);           
+            
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -100,12 +68,88 @@ public class CustomPropertiesUpdateController extends AbstractController {
         return returnValue;
     }
 
-    private boolean onlyOneIsNull(String languageCode, String countryCode) {
-        return (languageCode == null && countryCode != null) || (languageCode != null && countryCode == null);
+    private void handleMinMaxClientAge(HttpServletRequest request, HttpServletResponse response,
+            List<String> errorMessages, Map<String, Object> model) {
+        String minimumAge = request.getParameter("ClientRules.MinimumAgeForNewClients");
+        if (StringUtils.isNotBlank(minimumAge)) {
+            try {
+                int minimumAgeForNewClient = Integer.parseInt(minimumAge);
+                testingService.setMinimumAgeForNewClient(minimumAgeForNewClient);
+                model.put("clientRulesResult", "minimumAge: " + minimumAge);
+            } catch (NumberFormatException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                errorMessages.add("Unable to parse and int from ClientRules.MinimumAgeForNewClients: " + new LogUtils().getStackTrace(e) );                    
+            }
+        }
+
+        String maximumAge = request.getParameter("ClientRules.MaximumAgeForNewClients");
+        if (StringUtils.isNotBlank(maximumAge)) {
+            try {
+                int maximumAgeForNewClient = Integer.parseInt(maximumAge);
+                testingService.setMaximumAgeForNewClient(maximumAgeForNewClient);
+                model.put("clientRulesResult", "maximumAge: " + maximumAge);
+            } catch (NumberFormatException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                errorMessages.add("Unable to parse and int from ClientRules.MaximumAgeForNewClients: " + new LogUtils().getStackTrace(e) );                    
+            }
+        }
     }
 
-    private boolean neitherAreNull(String languageCode, String countryCode) {
-        return languageCode != null && countryCode != null;
+    private void handleCalendarRules(HttpServletRequest request, HttpServletResponse response,
+            List<String> errorMessages, Map<String, Object> model) {
+        String workingDays = request.getParameter("FiscalCalendarRules.WorkingDays");
+        String scheduleTypeForMeetingOnHoliday = request.getParameter("FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday");
+        if (StringUtils.isNotBlank(workingDays) || StringUtils.isNotBlank(scheduleTypeForMeetingOnHoliday)) {
+            try {
+                testingService.setFiscalCalendarRules(workingDays, scheduleTypeForMeetingOnHoliday);
+                model.put("fiscalCalendarRulesResult", "workingDays: " + workingDays + " scheduleTypeForMeetingOnHoliday: " + scheduleTypeForMeetingOnHoliday);
+            } catch (MifosException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                errorMessages.add("Something was wrong with your Fiscal Calendar Rules parameters: " + new LogUtils().getStackTrace(e) );
+            }
+        }
+    }
+
+    private void handleAccountingRules(HttpServletRequest request, HttpServletResponse response,
+            List<String> errorMessages, Map<String, Object> model) {
+        String numberOfInterestDays = request.getParameter(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
+        String digitsAfterDecimal = request.getParameter(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
+        String digitsAfterDecimalForInterest = request.getParameter(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
+        String maxInterest = request.getParameter(AccountingRulesConstants.MAX_INTEREST);
+        String minInterest = request.getParameter(AccountingRulesConstants.MIN_INTEREST);
+        String backDatedTransactionsAllowed = request.getParameter(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
+        
+        if (StringUtils.isNotBlank(numberOfInterestDays) || StringUtils.isNotBlank(digitsAfterDecimal) || 
+            StringUtils.isNotBlank(digitsAfterDecimalForInterest) || StringUtils.isNotBlank(maxInterest) ||
+            StringUtils.isNotBlank(minInterest) || StringUtils.isNotBlank(backDatedTransactionsAllowed)) {
+            try {
+                AccountingRulesParameters accountingRulesParameters = new AccountingRulesParameters();
+                accountingRulesParameters.setParameters(numberOfInterestDays, digitsAfterDecimal, digitsAfterDecimalForInterest, maxInterest, minInterest, backDatedTransactionsAllowed);
+                testingService.setAccountingRules(accountingRulesParameters);
+                model.put("accountingRulesResult", accountingRulesParameters.toString());
+            } catch (MifosException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                errorMessages.add("Something was wrong with your Accounting Rules parameters: " + new LogUtils().getStackTrace(e) );
+            }
+        }
+    }
+
+    private void handleLocalization(HttpServletRequest request, HttpServletResponse response,
+            List<String> errorMessages, Map<String, Object> model) {
+        String languageCode = request.getParameter("Localization.LanguageCode");
+        String countryCode = request.getParameter("Localization.CountryCode");
+        if (StringUtils.isNotBlank(languageCode) && StringUtils.isNotBlank(countryCode)) {
+            try {
+                testingService.setLocale(languageCode, countryCode);
+                model.put("localeResult", "languageCode: " + languageCode + " countryCode: " + countryCode);
+            } catch (MifosException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                errorMessages.add("This language code and country code combination are not supported by Mifos.");
+            }
+        } else if (StringUtils.isNotBlank(languageCode) || StringUtils.isNotBlank(countryCode)) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            errorMessages.add("You must include both Localization.LanguageCode and Localization.CountryCode as parameters!");
+        }
     }
 
     public TestingService getTestingService() {

@@ -16,6 +16,9 @@
       [#if model.fiscalCalendarRulesResult??]
 	      Updating fiscalCalendarRules: <div id="CustomProperties.accountingRules.result">${model.fiscalCalendarRulesResult}</div>
       [/#if]
+      [#if model.clientRulesResult??]
+	      Updating clientRules: <div id="CustomProperties.clientRules.result">${model.clientRulesResult}</div>
+      [/#if]
       [#if (status.errorMessages?size > 0)]
         Errors: <div id="CustomProperties.error.messages">[#list status.errorMessages as errorMessage]${errorMessage}[/#list]</div>
       [/#if]

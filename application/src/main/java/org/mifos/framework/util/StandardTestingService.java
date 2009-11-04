@@ -31,6 +31,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.mifos.config.AccountingRules;
+import org.mifos.config.ClientRules;
 import org.mifos.config.ConfigLocale;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.config.FiscalCalendarRules;
@@ -235,5 +236,17 @@ public class StandardTestingService implements TestingService {
     private boolean isSet(Object value) {
         return value != null;
     }
+
+    @Override
+    public void setMaximumAgeForNewClient(int age) {
+        ClientRules.setMaximumAgeForNewClient(age);        
+    }
+
+    @Override
+    public void setMinimumAgeForNewClient(int age) {
+        ClientRules.setMinimumAgeForNewClient(age);        
+    }
+    
+    
 
 }
