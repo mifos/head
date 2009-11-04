@@ -32,7 +32,7 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.upload.MultipartRequestHandler;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
-import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacede;
+import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacade;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 /**
@@ -115,7 +115,7 @@ public class ImportTransactionsActionForm extends BaseActionForm {
         }
         
 
-        ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacede();
+        ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacade();
         try {
             
             if (importTransactionsFile.getFileName() != null 

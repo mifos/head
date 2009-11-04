@@ -30,9 +30,9 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 
-public class WebTierImportTransactionsServiceFacede implements ImportTransactionsServiceFacade {
+public class WebTierImportTransactionsServiceFacade implements ImportTransactionsServiceFacade {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(WebTierImportTransactionsServiceFacede.class.getName());
+    private static final MifosLogger logger = MifosLogManager.getLogger(WebTierImportTransactionsServiceFacade.class.getName());
     
     private ImportedFilesService importedFilesService;
     

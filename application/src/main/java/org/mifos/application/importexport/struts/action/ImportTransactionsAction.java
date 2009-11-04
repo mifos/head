@@ -39,7 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
-import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacede;
+import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacade;
 import org.mifos.application.importexport.struts.actionforms.ImportTransactionsActionForm;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.framework.business.BusinessObject;
@@ -169,7 +169,7 @@ public class ImportTransactionsAction extends BaseAction {
         transactionImport.store(new FileInputStream(tempFilename));
 
         final UserContext userContext = getUserContext(request);
-        ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacede();
+        ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacade();
         importedFilesServiceFacade.saveImportedFileName(userContext, importTransactionsFileName);
 
         logger.info(importResult.successfullyParsedRows.size() + " transaction(s) imported from "
