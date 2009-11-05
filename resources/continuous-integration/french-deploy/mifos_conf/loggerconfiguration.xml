@@ -28,6 +28,10 @@ how log4j is setting up logging. -->
         <priority value="WARN"/> 
     </category>
 
+    <category name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog" additivity="true">
+       <priority value="ERROR"/>
+    </category>
+
     <root>
         <!-- Any log statement of level less than this priority will not be logged -->
         <priority value="INFO"/>

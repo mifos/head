@@ -23,10 +23,6 @@ how log4j is setting up logging. -->
             <param name="ConversionPattern" value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n"/>
         </layout>
     </appender>
-    
-    <category name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog" additivity="true">
-       <priority value="ERROR"/>
-    </category>
 
     <root>
         <!-- Any log statement of level less than this priority will not be logged -->
