@@ -753,17 +753,20 @@ public class LoanAccountActionForm extends BaseActionForm {
     private void checkValidationForManagePreview(ActionErrors errors, HttpServletRequest request)
             throws ApplicationException {
         if (getState().equals(AccountState.LOAN_PARTIAL_APPLICATION)
-                || getState().equals(AccountState.LOAN_PENDING_APPROVAL))
+                || getState().equals(AccountState.LOAN_PENDING_APPROVAL)) {
             checkValidationForPreview(errors, request);
+            // Only validate the disbursement date before a loan has been approved.  After
+            // approval, it cannot be edited.
+            try {
+                validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(request)
+                    .getPreferredLocale()));
+            } catch (InvalidDateException dateException) {
+                addError(errors, LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+            }
+        }
         performGlimSpecificValidations(errors, request);
         validateCustomFields(request, errors);
-        validateRepaymentDayRequired(request, errors);
-        try {
-            validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(request)
-                .getPreferredLocale()));
-        } catch (InvalidDateException dateException) {
-            addError(errors, LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-        }
+        validateRepaymentDayRequired(request, errors);        
     }
 
     private void validateDisbursementDate(ActionErrors errors, CustomerBO customer, java.sql.Date disbursementDateValue)
