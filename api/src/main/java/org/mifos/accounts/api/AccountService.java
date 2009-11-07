@@ -58,6 +58,18 @@ public interface AccountService {
      * @throws Exception
      */
     AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws Exception;
+
+    /**
+     * Lookup a loan account reference for a loan with a matching global account number.  If no loan is found 
+     * with a matching global account number, then an exception is thrown.
+     * 
+     * @param globalAccountNumber the the global account number to find.
+     * 
+     * @return a reference to the account found
+     * 
+     * @throws Exception
+     */
+    AccountReferenceDto lookupLoanAccountReferenceFromGlobalAccountNumber(String globalAccountNumber) throws Exception;
     
     /**
      * Validate a payment by checking for any errors that would result from making a

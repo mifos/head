@@ -173,4 +173,14 @@ public class StandardAccountService implements AccountService {
         return paymentTypeDtos;
     }
 
+    @Override
+    public AccountReferenceDto lookupLoanAccountReferenceFromGlobalAccountNumber(String globalAccountNumber)
+            throws PersistenceException {
+        AccountBO accountBo = getAccountPersistence().findBySystemId(globalAccountNumber);
+        if (null == accountBo) {
+            throw new PersistenceException("loan not found for global account number " + globalAccountNumber);
+        }
+        return new AccountReferenceDto(accountBo.getAccountId());
+    }
+
 }

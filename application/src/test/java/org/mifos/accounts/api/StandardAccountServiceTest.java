@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.api;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyShort;
@@ -39,10 +41,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.api.AccountPaymentParametersDto;
-import org.mifos.accounts.api.AccountReferenceDto;
-import org.mifos.accounts.api.PaymentTypeDto;
-import org.mifos.accounts.api.UserReferenceDto;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -91,6 +90,9 @@ public class StandardAccountServiceTest {
 
     @Mock
     private HibernateUtil hibernateUtil;
+
+    @Mock 
+    private AccountBO someAccountBo;
     
     private LoanBO accountBO;
 
@@ -171,6 +173,25 @@ public class StandardAccountServiceTest {
             StaticHibernateUtil.setHibernateUtil(new HibernateUtil());
         }
         
+    }
+    
+    @Test
+    public void testLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
+        String globalAccountNumber = "123456789012345";
+        int accountId = 3;
+        when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(someAccountBo);
+        when(someAccountBo.getAccountId()).thenReturn(accountId);
+        AccountReferenceDto accountReferenceDto = standardAccountService.
+            lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
+        assertThat(accountReferenceDto.getAccountId(), is(accountId));
+    }
+    
+    @Test(expected=PersistenceException.class)
+    public void testFailureOfLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
+        String globalAccountNumber = "123456789012345";
+        when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(null);
+        AccountReferenceDto accountReferenceDto = standardAccountService.
+            lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
     }
     
     private class PrivateLoanAccountBuilder {
