@@ -34,8 +34,8 @@ public class ImportTransactionsPage extends MifosPage {
         verifyPage("import.transactions.form");
     }
 
-    public ImportTransactionsConfirmationPage importAudiTransactions(String importFile) {
-        selenium.select("importPluginName", "label=Audi Bank (tab-delimited)");
+    public ImportTransactionsConfirmationPage importAudiTransactions(String importFile, String importFormat) {
+        selenium.select("importPluginName", "label=" + importFormat);
         selenium.type("importTransactionsFile", importFile);
         selenium.click("import_transactions.button.review");
         waitForPageToLoad();

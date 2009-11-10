@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.admin;
 
 import org.dbunit.dataset.IDataSet;
+import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -28,6 +29,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ImportTransactionsConfirmationPage;
 import org.mifos.test.acceptance.framework.admin.ImportTransactionsPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -41,6 +43,8 @@ import org.testng.annotations.Test;
 public class ImportTransactionsTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
+    private static final String EXCEL_IMPORT_TYPE = "Audi Bank (Excel 2007)";
+    private static final String TSV_IMPORT_TYPE = "Audi Bank (tab-delimited)";
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -63,6 +67,9 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2009,11,7,10,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
     }
 
@@ -72,22 +79,39 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void importAudiBankTransactions() throws Exception {
-
+    public void importTabDelimitedAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-OneTransactionEA00002.txt").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
+        
+        importTransaction(importFile, TSV_IMPORT_TYPE);
+        
+        String expectedDataSetFile = "ImportTransactions_001_result_dbunit.xml.zip";
+     
+        verifyImportTransactions(expectedDataSetFile);     
+     }
+
+ 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void importExcelFormatAudiBankTransactions() throws Exception {
+        String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
+
+        importTransaction(importFile, EXCEL_IMPORT_TYPE);
+        
+        String expectedDataSetFile = "ImportTransactions_002_result_dbunit.xml.zip";
+     
+        verifyImportTransactions(expectedDataSetFile);     
+     }
+
+
+    private void importTransaction(String importFile, String importType) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
         importTransactionsPage.verifyPage();
-        ImportTransactionsConfirmationPage importTransactionsConfirmationPage = importTransactionsPage.importAudiTransactions(importFile);
+        ImportTransactionsConfirmationPage importTransactionsConfirmationPage = importTransactionsPage.importAudiTransactions(importFile, importType);
         importTransactionsConfirmationPage.verifyPage();
-        
-        String expectedDataSetFile = "ImportTransactions_001_result_dbunit.xml.zip";
-        
-        verifyImportTransactions(expectedDataSetFile);     
-
-        
-     }
+    }
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyImportTransactions(String expectedDataSetFile) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(expectedDataSetFile);
