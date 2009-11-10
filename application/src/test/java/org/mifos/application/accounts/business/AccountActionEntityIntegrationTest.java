@@ -34,7 +34,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 
 /**
  * Also see {@link AccountActionEntityTest}.
@@ -68,9 +67,6 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase
     }
 
     public void testBasics() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
-
-        Session session = database.openSession();
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class,
                 AccountActionTypes.PAYMENT.getValue());
 
