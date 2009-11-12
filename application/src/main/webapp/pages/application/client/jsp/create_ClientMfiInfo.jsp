@@ -398,6 +398,7 @@ explanation of the license and how it is applied.
 													<html-el:option value="${offering.prdOfferingId}">${offering.prdOfferingName}</html-el:option>
 												</c:forEach>
 											</mifos:select>
+											
 										</td>
 									</tr>
 							 	</c:forEach>

@@ -48,6 +48,24 @@ public class ClientRules {
     private static int minimumAgeForNewClient;
     private static int maximumAgeForNewClient;
     private static boolean ageCheckDisabled;
+    private static int maximumNumberOfFamilyMembers;
+    public static int getMaximumNumberOfFamilyMembers() {
+        return maximumNumberOfFamilyMembers;
+    }
+
+    public static void setMaximumNumberOfFamilyMembers(int maximumNumberOfFamilyMembers) {
+        ClientRules.maximumNumberOfFamilyMembers = maximumNumberOfFamilyMembers;
+    }
+
+    private static boolean familyDetailsRequired=false;
+
+    public static boolean isFamilyDetailsRequired() {
+        return familyDetailsRequired;
+    }
+
+    public static void setFamilyDetailsRequired(boolean familyDetailsRequired) {
+        ClientRules.familyDetailsRequired = familyDetailsRequired;
+    }
 
     /**
      * A name sequence is the order in which client names are displayed.
@@ -112,6 +130,7 @@ public class ClientRules {
         clientCanExistOutsideGroup = getClientCanExistOutsideGroup();
         nameSequence = getNameSequence();
         initializeAges();
+        intializeFamilyConfig();
     }
 
     public static Boolean getCenterHierarchyExists() {
@@ -344,5 +363,11 @@ public class ClientRules {
         return maximumAge;
 
     }
+    
+    public static void intializeFamilyConfig() throws ConfigurationException {
+                 setFamilyDetailsRequired(ClientFamilyInfoConfig.getAreFamilyDetailsRequired());
+                 setMaximumNumberOfFamilyMembers(ClientFamilyInfoConfig.getMaximumNumberOfFamilyMembers());
+             }
+
 
 }

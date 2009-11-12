@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -45,6 +46,7 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -78,6 +80,8 @@ public class ClientBO extends CustomerBO {
     private CustomerPictureEntity customerPicture;
 
     private final Set<ClientNameDetailEntity> nameDetailSet;
+    
+    private Set<ClientFamilyDetailEntity> familyDetailSet;
 
     private final Set<ClientAttendanceBO> clientAttendances;
 
@@ -139,6 +143,7 @@ public class ClientBO extends CustomerBO {
         this.clientAttendances = new HashSet<ClientAttendanceBO>();
         this.clientPerformanceHistory = null;
         this.offeringsAssociatedInCreate = null;
+        this.familyDetailSet=null;
     }
 
     /**
@@ -155,6 +160,7 @@ public class ClientBO extends CustomerBO {
         this.clientAttendances = new HashSet<ClientAttendanceBO>();
         this.clientPerformanceHistory = null;
         this.offeringsAssociatedInCreate = null;
+        this.familyDetailSet=null;
     }
 
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
@@ -193,7 +199,7 @@ public class ClientBO extends CustomerBO {
         nameDetailSet = new HashSet<ClientNameDetailEntity>();
         clientAttendances = new HashSet<ClientAttendanceBO>();
         this.clientPerformanceHistory = new ClientPerformanceHistoryEntity(this);
-
+        this.familyDetailSet=null;
         this.dateOfBirth = dateOfBirth;
         this.governmentId = governmentId;
         if (trained != null) {
@@ -207,7 +213,8 @@ public class ClientBO extends CustomerBO {
         this.lastName = clientNameDetailView.getLastName();
         this.secondLastName = clientNameDetailView.getSecondLastName();
         this.addNameDetailSet(new ClientNameDetailEntity(this, null, clientNameDetailView));
-        this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
+        if(spouseNameDetailView!=null)
+            this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
         this.customerDetail = new ClientDetailEntity(this, clientDetailView);
         createPicture(picture);
         offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
@@ -226,9 +233,25 @@ public class ClientBO extends CustomerBO {
         }
         generateSearchId();
     }
-
+    
+    public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView, final List<ClientFamilyDetailView> familyDetailView) {
+        Iterator iterator2=familyDetailView.iterator();
+        familyDetailSet=new HashSet<ClientFamilyDetailEntity>();
+        for (Iterator iterator = familyNameDetailView.iterator(); iterator.hasNext();) { 
+            ClientNameDetailView clientNameDetailView2 = (ClientNameDetailView) iterator.next();
+            ClientFamilyDetailView clientFamilyDetailView2= (ClientFamilyDetailView) iterator2.next();
+            ClientNameDetailEntity nameEntity=new ClientNameDetailEntity(this, null,clientNameDetailView2);
+            this.addNameDetailSet(nameEntity);
+            this.addFamilyDetailSet(new ClientFamilyDetailEntity(this,nameEntity, clientFamilyDetailView2));   
+        } 
+        
+    }
     public Set<ClientNameDetailEntity> getNameDetailSet() {
         return nameDetailSet;
+    }
+
+    public Set<ClientFamilyDetailEntity> getFamilyDetailSet() {
+        return this.familyDetailSet;
     }
 
     public CustomerPictureEntity getCustomerPicture() {
@@ -332,6 +355,9 @@ public class ClientBO extends CustomerBO {
         this.nameDetailSet.add(customerNameDetail);
     }
 
+    public void addFamilyDetailSet(final ClientFamilyDetailEntity clientFamilyDetail){
+        this.familyDetailSet.add(clientFamilyDetail);
+     }
     @Override
     public boolean isActive() {
         return getStatus() == CustomerStatus.CLIENT_ACTIVE;
@@ -458,9 +484,121 @@ public class ClientBO extends CustomerBO {
         setDateOfBirth(dateOfBirth);
 
         super.update();
-    }
-
-    public void updateMfiInfo(final PersonnelBO personnel) throws CustomerException {
+    }   
+  
+    /**
+     * This method is called for client family and name details update
+     */
+     public void updateFamilyInfo(List<Integer> primaryKeys,List<ClientNameDetailView> clientNameDetailView, List<ClientFamilyDetailView> clientFamilyDetailView) throws PersistenceException {                 
+         
+         updateFamilyAndNameDetails(primaryKeys,clientNameDetailView,clientFamilyDetailView);
+         deleteFamilyAndNameDetails(primaryKeys);
+         insertFamilyAndNameDetails(primaryKeys,clientNameDetailView,clientFamilyDetailView);
+         
+         new CustomerPersistence().createOrUpdate(this);  
+     }
+     
+     /**
+      * This method return boolean value
+      * 
+      * @param clientNameId
+      * @param primaryKeys
+      * @return
+      */
+     private boolean isKeyExists(int clientNameId, List<Integer> primaryKeys){         
+         boolean keyFound = false;
+         for(int i=0;i<primaryKeys.size();i++){
+             if(primaryKeys.get(i)!=null && primaryKeys.get(i)==clientNameId){
+                 keyFound = true;
+             }
+         }      
+         return keyFound;
+     }
+     
+     /**
+      * This method is used to update the Client Family and Name Details
+      *  
+      * @param primaryKeys
+      * @param clientNameDetailView
+      * @param clientFamilyDetailView
+      */
+     public void updateFamilyAndNameDetails (List<Integer> primaryKeys,List<ClientNameDetailView> clientNameDetailView, List<ClientFamilyDetailView> clientFamilyDetailView) {
+         for(int key=0;key<primaryKeys.size();key++) {
+             // check for the primary key if that is not null update the data
+            if(primaryKeys.get(key)!=null){
+              //update name details
+                for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet){
+                    if(clientNameDetailEntity.getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){                        
+                        clientNameDetailEntity.updateNameDetails(clientNameDetailView.get(key));
+                    }// if clientNameDetailEntity.getCustomerNameId()                 
+                }//inner for clientNameDetailEntity
+                
+                //update family details 
+                for (ClientFamilyDetailEntity clientFamilyDetailEntity  : familyDetailSet){                
+                    if(clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){
+                        clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailView.get(key));
+                    }// if clientFamilyDetailEntity   
+                }//end of for clientFamilyDetailEntity                 
+            }// end of if
+        }//End of for 
+     }
+    
+     /**
+     *  This method is used to delete the Client Family and Name Details
+     *   
+     * @param primaryKeys
+     * @throws PersistenceException 
+     */
+     public void deleteFamilyAndNameDetails(List<Integer> primaryKeys) throws PersistenceException{
+         // check for the primary  if that is null crate the data
+         //get all the family entities to delete
+         List<ClientFamilyDetailEntity> deleteFamilyDetailEntity = new ArrayList<ClientFamilyDetailEntity>();
+         for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet){
+             if(!isKeyExists(clientFamilyDetailEntity.getClientName().getCustomerNameId(),primaryKeys)){
+                 deleteFamilyDetailEntity.add(clientFamilyDetailEntity);
+             }
+         }
+        //get all the name entities to delete
+         List<ClientNameDetailEntity> deleteNameDetailEntity = new ArrayList<ClientNameDetailEntity>();
+         for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet){
+             //Ignoring name entities of client type
+             if(!clientNameDetailEntity.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+                 if(!isKeyExists(clientNameDetailEntity.getCustomerNameId(),primaryKeys)){
+                     deleteNameDetailEntity.add(clientNameDetailEntity);
+                 }
+             }         
+         }         
+         //Delete ClientFamilyDetailEntity
+         for(int i=0;i<deleteFamilyDetailEntity.size();i++){
+             familyDetailSet.remove(deleteFamilyDetailEntity.get(i));
+            getCustomerPersistence().delete(deleteFamilyDetailEntity.get(i));            
+         }
+       //Delete ClientNameDetailEntity
+         for(int i=0;i<deleteNameDetailEntity.size();i++){
+             nameDetailSet.remove(deleteNameDetailEntity.get(i));
+             getCustomerPersistence().delete(deleteNameDetailEntity.get(i));           
+         }
+     }
+     
+     /**
+      * This method is used to insert the Client Family and Name Details
+      * 
+      * @param primaryKeys
+      * @param clientNameDetailView
+      * @param clientFamilyDetailView
+      */
+     public void insertFamilyAndNameDetails(List<Integer> primaryKeys,List<ClientNameDetailView> clientNameDetailView, List<ClientFamilyDetailView> clientFamilyDetailView) {
+       //INSERT data
+         for(int i=0;i<primaryKeys.size();i++){
+             if(primaryKeys.get(i)==null){                 
+                 ClientNameDetailEntity nameDetail=new ClientNameDetailEntity(this,null,clientNameDetailView.get(i));
+                 nameDetailSet.add(nameDetail);
+                 familyDetailSet.add(new ClientFamilyDetailEntity(this,nameDetail,clientFamilyDetailView.get(i)));
+             }
+         }
+     }
+     
+     public void updateMfiInfo(final PersonnelBO personnel) throws CustomerException {
         if (isActive() || isOnHold()) {
             validateLO(personnel);
         }

@@ -211,6 +211,9 @@ public abstract class Upgrade {
         statement.close();
     }
 
+    /**
+     * @deprecated use {@link #addLookupEntity(Connection, String, String)} instead
+     */
     @SuppressWarnings("PMD.CloseResource")
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     protected void addLookupEntity(Connection connection, int entityId, String name, String description)
@@ -271,5 +274,21 @@ public abstract class Upgrade {
         return numFields;
 
     }
+    
+    @SuppressWarnings("PMD.CloseResource") 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.") 
+    protected int addLookupEntity(Connection connection, String name, String description)  throws SQLException { 
+       int newId = -1; 
+       PreparedStatement statement = connection 
+                .prepareStatement("INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION) VALUES(NULL,?,?)"); 
+       statement.setString(1, name); 
+       statement.setString(2, description); 
+       statement.executeUpdate(); 
+       ResultSet keys = statement.getGeneratedKeys(); 
+       keys.next(); 
+       newId = Integer.parseInt(keys.getString(1)); 
+       statement.close(); 
+       return newId; 
+    } 
 
 }

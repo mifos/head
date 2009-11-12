@@ -44,4 +44,6 @@ public interface TestingService {
     void setFiscalCalendarRules(String workingDays, String scheduleTypeForMeetingOnHoliday) throws MifosException;
     void setMinimumAgeForNewClient(int age);
     void setMaximumAgeForNewClient(int age);
+    void setAreFamilyDetailsRequired(boolean flag);
+    void setMaximumNumberOfFamilyMembers(int number);
 }

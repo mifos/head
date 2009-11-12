@@ -43,6 +43,7 @@ public interface ClientConstants {
     /** Request parameter names */
     public static final String SALUTATION_ENTITY = "salutationEntity";
     public static final String GENDER_ENTITY = "genderEntity";
+    public static final String LIVING_STATUS_ENTITY="livingStatusEntity";
     public static final String MARITAL_STATUS_ENTITY = "maritalStatusEntity";
     public static final String CITIZENSHIP_ENTITY = "citizenshipEntity";
     public static final String ETHINICITY_ENTITY = "ethinicityEntity";
@@ -51,6 +52,10 @@ public interface ClientConstants {
     public static final String BUSINESS_ACTIVITIES_ENTITY = "businessActivitiesEntity";
     public static final String HANDICAPPED_ENTITY = "handicappedEntity";
     public static final String SPOUSE_FATHER_ENTITY = "spouseEntity";
+    public static final String FAMILY_NAME_ENTITY="familyNameEntity";
+    public static final String FAMILY_DETAIL_ENTITY="familyDetailEntity";
+    public static final String MAXIMUM_NUMBER_OF_FAMILY_MEMBERS="familyMembers";
+    public static final String ARE_FAMILY_DETAILS_REQUIRED="areFamilyDetailsRequired";
     public static final String GENDER_ENTITY_NAME = "genderEntityName";
     public static final String BUSINESS_ACTIVITIES_ENTITY_NAME = "businessActivitiesEntityName";
     public static final String HANDICAPPED_ENTITY_NAME = "handicappedEntityName";
@@ -58,7 +63,7 @@ public interface ClientConstants {
     public static final String CITIZENSHIP_ENTITY_NAME = "citizenshipEntityName";
     public static final String ETHINICITY_ENTITY_NAME = "ethinicityEntityName";
     public static final String EDUCATION_LEVEL_ENTITY_NAME = "educationLevelEntityName";
-
+    
     /** Request parameter names for the dropdown values */
     public static final String SALUTATION_VALUE = "salutationValue";
     public static final String GENDER_VALUE = "genderValue";
@@ -78,6 +83,7 @@ public interface ClientConstants {
     public static final String INPUT_MFI_INFO = "mfiInfo";
     public static final String INPUT_EDIT_PERSONAL_INFO = "editPersonalInfo";
     public static final String INPUT_EDIT_MFI_INFO = "editMfiInfo";
+    public static final String INPUT_EDIT_FAMILY_INFO="editFamilyInfo";
     public static final String INPUT_CREATE_CLIENT = "createClient";
     public static final String INPUT_GROUP_TRANSFER = "groupTransfer";
     public static final String CLIENT_TRANSFER = "clientTransfer";
@@ -156,6 +162,16 @@ public interface ClientConstants {
     public static final String FUTURE_DOB_EXCEPTION = "Client.FutureDOB";
     public static final String INVALID_DOB_EXCEPTION = "Client.InvalidDOB";
     public static final String INVALID_AGE="Client.InvalidAge";
+    public static final String INVALID_FAMILY_DOB_EXCPETION= "Family.InvalidDOB";
+    public static final String INVALID_NUMBER_OF_SPOUSES="Family.InvalidSpouseNumber";
+    public static final String INVALID_NUMBER_OF_FATHERS="Family.InvalidFatherNumber";
+    public static final String INVALID_FAMILY_RELATIONSHIP="Family.InvalidRelationship";
+    public static final String INVALID_FAMILY_GENDER="Family.InvalidGender";
+    public static final String INVALID_FAMILY_LIVING_STATUS="Family.InvalidLivingStatus";
+    public static final String INVALID_NUMBER_OF_FAMILY_MEMBERS="Family.InvalidNumberOfFamilyMembers";
+    public static final String INVALID_FAMILY_FIRST_NAME="Family.InvalidFamilyFirstName";
+    public static final String INVALID_FAMILY_LAST_NAME="Family.InvalidFamilyLastName";
+    public static final String BAD_CHARACTERS_IN_INPUT_STRING="Family.InvalidCharacter";
     public static final String FLAG_EXCEPTION = "Client.FlagException";
     public static final String CLIENT_HISTORICAL_DATA_PAGE = "loadHistoricalData_success";
 

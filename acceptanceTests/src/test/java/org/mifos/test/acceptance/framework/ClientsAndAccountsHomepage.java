@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterFamilyDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
@@ -154,7 +155,64 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
         return clientPersonalDataPage.create(formParameters);
     }
+    
+    
+    public CreateClientEnterPersonalDataPage createClientForFamilyInfo(String officeName, String dd, String mm, String yy) {
+         GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
+         ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
+         CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
+         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+         formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+         formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+         formParameters.setFirstName("test");
+         formParameters.setDateOfBirthYYYY(yy);
+         formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+         formParameters.setDateOfBirthDD(dd);
+         formParameters.setDateOfBirthMM(mm);
+         formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+         formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+         formParameters.setHandicapped("Yes");
+         return clientPersonalDataPage.createWithoutSpouse(formParameters);
+     }
+    
+    public CreateClientEnterFamilyDetailsPage createFamily(String fname, String lname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page) {       
+         CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
+         formParameters.setRelationship(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.FATHER);
+         formParameters.setFirstName(fname);
+         formParameters.setLastName(lname);
+         formParameters.setDateOfBirthDD(dd);
+         formParameters.setDateOfBirthMM(mm);
+         formParameters.setDateOfBirthYY(yy);
+         formParameters.setGender(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.MALE);
+         formParameters.setLivingStatus(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.TOGETHER);
+         return page.createMember(formParameters);
+    }
+    
+    public CreateClientEnterFamilyDetailsPage createFamilyWithoutLookups(Integer relation,Integer gender, Integer livingStatus,CreateClientEnterFamilyDetailsPage page) {       
+        CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
+        formParameters.setRelationship(relation);
+        formParameters.setFirstName("fname");
+        formParameters.setLastName("lname");
+        formParameters.setDateOfBirthDD("11");
+        formParameters.setDateOfBirthMM("1");
+        formParameters.setDateOfBirthYY("2009");
+        formParameters.setGender(gender);
+        formParameters.setLivingStatus(livingStatus);
+        return page.createMember(formParameters);
+   }
+   
+   public CreateClientPreviewDataPage createClientMFIInformationAndGoToPreviewPage(String loanOfficer,CreateClientEnterMfiDataPage clientMfiDataPage) {
+       CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
+       mfiFormParameters.setLoanOfficerId(loanOfficer);
 
+       MeetingParameters meetingFormParameters = new MeetingParameters();
+       meetingFormParameters.setWeekFrequency("1");
+       meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
+       meetingFormParameters.setMeetingPlace("Mangalore");
+       
+       mfiFormParameters.setMeeting(meetingFormParameters);
+       return clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+   }
     // TODO is this not in SearchHelper?
     public ClientSearchResultsPage searchForClient(String searchString)
     {

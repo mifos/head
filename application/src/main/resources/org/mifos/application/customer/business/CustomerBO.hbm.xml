@@ -120,9 +120,14 @@
 			<one-to-one name="clientPerformanceHistory" 
 				class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" 
 				cascade="all" property-ref="client"/>
-			<set name="nameDetailSet" cascade="all" access="field">
+			<set name="nameDetailSet" cascade="all" table="CUSTOMER_NAME_DETAIL" order-by="CUSTOMER_NAME_ID" access="field">
 				<key column="CUSTOMER_ID" />
 				<one-to-many class="org.mifos.application.customer.client.business.ClientNameDetailEntity" />
+			</set>
+			
+			<set name="familyDetailSet" cascade="all" access="field">
+				<key column="CUSTOMER_ID" />
+				<one-to-many class="org.mifos.application.customer.client.business.ClientFamilyDetailEntity" />
 			</set>
 			<set name="clientAttendances" cascade="all" inverse="true" access="field">
 				<key column="CUSTOMER_ID" />

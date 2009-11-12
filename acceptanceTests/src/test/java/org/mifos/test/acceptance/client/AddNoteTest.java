@@ -55,6 +55,7 @@ public class AddNoteTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
+
     }
 
     @AfterMethod
@@ -101,4 +102,5 @@ public class AddNoteTest extends UiTestCaseBase {
         notes.verifyTextOnPage(testNote);
 
     }
+    
 }

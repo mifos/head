@@ -54,6 +54,7 @@
 		<mapping resource="org/mifos/application/customer/business/CustomerAddressDetailEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/customer/business/CustomerBO.hbm.xml" />
 		<mapping resource="org/mifos/application/customer/client/business/ClientDetailEntity.hbm.xml" />
+		<mapping resource="org/mifos/application/customer/client/business/ClientFamilyDetailEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/customer/business/CustomerCustomFieldEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/customer/business/CustomerFlagDetailEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/customer/business/CustomerStatusFlagEntity.hbm.xml" />

@@ -32,6 +32,7 @@ public interface MasterConstants {
     public static final String BUSINESS_ACTIVITIE_NAME = "BusinessActivitieName";
     public static final String HANDICAPPED = "Handicapped";
     public static final String GENDER = "Gender";
+    public static final String LIVING_STATUS="LivingStatus";
     public static final String SPOUSE_FATHER = "SpouseFather";
     public static final String PERSONNEL_TITLE = "PersonnelTitles";
     public static final String PERSONNEL_LEVELS = "PersonnelLevels";

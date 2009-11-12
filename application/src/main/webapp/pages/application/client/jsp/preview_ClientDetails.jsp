@@ -61,6 +61,11 @@ explanation of the license and how it is applied.
 	clientCustActionForm.action="clientCustAction.do?method=prevPersonalInfo";
 	clientCustActionForm.submit();
   }
+  
+  function goToFamilyPage(){
+	clientCustActionForm.action="clientCustAction.do?method=prevFamilyInfo";
+	clientCustActionForm.submit();
+  }
 
 </script>
 		<html-el:form action="clientCustAction.do?method=create">
@@ -387,6 +392,93 @@ explanation of the license and how it is applied.
 									</tr>
 							</table>
 							<%-- Personal Information end --%> <br>
+							
+							
+							<%-- Family Information --%>
+							<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td width="100%" height="23" class="fontnormalboldorange"><mifos:mifoslabel
+										name="client.FamilyInformationLabel" bundle="ClientUIResources"></mifos:mifoslabel>
+									</td>
+								</tr>
+							</table>
+							<table border="0" cellspacing="0" cellpadding="0">
+									<tr class="fontnormal">
+										<td>
+											<span class="fontnormalbold">
+										<mifos:mifoslabel name="client.FamilyRelationship" bundle="ClientUIResources"></mifos:mifoslabel>
+											</span>
+										</td>
+										<td class="paddingL10">
+											<span class="fontnormalbold">
+											<mifos:mifoslabel	name="client.FamilyDisplayName"
+											   bundle="ClientUIResources">
+											   </mifos:mifoslabel></span>
+										</td>
+										<td class="paddingL10">
+											<span class="fontnormalbold">
+												<mifos:mifoslabel	name="client.FamilyDateOfBirth" 
+													bundle="ClientUIResources"></mifos:mifoslabel>
+											</span>
+										</td>
+										<td class="paddingL10">
+											<span class="fontnormalbold">
+												<mifos:mifoslabel	name="client.FamilyGender" 
+													bundle="ClientUIResources"></mifos:mifoslabel>
+											</span>
+										</td>
+										<td class="paddingL10">
+											<span class="fontnormalbold">
+												<mifos:mifoslabel name="client.FamilyLivingStatus"
+													bundle="ClientUIResources">
+												</mifos:mifoslabel>
+											</span>
+										</td>
+									</tr>
+							 		<c:forEach var="familyDetails" items="${sessionScope.clientCustActionForm.familyDetails}"> 
+									<tr class="fontnormal">
+										<td>
+											<c:forEach var="familyEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}">
+												<c:if test = "${familyEntity.id == familyDetails.relationship}">
+													<c:out value="${familyEntity.name}"/>
+												</c:if>
+											</c:forEach>
+										</td>
+										<td class="paddingL10"> <div id="displayName">
+											<c:out value="${familyDetails.displayName}"/>	</div>   
+										</td>		
+										<td class="paddingL10">
+											<c:out value="${familyDetails.dateOfBirth}"/>
+										</td>
+										<td class="paddingL10">
+											<c:forEach var="genderEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">
+											<c:if test = "${genderEntity.id == familyDetails.gender}">
+												<c:out value="${genderEntity.name}"/>
+											</c:if>
+											</c:forEach>
+										</td>
+										<td class="paddingL10">
+											<c:forEach var="livingStatusEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'livingStatusEntity')}">
+													<c:if test = "${livingStatusEntity.id ==familyDetails.livingStatus}">
+														<c:out value="${livingStatusEntity.name}"/>
+													</c:if>
+											</c:forEach>
+										</td>
+									</tr>
+									</c:forEach>
+									<tr>
+										<td>	
+										<br>
+										<!-- Edit Button --> 
+											<html-el:button styleId="preview_ClientDetails.button.editFamilyInformation" onclick="goToFamilyPage()" property="editButton" styleClass="insidebuttn">
+												<mifos:mifoslabel name="button.previousFamilyInfo" bundle="ClientUIResources"></mifos:mifoslabel>
+											</html-el:button>
+										</td>
+									</tr>
+							</table>
+							<br>
+							</c:if>
 							<%-- MFI Information --%>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

@@ -461,6 +461,7 @@ explanation of the license and how it is applied.
 								value="${BusinessKey.governmentId}" /><br>
 							</td>
 						</tr>
+						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
 						<tr>
 							<td colspan="2" class="fontnormal"><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntityName')}" />
 							<c:if
@@ -477,6 +478,7 @@ explanation of the license and how it is applied.
 							</c:if><br>
 							</td>
 						</tr>
+						</c:if>
 						<tr id="Client.Ethinicity">
 							<td class="fontnormal">
 							<mifos:mifoslabel name="${ConfigurationConstants.ETHINICITY}" keyhm="Client.Ethinicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
@@ -623,16 +625,103 @@ explanation of the license and how it is applied.
 							<span class="fontnormal">							
 							<!-- Bug Id 27210. Added code to pass the created date as parameter-->
 
+							
+							</span> </td>
+						</tr>
+					</table>
+					<!-- Family Details -->
+					<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
+					<table width="96%" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+							<td width="50%" height="23" class="headingorange"><mifos:mifoslabel
+								name="client.FamilyInformationLabel"
+								bundle="ClientUIResources"></mifos:mifoslabel></td>
+							<td width="50%" align="right" class="fontnormal"><html-el:link styleId="viewClientDetails.link.editFamilyInformation"
+								action="clientCustAction.do?method=editFamilyInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="client.EditFamilyInformationLink"
+									bundle="ClientUIResources"></mifos:mifoslabel>
+							</html-el:link></td>
+					</tr>
+					</table>
+					<table>
+					<tr class="fontnormal">
+							<td>
+							<span class="fontnormalbold">
+							<mifos:mifoslabel name="client.FamilyRelationship"
+							bundle="ClientUIResources"></mifos:mifoslabel>
+							</span>
+							</td>
+								<td class="paddingL10">
+									<span class="fontnormalbold">
+									<mifos:mifoslabel	name="client.FamilyDisplayName"
+									   bundle="ClientUIResources">
+									   </mifos:mifoslabel></span>
+								</td>									
+								<td class="paddingL10">
+								<span class="fontnormalbold">
+									<mifos:mifoslabel	name="client.FamilyDateOfBirth" 
+										bundle="ClientUIResources"></mifos:mifoslabel>
+								</span>
+								</td>
+								<td class="paddingL10">
+								<span class="fontnormalbold">
+									<mifos:mifoslabel	name="client.FamilyGender" 
+										bundle="ClientUIResources"></mifos:mifoslabel>
+								</span>
+								</td>
+								<td class="paddingL10">
+								<span class="fontnormalbold">
+									<mifos:mifoslabel name="client.FamilyLivingStatus"
+										bundle="ClientUIResources">
+									</mifos:mifoslabel>
+								</span>
+								</td>
+						</tr>	
+							<c:forEach var="familyDetails" items="${sessionScope.clientCustActionForm.familyDetails}"> 
+									<tr class="fontnormal">
+										<td>
+											<c:forEach var="familyEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}">
+												<c:if test = "${familyEntity.id == familyDetails.relationship}">
+													<c:out value="${familyEntity.name}"/>
+												</c:if>
+											</c:forEach>
+										</td>
+										<td class="paddingL10"> <div id="displayName"> 
+											<c:out value="${familyDetails.displayName}"/></div>	   
+										</td>		
+										<td class="paddingL10">
+											<c:out value="${familyDetails.dateOfBirth}"/>
+										</td>
+										<td class="paddingL10">
+											<c:forEach var="genderEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">
+											<c:if test = "${genderEntity.id == familyDetails.gender}">
+												<c:out value="${genderEntity.name}"/>
+											</c:if>
+											</c:forEach>
+										</td>
+										<td class="paddingL10">
+											<c:forEach var="livingStatusEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'livingStatusEntity')}">
+													<c:if test = "${livingStatusEntity.id ==familyDetails.livingStatus}">
+														<c:out value="${livingStatusEntity.name}"/>
+													</c:if>
+											</c:forEach>
+										</td>
+									</tr>
+								</c:forEach>
+  							</c:if>
+							<tr><td class="paddingL10"> <br>
 							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
 							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
 							</html-el:link> <br>
-							</span> </td>
-						</tr>
+  							</td></tr>
+						
 					</table>
+					
 					</td>
+					
 					<!-- Performance History -->
 					<td width="30%" align="left" valign="top" class="paddingleft1">
 					<table width="100%" border="0" cellpadding="2" cellspacing="0"

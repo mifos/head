@@ -290,6 +290,7 @@ explanation of the license and how it is applied.
 								onkeypress="return onKeyPressForFileComponent(this);" /></td>
 						</tr>
 						<%-- Spouse/Father details --%>
+						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="client.SpouseFatherName" mandatory="yes"
@@ -381,8 +382,9 @@ explanation of the license and how it is applied.
 							</table>
 							</td>
 						</tr>
+						</c:if>
 					</table>
-
+					
 					<br>
 					<!-- Address Fields -->
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">

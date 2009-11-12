@@ -482,6 +482,7 @@ explanation of the license and how it is applied.
 										onkeypress="return onKeyPressForFileComponent(this);" /></td>
 								</tr>
 								<%-- Spouse/Father details --%>
+								<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
 								<tr class="fontnormal">
 									<td align="right" class="paddingL10"><mifos:mifoslabel
 										name="client.SpouseFatherName" mandatory="yes"
@@ -575,6 +576,10 @@ explanation of the license and how it is applied.
 										</tr>
 									</table>
 									</td>
+								</tr>
+								</c:if>
+								<tr>
+								<input type="hidden" name="numberOfFamilyMembers" value="1"/>
 								</tr>
 							</table>
 							<br>
@@ -740,7 +745,8 @@ explanation of the license and how it is applied.
 										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="button.cancel"
 											bundle="ClientUIResources"></mifos:mifoslabel>
-									</html-el:button></td>
+									</html-el:button>
+									</td>
 								</tr>
 							</table>
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

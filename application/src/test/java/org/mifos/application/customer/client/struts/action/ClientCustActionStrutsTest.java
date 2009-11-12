@@ -71,6 +71,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -123,6 +124,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 
         EntityMasterData.getInstance().init();
+        ClientRules.init();
         FieldConfig fieldConfig = FieldConfig.getInstance();
         fieldConfig.init();
         getActionServlet().getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,
@@ -340,7 +342,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testNextSuccess() throws Exception {
-
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");

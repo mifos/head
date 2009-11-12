@@ -148,4 +148,6 @@ public class ClientTest extends UiTestCaseBase {
         CreateClientEnterPersonalDataPage nextPage=clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
+    
+ 
 }

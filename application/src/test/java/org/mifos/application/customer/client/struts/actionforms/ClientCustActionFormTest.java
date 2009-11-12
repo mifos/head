@@ -32,6 +32,7 @@ import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mortbay.http.handler.SetResponseHeadersHandler;
 import org.testng.annotations.Test;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
@@ -113,9 +114,11 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testLessThanMinimumAge() throws Exception {
-        ClientRules.setMinimumAgeForNewClient(18);
-        ClientRules.setMaximumAgeForNewClient(60);
-        ClientRules.setAgeCheckDisabled(false);
+        if(ClientRules.isAgeCheckDisabled()){
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setAgeCheckDisabled(false);
+         }
 
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
@@ -128,10 +131,11 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testMoreThanMaximumAge() throws Exception {
-        ClientRules.setMinimumAgeForNewClient(18);
-        ClientRules.setMaximumAgeForNewClient(60);
-        ClientRules.setAgeCheckDisabled(false);
-
+        if(ClientRules.isAgeCheckDisabled()){
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setAgeCheckDisabled(false);
+         }
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
         form.setDateOfBirthYY("1940");
@@ -139,9 +143,176 @@ public class ClientCustActionFormTest extends TestCase {
         Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.INVALID_AGE, message.getKey());
+    }
+    
+    public void testInvaildFamilyDateOfBirth() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
 
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyDateOfBirthDD(0, "1");
+        form.setFamilyDateOfBirthMM(0, "1");
+        form.setFamilyDateOfBirthYY(0, "200a");
+        form.validateFamilyDateOfBirths(errors);
+        Assert.assertEquals(1, errors.size());
+    }
+    
+  public void testVaildFamilyDateOfBirth() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyDateOfBirthDD(0, "1");
+        form.setFamilyDateOfBirthMM(0, "1");
+        form.setFamilyDateOfBirthYY(0, "2000");
+        form.validateFamilyDateOfBirths(errors);
+        Assert.assertEquals(0, errors.size());
+    }
+    
+    public void testNoFirstName() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyFirstName(0, " ");
+        form.setFamilyLastName(0, "lname");
+        form.validateFamilyNames(errors);
+        Assert.assertEquals(1,errors.size());
+    }
+ 
+    public void testNoLastName() throws Exception {
+         if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyFirstName(0, "fname");
+        form.setFamilyLastName(0, " ");
+        form.validateFamilyNames(errors);
+        Assert.assertEquals(1,errors.size());
     }
 
+    public void testValidName() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyFirstName(0, "fname");
+        form.setFamilyLastName(0, "lname");
+        form.validateFamilyNames(errors);
+        Assert.assertEquals(0,errors.size());
+    }
+  
+    public void testTwoFathers() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyRelationship(0, (short)2);
+        form.addFamilyMember();
+        form.setFamilyRelationship(1, (short)2);
+        form.validateFamilyOneSpouseOrFather(errors);
+        Assert.assertEquals(1,errors.size());
+    }
+
+    public void testTwoSpouses() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyRelationship(0, (short)1);
+        form.addFamilyMember();
+        form.setFamilyRelationship(1, (short)1);
+        form.validateFamilyOneSpouseOrFather(errors);
+        Assert.assertEquals(1,errors.size());
+    }
+    
+    public void testValidRelationships() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyRelationship(0, (short)1);
+        form.addFamilyMember();
+        form.setFamilyRelationship(1, (short)2);
+        form.validateFamilyOneSpouseOrFather(errors);
+        Assert.assertEquals(0,errors.size());
+    }
+    
+    public void testNoRelationships() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.validateFamilyRelationship(errors);
+        Assert.assertEquals(1,errors.size());
+    }
+    
+    public void testNoGender() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.validateFamilyGender(errors);
+        Assert.assertEquals(1,errors.size());
+    }
+
+    public void testNoLivingStatus() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.validateFamilyLivingStatus(errors);
+        Assert.assertEquals(1,errors.size());
+    }
+    
+    public void testValidFamilyMember() throws Exception {
+        if(!ClientRules.isFamilyDetailsRequired()){
+            ClientRules.setFamilyDetailsRequired(true);
+            ClientRules.setMaximumNumberOfFamilyMembers(10);
+        }
+        form.initializeFamilyMember();
+        form.addFamilyMember();
+        form.setFamilyRelationship(0, (short)1);
+        form.setFamilyFirstName(0, "fname");
+        form.setFamilyMiddleName(0,"mname");
+        form.setFamilyLastName(0,"lname");
+        form.setFamilyDateOfBirthDD(0,"1");
+        form.setFamilyDateOfBirthMM(0,"11");
+        form.setFamilyDateOfBirthYY(0,"2008");
+        form.setFamilyGender(0,(short)49);
+        form.setFamilyLivingStatus(0,(short)622);
+        form.validateFamilyRelationship(errors);
+        form.validateFamilyNames(errors);
+        form.validateFamilyDateOfBirths(errors);
+        form.validateFamilyGender(errors);
+        form.validateFamilyLivingStatus(errors);
+        Assert.assertEquals(0,errors.size());
+    }
+    
     @Override
     public void tearDown() {
         form = null;

@@ -192,11 +192,29 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         return this;
         
     }
+    public CreateClientEnterPersonalDataPage createWithoutSpouse(SubmitFormParameters parameters) {
+         selectValueIfNotZero("clientName.salutation", parameters.getSalutation());
+         typeTextIfNotEmpty("create_ClientPersonalInfo.input.firstName", parameters.getFirstName());
+         typeTextIfNotEmpty("create_ClientPersonalInfo.input.lastName", parameters.getLastName());
+         typeTextIfNotEmpty("dateOfBirthDD", parameters.getDateOfBirthDD());
+         typeTextIfNotEmpty("dateOfBirthMM", parameters.getDateOfBirthMM());
+         typeTextIfNotEmpty("dateOfBirthYY", parameters.getDateOfBirthYYYY());     
+         selectValueIfNotZero("clientDetailView.gender", parameters.getGender());
+         selectValueIfNotZero("clientDetailView.povertyStatus", parameters.getPovertyStatus());
+         selectIfNotEmpty("clientDetailView.handicapped", parameters.getHandicapped());  
+         return this;
+    }
     
     public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage() {
         selenium.click("create_ClientPersonalInfo.button.continue");
         waitForPageToLoad();
         return new CreateClientEnterMfiDataPage(selenium);
+    }
+    
+    public CreateClientEnterFamilyDetailsPage submitAndGotoCreateClientEnterFamilyDetailsPage() {
+        selenium.click("create_ClientPersonalInfo.button.continue");
+        waitForPageToLoad();
+        return new CreateClientEnterFamilyDetailsPage(selenium);
     }
     
     /* It to should fail to load next page due to an induced error*/

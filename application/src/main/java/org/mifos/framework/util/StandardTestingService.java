@@ -247,6 +247,13 @@ public class StandardTestingService implements TestingService {
         ClientRules.setMinimumAgeForNewClient(age);        
     }
     
+    @Override
+    public void setAreFamilyDetailsRequired(boolean flag) {
+        ClientRules.setFamilyDetailsRequired(flag);
+    }
     
-
+    @Override
+    public void setMaximumNumberOfFamilyMembers(int number) {
+        ClientRules.setMaximumNumberOfFamilyMembers(number);
+    }
 }

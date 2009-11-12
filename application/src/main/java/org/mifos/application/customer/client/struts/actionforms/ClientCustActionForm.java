@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,7 +40,9 @@ import org.apache.struts.upload.FormFile;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientFamilyDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.business.FamilyDetailDTO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -68,6 +71,17 @@ public class ClientCustActionForm extends CustomerActionForm {
     private CustomerBO parentGroup;
 
     private String groupFlag;
+    
+    private List<FamilyDetailDTO> familyDetailBean=new ArrayList<FamilyDetailDTO>();
+
+    public List<FamilyDetailDTO> getFamilyDetailBean() {
+        return this.familyDetailBean;
+    }
+
+
+    public void setFamilyDetailBean(List<FamilyDetailDTO> familyDetailBean) {        
+        this.familyDetailBean = familyDetailBean;
+    }
 
     private ClientDetailView clientDetailView;
 
@@ -86,6 +100,41 @@ public class ClientCustActionForm extends CustomerActionForm {
     private String dateOfBirthYY;
 
     private String nextOrPreview;
+    
+    private String editFamily;
+
+    private String gotErrorInPage;
+    
+    private String deleteThisRow;
+
+    public String getDeleteThisRow() {
+        return this.deleteThisRow;
+    }
+
+
+    public void setDeleteThisRow(String deleteThisRow) {
+        this.deleteThisRow = deleteThisRow;
+    }
+
+
+    public String getGotErrorInPage() {
+        return this.gotErrorInPage;
+    }
+
+
+    public void setGotErrorInPage(String gotErrorInPage) {
+        this.gotErrorInPage = gotErrorInPage;
+    }
+
+
+    public String getEditFamily() {
+        return this.editFamily;
+    }
+
+
+    public void setEditFamily(String editFamily) {
+        this.editFamily = editFamily;
+    }
 
     private FormFile picture;
 
@@ -94,12 +143,98 @@ public class ClientCustActionForm extends CustomerActionForm {
     private int age;
 
     private List<Short> selectedOfferings;
+    
+    private List familyNames;
+    
+    private List familyDetails;  
+   
+
+    public List<ClientFamilyDetailView> getFamilyDetails() {
+        return this.familyDetails;
+    }
+
+
+    public void setFamilyDetails(List familyDetails) {
+        this.familyDetails = familyDetails;
+    }
+
+
+    public void setFamilyNames(List familyNames) {
+        this.familyNames = familyNames;
+    }
+    
+    private int[] relativePrimaryKey=new int[ClientRules.getMaximumNumberOfFamilyMembers()];
+    
+    public int[] getRelativePrimaryKey() {
+        return this.relativePrimaryKey;
+    }
+
+
+    public void setRelativePrimaryKey(int[] relativePrimaryKey) {
+        this.relativePrimaryKey = relativePrimaryKey;
+    }
+
+
+    /*
+     *  This is used to construct Name detail view and family detail view for each family member,
+     *  Please note i have added display name into family detail view so that i can iterate over only one collection
+     *  when i do preview of this page.
+     */
+  
+    public void constructFamilyDetails() {
+        this.familyDetails=new ArrayList<ClientFamilyDetailView>();
+        this.familyNames=new ArrayList<ClientNameDetailView>();
+        for(int row=0;row<familyFirstName.size();row++){
+            ClientNameDetailView familyNames=new ClientNameDetailView();
+            familyNames.setFirstName(getFamilyFirstName(row));
+            familyNames.setMiddleName(getFamilyMiddleName(row));
+            familyNames.setLastName(getFamilyLastName(row));
+            familyNames.setNameType(getFamilyRelationship(row));
+            familyNames.setDisplayName(new StringBuilder(getFamilyFirstName(row)+getFamilyLastName(row)));
+            ClientFamilyDetailView familyDetails=null;
+            
+            try {
+                if(getFamilyDateOfBirth(row)!=null){
+                    familyDetails = new ClientFamilyDetailView(getFamilyRelationship(row),getFamilyGender(row),
+                            getFamilyLivingStatus(row),DateUtils.getDateAsSentFromBrowser(getFamilyDateOfBirth(row)));
+                    familyDetails.setDisplayName(familyNames.getDisplayName());  
+                } else {
+                    familyDetails = new ClientFamilyDetailView(getFamilyRelationship(row),getFamilyGender(row),
+                            getFamilyLivingStatus(row),null);
+                    familyDetails.setDisplayName(familyNames.getDisplayName());  
+                }
+                
+            } catch (InvalidDateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            this.familyNames.add(familyNames);
+            this.familyDetails.add(familyDetails);
+            
+        }
+    }
+    
+    public String removeSpaces(String s) {
+        StringTokenizer st = new StringTokenizer(s," ",false);
+        String t="";
+        while (st.hasMoreElements()) t += st.nextElement();
+        return t;
+      }
+
+
+    public List<ClientNameDetailView> getFamilyNames() {
+        return this.familyNames;
+    }
+
 
     public ClientCustActionForm() {
         super();
         selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
         for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++)
             selectedOfferings.add(null);
+        
+        initializeFamilyMember();
+        addFamilyMember();
     }
 
     public String getGroupFlag() {
@@ -145,6 +280,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setSpouseName(ClientNameDetailView spouseName) {
         this.spouseName = spouseName;
     }
+
 
     public String getParentGroupId() {
         return parentGroupId;
@@ -209,10 +345,10 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (i < ClientConstants.MAX_OFFERINGS_SIZE)
             selectedOfferings.set(i, value);
     }
+    
 
     @Override
     protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
-
         ActionErrors errors = new ActionErrors();
         UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
         Locale locale = userContext.getPreferredLocale();
@@ -224,7 +360,8 @@ public class ClientCustActionForm extends CustomerActionForm {
             validateClientNames(errors, resources);
             validateDateOfBirth(request, errors, resources);
             validateGender(errors, resources);
-            validateSpouseNames(errors, resources);
+            if(!ClientRules.isFamilyDetailsRequired())
+                validateSpouseNames(errors, resources);
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
             validateCustomFields(request, errors);
             validatePicture(request, errors);
@@ -244,9 +381,41 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (method.equals(Methods.updateMfiInfo.toString())) {
             validateTrained(request, errors);
         }
+        if (method.equals(Methods.familyInfoNext.toString())) {
+            validateFamilyDateOfBirths(errors);
+            validateFamilyNames(errors);
+            validateFamilyOneSpouseOrFather(errors);
+            validateFamilyGender(errors);
+            validateFamilyRelationship(errors);
+            validateFamilyLivingStatus(errors);
+
+        }
+        if (method.equals(Methods.prevFamilyInfoNext.toString())) {
+            validateFamilyDateOfBirths(errors);
+            validateFamilyNames(errors);
+            validateFamilyOneSpouseOrFather(errors);
+            validateFamilyGender(errors);
+            validateFamilyRelationship(errors);
+            validateFamilyLivingStatus(errors);
+        }
+        if (method.equals(Methods.addFamilyRow.toString())) {
+            validateNumberOfFamilyMembers(errors);
+        }
+        if (method.equals(Methods.editAddFamilyRow.toString())) {
+            validateNumberOfFamilyMembers(errors);
+        }
+        if (method.equals(Methods.previewEditFamilyInfo.toString())) {
+            validateFamilyDateOfBirths(errors);
+            validateFamilyNames(errors);
+            validateFamilyOneSpouseOrFather(errors);
+            validateFamilyGender(errors);
+            validateFamilyRelationship(errors);
+            validateFamilyLivingStatus(errors);
+        }
         return errors;
     }
-
+    
+    
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
         if (picture != null) {
             String fileName = picture.getFileName();
@@ -258,7 +427,6 @@ public class ClientCustActionForm extends CustomerActionForm {
                 String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
                 if (!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg")))
                     errors.add(ClientConstants.PICTURE_EXCEPTION, new ActionMessage(ClientConstants.PICTURE_EXCEPTION));
-
             }
             if (picture.getFileSize() == 0 || picture.getFileSize() < 0) {
                 SessionUtils.setAttribute("noPicture", "Yes", request);
@@ -267,7 +435,7 @@ public class ClientCustActionForm extends CustomerActionForm {
             }
         }
     }
-
+    
     private void validateGender(ActionErrors errors, ResourceBundle resources) {
         if (clientDetailView.getGender() == null)
             errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
@@ -284,7 +452,6 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (StringUtils.isNullOrEmpty(clientName.getLastName()))
             errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.LastName")));
-
     }
 
     private void validateSpouseNames(ActionErrors errors, ResourceBundle resources) {
@@ -297,7 +464,6 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (StringUtils.isNullOrEmpty(spouseName.getLastName()))
             errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                     resources.getString("Customer.SpouseLastName")));
-
     }
 
     void validateDateOfBirth(HttpServletRequest request, ActionErrors errors) {
@@ -331,7 +497,6 @@ public class ClientCustActionForm extends CustomerActionForm {
                                 ClientRules.getMinimumAgeForNewClient(), ClientRules.getMaximumAgeForNewClient()));
                     }
                 }
-
             } catch (InvalidDateException e) {
                 errors.add(ClientConstants.INVALID_DOB_EXCEPTION, new ActionMessage(
                         ClientConstants.INVALID_DOB_EXCEPTION));
@@ -361,7 +526,6 @@ public class ClientCustActionForm extends CustomerActionForm {
                         errors.add(fieldConfigurationEntity.getLabel(), new ActionMessage(
                                 FieldConfigurationConstant.EXCEPTION_MANDATORY, FieldConfigurationHelper
                                         .getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(), userContext)));
-
                     }
                     getCustomerPicture().reset();
                 } catch (IOException e) {
@@ -397,6 +561,102 @@ public class ClientCustActionForm extends CustomerActionForm {
                 break;
         }
     }
+    
+    public void validateNumberOfFamilyMembers(ActionErrors errors) {
+        if(familyFirstName.size()==ClientRules.getMaximumNumberOfFamilyMembers()){
+            errors.add(ClientConstants.INVALID_NUMBER_OF_FAMILY_MEMBERS, new ActionMessage(ClientConstants.INVALID_NUMBER_OF_FAMILY_MEMBERS,
+                    1,ClientRules.getMaximumNumberOfFamilyMembers()));
+        }
+    }
+    public void validateFamilyNames(ActionErrors errors) {
+
+        for(int row=0;row<familyFirstName.size();row++){
+           if(StringUtils.isNullOrEmpty(familyFirstName.get(row))){
+                errors.add(ClientConstants.INVALID_FAMILY_FIRST_NAME, new ActionMessage(ClientConstants.INVALID_FAMILY_FIRST_NAME));
+                break;
+            }
+           if(StringUtils.isNullOrEmpty(familyLastName.get(row))){
+               errors.add(ClientConstants.INVALID_FAMILY_LAST_NAME, new ActionMessage(ClientConstants.INVALID_FAMILY_LAST_NAME));
+               break;
+           }
+       }
+    }
+    public void validateFamilyDateOfBirths(ActionErrors errors) { 
+       //Setting date of births for family members before validating it. 
+       setFamilyDateOfBirth(); 
+       for(int row=0;row<familyDateOfBirth.size();row++){
+           if (StringUtils.isNullOrEmpty(familyDateOfBirth.get(row))) {
+                    errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                            CustomerConstants.DOB));
+                    break;
+                }
+            else if(!isValid(familyDateOfBirthDD.get(row)) || !isValid(familyDateOfBirthMM.get(row)) || !isValid(familyDateOfBirthYY.get(row))){
+                errors.add(ClientConstants.INVALID_FAMILY_DOB_EXCPETION, new ActionMessage(ClientConstants.INVALID_FAMILY_DOB_EXCPETION, row+1));
+                break;
+            }
+            else  {
+                Date date;
+                try {
+                    date = DateUtils.getDateAsSentFromBrowser(familyDateOfBirth.get(row));
+                    if (DateUtils.whichDirection(date) > 0) {
+                        errors.add(ClientConstants.FUTURE_DOB_EXCEPTION, new ActionMessage(
+                                ClientConstants.FUTURE_DOB_EXCEPTION));
+                        break;
+                    }
+                } catch (InvalidDateException e) {
+                    errors.add(ClientConstants.INVALID_FAMILY_DOB_EXCPETION, new ActionMessage(ClientConstants.INVALID_FAMILY_DOB_EXCPETION, row+1));
+                }    
+            }
+        }
+     }
+ 
+    public void validateFamilyGender(ActionErrors errors) {
+        for(int row=0;row<familyGender.size();row++) {
+            if(familyGender.get(row) == null) {
+                errors.add(ClientConstants.INVALID_FAMILY_GENDER,new ActionMessage(ClientConstants.INVALID_FAMILY_GENDER));
+                break;
+            }
+        }
+    }
+    
+    public void validateFamilyRelationship(ActionErrors errors) {
+        for(int row=0;row<familyRelationship.size();row++){
+            if(familyRelationship.get(row)==null) {
+                errors.add(ClientConstants.INVALID_FAMILY_RELATIONSHIP, new ActionMessage(ClientConstants.INVALID_FAMILY_RELATIONSHIP));           
+                break;
+            }
+        }
+    }
+    
+    public void validateFamilyLivingStatus(ActionErrors errors) {
+        for(int row=0;row<familyLivingStatus.size();row++){
+            if(familyLivingStatus.get(row)==null) {
+                errors.add(ClientConstants.INVALID_FAMILY_LIVING_STATUS, new ActionMessage(ClientConstants.INVALID_FAMILY_LIVING_STATUS));
+                break;
+            }
+        }
+    }
+
+    public void validateFamilyOneSpouseOrFather(ActionErrors errors) {
+        int spouseCount=0;
+        int fatherCount=0;
+        for(int row=0;row<familyRelationship.size();row++){
+            if(familyRelationship.get(row)!=null){
+                if(familyRelationship.get(row)==2) {
+                    fatherCount++;
+                }
+                if(familyRelationship.get(row)==1) {
+                    spouseCount++;
+                }
+            }
+         }
+        if(spouseCount>1) {
+            errors.add(ClientConstants.INVALID_NUMBER_OF_SPOUSES,new ActionMessage(ClientConstants.INVALID_NUMBER_OF_SPOUSES));
+        } 
+        if(fatherCount>1) {
+            errors.add(ClientConstants.INVALID_NUMBER_OF_FATHERS,new ActionMessage(ClientConstants.INVALID_NUMBER_OF_FATHERS));
+       }
+     }
 
     @Override
     protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
@@ -416,7 +676,17 @@ public class ClientCustActionForm extends CustomerActionForm {
             return null;
         }
     }
+    public String getDateOfBirth(String dateOfBirthDD, String dateOfBirthMM, String dateOfBirthYY){
+        if (StringUtils.isNullAndEmptySafe(dateOfBirthDD) && StringUtils.isNullAndEmptySafe(dateOfBirthMM)
+                && StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
+            String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
+            return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator + dateOfBirthYY;
 
+        } else {
+            return null;
+        }
+        
+    }
     public void setDateOfBirth(String receiptDate) throws InvalidDateException {
         if (StringUtils.isNullOrEmpty(receiptDate)) {
             dateOfBirthDD = null;
@@ -463,6 +733,264 @@ public class ClientCustActionForm extends CustomerActionForm {
             return true;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+    
+    private List<Short> familyRelationship; 
+    private List<String> familyFirstName;
+    private List<String> familyMiddleName;
+    private List<String> familyLastName;
+    private List<String> familyDateOfBirthDD;
+    private List<String> familyDateOfBirthMM;
+    private List<String> familyDateOfBirthYY;
+    private List<Short> familyGender; 
+    private List<Short> familyLivingStatus;
+    private List<Integer> familyPrimaryKey;
+    
+    //FirstName
+    public List<String> getFamilyFirstName() {
+        return this.familyFirstName;
+    }
+    public void setFamilyFirstName(List<String> familyFirstName) {
+        this.familyFirstName = familyFirstName;
+    }    
+
+    public String getFamilyFirstName(int i) {
+        return familyFirstName.get(i);
+    }
+
+    public void setFamilyFirstName(int i, String value) { 
+        if(i<familyFirstName.size())
+            familyFirstName.set(i, value);       
+    }
+    
+    //RelationShip
+    public List<Short> getFamilyRelationship() {
+        return this.familyRelationship;
+    }    
+
+    public void setFamilyRelationship(List<Short> familyRelationship) {
+        this.familyRelationship = familyRelationship;
+    }
+    public Short getFamilyRelationship(int i) {
+        return familyRelationship.get(i);
+    }
+
+    public void setFamilyRelationship(int i, Short value) {   
+        if(i<familyRelationship.size())
+            familyRelationship.set(i, value);       
+    }
+    
+    //  MiddleName
+    public List<String> getFamilyMiddleName() {
+        return this.familyMiddleName;
+    }
+    
+    public void setFamilyMiddleName(List<String> familyMiddleName) {
+        this.familyMiddleName = familyMiddleName;
+    }
+    
+    public String getFamilyMiddleName(int i) {
+        return familyMiddleName.get(i);
+    }
+
+    public void setFamilyMiddleName(int i, String value) {
+        if(i<familyMiddleName.size())
+            familyMiddleName.set(i, value);       
+    }
+    
+//LastName
+    public List<String> getFamilyLastName() {
+        return this.familyLastName;
+    }
+    
+    public void setFamilyLastName(List<String> familyLastName) {
+        this.familyLastName = familyLastName;
+    }
+    public String getFamilyLastName(int i) {
+        return familyLastName.get(i);
+    }
+
+    public void setFamilyLastName(int i, String value) {  
+        if(i<familyLastName.size())
+            familyLastName.set(i, value);      
+    }
+
+//DOB-DD
+    public List<String> getFamilyDateOfBirthDD() {
+        return this.familyDateOfBirthDD;
+    }
+    public void setFamilyDateOfBirthDD(List<String> familyDateOfBirthDD) {
+        this.familyDateOfBirthDD = familyDateOfBirthDD;
+    }
+    public String getFamilyDateOfBirthDD(int i) {
+        return familyDateOfBirthDD.get(i);
+    }
+
+    public void setFamilyDateOfBirthDD(int i, String value) {    
+        if(i<familyDateOfBirthDD.size())
+            familyDateOfBirthDD.set(i, value);        
+    }
+  //DOB-MM
+    public List<String> getFamilyDateOfBirthMM() {
+        return this.familyDateOfBirthMM;
+    }
+    public void setFamilyDateOfBirthMM(List<String> familyDateOfBirthMM) {
+        this.familyDateOfBirthMM = familyDateOfBirthMM;
+    }
+    public String getFamilyDateOfBirthMM(int i) {
+        return familyDateOfBirthMM.get(i);
+    }
+
+    public void setFamilyDateOfBirthMM(int i, String value) {      
+        if(i<familyDateOfBirthMM.size())
+            familyDateOfBirthMM.set(i, value);       
+    }
+//DOB-YY
+    public List<String> getFamilyDateOfBirthYY() {
+        return this.familyDateOfBirthYY;
+    }
+
+
+    public void setFamilyDateOfBirthYY(List<String> familyDateOfBirthYY) {
+        this.familyDateOfBirthYY = familyDateOfBirthYY;
+    }
+    public String getFamilyDateOfBirthYY(int i) {
+        return familyDateOfBirthYY.get(i);
+    }
+
+    public void setFamilyDateOfBirthYY(int i, String value) {  
+        if(i<familyDateOfBirthYY.size())
+            familyDateOfBirthYY.set(i, value);       
+    }
+   //Gender
+    public List<Short> getFamilyGender() {
+        return this.familyGender;
+    }
+    public void setFamilyGender(List<Short> familyGender) {
+        this.familyGender = familyGender;
+    }
+    public Short getFamilyGender(int i) {
+        return familyGender.get(i);
+    }
+
+    public void setFamilyGender(int i, Short value) {
+        if(i<familyGender.size())
+            familyGender.set(i, value);          
+    }
+    
+//Living Status
+    public List<Short> getFamilyLivingStatus() {
+        return this.familyLivingStatus;
+    }   
+    public void setFamilyLivingStatus(List<Short> familyLivingStatus) {
+        this.familyLivingStatus = familyLivingStatus;
+    }
+
+    public Short getFamilyLivingStatus(int i) {
+        return familyLivingStatus.get(i);
+    }
+
+    public void setFamilyLivingStatus(int i, Short value) {   
+        if(i<familyLivingStatus.size())
+            familyLivingStatus.set(i, value);
+    }
+
+    public List<Integer> getFamilyPrimaryKey() {
+        return this.familyPrimaryKey;
+    }
+
+
+    public void setFamilyPrimaryKey(List<Integer> familyPrimaryKey) {
+        this.familyPrimaryKey = familyPrimaryKey;
+    }
+    
+    public Integer getFamilyPrimaryKey(int i) {
+        return familyPrimaryKey.get(i);
+    }
+    
+    public void setFamilyPrimaryKey(int i, Integer value) {
+        familyPrimaryKey.set(i, value);
+    }
+
+    public void initializeFamilyMember(){       
+        //relationship
+        familyRelationship = new ArrayList<Short>();
+        
+        //fistName
+        familyFirstName = new ArrayList<String>();
+        
+        //middleName
+        familyMiddleName = new ArrayList<String>();
+        
+        //lastName
+        familyLastName = new ArrayList<String>();
+        
+        //DOB-DD
+        familyDateOfBirthDD = new ArrayList<String>();
+        
+        //DOB-MM
+        familyDateOfBirthMM = new ArrayList<String>();
+        
+        //DOB-YY
+        familyDateOfBirthYY = new ArrayList<String>();
+       
+        //Gender
+        familyGender = new ArrayList<Short>();
+        
+        //LivingStatus
+        familyLivingStatus = new ArrayList<Short>();
+        
+        //Primary keys
+        familyPrimaryKey=new ArrayList<Integer>();
+    }
+    
+    public void addFamilyMember() {
+        familyPrimaryKey.add(null);
+        familyRelationship.add(null);
+        familyFirstName.add(null);
+        familyMiddleName.add(null);
+        familyLastName.add(null);
+        familyDateOfBirthDD.add(null);
+        familyDateOfBirthMM.add(null);
+        familyDateOfBirthYY.add(null);
+        familyGender.add(null);
+        familyLivingStatus.add(null);
+    }
+    
+    public void removeFamilyMember(int member){
+        familyPrimaryKey.remove(member);
+        familyRelationship.remove(member);
+        familyFirstName.remove(member);
+        familyMiddleName.remove(member);
+        familyLastName.remove(member);
+        familyDateOfBirthDD.remove(member);
+        familyDateOfBirthMM.remove(member);
+        familyDateOfBirthYY.remove(member);
+        familyGender.remove(member);
+        familyLivingStatus.remove(member);
+    }
+    
+    public int getFamilySize() {
+        return familyFirstName.size()-1;
+    }
+    
+    List<String> familyDateOfBirth;
+
+    public List<String> getFamilyDateOfBirth() {
+        return this.familyDateOfBirth;
+    }
+
+    public String getFamilyDateOfBirth(int i) {
+        return this.familyDateOfBirth.get(i);
+    }
+    /*
+     * I set date of Birth so that it can be used by the construct family details function
+     */
+    public void setFamilyDateOfBirth() {
+        this.familyDateOfBirth=new ArrayList<String>();
+        for(int i=0;i<familyDateOfBirthDD.size();i++) {
+            this.familyDateOfBirth.add(getDateOfBirth(getFamilyDateOfBirthDD(i), getFamilyDateOfBirthMM(i),  getFamilyDateOfBirthYY(i)));           
         }
     }
 

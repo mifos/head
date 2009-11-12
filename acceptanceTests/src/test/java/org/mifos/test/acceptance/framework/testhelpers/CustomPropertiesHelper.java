@@ -67,4 +67,22 @@ public class CustomPropertiesHelper {
     public void setMaximumAgeForClients(int maximumAge) {
         selenium.open(UPDATE_PAGE + "?ClientRules.MaximumAgeForNewClients=" + maximumAge);
     }
+    
+    /**
+     * This is to decide whether the user requires to store the client family information
+     * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
+     * @param req True if its required and false if its not required
+     */
+    public void setAreFamilyDetailsRequired(boolean req) {
+        selenium.open(UPDATE_PAGE + "?ClientInformation.AreFamilyDetailsRequired=" + req);
+    }
+    
+    /**
+     * This is to set the maximum number of family members per client
+     * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
+     * @param maximumNumberOfFamilyMembers Specifies the maximum number of family members for each client
+     */
+    public void setMaximumNumberOfFamilyMemebers(int maximumNumberOfFamilyMembers) {
+        selenium.open(UPDATE_PAGE + "?ClientInformation.MaximumNumberOfFamilyMembers=" + maximumNumberOfFamilyMembers);
+    }
 }

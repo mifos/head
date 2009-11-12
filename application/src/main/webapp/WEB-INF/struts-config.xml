@@ -165,6 +165,9 @@
             <!--  Next forwards -->
             <forward name="next_success" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp"/>
             <forward name="next_failure" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp"/>
+            <!-- Family Info Forwards -->
+            <forward name="next_success_family" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
+            <forward name="familyInfoNext_failure" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
             <!-- Preview Page Forwards -->
             <forward name="preview_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp"/>
             <forward name="preview_failure" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp"/>
@@ -174,18 +177,31 @@
             <forward name="previewMfiInfo_failure" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp"/>
             <forward name="previewEditPersonalInfo_success"
                      path="/pages/application/client/jsp/preview_EditClientPersonalInfo.jsp"/>
+            <forward name="previewEditFamilyInfo_success"
+                     path="/pages/application/client/jsp/preview_EditClientFamilyInfo.jsp"/>
+            <forward name="editPreviewEditFamilyInfo_success" path="/pages/application/client/jsp/edit_ClientFamilyInfo.jsp"/>
+            <forward name="previewEditFamilyInfo_failure"
+                     path="/pages/application/client/jsp/edit_ClientFamilyInfo.jsp"/>
             <forward name="previewEditPersonalInfo_failure"
                      path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp"/>
             <forward name="previewEditMfiInfo_success"
                      path="/pages/application/client/jsp/preview_EditClientMfiInfo.jsp"/>
             <forward name="previewEditMfiInfo_failure" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp"/>
-
+			
+			<!-- Modify number of rows for family -->
+			<forward name="addFamilyRow_success" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
+			<forward name="addFamilyRow_failure" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
+			<forward name="deleteFamilyRow_success" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
+			<forward name="deleteFamilyRow_failure" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
             <!-- Preview Page Forwards End -->
             <!-- Previous Page Forwards -->
             <forward name="prevPersonalInfo_success"
                      path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp"/>
             <forward name="prevEditPersonalInfo_success"
                      path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp"/>
+            <forward name="prevFamilyInfo_success" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
+            <forward name="prevFamilyInfoNext_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp"/>
+            <forward name="prevFamilyInfoNext_failure" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>  	
             <forward name="prevMFIInfo_success" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp"/>
             <forward name="prevEditMfiInfo_success" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp"/>
             <!-- Previous Page Forwards End -->
@@ -194,7 +210,14 @@
             <forward name="create_failure" path="/pages/application/client/jsp/preview_ClientDetails.jsp"/>
             <forward name="editPersonalInfo_success" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp"/>
             <forward name="editMfiInfo_success" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp"/>
+            <forward name="editFamilyInfo_success" path="/pages/application/client/jsp/edit_ClientFamilyInfo.jsp"/>
+            <forward name="editAddFamilyRow_success" path="/pages/application/client/jsp/edit_ClientFamilyInfo.jsp"/>
+            <forward name="editAddFamilyRow_failure" path="/pages/application/client/jsp/edit_ClientFamilyInfo.jsp"/>
+            <forward name="editDeleteFamilyRow_success" path="/pages/application/client/jsp/edit_ClientFamilyInfo.jsp"/>
+            <forward name="editDeleteFamilyRow_failure" path="/pages/application/client/jsp/edit_ClientFamilyInfo.jsp"/>
             <forward name="updatePersonalInfo_success" path="/clientCustAction.do?method=get"/>
+            <forward name="updateFamilyInfo_success" path="/clientCustAction.do?method=get"/>
+            <forward name="updateFamilyInfo_failure" path="/pages/application/client/jsp/preview_EditClientFamilyInfo.jsp" />
             <forward name="updatePersonalInfo_failure"
                      path="/pages/application/client/jsp/preview_EditClientPersonalInfo.jsp"/>
             <forward name="updateMfiInfo_success" path="/clientCustAction.do?method=get"/>

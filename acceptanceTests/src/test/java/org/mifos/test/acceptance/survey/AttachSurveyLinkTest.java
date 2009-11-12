@@ -43,6 +43,7 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"acceptance", "ui", "survey"})
 public class AttachSurveyLinkTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
+   
     
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -56,7 +57,6 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,7,11,14,01,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);

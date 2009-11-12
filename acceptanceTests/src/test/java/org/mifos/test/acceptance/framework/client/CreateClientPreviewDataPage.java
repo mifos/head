@@ -45,4 +45,11 @@ public class CreateClientPreviewDataPage extends MifosPage {
         waitForPageToLoad();
         return new CreateClientConfirmationPage(selenium);
     }
+    
+    public CreateClientEnterFamilyDetailsPage edit() {
+        selenium.click("preview_ClientDetails.button.editFamilyInformation");
+        waitForPageToLoad();
+        return new CreateClientEnterFamilyDetailsPage(selenium);
+    }
+    
 }
