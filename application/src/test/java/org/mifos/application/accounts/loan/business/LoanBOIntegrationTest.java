@@ -826,7 +826,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             auditLogList.get(auditLogListIndex).getAuditLogRecords();
         }
        Assert.assertEquals(EntityType.LOAN, auditLogList.get(0).getEntityTypeAsEnum());
-       Assert.assertEquals(4, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Collateral Notes")) {
                Assert.assertEquals("-", auditLogRecord.getOldValue());

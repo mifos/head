@@ -59,6 +59,9 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
     protected CustomerBO group = null;
 
 
+    /*
+     * Note: since this loan is active the disbursement date will not be updated
+     */
     public void testUpdateLoanForLogging() throws Exception {
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
@@ -76,7 +79,7 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOAN, accountBO.getAccountId());
        Assert.assertEquals(1, auditLogList.size());
        Assert.assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0).getEntityType());
-       Assert.assertEquals(4, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Collateral Notes")) {
                Assert.assertEquals("-", auditLogRecord.getOldValue());

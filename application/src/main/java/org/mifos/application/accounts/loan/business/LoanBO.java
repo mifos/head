@@ -1247,7 +1247,7 @@ public class LoanBO extends AccountBO {
     }
 
     public void updateLoan(final Boolean interestDeductedAtDisbursment, final Money loanAmount, final Double interestRate,
-            final Short noOfInstallments, final Date disbursmentDate, final Short gracePeriodDuration, final Integer businessActivityId,
+            final Short noOfInstallments, final Date disbursementDate, final Short gracePeriodDuration, final Integer businessActivityId,
             final String collateralNote, final Integer collateralTypeId, final List<CustomFieldView> customFields,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         if (interestDeductedAtDisbursment) {
@@ -1266,7 +1266,6 @@ public class LoanBO extends AccountBO {
         setLoanAmount(loanAmount);
         setInterestRate(interestRate);
         setNoOfInstallments(noOfInstallments);
-        setDisbursementDate(disbursmentDate);
         setGracePeriodDuration(gracePeriodDuration);
         setInterestDeductedAtDisbursement(interestDeductedAtDisbursment);
         setBusinessActivityId(businessActivityId);
@@ -1276,9 +1275,14 @@ public class LoanBO extends AccountBO {
                 || getAccountState().getId().equals(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue())
                 || getAccountState().getId().equals(AccountState.LOAN_PARTIAL_APPLICATION.getValue())
                 || getAccountState().getId().equals(AccountState.LOAN_PENDING_APPROVAL.getValue())) {
-            if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
+            // only check the disbursement date if it has changed
+            if (disbursementDate != null && !disbursementDate.equals(getDisbursementDate()) &&
+                    isDisbursementDateLessThanCurrentDate(disbursementDate)) {
                 throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+            } else {
+                setDisbursementDate(disbursementDate);
             }
+            
             regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         }
         try {

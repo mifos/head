@@ -1564,6 +1564,8 @@ public class LoanAccountAction extends AccountAppAction {
         loanAccountActionForm.setNoOfInstallments(getStringValue(loan.getNoOfInstallments()));
         loanAccountActionForm.setGracePeriodDuration(getStringValue(loan.getGracePeriodDuration()));
         loanAccountActionForm.setCustomFields(createCustomFieldViews(loan.getAccountCustomFields(), request));
+        
+        loanAccountActionForm.setOriginalDisbursementDate(new java.sql.Date(loan.getDisbursementDate().getTime()));
     }
 
     private ViewInstallmentDetails getUpcomingInstallmentDetails(final AccountActionDateEntity upcomingAccountActionDate) {

@@ -184,6 +184,16 @@ public class LoanAccountActionForm extends BaseActionForm {
     private String dayNumber;
 
     private ConfigurationBusinessService configService;
+    
+    private Date originalDisbursementDate;    
+
+    public Date getOriginalDisbursementDate() {
+        return this.originalDisbursementDate;
+    }
+
+    public void setOriginalDisbursementDate(Date originalDisbursementDate) {
+        this.originalDisbursementDate = originalDisbursementDate;
+    }
 
     public String getDayNumber() {
         return dayNumber;
@@ -758,8 +768,11 @@ public class LoanAccountActionForm extends BaseActionForm {
             // Only validate the disbursement date before a loan has been approved.  After
             // approval, it cannot be edited.
             try {
-                validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(request)
-                    .getPreferredLocale()));
+                // only validate if the disbursement date has changed
+                if (!getDisbursementDateValue(getUserContext(request).getPreferredLocale()).equals(getOriginalDisbursementDate())) {                        
+                    validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(request)
+                        .getPreferredLocale()));
+                }
             } catch (InvalidDateException dateException) {
                 addError(errors, LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
             }

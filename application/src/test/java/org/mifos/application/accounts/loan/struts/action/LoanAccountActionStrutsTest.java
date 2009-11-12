@@ -1128,6 +1128,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Date firstInstallmentDate = loan.getDetailsOfNextInstallment().getActionDate();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         Date newDate = DateUtils.addWeeks(loan.getDisbursementDate(), 1);
+        Date originalDate = loan.getDisbursementDate();
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("method", "update");
@@ -1149,7 +1150,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue(), DELTA);
         Assert.assertFalse(loan.isInterestDeductedAtDisbursement());
         Assert.assertEquals(1, loan.getGracePeriodDuration().intValue());
-        Assert.assertEquals(DateUtils.format(newDate), DateUtils.getUserLocaleDate(TestObjectFactory.getContext()
+        Assert.assertEquals(DateUtils.format(originalDate), DateUtils.getUserLocaleDate(TestObjectFactory.getContext()
                 .getPreferredLocale(), DateUtils.toDatabaseFormat(loan.getDisbursementDate())));
         Assert.assertEquals(firstInstallmentDate, loan.getAccountActionDate(Short.valueOf("1")).getActionDate());
     }
@@ -1333,6 +1334,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 startDate, loanOffering);
     }
 
+    
     private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
         MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
