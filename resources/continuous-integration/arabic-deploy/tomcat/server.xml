@@ -18,7 +18,7 @@
 <Server port="8089" shutdown="SHUTDOWN">
   <Listener className="org.apache.catalina.core.JasperListener" />
   <Service name="Catalina">
-    <Connector port="8090" protocol="HTTP/1.1" connectionTimeout="20000" />
+    <Connector port="8090" protocol="HTTP/1.1" connectionTimeout="20000" URIEncoding="UTF-8" />
     <Engine name="Catalina" defaultHost="localhost">
       <Host name="localhost"  appBase="webapps"
             unpackWARs="false" autoDeploy="true"
