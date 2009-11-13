@@ -925,6 +925,30 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1.1-mifos-mexec-68-patch</version>
+                <executions>
+                    <execution>
+                        <id>create_props</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${basedir}/src/main/resources/org/mifos/config/localizedResources/create_props.sh</executable>
+                            <workingDirectory>${java.io.tmpdir}</workingDirectory>
+                            <outputFile>${basedir}/target/create_props.out</outputFile>
+                            <arguments>
+                                <argument>${basedir}/src/main/resources/org/mifos/config/localizedResources</argument>
+                                <argument>${basedir}/target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</argument>
+                            </arguments>
+                            <skip>${create.props.skip}</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.0.2</version>
@@ -971,30 +995,6 @@
                     <doUpdate>false</doUpdate>
                     <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.1.1-mifos-mexec-68-patch</version>
-                <executions>
-                    <execution>
-                        <id>create_props</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${basedir}/src/main/resources/org/mifos/config/localizedResources/create_props.sh</executable>
-                            <workingDirectory>${java.io.tmpdir}</workingDirectory>
-                            <outputFile>${basedir}/target/create_props.out</outputFile>
-                            <arguments>
-                                <argument>${basedir}/src/main/resources/org/mifos/config/localizedResources</argument>
-                                <argument>${basedir}/target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</argument>
-                            </arguments>
-                            <skip>${create.props.skip}</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.mifos.maven</groupId>
