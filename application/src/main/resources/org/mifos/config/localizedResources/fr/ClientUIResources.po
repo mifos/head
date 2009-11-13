@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-26 16:58-0700\n"
+"POT-Creation-Date: 2009-11-13 13:21-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,6 +48,53 @@ msgstr ""
 #: Client.InvalidDOB
 msgid "<li>The date of birth specified was invalid.</li>"
 msgstr "<li>La date de naissance indiquée était invalide.</li>"
+
+#: Family.InvalidDOB
+#, fuzzy
+msgid "<li>The date of birth specified was invalid in the row {0}.</li>"
+msgstr "<li>La date de naissance indiquée était invalide.</li>"
+
+#: Client.InvalidAge
+msgid "<li>Given age is out of range. Age must be between {0} and {1}</li>"
+msgstr ""
+
+#: Family.InvalidNumberOfFamilyMembers
+msgid "<li>The number of family members can only be between {0} and {1}</li>"
+msgstr ""
+
+#: Family.InvalidFatherNumber
+msgid "<li> The number of Fathers per client cannot be greater than 1 </li>"
+msgstr ""
+
+#: Family.InvalidSpouseNumber
+msgid "<li> The number of Spouses per client cannot be greater than 1 </li>"
+msgstr ""
+
+#: Family.InvalidCharacter
+msgid "<li> Bad Character ',' or '/' in input String </li>"
+msgstr ""
+
+#: Family.InvalidRelationship
+msgid ""
+"<li>Please specify the relationship of every family member to the "
+"client</li>"
+msgstr ""
+
+#: Family.InvalidGender
+msgid "<li>Please specify the gender of every family member</li>"
+msgstr ""
+
+#: Family.InvalidLivingStatus
+msgid "<li>Please specify the living status of every family member</li>"
+msgstr ""
+
+#: Family.InvalidFamilyFirstName
+msgid "<li>Please specify the first name of every family member</li>"
+msgstr ""
+
+#: Family.InvalidFamilyLastName
+msgid "<li>Please specify the last name of every family member</li>"
+msgstr ""
 
 #: Client.NoPictureAvailable
 msgid "(No Picture Available)"
@@ -285,6 +332,11 @@ msgstr "Continuer"
 msgid "Preview"
 msgstr "Aperçu"
 
+#: button.edit
+msgctxt "button.edit"
+msgid "Edit"
+msgstr "Editer"
+
 #: button.previousMFIInfo
 msgid "Edit MFI related information"
 msgstr "Editer l'information relié par MFI"
@@ -294,6 +346,10 @@ msgctxt "button.previousPersonalInfo"
 msgid "Edit personal information"
 msgstr "Editer l'information personelle"
 
+#: button.previousFamilyInfo
+msgid "Edit Family information"
+msgstr ""
+
 #: button.previousStatus
 msgid "Edit status"
 msgstr "Editer statut"
@@ -301,6 +357,14 @@ msgstr "Editer statut"
 #: button.submit
 msgid "Submit"
 msgstr "Valider"
+
+#: button.addrow
+msgid "Add Row"
+msgstr ""
+
+#: button.deleterow
+msgid "Delete"
+msgstr ""
 
 #: cf.lookUpEntity.entityId
 msgid "Custom Field"
@@ -602,6 +666,10 @@ msgstr "et Comptes sans Valider l'information."
 msgid "Complete the fields below. Then click Continue."
 msgstr "Compléter les champs ci-dessous. Puis cliquer sur Continuer."
 
+#: client.CreateFamilyInformationInstruction
+msgid "Add the family members. Then click Continue."
+msgstr ""
+
 #: client.CreatePersonalInformationTitle
 msgid "-  Enter personal information"
 msgstr "-  Entrer les informations personnelles"
@@ -684,6 +752,7 @@ msgid "Edit group membership"
 msgstr "Editer membre de groupe"
 
 #: client.EditLink
+msgctxt "client.EditLink"
 msgid "Edit"
 msgstr "Editer"
 
@@ -718,6 +787,11 @@ msgstr "-  Editer l' information personnelle"
 #: client.EditPreviewPersonalReviewTitle
 msgid "Review & Submit Personal Information"
 msgstr "Réafficher et Valider l'information personelle"
+
+#: client.EditFamilyInformationLink
+msgctxt "client.EditFamilyInformationLink"
+msgid "Edit family information"
+msgstr ""
 
 #: client.EditRemoveMembership
 msgid "Edit / Remove {0} membership"
@@ -782,6 +856,7 @@ msgid "Gender\\:"
 msgstr "Sexe\\:"
 
 #: client.GenderValue
+msgctxt "client.GenderValue"
 msgid "Gender"
 msgstr "Sexe"
 
@@ -820,6 +895,15 @@ msgstr "Style de membre de groupe"
 #: client.GroupsAssigned
 msgid "Group assigned\\:"
 msgstr "Groupe assigné\\:"
+
+#: family.EditFamilyInformationLink
+msgctxt "family.EditFamilyInformationLink"
+msgid "Edit family information"
+msgstr ""
+
+#: family.FamilyInformationHeading
+msgid "Family information"
+msgstr ""
 
 #: client.Handicapped
 msgid "Handicapped\\:"
@@ -927,6 +1011,10 @@ msgstr "Style de membre\\:"
 msgid "MFI related information"
 msgstr "Les informations sur le IMF"
 
+#: client.FamilyInformationLabel
+msgid "Family Information"
+msgstr ""
+
 #: client.MiddleName
 msgid "Middle Name\\:"
 msgstr "Dexième Prénom\\:"
@@ -1000,11 +1088,17 @@ msgstr "Editer les champs ci-dessous. Puis cliquer sur Aperçu."
 msgid "Preview MFI information"
 msgstr "Aperçu des informations de l'IMF"
 
+#: client.PreviewFamilyInformation
+#, fuzzy
+msgid "Preview Family information"
+msgstr "Aperçu des informations de l'IMF"
+
 #: client.RecentNotes
 msgid "Recent Notes"
 msgstr "Notes Récentes"
 
 #: client.Relationship
+msgctxt "client.Relationship"
 msgid "Relationship"
 msgstr "Relation"
 
@@ -1110,6 +1204,7 @@ msgid "Spouse/Father Last Name"
 msgstr "Conjoint/Père Nom de la famille"
 
 #: client.SpouseMiddleName
+msgctxt "client.SpouseMiddleName"
 msgid "Middle Name"
 msgstr "Deuxième prénom"
 
@@ -1120,6 +1215,72 @@ msgstr "Conjoint/Père Type"
 #: client.SpouseSecondLastName
 msgid "Second Last Name"
 msgstr "Deuxième Nom de famille"
+
+#: client.FamilyNumber
+msgid "Dependent Family Members"
+msgstr ""
+
+#: client.FamilyDetails
+msgid "Family Details"
+msgstr ""
+
+#: client.FamilyRelationship
+msgctxt "client.FamilyRelationship"
+msgid "Relationship"
+msgstr "Relation"
+
+#: client.FamilyFirstName
+msgctxt "client.FamilyFirstName"
+msgid "First Name"
+msgstr "Prénom"
+
+#: client.FamilyMiddleName
+msgctxt "client.FamilyMiddleName"
+msgid "Middle Name"
+msgstr "Deuxième prénom"
+
+#: client.FamilyLastName
+msgctxt "client.FamilyLastName"
+msgid "Last Name"
+msgstr "Nom de famille"
+
+#: client.FamilyDateOfBirth
+#, fuzzy
+msgid "Date of Birth"
+msgstr "Date de naissance"
+
+#: client.FamilyGender
+msgctxt "client.FamilyGender"
+msgid "Gender"
+msgstr "Sexe"
+
+#: client.FamilyLivingStatus
+msgid "Living Status"
+msgstr ""
+
+#: client.FamilyChildLabel
+msgid "Child"
+msgstr ""
+
+#: client.FamilySpouseLabel
+msgid "Spouse"
+msgstr ""
+
+#: client.FamilyFatherLabel
+msgid "Father"
+msgstr ""
+
+#: client.FamilyMotherLabel
+msgid "Mother"
+msgstr ""
+
+#: client.FamilySiblingLabel
+msgid "Sibling"
+msgstr ""
+
+#: client.FamilyDisplayName
+msgid "Name"
+msgstr ""
 
 #: client.State
 msgid "State\\:"

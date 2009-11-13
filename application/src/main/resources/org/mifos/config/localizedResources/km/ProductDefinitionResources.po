@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-26 16:58-0700\n"
+"POT-Creation-Date: 2009-11-13 13:22-0700\n"
 "PO-Revision-Date: 2009-09-29 00:52-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,8 +88,9 @@ msgid ""
 msgstr ""
 
 #: errors.defaultloanamount
+#, fuzzy
 msgid "Please Specify the valid Default Loan Amount {0}."
-msgstr ""
+msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
 #: errors.defaultloanamountinvalidformat
 msgid "The default loan amount format {0} {1} is invalid because {2}"
@@ -137,8 +138,9 @@ msgid "Please Specify the valid End Installment Range Number {0} {1}."
 msgstr ""
 
 #: errors.endloanamount
+#, fuzzy
 msgid "Please Specify the valid End Range Loan Amount {0} {1}."
-msgstr ""
+msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
 #: errors.feefrequency
 msgid "The frequency of the product and the fee \"{0}\" does not match."
@@ -338,8 +340,9 @@ msgid "Please Specify the valid Start Installment Range Number {0} {1}."
 msgstr ""
 
 #: errors.startloanamount
+#, fuzzy
 msgid "Please Specify the valid Start Range Loan Amount {0} {1}."
-msgstr ""
+msgstr "សូមបញ្ជាក់កាគណនា\\# នៃប្រភេទសងរំលោះ"
 
 #: errors.suffix
 msgid "</LI>"
