@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-13 13:22-0700\n"
+"POT-Creation-Date: 2009-11-13 14:42-0700\n"
 "PO-Revision-Date: 2009-09-15 20:48-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -656,6 +656,10 @@ msgstr "ភាសាខ្មែរ"
 #: Language-Lao
 msgid "Lao"
 msgstr "ភាសាឡាវ"
+
+#: Language-Hungarian
+msgid "Hungarian"
+msgstr ""
 
 #: Loan-Loan
 msgctxt "Loan-Loan"
