@@ -60,7 +60,7 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("Saturday", messageLookup.lookup(WeekDay.SATURDAY, Locale.US));
        Assert.assertEquals("Sunday", messageLookup.lookup(WeekDay.SUNDAY, Locale.US));
         // Spanish locale
-       Assert.assertEquals("lunes", messageLookup.lookup(WeekDay.MONDAY, new Locale("es")));
+       Assert.assertEquals("Lunes", messageLookup.lookup(WeekDay.MONDAY, new Locale("es")));
         // French locale
        Assert.assertEquals("lundi", messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
     }
@@ -125,7 +125,7 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
 
         } finally {
             messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
-            localization.setCountryCodeLanguageCodeToConfigFile(originalConfig);
+            ChangeLocale(originalConfig);
         }
     }
 
