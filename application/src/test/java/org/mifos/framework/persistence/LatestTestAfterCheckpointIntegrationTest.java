@@ -38,10 +38,10 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -61,20 +61,21 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * fixes to be made to recent upgrades when necessary.
  */
 
-public class LatestTestAfterCheckpointIntegrationTest {
+public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTestCase {
+
+    public LatestTestAfterCheckpointIntegrationTest() throws SystemException, ApplicationException {
+        super();
+    }
 
     private static Connection connection;
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        MifosLogManager.configureLogging();
-        StaticHibernateUtil.initialize();
-        connection = StaticHibernateUtil.getSessionTL().connection();
-        connection.setAutoCommit(false);
-    }
-
+    @Override
     @Before
     public void setUp() throws Exception {
+        super.setUp();
+        if (null == connection) {
+            connection = StaticHibernateUtil.getSessionTL().connection();
+        }
         dropLatestDatabase();
     }
 
