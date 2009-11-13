@@ -167,9 +167,15 @@ explanation of the license and how it is applied.
 					</table>
 					<table width="90%" border="0" align="center" cellpadding="0" id="familyTable"
 						cellspacing="0" class="bluetableborder">
-						<tr><td>
-						<font class="fontnormalRedBold"><span id="create_ClientFamilyInfo.error.message"><html-el:errors
-											bundle="ClientUIResources" /></span> </font></td></tr>
+						<tr>
+							<td>
+								<font class="fontnormalRedBold">
+									<span id="create_ClientFamilyInfo.error.message">
+										<html-el:errors bundle="ClientUIResources" />
+									</span> 
+								</font>
+							</td>
+						</tr>
 						<tr>
 							<td align="left" valign="top" class="paddingleftCreates">
 							
@@ -199,14 +205,12 @@ explanation of the license and how it is applied.
 															   bundle="ClientUIResources">
 															   </mifos:mifoslabel></span>
 														</td>
-														
 														<td class="paddingL10">
 														<span id="create_ClientFamilyInfo.label.familyMiddleName">
 																<mifos:mifoslabel  name="client.FamilyMiddleName" 
 																		bundle="ClientUIResources">
 																		</mifos:mifoslabel>
 														</span>
-														
 														</td>
 														<td class="paddingL10">
 														<span id="create_ClientFamilyInfo.label.familyLastName">
@@ -214,7 +218,6 @@ explanation of the license and how it is applied.
 																		bundle="ClientUIResources">
 																		</mifos:mifoslabel>
 														</span>
-														
 														</td>
 														<td class="paddingL10" width="70%">
 														<span id="create_ClientFamilyInfo.label.familyDateOfBirth">

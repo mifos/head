@@ -210,7 +210,6 @@ public class ClientCustActionForm extends CustomerActionForm {
             }
             this.familyNames.add(familyNames);
             this.familyDetails.add(familyDetails);
-            
         }
     }
     
@@ -755,13 +754,13 @@ public class ClientCustActionForm extends CustomerActionForm {
         this.familyFirstName = familyFirstName;
     }    
 
-    public String getFamilyFirstName(int i) {
-        return familyFirstName.get(i);
+    public String getFamilyFirstName(int forMember) {
+        return familyFirstName.get(forMember);
     }
 
-    public void setFamilyFirstName(int i, String value) { 
-        if(i<familyFirstName.size())
-            familyFirstName.set(i, value);       
+    public void setFamilyFirstName(int forMember, String value) { 
+        if(forMember<familyFirstName.size())
+            familyFirstName.set(forMember, value);       
     }
     
     //RelationShip
@@ -772,13 +771,13 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyRelationship(List<Short> familyRelationship) {
         this.familyRelationship = familyRelationship;
     }
-    public Short getFamilyRelationship(int i) {
-        return familyRelationship.get(i);
+    public Short getFamilyRelationship(int forMember) {
+        return familyRelationship.get(forMember);
     }
 
-    public void setFamilyRelationship(int i, Short value) {   
-        if(i<familyRelationship.size())
-            familyRelationship.set(i, value);       
+    public void setFamilyRelationship(int forMember, Short value) {   
+        if(forMember<familyRelationship.size())
+            familyRelationship.set(forMember, value);       
     }
     
     //  MiddleName
@@ -790,13 +789,13 @@ public class ClientCustActionForm extends CustomerActionForm {
         this.familyMiddleName = familyMiddleName;
     }
     
-    public String getFamilyMiddleName(int i) {
-        return familyMiddleName.get(i);
+    public String getFamilyMiddleName(int forMember) {
+        return familyMiddleName.get(forMember);
     }
 
-    public void setFamilyMiddleName(int i, String value) {
-        if(i<familyMiddleName.size())
-            familyMiddleName.set(i, value);       
+    public void setFamilyMiddleName(int forMember, String value) {
+        if(forMember<familyMiddleName.size())
+            familyMiddleName.set(forMember, value);       
     }
     
 //LastName
@@ -807,13 +806,13 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyLastName(List<String> familyLastName) {
         this.familyLastName = familyLastName;
     }
-    public String getFamilyLastName(int i) {
-        return familyLastName.get(i);
+    public String getFamilyLastName(int forMember) {
+        return familyLastName.get(forMember);
     }
 
-    public void setFamilyLastName(int i, String value) {  
-        if(i<familyLastName.size())
-            familyLastName.set(i, value);      
+    public void setFamilyLastName(int forMember, String value) {  
+        if(forMember<familyLastName.size())
+            familyLastName.set(forMember, value);      
     }
 
 //DOB-DD
@@ -823,13 +822,13 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyDateOfBirthDD(List<String> familyDateOfBirthDD) {
         this.familyDateOfBirthDD = familyDateOfBirthDD;
     }
-    public String getFamilyDateOfBirthDD(int i) {
-        return familyDateOfBirthDD.get(i);
+    public String getFamilyDateOfBirthDD(int forMember) {
+        return familyDateOfBirthDD.get(forMember);
     }
 
-    public void setFamilyDateOfBirthDD(int i, String value) {    
-        if(i<familyDateOfBirthDD.size())
-            familyDateOfBirthDD.set(i, value);        
+    public void setFamilyDateOfBirthDD(int forMember, String value) {    
+        if(forMember<familyDateOfBirthDD.size())
+            familyDateOfBirthDD.set(forMember, value);        
     }
   //DOB-MM
     public List<String> getFamilyDateOfBirthMM() {
@@ -838,13 +837,13 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyDateOfBirthMM(List<String> familyDateOfBirthMM) {
         this.familyDateOfBirthMM = familyDateOfBirthMM;
     }
-    public String getFamilyDateOfBirthMM(int i) {
-        return familyDateOfBirthMM.get(i);
+    public String getFamilyDateOfBirthMM(int forMember) {
+        return familyDateOfBirthMM.get(forMember);
     }
 
-    public void setFamilyDateOfBirthMM(int i, String value) {      
-        if(i<familyDateOfBirthMM.size())
-            familyDateOfBirthMM.set(i, value);       
+    public void setFamilyDateOfBirthMM(int forMember, String value) {      
+        if(forMember<familyDateOfBirthMM.size())
+            familyDateOfBirthMM.set(forMember, value);       
     }
 //DOB-YY
     public List<String> getFamilyDateOfBirthYY() {
@@ -855,13 +854,13 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyDateOfBirthYY(List<String> familyDateOfBirthYY) {
         this.familyDateOfBirthYY = familyDateOfBirthYY;
     }
-    public String getFamilyDateOfBirthYY(int i) {
-        return familyDateOfBirthYY.get(i);
+    public String getFamilyDateOfBirthYY(int forMember) {
+        return familyDateOfBirthYY.get(forMember);
     }
 
-    public void setFamilyDateOfBirthYY(int i, String value) {  
-        if(i<familyDateOfBirthYY.size())
-            familyDateOfBirthYY.set(i, value);       
+    public void setFamilyDateOfBirthYY(int forMember, String value) {  
+        if(forMember<familyDateOfBirthYY.size())
+            familyDateOfBirthYY.set(forMember, value);       
     }
    //Gender
     public List<Short> getFamilyGender() {
@@ -870,13 +869,13 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyGender(List<Short> familyGender) {
         this.familyGender = familyGender;
     }
-    public Short getFamilyGender(int i) {
-        return familyGender.get(i);
+    public Short getFamilyGender(int forMember) {
+        return familyGender.get(forMember);
     }
 
-    public void setFamilyGender(int i, Short value) {
-        if(i<familyGender.size())
-            familyGender.set(i, value);          
+    public void setFamilyGender(int forMember, Short value) {
+        if(forMember<familyGender.size())
+            familyGender.set(forMember, value);          
     }
     
 //Living Status
@@ -887,13 +886,13 @@ public class ClientCustActionForm extends CustomerActionForm {
         this.familyLivingStatus = familyLivingStatus;
     }
 
-    public Short getFamilyLivingStatus(int i) {
-        return familyLivingStatus.get(i);
+    public Short getFamilyLivingStatus(int forMember) {
+        return familyLivingStatus.get(forMember);
     }
 
-    public void setFamilyLivingStatus(int i, Short value) {   
-        if(i<familyLivingStatus.size())
-            familyLivingStatus.set(i, value);
+    public void setFamilyLivingStatus(int forMember, Short value) {   
+        if(forMember<familyLivingStatus.size())
+            familyLivingStatus.set(forMember, value);
     }
 
     public List<Integer> getFamilyPrimaryKey() {
@@ -905,12 +904,12 @@ public class ClientCustActionForm extends CustomerActionForm {
         this.familyPrimaryKey = familyPrimaryKey;
     }
     
-    public Integer getFamilyPrimaryKey(int i) {
-        return familyPrimaryKey.get(i);
+    public Integer getFamilyPrimaryKey(int forMember) {
+        return familyPrimaryKey.get(forMember);
     }
     
-    public void setFamilyPrimaryKey(int i, Integer value) {
-        familyPrimaryKey.set(i, value);
+    public void setFamilyPrimaryKey(int forMember, Integer value) {
+        familyPrimaryKey.set(forMember, value);
     }
 
     public void initializeFamilyMember(){       
@@ -981,16 +980,16 @@ public class ClientCustActionForm extends CustomerActionForm {
         return this.familyDateOfBirth;
     }
 
-    public String getFamilyDateOfBirth(int i) {
-        return this.familyDateOfBirth.get(i);
+    public String getFamilyDateOfBirth(int forMember) {
+        return this.familyDateOfBirth.get(forMember);
     }
     /*
      * I set date of Birth so that it can be used by the construct family details function
      */
     public void setFamilyDateOfBirth() {
         this.familyDateOfBirth=new ArrayList<String>();
-        for(int i=0;i<familyDateOfBirthDD.size();i++) {
-            this.familyDateOfBirth.add(getDateOfBirth(getFamilyDateOfBirthDD(i), getFamilyDateOfBirthMM(i),  getFamilyDateOfBirthYY(i)));           
+        for(int forMember=0;forMember<familyDateOfBirthDD.size();forMember++) {
+            this.familyDateOfBirth.add(getDateOfBirth(getFamilyDateOfBirthDD(forMember), getFamilyDateOfBirthMM(forMember),  getFamilyDateOfBirthYY(forMember)));           
         }
     }
 

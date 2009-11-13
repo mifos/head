@@ -2,6 +2,8 @@ package org.mifos.application.customer.client.business;
 
 import java.sql.Date;
 
+import org.mifos.framework.util.helpers.DateUtils;
+
 public class ClientFamilyDetailView {
 
     private Short relationship;
@@ -60,6 +62,10 @@ public class ClientFamilyDetailView {
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+    
+    public String getDateOfBirthForBrowser() {
+        return DateUtils.makeDateAsSentFromBrowser(getDateOfBirth());
     }
     
     

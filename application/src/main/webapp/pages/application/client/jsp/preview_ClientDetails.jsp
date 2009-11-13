@@ -449,7 +449,7 @@ explanation of the license and how it is applied.
 											<c:out value="${familyDetails.displayName}"/>	</div>   
 										</td>		
 										<td class="paddingL10">
-											<c:out value="${familyDetails.dateOfBirth}"/>
+											<c:out value="${familyDetails.dateOfBirthForBrowser}"/>
 										</td>
 										<td class="paddingL10">
 											<c:forEach var="genderEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">

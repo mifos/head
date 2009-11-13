@@ -120,13 +120,20 @@ explanation of the license and how it is applied.
 					</table>
 					<br>
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
-						<font class="fontnormalRedBold"><span id="edit_ClientFamilyInfo.error.message"><html-el:errors
-							bundle="ClientUIResources" /></span> </font>
+						<tr>
+							<td>
+								<font class="fontnormalRedBold">
+									<span id="edit_ClientFamilyInfo.error.message">
+										<html-el:errors bundle="ClientUIResources" />
+									</span> 
+								</font>
+							</td>
+						</tr>
 						<tr>
 							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 								name="family.FamilyInformationHeading"
 								bundle="ClientUIResources"></mifos:mifoslabel><br>
-							<br>
+								<br>
 							</td>
 						</tr>
 					</table>

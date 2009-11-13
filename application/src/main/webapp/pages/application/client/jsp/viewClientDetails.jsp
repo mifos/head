@@ -631,8 +631,8 @@ explanation of the license and how it is applied.
 					</table>
 					<!-- Family Details -->
 					<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
-					<table width="96%" border="0" cellpadding="0" cellspacing="0">
-					<tr>
+						<table width="96%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
 							<td width="50%" height="23" class="headingorange"><mifos:mifoslabel
 								name="client.FamilyInformationLabel"
 								bundle="ClientUIResources"></mifos:mifoslabel></td>
@@ -641,8 +641,8 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="client.EditFamilyInformationLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:link></td>
-					</tr>
-					</table>
+						</tr>
+						</table>
 					<table>
 					<tr class="fontnormal">
 							<td>
@@ -686,11 +686,13 @@ explanation of the license and how it is applied.
 												</c:if>
 											</c:forEach>
 										</td>
-										<td class="paddingL10"> <div id="displayName"> 
-											<c:out value="${familyDetails.displayName}"/></div>	   
+										<td class="paddingL10"> 
+											<div id="displayName"> 
+												<c:out value="${familyDetails.displayName}"/>
+											</div>	   
 										</td>		
 										<td class="paddingL10">
-											<c:out value="${familyDetails.dateOfBirth}"/>
+											<c:out value="${familyDetails.dateOfBirthForBrowser}"/>
 										</td>
 										<td class="paddingL10">
 											<c:forEach var="genderEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">
