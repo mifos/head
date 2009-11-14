@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink
-						selfLink="false" /> </span>
+						selfLink="false" /> </span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
