@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-13 14:42-0700\n"
+"POT-Creation-Date: 2009-11-16 15:30-0700\n"
 "PO-Revision-Date: 2009-08-16 21:53-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -758,9 +758,10 @@ msgid "Review & Submit Personal Information"
 msgstr "ពិនិត្យឡើងវិញ​និងបញ្ជូនពត័មានផ្ទាល់ខ្លួន"
 
 #: client.EditFamilyInformationLink
+#, fuzzy
 msgctxt "client.EditFamilyInformationLink"
 msgid "Edit family information"
-msgstr ""
+msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
 #: client.EditRemoveMembership
 msgid "Edit / Remove {0} membership"
@@ -866,13 +867,15 @@ msgid "Group assigned\\:"
 msgstr "ការចាត់តាំងក្រុម"
 
 #: family.EditFamilyInformationLink
+#, fuzzy
 msgctxt "family.EditFamilyInformationLink"
 msgid "Edit family information"
-msgstr ""
+msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
 #: family.FamilyInformationHeading
+#, fuzzy
 msgid "Family information"
-msgstr ""
+msgstr "ត្រួតពិនិត្យព័តមានMFI"
 
 #: client.Handicapped
 msgid "Handicapped\\:"

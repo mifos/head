@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-13 14:43-0700\n"
+"POT-Creation-Date: 2009-11-16 15:31-0700\n"
 "PO-Revision-Date: 2009-07-04 10:49-0700\n"
 "Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -792,9 +792,10 @@ msgid "Review & Submit Personal Information"
 msgstr "Revisar y Enviar Información Personal"
 
 #: client.EditFamilyInformationLink
+#, fuzzy
 msgctxt "client.EditFamilyInformationLink"
 msgid "Edit family information"
-msgstr ""
+msgstr "Vista Previa de información de la IMF."
 
 #: client.EditRemoveMembership
 msgid "Edit / Remove {0} membership"
@@ -900,13 +901,15 @@ msgid "Group assigned\\:"
 msgstr "Grupo asignado\\:"
 
 #: family.EditFamilyInformationLink
+#, fuzzy
 msgctxt "family.EditFamilyInformationLink"
 msgid "Edit family information"
-msgstr ""
+msgstr "Vista Previa de información de la IMF."
 
 #: family.FamilyInformationHeading
+#, fuzzy
 msgid "Family information"
-msgstr ""
+msgstr "Vista Previa de información de la IMF."
 
 #: client.Handicapped
 msgid "Handicapped\\:"
