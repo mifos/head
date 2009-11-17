@@ -34,7 +34,6 @@ import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
@@ -43,7 +42,6 @@ import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class HibernateUtil {
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
     private static Boolean initialized = Boolean.FALSE;
     private static SessionFactory sessionFactory;
@@ -67,21 +65,7 @@ public class HibernateUtil {
         }
     }
 
-    public void shutdown() {
-	synchronized (initialized) {
-	    if (initialized == Boolean.TRUE) {
-		try {
-		    sessionFactory.close();
-		} catch (HibernateException e) {
-		    // TODO?
-		}
-		sessionFactory = null;
-	    }
-	}
-    }
-
     public void setThreadLocal(SessionHolder holder) {
-	logger.info("open session " + holder);
         threadLocal.set(holder);
     }
 
@@ -130,10 +114,12 @@ public class HibernateUtil {
      */
     public Session getSessionTL() {
         try {
-            return getOrCreateSessionHolder().getSession();
+            getOrCreateSessionHolder();
         } catch (HibernateException he) {
             throw new ConnectionNotFoundException(he);
         }
+        return threadLocal.get().getSession();
+
     }
 
     public AuditInterceptor getInterceptor() {
@@ -166,7 +152,6 @@ public class HibernateUtil {
         if (getSessionTL().isOpen()) {
             getSessionTL().close();
         }
-	logger.info("close session " + threadLocal.get());
         threadLocal.set(null);
     }
 
@@ -175,8 +160,8 @@ public class HibernateUtil {
             getSessionTL().flush();
             getSessionTL().close();
         }
-	logger.info("flush&close session " + threadLocal.get());
         threadLocal.set(null);
+
     }
 
     public void flushAndClearSession() {
@@ -189,25 +174,22 @@ public class HibernateUtil {
     }
 
     public SessionHolder getSessionHolder() {
-	SessionHolder s = threadLocal.get();
-	if (s == null) {
-	    logger.warn("returning null session");
-	}
-	return s;
+        if (null == threadLocal.get()) {
+            // need to log to indicate that the session is being invoked when
+            // not present
+
+        }
+        return threadLocal.get();
     }
 
     public SessionHolder getOrCreateSessionHolder() throws HibernateException {
-	SessionHolder s = threadLocal.get();
-	if (s == null) return createSessionHolder();
-        return s;
-    }
-
-    private SessionHolder createSessionHolder() throws HibernateException {
-	AuditInterceptor auditInterceptor = new AuditInterceptor();
-	SessionHolder sessionHolder = new SessionHolder(sessionFactory.openSession(auditInterceptor));
-	sessionHolder.setInterceptor(auditInterceptor);
-	setThreadLocal(sessionHolder);
-	return sessionHolder;
+        if (threadLocal.get() == null) {
+            AuditInterceptor auditInterceptor = new AuditInterceptor();
+            SessionHolder sessionHolder = new SessionHolder(sessionFactory.openSession(auditInterceptor));
+            sessionHolder.setInterceptor(auditInterceptor);
+            setThreadLocal(sessionHolder);
+        }
+        return threadLocal.get();
     }
 
     public boolean isSessionOpen() {
@@ -253,8 +235,8 @@ public class HibernateUtil {
         try {
             sessionFactory = HibernateSessionFactory.getSessionFactory();
         } catch (Throwable ex) {
-            logger.error("Initial SessionFactory creation failed.",
-			 false, null, ex);
+            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("Initial SessionFactory creation failed.",
+                    false, null, ex);
 
             throw new ExceptionInInitializerError(ex);
         }

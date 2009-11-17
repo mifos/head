@@ -26,10 +26,6 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.Enumeration;
-import java.util.logging.LogManager;
-import java.sql.Driver;
-import java.sql.DriverManager;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -73,8 +69,6 @@ import org.mifos.framework.util.helpers.Money;
 public class ApplicationInitializer implements ServletContextListener, ServletRequestListener {
 
     private static MifosLogger LOG = null;
-
-    private static MifosScheduler scheduler = null;
 
     private static class DatabaseError {
         boolean isError = false;
@@ -132,6 +126,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         try {
             synchronized (ApplicationInitializer.class) {
                 initializeLogger();
+                initializeHibernate();
 
                 /*
                  * getLogger() cannot be called statically (ie: when
@@ -142,7 +137,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
                 LOG.info("Logger has been initialised", false, null);
 
-                initializeHibernate();
                 LOG.info(getDatabaseConnectionInfo(), false, null);
 
                 DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
@@ -194,18 +188,13 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     FinancialInitializer.initialize();
                     EntityMasterData.getInstance().init();
                     initializeEntityMaster();
-                    scheduler = new MifosScheduler();
-                    scheduler.registerTasks();
+                    (new MifosScheduler()).registerTasks();
 
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
                 }
-
-		// clear ThreadLocal handle to our session
-		StaticHibernateUtil.closeSession();
             }
- 	    LOG.info("ApplicationInitializer done");
         } catch (Exception e) {
             String errMsgStart = "unable to start Mifos web application"; 
             if (null == LOG) {
@@ -382,73 +371,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     public void contextDestroyed(ServletContextEvent ctx) {
-	LOG.info("destroying context");
-        StaticHibernateUtil.shutdown(); // closes session factory
-        MifosLogManager.shutdown();     // stops config reload thread
-        if (scheduler != null) {
-	    scheduler.shutdown();           // stops batch job timer
-	    scheduler = null;
-	}
-        
-        // Print out what thread locals are still registered for the threads
-	// in the container.  This code helps with finding leaks that prevent
-	// proper unloading of the context.
-	if (false)
-        try {
-            int n = Thread.activeCount();
-            Thread[] threadlist = new Thread[n];
-            Thread.enumerate(threadlist);
-            for (Thread t : threadlist) {
-		if (t == null) continue;
-		java.lang.reflect.Field thread_threadLocals = Thread.class.getDeclaredField("threadLocals");
-		thread_threadLocals.setAccessible(true);
-		Object thread_local_map = thread_threadLocals.get(t);  // a java.lang.Threadlocal$ThreadLocalMap
-		if (thread_local_map == null) continue;
-		java.lang.reflect.Field threadLocalMap_table = thread_local_map.getClass().getDeclaredField("table");
-		threadLocalMap_table.setAccessible(true);
-		Object table = threadLocalMap_table.get(thread_local_map); // array of java.lang.ThreadLocal$ThreadLocalMap$Entry
-		for (int i = 0; i < java.lang.reflect.Array.getLength(table); i++) {
-		    Object entry = java.lang.reflect.Array.get(table, i); // java.lang.ThreadLocal$ThreadLocalMap$Entry
-		    if (entry == null) continue;
-		    java.lang.reflect.Field entry_value = entry.getClass().getDeclaredField("value");
-		    entry_value.setAccessible(true);
-		    Object value = entry_value.get(entry);
-		    if (value == null) continue;
-		    ClassLoader ldr = value.getClass().getClassLoader();
-		    LOG.info(value.getClass() + ": " + value.getClass().getClassLoader() + ": " + value);
-		}
-            }
-        } catch (Exception e) {
-            LOG.error("can't print threadLocals", e);
-        }
 
-        // birt stashes a logger here (a org.eclipse.birt.report.engine.api.impl.EngineLoggerHandler instance at "org.eclipse.birt")
-        LogManager.getLogManager().reset();
-
-        // unregister any jdbc drivers (mysql driver)
-        try {
-            for (Enumeration<Driver> e = DriverManager.getDrivers();
-                 e.hasMoreElements(); ) {
-                DriverManager.deregisterDriver(e.nextElement());
-            }
-        } catch (Exception e) {
-            LOG.error("can't unregister jdbc drivers", e);
-        }
-        
-        // mysql statement cancellation timer (mysql bug 36565)
-        try {
-            java.lang.reflect.Field f = com.mysql.jdbc.ConnectionImpl.class.getDeclaredField("cancelTimer");
-            f.setAccessible(true);
-	    java.util.Timer t = (java.util.Timer) f.get(null);
-            if (t != null) t.cancel();
-        } catch (Exception e) {
-            LOG.error("can't cancel mysql statement cancellation timer", e);
-        }
-
-        // kill ehcache threads
-	// (net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread)
-	// hooked in as a listener in web.xml
-	LOG.info("destroyed context");
     }
 
     public void requestDestroyed(ServletRequestEvent event) {

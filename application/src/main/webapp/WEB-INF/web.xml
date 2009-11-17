@@ -83,18 +83,9 @@
 	    <url-pattern>/developer/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- startup and shutdown of Mifos -->
 	<listener>
 	    <listener-class>org.mifos.framework.ApplicationInitializer</listener-class>
 	</listener> 
-
-	<!-- Listener for correct shutdown of ehcache
-	  instructions from http://ehcache.org/documentation/shutdown.html
-	  TODO: this should be done by whatever calls ehcache (hibernate?),
-	  not by us. -->
-	<listener>
-	    <listener-class>net.sf.ehcache.constructs.web.ShutdownListener</listener-class>
-	</listener>
 
 	<welcome-file-list>
 		<welcome-file>
