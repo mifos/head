@@ -116,8 +116,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
-import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
-
 public class LoanBO extends AccountBO {
 
     /**
@@ -2431,7 +2429,8 @@ public class LoanBO extends AccountBO {
     @Override
     public boolean paymentAmountIsValid(final Money amount) {
         Money totalRepayableAmount = getTotalRepayableAmount();
-        return amount.isLessThan(totalRepayableAmount) || amount.equals(totalRepayableAmount);
+        return (null != amount) && (!amount.isLessThan(new Money("0.0")))
+                && (amount.isLessThan(totalRepayableAmount) || amount.equals(totalRepayableAmount));
     }
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {

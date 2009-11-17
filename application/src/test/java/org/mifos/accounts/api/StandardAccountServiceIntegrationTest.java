@@ -157,7 +157,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertTrue(errors.contains(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE));
     }
     
-    public void testValidatePaymentWithInvalidPaymentAmount() throws Exception {
+    public void testValidatePaymentWithInvalidLargePaymentAmount() throws Exception {
         String paymentAmount = "700000";
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
@@ -171,4 +171,19 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
         Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT));
     }    
+
+    public void testValidatePaymentWithInvalidNegativePaymentAmount() throws Exception {
+        String paymentAmount = "-1";
+        standardAccountService.setAccountPersistence(new AccountPersistence());
+
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
+                new AccountReferenceDto(accountBO.getAccountId()), 
+                new BigDecimal(paymentAmount), 
+                new LocalDate(), 
+                defaultPaymentType,"");
+        List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
+
+        Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT));
+    }
 }
