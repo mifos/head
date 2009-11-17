@@ -28,6 +28,8 @@ import org.apache.log4j.xml.DOMConfigurator;
  * files
  */
 public class MifosDOMConfigurator extends DOMConfigurator {
+    
+    private static MifosXMLWatchdog xdog;
 
     /**
      * Function to configure the logger from the configuration file
@@ -53,8 +55,15 @@ public class MifosDOMConfigurator extends DOMConfigurator {
      *            changes
      */
     public static void configureAndWatch(String configFilename, long delay) {
-        MifosXMLWatchdog xdog = new MifosXMLWatchdog(configFilename);
+        xdog = new MifosXMLWatchdog(configFilename);
         xdog.setDelay(delay);
         xdog.start();
+    }
+
+    /**
+     * release any resources - the application is going away.
+     */
+    public static void shutdown() {
+	xdog.shutdown();
     }
 }

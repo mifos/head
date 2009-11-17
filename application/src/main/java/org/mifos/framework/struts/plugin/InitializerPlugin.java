@@ -34,6 +34,7 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringToMoneyConverter;
@@ -67,6 +68,8 @@ public class InitializerPlugin implements PlugIn {
             throw ue;
         }
 
+	// clear ThreadLocal handle to our session
+	StaticHibernateUtil.closeSession();
     }
 
     public void destroy() {
