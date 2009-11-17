@@ -768,7 +768,7 @@ public class ClientCustAction extends CustAction {
                 .getPreferredLocale());
         for (CustomFieldView fieldView : actionForm.getCustomFields())
             for (CustomerCustomFieldEntity fieldEntity : client.getCustomFields())
-                if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+                if (fieldView.getFieldId().equals(fieldEntity.getFieldId().shortValue()))
                     fieldEntity.setFieldValue(fieldView.getFieldValue());
         client.getClientName().updateNameDetails(actionForm.getClientName());
         if(!ClientRules.isFamilyDetailsRequired()){

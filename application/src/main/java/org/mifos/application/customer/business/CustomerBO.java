@@ -988,7 +988,7 @@ public abstract class CustomerBO extends BusinessObject {
                 }
 
                 for (CustomerCustomFieldEntity fieldEntity : getCustomFields()) {
-                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
+                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId().shortValue())) {
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
                     }
                 }
@@ -1151,7 +1151,7 @@ public abstract class CustomerBO extends BusinessObject {
     private void createCustomFields(final List<CustomFieldView> customFields) {
         if (customFields != null) {
             for (CustomFieldView customField : customFields) {
-                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(),
+                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId().intValue(), customField.getFieldValue(),
                         this));
             }
         }

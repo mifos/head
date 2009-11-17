@@ -28,9 +28,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldEntity;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeCustomFieldEntity;
@@ -40,6 +37,9 @@ import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.hibernate.Transaction;
+import org.hibernate.Session;
 
 /**
  * Handle business logic related to backfilling existing clients, groups, etc.
@@ -63,16 +63,20 @@ public class CustomFieldsBackfiller {
         if (categoryType.equals(EntityType.CLIENT) || categoryType.equals(EntityType.GROUP)
                 || categoryType.equals(EntityType.CENTER)) {
             // 1>>For Client, 12>>For Group, 20>>For Center
-            CustomerBusinessService customerService = new CustomerBusinessService();
-            List<CustomerBO> listOfCustomers = customerService.getCustomersByLevelId(levelId);
-            if (null != listOfCustomers && listOfCustomers.size() != 0) {
-                Iterator<CustomerBO> listOfCustomersIter = listOfCustomers.iterator();
-                while (listOfCustomersIter.hasNext()) {
-                    CustomerBO customerBO = listOfCustomersIter.next();
-                    CustomerCustomFieldEntity customerCustomFieldEntity = new CustomerCustomFieldEntity(customField
-                            .getFieldId(), customField.getDefaultValue(), customerBO);
-                    customerCustomFieldEntity.save(customerCustomFieldEntity);
-                }
+            Session session = StaticHibernateUtil.getSessionTL();
+            String insertHQL = "insert into CustomerCustomFieldEntity (customer, fieldId, fieldValue) select customer, " + customField.getFieldId() +
+                    ", '" + customField.getDefaultValue() +
+                    "' from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id = " + levelId;
+            StaticHibernateUtil.startTransaction();
+            try {
+                session.createQuery(insertHQL).executeUpdate();
+                StaticHibernateUtil.commitTransaction();
+            } catch (Exception e) {
+                StaticHibernateUtil.rollbackTransaction();
+                throw new ApplicationException(e);
+            }
+            finally {
+                StaticHibernateUtil.closeSession();
             }
         } else if (categoryType.equals(EntityType.OFFICE)) // For Office
         {
