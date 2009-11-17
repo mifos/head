@@ -125,7 +125,7 @@ explanation of the license and how it is applied.
                                     <td align="center"><html-el:submit styleId="import_transactions.button.review" styleClass="buttn">
                                         <mifos:mifoslabel name="configuration.review"></mifos:mifoslabel>
                                     </html-el:submit> &nbsp; <html-el:submit onclick="this.form.action='AdminAction.do?method=load'"
-                                        property="cancelButton" value="Cancel" styleId="import_transactions.button.cancel" styleClass="cancelbuttn">
+                                        property="cancelButton" styleId="import_transactions.button.cancel" styleClass="cancelbuttn">
                                         <mifos:mifoslabel name="configuration.cancel" />
                                     </html-el:submit></td>
                                 </tr>

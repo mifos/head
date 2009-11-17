@@ -162,7 +162,7 @@ explanation of the license and how it is applied.
                                         </c:otherwise>
                                     </c:choose> &nbsp; <html-el:submit onclick="this.form.action='AdminAction.do?method=load'"
                                         property="cancelButton" styleId="import_transactions_results.button.cancel"
-                                        value="Cancel" styleClass="cancelbuttn">
+                                         styleClass="cancelbuttn">
                                         <mifos:mifoslabel name="configuration.cancel" />
                                     </html-el:submit></td>
                                 </tr>

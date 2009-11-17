@@ -156,7 +156,7 @@ explanation of the license and how it is applied.
 									<td align="center"><html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="reports.submit"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button onclick="goToCancelPage(this.form);"
-										property="cancelButton" value="Cancel"
+										property="cancelButton" 
 										styleClass="cancelbuttn" >
 										<mifos:mifoslabel name="reports.cancel" />
 									</html-el:button></td>

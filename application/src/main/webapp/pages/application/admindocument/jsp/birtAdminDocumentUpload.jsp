@@ -202,7 +202,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="reports.preview"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage(this.form);" property="cancelButton"
-										value="Cancel" styleClass="cancelbuttn" >
+										 styleClass="cancelbuttn" >
 										<mifos:mifoslabel name="reports.cancel"/>
 									</html-el:button></td>
 								</tr>
