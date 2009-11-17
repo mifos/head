@@ -31,8 +31,10 @@
  			               org.mifos.application.holiday.business.RepaymentRuleEntity repaymentRuleEntity
  			               ,org.mifos.application.master.business.LookUpValueEntity lv  
                      where  holidayBO.repaymentRuleEntity.id = repaymentRuleEntity.id
-		               and (holidayBO.holidayThruDate >= :START_OF_YEAR
-                       or holidayBO.holidayPK.holidayFromDate <= :END_OF_YEAR)
+		               and ((holidayBO.holidayThruDate >= :START_OF_YEAR  
+		               and  holidayBO.holidayThruDate <= :END_OF_YEAR) 
+		               or  (holidayBO.holidayPK.holidayFromDate >= :START_OF_YEAR 
+		               and  holidayBO.holidayPK.holidayFromDate <= :END_OF_YEAR))
                        and lv.lookUpId = repaymentRuleEntity.lookUpValue.lookUpId  
                        order by holidayBO.holidayPK.holidayFromDate
    	       ]]>
