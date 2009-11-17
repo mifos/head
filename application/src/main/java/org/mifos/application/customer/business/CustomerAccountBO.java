@@ -192,7 +192,7 @@ public class CustomerAccountBO extends AccountBO {
                 .getTransactionDate());
 
         if (customerAccountPayments.isEmpty()) {
-            throw new AccountException("errors.update", new String[] { getGlobalAccountNum() });
+            throw new AccountException(AccountConstants.NO_TRANSACTION_POSSIBLE, new String[] {"Trying to pay account charges before the due date."});
         }
 
         Money totalAllUnpaidInstallments = new Money(totalPaid.getCurrency(), "0.0");

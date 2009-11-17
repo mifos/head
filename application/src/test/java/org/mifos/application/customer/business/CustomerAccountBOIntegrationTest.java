@@ -34,8 +34,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
+import net.sf.cglib.core.Local;
+
+import org.apache.struts.actions.LocaleAction;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -62,6 +66,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -1014,9 +1019,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testAccountExceptionThrownForAPaymentWithNoOutstandingCustomerAccountInstallments() throws Exception {
-
         createCenter();
-        verifyExpectedMessageThrown(center, new Money("8.54"), -2, center.getCustomerAccount().getGlobalAccountNum());
+        verifyExpectedMessageThrown(center, new Money("8.54"), -2, 
+                "Trying to pay account charges before the due date.");
     }
 
     private void verifyExpectedMessageThrown(final CustomerBO customer, final Money paymentAmount,
