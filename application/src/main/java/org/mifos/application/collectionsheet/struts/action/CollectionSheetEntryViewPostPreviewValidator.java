@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
@@ -32,7 +33,6 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryCo
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  *
@@ -139,7 +139,7 @@ public class CollectionSheetEntryViewPostPreviewValidator {
     }
     
     public static Double getDoubleValue(final String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
+        return StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 

@@ -22,6 +22,7 @@ package org.mifos.application.customer.center.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -35,7 +36,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class CenterCustActionForm extends CustomerActionForm {
@@ -46,8 +46,8 @@ public class CenterCustActionForm extends CustomerActionForm {
 
     @Override
     public String getMfiJoiningDate() {
-        if (StringUtils.isNullOrEmpty(mfiJoiningDateDD) || StringUtils.isNullOrEmpty(mfiJoiningDateMM)
-                || StringUtils.isNullOrEmpty(mfiJoiningDateYY))
+        if (StringUtils.isBlank(mfiJoiningDateDD) || StringUtils.isBlank(mfiJoiningDateMM)
+                || StringUtils.isBlank(mfiJoiningDateYY))
             return null;
 
         String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();

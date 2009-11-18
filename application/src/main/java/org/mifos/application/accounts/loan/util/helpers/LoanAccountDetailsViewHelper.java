@@ -20,9 +20,9 @@
 
 package org.mifos.application.accounts.loan.util.helpers;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class LoanAccountDetailsViewHelper extends BusinessObject {
 
@@ -136,7 +136,7 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
     }
 
     public boolean isEmpty() {
-        return loanAmount == null && StringUtils.isNullOrEmpty(businessActivity);
+        return loanAmount == null && StringUtils.isBlank(businessActivity);
     }
 
     public boolean isAmountZeroOrNull() {

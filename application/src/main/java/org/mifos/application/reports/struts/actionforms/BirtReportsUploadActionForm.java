@@ -22,6 +22,7 @@ package org.mifos.application.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -33,7 +34,6 @@ import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class BirtReportsUploadActionForm extends ValidatorActionForm {
     private String reportCategoryId;
@@ -74,13 +74,13 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 
     private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
         if (methodFromRequest.equals(verifyMethod)) {
-            if (StringUtils.isNullOrEmpty(reportTitle)) {
+            if (StringUtils.isBlank(reportTitle)) {
                 errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(ReportsConstants.ERROR_TITLE));
             }
-            if (StringUtils.isNullOrEmpty(reportCategoryId) || this.getReportCategoryId().equals("-1")) {
+            if (StringUtils.isBlank(reportCategoryId) || this.getReportCategoryId().equals("-1")) {
                 errors.add(ReportsConstants.ERROR_CATEGORYID, new ActionMessage(ReportsConstants.ERROR_CATEGORYID));
             }
-            if (StringUtils.isNullOrEmpty(isActive) || this.getIsActive().equals("-1")) {
+            if (StringUtils.isBlank(isActive) || this.getIsActive().equals("-1")) {
                 errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(ReportsConstants.ERROR_STATUS));
             }
             if (methodFromRequest.equals(Methods.preview.toString())) {

@@ -31,6 +31,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -100,7 +101,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class ClientCustAction extends CustAction {
@@ -302,10 +302,10 @@ public class ClientCustAction extends CustAction {
          * null or empty, and display name + dob combination is present in
          * closed state display warning
          */
-        if (!StringUtils.isNullOrEmpty(governmentId)
+        if (StringUtils.isNotBlank(governmentId)
                 && clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(governmentId)) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
-        } else if (StringUtils.isNullOrEmpty(governmentId)
+        } else if (StringUtils.isBlank(governmentId)
                 && clientPersistence.checkForDuplicacyForClosedClientsOnNameAndDob(actionForm.getClientName()
                         .getDisplayName(), DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth()))) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
@@ -778,7 +778,7 @@ public class ClientCustAction extends CustAction {
         client.setFirstName(actionForm.getClientName().getFirstName());
         client.setLastName(actionForm.getClientName().getLastName());
         client.setSecondLastName(actionForm.getClientName().getSecondLastName());
-        if (actionForm.getPicture() != null && !StringUtils.isNullOrEmpty(actionForm.getPicture().getFileName())) {
+        if (actionForm.getPicture() != null && StringUtils.isNotBlank(actionForm.getPicture().getFileName())) {
             client.updatePicture(actionForm.getCustomerPicture());
         }
         client.setUserContext(getUserContext(request));

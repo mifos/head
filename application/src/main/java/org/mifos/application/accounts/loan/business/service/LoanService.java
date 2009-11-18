@@ -23,6 +23,7 @@ package org.mifos.application.accounts.loan.business.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanDao;
@@ -41,8 +42,8 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * LoanService encapsulates high level operations on loans including loan
@@ -96,7 +97,7 @@ public class LoanService implements Service {
         loanProductService.getDefaultAndAdditionalFees(loanProductId, userContext, defaultFees, additionalFees);
 
         CustomerBO client = new CustomerBusinessService().getCustomer(clientId);
-        LoanBO loan = loanDao.createLoan(userContext, loanOffering, client, accountState, getMoney(loanAmount),
+        LoanBO loan = loanDao.createLoan(userContext, loanOffering, client, accountState, FormUtils.getMoney(loanAmount),
                 defaultNumberOfInstallments, center.getCustomerAccount().getNextMeetingDate(), loanOffering
                         .isIntDedDisbursement(), loanOffering.getDefInterestRate(), loanOffering
                         .getGracePeriodDuration(), NO_FUND, defaultFees, null, maxLoanAmount, minLoanAmount,
@@ -119,10 +120,6 @@ public class LoanService implements Service {
                 userContext,
                 new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId,
                         loanOfficerId));
-    }
-
-    protected Money getMoney(String str) {
-        return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(str) : new Money();
     }
 
 }

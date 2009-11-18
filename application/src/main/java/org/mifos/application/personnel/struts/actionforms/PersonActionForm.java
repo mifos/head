@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -55,7 +56,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonActionForm extends BaseActionForm {
 
@@ -153,8 +153,8 @@ public class PersonActionForm extends BaseActionForm {
     }
 
     public String getDateOfJoiningMFI() {
-        if (StringUtils.isNullAndEmptySafe(dateOfJoiningMFIDD) && StringUtils.isNullAndEmptySafe(dateOfJoiningMFIMM)
-                && StringUtils.isNullAndEmptySafe(dateOfJoiningMFIYY)) {
+        if (StringUtils.isNotBlank(dateOfJoiningMFIDD) && StringUtils.isNotBlank(dateOfJoiningMFIMM)
+                && StringUtils.isNotBlank(dateOfJoiningMFIYY)) {
 
             String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dateOfJoiningMFIDD + dateSeparator + dateOfJoiningMFIMM + dateSeparator + dateOfJoiningMFIYY;
@@ -175,8 +175,8 @@ public class PersonActionForm extends BaseActionForm {
     }
 
     public String getDob() {
-        if (!StringUtils.isNullAndEmptySafe(dobDD) || !StringUtils.isNullAndEmptySafe(dobMM)
-                || !StringUtils.isNullAndEmptySafe(dobYY)) {
+        if (!StringUtils.isNotBlank(dobDD) || !StringUtils.isNotBlank(dobMM)
+                || !StringUtils.isNotBlank(dobYY)) {
             return null;
         } else {
 
@@ -425,7 +425,7 @@ public class PersonActionForm extends BaseActionForm {
         }
 
         if (method.equals(Methods.search.toString())) {
-            if (StringUtils.isNullOrEmpty(searchString)) {
+            if (StringUtils.isBlank(searchString)) {
                 try {
                     cleanUpSearch(request);
                 } catch (PageExpiredException e) {
@@ -494,18 +494,18 @@ public class PersonActionForm extends BaseActionForm {
                 && userPassword.length() != 0 && userPassword.trim().equals("")) {
             errors.add(PersonnelConstants.PASSWORD_MASK, new ActionMessage(PersonnelConstants.PASSWORD_MASK, password));
         }
-        if (StringUtils.isNullAndEmptySafe(userPassword) && StringUtils.isNullAndEmptySafe(passwordRepeat)
+        if (StringUtils.isNotBlank(userPassword) && StringUtils.isNotBlank(passwordRepeat)
                 && !(userPassword.trim().equals(passwordRepeat.trim()))) {
             errors.add(PersonnelConstants.PASSWORD, new ActionMessage(PersonnelConstants.VALID_PASSWORD, password));
         }
-        if ((StringUtils.isNullAndEmptySafe(passwordRepeat) && !StringUtils.isNullAndEmptySafe(userPassword))
-                || ((!StringUtils.isNullAndEmptySafe(passwordRepeat) && StringUtils.isNullAndEmptySafe(userPassword)))) {
+        if ((StringUtils.isNotBlank(passwordRepeat) && !StringUtils.isNotBlank(userPassword))
+                || ((!StringUtils.isNotBlank(passwordRepeat) && StringUtils.isNotBlank(userPassword)))) {
             errors.add(PersonnelConstants.PASSWORD, new ActionMessage(PersonnelConstants.VALID_PASSWORD, password));
         }
         if (input.equals(PersonnelConstants.CREATE_USER)
-                && (StringUtils.isNullOrEmpty(userPassword) || StringUtils.isNullOrEmpty(passwordRepeat)))
+                && (StringUtils.isBlank(userPassword) || StringUtils.isBlank(passwordRepeat)))
             errors.add(PersonnelConstants.PASSWORD, new ActionMessage(PersonnelConstants.VALID_PASSWORD, password));
-        if (input.equals(PersonnelConstants.CREATE_USER) && (StringUtils.isNullAndEmptySafe(userPassword))) {
+        if (input.equals(PersonnelConstants.CREATE_USER) && (StringUtils.isNotBlank(userPassword))) {
             if (userPassword.length() < 6)
                 errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
                         PersonnelConstants.ERROR_PASSWORD_LENGTH));
@@ -536,18 +536,18 @@ public class PersonActionForm extends BaseActionForm {
     }
 
     private void validateNameDetail(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(firstName)) {
+        if (StringUtils.isBlank(firstName)) {
             errors.add(PersonnelConstants.ERROR_FIRSTNAME, new ActionMessage(PersonnelConstants.ERROR_FIRSTNAME));
         }
-        if (StringUtils.isNullOrEmpty(lastName)) {
+        if (StringUtils.isBlank(lastName)) {
             errors.add(PersonnelConstants.ERROR_LASTNAME, new ActionMessage(PersonnelConstants.ERROR_LASTNAME));
         }
     }
 
     private void validateDateOfBirth(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(getDob())) {
+        if (StringUtils.isBlank(getDob())) {
             errors.add(PersonnelConstants.ERROR_DOB, new ActionMessage(PersonnelConstants.ERROR_DOB));
-        } else if (!StringUtils.isNullOrEmpty(getDob())) {
+        } else if (StringUtils.isNotBlank(getDob())) {
             try {
                 Date date = DateUtils.getDateAsSentFromBrowser(getDob());
                 if (DateUtils.whichDirection(date) > 0) {
@@ -560,7 +560,7 @@ public class PersonActionForm extends BaseActionForm {
     }
 
     private void validateDateofJoiningMFI(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(getDateOfJoiningMFI())) {
+        if (StringUtils.isBlank(getDateOfJoiningMFI())) {
             return;
         } else {
             try {
@@ -574,25 +574,25 @@ public class PersonActionForm extends BaseActionForm {
     }
 
     private void validateGender(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(gender)) {
+        if (StringUtils.isBlank(gender)) {
             errors.add(PersonnelConstants.ERROR_GENDER, new ActionMessage(PersonnelConstants.ERROR_GENDER));
         }
     }
 
     private void validateEmail(ActionErrors errors) {
-        if (!StringUtils.isNullOrEmpty(emailId) && !GenericValidator.isEmail(emailId)) {
+        if (StringUtils.isNotBlank(emailId) && !GenericValidator.isEmail(emailId)) {
             errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(PersonnelConstants.ERROR_VALID_EMAIL));
         }
     }
 
     private void validateUserHirerchy(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(level)) {
+        if (StringUtils.isBlank(level)) {
             errors.add(PersonnelConstants.ERROR_LEVEL, new ActionMessage(PersonnelConstants.ERROR_LEVEL));
         }
     }
 
     private void validateloginName(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(loginName)) {
+        if (StringUtils.isBlank(loginName)) {
             errors.add(PersonnelConstants.ERROR_USER_NAME, new ActionMessage(PersonnelConstants.ERROR_USER_NAME));
         } else if (loginName.trim().contains(" ")) {
             errors.add(PersonnelConstants.INVALID_USER_NAME, new ActionMessage(PersonnelConstants.INVALID_USER_NAME));
@@ -619,7 +619,7 @@ public class PersonActionForm extends BaseActionForm {
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PERSONNELUIRESOURCESPATH, locale);
         String statusString = resources.getString("Personnel.status");
-        if (StringUtils.isNullOrEmpty(status)) {
+        if (StringUtils.isBlank(status)) {
             errors.add(PersonnelConstants.STATUS, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, statusString));
         }
 
@@ -630,7 +630,7 @@ public class PersonActionForm extends BaseActionForm {
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PERSONNELUIRESOURCESPATH, locale);
         String office = resources.getString("Personnel.OfficeLabel");
-        if (StringUtils.isNullOrEmpty(officeId)) {
+        if (StringUtils.isBlank(officeId)) {
             errors.add(PersonnelConstants.OFFICE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, office));
         }
     }
@@ -650,7 +650,7 @@ public class PersonActionForm extends BaseActionForm {
             boolean isErrorFound = false;
             for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                 if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory())
-                    if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
+                    if (StringUtils.isBlank(customField.getFieldValue())) {
                         errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
                                 PersonnelConstants.ERROR_CUSTOMfIELD));
                         isErrorFound = true;

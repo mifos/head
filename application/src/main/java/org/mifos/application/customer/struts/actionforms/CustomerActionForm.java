@@ -28,6 +28,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -54,7 +55,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * What's the difference between this and {@link CustActionForm} ?
@@ -244,7 +244,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
     }
 
     public CustomerStatus getStatusValue() {
-        return StringUtils.isNullAndEmptySafe(status) ? CustomerStatus.fromInt(Short.valueOf(status)) : null;
+        return StringUtils.isNotBlank(status) ? CustomerStatus.fromInt(Short.valueOf(status)) : null;
     }
 
     public Short getFormedByPersonnelValue() {
@@ -364,17 +364,17 @@ public abstract class CustomerActionForm extends BaseActionForm {
             throws ApplicationException;
 
     protected void validateName(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(getDisplayName()))
+        if (StringUtils.isBlank(getDisplayName()))
             errors.add(CustomerConstants.NAME, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_NAME));
     }
 
     protected void validateLO(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(getLoanOfficerId()))
+        if (StringUtils.isBlank(getLoanOfficerId()))
             errors.add(CustomerConstants.LOAN_OFFICER, new ActionMessage(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER));
     }
 
     protected void validateFormedByPersonnel(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(getFormedByPersonnel()))
+        if (StringUtils.isBlank(getFormedByPersonnel()))
             errors.add(CustomerConstants.FORMED_BY_LOANOFFICER, new ActionMessage(
                     CustomerConstants.FORMEDBY_LOANOFFICER_BLANK_EXCEPTION));
     }
@@ -398,7 +398,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
                 boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                        if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
+                        if (StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
                                     CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
                             isErrorFound = true;
@@ -476,7 +476,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
     protected void validateForFeeAmount(ActionErrors errors) {
         List<FeeView> feeList = getFeesToApply();
         for (FeeView fee : feeList) {
-            if (StringUtils.isNullOrEmpty(fee.getAmount()))
+            if (StringUtils.isBlank(fee.getAmount()))
                 errors.add(CustomerConstants.FEE, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_FEE_AMOUNT));
         }
     }
@@ -534,7 +534,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
     }
 
     public boolean isCustomerTrained() {
-        return StringUtils.isNullAndEmptySafe(trained) && Short.valueOf(trained).equals(YesNoFlag.YES.getValue());
+        return StringUtils.isNotBlank(trained) && Short.valueOf(trained).equals(YesNoFlag.YES.getValue());
     }
 
     public Date getTrainedDateValue(Locale locale) throws InvalidDateException {

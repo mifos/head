@@ -22,6 +22,7 @@ package org.mifos.application.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -30,7 +31,6 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ReportsCategoryActionForm extends ValidatorActionForm {
 
@@ -82,7 +82,7 @@ public class ReportsCategoryActionForm extends ValidatorActionForm {
 
     private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
         if (methodFromRequest.equals(verifyMethod)) {
-            if (StringUtils.isNullOrEmpty(categoryName)) {
+            if (StringUtils.isBlank(categoryName)) {
                 errors.add(ReportsConstants.ERROR_CATEGORYNAME, new ActionMessage(ReportsConstants.ERROR_CATEGORYNAME));
             }
         }

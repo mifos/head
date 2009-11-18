@@ -22,6 +22,7 @@ package org.mifos.application.personnel.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -29,7 +30,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelNoteActionForm extends ValidatorActionForm {
     private String personnelId;
@@ -109,7 +109,7 @@ public class PersonnelNoteActionForm extends ValidatorActionForm {
     }
 
     private ActionErrors handlePreviewValidations(HttpServletRequest request, ActionErrors errors) {
-        if (!StringUtils.isNullAndEmptySafe(getComment())) {
+        if (StringUtils.isBlank(getComment())) {
             if (null == errors) {
                 errors = new ActionErrors();
             }

@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -77,7 +78,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class PersonAction extends SearchAction {
@@ -192,7 +192,7 @@ public class PersonAction extends SearchAction {
     }
 
     private Short getPerefferedLocale(PersonActionForm personActionForm, UserContext userContext) {
-        if (StringUtils.isNullAndEmptySafe(personActionForm.getPreferredLocale()))
+        if (StringUtils.isNotBlank(personActionForm.getPreferredLocale()))
             return getShortValue(personActionForm.getPreferredLocale());
         else
             // return userContext.getMfiLocaleId();
@@ -325,7 +325,7 @@ public class PersonAction extends SearchAction {
         String searchString = ((PersonActionForm) form).getSearchString();
         addSeachValues(searchString, personnel.getOffice().getOfficeId().toString(), personnel.getOffice()
                 .getOfficeName(), request);
-        searchString = StringUtils.normalizeSearchString(searchString);
+        searchString = org.mifos.framework.util.helpers.StringUtils.normalizeSearchString(searchString);
         actionForward = super.search(mapping, form, request, response);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new PersonnelPersistence().search(searchString,
                 userContext.getId()), request);
@@ -415,7 +415,7 @@ public class PersonAction extends SearchAction {
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
                 customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
                         .getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));

@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -89,7 +90,6 @@ import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class SurveyInstanceAction extends BaseAction {
 
@@ -127,8 +127,8 @@ public class SurveyInstanceAction extends BaseAction {
                     String dayValue = (String) data.get(formName + "_DD");
                     String monthValue = (String) data.get(formName + "_MM");
                     String yearValue = (String) data.get(formName + "_YY");
-                    if (StringUtils.isNullAndEmptySafe(dayValue) && StringUtils.isNullAndEmptySafe(dayValue)
-                            && StringUtils.isNullAndEmptySafe(dayValue))
+                    if (StringUtils.isNotBlank(dayValue) && StringUtils.isNotBlank(dayValue)
+                            && StringUtils.isNotBlank(dayValue))
                         formInput = dayValue + "/" + monthValue + "/" + yearValue;
                 } else if (question.getQuestion().getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
                     formInput = "";
@@ -149,7 +149,7 @@ public class SurveyInstanceAction extends BaseAction {
                     formInput = (String) data.get(formName);
                 }
 
-                if (StringUtils.isNullOrEmpty(formInput)) {
+                if (StringUtils.isBlank(formInput)) {
                     if (question.getMandatory() == 1) {
                         int questionNum = survey.getQuestions().indexOf(question) + 1;
                         ActionMessage newMessage = new ActionMessage(getKey(ErrorType.MISSING.toString()), Integer

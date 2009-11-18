@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.meeting.MeetingTemplate;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -40,7 +41,6 @@ import org.mifos.framework.components.configuration.persistence.ConfigurationPer
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -245,7 +245,7 @@ public class MeetingBO extends BusinessObject {
     }
 
     private void validateMeetingPlace(final String meetingPlace) throws MeetingException {
-        if (StringUtils.isNullOrEmpty(meetingPlace)) {
+        if (StringUtils.isBlank(meetingPlace)) {
             throw new MeetingException(MeetingConstants.INVALID_MEETINGPLACE);
         }
     }

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -47,7 +48,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientPersistence extends Persistence {
 
@@ -104,7 +104,7 @@ public class ClientPersistence extends Persistence {
 
         // if government id is null or empty, do not match against closed
         // client's government id, doesn't make sense
-        if (StringUtils.isNullOrEmpty(governmentId))
+        if (StringUtils.isBlank(governmentId))
             return false;
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();

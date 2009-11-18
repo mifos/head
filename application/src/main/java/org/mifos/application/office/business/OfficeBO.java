@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.exceptions.OfficeException;
@@ -48,7 +49,6 @@ import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class OfficeBO extends BusinessObject {
 
@@ -304,7 +304,7 @@ public class OfficeBO extends BusinessObject {
     private void verifyFields(final String officeName, final String shortName, final OfficeBO parentOffice)
             throws OfficeValidationException, PersistenceException {
         OfficePersistence officePersistence = new OfficePersistence();
-        if (StringUtils.isNullOrEmpty(officeName)) {
+        if (StringUtils.isBlank(officeName)) {
             throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD,
                     new Object[] { getLocaleString(OfficeConstants.OFFICE_NAME) });
         }
@@ -312,7 +312,7 @@ public class OfficeBO extends BusinessObject {
             throw new OfficeValidationException(OfficeConstants.OFFICENAMEEXIST);
         }
 
-        if (StringUtils.isNullOrEmpty(shortName)) {
+        if (StringUtils.isBlank(shortName)) {
             throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD,
                     new Object[] { getLocaleString(OfficeConstants.OFFICESHORTNAME) });
         }

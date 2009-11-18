@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -43,7 +44,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String input;
@@ -180,8 +180,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public String getReceiptDate() {
-        if (StringUtils.isNullAndEmptySafe(receiptDateDD) && StringUtils.isNullAndEmptySafe(receiptDateMM)
-                && StringUtils.isNullAndEmptySafe(receiptDateYY)) {
+        if (StringUtils.isNotBlank(receiptDateDD) && StringUtils.isNotBlank(receiptDateMM)
+                && StringUtils.isNotBlank(receiptDateYY)) {
 
             return receiptDateDD + "/" + receiptDateMM + "/" + receiptDateYY;
         } else {
@@ -190,7 +190,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public void setReceiptDate(String receiptDate) throws InvalidDateException {
-        if (StringUtils.isNullOrEmpty(receiptDate)) {
+        if (StringUtils.isBlank(receiptDate)) {
             receiptDateDD = null;
             receiptDateMM = null;
             receiptDateYY = null;
@@ -213,8 +213,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public String getTransactionDate() {
-        if (StringUtils.isNullAndEmptySafe(transactionDateDD) && StringUtils.isNullAndEmptySafe(transactionDateMM)
-                && StringUtils.isNullAndEmptySafe(transactionDateYY)) {
+        if (StringUtils.isNotBlank(transactionDateDD) && StringUtils.isNotBlank(transactionDateMM)
+                && StringUtils.isNotBlank(transactionDateYY)) {
             String transactionDate = "";
             if (transactionDateDD.length() < 2)
                 transactionDate = transactionDate + "0" + transactionDateDD;
@@ -232,7 +232,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public void setTransactionDate(String receiptDate) throws InvalidDateException {
-        if (StringUtils.isNullOrEmpty(receiptDate)) {
+        if (StringUtils.isBlank(receiptDate)) {
             transactionDateDD = null;
             transactionDateMM = null;
             transactionDateYY = null;

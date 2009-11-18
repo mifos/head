@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -76,7 +77,6 @@ import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustAction extends SearchAction {
@@ -135,7 +135,7 @@ public class CustAction extends SearchAction {
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
                 customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
                         request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
@@ -234,7 +234,7 @@ public class CustAction extends SearchAction {
     protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
         for (CustomFieldView customField : customFields) {
             if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNullAndEmptySafe(customField.getFieldValue()))
+                    && StringUtils.isNotBlank(customField.getFieldValue()))
                 customField.convertDateToUniformPattern(locale);
         }
     }

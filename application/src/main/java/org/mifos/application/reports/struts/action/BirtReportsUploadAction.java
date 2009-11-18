@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -65,7 +66,6 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
 public class BirtReportsUploadAction extends BaseAction {
@@ -250,7 +250,7 @@ public class BirtReportsUploadAction extends BaseAction {
     private boolean isReportInfoNotEdit(HttpServletRequest request, BirtReportsUploadActionForm form, ReportsBO report) {
         if (isReportItsSelf(form, report)) {
             if (form.getIsActive().equals(report.getIsActive().toString())
-                    && StringUtils.isEmpty(form.getFile().getFileName())) {
+                    && StringUtils.isBlank(form.getFile().getFileName())) {
                 ActionErrors errors = new ActionErrors();
                 errors.add(ReportsConstants.ERROR_REPORTINFONOTEDIT, new ActionMessage(
                         ReportsConstants.ERROR_REPORTINFONOTEDIT));

@@ -23,6 +23,7 @@ package org.mifos.application.master;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
@@ -39,7 +40,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
@@ -202,7 +202,7 @@ public class MessageLookup implements MessageSourceAware {
     public void updateLookupValue(LookUpValueEntity lookupValueEntity, String newValue) {
 
         Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
-        if ((lookUpValueLocales != null) && StringUtils.isNullAndEmptySafe(newValue)) {
+        if ((lookUpValueLocales != null) && StringUtils.isNotBlank(newValue)) {
             MasterPersistence masterPersistence = new MasterPersistence();
             for (LookUpValueLocaleEntity entity : lookUpValueLocales)
                 if (entity.getLookUpId().equals(lookupValueEntity.getLookUpId())

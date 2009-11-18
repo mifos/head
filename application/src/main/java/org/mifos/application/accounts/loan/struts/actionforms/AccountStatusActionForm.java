@@ -26,13 +26,13 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 import java.util.ResourceBundle;
 
 public class AccountStatusActionForm extends BaseActionForm {
@@ -161,11 +161,11 @@ public class AccountStatusActionForm extends BaseActionForm {
             String branch = resources.getString("loan.branch");
             String loanOfficer = resources.getString("loan.loanOfficer");
             String currentStatus = resources.getString("loan.currentStatus");
-            if (StringUtils.isNullOrEmpty(getOfficeId()))
+            if (StringUtils.isBlank(getOfficeId()))
                 addError(errors, "officeId", "errors.mandatoryselect", branch);
-            if (StringUtils.isNullOrEmpty(getPersonnelId()))
+            if (StringUtils.isBlank(getPersonnelId()))
                 addError(errors, "loanOfficer", "errors.mandatoryselect", loanOfficer);
-            if (StringUtils.isNullOrEmpty(getCurrentStatus()))
+            if (StringUtils.isBlank(getCurrentStatus()))
                 addError(errors, "currentStatus", "errors.mandatoryselect", currentStatus);
         }
         if (method.equals(Methods.update.toString())) {
@@ -174,7 +174,7 @@ public class AccountStatusActionForm extends BaseActionForm {
             String note = resources.getString("loan.note");
             if (getApplicableAccountRecords().size() == 0)
                 addError(errors, "records", LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, account);
-            if (StringUtils.isNullOrEmpty(getComments()))
+            if (StringUtils.isBlank(getComments()))
                 addError(errors, "comments", "errors.mandatory", notes);
             else if (getComments().length() > 500)
                 addError(errors, "comments", "errors.maximumlength", note, "500");

@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -37,7 +38,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
@@ -130,7 +130,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
         if (method != null && method.equals(Methods.preview.toString())) {
             errors = new ActionErrors();
 
-            if (StringUtils.isNullOrEmpty(getTrxnTypeId())) {
+            if (StringUtils.isBlank(getTrxnTypeId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.paymentType")));
             }
@@ -139,7 +139,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.amount")));
 
-            if (StringUtils.isNullOrEmpty(getPaymentTypeId())) {
+            if (StringUtils.isBlank(getPaymentTypeId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.modeOfPayment")));
             }
@@ -153,7 +153,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
                 if (dateError != null && !dateError.isEmpty())
                     errors.add(dateError);
             }
-            if (StringUtils.isNullOrEmpty(getCustomerId())) {
+            if (StringUtils.isBlank(getCustomerId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.ClientName")));
             }

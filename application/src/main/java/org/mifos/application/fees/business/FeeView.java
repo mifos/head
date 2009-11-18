@@ -20,6 +20,7 @@
 
 package org.mifos.application.fees.business;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
@@ -28,7 +29,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.View;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FeeView extends View {
@@ -126,7 +126,7 @@ public class FeeView extends View {
     }
 
     public Short getFeeIdValue() {
-        return StringUtils.isNullAndEmptySafe(feeId) ? Short.valueOf(feeId) : null;
+        return StringUtils.isNotBlank(feeId) ? Short.valueOf(feeId) : null;
     }
 
     public Double getAmountDoubleValue() {

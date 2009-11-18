@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -42,7 +43,6 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class FeeBO extends BusinessObject {
 
@@ -277,7 +277,7 @@ public abstract class FeeBO extends BusinessObject {
     }
 
     private void validateFeeName(final String feeName) throws FeeException {
-        if (StringUtils.isNullOrEmpty(feeName)) {
+        if (StringUtils.isBlank(feeName)) {
             throw new FeeException(FeeConstants.INVALID_FEE_NAME);
         }
     }

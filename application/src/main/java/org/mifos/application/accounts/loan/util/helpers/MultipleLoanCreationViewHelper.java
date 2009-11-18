@@ -23,10 +23,10 @@ package org.mifos.application.accounts.loan.util.helpers;
 import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
 import static org.mifos.framework.util.helpers.NumberUtils.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.productdefinition.business.LoanAmountOption;
 import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class MultipleLoanCreationViewHelper {
 
@@ -80,7 +80,7 @@ public class MultipleLoanCreationViewHelper {
     }
 
     public boolean isLoanAmountInRange() {
-        return !StringUtils.isNullOrEmpty(this.loanAmount)
+        return StringUtils.isNotBlank(this.loanAmount)
                 && loanAmountOption.isInRange(getDoubleValue(this.loanAmount));
     }
 

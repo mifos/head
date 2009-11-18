@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -63,7 +64,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustomFieldsAction extends BaseAction {
@@ -389,7 +389,7 @@ public class CustomFieldsAction extends BaseAction {
         String dataTypeName = getDataType(customField.getFieldType(), locale);
         Short fieldType = customField.getFieldType();
         String defaultValue = customField.getDefaultValue();
-        if (fieldType.equals(CustomFieldType.DATE.getValue()) && !StringUtils.isNullOrEmpty(defaultValue))
+        if (fieldType.equals(CustomFieldType.DATE.getValue()) && StringUtils.isNotBlank(defaultValue))
             actionForm.setDefaultValue(DateUtils.getUserLocaleDate(locale, defaultValue));
         else
             actionForm.setDefaultValue(defaultValue);
@@ -417,7 +417,7 @@ public class CustomFieldsAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("start manage method of Fund Action");
         CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
-        if (StringUtils.isNullOrEmpty(actionForm.getCustomFieldIdStr()))
+        if (StringUtils.isBlank(actionForm.getCustomFieldIdStr()))
             throw new Exception("Error! No custom field id is null.");
         Short editedCustomFieldId = Short.parseShort(actionForm.getCustomFieldIdStr());
         setFormAttributes(actionForm, editedCustomFieldId, request);

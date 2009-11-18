@@ -56,22 +56,6 @@ public class StringUtils {
         return String.valueOf(totalArray);
     }
 
-    /**
-     * TODO: delegate to !{@link #isNullOrEmpty(String)} and then inline.
-     * @deprecated
-     */
-    public static boolean isNullAndEmptySafe(String stringToBeChecked) {
-        return (stringToBeChecked != null) && !isEmpty(stringToBeChecked);
-    }
-
-    public static boolean isNullOrEmpty(String stringToBeChecked) {
-        return isEmpty(stringToBeChecked);
-    }
-
-    public static boolean isEmpty(String stringToBeChecked) {
-        return org.apache.commons.lang.StringUtils.isBlank(stringToBeChecked);
-    }
-
     public static String getMessageWithSubstitution(String bundleName, Locale userLocale, String key, Object[] args) {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName, userLocale);
         String label = resourceBundle.getString(key);

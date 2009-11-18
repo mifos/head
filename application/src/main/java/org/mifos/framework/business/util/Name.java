@@ -20,7 +20,8 @@
 
 package org.mifos.framework.business.util;
 
-import org.mifos.framework.util.helpers.StringUtils;
+import org.apache.commons.lang.StringUtils;
+
 
 public class Name {
 
@@ -77,13 +78,13 @@ public class Name {
 
     public String getDisplayName() {
         StringBuffer displayName = new StringBuffer("");
-        if (!StringUtils.isNullOrEmpty(firstName))
+        if (StringUtils.isNotBlank(firstName))
             displayName.append(firstName);
-        if (!StringUtils.isNullOrEmpty(middleName))
+        if (StringUtils.isNotBlank(middleName))
             displayName.append(" ").append(middleName);
-        if (!StringUtils.isNullOrEmpty(secondLastName))
+        if (StringUtils.isNotBlank(secondLastName))
             displayName.append(" ").append(secondLastName);
-        if (!StringUtils.isNullOrEmpty(lastName))
+        if (StringUtils.isNotBlank(lastName))
             displayName.append(" ").append(lastName);
         return displayName.toString();
     }

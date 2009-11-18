@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -49,7 +50,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class EditStatusAction extends BaseAction {
@@ -127,9 +127,9 @@ public class EditStatusAction extends BaseAction {
         setInitialObjectForAuditLogging(accountBO);
         Short flagId = null;
         Short newStatusId = null;
-        if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getFlagId()))
             flagId = getShortValue(editStatusActionForm.getFlagId());
-        if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getNewStatusId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId()))
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
         accountBO.changeStatus(newStatusId, flagId, editStatusActionForm.getNotes());
@@ -189,11 +189,11 @@ public class EditStatusAction extends BaseAction {
                 getShortValue(editStatusActionForm.getNewStatusId()),
                 getShortValue(editStatusActionForm.getAccountTypeId()));
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
-        if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getNewStatusId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId()))
             newStatusName = getAccountBusinessService().getStatusName(userContext.getLocaleId(),
                     AccountState.fromShort(getShortValue(editStatusActionForm.getNewStatusId())), accountBO.getType());
         SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, newStatusName, request);
-        if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getNewStatusId())
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())
                 && isNewStatusIsCancel(getShortValue(editStatusActionForm.getNewStatusId())))
             flagName = getAccountBusinessService().getFlagName(userContext.getLocaleId(),
                     AccountStateFlag.getStatusFlag(getShortValue(editStatusActionForm.getFlagId())),

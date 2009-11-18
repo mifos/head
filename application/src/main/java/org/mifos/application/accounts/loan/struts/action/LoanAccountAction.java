@@ -75,6 +75,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -169,7 +170,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class LoanAccountAction extends AccountAppAction {
@@ -365,7 +365,7 @@ public class LoanAccountAction extends AccountAppAction {
                 }
                 String governmentId = clientBusinessService.getClient(individualLoan.getCustomer().getCustomerId())
                         .getGovernmentId();
-                loandetails.setGovermentId(!StringUtils.isNullOrEmpty(governmentId) ? governmentId : "-");
+                loandetails.setGovermentId(StringUtils.isNotBlank(governmentId) ? governmentId : "-");
                 loanAccountDetailsViewList.add(loandetails);
             }
             SessionUtils.setAttribute(CUSTOMER_ID, customerId, request);
@@ -912,9 +912,9 @@ public class LoanAccountAction extends AccountAppAction {
                             }
                             tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
                             tempLoanAccount
-                                    .setBusinessActivityName((!StringUtils.isNullOrEmpty(businessActName) ? businessActName
+                                    .setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName
                                             : "-").toString());
-                            tempLoanAccount.setGovermentId((!StringUtils.isNullOrEmpty(clt.getGovernmentId()) ? clt
+                            tempLoanAccount.setGovermentId((StringUtils.isNotBlank(clt.getGovernmentId()) ? clt
                                     .getGovernmentId() : "-").toString());
                             loanAccountDetailsView.add(tempLoanAccount);
                         }
@@ -1221,7 +1221,7 @@ public class LoanAccountAction extends AccountAppAction {
             final List<LoanAccountDetailsViewHelper> clientDetails, final List<String> selectedClients) throws ServiceException {
         List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
         for (final String clientId : selectedClients) {
-            if (!StringUtils.isEmpty(clientId)) {
+            if (StringUtils.isNotEmpty(clientId)) {
                 LoanAccountDetailsViewHelper matchingClientDetail = (LoanAccountDetailsViewHelper) CollectionUtils
                         .find(clientDetails, new Predicate() {
                             public boolean evaluate(final Object object) {
@@ -1260,7 +1260,7 @@ public class LoanAccountAction extends AccountAppAction {
     private String findGovernmentId(final Integer clientId) throws ServiceException {
         ClientBO client = clientBusinessService.getClient(clientId);
         String governmentId = client.getGovernmentId();
-        return StringUtils.isNullOrEmpty(governmentId) ? "-" : governmentId;
+        return StringUtils.isBlank(governmentId) ? "-" : governmentId;
     }
 
     private String findBusinessActivityName(final String businessActivity, final Short localeId) throws ServiceException {
@@ -1616,7 +1616,7 @@ public class LoanAccountAction extends AccountAppAction {
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
                 customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
                         request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));

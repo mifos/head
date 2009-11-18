@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.fund.util.helpers.FundConstants;
@@ -38,7 +39,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class FundActionForm extends BaseActionForm {
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
@@ -95,16 +95,16 @@ public class FundActionForm extends BaseActionForm {
         String fundName = resources.getString("funds.fundName");
         String fundCode = resources.getString("funds.fundCode");
         logger.debug("start validateForPreview method of Fund Action form method :" + fundName);
-        if (StringUtils.isNullOrEmpty(getFundName()))
+        if (StringUtils.isBlank(getFundName()))
             addError(errors, "fundName", FundConstants.ERROR_MANDATORY, fundName);
-        if (StringUtils.isNullOrEmpty(getFundCode()))
+        if (StringUtils.isBlank(getFundCode()))
             addError(errors, "fundCode", FundConstants.ERROR_SELECT, fundCode);
         logger.debug("validateForPreview method of Fund Action form method called :" + fundName);
     }
 
     private void validateForPreviewManage(HttpServletRequest request, ActionErrors errors) {
         logger.debug("start validateForPreviewManage method of Fund Action form method :" + fundName);
-        if (StringUtils.isNullOrEmpty(getFundName())) {
+        if (StringUtils.isBlank(getFundName())) {
             UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
             Locale locale = userContext.getPreferredLocale();
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.FUND_UI_RESOURCE_PROPERTYFILE, locale);

@@ -22,6 +22,7 @@ package org.mifos.application.customer.group.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -29,7 +30,6 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class GroupTransferActionForm extends BaseActionForm {
     private String officeId;
@@ -54,7 +54,7 @@ public class GroupTransferActionForm extends BaseActionForm {
         String method = request.getParameter(Methods.method.toString());
         if (method.equals(Methods.removeGroupMemberShip.toString())) {
             errors.add(super.validate(mapping, request));
-            if (StringUtils.isNullOrEmpty(getAssignedLoanOfficerId())) {
+            if (StringUtils.isBlank(getAssignedLoanOfficerId())) {
                 if (isActive == Constants.YES) {
                     errors.add(GroupConstants.ASSIGNED_LOAN_OFFICER_REQUIRED, new ActionMessage(
                             GroupConstants.ASSIGNED_LOAN_OFFICER_REQUIRED));

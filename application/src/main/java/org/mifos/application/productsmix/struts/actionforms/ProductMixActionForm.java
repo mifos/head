@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -35,7 +36,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ProductMixActionForm extends BaseActionForm {
 
@@ -104,7 +104,7 @@ public class ProductMixActionForm extends BaseActionForm {
     }
 
     private void validateProductType(ActionErrors errors, HttpServletRequest request) {
-        if (StringUtils.isNullOrEmpty(getProductType())) {
+        if (StringUtils.isBlank(getProductType())) {
             addError(errors, "productType", ProductDefinitionConstants.ERROR_MANDATORY, getLocaleString(
                     "product.productType", request));
 
@@ -112,7 +112,7 @@ public class ProductMixActionForm extends BaseActionForm {
     }
 
     private void validateProductInstance(ActionErrors errors, HttpServletRequest request) {
-        if (StringUtils.isNullOrEmpty(getProductInstance())) {
+        if (StringUtils.isBlank(getProductInstance())) {
             addError(errors, "productInstance", ProductDefinitionConstants.ERROR_MANDATORY, getLocaleString(
                     "product.prodinstname", request));
 

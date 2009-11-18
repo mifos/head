@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -32,7 +33,6 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -224,10 +224,10 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
         if (newStatusId == null)
             errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
                     resources.getString("Customer.status")));
-        else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
+        else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId))
             errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
                     resources.getString("Customer.flag")));
-        if (StringUtils.isNullOrEmpty(notes))
+        if (StringUtils.isBlank(notes))
             errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX,
                     resources.getString("Customer.notes")));
         else if (notes.length() > CustomerConstants.COMMENT_LENGTH)

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
@@ -42,7 +43,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class BulkEntryDisplayHelper {
 
@@ -407,7 +407,7 @@ public class BulkEntryDisplayHelper {
     }
 
     protected Double getDoubleValue(final String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
+        return StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 

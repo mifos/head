@@ -22,6 +22,7 @@ package org.mifos.application.fees.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -36,7 +37,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class FeeActionForm extends BaseActionForm {
     private String feeId;
@@ -102,7 +102,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public FeeCategory getCategoryTypeValue() throws PropertyNotFoundException {
-        return StringUtils.isNullAndEmptySafe(categoryType) ? FeeCategory.getFeeCategory(Short.valueOf(categoryType))
+        return StringUtils.isNotBlank(categoryType) ? FeeCategory.getFeeCategory(Short.valueOf(categoryType))
                 : null;
     }
 
@@ -131,7 +131,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public FeeFormula getFeeFormulaValue() throws PropertyNotFoundException {
-        return StringUtils.isNullAndEmptySafe(feeFormula) ? FeeFormula.getFeeFormula(Short.valueOf(feeFormula)) : null;
+        return StringUtils.isNotBlank(feeFormula) ? FeeFormula.getFeeFormula(Short.valueOf(feeFormula)) : null;
     }
 
     public String getFeeFrequencyType() {
@@ -143,7 +143,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public FeeFrequencyType getFeeFrequencyTypeValue() throws PropertyNotFoundException {
-        return StringUtils.isNullAndEmptySafe(feeFrequencyType) ? FeeFrequencyType.getFeeFrequencyType(Short
+        return StringUtils.isNotBlank(feeFrequencyType) ? FeeFrequencyType.getFeeFrequencyType(Short
                 .valueOf(feeFrequencyType)) : null;
     }
 
@@ -156,11 +156,11 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public String getFeePaymentType() {
-        return StringUtils.isNullAndEmptySafe(categoryType) && isCategoryLoan() ? loanCharge : customerCharge;
+        return StringUtils.isNotBlank(categoryType) && isCategoryLoan() ? loanCharge : customerCharge;
     }
 
     public FeePayment getFeePaymentTypeValue() throws PropertyNotFoundException {
-        return StringUtils.isNullAndEmptySafe(getFeePaymentType()) ? FeePayment.getFeePayment(Short
+        return StringUtils.isNotBlank(getFeePaymentType()) ? FeePayment.getFeePayment(Short
                 .valueOf(getFeePaymentType())) : null;
     }
 
@@ -173,7 +173,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public RecurrenceType getFeeRecurrenceTypeValue() throws PropertyNotFoundException {
-        return StringUtils.isNullAndEmptySafe(feeRecurrenceType) ? RecurrenceType.fromInt(Short
+        return StringUtils.isNotBlank(feeRecurrenceType) ? RecurrenceType.fromInt(Short
                 .valueOf(feeRecurrenceType)) : null;
     }
 
@@ -186,7 +186,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public FeeStatus getFeeStatusValue() {
-        return StringUtils.isNullAndEmptySafe(feeStatus) ? FeeStatus.getFeeStatus(Short.valueOf(feeStatus)) : null;
+        return StringUtils.isNotBlank(feeStatus) ? FeeStatus.getFeeStatus(Short.valueOf(feeStatus)) : null;
     }
 
     public String getGlCode() {
@@ -250,7 +250,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public boolean isRateFee() {
-        return StringUtils.isNullAndEmptySafe(rate) && StringUtils.isNullAndEmptySafe(feeFormula);
+        return StringUtils.isNotBlank(rate) && StringUtils.isNotBlank(feeFormula);
     }
 
     @Override
@@ -289,7 +289,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     private void validateForPreview(ActionErrors errors) {
-        if (StringUtils.isNullAndEmptySafe(categoryType) && isCategoryLoan()) {
+        if (StringUtils.isNotBlank(categoryType) && isCategoryLoan()) {
             validateForPreviewLoanCategory(errors);
         } else if (!isAmountValid()) {
             addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
@@ -307,7 +307,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     private void validateForEditPreview(ActionErrors errors) {
-        if (StringUtils.isNullAndEmptySafe(feeFormula)) {
+        if (StringUtils.isNotBlank(feeFormula)) {
             if (!isRateValid())
                 addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
         } else if (!isAmountValid())
@@ -326,7 +326,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     private boolean isFormulaValid() {
-        return StringUtils.isNullAndEmptySafe(feeFormula);
+        return StringUtils.isNotBlank(feeFormula);
     }
 
     boolean isAmountValid() {

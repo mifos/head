@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.checklist.exceptions.CheckListException;
 import org.mifos.application.checklist.persistence.CheckListPersistence;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
@@ -33,7 +34,6 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class CheckListBO extends BusinessObject {
 
@@ -145,7 +145,7 @@ public abstract class CheckListBO extends BusinessObject {
         setUpdateDetails(userId);
         if (details == null || details.size() <= 0)
             throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
-        if (StringUtils.isNullOrEmpty(checkListName))
+        if (StringUtils.isBlank(checkListName))
             throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
         this.checklistName = checkListName;
         getChecklistDetails().clear();

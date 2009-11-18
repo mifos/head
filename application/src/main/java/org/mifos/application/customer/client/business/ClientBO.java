@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -73,7 +74,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientBO extends CustomerBO {
 
@@ -815,7 +815,7 @@ public class ClientBO extends CustomerBO {
 
     private void checkForDuplicates(final String name, final Date dob, final String governmentId, final Integer customerId)
             throws CustomerException {
-        if (!StringUtils.isNullOrEmpty(governmentId)) {
+        if (StringUtils.isNotBlank(governmentId)) {
             try {
                 if (getClientPersistence().checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
                     String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,

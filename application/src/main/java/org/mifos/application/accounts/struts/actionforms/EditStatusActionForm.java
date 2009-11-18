@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -32,7 +33,6 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class EditStatusActionForm extends BaseActionForm {
@@ -200,9 +200,9 @@ public class EditStatusActionForm extends BaseActionForm {
         String flag = resources.getString("accounts.flag");
         if (newStatusId == null)
             addError(errors, LoanConstants.MANDATORY, LoanConstants.MANDATORY, status);
-        else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
+        else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId))
             addError(errors, LoanConstants.MANDATORY_SELECT, LoanConstants.MANDATORY_SELECT, flag);
-        if (StringUtils.isNullOrEmpty(notes))
+        if (StringUtils.isBlank(notes))
             addError(errors, LoanConstants.MANDATORY_TEXTBOX, LoanConstants.MANDATORY_TEXTBOX, notesString);
         else if (notes.length() > LoanConstants.COMMENT_LENGTH)
             addError(errors, LoanConstants.MAX_LENGTH, LoanConstants.MAX_LENGTH, notesString, String

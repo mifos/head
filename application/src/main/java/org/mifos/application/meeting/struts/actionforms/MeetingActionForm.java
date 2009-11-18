@@ -22,6 +22,7 @@ package org.mifos.application.meeting.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -35,7 +36,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class MeetingActionForm extends BaseActionForm {
     private static final long serialVersionUID = 44l;
@@ -167,11 +167,11 @@ public class MeetingActionForm extends BaseActionForm {
     }
 
     public WeekDay getWeekDayValue() {
-        return StringUtils.isNullAndEmptySafe(getWeekDay()) ? WeekDay.getWeekDay(Short.valueOf(getWeekDay())) : null;
+        return StringUtils.isNotBlank(getWeekDay()) ? WeekDay.getWeekDay(Short.valueOf(getWeekDay())) : null;
     }
 
     public RecurrenceType getRecurrenceType() {
-        return StringUtils.isNullAndEmptySafe(getFrequency()) ? RecurrenceType.fromInt(Short.valueOf(getFrequency()))
+        return StringUtils.isNotBlank(getFrequency()) ? RecurrenceType.fromInt(Short.valueOf(getFrequency()))
                 : null;
     }
 
@@ -197,12 +197,12 @@ public class MeetingActionForm extends BaseActionForm {
     }
 
     public RankType getMonthRankValue() {
-        return StringUtils.isNullAndEmptySafe(getMonthRank()) ? RankType.getRankType(Short.valueOf(getMonthRank()))
+        return StringUtils.isNotBlank(getMonthRank()) ? RankType.getRankType(Short.valueOf(getMonthRank()))
                 : null;
     }
 
     public WeekDay getMonthWeekValue() {
-        return StringUtils.isNullAndEmptySafe(getMonthWeek()) ? WeekDay.getWeekDay(Short.valueOf(getMonthWeek()))
+        return StringUtils.isNotBlank(getMonthWeek()) ? WeekDay.getWeekDay(Short.valueOf(getMonthWeek()))
                 : null;
     }
 
@@ -245,7 +245,7 @@ public class MeetingActionForm extends BaseActionForm {
         else if (getRecurrenceType().equals(RecurrenceType.MONTHLY))
             validateMonthlyMeeting(errors);
 
-        if (StringUtils.isNullOrEmpty(getMeetingPlace()))
+        if (StringUtils.isBlank(getMeetingPlace()))
             errors.add(MeetingConstants.INVALID_MEETINGPLACE, new ActionMessage(MeetingConstants.INVALID_MEETINGPLACE));
         return errors;
     }
@@ -257,7 +257,7 @@ public class MeetingActionForm extends BaseActionForm {
     }
 
     private void validateMonthlyMeeting(ActionErrors errors) {
-        if (StringUtils.isNullAndEmptySafe(monthType) && monthType.equals(MeetingConstants.MONTHLY_ON_DATE)) {
+        if (StringUtils.isNotBlank(monthType) && monthType.equals(MeetingConstants.MONTHLY_ON_DATE)) {
             if (getMonthDayValue() == null || getDayRecurMonthValue() == null)
                 errors.add(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER, new ActionMessage(
                         MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));

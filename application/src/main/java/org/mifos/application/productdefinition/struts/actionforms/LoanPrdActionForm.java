@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -49,7 +50,6 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -1799,7 +1799,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
                 forNumberOfLastLoanInstallmentAtRow);
-        if (StringUtils.isNullOrEmpty(getInterestTypes()))
+        if (StringUtils.isBlank(getInterestTypes()))
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST, request), rateType);
         validateMinMaxDefInterestRates(errors, locale, request);
@@ -1826,10 +1826,10 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
                 forNumberOfLastLoanInstallmentAtRow);
-        if (StringUtils.isNullOrEmpty(getInterestTypes()))
+        if (StringUtils.isBlank(getInterestTypes()))
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST, request), rateType);
-        if (StringUtils.isNullOrEmpty(getPrdStatus()))
+        if (StringUtils.isBlank(getPrdStatus()))
             addError(errors, "prdStatus", ProductDefinitionConstants.ERROR_SELECT, status);
         validateMinMaxDefInterestRates(errors, locale, request);
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
@@ -2004,7 +2004,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateInterestGLCode(HttpServletRequest request, ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(getInterestGLCode())) {
+        if (StringUtils.isBlank(getInterestGLCode())) {
             UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
             Locale locale = userContext.getPreferredLocale();
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,
@@ -2031,7 +2031,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         String maxLoanAmt = null;
         String defLoanAmt = null;
 
-        if (!StringUtils.isNullAndEmptySafe(getLoanAmtCalcType())) {
+        if (!StringUtils.isNotBlank(getLoanAmtCalcType())) {
             addError(errors, ProductDefinitionConstants.ERRORCALCLOANAMOUNTTYPE,
                     ProductDefinitionConstants.ERRORCALCLOANAMOUNTTYPE);
         }
@@ -2234,7 +2234,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         String min = resources.getString("product.min");
         String max = resources.getString("product.max");
         String defaultString = resources.getString("product.default");
-        if (!StringUtils.isNullAndEmptySafe(minInterestRate)) {
+        if (!StringUtils.isNotBlank(minInterestRate)) {
             addError(errors, "minInterestRate", ProductDefinitionConstants.ERRORSENTERCONFIG, min, label, prdrate);
         } else {
             minInterestResult = parseDoubleForInterest(minInterestRate);
@@ -2249,7 +2249,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             }
         }
 
-        if (!StringUtils.isNullAndEmptySafe(maxInterestRate)) {
+        if (!StringUtils.isNotBlank(maxInterestRate)) {
             addError(errors, "maxInterestRate", ProductDefinitionConstants.ERRORSENTERCONFIG, max, label, prdrate);
         } else {
             maxInterestResult = parseDoubleForInterest(maxInterestRate);
@@ -2263,7 +2263,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxInterest = maxInterestResult.getDoubleValue();
         }
 
-        if (!StringUtils.isNullAndEmptySafe(defInterestRate)) {
+        if (!StringUtils.isNotBlank(defInterestRate)) {
             addError(errors, "defInterestRate", ProductDefinitionConstants.ERRORSENTERCONFIG, defaultString, label,
                     prdrate);
         } else {
@@ -2310,7 +2310,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         Double minLoanAmt = null;
         Double defLoanAmt = null;
 
-        if (!StringUtils.isNullAndEmptySafe(minLoanAmountStr)) {
+        if (!StringUtils.isNotBlank(minLoanAmountStr)) {
             addError(errors, ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNT,
                     ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNT, error, rownum);
         } else {
@@ -2325,7 +2325,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = minLoanResult.getDoubleValue();
         }
 
-        if (!StringUtils.isNullAndEmptySafe(maxLoanAmountStr)) {
+        if (!StringUtils.isNotBlank(maxLoanAmountStr)) {
             addError(errors, ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNT,
                     ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNT, error, rownum);
         } else {
@@ -2340,7 +2340,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = maxLoanResult.getDoubleValue();
         }
 
-        if (!StringUtils.isNullAndEmptySafe(defLoanAmountStr)) {
+        if (!StringUtils.isNotBlank(defLoanAmountStr)) {
             addError(errors, ProductDefinitionConstants.ERRORDEFLOANAMOUNT,
                     ProductDefinitionConstants.ERRORDEFLOANAMOUNT, error, rownum);
         } else {
@@ -2379,7 +2379,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         Integer startRange;
         Integer endRange;
 
-        if (!StringUtils.isNullAndEmptySafe(getCalcInstallmentType())) {
+        if (!StringUtils.isNotBlank(getCalcInstallmentType())) {
             addError(errors, ProductDefinitionConstants.ERRORCALCINSTALLMENTTYPE,
                     ProductDefinitionConstants.ERRORCALCINSTALLMENTTYPE);
         }
@@ -2512,26 +2512,26 @@ public class LoanPrdActionForm extends BaseActionForm {
         String minNoOfInstall = mininst == null ? null : mininst.toString();
         String defNoOfInstall = definst == null ? null : definst.toString();
 
-        if (!StringUtils.isNullAndEmptySafe(minNoOfInstall)) {
+        if (!StringUtils.isNotBlank(minNoOfInstall)) {
             addError(errors, ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT,
                     ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT, error, rownum);
         }
-        if (!StringUtils.isNullAndEmptySafe(maxNoOfInstall)) {
+        if (!StringUtils.isNotBlank(maxNoOfInstall)) {
             addError(errors, ProductDefinitionConstants.ERRORMAXIMUMINSTALLMENT,
                     ProductDefinitionConstants.ERRORMAXIMUMINSTALLMENT, error, rownum);
         }
-        if (!StringUtils.isNullAndEmptySafe(defNoOfInstall)) {
+        if (!StringUtils.isNotBlank(defNoOfInstall)) {
             addError(errors, ProductDefinitionConstants.ERRORDEFAULTINSTALLMENT,
                     ProductDefinitionConstants.ERRORDEFAULTINSTALLMENT, error, rownum);
         }
 
-        if (StringUtils.isNullAndEmptySafe(maxNoOfInstall) && StringUtils.isNullAndEmptySafe(minNoOfInstall)) {
+        if (StringUtils.isNotBlank(maxNoOfInstall) && StringUtils.isNotBlank(minNoOfInstall)) {
             if (Integer.parseInt(minNoOfInstall) > Integer.parseInt(maxNoOfInstall))
                 addError(errors, ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL,
                         ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL, error, rownum);
         }
-        if (StringUtils.isNullAndEmptySafe(defNoOfInstall) && StringUtils.isNullAndEmptySafe(maxNoOfInstall)
-                && StringUtils.isNullAndEmptySafe(minNoOfInstall)) {
+        if (StringUtils.isNotBlank(defNoOfInstall) && StringUtils.isNotBlank(maxNoOfInstall)
+                && StringUtils.isNotBlank(minNoOfInstall)) {
             if (Integer.parseInt(defNoOfInstall) < Integer.parseInt(minNoOfInstall)
                     || Integer.parseInt(defNoOfInstall) > Integer.parseInt(maxNoOfInstall)) {
                 addError(errors, ProductDefinitionConstants.ERRORMINMAXDEFINSTALLMENT,
@@ -2546,15 +2546,15 @@ public class LoanPrdActionForm extends BaseActionForm {
         String S_StartLoanAmount = StartLoanAmount == null ? null : StartLoanAmount.toString();
         String S_EndLoanAmount = EndLoanAmnount == null ? null : EndLoanAmnount.toString();
 
-        if (!StringUtils.isNullAndEmptySafe(S_StartLoanAmount)) {
+        if (!StringUtils.isNotBlank(S_StartLoanAmount)) {
             addError(errors, ProductDefinitionConstants.ERRORSTARTRANGELOANAMOUNT,
                     ProductDefinitionConstants.ERRORSTARTRANGELOANAMOUNT, error, rownum);
         }
-        if (!StringUtils.isNullAndEmptySafe(S_EndLoanAmount)) {
+        if (!StringUtils.isNotBlank(S_EndLoanAmount)) {
             addError(errors, ProductDefinitionConstants.ERRORENDLOANAMOUNT,
                     ProductDefinitionConstants.ERRORENDLOANAMOUNT, error, rownum);
         }
-        if (StringUtils.isNullAndEmptySafe(S_StartLoanAmount) && StringUtils.isNullAndEmptySafe(S_EndLoanAmount)) {
+        if (StringUtils.isNotBlank(S_StartLoanAmount) && StringUtils.isNotBlank(S_EndLoanAmount)) {
             if (StartLoanAmount > EndLoanAmnount)
                 addError(errors, ProductDefinitionConstants.ERRORSTARTENDLOANAMOUNT,
                         ProductDefinitionConstants.ERRORSTARTENDLOANAMOUNT, error, rownum);
@@ -2566,15 +2566,15 @@ public class LoanPrdActionForm extends BaseActionForm {
 
         String S_StartInstallmentno = StartInstallmentno == null ? null : StartInstallmentno.toString();
         String S_EndInstallmentno = EndInstallmentno == null ? null : EndInstallmentno.toString();
-        if (!StringUtils.isNullAndEmptySafe(S_StartInstallmentno)) {
+        if (!StringUtils.isNotBlank(S_StartInstallmentno)) {
             addError(errors, ProductDefinitionConstants.ERRORSTARTRANGEINSTALLMENT,
                     ProductDefinitionConstants.ERRORSTARTRANGEINSTALLMENT, error, rownum);
         }
-        if (!StringUtils.isNullAndEmptySafe(S_EndInstallmentno)) {
+        if (!StringUtils.isNotBlank(S_EndInstallmentno)) {
             addError(errors, ProductDefinitionConstants.ERRORENDINSTALLMENT,
                     ProductDefinitionConstants.ERRORENDINSTALLMENT, error, rownum);
         }
-        if (StringUtils.isNullAndEmptySafe(S_StartInstallmentno) && StringUtils.isNullAndEmptySafe(S_EndInstallmentno)) {
+        if (StringUtils.isNotBlank(S_StartInstallmentno) && StringUtils.isNotBlank(S_EndInstallmentno)) {
             if (StartInstallmentno > EndInstallmentno)
                 addError(errors, ProductDefinitionConstants.ERRORSTARTENDINSTALLMENT,
                         ProductDefinitionConstants.ERRORSTARTENDINSTALLMENT, error, rownum);

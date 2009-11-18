@@ -20,6 +20,7 @@
 
 package org.mifos.application.fund.business;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.fund.exception.FundException;
 import org.mifos.application.fund.persistence.FundPersistence;
 import org.mifos.application.fund.util.helpers.FundConstants;
@@ -29,7 +30,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class FundBO extends BusinessObject {
     private final Short fundId;
@@ -114,7 +114,7 @@ public class FundBO extends BusinessObject {
 
     private void validateFundName(String fundName) throws FundException {
         logger.debug("Checking for empty Fund name");
-        if (StringUtils.isNullOrEmpty(fundName))
+        if (StringUtils.isBlank(fundName))
             throw new FundException(FundConstants.INVALID_FUND_NAME);
     }
 

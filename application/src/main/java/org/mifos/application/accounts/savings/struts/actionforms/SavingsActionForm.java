@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -45,9 +46,9 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class SavingsActionForm extends AccountAppActionForm {
     private String recommendedAmount;
@@ -108,11 +109,7 @@ public class SavingsActionForm extends AccountAppActionForm {
     }
 
     public Money getRecommendedAmntValue() {
-        return getMoney(recommendedAmount);
-    }
-
-    private Money getMoney(String str) {
-        return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(str) : new Money();
+        return FormUtils.getMoney(recommendedAmount);
     }
 
     public void clear() {
@@ -129,7 +126,7 @@ public class SavingsActionForm extends AccountAppActionForm {
                 boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                        if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
+                        if (StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
                                     LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
                             isErrorFound = true;

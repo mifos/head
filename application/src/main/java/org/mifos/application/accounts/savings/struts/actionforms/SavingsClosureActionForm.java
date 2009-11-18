@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -35,7 +36,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class SavingsClosureActionForm extends ValidatorActionForm {
@@ -119,8 +119,8 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 
             String amount = getAmount();
             if (!("0.0".equals(amount))) {
-                if (!StringUtils.isNullOrEmpty(amount)) {
-                    if (StringUtils.isNullOrEmpty(getPaymentTypeId()))
+                if (StringUtils.isNotBlank(amount)) {
+                    if (StringUtils.isBlank(getPaymentTypeId()))
                         errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
                                 AccountConstants.ERROR_MANDATORY, resources.getString("Savings.paymentType")));
                 }
@@ -133,12 +133,12 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
                     errors.add(dateError);
             }
 
-            if (StringUtils.isNullOrEmpty(getCustomerId())) {
+            if (StringUtils.isBlank(getCustomerId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.ClientName")));
             }
 
-            if (StringUtils.isNullOrEmpty(getNotes())) {
+            if (StringUtils.isBlank(getNotes())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.notes")));
             }

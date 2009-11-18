@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -55,7 +56,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
@@ -220,14 +220,14 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     }
 
     private void checkValidationForBranchOffice(ActionErrors errors, UserContext userContext) {
-        if (StringUtils.isNullOrEmpty(branchOfficeId)) {
+        if (StringUtils.isBlank(branchOfficeId)) {
             addError(errors, ConfigurationConstants.BRANCHOFFICE, LoanConstants.MANDATORY_SELECT, getMessageText(
                     ConfigurationConstants.BRANCHOFFICE, userContext));
         }
     }
 
     private void checkValidationForLoanOfficer(ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(loanOfficerId)) {
+        if (StringUtils.isBlank(loanOfficerId)) {
             addError(errors, LoanConstants.LOANOFFICERS, LoanConstants.MANDATORY_SELECT, LoanConstants.LOANOFFICERS);
         }
     }
@@ -235,14 +235,14 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     private void checkValidationForCenter(ActionErrors errors, UserContext userContext, short isCenterHierarchyExists) {
         String customerLabel = isCenterHierarchyExists == Constants.YES ? ConfigurationConstants.CENTER
                 : ConfigurationConstants.GROUP;
-        if (StringUtils.isNullOrEmpty(centerId)) {
+        if (StringUtils.isBlank(centerId)) {
             addError(errors, ConfigurationConstants.CENTER, LoanConstants.MANDATORY_SELECT, getLabel(customerLabel,
                     userContext));
         }
     }
 
     private void checkValidationForPrdOfferingId(ActionErrors errors, UserContext userContext) {
-        if (StringUtils.isNullOrEmpty(prdOfferingId)) {
+        if (StringUtils.isBlank(prdOfferingId)) {
             addError(errors, LoanConstants.PRDOFFERINGID, LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
                     ConfigurationConstants.LOAN, userContext), LoanConstants.INSTANCENAME);
         }

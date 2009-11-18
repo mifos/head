@@ -20,13 +20,12 @@
 
 package org.mifos.application.accounts.loan.struts.actionforms;
 
-import static org.mifos.framework.util.helpers.StringUtils.isNullOrEmpty;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -52,7 +51,8 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
             errors.add(errors1);
 
         String method = request.getParameter(MethodNameConstants.METHOD);
-        if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount()) && isNullOrEmpty(paymentModeOfPayment)) {
+        if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount())
+                && StringUtils.isBlank(paymentModeOfPayment)) {
             String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                     errorMessage));

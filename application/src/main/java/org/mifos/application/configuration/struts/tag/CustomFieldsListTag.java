@@ -26,6 +26,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.util.ResourceBundle;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;
@@ -38,7 +39,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
@@ -65,7 +65,7 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
     private String getDefaultValue(CustomFieldDefinitionEntity customField, UserContext userContext) {
         String defaultValue = customField.getDefaultValue();
         if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                && !StringUtils.isNullOrEmpty(defaultValue))
+                && StringUtils.isNotBlank(defaultValue))
             defaultValue = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), defaultValue);
         return defaultValue;
     }

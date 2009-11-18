@@ -25,6 +25,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -56,7 +57,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class EditCustomerStatusAction extends BaseAction {
@@ -183,7 +183,7 @@ public class EditCustomerStatusAction extends BaseAction {
     }
 
     private String getStatusName(CustomerBO customerBO, Short localeId, String statusId, Short statusIdValue) {
-        if (StringUtils.isNullAndEmptySafe(statusId)) {
+        if (StringUtils.isNotBlank(statusId)) {
             return customerService
                     .getStatusName(localeId, CustomerStatus.fromInt(statusIdValue), customerBO.getLevel());
         }
@@ -192,7 +192,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
     private String getFlagName(CustomerBO customerBO, Short localeId, String statusId, Short statusIdValue,
             Short flagIdValue) {
-        if (StringUtils.isNullAndEmptySafe(statusId) && isNewStatusCancelledOrClosed(statusIdValue)) {
+        if (StringUtils.isNotBlank(statusId) && isNewStatusCancelledOrClosed(statusIdValue)) {
             return customerService.getFlagName(localeId, CustomerStatusFlag.getStatusFlag(flagIdValue), customerBO
                     .getLevel());
         }
@@ -288,9 +288,9 @@ public class EditCustomerStatusAction extends BaseAction {
         customerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         Short flagId = null;
         Short newStatusId = null;
-        if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getFlagId()))
             flagId = editStatusActionForm.getFlagIdValue();
-        if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getNewStatusId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId()))
             newStatusId = editStatusActionForm.getNewStatusIdValue();
         checkPermission(customerBO, request, newStatusId, flagId);
         setInitialObjectForAuditLogging(customerBO);

@@ -31,9 +31,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.application.reports.business.ReportsBO;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ReportTemplateDownloadServlet extends HttpServlet {
 
@@ -41,7 +41,7 @@ public class ReportTemplateDownloadServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String realPath = request.getParameter("realPath");
         boolean isReportAnAdminDocument = false;
-        if (StringUtils.isNullOrEmpty(realPath))
+        if (StringUtils.isBlank(realPath))
             realPath = "report";
         else
             isReportAnAdminDocument = true;

@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -55,7 +56,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelBO extends BusinessObject {
 
@@ -425,14 +425,14 @@ public class PersonnelBO extends BusinessObject {
             PersistenceException {
 
         PersonnelPersistence persistence = new PersonnelPersistence();
-        if (StringUtils.isNullOrEmpty(userName)) {
+        if (StringUtils.isBlank(userName)) {
             throw new ValidationException(PersonnelConstants.ERRORMANDATORY);
         }
         if (persistence.isUserExist(userName)) {
             throw new ValidationException(PersonnelConstants.DUPLICATE_USER, new Object[] { userName });
 
         }
-        if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
+        if (StringUtils.isNotBlank(governmentIdNumber)) {
             if (persistence.isUserExistWithGovernmentId(governmentIdNumber)) {
                 throw new ValidationException(PersonnelConstants.DUPLICATE_GOVT_ID, new Object[] { governmentIdNumber });
             }
@@ -475,7 +475,7 @@ public class PersonnelBO extends BusinessObject {
         this.displayName = name.getDisplayName();
         this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
 
-        if (StringUtils.isNullAndEmptySafe(password)) {
+        if (StringUtils.isNotBlank(password)) {
             this.encryptedPassword = getEncryptedPassword(password);
         }
         this.emailId = emailId;

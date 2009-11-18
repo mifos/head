@@ -33,6 +33,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -68,7 +69,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class BirtAdminDocumentUploadAction extends BaseAction {
@@ -132,7 +132,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         SessionUtils.removeAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS, request);
         SessionUtils.removeAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, request);
         SessionUtils.removeAttribute(ProductDefinitionConstants.STATUS_LIST, request);
-        if (!StringUtils.isNullOrEmpty(uploadForm.getAccountTypeId())) {
+        if (StringUtils.isNotBlank(uploadForm.getAccountTypeId())) {
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS,
                     new AccountBusinessService().retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short
                             .valueOf(uploadForm.getAccountTypeId()))), request);

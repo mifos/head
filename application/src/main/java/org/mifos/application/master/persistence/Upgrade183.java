@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.persistence.Upgrade;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
 public class Upgrade183 extends Upgrade {
@@ -77,8 +76,8 @@ public class Upgrade183 extends Upgrade {
                         lookUpName = unusedLookupName7;
                     else {
                         newElementText = entityName + counter;
-                        lookUpName = StringUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(),
-                                newElementText);
+                        lookUpName = org.mifos.framework.util.helpers.StringUtils.generateLookupName(
+                                DynamicLookUpValueCreationTypes.DBUpgrade.name(), newElementText);
                         counter++;
                     }
                     updateLookUpName(connection, lookUpName, lookUpId);
@@ -132,8 +131,7 @@ public class Upgrade183 extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection)
-            throws IOException, SQLException {
+    public void upgrade(Connection connection) throws IOException, SQLException {
         updateLookUpNames(connection);
         fixDuplicateLookUpNames(connection);
         addUniqueToLookUpName(connection);

@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -41,7 +42,6 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class HolidayActionForm extends BaseActionForm {
@@ -109,7 +109,7 @@ public class HolidayActionForm extends BaseActionForm {
     }
 
     private void verifyFields(ActionErrors actionErrors, UserContext userContext, Locale userLocale) {
-        if (StringUtils.isNullOrEmpty(holidayName))
+        if (StringUtils.isBlank(holidayName))
             actionErrors.add(HolidayConstants.HOLIDAY_NAME, new ActionMessage(HolidayConstants.ERRORMANDATORYFIELD,
                     getLocaleString(HolidayConstants.HOLIDAYNAME, userContext)));
 

@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
@@ -46,7 +47,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
@@ -103,11 +103,11 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected Short getShortValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
+        return StringUtils.isNotBlank(str) ? Short.valueOf(str) : null;
     }
 
     public static Integer getIntegerValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? Integer.valueOf(str) : null;
+        return StringUtils.isNotBlank(str) ? Integer.valueOf(str) : null;
     }
 
     protected Double getDoubleValue(String str) {
@@ -120,7 +120,7 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected Money getMoney(String str) {
-        return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(str) : new Money();
+        return FormUtils.getMoney(str);
     }
 
     protected String getStringValue(Double value) {
@@ -144,7 +144,7 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected Date getDateFromString(String strDate, Locale locale) throws InvalidDateException {
-        if (StringUtils.isNullAndEmptySafe(strDate)) {
+        if (StringUtils.isNotBlank(strDate)) {
             return new Date(DateUtils.getLocaleDate(locale, strDate).getTime());
         }
         return null;

@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -37,7 +38,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  *
@@ -130,7 +130,7 @@ public class LoanAccountAssembler {
     }
     
     private Double getDoubleValue(final String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
+        return StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 }

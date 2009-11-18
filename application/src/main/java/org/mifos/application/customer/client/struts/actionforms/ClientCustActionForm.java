@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
@@ -64,7 +65,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
@@ -445,10 +445,10 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (clientName.getSalutation() == null)
             errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.Salutation")));
-        if (StringUtils.isNullOrEmpty(clientName.getFirstName()))
+        if (StringUtils.isBlank(clientName.getFirstName()))
             errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.FirstName")));
-        if (StringUtils.isNullOrEmpty(clientName.getLastName()))
+        if (StringUtils.isBlank(clientName.getLastName()))
             errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.LastName")));
     }
@@ -457,10 +457,10 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (spouseName.getNameType() == null)
             errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.SpouseType")));
-        if (StringUtils.isNullOrEmpty(spouseName.getFirstName()))
+        if (StringUtils.isBlank(spouseName.getFirstName()))
             errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                     resources.getString("Customer.SpouseFirstName")));
-        if (StringUtils.isNullOrEmpty(spouseName.getLastName()))
+        if (StringUtils.isBlank(spouseName.getLastName()))
             errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                     resources.getString("Customer.SpouseLastName")));
     }
@@ -470,7 +470,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     void validateDateOfBirth(HttpServletRequest request, ActionErrors errors, ResourceBundle resources) {
-        if (StringUtils.isNullOrEmpty(getDateOfBirth())) {
+        if (StringUtils.isBlank(getDateOfBirth())) {
             if (resources == null) {
                 errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                         CustomerConstants.DOB));
@@ -570,11 +570,11 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void validateFamilyNames(ActionErrors errors) {
 
         for(int row=0;row<familyFirstName.size();row++){
-           if(StringUtils.isNullOrEmpty(familyFirstName.get(row))){
+           if(StringUtils.isBlank(familyFirstName.get(row))){
                 errors.add(ClientConstants.INVALID_FAMILY_FIRST_NAME, new ActionMessage(ClientConstants.INVALID_FAMILY_FIRST_NAME));
                 break;
             }
-           if(StringUtils.isNullOrEmpty(familyLastName.get(row))){
+           if(StringUtils.isBlank(familyLastName.get(row))){
                errors.add(ClientConstants.INVALID_FAMILY_LAST_NAME, new ActionMessage(ClientConstants.INVALID_FAMILY_LAST_NAME));
                break;
            }
@@ -584,7 +584,7 @@ public class ClientCustActionForm extends CustomerActionForm {
        //Setting date of births for family members before validating it. 
        setFamilyDateOfBirth(); 
        for(int row=0;row<familyDateOfBirth.size();row++){
-           if (StringUtils.isNullOrEmpty(familyDateOfBirth.get(row))) {
+           if (StringUtils.isBlank(familyDateOfBirth.get(row))) {
                     errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                             CustomerConstants.DOB));
                     break;
@@ -666,8 +666,8 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public String getDateOfBirth() {
-        if (StringUtils.isNullAndEmptySafe(dateOfBirthDD) && StringUtils.isNullAndEmptySafe(dateOfBirthMM)
-                && StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
+        if (StringUtils.isNotBlank(dateOfBirthDD) && StringUtils.isNotBlank(dateOfBirthMM)
+                && StringUtils.isNotBlank(dateOfBirthYY)) {
             String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator + dateOfBirthYY;
 
@@ -676,8 +676,8 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
     }
     public String getDateOfBirth(String dateOfBirthDD, String dateOfBirthMM, String dateOfBirthYY){
-        if (StringUtils.isNullAndEmptySafe(dateOfBirthDD) && StringUtils.isNullAndEmptySafe(dateOfBirthMM)
-                && StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
+        if (StringUtils.isNotBlank(dateOfBirthDD) && StringUtils.isNotBlank(dateOfBirthMM)
+                && StringUtils.isNotBlank(dateOfBirthYY)) {
             String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator + dateOfBirthYY;
 
@@ -687,7 +687,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         
     }
     public void setDateOfBirth(String receiptDate) throws InvalidDateException {
-        if (StringUtils.isNullOrEmpty(receiptDate)) {
+        if (StringUtils.isBlank(receiptDate)) {
             dateOfBirthDD = null;
             dateOfBirthMM = null;
             dateOfBirthYY = null;

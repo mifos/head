@@ -26,6 +26,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -58,7 +59,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class OffAction extends BaseAction {
@@ -163,7 +163,7 @@ public class OffAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         OffActionForm actionForm = (OffActionForm) form;
         OfficeBO officeBO = null;
-        if (StringUtils.isNullOrEmpty(actionForm.getOfficeId()))
+        if (StringUtils.isBlank(actionForm.getOfficeId()))
             throw new OfficeException(OfficeConstants.KEYGETFAILED);
         officeBO = ((OfficeBusinessService) getService()).getOffice(Short.valueOf(actionForm.getOfficeId()));
         actionForm.clear();
@@ -279,7 +279,7 @@ public class OffAction extends BaseAction {
 
     private void loadParents(HttpServletRequest request, OffActionForm form) throws Exception {
         String officeLevel = request.getParameter("officeLevel");
-        if (!StringUtils.isNullOrEmpty(officeLevel)) {
+        if (StringUtils.isNotBlank(officeLevel)) {
             form.setOfficeLevel(officeLevel);
             OfficeLevel Level = OfficeLevel.getOfficeLevel(Short.valueOf(officeLevel));
 
@@ -307,7 +307,7 @@ public class OffAction extends BaseAction {
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
                 customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
                         request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));

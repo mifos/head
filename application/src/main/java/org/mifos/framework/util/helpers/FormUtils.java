@@ -20,13 +20,17 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FormUtils {
 
     public static Double getDoubleValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
+        return org.apache.commons.lang.StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 
+    public static Money getMoney(String str) {
+        return (StringUtils.isNotBlank(str) && !str.trim().equals(".")) ? new Money(str) : new Money();
+    }
 }

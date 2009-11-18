@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -32,7 +33,6 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -183,7 +183,7 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
         UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
-        if (StringUtils.isNullAndEmptySafe(getCommentNotes())) {
+        if (StringUtils.isNotBlank(getCommentNotes())) {
             if (getCommentNotes().length() > CustomerConstants.HISTORICALDATA_COMMENT_LENGTH) {
                 errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH,
                         resources.getString("Customer.notes"), CustomerConstants.HISTORICALDATA_COMMENT_LENGTH));

@@ -28,6 +28,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -80,7 +81,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CenterCustAction extends CustAction {
@@ -290,7 +290,7 @@ public class CenterCustAction extends CustAction {
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
                 customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
                         request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
@@ -384,7 +384,7 @@ public class CenterCustAction extends CustAction {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
-        searchString = StringUtils.normalizeSearchString(searchString);
+        searchString = org.mifos.framework.util.helpers.StringUtils.normalizeSearchString(searchString);
         if (searchString.equals(""))
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new CenterBusinessService().search(searchString,

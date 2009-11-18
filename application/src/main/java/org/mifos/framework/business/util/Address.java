@@ -20,7 +20,8 @@
 
 package org.mifos.framework.business.util;
 
-import org.mifos.framework.util.helpers.StringUtils;
+import org.apache.commons.lang.StringUtils;
+
 
 public class Address {
 
@@ -123,18 +124,18 @@ public class Address {
 
     public String getDisplayAddress() {
         String displayAddress = "";
-        if (StringUtils.isNullAndEmptySafe(getLine1())) {
+        if (StringUtils.isNotBlank(getLine1())) {
             displayAddress = getLine1();
         }
-        if (StringUtils.isNullAndEmptySafe(getLine2()) && StringUtils.isNullAndEmptySafe(getLine1())) {
+        if (StringUtils.isNotBlank(getLine2()) && StringUtils.isNotBlank(getLine1())) {
             displayAddress += ", " + getLine2();
-        } else if (StringUtils.isNullAndEmptySafe(getLine2())) {
+        } else if (StringUtils.isNotBlank(getLine2())) {
             displayAddress = getLine2();
         }
-        if (StringUtils.isNullAndEmptySafe(getLine3()) && StringUtils.isNullAndEmptySafe(getLine2())
-                || (StringUtils.isNullAndEmptySafe(getLine3()) && StringUtils.isNullAndEmptySafe(getLine1()))) {
+        if (StringUtils.isNotBlank(getLine3()) && StringUtils.isNotBlank(getLine2())
+                || (StringUtils.isNotBlank(getLine3()) && StringUtils.isNotBlank(getLine1()))) {
             displayAddress += ", " + getLine3();
-        } else if (StringUtils.isNullAndEmptySafe(getLine3())) {
+        } else if (StringUtils.isNotBlank(getLine3())) {
             displayAddress += getLine3();
         }
         return displayAddress;

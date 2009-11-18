@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -74,7 +75,6 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyFactory;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * A class that represents a customer entity after being created.
@@ -983,7 +983,7 @@ public abstract class CustomerBO extends BusinessObject {
         if (customFields != null) {
             for (CustomFieldView fieldView : customFields) {
                 if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
-                        && StringUtils.isNullAndEmptySafe(fieldView.getFieldValue())) {
+                        && StringUtils.isNotBlank(fieldView.getFieldValue())) {
                     fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
                 }
 
@@ -1181,7 +1181,7 @@ public abstract class CustomerBO extends BusinessObject {
 
     private void validateFields(final String displayName, final CustomerStatus customerStatus, final CustomerBO parentCustomer)
             throws CustomerException {
-        if (StringUtils.isNullOrEmpty(displayName)) {
+        if (StringUtils.isBlank(displayName)) {
             throw new CustomerException(CustomerConstants.INVALID_NAME);
         }
         if (customerStatus == null) {

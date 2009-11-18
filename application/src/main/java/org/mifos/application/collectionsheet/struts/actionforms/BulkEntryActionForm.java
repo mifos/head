@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -45,7 +46,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  *
@@ -98,15 +98,15 @@ public class BulkEntryActionForm extends BaseActionForm {
     }
 
     public String getReceiptDate() {
-        if (StringUtils.isNullOrEmpty(getReceiptDateDD()) || StringUtils.isNullOrEmpty(getReceiptDateMM())
-                || StringUtils.isNullOrEmpty(getReceiptDateYY())) {
+        if (StringUtils.isBlank(getReceiptDateDD()) || StringUtils.isBlank(getReceiptDateMM())
+                || StringUtils.isBlank(getReceiptDateYY())) {
             return null;
         }
         return getReceiptDateDD() + "/" + getReceiptDateMM() + "/" + getReceiptDateYY();
     }
 
     public void setReceiptDate(String s) {
-        if (!StringUtils.isNullOrEmpty(s)) {
+        if (StringUtils.isNotBlank(s)) {
             setReceiptDate(DateUtils.getDate(s));
         }
     }
@@ -156,8 +156,8 @@ public class BulkEntryActionForm extends BaseActionForm {
     }
 
     public String getTransactionDate() {
-        if (StringUtils.isNullOrEmpty(transactionDateDD) || StringUtils.isNullOrEmpty(transactionDateMM)
-                || StringUtils.isNullOrEmpty(transactionDateYY)) {
+        if (StringUtils.isBlank(transactionDateDD) || StringUtils.isBlank(transactionDateMM)
+                || StringUtils.isBlank(transactionDateYY)) {
             return null;
         }
         return transactionDateDD + "/" + transactionDateMM + "/" + transactionDateYY;
@@ -233,7 +233,7 @@ public class BulkEntryActionForm extends BaseActionForm {
     }
 
     private ActionErrors receiptDateValidate(ActionErrors errors, Locale locale) {
-        if (!StringUtils.isNullOrEmpty(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
+        if (StringUtils.isNotBlank(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
             String rcptdate = resources.getString(CollectionSheetEntryConstants.RECEIPTDATE);
             errors.add(CollectionSheetEntryConstants.INVALID_RECEIPT_DATE, new ActionMessage(

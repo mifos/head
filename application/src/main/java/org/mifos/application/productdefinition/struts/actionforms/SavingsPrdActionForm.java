@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -48,7 +49,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -270,7 +270,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
     }
 
     public SavingsType getSavingsTypeValue() {
-        return (StringUtils.isNullAndEmptySafe(getSavingsType())) ? SavingsType
+        return (StringUtils.isNotBlank(getSavingsType())) ? SavingsType
                 .fromInt(getShortValue(getSavingsType())) : null;
     }
 
@@ -436,7 +436,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
         String frequencyString = resources.getString("product.frequency");
         String calculation = resources.getString("product.calc");
         String postingAccounts = resources.getString("product.postingAccounts");
-        if (StringUtils.isNullOrEmpty(getInterestRate())) {
+        if (StringUtils.isBlank(getInterestRate())) {
             addError(errors, "interestRate", ProductDefinitionConstants.ERROR_MANDATORY, getLabel(
                     ConfigurationConstants.INTEREST, request)
                     + " " + prdrate);
@@ -447,10 +447,10 @@ public class SavingsPrdActionForm extends BaseActionForm {
                         ConfigurationConstants.INTEREST, request)
                         + " " + prdrate);
         }
-        if (StringUtils.isNullOrEmpty(getInterestCalcType()))
+        if (StringUtils.isBlank(getInterestCalcType()))
             addError(errors, "interestCalcType", ProductDefinitionConstants.ERROR_SELECT, balanceInterest
                     + getLabel(ConfigurationConstants.INTEREST, request) + " " + calculation);
-        if (StringUtils.isNullOrEmpty(getTimeForInterestCacl())) {
+        if (StringUtils.isBlank(getTimeForInterestCacl())) {
             addError(errors, "timeForInterestCacl", ProductDefinitionConstants.ERROR_MANDATORY, timePeriodString
                     + getLabel(ConfigurationConstants.INTEREST, request) + " " + calculation);
         } else {
@@ -459,7 +459,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
                 addError(errors, "timeForInterestCacl", ProductDefinitionConstants.ERRORINTRATE, timePeriodString
                         + getLabel(ConfigurationConstants.INTEREST, request) + " " + calculation);
         }
-        if (StringUtils.isNullOrEmpty(getFreqOfInterest())) {
+        if (StringUtils.isBlank(getFreqOfInterest())) {
             addError(errors, "freqOfInterest", ProductDefinitionConstants.ERROR_MANDATORY, frequencyString
                     + getLabel(ConfigurationConstants.INTEREST, request) + " " + postingAccounts);
         } else {
@@ -533,7 +533,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
     }
 
     private void validateInterestGLCode(HttpServletRequest request, ActionErrors errors) {
-        if (StringUtils.isNullOrEmpty(getInterestGLCode())) {
+        if (StringUtils.isBlank(getInterestGLCode())) {
             UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
             Locale locale = userContext.getPreferredLocale();
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,

@@ -25,9 +25,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class GenericActionForm extends ActionForm {
 
@@ -65,7 +65,7 @@ public class GenericActionForm extends ActionForm {
         String month = getValue(keyPrefix + "_MM");
         String year = getValue(keyPrefix + "_YY");
 
-        if (StringUtils.isNullOrEmpty(day) || StringUtils.isNullOrEmpty(month) || StringUtils.isNullOrEmpty(year))
+        if (StringUtils.isBlank(day) || StringUtils.isBlank(month) || StringUtils.isBlank(year))
             return null;
 
         return day + "/" + month + "/" + year;

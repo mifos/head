@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -36,7 +37,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class RoleBO extends BusinessObject {
 
@@ -172,7 +172,7 @@ public class RoleBO extends BusinessObject {
 
     private void validateRoleName(String roleName) throws RolesPermissionException {
         logger.info("Checking rolename for empty or null");
-        if (!StringUtils.isNullAndEmptySafe(roleName))
+        if (StringUtils.isBlank(roleName))
             throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED);
         logger.info("Checking for duplicate rolename");
         try {

@@ -22,6 +22,7 @@ package org.mifos.application.admindocuments.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -31,7 +32,6 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
 
@@ -83,13 +83,13 @@ public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
 
     private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
         if (methodFromRequest.equals(verifyMethod)) {
-            if (StringUtils.isNullOrEmpty(adminiDocumentTitle)) {
+            if (StringUtils.isBlank(adminiDocumentTitle)) {
                 errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(ReportsConstants.ERROR_TITLE));
             }
-            if (StringUtils.isNullOrEmpty(accountTypeId) || this.getAccountTypeId().equals("-1")) {
+            if (StringUtils.isBlank(accountTypeId) || this.getAccountTypeId().equals("-1")) {
                 errors.add(ReportsConstants.ERROR_ACCOUNTTYPE, new ActionMessage(ReportsConstants.ERROR_ACCOUNTTYPE));
             }
-            if (StringUtils.isNullOrEmpty(isActive) || this.getIsActive().equals("-1")) {
+            if (StringUtils.isBlank(isActive) || this.getIsActive().equals("-1")) {
                 errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(ReportsConstants.ERROR_STATUS));
             }
             if (this.statusList == null || this.statusList.length == 0) {

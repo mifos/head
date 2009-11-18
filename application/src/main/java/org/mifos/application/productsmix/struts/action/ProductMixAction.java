@@ -26,6 +26,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -57,7 +58,6 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class ProductMixAction extends BaseAction {
@@ -123,14 +123,14 @@ public class ProductMixAction extends BaseAction {
         SessionUtils.removeAttribute(ProductDefinitionConstants.NOTALLOWEDPRODUCTLIST, request);
         SessionUtils.removeAttribute(ProductDefinitionConstants.PRODUCTINSTANCELIST, request);
 
-        if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())
+        if (StringUtils.isNotBlank(prdMixActionForm.getProductType())
                 && prdMixActionForm.getProductType().equals(ProductType.LOAN.getValue().toString())) {
             List<LoanOfferingBO> loanOffInstance = ((ProductMixBusinessService) getService())
                     .getLoanOfferingsNotMixed(getUserContext(request).getLocaleId());
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTINSTANCELIST, loanOffInstance,
                     request);
 
-        } else if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())
+        } else if (StringUtils.isNotBlank(prdMixActionForm.getProductType())
                 && prdMixActionForm.getProductType().equals(ProductType.SAVINGS.getValue().toString())) {
             List<SavingsOfferingBO> savingOffInstance = ((ProductMixBusinessService) getService())
                     .getSavingsOfferingsNotMixed(getUserContext(request).getLocaleId());
@@ -149,14 +149,14 @@ public class ProductMixAction extends BaseAction {
         SessionUtils.removeAttribute(ProductDefinitionConstants.NOTALLOWEDPRODUCTLIST, request);
         SessionUtils.removeAttribute(ProductDefinitionConstants.PRODUCTINSTANCELIST, request);
 
-        if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())
+        if (StringUtils.isNotBlank(prdMixActionForm.getProductType())
                 && prdMixActionForm.getProductType().equals(ProductType.LOAN.getValue().toString())) {
             List<LoanOfferingBO> loanOffInstance = ((ProductMixBusinessService) getService())
                     .getAllLoanOfferings(getUserContext(request).getLocaleId());
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTINSTANCELIST, loanOffInstance,
                     request);
 
-        } else if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())
+        } else if (StringUtils.isNotBlank(prdMixActionForm.getProductType())
                 && prdMixActionForm.getProductType().equals(ProductType.SAVINGS.getValue().toString())) {
             List<SavingsOfferingBO> savingOffInstance = ((ProductMixBusinessService) getService())
                     .getAllSavingsProducts();
@@ -172,7 +172,7 @@ public class ProductMixAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         prdLogger.error("in validate");
         String method = (String) request.getAttribute(ProductDefinitionConstants.METHODCALLED);
-        if (!StringUtils.isNullOrEmpty(method) && method.equalsIgnoreCase(Methods.preview.toString())) {
+        if (StringUtils.isNotBlank(method) && method.equalsIgnoreCase(Methods.preview.toString())) {
             prdLogger.error(" validate:::" + Methods.preview.toString());
             return mapping.findForward(Methods.preview.toString() + "_failure");
         }
@@ -190,14 +190,14 @@ public class ProductMixAction extends BaseAction {
                 .getSession());
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(userContext),
                 request);
-        if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())
+        if (StringUtils.isNotBlank(prdMixActionForm.getProductType())
                 && prdMixActionForm.getProductType().equals(ProductType.LOAN.getValue().toString())) {
             List<LoanOfferingBO> loanOffInstance = ((ProductMixBusinessService) getService())
                     .getAllLoanOfferings(getUserContext(request).getLocaleId());
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTINSTANCELIST, loanOffInstance,
                     request);
 
-        } else if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())
+        } else if (StringUtils.isNotBlank(prdMixActionForm.getProductType())
                 && prdMixActionForm.getProductType().equals(ProductType.SAVINGS.getValue().toString())) {
             List<SavingsOfferingBO> savingOffInstance = ((ProductMixBusinessService) getService())
                     .getAllSavingsProducts();
@@ -205,7 +205,7 @@ public class ProductMixAction extends BaseAction {
                     request);
         }
 
-        if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())) {
+        if (StringUtils.isNotBlank(prdMixActionForm.getProductType())) {
 
             List<PrdOfferingBO> prdOfferingList = ((ProductMixBusinessService) getService())
                     .getAllowedPrdOfferingsByType(prdMixActionForm.getProductInstance(), prdMixActionForm
@@ -234,7 +234,7 @@ public class ProductMixAction extends BaseAction {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, getPrdMixBusinessService().getPrdOfferingByID(
                 Short.valueOf(prdMixActionForm.getProductInstance())), request);
 
-        if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())) {
+        if (StringUtils.isNotBlank(prdMixActionForm.getProductType())) {
 
             List<PrdOfferingBO> prdOfferingList = ((ProductMixBusinessService) getService())
                     .getAllowedPrdOfferingsForMixProduct(prdMixActionForm.getProductInstance(), prdMixActionForm
@@ -313,7 +313,7 @@ public class ProductMixAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         ProductMixActionForm prdMixActionForm = (ProductMixActionForm) form;
 
-        if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())) {
+        if (StringUtils.isNotBlank(prdMixActionForm.getProductType())) {
             List<PrdOfferingBO> prdOfferingList = ((ProductMixBusinessService) getService())
                     .getAllPrdOfferingsByType(prdMixActionForm.getProductType());
 
@@ -333,7 +333,7 @@ public class ProductMixAction extends BaseAction {
 
         loadDefaultAllowedProduct(mapping, form, request, response);
         checkBeforeUpdate(form, request);
-        if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())) {
+        if (StringUtils.isNotBlank(prdMixActionForm.getProductType())) {
             List<PrdOfferingBO> prdOfferingList = ((ProductMixBusinessService) getService())
                     .getAllPrdOfferingsByType(prdMixActionForm.getProductType());
 
@@ -408,7 +408,7 @@ public class ProductMixAction extends BaseAction {
                 Short.valueOf(prdMixActionForm.getPrdOfferingId()));
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, prdOfferingBO, request);
-        if (!StringUtils.isNullOrEmpty(prdOfferingBO.getPrdType().getProductTypeID().toString())) {
+        if (StringUtils.isNotBlank(prdOfferingBO.getPrdType().getProductTypeID().toString())) {
 
             List<PrdOfferingBO> prdOfferingList = ((ProductMixBusinessService) getService())
                     .getAllowedPrdOfferingsByType(prdMixActionForm.getPrdOfferingId(), prdMixActionForm

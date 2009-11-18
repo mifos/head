@@ -1498,7 +1498,7 @@ public class AccountBO extends BusinessObject {
         }
         for (CustomFieldView fieldView : customFields) {
             if (fieldView.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNullAndEmptySafe(fieldView.getFieldValue())) {
+                    && org.apache.commons.lang.StringUtils.isNotBlank(fieldView.getFieldValue())) {
                 fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
             }
             if (getAccountCustomFields().size() > 0) {

@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -57,7 +58,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountAppAction extends BaseAction {
@@ -198,7 +198,7 @@ public class AccountAppAction extends BaseAction {
     protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
         for (CustomFieldView customField : customFields) {
             if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNullAndEmptySafe(customField.getFieldValue()))
+                    && StringUtils.isNotBlank(customField.getFieldValue()))
                 customField.convertDateToUniformPattern(locale);
         }
     }

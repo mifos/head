@@ -22,6 +22,7 @@ package org.mifos.application.accounts.savings.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -38,7 +39,6 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
 
@@ -104,11 +104,11 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
                     errors.add(SavingsConstants.INVALID_LAST_PAYMENT, new ActionMessage(
                             SavingsConstants.INVALID_LAST_PAYMENT));
                 } else {
-                    if (StringUtils.isNullOrEmpty(lastPaymentAmount))
+                    if (StringUtils.isBlank(lastPaymentAmount))
                         errors.add(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT, new ActionMessage(
                                 SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
 
-                    if (StringUtils.isNullAndEmptySafe(getNote())
+                    if (StringUtils.isNotBlank(getNote())
                             && getNote().length() > CustomerConstants.COMMENT_LENGTH) {
                         errors.add(AccountConstants.MAX_NOTE_LENGTH, new ActionMessage(
                                 AccountConstants.MAX_NOTE_LENGTH, AccountConstants.COMMENT_LENGTH));

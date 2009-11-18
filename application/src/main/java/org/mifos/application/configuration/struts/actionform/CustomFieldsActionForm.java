@@ -23,6 +23,7 @@ package org.mifos.application.configuration.struts.actionform;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.util.helpers.Methods;
@@ -33,7 +34,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import java.util.Locale;
@@ -118,7 +118,7 @@ public class CustomFieldsActionForm extends BaseActionForm {
     }
 
     private void validateDefaultValue(ActionErrors errors, HttpServletRequest request) {
-        if (StringUtils.isNullOrEmpty(dataType)) {
+        if (StringUtils.isBlank(dataType)) {
             Locale locale = getUserContext(request).getPreferredLocale();
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE,
                     locale);
@@ -127,13 +127,13 @@ public class CustomFieldsActionForm extends BaseActionForm {
             return;
         }
         Short dataTypeValue = Short.parseShort(dataType);
-        if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (!StringUtils.isNullOrEmpty(defaultValue))) {
+        if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (StringUtils.isNotBlank(defaultValue))) {
             try {
                 Double.parseDouble(defaultValue);
             } catch (NumberFormatException e) {
                 addError(errors, defaultValue, "errors.default_value_not_number", new String[] { null });
             }
-        } else if (dataTypeValue.equals(CustomFieldType.DATE.getValue()) && (!StringUtils.isNullOrEmpty(defaultValue))) {
+        } else if (dataTypeValue.equals(CustomFieldType.DATE.getValue()) && (StringUtils.isNotBlank(defaultValue))) {
             try {
                 // for now just use this function to validate the string.
                 // need to check more when the exact format is specified
@@ -156,7 +156,7 @@ public class CustomFieldsActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         if ((method.equals(Methods.preview.toString())) || (method.equals(Methods.editPreview.toString()))) {
             errors = super.validate(mapping, request);
-            if (!StringUtils.isNullOrEmpty(defaultValue))
+            if (StringUtils.isNotBlank(defaultValue))
                 validateDefaultValue(errors, request);
         }
 

@@ -22,13 +22,13 @@ package org.mifos.application.accounts.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class ApplyChargeActionForm extends BaseActionForm {
@@ -89,7 +89,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {
             if ((Methods.update.toString()).equals(methodCalled)) {
-                if (!StringUtils.isNullOrEmpty(selectedChargeFormula)) {
+                if (StringUtils.isNotBlank(selectedChargeFormula)) {
                     validateRate(errors, request);
 
                 }

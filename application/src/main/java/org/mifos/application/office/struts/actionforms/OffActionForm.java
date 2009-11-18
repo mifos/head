@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -47,7 +48,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class OffActionForm extends BaseActionForm {
 
@@ -159,20 +159,20 @@ public class OffActionForm extends BaseActionForm {
     }
 
     private void verifyFields(ActionErrors actionErrors, UserContext userContext) {
-        if (StringUtils.isNullOrEmpty(officeName))
+        if (StringUtils.isBlank(officeName))
             actionErrors.add(OfficeConstants.OFFICE_NAME, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                     getLocaleString(OfficeConstants.OFFICE_NAME, userContext)));
-        if (StringUtils.isNullOrEmpty(shortName))
+        if (StringUtils.isBlank(shortName))
             actionErrors.add(OfficeConstants.OFFICESHORTNAME, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                     getLocaleString(OfficeConstants.OFFICESHORTNAME, userContext)));
-        if (StringUtils.isNullOrEmpty(officeLevel))
+        if (StringUtils.isBlank(officeLevel))
             actionErrors.add(OfficeConstants.OFFICETYPE, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                     getLocaleString(OfficeConstants.OFFICETYPE, userContext)));
-        if (!StringUtils.isNullOrEmpty(officeLevel) && officeLevel.equals("1"))
+        if (StringUtils.isNotBlank(officeLevel) && officeLevel.equals("1"))
             ;
         else {
 
-            if (StringUtils.isNullOrEmpty(parentOfficeId))
+            if (StringUtils.isBlank(parentOfficeId))
                 actionErrors.add(OfficeConstants.PARENTOFFICE, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                         getLocaleString(OfficeConstants.PARENTOFFICE, userContext)));
         }
@@ -208,7 +208,7 @@ public class OffActionForm extends BaseActionForm {
                 boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory())
-                        if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
+                        if (StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
                                     OfficeConstants.ENTERADDTIONALINFO));
                             isErrorFound = true;

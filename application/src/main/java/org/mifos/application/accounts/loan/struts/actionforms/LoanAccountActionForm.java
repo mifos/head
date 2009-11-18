@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -81,7 +82,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class LoanAccountActionForm extends BaseActionForm {
 
@@ -644,7 +644,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     // TODO: use localized strings for error messages rather than hardcoded
     private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
-        if (StringUtils.isNullOrEmpty(getCustomerId())) {
+        if (StringUtils.isBlank(getCustomerId())) {
             addError(errors, LoanConstants.CUSTOMER, LoanConstants.CUSTOMERNOTSELECTEDERROR, getLabel(
                     ConfigurationConstants.CLIENT, userContext), getLabel(ConfigurationConstants.GROUP, userContext));
         }
@@ -653,7 +653,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     // TODO: use localized strings for error messages rather than hardcoded
     private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
         checkValidationForGetPrdOfferings(errors, userContext);
-        if (StringUtils.isNullOrEmpty(getPrdOfferingId())) {
+        if (StringUtils.isBlank(getPrdOfferingId())) {
             Locale locale = userContext.getCurrentLocale();
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
             String instanceName = resources.getString("loan.instanceName");
@@ -738,7 +738,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
         for (LoanAccountDetailsViewHelper loanAccount : listdetail) {
             if (ids_clients_selected.contains(loanAccount.getClientId())) {
-                if (StringUtils.isNullOrEmpty(loanAccount.getBusinessActivity())) {
+                if (StringUtils.isBlank(loanAccount.getBusinessActivity())) {
                     addErrorInvalidPurpose(errors);
                     return;
                 }
@@ -751,7 +751,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     private void validatePurposeOfLoanFields(ActionErrors errors, List<FieldConfigurationEntity> mandatoryFields) {
-        if (isPurposeOfLoanMandatory(mandatoryFields) && StringUtils.isNullOrEmpty(getBusinessActivityId())) {
+        if (isPurposeOfLoanMandatory(mandatoryFields) && StringUtils.isBlank(getBusinessActivityId())) {
             addErrorInvalidPurpose(errors);
         }
     }
@@ -802,17 +802,17 @@ public class LoanAccountActionForm extends BaseActionForm {
         checkForMinMax(errors, interestRate, loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
                 resources.getString("loan.noOfInstallments"));
         checkForMinMax(errors, noOfInstallments, installmentRange, resources.getString("loan.noOfInstallments"));
-        if (StringUtils.isNullOrEmpty(getDisbursementDate())) {
+        if (StringUtils.isBlank(getDisbursementDate())) {
             addError(errors, "Proposed/Actual disbursal date", "errors.validandmandatory", resources
                     .getString("loan.disbursalDate"));
         }
         if (isInterestDedAtDisbValue()) {
             setGracePeriodDuration("0");
         }
-        if (((!isInterestDedAtDisbValue()) && StringUtils.isNullOrEmpty(getGracePeriodDuration()))
+        if (((!isInterestDedAtDisbValue()) && StringUtils.isBlank(getGracePeriodDuration()))
                 || (getDoubleValue(getGracePeriodDuration()) != null && getDoubleValue(getNoOfInstallments()) != null && getDoubleValue(getGracePeriodDuration()) >= getDoubleValue(getNoOfInstallments()))) {
             String gracePeriodForRepayments = resources.getString("loan.gracePeriodForRepayments");
-            String noInst = StringUtils.isNullOrEmpty(getNoOfInstallments()) ? getStringValue(installmentRange
+            String noInst = StringUtils.isBlank(getNoOfInstallments()) ? getStringValue(installmentRange
                     .getMaxNoOfInstall()) : getNoOfInstallments();
             addError(errors, LoanConstants.GRACEPERIODDURATION, LoanConstants.GRACEPERIODERROR,
                     gracePeriodForRepayments, noInst);
@@ -828,14 +828,14 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     void checkForMinMax(ActionErrors errors, String currentValue, InstallmentRange installmentRange, String field) {
-        if (StringUtils.isNullOrEmpty(currentValue) || !installmentRange.isInRange(getShortValue(currentValue))) {
+        if (StringUtils.isBlank(currentValue) || !installmentRange.isInRange(getShortValue(currentValue))) {
             addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(installmentRange
                     .getMinNoOfInstall()), getStringValue(installmentRange.getMaxNoOfInstall()));
         }
     }
 
     private void checkForMinMax(ActionErrors errors, String currentValue, Double maxValue, Double minValue, String field) {
-        if (StringUtils.isNullOrEmpty(currentValue)
+        if (StringUtils.isBlank(currentValue)
                 || getDoubleValue(currentValue).doubleValue() > maxValue.doubleValue()
                 || getDoubleValue(currentValue).doubleValue() < minValue.doubleValue()) {
             addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(minValue),
@@ -851,7 +851,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     protected void validateForFeeAmount(ActionErrors errors) {
         List<FeeView> feeList = getFeesToApply();
         for (FeeView fee : feeList) {
-            if (StringUtils.isNullOrEmpty(fee.getAmount()))
+            if (StringUtils.isBlank(fee.getAmount()))
                 errors.add(LoanConstants.FEE, new ActionMessage(LoanConstants.ERRORS_SPECIFY_FEE_AMOUNT));
         }
     }
@@ -891,7 +891,7 @@ public class LoanAccountActionForm extends BaseActionForm {
                 boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                        if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
+                        if (StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
                                     LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
                             isErrorFound = true;
@@ -911,7 +911,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     void validateSelectedClients(ActionErrors errors) {
         List<String> selectedClients = new ArrayList();
         for (String id : getClients()) {
-            if (!StringUtils.isNullOrEmpty(id)) {
+            if (StringUtils.isNotBlank(id)) {
                 selectedClients.add(id);
             }
         }
@@ -940,7 +940,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
 
         if (!foundInvalidAmount
-                && (StringUtils.isNullOrEmpty(Double.valueOf(totalAmount).toString()) || !amountRange
+                && (StringUtils.isBlank(Double.valueOf(totalAmount).toString()) || !amountRange
                         .isInRange(totalAmount))) {
             addError(errors, LoanConstants.LOANAMOUNT,
                     LoanExceptionConstants.SUM_OF_INDIVIDUAL_AMOUNTS_IS_NOT_IN_THE_RANGE_OF_ALLOWED_AMOUNTS,
@@ -960,22 +960,22 @@ public class LoanAccountActionForm extends BaseActionForm {
                 recurrenceId = new Short(this.getRecurrenceId());
             }
             if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
-                if (StringUtils.isNullOrEmpty(this.getFrequency())) {
+                if (StringUtils.isBlank(this.getFrequency())) {
                     addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                 } else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
-                    if (StringUtils.isNullOrEmpty(this.getRecurWeek()) || StringUtils.isNullOrEmpty(this.getWeekDay())) {
+                    if (StringUtils.isBlank(this.getRecurWeek()) || StringUtils.isBlank(this.getWeekDay())) {
                         addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                     }
                 } else {
                     if (monthType.equals("1")) {
-                        if (StringUtils.isNullOrEmpty(this.getMonthDay())
-                                || StringUtils.isNullOrEmpty(this.getDayRecurMonth())) {
+                        if (StringUtils.isBlank(this.getMonthDay())
+                                || StringUtils.isBlank(this.getDayRecurMonth())) {
                             addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                         }
                     } else {
-                        if (StringUtils.isNullOrEmpty(this.getMonthRank())
-                                || StringUtils.isNullOrEmpty(this.getMonthWeek())
-                                || StringUtils.isNullOrEmpty(this.getRecurMonth())) {
+                        if (StringUtils.isBlank(this.getMonthRank())
+                                || StringUtils.isBlank(this.getMonthWeek())
+                                || StringUtils.isBlank(this.getRecurMonth())) {
                             addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                         }
                     }

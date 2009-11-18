@@ -24,6 +24,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -34,7 +35,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelSettingsActionForm extends BaseActionForm {
 
@@ -195,19 +195,19 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         String method = request.getParameter(Methods.method.toString());
         if (method.equals(Methods.preview.toString())) {
-            if (StringUtils.isNullOrEmpty(getFirstName()))
+            if (StringUtils.isBlank(getFirstName()))
                 addError(errors, PersonnelConstants.FIRSTNAME, PersonnelConstants.ERRORMANDATORY,
                         PersonnelConstants.FIRST_NAME);
             else if (getFirstName().length() > PersonnelConstants.PERSONNELLENGTH)
                 addError(errors, PersonnelConstants.FIRSTNAME, PersonnelConstants.MAXIMUM_LENGTH,
                         PersonnelConstants.FIRST_NAME, PersonnelConstants.PERSONNELNAMELENGTH);
-            if (StringUtils.isNullOrEmpty(getLastName()))
+            if (StringUtils.isBlank(getLastName()))
                 addError(errors, PersonnelConstants.LASTNAME, PersonnelConstants.ERRORMANDATORY,
                         PersonnelConstants.LAST_NAME);
             else if (getLastName().length() > PersonnelConstants.PERSONNELLENGTH)
                 addError(errors, PersonnelConstants.LASTNAME, PersonnelConstants.MAXIMUM_LENGTH,
                         PersonnelConstants.LAST_NAME, PersonnelConstants.PERSONNELNAMELENGTH);
-            if (StringUtils.isNullOrEmpty(getGender()))
+            if (StringUtils.isBlank(getGender()))
                 addError(errors, PersonnelConstants.GENDERVALUE, PersonnelConstants.MANDATORYSELECT,
                         PersonnelConstants.GENDERVALUE);
             if (getDisplayName().length() > PersonnelConstants.PERSONNELDISPLAYNAMELENGTH)
@@ -221,7 +221,7 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
     }
 
     private void validateEmail(ActionErrors errors) {
-        if (!StringUtils.isNullOrEmpty(emailId) && !GenericValidator.isEmail(emailId)) {
+        if (StringUtils.isNotBlank(emailId) && !GenericValidator.isEmail(emailId)) {
             errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(PersonnelConstants.ERROR_VALID_EMAIL));
         }
     }

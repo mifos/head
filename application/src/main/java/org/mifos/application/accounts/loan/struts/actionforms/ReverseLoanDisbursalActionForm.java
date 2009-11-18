@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -36,7 +37,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ReverseLoanDisbursalActionForm extends BaseActionForm {
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
@@ -85,7 +85,7 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
     }
 
     private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
-        if (StringUtils.isNullOrEmpty(getSearchString())) {
+        if (StringUtils.isBlank(getSearchString())) {
             addError(errors, "SearchString", LoanConstants.ERROR_LOAN_ACCOUNT_ID, getLabel(ConfigurationConstants.LOAN,
                     userContext));
         }
@@ -94,7 +94,7 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
     private void checkValidationForPreview(ActionErrors errors, Locale userLocale) {
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
         String note = resources.getString("loan.note");
-        if (StringUtils.isNullOrEmpty(getNote()))
+        if (StringUtils.isBlank(getNote()))
             addError(errors, LoanConstants.NOTE, LoanConstants.MANDATORY, note);
         else if (getNote().length() > 500)
             addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH, note, String

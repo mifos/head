@@ -44,6 +44,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
@@ -88,7 +89,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /*
@@ -1665,7 +1665,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String[] tokens = tempLine.split(",");
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
-            if (StringUtils.isNullAndEmptySafe(token)) {
+            if (StringUtils.isNotBlank(token)) {
                 if ((paramType.indexOf(principal) >= 0) && (loanParams.getPrincipal() == null))
                     loanParams.setPrincipal(token);
                 else if (paramType.indexOf(loanType) >= 0) {
@@ -1700,7 +1700,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String token = null;
         for (int j = 0; j < tokens.length; j++) {
             token = tokens[j];
-            if (StringUtils.isNullAndEmptySafe(token))
+            if (StringUtils.isNotBlank(token))
                 break;
         }
         return token;
@@ -1711,7 +1711,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String[] tokens = tempLine.split(",");
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
-            if (StringUtils.isNullAndEmptySafe(token)) {
+            if (StringUtils.isNotBlank(token)) {
                 if (paramType.indexOf(initialRoundingMode) >= 0) {
                     RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
                     config.setInitialRoundingMode(mode);
@@ -1799,7 +1799,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         boolean totalPrincipals = true;
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i].trim();
-            if (StringUtils.isNullAndEmptySafe(token)) {
+            if (StringUtils.isNotBlank(token)) {
                 if (totalPayments == false) {
                     result.setTotalPayments(new Money(token));
                     totalPayments = true;
@@ -1859,7 +1859,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         PaymentDetail paymentDetail = new PaymentDetail();
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i].trim();
-            if (StringUtils.isNullAndEmptySafe(token)) {
+            if (StringUtils.isNotBlank(token)) {
                 if (paymentIndex == false) {
                     int paymentNumber = Integer.parseInt(token);
                     int expectedPaymentNumber = result.getPayments().size() + 1;
@@ -1921,7 +1921,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 String[] tokens = line.split(",");
                 for (int i = 0; i < tokens.length; i++) {
                     String token = tokens[i];
-                    if (StringUtils.isNullAndEmptySafe(token)) {
+                    if (StringUtils.isNotBlank(token)) {
                         if ((token.indexOf(principal) >= 0) || (token.indexOf(loanType) >= 0)
                                 || (token.indexOf(annualInterest) >= 0) || (token.indexOf(numberOfPayments) >= 0)
                                 || (token.indexOf(paymentFrequency) >= 0)) {

@@ -28,6 +28,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -67,9 +68,9 @@ import org.mifos.framework.util.helpers.ConversionUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
@@ -289,20 +290,20 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected Short getShortValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
+        return StringUtils.isNotBlank(str) ? Short.valueOf(str) : null;
     }
 
     protected Integer getIntegerValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? Integer.valueOf(str) : null;
+        return StringUtils.isNotBlank(str) ? Integer.valueOf(str) : null;
     }
 
     protected Double getDoubleValue(String str) {
-        return StringUtils.isNullAndEmptySafe(str) ? new LocalizationConverter()
+        return StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 
     protected Money getMoney(String str) {
-        return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(str) : new Money();
+        return FormUtils.getMoney(str);
     }
 
     protected String getStringValue(Double value) {
@@ -339,7 +340,7 @@ public abstract class BaseAction extends DispatchAction {
 
     protected Date getDateFromString(String strDate, Locale locale) throws InvalidDateException {
         Date date = null;
-        if (StringUtils.isNullAndEmptySafe(strDate))
+        if (StringUtils.isNotBlank(strDate))
             date = new Date(DateUtils.getLocaleDate(locale, strDate).getTime());
         return date;
     }
