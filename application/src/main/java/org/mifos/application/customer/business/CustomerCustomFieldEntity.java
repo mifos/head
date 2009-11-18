@@ -34,13 +34,13 @@ public class CustomerCustomFieldEntity extends PersistentObject {
     /*
      * Reference to a {@link CustomFieldDefinitionEntity}
      */
-    private final Integer fieldId;
+    private final Short fieldId;
 
     private String fieldValue;
 
     private final CustomerBO customer;
 
-    public CustomerCustomFieldEntity(Integer fieldId, String fieldValue, CustomerBO customer) {
+    public CustomerCustomFieldEntity(Short fieldId, String fieldValue, CustomerBO customer) {
         this.fieldId = fieldId;
         this.fieldValue = fieldValue;
         this.customer = customer;
@@ -58,7 +58,7 @@ public class CustomerCustomFieldEntity extends PersistentObject {
         this.customer = null;
     }
 
-    public Integer getFieldId() {
+    public Short getFieldId() {
         return fieldId;
     }
 

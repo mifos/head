@@ -156,13 +156,13 @@ public class CustAction extends SearchAction {
         Locale locale = getUserContext(request).getPreferredLocale();
         for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
             for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
-                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId().shortValue())) {
+                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
                     if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId().shortValue(), DateUtils
+                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
                                 .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
                                 .getFieldType()));
                     } else {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId().shortValue(), customFieldEntity
+                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), customFieldEntity
                                 .getFieldValue(), customFieldDef.getFieldType()));
                     }
                 }

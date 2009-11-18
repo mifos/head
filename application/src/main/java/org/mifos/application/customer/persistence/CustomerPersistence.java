@@ -1028,7 +1028,7 @@ public class CustomerPersistence extends Persistence {
             return CollectionUtils.exists(customFields, new Predicate() {
                 public boolean evaluate(final Object object) {
                     CustomerCustomFieldEntity field = (CustomerCustomFieldEntity) object;
-                    return fieldValue.equals(field.getFieldValue()) && fieldId.equals(field.getFieldId().shortValue());
+                    return fieldValue.equals(field.getFieldValue()) && fieldId.equals(field.getFieldId());
                 }
             });
         }

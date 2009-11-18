@@ -765,4 +765,7 @@ public interface NamedQueryConstants {
     
     // Imported transactions files
     public String GET_IMPORTED_FILES_BY_NAME = "importfiles.getImportedFileByName";
+
+    // Insert CustomerCustomFieldEntity entries
+    public String INSERT_CUSTOMER_CUSTOM_FIELD_ENTITY = "CustomerCustomFieldEntity.insertEntries";
 }

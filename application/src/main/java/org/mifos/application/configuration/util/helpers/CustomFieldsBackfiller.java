@@ -36,10 +36,11 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.hibernate.Transaction;
 import org.hibernate.Session;
+import org.hibernate.Query;
 
 /**
  * Handle business logic related to backfilling existing clients, groups, etc.
@@ -64,12 +65,12 @@ public class CustomFieldsBackfiller {
                 || categoryType.equals(EntityType.CENTER)) {
             // 1>>For Client, 12>>For Group, 20>>For Center
             Session session = StaticHibernateUtil.getSessionTL();
-            String insertHQL = "insert into CustomerCustomFieldEntity (customer, fieldId, fieldValue) select customer, " + customField.getFieldId() +
-                    ", '" + customField.getDefaultValue() +
-                    "' from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id = " + levelId;
             StaticHibernateUtil.startTransaction();
             try {
-                session.createQuery(insertHQL).executeUpdate();
+                Query insert = session.getNamedQuery(NamedQueryConstants.INSERT_CUSTOMER_CUSTOM_FIELD_ENTITY);
+                insert.setParameter("levelId", levelId);
+                insert.setParameter("fieldId", customField.getFieldId());
+                insert.executeUpdate();
                 StaticHibernateUtil.commitTransaction();
             } catch (Exception e) {
                 StaticHibernateUtil.rollbackTransaction();
