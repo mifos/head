@@ -20,7 +20,7 @@ public class Upgrade223 extends Upgrade {
         		" is living together with the client or not");
 
        insertLookupValue(connection, newLookupEntityId, "Together");
-       insertLookupValue(connection, newLookupEntityId, "Not Together");
+       insertLookupValue(connection, newLookupEntityId, "NotTogether");
        
        int motherId=insertLookupValue(connection, 52, "Mother");
        int childId=insertLookupValue(connection, 52, "Child");

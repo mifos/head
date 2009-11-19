@@ -160,6 +160,21 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="VOS.nameSequence" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.nameSequence}"/>
 								<br/>
+								<mifos:mifoslabel name="VOS.isAgeCheckDisabled" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.isAgeCheckDisabled}"/>
+								<br/>
+								<mifos:mifoslabel name="VOS.minimumAge" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.minimumAge}"/>
+								<br/>
+								<mifos:mifoslabel name="VOS.maximumAge" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.maximumAge}"/>
+								<br/>
+								<mifos:mifoslabel name="VOS.isFamilyDetailsRequired" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.isFamilyDetailsRequired}"/>
+								<br/>
+								<mifos:mifoslabel name="VOS.maximumNumberOfFamilyMembers" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.maximumNumberOfFamilyMembers}"/>
+								<br/>
 								<br/>
 							</span>
 						</span>

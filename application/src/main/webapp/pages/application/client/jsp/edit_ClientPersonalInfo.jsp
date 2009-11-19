@@ -301,7 +301,7 @@ explanation of the license and how it is applied.
 								  <td width="14%"><mifos:mifoslabel name="client.Relationship" bundle="ClientUIResources"></mifos:mifoslabel>
 									<mifos:select name="clientCustActionForm"
 										property="spouseName.nameType" size="1">
-										<c:forEach var="spouseEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}" >
+										<c:forEach var="spouseEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}" begin="0" end="1" >
 											<html-el:option value="${spouseEntityList.id}">${spouseEntityList.name}</html-el:option>
 										</c:forEach>
 									</mifos:select>
