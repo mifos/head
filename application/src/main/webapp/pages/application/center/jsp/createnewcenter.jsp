@@ -38,9 +38,6 @@ explanation of the license and how it is applied.
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 		
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
-		<script src="pages/framework/js/conversion.js"></script>
-		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<script language="javascript">
 
 
@@ -456,7 +453,7 @@ explanation of the license and how it is applied.
 																			<c:out value="${adminFees.amount}" />
 																		</c:when>
 																		<c:otherwise>
-																			<mifos:mifosdecimalinput styleId="createnewcenter.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
+																			<html-el:text styleId="createnewcenter.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
 																		</c:otherwise>
 																	</c:choose>
 																</td>
@@ -514,7 +511,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="Center.Amount" bundle="CenterUIResources" /></span>
 											</td>
 											<td width="50%" class="fontnormal">
-												<mifos:mifosdecimalinput styleId="createnewcenter.input.amount" property='selectedFee[${ctr2}].amount' />
+												<html-el:text styleId="createnewcenter.input.amount" property='selectedFee[${ctr2}].amount'/>
 											</td>
 											<c:if test="${ctr2 == 0}">
 												<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">

@@ -108,7 +108,7 @@ public class LoanDisbursmentAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, getAcceptedPaymentTypes(uc.getLocaleId()),
                 request);
-        loanDisbursmentActionForm.setAmount(loan.getAmountTobePaidAtdisburtail());
+        loanDisbursmentActionForm.setAmount(loan.getAmountTobePaidAtdisburtail().toString());
         loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }

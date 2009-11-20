@@ -131,9 +131,26 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("accountId", accountBO.getAccountId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        verifyForward("loanDetails_success");
+//        verifyForward("loanDetails_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
+
+    }
+    
+    public void testUpdateFailureDueToInvalidChargeAmount() {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createInitialObjects();
+        accountBO = getLoanAccount(client, meeting);
+        setRequestPathInfo("/applyChargeAction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter("chargeType", "-1");
+        addRequestParameter("charge", "12345678.21");
+        addRequestParameter("accountId", accountBO.getAccountId().toString());
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        actionPerform();
+        verifyNoActionMessages();
+        Assert.assertEquals(3, getErrorSize());
+        Assert.assertEquals("Charge Amount", 2, getErrorSize(AccountConstants.ACCOUNT_AMOUNT));
 
     }
 
@@ -179,7 +196,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    private AccountBusinessService getAccountBusinessService() throws ServiceException {
+    private AccountBusinessService getAccountBusinessService() {
         return new AccountBusinessService();
     }
 

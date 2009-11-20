@@ -114,12 +114,12 @@ explanation of the license and how it is applied.
 							<td width="76%">
 							<c:choose>
 								<c:when test="${AccountType=='LOAN_ACCOUNT'}">
-								<mifos:mifosdecimalinput property="amount"
+								<html-el:text property="amount"
 								styleId="applypayment.input.amount"
 								name="applyPaymentActionForm" />
 								</c:when>
 								<c:otherwise>
-								<mifos:mifosdecimalinput property="amount"
+								<html-el:text property="amount"
 								styleId="applypayment.input.amount"
 								disabled="true" name="applyPaymentActionForm" />
 								</c:otherwise>

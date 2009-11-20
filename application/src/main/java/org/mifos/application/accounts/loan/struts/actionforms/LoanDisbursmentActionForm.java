@@ -51,7 +51,7 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
             errors.add(errors1);
 
         String method = request.getParameter(MethodNameConstants.METHOD);
-        if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount())
+        if (isPreviewMethod(method) && isAmountGreaterThanZero(new Money(getAmount()))
                 && StringUtils.isBlank(paymentModeOfPayment)) {
             String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,

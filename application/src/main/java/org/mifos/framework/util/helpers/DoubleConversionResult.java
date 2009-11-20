@@ -22,7 +22,7 @@ package org.mifos.framework.util.helpers;
 
 import java.util.List;
 
-public class ConversionResult {
+public class DoubleConversionResult {
 
     private List<ConversionError> errors;
     private Double doubleValue;

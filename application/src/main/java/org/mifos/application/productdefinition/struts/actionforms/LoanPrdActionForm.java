@@ -50,7 +50,7 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.security.util.UserContext;
@@ -1735,14 +1735,14 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private Double getDoubleValueForMoney(String doubleStr) {
-        ConversionResult result = parseDoubleForMoney(doubleStr);
+        DoubleConversionResult result = parseDoubleForMoney(doubleStr);
         if (result != null)
             return result.getDoubleValue();
         return null;
     }
 
     private Double getDoubleValueForInterest(String doubleStr) {
-        ConversionResult result = parseDoubleForInterest(doubleStr);
+        DoubleConversionResult result = parseDoubleForInterest(doubleStr);
         if (result != null)
             return result.getDoubleValue();
         return null;
@@ -2220,9 +2220,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void validateMinMaxDefInterestRates(ActionErrors errors, Locale locale, HttpServletRequest request) {
 
-        ConversionResult minInterestResult = null;
-        ConversionResult maxInterestResult = null;
-        ConversionResult defInterestResult = null;
+        DoubleConversionResult minInterestResult = null;
+        DoubleConversionResult maxInterestResult = null;
+        DoubleConversionResult defInterestResult = null;
         List<ConversionError> errorList = null;
         Double maxInterest = null;
         Double minInterest = null;
@@ -2302,9 +2302,9 @@ public class LoanPrdActionForm extends BaseActionForm {
     private void validateMinMaxDefLoanAmounts(ActionErrors errors, String maxLoanAmountStr, String minLoanAmountStr,
             String defLoanAmountStr, String error, String rownum, Locale locale) {
 
-        ConversionResult minLoanResult = null;
-        ConversionResult maxLoanResult = null;
-        ConversionResult defaultLoanResult = null;
+        DoubleConversionResult minLoanResult = null;
+        DoubleConversionResult maxLoanResult = null;
+        DoubleConversionResult defaultLoanResult = null;
         List<ConversionError> errorList = null;
         Double maxLoanAmt = null;
         Double minLoanAmt = null;

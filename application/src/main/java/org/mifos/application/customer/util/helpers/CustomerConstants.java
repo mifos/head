@@ -199,7 +199,7 @@ public interface CustomerConstants {
     public static final String LOAN_OFFICER = "LoanOfficer";
     public static final String MEETING = "Meeting";
     public static final String CUSTOM_FIELD = "CustomField";
-    public static final String FEE = "Fee";
+    public static final String FEE = "errors.fee";
     public static final String INVALID_MEETING = "errors.Customer.invalidMeeting";
     public static final String INVALID_LOAN_OFFICER = "errors.Customer.invalidLoanOfficer";
     public static final String INVALID_FORMED_BY = "errors.Customer.invalidFormedBy";

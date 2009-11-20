@@ -25,32 +25,32 @@ package org.mifos.application.accounts.util.helpers;
  * 
  */
 public interface AccountConstants {
-    public final String GETPRDOFFERINGS = "getPrdOfferings";
-    public final String CUSTOMGETPRDOFFERINGS = "customGetPrdOfferigs";
+    public static final String GETPRDOFFERINGS = "getPrdOfferings";
+    public static final String CUSTOMGETPRDOFFERINGS = "customGetPrdOfferigs";
     public static final String GETPRDOFFERINGS_SUCCESS = "getPrdOfferigs_success";
 
     public static final String GET_PRDOFFERINGS_SUCCESS = "getPrdOfferings_success";
     public static final String PRD_OFFERINGS = "prdOfferings";
     public static final String ENTITY_TYPE = "entityType";
     // used to add an attribute to business results
-    public final String CUSTOMERMASTER = "customerMaster";
-    public final String SELECTEDPRDOFFERING = "selectedPrdOffering";
+    public static final String CUSTOMERMASTER = "customerMaster";
+    public static final String SELECTEDPRDOFFERING = "selectedPrdOffering";
     // used for query parameters in hql
-    public final String CUSTOMERID = "customerId";
-    public final String PRDTYPEID = "prdTypeId";
-    public final String PRDSTATUS = "prdStatus";
-    public final String PRDOFFERINGID = "prdofferingId";
-    public final String PRODUCT_APPLICABLE_TO = "prdApplicableMaster";
-    public final Object GLOBALACCOUNTNUM = "globalAccountNum";
+    public static final String CUSTOMERID = "customerId";
+    public static final String PRDTYPEID = "prdTypeId";
+    public static final String PRDSTATUS = "prdStatus";
+    public static final String PRDOFFERINGID = "prdofferingId";
+    public static final String PRODUCT_APPLICABLE_TO = "prdApplicableMaster";
+    public static final Object GLOBALACCOUNTNUM = "globalAccountNum";
 
-    public final String STATECURRENTLYINUSE = "1";
+    public static final String STATECURRENTLYINUSE = "1";
 
-    public final String ACCOUNTSSEARCHDEPENDENCY = "AccountsSearch";
-    public final String ACCOUNTSAPPLYCHARGESDEPENDENCY = "AccountsApplyCharges";
+    public static final String ACCOUNTSSEARCHDEPENDENCY = "AccountsSearch";
+    public static final String ACCOUNTSAPPLYCHARGESDEPENDENCY = "AccountsApplyCharges";
 
-    public final String ACCOUNT_TRXN = "AccountTrxn";
-    public final String ACCOUNT_GETINSTALLMENTS = "getInstallmentHistory";
-    public final String ACCOUNT_TRXN_HISTORY = "getTrxnHistory";
+    public static final String ACCOUNT_TRXN = "AccountTrxn";
+    public static final String ACCOUNT_GETINSTALLMENTS = "getInstallmentHistory";
+    public static final String ACCOUNT_TRXN_HISTORY = "getTrxnHistory";
 
     // for account notes
 
@@ -89,26 +89,26 @@ public interface AccountConstants {
 
     public static final String SEARCH_STRING = "searchString";
 
-    public final String VIEWCLIENTCHARGES = "ViewClientCharges";
-    public final String VIEWGROUPCHARGES = "ViewGroupCharges";
-    public final String VIEWCENTERCHARGES = "ViewCenterCharges";
-    public final String APPLYLOANCHARGES = "reviewTransactionPage";
-    public final String FEEFORMULAPATH = "org.mifos.application.fees.util.valueobjects.FeeFormula";
-    public final String FEEFORMULAID = "feeFormulaId";
-    public final String KEYNOMEETING = "errors.nomeeting";
-    public final String UNEXPECTEDERROR = "errors.unexpected";
-    public final String NOMOREINSTALLMENTS = "errors.nomoreinstallments";
-    public final String MISC_CHARGE_NOT_APPLICABLE = "error.miscchargenotapplicable";
+    public static final String VIEWCLIENTCHARGES = "ViewClientCharges";
+    public static final String VIEWGROUPCHARGES = "ViewGroupCharges";
+    public static final String VIEWCENTERCHARGES = "ViewCenterCharges";
+    public static final String APPLYLOANCHARGES = "reviewTransactionPage";
+    public static final String FEEFORMULAPATH = "org.mifos.application.fees.util.valueobjects.FeeFormula";
+    public static final String FEEFORMULAID = "feeFormulaId";
+    public static final String KEYNOMEETING = "errors.nomeeting";
+    public static final String UNEXPECTEDERROR = "errors.unexpected";
+    public static final String NOMOREINSTALLMENTS = "errors.nomoreinstallments";
+    public static final String MISC_CHARGE_NOT_APPLICABLE = "error.miscchargenotapplicable";
     // Misc Fees and Penalty
-    public final String MISC_FEES = "-1";
-    public final String MISC_PENALTY = "-2";
+    public static final String MISC_FEES = "-1";
+    public static final String MISC_PENALTY = "-2";
 
     /*
-     * Payment Status public final Short PAYMENT_UNPAID=0; public final Short
+     * Payment Status public static final Short PAYMENT_UNPAID=0; public static final Short
      * PAYMENT_PAID=1;
      */
 
-    public final String SAVINGS = "savings";
+    public static final String SAVINGS = "savings";
     public static final String CUSTOMERS_FOR_SAVINGS_ACCOUNT = "customersForSavingsAccount";
     public static final String GLOBAL_ACCOUNT_NUMBER = "globalAccountNumber";
     // Errors
@@ -121,26 +121,27 @@ public interface AccountConstants {
 
     // For loan next meeting date, amount due, amount in arrears
 
-    public final String LOAN_NEXT_MEETING_DATE = "LoanNextMeeetingDate";
-    public final String LOAN_AMOUNT_DUE = "LoanAmountDue";
-    public final String LOAN_AMOUNT_IN_ARREARS = "LoanAmountInArrears";
+    public static final String LOAN_NEXT_MEETING_DATE = "LoanNextMeeetingDate";
+    public static final String LOAN_AMOUNT_DUE = "LoanAmountDue";
+    public static final String LOAN_AMOUNT_IN_ARREARS = "LoanAmountInArrears";
 
-    public final String FEES_APPLIED = "charged";
-    public final String FEES_REMOVED = "removed";
-    public final String MISC_PENALTY_APPLIED = "Misc penalty applied";
-    public final String MISC_FEES_APPLIED = "Misc fees applied";
-    public final String LAST_PAYMENT_ACTION = "lastPaymentAction";
+    public static final String FEES_APPLIED = "charged";
+    public static final String FEES_REMOVED = "removed";
+    public static final String MISC_PENALTY_APPLIED = "Misc penalty applied";
+    public static final String MISC_FEES_APPLIED = "Misc fees applied";
+    public static final String LAST_PAYMENT_ACTION = "lastPaymentAction";
 
-    public final String REMOVE_SUCCESS = "remove_success";
-    public final String REMOVE = "remove";
-    public final String CHARGES = "charges";
+    public static final String REMOVE_SUCCESS = "remove_success";
+    public static final String REMOVE = "remove";
+    public static final String CHARGES = "charges";
 
-    public final String ERROR_MANDATORY = "errors.mandatory";
-    public final String ERROR_FUTUREDATE = "errors.futuredate";
-    public final String ERROR_INVALIDDATE = "errors.invaliddate";
-    public final String ERROR_INVALID_TRXN = "errors.invalidTxndate";
-    public final String ERROR_INVALID_PERSONNEL = "errors.invalidPersonnel";
-    public final String WAIVE_TYPE = "WaiveType";
+    public static final String ERROR_MANDATORY = "errors.mandatory";
+    public static final String ERROR_FUTUREDATE = "errors.futuredate";
+    public static final String ERROR_INVALIDDATE = "errors.invaliddate";
+    public static final String ERROR_INVALID_TRXN = "errors.invalidTxndate";
+    public static final String ERROR_INVALID_PERSONNEL = "errors.invalidPersonnel";
+    public static final String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
+    public static final String WAIVE_TYPE = "WaiveType";
     public static final short COMMENT_LENGTH = 500;
     public static final String MAX_LENGTH = "errors.maximumlength";
     public static final String APPLICABLE_CHARGE_LIST = "applicableChargeList";
@@ -164,23 +165,24 @@ public interface AccountConstants {
     public static final String NOT_SUPPORTED_DURATION_TYPE = "errors.not_supported_durationtype";
     public static final String NOT_SUPPORTED_INTEREST_DAYS = "errors.not_supported_interestdays";
     public static final String MAX_NOTE_LENGTH = "errors.maximumlengthForNotes";
-    public String CLOSEDLOANACCOUNTSLIST = "ClosedLoanAccountsList";
-    public String CLOSEDSAVINGSACCOUNTSLIST = "ClosedSavingsAccountsList";
+    public static final String CLOSEDLOANACCOUNTSLIST = "ClosedLoanAccountsList";
+    public static final String CLOSEDSAVINGSACCOUNTSLIST = "ClosedSavingsAccountsList";
 
-    public String LOAN_DISBURSAL = "Loan Disbursal";
-    public String PAYMENT_RCVD = "Payment rcvd.";
-    public String LOAN_REPAYMENT = "Loan Repayment";
-    public String LOAN_WRITTEN_OFF = "Loan Written Off";
-    public String WAIVED = " waived";
-    public String AMOUNT = "Amnt ";
-    public String LOAN_ADJUSTED = "Loan Adjusted";
-    public String APPLIED = " applied";
-    public String AMNT_ADJUSTED = "Amnt Adjusted";
-    public String AMNT_WAIVED = "Amnt waived";
-    public String LOAN_RESCHEDULED = "Loan Rescheduled";
+    public static final String LOAN_DISBURSAL = "Loan Disbursal";
+    public static final String PAYMENT_RCVD = "Payment rcvd.";
+    public static final String LOAN_REPAYMENT = "Loan Repayment";
+    public static final String LOAN_WRITTEN_OFF = "Loan Written Off";
+    public static final String WAIVED = " waived";
+    public static final String AMOUNT = "Amnt ";
+    public static final String LOAN_ADJUSTED = "Loan Adjusted";
+    public static final String APPLIED = " applied";
+    public static final String AMNT_ADJUSTED = "Amnt Adjusted";
+    public static final String AMNT_WAIVED = "Amnt waived";
+    public static final String LOAN_RESCHEDULED = "Loan Rescheduled";
+    public static final String ACCOUNT_AMOUNT = "accounts.amount";
 
-    public String SURVEY_KEY = "accountSurveys";
-    public String SELECTED_ACCOUNT_STATUS = "SelectedAccountStatus";
+    public static final String SURVEY_KEY = "accountSurveys";
+    public static final String SELECTED_ACCOUNT_STATUS = "SelectedAccountStatus";
 
     public static final String GL_CODE = "glCode";
 }

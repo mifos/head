@@ -31,28 +31,28 @@ import org.junit.Ignore;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.testng.annotations.Test;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
+@Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class LocalizationConverterTest extends TestCase {
 
     public void testDateFormattingWithFourDigitsInYear() throws Exception {
         LocalizationConverter instance = new LocalizationConverter();
         DateFormat dateFormat = instance.getDateFormatWithFullYear();
-       Assert.assertEquals("13/12/2008", dateFormat.format(DateUtils.getDate(2008, Calendar.DECEMBER, 13)));
+        Assert.assertEquals("13/12/2008", dateFormat.format(DateUtils.getDate(2008, Calendar.DECEMBER, 13)));
     }
-    
+
     public void testGetDecimalFormatSymbol() {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         char sep = '.';
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
-           Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
+            Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
         converter.setCurrentLocale(new Locale("IS", "is"));
         sep = ',';
-       Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
+        Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
         converter.setCurrentLocale(locale);
     }
 
@@ -64,11 +64,11 @@ public class LocalizationConverterTest extends TestCase {
         LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleStringForMoney(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
-           Assert.assertEquals(doubleValueString, dString);
+            Assert.assertEquals(doubleValueString, dString);
         converter.setCurrentLocale(new Locale("IS", "is"));
         doubleValueString = "2,5";
         dString = converter.getDoubleStringForMoney(dValue);
-       Assert.assertEquals(doubleValueString, dString);
+        Assert.assertEquals(doubleValueString, dString);
         converter.setCurrentLocale(locale);
     }
 
@@ -80,11 +80,11 @@ public class LocalizationConverterTest extends TestCase {
         LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleStringForInterest(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
-           Assert.assertEquals(doubleValueString, dString);
+            Assert.assertEquals(doubleValueString, dString);
         converter.setCurrentLocale(new Locale("IS", "is"));
         doubleValueString = "2123,12345";
         dString = converter.getDoubleStringForInterest(dValue);
-       Assert.assertEquals(doubleValueString, dString);
+        Assert.assertEquals(doubleValueString, dString);
         converter.setCurrentLocale(locale);
     }
 
@@ -96,16 +96,17 @@ public class LocalizationConverterTest extends TestCase {
         LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleValueString(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
-           Assert.assertEquals(doubleValueString, dString);
+            Assert.assertEquals(doubleValueString, dString);
         converter.setCurrentLocale(new Locale("IS", "is"));
         doubleValueString = "2,59";
         dString = converter.getDoubleValueString(dValue);
-       Assert.assertEquals(doubleValueString, dString);
+        Assert.assertEquals(doubleValueString, dString);
         converter.setCurrentLocale(locale);
     }
 
     /**
-     * Currently broken -- incomplete support for multiple locales for numeric input.
+     * Currently broken -- incomplete support for multiple locales for numeric
+     * input.
      */
     @Ignore
     public void testGetDateSeparator() {
@@ -114,10 +115,10 @@ public class LocalizationConverterTest extends TestCase {
         LocalizationConverter converter = new LocalizationConverter();
         String dateSeparator = converter.getDateSeparatorForCurrentLocale();
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
-           Assert.assertEquals(separator, dateSeparator);
+            Assert.assertEquals(separator, dateSeparator);
         converter.setCurrentLocale(new Locale("IS", "is"));
         dateSeparator = converter.getDateSeparatorForCurrentLocale();
-       Assert.assertEquals(".", dateSeparator);
+        Assert.assertEquals(".", dateSeparator);
         converter.setCurrentLocale(locale);
 
     }
@@ -133,25 +134,25 @@ public class LocalizationConverterTest extends TestCase {
         AccountingRules.setDigitsBeforeDecimal(digitsBeforeForMoney);
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
-        ConversionResult result = converter.parseDoubleForMoney(doubleValueString);
+        DoubleConversionResult result = converter.parseDoubleForMoney(doubleValueString);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
-           Assert.assertEquals(result.getDoubleValue(), dValue);
+            Assert.assertEquals(result.getDoubleValue(), dValue);
             // if the wrong decimal separator is entered, error will be returned
             doubleValueString = "2,59";
             result = converter.parseDoubleForMoney(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
+            Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
             doubleValueString = "2a59";
             result = converter.parseDoubleForMoney(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
+            Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
             doubleValueString = "123456789.59";
             result = converter.parseDoubleForMoney(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0),
+            Assert.assertEquals(result.getErrors().get(0),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY);
-           Assert.assertEquals(result.getErrors().get(1),
+            Assert.assertEquals(result.getErrors().get(1),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY);
             doubleValueString = "222222222.5";
             result = converter.parseDoubleForMoney(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0),
+            Assert.assertEquals(result.getErrors().get(0),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY);
         }
         AccountingRules.setDigitsAfterDecimal(digitsAfterForMoneySaved);
@@ -172,23 +173,23 @@ public class LocalizationConverterTest extends TestCase {
         AccountingRules.setDigitsBeforeDecimalForInterest(digitsBeforeForInterest);
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
-        ConversionResult result = converter.parseDoubleForInterest(doubleValueString);
+        DoubleConversionResult result = converter.parseDoubleForInterest(doubleValueString);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
-           Assert.assertEquals(result.getDoubleValue(), dValue);
+            Assert.assertEquals(result.getDoubleValue(), dValue);
             // if the wrong decimal separator is entered, error will be returned
             doubleValueString = "222,59562";
             result = converter.parseDoubleForInterest(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
+            Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
             doubleValueString = "2a5922";
             result = converter.parseDoubleForInterest(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
+            Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
             doubleValueString = "222.595690";
             result = converter.parseDoubleForInterest(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0),
+            Assert.assertEquals(result.getErrors().get(0),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST);
             doubleValueString = "22222222222.5";
             result = converter.parseDoubleForInterest(doubleValueString);
-           Assert.assertEquals(result.getErrors().get(0),
+            Assert.assertEquals(result.getErrors().get(0),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST);
         }
         AccountingRules.setDigitsAfterDecimalForInterest(digitsAfterForInterestSaved);
@@ -208,26 +209,26 @@ public class LocalizationConverterTest extends TestCase {
         LocalizationConverter converter = new LocalizationConverter();
         Double dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
-           Assert.assertEquals(dNumber, dValue);
+            Assert.assertEquals(dNumber, dValue);
             // if the wrong decimal separator is entered, it will throw
             // exception
             doubleValueString = "223,59";
             try {
                 dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
             } catch (Exception ex) {
-               Assert.assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
+                Assert.assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
             }
         }
         converter.setCurrentLocale(new Locale("IS", "is"));
         doubleValueString = "223,59";
         dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
-       Assert.assertEquals(dNumber, dValue);
+        Assert.assertEquals(dNumber, dValue);
         // if the wrong decimal separator is entered, it will throw exception
         doubleValueString = "223.59";
         try {
             dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
         } catch (Exception ex) {
-           Assert.assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
+            Assert.assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
         }
         converter.setCurrentLocale(locale);
 

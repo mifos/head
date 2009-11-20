@@ -71,7 +71,6 @@ public interface FeeConstants {
 
     public static final String RATE_AND_FORMULA = "RateAndFormula";
     public static final String RATE_OR_AMOUNT = "RateOrAmount";
-    public static final String AMOUNT = "amount";
 
     // error messages for BO
     public static final String INVALID_FEE_NAME = "errors.Fee.invalidName";
@@ -85,10 +84,14 @@ public interface FeeConstants {
     public static final String FEE_CREATE_ERROR = "errors.Fee.create";
     public static final String FEE_UPDATE_ERROR = "errors.Fee.update";
     public static final String INVALID_FEE = "errors.Fee.invalid";
-
+    public static final String RATE = "Fees.error.rate";
+    public static final String AMOUNT = "Fees.error.amount";
+    
     // error messages for UI
     public static final String ERRORS_SPECIFY_VALUE = "errors.enter";
     public static final String ERRORS_SPECIFY_AMOUNT_OR_RATE = "errors.amountOrRate";
     public static final String ERRORS_SPECIFY_RATE_AND_FORMULA = "errors.rateAndFormulaId";
     public static final String ERRORS_SELECT_STATUS = "errors.selectStatus";
+    public static final String ERRORS_GENERIC = "errors.generic";
+    public static final String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
 }

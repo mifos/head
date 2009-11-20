@@ -34,9 +34,6 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="DisburseLoan" />
 
 	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-	<script src="pages/framework/js/conversion.js"></script>
-	<script src="pages/framework/js/con_en.js"></script>
-	<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BackDatedTransactionsAllowed')}" var="allowBackDatedTransactions" />
@@ -136,7 +133,7 @@ explanation of the license and how it is applied.
 									<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message></span>:&nbsp;</td>
-							<td width="71%"><mifos:mifosdecimalinput styleId="DisburseLoan.input.disbursementAmount"
+							<td width="71%"><html-el:text styleId="DisburseLoan.input.disbursementAmount"
 								property="loanAmount" name="loanDisbursmentActionForm"
 								disabled="true" /></td>
 						</tr>
@@ -164,7 +161,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="29%" align="right" class="fontnormal"><span id="DisburseLoan.label.paymentAmount"><mifos:mifoslabel
 								name="loan.amount" /></span>:&nbsp;</td>
-							<td width="71%"><mifos:mifosdecimalinput styleId="DisburseLoan.input.paymentAmount" property="amount"
+							<td width="71%"><html-el:text styleId="DisburseLoan.input.paymentAmount" property="amount"
 								name="loanDisbursmentActionForm" disabled="true" /></td>
 						</tr>
 						<tr>
@@ -172,7 +169,7 @@ explanation of the license and how it is applied.
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
 							<td><c:choose>
 								<c:when
-									test="${loanDisbursmentActionForm.amount.amountDoubleValue == 0.0}">
+									test="${loanDisbursmentActionForm.loanAmount.amountDoubleValue == 0.0}">
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;" disabled="true">
 										<c:forEach var="PT"

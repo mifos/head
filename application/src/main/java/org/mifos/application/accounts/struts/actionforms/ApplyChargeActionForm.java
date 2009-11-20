@@ -20,6 +20,8 @@
 
 package org.mifos.application.accounts.struts.actionforms;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -28,8 +30,11 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class ApplyChargeActionForm extends BaseActionForm {
 
@@ -85,6 +90,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        Locale locale = getUserContext(request).getPreferredLocale();
         ActionErrors errors = new ActionErrors();
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {
@@ -92,11 +98,12 @@ public class ApplyChargeActionForm extends BaseActionForm {
                 if (StringUtils.isNotBlank(selectedChargeFormula)) {
                     validateRate(errors, request);
 
-                }
+                }          
+                validateAmount(errors, locale);           
                 errors.add(super.validate(mapping, request));
             }
         }
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", methodCalled);
         }
@@ -104,11 +111,20 @@ public class ApplyChargeActionForm extends BaseActionForm {
     }
 
     private void validateRate(ActionErrors errors, HttpServletRequest request) {
+        //FIXME Do not use hard coded values for properties local.properties
         if (getDoubleValue(chargeAmount) > Double.valueOf("999")) {
             errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.RATE_ERROR));
             request.setAttribute("selectedChargeFormula", selectedChargeFormula);
         }
-
+    }
+    
+    protected void validateAmount(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
+        }
     }
 
 }

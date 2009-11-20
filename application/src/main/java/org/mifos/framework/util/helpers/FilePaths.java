@@ -92,6 +92,7 @@ public interface FilePaths {
     public static final String LOCALIZED_RESOURCE_PATH = "org/mifos/config/localizedResources/";
     public static final String COLUMN_MAPPING_BUNDLE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "ColumnMappingBundle";
     public static String FIELD_CONF_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "FieldUIResources";
+    public static String FEE_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "FeesUIResources";
     // org.mifos.config.localizedResources.
     public static String LOAN_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "LoanUIResources";
     // org.mifos.application.accounts.savings.util.resources.SavingsUIResources

@@ -179,9 +179,9 @@ explanation of the license and how it is applied.
 							</td>
 							<td width="10%" align="left" class="fontnormal"><span id="applyCharges.label.amount"><mifos:mifoslabel
 								name="accounts.amount_(Rs)"></mifos:mifoslabel></span></td>
-							<td width="10%" class="fontnormal" align="left"><mifos:mifosdecimalinput
-								styleId="applyCharges.input.amount"
-								property="chargeAmount"></mifos:mifosdecimalinput></td>
+							<td width="10%" class="fontnormal" align="left">
+							<html-el:text styleId="applyCharges.input.amount" property="chargeAmount" />
+							</td>
 							<td  width="40%" class="fontnormal" align="left">
 							<SPAN id="formula"></SPAN>
 							</td>

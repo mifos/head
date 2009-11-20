@@ -29,9 +29,6 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="feescreate" />
 	
 		<script src="pages/application/fees/js/Fees.js"></script>
-		<script src="pages/framework/js/conversion.js"></script>
-		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		
 		<html-el:form action="/feeaction.do?method=preview" focus="feeName">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -249,7 +246,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="Fees.enteramount" mandatory="yes" />
 											</td>
 											<td valign="top">
-												<mifos:mifosdecimalinput property="amount"></mifos:mifosdecimalinput>
+												<html-el:text property="amount"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -280,7 +277,7 @@ explanation of the license and how it is applied.
 														</tr>
 														<tr class="fontnormal">
 															<td width="16%">
-																<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="3.5"></mifos:mifosdecimalinput>
+																<html-el:text property="rate"/>
 																<mifos:mifoslabel name="Fees.percentof" />
 																<mifos:select property="feeFormula">
 																	<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FormulaList')}" var="formula">

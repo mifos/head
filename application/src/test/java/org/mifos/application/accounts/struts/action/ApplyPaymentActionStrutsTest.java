@@ -153,7 +153,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
 
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
-        accountApplyPaymentActionForm.setAmount(new Money("212"));
+        accountApplyPaymentActionForm.setAmount("212");
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
         
         SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountBO.getVersionNo(),request);
@@ -188,7 +188,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
 
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
-        accountApplyPaymentActionForm.setAmount(new Money("212"));
+        accountApplyPaymentActionForm.setAmount("212");
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
         setRequestPathInfo("/applyPaymentAction");
         addRequestParameter("input", "loan");
@@ -220,7 +220,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
-        accountApplyPaymentActionForm.setAmount(new Money("212"));
+        accountApplyPaymentActionForm.setAmount("212");
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
         setRequestPathInfo("/applyPaymentAction");
         addRequestParameter("input", "loan");
@@ -270,7 +270,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
-        accountApplyPaymentActionForm.setAmount(new Money("212"));
+        accountApplyPaymentActionForm.setAmount("212");
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
         setRequestPathInfo("/applyPaymentAction");
         addRequestParameter("input", "loan");

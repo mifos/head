@@ -32,10 +32,6 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="CreateGroup" />
 
-
-		<script src="pages/framework/js/conversion.js"></script>
-		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<script language="javascript">
 
   function goToCancelPage(){
@@ -512,7 +508,7 @@ explanation of the license and how it is applied.
 																			<c:out value="${adminFees.amount}" />
 																		</c:when>
 																		<c:otherwise>
-																			<mifos:mifosdecimalinput styleId="creategroup.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
+																			<html-el:text styleId="creategroup.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
 																		</c:otherwise>
 																	</c:choose>
 																</td>
@@ -571,7 +567,7 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="Group.amount" bundle="GroupUIResources"></mifos:mifoslabel>
 												</td>
 												<td class="fontnormal" width="50%">
-													<mifos:mifosdecimalinput styleId="creategroup.input.amount" property='selectedFee[${ctr2}].amount' />
+													<html-el:text styleId="creategroup.input.amount" property='selectedFee[${ctr2}].amount' />
 												</td>
 
 												<c:if test="${ctr2 == 0}">

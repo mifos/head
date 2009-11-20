@@ -20,6 +20,7 @@
 
 package org.mifos.application.accounts.struts.action;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -68,7 +69,6 @@ public class AccountApplyPaymentAction extends BaseAction {
     private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
     private StandardAccountService standardAccountService = null;  
     private AccountBusinessService accountBusinessService = null;
-    private LoanBusinessService loanBusinessService = null;
     private AccountPersistence accountPersistence = new AccountPersistence();
     private List<PaymentTypeDto> loanPaymentTypeDtos;
     private List<PaymentTypeDto> feePaymentTypeDtos;
@@ -122,7 +122,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, 
                 accountPaymentDto.getPaymentTypeList(), request);
 
-        actionForm.setAmount(accountPaymentDto.getTotalPaymentDue());
+        actionForm.setAmount(accountPaymentDto.getTotalPaymentDue().toString());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -163,19 +163,19 @@ public class AccountApplyPaymentAction extends BaseAction {
             Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
             PaymentTypeDto paymentTypeDto;
 
-            Money amount = new Money("0");
+            String amount = "0";
             if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
                 amount = actionForm.getAmount();
                 paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
             } else {
-                amount = accountPaymentDto.getTotalPaymentDue();
+                amount = accountPaymentDto.getTotalPaymentDue().toString();
                 paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
             }
              
             AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
                     new UserReferenceDto(userContext.getId()),
                     new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
-                    amount.getAmount(),
+                    new BigDecimal(amount),
                     new LocalDate(trxnDate.getTime()),
                     paymentTypeDto,
                     "",

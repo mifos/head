@@ -984,23 +984,6 @@
 				</var>
 			</field>
 
-			<field property="rate" depends="decimalFormat">
-				<msg name="decimalFormat" key="errors.rateGreaterThen999" bundle="FeesUIResources" />
-				<arg0 key="Fees.error.rate" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(3,0)</var-value>
-				</var>
-			</field>
-
-			<field property="amount" depends="decimalFormat">
-				<msg name="decimalFormat" key="errors.amountGreaterThan" bundle="FeesUIResources" />
-				<arg0 key="Fees.error.amount" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(13,4)</var-value>
-				</var>
-			</field>			
 		</form>
 		<!-- Fee Action Ends -->
 

@@ -20,6 +20,7 @@
 
 package org.mifos.application.fees.struts.actionforms;
 
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +37,8 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 
 public class FeeActionForm extends BaseActionForm {
@@ -102,8 +105,7 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     public FeeCategory getCategoryTypeValue() throws PropertyNotFoundException {
-        return StringUtils.isNotBlank(categoryType) ? FeeCategory.getFeeCategory(Short.valueOf(categoryType))
-                : null;
+        return StringUtils.isNotBlank(categoryType) ? FeeCategory.getFeeCategory(Short.valueOf(categoryType)) : null;
     }
 
     public String getCustomerCharge() {
@@ -172,9 +174,9 @@ public class FeeActionForm extends BaseActionForm {
         this.feeRecurrenceType = feeRecurrenceType;
     }
 
-    public RecurrenceType getFeeRecurrenceTypeValue() throws PropertyNotFoundException {
-        return StringUtils.isNotBlank(feeRecurrenceType) ? RecurrenceType.fromInt(Short
-                .valueOf(feeRecurrenceType)) : null;
+    public RecurrenceType getFeeRecurrenceTypeValue() {
+        return StringUtils.isNotBlank(feeRecurrenceType) ? RecurrenceType.fromInt(Short.valueOf(feeRecurrenceType))
+                : null;
     }
 
     public String getFeeStatus() {
@@ -268,72 +270,100 @@ public class FeeActionForm extends BaseActionForm {
 
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        Locale locale = getUserContext(request).getPreferredLocale();
         ActionErrors errors = new ActionErrors();
         String methodCalled = request.getParameter(Methods.method.toString());
-        if (!methodCalled.equals(Methods.validate.toString()))
+        if (!methodCalled.equals(Methods.validate.toString())) {
             request.setAttribute("methodCalled", methodCalled);
-        else
+        } else {
             request.setAttribute("methodCalled", request.getAttribute("methodCalled"));
+        }
         if (null != methodCalled) {
             if (methodCalled.equals(Methods.preview.toString())) {
+                // fee creation
                 errors.add(super.validate(mapping, request));
-                validateForPreview(errors);
+                validateForPreview(errors, locale);
             } else if (methodCalled.equalsIgnoreCase(Methods.editPreview.toString())) {
-                validateForEditPreview(errors);
+                // editing fees
+                validateForEditPreview(errors, locale);
             }
         }
 
-        if (null != errors && !errors.isEmpty())
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
+        }
         return errors;
     }
 
-    private void validateForPreview(ActionErrors errors) {
-        if (StringUtils.isNotBlank(categoryType) && isCategoryLoan()) {
-            validateForPreviewLoanCategory(errors);
-        } else if (!isAmountValid()) {
-            addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
+    /**
+     * Used while creating fees.
+     */
+    private void validateForPreview(ActionErrors errors, Locale locale) {
+        if (StringUtils.isNotBlank(getCategoryType()) && isCategoryLoan()) {
+            validateForPreviewLoanCategory(errors, locale);
+        } else {
+            if (StringUtils.isBlank(getAmount())) {
+                // neither rate nor amount was specified
+                addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
+            } else {
+                validateAmount(errors, locale);
+            }
         }
-        if (getGlCodeValue() == null)
+        if (getGlCodeValue() == null) {
             addError(errors, FeeConstants.INVALID_GLCODE, FeeConstants.INVALID_GLCODE);
-    }
-
-    private void validateForPreviewLoanCategory(ActionErrors errors) {
-
-        if ((!isAmountValid() && !isRateOrFormulaValid()) || (isAmountValid() && isRateOrFormulaValid()))
-            addError(errors, FeeConstants.RATE_OR_AMOUNT, FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
-        else if ((!isRateValid() && isFormulaValid()) || (isRateValid() && !isFormulaValid()))
-            addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
-    }
-
-    private void validateForEditPreview(ActionErrors errors) {
-        if (StringUtils.isNotBlank(feeFormula)) {
-            if (!isRateValid())
-                addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
-        } else if (!isAmountValid())
-            addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
-
-        if (getFeeStatusValue() == null)
-            addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SELECT_STATUS);
-    }
-
-    private boolean isRateValid() {
-        return getRateValue() != null && getRateValue() > 0;
-    }
-
-    private boolean isRateOrFormulaValid() {
-        return isRateValid() || isFormulaValid();
-    }
-
-    private boolean isFormulaValid() {
-        return StringUtils.isNotBlank(feeFormula);
-    }
-
-    boolean isAmountValid() {
-        try {
-            return getAmountValue().getAmountDoubleValue() > 0.0;
-        } catch (NumberFormatException e) {
-            return false;
         }
     }
+
+    private void validateForPreviewLoanCategory(ActionErrors errors, Locale locale) {
+        if (StringUtils.isNotBlank(getRate()) && StringUtils.isNotBlank(getAmount())) {
+            // rate and amount must not both be specified
+            addError(errors, FeeConstants.RATE_OR_AMOUNT, FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
+        } else if (StringUtils.isNotBlank(getRate()) && StringUtils.isNotBlank(getFeeFormula())) {
+            validateRate(errors, locale);
+        } else if (StringUtils.isNotBlank(getRate()) && StringUtils.isBlank(getFeeFormula())) {
+            addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
+        } else if (StringUtils.isNotBlank(getAmount())) {
+            validateAmount(errors, locale);
+        } else {
+            // neither rate nor amount was specified
+            addError(errors, FeeConstants.RATE_OR_AMOUNT, FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
+        }
+    }
+
+    /**
+     * Used while editing fees.
+     */
+    private void validateForEditPreview(ActionErrors errors, Locale locale) {
+        if (StringUtils.isBlank(getRate()) && StringUtils.isBlank(getAmount())) {
+            // neither rate nor amount was specified
+            addError(errors, FeeConstants.RATE_OR_AMOUNT, FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
+        } else if (StringUtils.isNotBlank(feeFormula)) {
+            validateRate(errors, locale);
+        } else {
+            validateAmount(errors, locale);
+        }
+
+        if (getFeeStatusValue() == null) {
+            addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SELECT_STATUS);
+        }
+    }
+
+    protected void validateAmount(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(getAmount(), FeeConstants.AMOUNT, errors, locale,
+                FilePaths.FEE_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                    lookupLocalizedPropertyValue(FeeConstants.AMOUNT, locale, FilePaths.FEE_UI_RESOURCE_PROPERTYFILE));
+        }
+    }
+
+    protected void validateRate(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateInterest(getRate(), FeeConstants.RATE, errors, locale,
+                FilePaths.FEE_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, FeeConstants.RATE, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                    lookupLocalizedPropertyValue(FeeConstants.RATE, locale, FilePaths.FEE_UI_RESOURCE_PROPERTYFILE));
+        }
+    }
+
 }

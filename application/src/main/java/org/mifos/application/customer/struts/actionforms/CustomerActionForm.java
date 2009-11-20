@@ -38,6 +38,7 @@ import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
@@ -53,7 +54,9 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 /**
@@ -418,9 +421,10 @@ public abstract class CustomerActionForm extends BaseActionForm {
     protected abstract MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException;
 
     protected void validateFees(HttpServletRequest request, ActionErrors errors) throws ApplicationException {
+        Locale locale = getUserContext(request).getPreferredLocale();
         validateForFeeAssignedWithoutMeeting(request, errors);
         validateForFeeRecurrence(request, errors);
-        validateForFeeAmount(errors);
+        validateForFeeAmount(errors, locale);
         validateForDuplicatePeriodicFee(request, errors);
     }
 
@@ -473,14 +477,18 @@ public abstract class CustomerActionForm extends BaseActionForm {
         }
     }
 
-    protected void validateForFeeAmount(ActionErrors errors) {
+    protected void validateForFeeAmount(ActionErrors errors, Locale locale) {
         List<FeeView> feeList = getFeesToApply();
         for (FeeView fee : feeList) {
-            if (StringUtils.isBlank(fee.getAmount()))
+            if (StringUtils.isBlank(fee.getAmount())) {
                 errors.add(CustomerConstants.FEE, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_FEE_AMOUNT));
+            } else {
+                validateAmount(fee.getAmount(), CustomerConstants.FEE, 
+                        errors, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);              
+            }
         }
     }
-
+    
     protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors)
             throws ApplicationException {
         List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(

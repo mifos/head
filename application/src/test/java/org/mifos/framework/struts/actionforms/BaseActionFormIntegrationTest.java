@@ -36,7 +36,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
@@ -107,7 +107,7 @@ public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
         converter.setCurrentLocale(new Locale("en", "GB"));
         String doubleStr = "222.4";
         Double value = 222.4;
-        ConversionResult result = baseActionForm.parseDoubleForMoney(doubleStr);
+        DoubleConversionResult result = baseActionForm.parseDoubleForMoney(doubleStr);
        Assert.assertEquals(value, result.getDoubleValue());
 
         doubleStr = "222,4";
@@ -135,7 +135,7 @@ public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
         converter.setCurrentLocale(new Locale("IS", "is"));
         String doubleStr = "222.12345";
         Double value = 222.12345;
-        ConversionResult result = baseActionForm.parseDoubleForInterest("222,12345");
+        DoubleConversionResult result = baseActionForm.parseDoubleForInterest("222,12345");
         
         result = baseActionForm.parseDoubleForMoney("222,4");
        Assert.assertEquals(value, result.getDoubleValue());
@@ -162,7 +162,7 @@ public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
         converter.setCurrentLocale(new Locale("en", "GB"));
         String doubleStr = "222.12345";
         Double value = 222.12345;
-        ConversionResult result = baseActionForm.parseDoubleForInterest(doubleStr);
+        DoubleConversionResult result = baseActionForm.parseDoubleForInterest(doubleStr);
        Assert.assertEquals(value, result.getDoubleValue());
 
         doubleStr = "222,12345";
@@ -190,7 +190,7 @@ public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
         converter.setCurrentLocale(new Locale("IS", "is"));
         String doubleStr = "222.12345";
         Double value = 222.12345;
-        ConversionResult result = baseActionForm.parseDoubleForInterest("222,12345");
+        DoubleConversionResult result = baseActionForm.parseDoubleForInterest("222,12345");
        Assert.assertEquals(value, result.getDoubleValue());
         doubleStr = "222.12345";
         result = baseActionForm.parseDoubleForInterest(doubleStr);

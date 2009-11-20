@@ -20,14 +20,63 @@
 
 package org.mifos.application.fees.struts.actionforms;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import java.util.Locale;
 
-public class FeeActionFormTest extends TestCase {
+import junit.framework.Assert;
+
+import org.apache.struts.action.ActionErrors;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mifos.framework.TestUtils;
+
+public class FeeActionFormTest {
+    Locale locale = TestUtils.ukLocale();
+    FeeActionForm form;
     
-    public void testIsAmountValidWithInvalidString() {
-        FeeActionForm form = new FeeActionForm();
+    @Before
+    public void setUp() {
+        form = new FeeActionForm();
+    }
+    
+    @After
+    public void tearDown() {
+        form = null;
+    }
+
+    @Test
+    public void testIsAmountValidWithNonNumberString() {
         form.setAmount("aaa");
-        Assert.assertFalse(form.isAmountValid());
+        Assert.assertFalse(isAmountValid(form));
+    }
+
+    @Test
+    public void testIsAmountValidWithValidString() {
+        form.setAmount("2.5");
+        Assert.assertTrue(isAmountValid(form));
+    }
+
+    @Test
+    public void testIsAmountValidWithTooMuchPrecision() {
+        form.setAmount("2.12345");
+        Assert.assertFalse(isAmountValid(form));
+    }
+
+    @Test
+    public void testIsAmountValidWithZero() {
+        form.setAmount("0.0");
+        Assert.assertFalse(isAmountValid(form));
+    }
+
+    @Test
+    public void testIsAmountValidWithTooLargeANumber() {
+        form.setAmount("12345678.5");
+        Assert.assertFalse(isAmountValid(form));
+    }
+
+    private boolean isAmountValid(FeeActionForm form) {
+        ActionErrors errors = new ActionErrors();
+        form.validateAmount(errors, locale);
+        return errors.size() == 0;
     }
 }

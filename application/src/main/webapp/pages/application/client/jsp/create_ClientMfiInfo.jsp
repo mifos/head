@@ -37,9 +37,6 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="CreateClientMfiInfo" />	
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
-		<script src="pages/framework/js/conversion.js"></script>
-		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<script language="javascript">
 
 
@@ -297,10 +294,10 @@ explanation of the license and how it is applied.
 															<c:otherwise>
 																<c:choose>
 																	<c:when test="${param.method eq 'next'}">
-																		<td width="20%"><mifos:mifosdecimalinput styleId="create_ClientMfiInfo.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" /></td>
+																		<td width="20%"><html-el:text styleId="create_ClientMfiInfo.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" /></td>
 																	</c:when>
 																	<c:otherwise>
-																		<td width="20%"><mifos:mifosdecimalinput styleId="create_ClientMfiInfo.input.defaultAmount" property="defaultFee[${ctr1}].amount"  style="width:135px;" /></td>
+																		<td width="20%"><html-el:text styleId="create_ClientMfiInfo.input.defaultAmount" property="defaultFee[${ctr1}].amount"  style="width:135px;" /></td>
 																	</c:otherwise>
 																</c:choose>
 															</c:otherwise>
@@ -354,7 +351,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="client.Amount" bundle="ClientUIResources"/>
 											</td>
 											<td width="48%" class="fontnormal">
-												<mifos:mifosdecimalinput styleId="create_ClientMfiInfo.input.amount" property='selectedFee[${ctr2}].amount' />
+												<html-el:text styleId="create_ClientMfiInfo.input.amount" property='selectedFee[${ctr2}].amount' />
 											</td>
 											<c:if test="${ctr2 == 0}">
 												<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">

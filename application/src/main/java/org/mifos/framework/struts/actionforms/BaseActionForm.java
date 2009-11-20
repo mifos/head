@@ -48,7 +48,7 @@ import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -72,7 +72,7 @@ public class BaseActionForm extends ValidatorActionForm {
         }
     }
 
-    protected ConversionResult parseDoubleForMoney(String doubleString) {
+    protected DoubleConversionResult parseDoubleForMoney(String doubleString) {
         return new LocalizationConverter().parseDoubleForMoney(doubleString);
 
     }
@@ -97,7 +97,7 @@ public class BaseActionForm extends ValidatorActionForm {
 
     }
 
-    protected ConversionResult parseDoubleForInterest(String doubleString) {
+    protected DoubleConversionResult parseDoubleForInterest(String doubleString) {
         return new LocalizationConverter().parseDoubleForInterest(doubleString);
 
     }
@@ -182,4 +182,42 @@ public class BaseActionForm extends ValidatorActionForm {
         return customFields.get(i);
     }
 
+    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName) {
+        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
+        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName), 
+                errors, locale, conversionResult);
+        return conversionResult;        
+    }
+
+    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, String fieldName, ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
+        addConversionResultErrors(fieldPropertyKey, fieldName,
+                errors, locale, conversionResult);
+        return conversionResult;        
+    }
+        
+    protected DoubleConversionResult validateInterest(String interestString, String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName) {
+        DoubleConversionResult conversionResult = parseDoubleForInterest(interestString);
+        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName), 
+                errors, locale, conversionResult);
+        return conversionResult;
+    }
+
+    private void addConversionResultErrors(String fieldPropertyKey, String propertyName, ActionErrors errors, Locale locale, 
+            DoubleConversionResult conversionResult) {
+        List<ConversionError> errorList = conversionResult.getErrors();
+        if (errorList.size() > 0) {
+            for (int i = 0; i < errorList.size(); i++) {
+                addError(errors, fieldPropertyKey, "errors.generic", propertyName,
+                        getConversionErrorText(errorList.get(i), locale));
+            }
+        }
+    }
+    
+    protected String lookupLocalizedPropertyValue(String key, Locale locale, String propertyFile) {
+        ResourceBundle resources = ResourceBundle.getBundle(propertyFile, locale);
+        String errorText = resources.getString(key);
+        return errorText;
+    }
+    
 }

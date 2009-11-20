@@ -32,7 +32,8 @@ import java.util.Locale;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.Money;
 
 public class LocalizationConverter {
     private DecimalFormat currentDecimalFormat;
@@ -136,8 +137,14 @@ public class LocalizationConverter {
         }
     }
 
-    public ConversionResult parseDoubleForMoney(String doubleStr) {
-        ConversionResult result = new ConversionResult();
+    public DoubleConversionResult parseDoubleForMoney(String doubleStr) {
+        DoubleConversionResult result = new DoubleConversionResult();
+        if (doubleStr == null) {
+            List<ConversionError> errors = new ArrayList<ConversionError>();
+            errors.add(ConversionError.CONVERSION_ERROR);   
+            result.setErrors(errors);       
+            return result;
+        }
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, doubleStr);
@@ -150,14 +157,19 @@ public class LocalizationConverter {
         } catch (Exception ex) {
             // after all the checkings this is not likely to happen, but just in
             // case
-            ConversionError error = ConversionError.CONVERSION_ERROR;
-            result.getErrors().add(error);
+            result.getErrors().add(ConversionError.CONVERSION_ERROR);            
         }
         return result;
     }
 
-    public ConversionResult parseDoubleForInterest(String doubleStr) {
-        ConversionResult result = new ConversionResult();
+    public DoubleConversionResult parseDoubleForInterest(String doubleStr) {
+        DoubleConversionResult result = new DoubleConversionResult();
+        if (doubleStr == null) {
+            List<ConversionError> errors = new ArrayList<ConversionError>();
+            errors.add(ConversionError.CONVERSION_ERROR);   
+            result.setErrors(errors);
+            return result;
+        }
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForInterest, digitsAfterDecimalForInterest,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST, doubleStr);
@@ -172,8 +184,7 @@ public class LocalizationConverter {
             } else
                 result.setDoubleValue(interest);
         } catch (Exception ex) {
-            ConversionError error = ConversionError.CONVERSION_ERROR;
-            result.getErrors().add(error);
+            result.getErrors().add(ConversionError.CONVERSION_ERROR);            
         }
         return result;
     }
@@ -184,7 +195,7 @@ public class LocalizationConverter {
 
     private List<ConversionError> checkDigits(Short digitsBefore, Short digitsAfter, ConversionError errorDigitsBefore,
             ConversionError errorDigitsAfter, String number) {
-        List<ConversionError> errors = new ArrayList();
+        List<ConversionError> errors = new ArrayList<ConversionError>();
         char temp;
         ConversionError error = null;
         for (int i = 0; i < number.length(); i++)
@@ -257,6 +268,11 @@ public class LocalizationConverter {
         return dNum;
     }
 
+    public Money getMoney(String amount) {
+        String doubleString = getDoubleValueForCurrentLocale(amount).toString();
+        return new Money(doubleString);
+    }
+
     public String getDoubleStringForMoney(Double dNumber) {
         return currentDecimalFormatForMoney.format(dNumber);
     }
@@ -322,4 +338,5 @@ public class LocalizationConverter {
             return new SimpleDateFormat(((SimpleDateFormat) dateFormat).toPattern().replace("yy", "yyyy"), dateLocale);
         return dateFormat;
     }
+     
 }
