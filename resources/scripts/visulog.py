@@ -112,7 +112,8 @@ if __name__ == '__main__':
             try:
                 line = sys.stdin.readline()
                 if line == '': break
-                m = re.match('([A-Z]+)', line)
+                log_levels_for_regex = '|'.join(colormap.keys())
+                m = re.search('(%s)' % log_levels_for_regex, line)
                 if m: term(colormap.get(m.group(0)))
                 print line,
                 term() # reset to default 
