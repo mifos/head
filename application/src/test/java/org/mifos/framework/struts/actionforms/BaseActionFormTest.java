@@ -27,27 +27,27 @@ import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.junit.Ignore;
 import org.mifos.config.Localization;
-import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
+public class BaseActionFormTest extends TestCase {
     BaseActionForm baseActionForm = new BaseActionForm();
     
-    public BaseActionFormIntegrationTest() throws SystemException, ApplicationException {
+    public BaseActionFormTest() {
         super();
+        MifosLogManager.configureLogging();
     }
 
     public void testGetDateFromString() throws Exception {
-        UserContext userContext = TestObjectFactory.getContext();
+        UserContext userContext = TestUtils.makeUser();
         BaseActionForm baseActionForm = new BaseActionForm();
         SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, userContext
                 .getPreferredLocale());
@@ -61,7 +61,6 @@ public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(one, baseActionForm.getStringValue(true));
         String strValue = "0.25";
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
            Assert.assertEquals(strValue, baseActionForm.getStringValue(0.25));
     }
@@ -82,7 +81,6 @@ public class BaseActionFormIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetDoubleValue() throws Exception {
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         double dValue = 2.34;
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
            Assert.assertEquals(dValue, baseActionForm.getDoubleValue("2.34"));

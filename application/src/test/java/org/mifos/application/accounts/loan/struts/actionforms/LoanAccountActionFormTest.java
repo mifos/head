@@ -41,6 +41,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -49,24 +50,23 @@ import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.productdefinition.business.AmountRange;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
-import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
-public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCase {
-
-    public LoanAccountActionFormIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class LoanAccountActionFormTest extends TestCase {
 
     private LoanAccountActionForm form;
     private PaymentDataTemplate paymentMock;
     private ActionErrors actionErrors;
     private static final String INTEREST_ERROR_KEY = "interest.invalid";
     private static final String AMOUNT_ERROR_KEY = "amount.invalid";
+    
+    public LoanAccountActionFormTest() {
+        super();
+        MifosLogManager.configureLogging();
+    }
 
     public void testShouldAddErrorIfTransactionDateForAPaymentIsInFuture() throws InvalidDateException {
         expect(paymentMock.getTransactionDate()).andReturn(DateUtils.getDateFromToday(1));

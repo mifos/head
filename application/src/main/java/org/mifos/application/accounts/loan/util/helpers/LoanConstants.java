@@ -131,6 +131,7 @@ public interface LoanConstants {
 
     public static final String ERROR = "error";
 
+    public static final String LOAN_AMOUNT_KEY = "loan.amount";
     public static final String LOANACCOUNTOWNER = "loanAccountOwner";
     public static final String CUSTOMER = "customer";
     public static final String CUSTOMERNOTSELECTEDERROR = "errors.customernotselected";
@@ -142,6 +143,7 @@ public interface LoanConstants {
     public static final String GRACEPERIODERROR = "errors.graceper";
     public static final String ADDITIONAL_FEES_LIST = "additionalFeeList";
     public static final String ERRORS_DUPLICATE_PERIODIC_FEE = "errors.loan.duplicatePeriodicFee";
+    public static final String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
     public static final String ERRORS_SPECIFY_FEE_AMOUNT = "errors.loan.specifyFeeAmount";
     public static final String FEE = "Fee";
     public static final String PROPOSEDDISBDATE = "proposedDisbDate";

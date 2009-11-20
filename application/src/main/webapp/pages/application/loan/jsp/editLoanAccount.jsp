@@ -190,7 +190,7 @@ explanation of the license and how it is applied.
 										<fmt:message key="loan.loanAmount">
 											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 										</fmt:message></span>:&nbsp;</td>
-									<td valign="top"><mifos:mifosdecimalinput 
+									<td valign="top"><html-el:text 
 										styleId="editLoanAccount.input.loanAmount"
 										property="loanAmount"
 										value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel

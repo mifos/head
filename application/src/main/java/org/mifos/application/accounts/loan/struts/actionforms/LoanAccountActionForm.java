@@ -72,12 +72,12 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
@@ -149,7 +149,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private List<CustomFieldView> customFields;
 
-    private List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList();
+    private List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList<PaymentDataHtmlBean>();
 
     // For Repayment day
 
@@ -486,7 +486,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         this.stateSelected = stateSelected;
     }
 
-    public AccountState getState() throws PropertyNotFoundException {
+    public AccountState getState() {
         return AccountState.fromShort(getShortValue(getStateSelected()));
     }
 
@@ -560,7 +560,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     public void initializeTransactionFields(UserContext userContext, List<RepaymentScheduleInstallment> installments) {
-        this.paymentDataBeans = new ArrayList(installments.size());
+        this.paymentDataBeans = new ArrayList<PaymentDataHtmlBean>(installments.size());
         PersonnelBO personnel;
         try {
             personnel = new PersonnelPersistence().getPersonnel(userContext.getId());
@@ -617,19 +617,22 @@ public class LoanAccountActionForm extends BaseActionForm {
         String method = request.getParameter(Methods.method.toString());
         ActionErrors errors = new ActionErrors();
         UserContext userContext = getUserContext(request);
+        Locale locale = userContext.getPreferredLocale();
         if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         try {
-            if (method.equals(Methods.getPrdOfferings.toString()))
+            if (method.equals(Methods.getPrdOfferings.toString())) {
                 checkValidationForGetPrdOfferings(errors, userContext);
-            else if (method.equals(Methods.load.toString()))
+            } else if (method.equals(Methods.load.toString())) {
                 checkValidationForLoad(errors, userContext);
-            else if (method.equals(Methods.schedulePreview.toString()))
+            } else if (method.equals(Methods.schedulePreview.toString())) {
                 checkValidationForSchedulePreview(errors, request);
-            else if (method.equals(Methods.managePreview.toString()))
+            } else if (method.equals(Methods.managePreview.toString())) {
+                validateAmount(errors, locale);
                 checkValidationForManagePreview(errors, request);
-            else if (method.equals(Methods.preview.toString()))
+            } else if (method.equals(Methods.preview.toString())) {
                 checkValidationForPreview(errors, request);
+            }
         } catch (ApplicationException ae) {
             // Discard other errors (is that right?)
             ae.printStackTrace();
@@ -642,6 +645,15 @@ public class LoanAccountActionForm extends BaseActionForm {
         return errors;
     }
 
+    protected void validateAmount(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), LoanConstants.LOAN_AMOUNT_KEY, errors, locale, 
+                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+        }
+    }
+    
     // TODO: use localized strings for error messages rather than hardcoded
     private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
         if (StringUtils.isBlank(getCustomerId())) {
@@ -668,7 +680,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateFees(request, errors);
         validateCustomFields(request, errors);
         performGlimSpecificValidations(errors, request);
-        validateRepaymentDayRequired(request, errors);
+        validateRepaymentDayRequired(errors);
         validatePurposeOfLoanFields(errors, getMandatoryFields(request));
     }
 
@@ -676,7 +688,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             throws PageExpiredException, ServiceException {
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
             removeClientsNotCheckedInForm(request);
-            validateIndividualLoanFieldsForGlim(request, errors);
+            validateIndividualLoanFieldsForGlim(errors);
             validateSelectedClients(errors);
             validateSumOfTheAmountsSpecified(errors);
             validatePurposeOfLoanForGlim(errors);
@@ -705,7 +717,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     List<String> getSelectedClientIdsFromRequest(HttpServletRequest request) {
-        Collection paramsStartingWithClients = CollectionUtils.select(convertEnumerationToList(request
+        Collection<?> paramsStartingWithClients = CollectionUtils.select(convertEnumerationToList(request
                 .getParameterNames()), new Predicate() {
             public boolean evaluate(Object object) {
                 return ((String) object).startsWith("clients");
@@ -715,16 +727,16 @@ public class LoanAccountActionForm extends BaseActionForm {
         return indices;
     }
 
-    private List<String> extractClientIdsFromRequest(HttpServletRequest request, Collection paramsStartingWithClients) {
+    private List<String> extractClientIdsFromRequest(HttpServletRequest request, Collection<?> paramsStartingWithClients) {
         List<String> clientIds = new ArrayList<String>();
-        for (Iterator iter = paramsStartingWithClients.iterator(); iter.hasNext();) {
+        for (Iterator<?> iter = paramsStartingWithClients.iterator(); iter.hasNext();) {
             String element = (String) iter.next();
             clientIds.add(request.getParameter(element));
         }
         return clientIds;
     }
 
-    private List<String> convertEnumerationToList(Enumeration parameterNames) {
+    private List<String> convertEnumerationToList(Enumeration<?> parameterNames) {
         List<String> params = new ArrayList<String>();
         while (parameterNames.hasMoreElements()) {
             params.add((String) parameterNames.nextElement());
@@ -756,7 +768,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    private void checkValidationForPreview(ActionErrors errors, HttpServletRequest request) throws ApplicationException {
+    private void checkValidationForPreview(ActionErrors errors, HttpServletRequest request) {
         validateRedoLoanPayments(request, errors);
     }
 
@@ -779,7 +791,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
         performGlimSpecificValidations(errors, request);
         validateCustomFields(request, errors);
-        validateRepaymentDayRequired(request, errors);        
+        validateRepaymentDayRequired(errors);        
     }
 
     private void validateDisbursementDate(ActionErrors errors, CustomerBO customer, java.sql.Date disbursementDateValue)
@@ -909,7 +921,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     void validateSelectedClients(ActionErrors errors) {
-        List<String> selectedClients = new ArrayList();
+        List<String> selectedClients = new ArrayList<String>();
         for (String id : getClients()) {
             if (StringUtils.isNotBlank(id)) {
                 selectedClients.add(id);
@@ -952,7 +964,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         errors.add(errorCode, new ActionMessage(errorCode));
     }
 
-    private void validateRepaymentDayRequired(HttpServletRequest request, ActionErrors errors) {
+    private void validateRepaymentDayRequired(ActionErrors errors) {
         try {
             // Default
             Short recurrenceId = RecurrenceType.WEEKLY.getValue();
@@ -987,7 +999,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     }
 
-    private void validateIndividualLoanFieldsForGlim(HttpServletRequest request, ActionErrors errors) {
+    private void validateIndividualLoanFieldsForGlim(ActionErrors errors) {
 
         for (LoanAccountDetailsViewHelper listDetail : clientDetails) {
             if (!listDetail.isEmpty()) {
