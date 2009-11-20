@@ -93,6 +93,7 @@ public class LoanDisbursmentAction extends BaseAction {
         setIsBackdatedTransactionAllowed(request);
         LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm) form;
         loanDisbursmentActionForm.clear();
+        loanDisbursmentActionForm.setAmountCannotBeZero(false);
 
         productMixValidator.checkIfProductsOfferingCanCoexist(getLoan(loanDisbursmentActionForm));
 

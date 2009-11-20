@@ -71,6 +71,16 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String accountId;
 
     private String prdOfferingName;
+    
+    private boolean amountCannotBeZero = true;
+
+    public boolean amountCannotBeZero() {
+        return this.amountCannotBeZero;
+    }
+
+    public void setAmountCannotBeZero(boolean amountCannotBeZero) {
+        this.amountCannotBeZero = amountCannotBeZero;
+    }
 
     public String getPrdOfferingName() {
         return prdOfferingName;
@@ -170,7 +180,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     protected void validateAmount(ActionErrors errors, Locale locale) {
         DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
-        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+        if (amountCannotBeZero() && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
                     lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
         }
