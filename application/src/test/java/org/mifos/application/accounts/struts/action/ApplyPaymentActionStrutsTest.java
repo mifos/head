@@ -97,7 +97,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) request.getSession().getAttribute(
                 "applyPaymentActionForm");
-       Assert.assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue().toString());
     }
 
     // added for defect 1590 [start]
@@ -115,7 +115,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) request.getSession().getAttribute(
                 "applyPaymentActionForm");
-       Assert.assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(actionForm.getAmount(), accountBO.getTotalPaymentDue().toString());
     }
 
     // added for defect 1590 [end]
@@ -128,6 +128,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestDateParameter("transactionDate", currentDate);
         addRequestParameter("paymentTypeId", "1");
         addRequestParameter("method", "preview");
+        addRequestParameter("amount", "10");        
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward(Constants.PREVIEW_SUCCESS);
@@ -141,6 +142,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestDateParameter("transactionDate", currentDate);
         addRequestParameter("paymentTypeId", "1");
         addRequestParameter("method", "preview");
+        addRequestParameter("amount", "10");        
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward(Constants.PREVIEW_SUCCESS);

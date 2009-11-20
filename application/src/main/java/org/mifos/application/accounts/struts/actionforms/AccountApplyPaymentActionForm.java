@@ -168,7 +168,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
     
     protected void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getAmount().toString(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+        DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
