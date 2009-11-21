@@ -35,6 +35,7 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
@@ -42,16 +43,15 @@ import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.config.AccountingRules;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class BaseActionForm extends ValidatorActionForm {
 
@@ -182,42 +182,44 @@ public class BaseActionForm extends ValidatorActionForm {
         return customFields.get(i);
     }
 
-    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName) {
+    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors,
+            Locale locale, String propertyfileName) {
         DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
-        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName), 
-                errors, locale, conversionResult);
-        return conversionResult;        
-    }
-
-    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, String fieldName, ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
-        addConversionResultErrors(fieldPropertyKey, fieldName,
-                errors, locale, conversionResult);
-        return conversionResult;        
-    }
-        
-    protected DoubleConversionResult validateInterest(String interestString, String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName) {
-        DoubleConversionResult conversionResult = parseDoubleForInterest(interestString);
-        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName), 
-                errors, locale, conversionResult);
+        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale,
+                propertyfileName), errors, locale, conversionResult);
         return conversionResult;
     }
 
-    private void addConversionResultErrors(String fieldPropertyKey, String propertyName, ActionErrors errors, Locale locale, 
-            DoubleConversionResult conversionResult) {
+    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, String fieldName,
+            ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
+        addConversionResultErrors(fieldPropertyKey, fieldName, errors, locale, conversionResult);
+        return conversionResult;
+    }
+
+    protected DoubleConversionResult validateInterest(String interestString, String fieldPropertyKey,
+            ActionErrors errors, Locale locale, String propertyfileName) {
+        DoubleConversionResult conversionResult = parseDoubleForInterest(interestString);
+        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale,
+                propertyfileName), errors, locale, conversionResult);
+        return conversionResult;
+    }
+
+    private void addConversionResultErrors(String fieldPropertyKey, String propertyName, ActionErrors errors,
+            Locale locale, DoubleConversionResult conversionResult) {
         List<ConversionError> errorList = conversionResult.getErrors();
         if (errorList.size() > 0) {
             for (int i = 0; i < errorList.size(); i++) {
-                addError(errors, fieldPropertyKey, "errors.generic", propertyName,
-                        getConversionErrorText(errorList.get(i), locale));
+                addError(errors, fieldPropertyKey, "errors.generic", propertyName, getConversionErrorText(errorList
+                        .get(i), locale));
             }
         }
     }
-    
+
     protected String lookupLocalizedPropertyValue(String key, Locale locale, String propertyFile) {
         ResourceBundle resources = ResourceBundle.getBundle(propertyFile, locale);
         String errorText = resources.getString(key);
         return errorText;
     }
-    
+
 }
