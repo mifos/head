@@ -89,7 +89,6 @@ public class FeeView extends View {
     }
 
     public Double getAmountMoney() {
-
         return new LocalizationConverter().getDoubleValueForCurrentLocale(amount);
     }
 

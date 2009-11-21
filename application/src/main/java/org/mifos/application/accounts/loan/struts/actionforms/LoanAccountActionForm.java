@@ -627,10 +627,13 @@ public class LoanAccountActionForm extends BaseActionForm {
                 checkValidationForLoad(errors, userContext);
             } else if (method.equals(Methods.schedulePreview.toString())) {
                 checkValidationForSchedulePreview(errors, request);
-            } else if (method.equals(Methods.managePreview.toString())) {
                 validateLoanAmount(errors, locale);
                 validateInterest(errors, locale);
+              //TODO Add defaultFee and additionalFee validation
+            } else if (method.equals(Methods.managePreview.toString())) {
                 checkValidationForManagePreview(errors, request);
+                validateLoanAmount(errors, locale);
+                validateInterest(errors, locale);
             } else if (method.equals(Methods.preview.toString())) {
                 checkValidationForPreview(errors, request);
             }
@@ -656,11 +659,11 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
     
     protected void validateInterest(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateInterest(getInterestRate(), LoanConstants.LOAN_INTEREST_KEY, errors, locale, 
+        DoubleConversionResult conversionResult = validateInterest(getInterestRate(), LoanConstants.LOAN_INTEREST_RATE_KEY, errors, locale, 
                 FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, LoanConstants.LOAN_INTEREST_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
-                    lookupLocalizedPropertyValue(LoanConstants.LOAN_INTEREST_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            addError(errors, LoanConstants.LOAN_INTEREST_RATE_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_INTEREST_RATE_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
         }
     }
     
@@ -823,7 +826,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             checkForMinMax(errors, loanAmount, amountRange, resources.getString("loan.amount"));
         }
         checkForMinMax(errors, interestRate, loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
-                resources.getString("loan.noOfInstallments"));
+                resources.getString("loan.interestRate"));
         checkForMinMax(errors, noOfInstallments, installmentRange, resources.getString("loan.noOfInstallments"));
         if (StringUtils.isBlank(getDisbursementDate())) {
             addError(errors, "Proposed/Actual disbursal date", "errors.validandmandatory", resources

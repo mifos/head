@@ -303,7 +303,7 @@ explanation of the license and how it is applied.
 									<tr class="fontnormal">
 											<td align="right" class="fontnormal" width="30%"><span id="loancreationdetails.label.loanAmount"><mifos:mifoslabel
 												name="loan.amount" mandatory="yes"   /></span>:</td>
-											<td valign="top"><mifos:mifosdecimalinput
+											<td valign="top"><html-el:text
 												property="loanAmount" readonly="false" styleId="loancreationdetails.input.sumLoanAmount"/> <mifos:mifoslabel
 												name="loan.allowed_amount" /> &nbsp; <c:out
 												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
@@ -318,9 +318,9 @@ explanation of the license and how it is applied.
 											<fmt:param><mifos:mifoslabel
 												name="${ConfigurationConstants.INTEREST}"/></fmt:param>
 										</fmt:message>:</td>
-									<td width="70%" valign="top"><mifos:mifosdecimalinput
+									<td width="70%" valign="top"><html-el:text
 										styleId="loancreationdetails.input.interestRate"
-										property="interestRate" decimalFmt="10.5" />
+										property="interestRate" />
 										<fmt:message key="loan.allowedInterest">
 											<fmt:param><mifos:mifoslabel
 												name="${ConfigurationConstants.INTEREST}" /></fmt:param>
