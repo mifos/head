@@ -56,8 +56,7 @@ public class LoanUIHelperFn {
     public static String getDoubleValue(Double value) {
         if (value != null)
             return BigDecimal.valueOf(value).toString();
-        else
-            return "0.0";
+        return "0.0";
     }
 
     static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState,

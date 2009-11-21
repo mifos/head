@@ -210,11 +210,10 @@ explanation of the license and how it is applied.
 								<fmt:message key="loan.interestRate">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 								</fmt:message></span>:&nbsp;</td>
-							<td width="70%" valign="top"><mifos:mifosdecimalinput
+							<td width="70%" valign="top"><html-el:text
 								styleId="editLoanAccount.input.interestRate"
 								property="interestRate" readonly="${loanfn:isDisabledWhileEditingGlim('interestRate',accountState)}"
-								value="${sessionScope.loanAccountActionForm.interestRate}"
-								decimalFmt="10.5" /> 
+								value="${sessionScope.loanAccountActionForm.interestRate}" /> 
 								<fmt:message key="loan.allowedInterest">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 								</fmt:message>&nbsp; <c:out

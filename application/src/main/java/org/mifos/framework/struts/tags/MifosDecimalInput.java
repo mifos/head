@@ -109,8 +109,7 @@ public class MifosDecimalInput extends ELTextTag {
         // String preferredUserLocale =
         // LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
         if (decimalFmt == null || decimalFmt == "")
-            decimalFmt = "7."
-                    + Configuration.getInstance().getSystemConfig().getCurrency().getDefaultDigitsAfterDecimal();
+            decimalFmt = "7."+ Configuration.getInstance().getSystemConfig().getCurrency().getDefaultDigitsAfterDecimal();
         this.setOnblur("if( false == doValidation(this," + getMin() + "," + getMax() + "," + getDecimalFmt()
                 + ")) this.focus();");
         this.setOnkeyup("return chekDecimal(" + getDecimalFmt() + ",this, event); ");

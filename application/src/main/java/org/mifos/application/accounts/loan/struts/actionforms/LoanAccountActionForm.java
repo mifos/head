@@ -628,7 +628,8 @@ public class LoanAccountActionForm extends BaseActionForm {
             } else if (method.equals(Methods.schedulePreview.toString())) {
                 checkValidationForSchedulePreview(errors, request);
             } else if (method.equals(Methods.managePreview.toString())) {
-                validateAmount(errors, locale);
+                validateLoanAmount(errors, locale);
+                validateInterest(errors, locale);
                 checkValidationForManagePreview(errors, request);
             } else if (method.equals(Methods.preview.toString())) {
                 checkValidationForPreview(errors, request);
@@ -645,7 +646,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         return errors;
     }
 
-    protected void validateAmount(ActionErrors errors, Locale locale) {
+    protected void validateLoanAmount(ActionErrors errors, Locale locale) {
         DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), LoanConstants.LOAN_AMOUNT_KEY, errors, locale, 
                 FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
@@ -653,6 +654,16 @@ public class LoanAccountActionForm extends BaseActionForm {
                     lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
         }
     }
+    
+    protected void validateInterest(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateInterest(getInterestRate(), LoanConstants.LOAN_INTEREST_KEY, errors, locale, 
+                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, LoanConstants.LOAN_INTEREST_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_INTEREST_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+        }
+    }
+    
     
     // TODO: use localized strings for error messages rather than hardcoded
     private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
