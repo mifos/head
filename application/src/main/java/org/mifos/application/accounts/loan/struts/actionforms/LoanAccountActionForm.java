@@ -832,6 +832,14 @@ public class LoanAccountActionForm extends BaseActionForm {
             addError(errors, "Proposed/Actual disbursal date", "errors.validandmandatory", resources
                     .getString("loan.disbursalDate"));
         }
+        // Check for invalid data format
+        try {
+            DateUtils.getLocaleDate(locale, getDisbursementDate());
+        } catch (InvalidDateException ide) {
+            addError(errors, "Proposed/Actual disbursal date",
+                    LoanExceptionConstants.ERROR_INVALID_DISBURSEMENT_DATE_FORMAT, resources
+                            .getString("loan.disbursalDate"));
+        }
         if (isInterestDedAtDisbValue()) {
             setGracePeriodDuration("0");
         }
