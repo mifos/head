@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
@@ -336,19 +337,15 @@ public class DateUtils {
         // the following line is for 1.1 release and will be removed when date
         // is localized
         locale = internalLocale;
-        if (locale != null && value != null && !value.equals("")) {
-            try {
-                SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
-                shortFormat.setLenient(false);
-                String userPattern = shortFormat.toPattern();
-                String dbDate = convertUserToDbFmt(value, userPattern);
-                return java.sql.Date.valueOf(dbDate);
-            } catch (RuntimeException alreadyRuntime) {
-                throw alreadyRuntime;
-            }
-        } else {
-            return null;
+        java.sql.Date result = null;
+        if (locale != null && StringUtils.isNotBlank(value)) {
+            SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
+            shortFormat.setLenient(false);
+            String userPattern = shortFormat.toPattern();
+            String dbDate = convertUserToDbFmt(value, userPattern);
+            result = java.sql.Date.valueOf(dbDate);
         }
+        return result;
     }
 
     public static String getMFIFormat() {
