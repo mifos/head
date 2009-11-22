@@ -316,19 +316,38 @@
                     <username>${acceptance.database.user}</username>
                     <password>${acceptance.database.password}</password>
                     <autocommit>true</autocommit>
+                    <skip>${maven.test.skip}</skip>
                 </configuration>
                 <executions>
-                    <execution>
-                        <id>pre-application-startup</id>
+                        <execution>
+                        <id>drop_db</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <skip>${maven.test.skip}</skip>
+                            <sqlCommand>DROP DATABASE IF EXISTS ${acceptance.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>CREATE DATABASE ${acceptance.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>USE ${acceptance.database}</sqlCommand>
                             <srcFiles>
-                                <srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>

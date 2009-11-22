@@ -119,7 +119,6 @@
                                 <configuration>
                                     <sqlCommand>USE ${main.database}</sqlCommand>
                                     <srcFiles>
-                                        <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/init_mifos_password.sql</srcFile>
@@ -210,7 +209,6 @@
                                 <configuration>
                                     <sqlCommand>USE ${main.database}</sqlCommand>
                                     <srcFiles>
-                                        <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
@@ -839,7 +837,6 @@
                         <configuration>
                             <sqlCommand>USE ${integration.database}</sqlCommand>
                             <srcFiles>
-                                <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
