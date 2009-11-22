@@ -926,7 +926,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         jumpToSchedulePreview();
         actionPerform();
         verifyActionErrors(new String[] { "errors.defMinMax", "errors.defMinMax", "errors.defMinMax",
-                "errors.validandmandatory", "errors.graceper" });
+                "errors.validandmandatory", "errors.graceper", "errors.generic", "errors.generic" });
         verifyInputForward();
     }
 
