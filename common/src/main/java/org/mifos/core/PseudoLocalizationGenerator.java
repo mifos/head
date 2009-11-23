@@ -20,6 +20,7 @@
 
 package org.mifos.core;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -95,7 +96,7 @@ public class PseudoLocalizationGenerator {
         FileInputStream in = null;
 
         try {
-            in = new FileInputStream(directory + baseFileName + ".properties");
+            in = new FileInputStream(directory + File.separator + baseFileName + ".properties");
             defaultProps.load(in);
         } finally {
             if (in != null) {
@@ -115,7 +116,7 @@ public class PseudoLocalizationGenerator {
 
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream(directory + baseFileName + "_" + locale + ".properties");
+            out = new FileOutputStream(directory + File.separator + baseFileName + "_" + locale + ".properties");
             defaultProps.store(out, "---Auto Generated Properties---");
         } finally {
             out.close();
