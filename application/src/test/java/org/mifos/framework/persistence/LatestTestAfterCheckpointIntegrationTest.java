@@ -80,7 +80,11 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        // Cleaning the database
+        // Cleaning the database using FK check disabled connection
+        // If any one of the test fails or throws error it could lead to
+        // multiple failures in other tests duing test build
+        Connection connection = TestDatabase.getJDBCConnection();
+        connection.setAutoCommit(false);
         executeScript("mifosdroptables.sql", connection);
         executeScript("latest-schema.sql", connection);
         executeScript("latest-data.sql", connection);
@@ -122,7 +126,6 @@ public class LatestTestAfterCheckpointIntegrationTest {
         IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
         Assert.assertEquals(latestDump, upgradeDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
-        
     }
 
     @Test
@@ -222,6 +225,11 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void dropLatestDatabase() throws Exception {
+        // Drop tables using FK check disabled connection
+        // If any one of the test fails or throws error it could lead to
+        // multiple failures in other tests duing test build
+        Connection connection = TestDatabase.getJDBCConnection();
+        connection.setAutoCommit(false);
         executeScript("mifosdroptables.sql", connection);
         connection.commit();
     }
@@ -251,6 +259,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void createLatestCheckPointDatabaseWithLatestData() throws Exception {
+        executeScript("mifosdroptables-checkpoint.sql", connection);
         executeScript("latest-schema-checkpoint.sql", connection);
         executeScript("latest-data-checkpoint.sql", connection);
         connection.commit();

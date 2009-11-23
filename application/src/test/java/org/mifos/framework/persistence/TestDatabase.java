@@ -235,8 +235,10 @@ public class TestDatabase implements SessionOpener {
     }
 
     // FIXME Use Spring Managed Connection
-
-    private static Connection getJDBCConnection() throws Exception {
+    /**
+     * Foreign key disabled connection
+     */
+    public static Connection getJDBCConnection() throws Exception {
         final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
         final String noFkChecksUrl = databaseSettings.getProperty("hibernate.connection.url")
                 + "&sessionVariables=FOREIGN_KEY_CHECKS=0";
