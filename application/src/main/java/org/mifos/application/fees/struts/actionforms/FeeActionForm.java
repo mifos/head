@@ -337,7 +337,7 @@ public class FeeActionForm extends BaseActionForm {
         if (StringUtils.isBlank(getRate()) && StringUtils.isBlank(getAmount())) {
             // neither rate nor amount was specified
             addError(errors, FeeConstants.RATE_OR_AMOUNT, FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
-        } else if (StringUtils.isNotBlank(feeFormula)) {
+        } else if (StringUtils.isNotBlank(getRate()) && StringUtils.isNotBlank(getFeeFormula())) {
             validateRate(errors, locale);
         } else {
             validateAmount(errors, locale);

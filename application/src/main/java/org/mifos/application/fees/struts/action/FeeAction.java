@@ -182,7 +182,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        return mapping.findForward(ActionForwards.editpreview_success.toString());
+        return mapping.findForward(ActionForwards.editPreview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)

@@ -94,12 +94,12 @@ explanation of the license and how it is applied.
 								<td width="73%" valign="top">
 									<c:choose>
 										<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
-											<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="3.5" />
+											<html-el:text property="rate" size="3"/>
 											<mifos:mifoslabel name="Fees.percentof" />
 											<c:out value="${BusinessKey.feeFormula.name}" />
 										</c:when>
 										<c:otherwise>
-											<mifos:mifosdecimalinput property="amount" />
+											<html-el:text property="amount" />
 										</c:otherwise>
 									</c:choose>
 								</td>

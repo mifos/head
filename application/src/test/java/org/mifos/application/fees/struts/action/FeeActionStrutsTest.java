@@ -554,7 +554,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue().toString());
         actionPerform();
         verifyNoActionErrors();
-        verifyForward(ActionForwards.editpreview_success.toString());
+        verifyForward(ActionForwards.editPreview_success.toString());
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
         Assert.assertEquals(new Money("200"), actionForm.getAmountValue());
