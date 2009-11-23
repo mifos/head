@@ -59,7 +59,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
          * be located when running test cases using the junit plugin inside
          * eclipse.
          */
-        setContextDirectory(new File("src/org/mifos/"));
+        setContextDirectory(new File("application/target/test-classes"));
 
         String className = this.getClass().getName();
         if (className.startsWith("org.mifos.application.customer")) {
