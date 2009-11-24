@@ -288,7 +288,7 @@ explanation of the license and how it is applied.
                                                                 <c:out value="${paymentDataBeans.installment.total}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <mifos:mifosdecimalinput styleId="schedulePreview.input.loanAmount" name="paymentDataBeans" indexed="true" property="amount" size="10" />
+                                                                <html-el:text styleId="schedulePreview.input.loanAmount" name="paymentDataBeans" indexed="true" property="amount" size="10" />
                                                             </td>
                                                         </tr>
                                                         </c:forEach>

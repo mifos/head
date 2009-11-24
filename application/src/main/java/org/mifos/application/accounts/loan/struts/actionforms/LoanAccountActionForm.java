@@ -1055,6 +1055,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
+        Locale locale = getUserContext(request).getPreferredLocale();
         try {
             if (paymentDataBeans == null || paymentDataBeans.size() <= 0)
                 return;
@@ -1071,9 +1072,10 @@ public class LoanAccountActionForm extends BaseActionForm {
                         LoanExceptionConstants.INVALIDTRANSACTIONDATE));
                     continue;
                 }
+                
+                validateTotalAmount(errors, template.getTotalAmount().toString(), locale );
                 // User has enter a payment for future date
-                validateTransactionDate(errors, template, getDisbursementDateValue(getUserContext(request)
-                        .getPreferredLocale()));
+                validateTransactionDate(errors, template, getDisbursementDateValue(locale));
             }
         } catch (InvalidDateException invalidDate) {
                 errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
@@ -1087,6 +1089,15 @@ public class LoanAccountActionForm extends BaseActionForm {
         } catch (ServiceException e) {
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, new ActionMessage(
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+        }
+    }
+    
+    protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(amount, LoanConstants.LOAN_AMOUNT_KEY, errors, locale, 
+                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
         }
     }
 
