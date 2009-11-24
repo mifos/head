@@ -1,7 +1,8 @@
 #!/bin/bash
 set -o errexit
 
-# Create new deployment root for a Mifos Hudson build job
+# Create new deployment root for a Mifos Hudson build job. Uses a war built off
+# the trunk and deploys into an instance configured for a different language.
 
 deployNickname=$1
 if [ -z "$deployNickname" ]

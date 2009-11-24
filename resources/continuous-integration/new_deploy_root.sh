@@ -11,7 +11,7 @@ then
     exit 1
 fi
 
-deployRoot=$HOME/mifos-$deployNickname-deploy
+deployRoot=$HOME/deploys/mifos-$deployNickname-deploy
 if [ -e $deployRoot ]
 then
     echo ERROR: $deployRoot already exists.
