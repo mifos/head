@@ -132,6 +132,8 @@ public interface LoanConstants {
     public static final String ERROR = "error";
 
     public static final String LOAN_AMOUNT_KEY = "loan.amount";
+    public static final String LOAN_ADDITIONAL_FEE_KEY = "loan.additionalFee";
+    public static final String LOAN_DEFAULT_FEE_KEY = "loan.defaultFee";
     public static final String LOAN_INTEREST_RATE_KEY = "loan.interestRate";
     public static final String LOANACCOUNTOWNER = "loanAccountOwner";
     public static final String CUSTOMER = "customer";

@@ -600,7 +600,7 @@ explanation of the license and how it is applied.
 														<c:out value="${adminFees.amount}" />
 													</c:when>
 													<c:otherwise>
-														<mifos:mifosdecimalinput
+														<html-el:text
 															styleId="loancreationdetails.input.defaultFeeAmount"
 															property="defaultFee[${ctr1}].amount"
 															value="${adminFees.amount}" style="width:135px;" />
@@ -655,9 +655,9 @@ explanation of the license and how it is applied.
 										</mifos:select></td>
 										<td align="left" width="6%" class="fontnormal"><span id="loancreationdetails.label.feeAmount"><mifos:mifoslabel
 											name="loan.amount" /></span>:</td>
-										<td align="left" class="fontnormal"><mifos:mifosdecimalinput
+										<td align="left" class="fontnormal"><html-el:text
 											styleId="loancreationdetails.input.feeAmount"
-											property='selectedFee[${ctr2}].amount' decimalFmt="10.5"
+											property='selectedFee[${ctr2}].amount' 
 											style="width:70px;" /></td>
 										<td><SPAN id="feeFormulaSpan${loopStatus2.index}"
 											class="fontnormal"></SPAN></td>

@@ -629,13 +629,15 @@ public class LoanAccountActionForm extends BaseActionForm {
                 checkValidationForSchedulePreview(errors, request);
                 validateLoanAmount(errors, locale);
                 validateInterest(errors, locale);
-              //TODO Add defaultFee and additionalFee validation
+                validateDefaultFee(errors, locale);
+                validateAdditionalFee(errors, locale);
             } else if (method.equals(Methods.managePreview.toString())) {
                 checkValidationForManagePreview(errors, request);
                 validateLoanAmount(errors, locale);
                 validateInterest(errors, locale);
             } else if (method.equals(Methods.preview.toString())) {
                 checkValidationForPreview(errors, request);
+                
             }
         } catch (ApplicationException ae) {
             // Discard other errors (is that right?)
@@ -667,6 +669,32 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
     
+    protected void validateDefaultFee(ActionErrors errors, Locale locale) {
+        for (FeeView defaultFee : defaultFees) {
+            DoubleConversionResult conversionResult = validateAmount(defaultFee.getAmount(),
+                    LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+            if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                        lookupLocalizedPropertyValue(LoanConstants.LOAN_DEFAULT_FEE_KEY, locale,
+                                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            }
+        }
+    }
+
+    protected void validateAdditionalFee(ActionErrors errors, Locale locale) {
+        for (FeeView additionalFee : additionalFees) {
+            if (additionalFee.getAmount() != null && !additionalFee.getAmount().equals("")) {
+                DoubleConversionResult conversionResult = validateAmount(additionalFee.getAmount(),
+                        LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                    addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
+                            LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
+                                    LoanConstants.LOAN_ADDITIONAL_FEE_KEY, locale,
+                                    FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                }
+            }
+        }
+    }
     
     // TODO: use localized strings for error messages rather than hardcoded
     private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
