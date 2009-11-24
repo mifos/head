@@ -489,7 +489,7 @@ public class ClientCustActionForm extends CustomerActionForm {
                 if (DateUtils.whichDirection(date) > 0) {
                     errors.add(ClientConstants.FUTURE_DOB_EXCEPTION, new ActionMessage(
                             ClientConstants.FUTURE_DOB_EXCEPTION));
-                } else if (!ClientRules.isAgeCheckDisabled()) {
+                } else if (ClientRules.isAgeCheckEnabled()) {
                     if (getAge() > ClientRules.getMaximumAgeForNewClient()
                             || getAge() < ClientRules.getMinimumAgeForNewClient()) {
                         errors.add(ClientConstants.INVALID_AGE, new ActionMessage(ClientConstants.INVALID_AGE,

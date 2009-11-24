@@ -47,7 +47,7 @@ public class ClientRules {
     private static Boolean clientCanExistOutsideGroup;
     private static int minimumAgeForNewClient;
     private static int maximumAgeForNewClient;
-    private static boolean ageCheckDisabled;
+    private static boolean ageCheckEnabled;
     private static int maximumNumberOfFamilyMembers;
     public static int getMaximumNumberOfFamilyMembers() {
         return maximumNumberOfFamilyMembers;
@@ -282,16 +282,14 @@ public class ClientRules {
                     + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
         }
 
-        if ((getMaximumAgeForNewClient() == 0) && (getMinimumAgeForNewClient() == 0)) {
-            setAgeCheckDisabled(true);
-        }
+        updateAgeCheckEnabled();
     }
 
-    private static void updateAgeCheckDisabled() {
+    private static void updateAgeCheckEnabled() {
         if ((getMaximumAgeForNewClient() == 0) && (getMinimumAgeForNewClient() == 0)) {
-            setAgeCheckDisabled(true);
+            setAgeCheckEnabled(false);
         } else {
-            setAgeCheckDisabled(false);           
+            setAgeCheckEnabled(true);           
         }
     }
     
@@ -301,7 +299,7 @@ public class ClientRules {
 
     public static void setMinimumAgeForNewClient(int minimumAgeForNewClient) {
         ClientRules.minimumAgeForNewClient = minimumAgeForNewClient;
-        updateAgeCheckDisabled();        
+        updateAgeCheckEnabled();        
     }
 
     public static int getMaximumAgeForNewClient() {
@@ -310,15 +308,15 @@ public class ClientRules {
 
     public static void setMaximumAgeForNewClient(int maximumAgeForNewClient) {
         ClientRules.maximumAgeForNewClient = maximumAgeForNewClient;
-        updateAgeCheckDisabled();        
+        updateAgeCheckEnabled();        
     }
 
-    public static boolean isAgeCheckDisabled() {
-        return ageCheckDisabled;
+    public static boolean isAgeCheckEnabled() {
+        return ageCheckEnabled;
     }
 
-    public static void setAgeCheckDisabled(boolean ageCheckDisabled) {
-        ClientRules.ageCheckDisabled = ageCheckDisabled;
+    public static void setAgeCheckEnabled(boolean ageCheckEnabled) {
+        ClientRules.ageCheckEnabled = ageCheckEnabled;
     }
 
     /*

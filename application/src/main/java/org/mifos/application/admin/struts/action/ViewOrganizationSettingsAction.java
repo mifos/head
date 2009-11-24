@@ -132,7 +132,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         clientRules.setProperty("loansForGroups", booleanToYesNo(ClientRules.getGroupCanApplyLoans()));
         clientRules.setProperty("clientsOutsideGroups", booleanToYesNo(ClientRules.getClientCanExistOutsideGroup()));
         clientRules.setProperty("nameSequence", StringUtils.join(ClientRules.getNameSequence(), DELIMITER));
-        clientRules.setProperty("isAgeCheckDisabled",booleanToYesNo(ClientRules.isAgeCheckDisabled()));
+        clientRules.setProperty("isAgeCheckEnabled",booleanToYesNo(ClientRules.isAgeCheckEnabled()));
         clientRules.setProperty("maximumAge", String.valueOf(ClientRules.getMaximumAgeForNewClient()));
         clientRules.setProperty("minimumAge", String.valueOf(ClientRules.getMinimumAgeForNewClient()));
         clientRules.setProperty("isFamilyDetailsRequired",booleanToYesNo(ClientRules.isFamilyDetailsRequired()));

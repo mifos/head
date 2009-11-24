@@ -32,7 +32,6 @@ import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mortbay.http.handler.SetResponseHeadersHandler;
 import org.testng.annotations.Test;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
@@ -46,7 +45,7 @@ public class ClientCustActionFormTest extends TestCase {
     private ActionErrors errors;
     private int minimumAgeForNewClientBeforeTestRun;
     private int maximumAgeForNewClientBeforeTestRun;
-    private boolean ageCheckDisabledBeforeTestRun;
+    private boolean ageCheckSettingBeforeTestRun;
 
     @Override
     public void setUp() throws Exception {
@@ -69,7 +68,7 @@ public class ClientCustActionFormTest extends TestCase {
         ClientRules.init();
         minimumAgeForNewClientBeforeTestRun = ClientRules.getMinimumAgeForNewClient();
         maximumAgeForNewClientBeforeTestRun = ClientRules.getMaximumAgeForNewClient();
-        ageCheckDisabledBeforeTestRun = ClientRules.isAgeCheckDisabled();
+        ageCheckSettingBeforeTestRun = ClientRules.isAgeCheckEnabled();
         
     }
 
@@ -114,10 +113,10 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testLessThanMinimumAge() throws Exception {
-        if(ClientRules.isAgeCheckDisabled()){
+        if(!ClientRules.isAgeCheckEnabled()){
             ClientRules.setMaximumAgeForNewClient(60);
             ClientRules.setMinimumAgeForNewClient(18);
-            ClientRules.setAgeCheckDisabled(false);
+            ClientRules.setAgeCheckEnabled(true);
          }
 
         form.setDateOfBirthDD("2");
@@ -131,10 +130,10 @@ public class ClientCustActionFormTest extends TestCase {
     }
 
     public void testMoreThanMaximumAge() throws Exception {
-        if(ClientRules.isAgeCheckDisabled()){
+        if(!ClientRules.isAgeCheckEnabled()){
             ClientRules.setMaximumAgeForNewClient(60);
             ClientRules.setMinimumAgeForNewClient(18);
-            ClientRules.setAgeCheckDisabled(false);
+            ClientRules.setAgeCheckEnabled(true);
          }
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
@@ -319,7 +318,7 @@ public class ClientCustActionFormTest extends TestCase {
         errors = null;
         ClientRules.setMinimumAgeForNewClient(minimumAgeForNewClientBeforeTestRun);
         ClientRules.setMaximumAgeForNewClient(maximumAgeForNewClientBeforeTestRun);
-        ClientRules.setAgeCheckDisabled(ageCheckDisabledBeforeTestRun);
+        ClientRules.setAgeCheckEnabled(ageCheckSettingBeforeTestRun);
     }
 
 }
