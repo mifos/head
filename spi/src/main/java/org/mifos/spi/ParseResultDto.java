@@ -25,11 +25,20 @@ import java.util.List;
 import org.mifos.accounts.api.AccountPaymentParametersDto;
 
 public class ParseResultDto {
-    public final List<String> parseErrors;
-    public final List<AccountPaymentParametersDto> successfullyParsedRows;
+    private final List<String> parseErrors;
+    private final List<AccountPaymentParametersDto> successfullyParsedRows;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;
         this.successfullyParsedRows = successfullyParsedRows;
     }
+
+    public List<String> getParseErrors() {
+        return this.parseErrors;
+    }
+
+    public List<AccountPaymentParametersDto> getSuccessfullyParsedRows() {
+        return this.successfullyParsedRows;
+    }
+    
 }

@@ -104,17 +104,17 @@ public class ImportTransactionsAction extends BaseAction {
         final ParseResultDto importResult = ti.parse(importTransactionsFile.getInputStream());
 
         final List<String> errorsForDisplay = new ArrayList<String>();
-        if (!importResult.parseErrors.isEmpty()) {
-            errorsForDisplay.addAll(importResult.parseErrors);
+        if (!importResult.getParseErrors().isEmpty()) {
+            errorsForDisplay.addAll(importResult.getParseErrors());
         }
 
         boolean submitButtonDisabled = false;
-        if (importResult.successfullyParsedRows.size() <= 0) {
+        if (importResult.getSuccessfullyParsedRows().size() <= 0) {
             submitButtonDisabled = true;
         }
 
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
-        request.setAttribute("numSuccessfulRows", importResult.successfullyParsedRows.size());
+        request.setAttribute("numSuccessfulRows", importResult.getSuccessfullyParsedRows().size());
         request.setAttribute("submitButtonDisabled", submitButtonDisabled);
 
         stream.close();
@@ -160,8 +160,8 @@ public class ImportTransactionsAction extends BaseAction {
         final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
         final String importTransactionsFileName = importTransactionsForm.getImportTransactionsFile().getFileName();
 
-        if (null != importResult.parseErrors && !importResult.parseErrors.isEmpty()) {
-            for (String error : importResult.parseErrors) {
+        if (null != importResult.getParseErrors() && !importResult.getParseErrors().isEmpty()) {
+            for (String error : importResult.getParseErrors()) {
                 logger.warn(importTransactionsFileName + ": " + error);
             }
         }
@@ -172,7 +172,7 @@ public class ImportTransactionsAction extends BaseAction {
         ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacade();
         importedFilesServiceFacade.saveImportedFileName(userContext, importTransactionsFileName);
 
-        logger.info(importResult.successfullyParsedRows.size() + " transaction(s) imported from "
+        logger.info(importResult.getSuccessfullyParsedRows().size() + " transaction(s) imported from "
                 + importTransactionsFileName + ".");
 
         new File(tempFilename).delete();
