@@ -198,7 +198,7 @@ explanation of the license and how it is applied.
 												<c:out value="${clientDetail.client.office.officeName}"/> / <c:out value="${clientDetail.client.parentCustomer.parentCustomer.displayName}"/> / <c:out value="${clientDetail.client.parentCustomer.displayName}"/>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
-												<mifos:mifosdecimalinput 
+												<html-el:text 
 												styleId="CreateMultipleLoanAccountsSearchResults.input.loanAmount"
 												property="clientDetails[${loopStatus.index}].loanAmount"/>
 											</td>

@@ -52,6 +52,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Predicate;
@@ -159,6 +160,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
                         CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request));
             } else if (method.equals(Methods.create.toString())) {
                 request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+                validateLoanAmounts(errors, this.getUserContext(request).getPreferredLocale(), clientDetails);
                 checkValidationForCreate(errors, request);
             } else if (method.equals(Methods.getLoanOfficers.toString())) {
                 checkValidationForBranchOffice(errors, getUserContext(request));
@@ -185,6 +187,18 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         return errors;
     }
 
+    protected void validateLoanAmounts(ActionErrors errors, Locale locale, List<MultipleLoanCreationViewHelper> clientDetails) {
+        for (MultipleLoanCreationViewHelper clientDetail : clientDetails) {
+            DoubleConversionResult conversionResult = validateAmount(clientDetail.getLoanAmount(),
+                    LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+            if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                        lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
+                                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            }
+        }
+    }
+    
     private void checkValidationForCreate(ActionErrors errors, HttpServletRequest request) throws PageExpiredException,
             ServiceException {
         logger.debug("inside checkValidationForCreate method");
