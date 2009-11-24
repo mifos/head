@@ -822,7 +822,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
         LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request);
 
-        if (!new ConfigurationBusinessService().isGlimEnabled()) {
+        if (!(configService.isGlimEnabled() && getCustomer(request).isGroup())) {
             checkForMinMax(errors, loanAmount, amountRange, resources.getString("loan.amount"));
         }
         checkForMinMax(errors, interestRate, loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
