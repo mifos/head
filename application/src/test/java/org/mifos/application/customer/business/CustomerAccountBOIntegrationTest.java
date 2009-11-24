@@ -1013,9 +1013,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     public void testAccountExceptionThrownForAPaymentNotEqualToTheTotalOutstandingCustomerAccountAmount()
             throws Exception {
         createCenter();
-        String expectedErrorMessage = "Attempting to pay a customer account balance that does not equal the total outstanding amount for customer: "
-                + center.getGlobalCustNum();
-        verifyExpectedMessageThrown(center, new Money("299.99"), 14, expectedErrorMessage);
+        verifyExpectedDetailMessageThrown(center, new Money("299.99"), 14, "errors.paymentmismatch");
     }
 
     public void testAccountExceptionThrownForAPaymentWithNoOutstandingCustomerAccountInstallments() throws Exception {
@@ -1024,6 +1022,25 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 "Trying to pay account charges before the due date.");
     }
 
+    private void verifyExpectedDetailMessageThrown(final CustomerBO customer, final Money paymentAmount,
+            final Integer numberOfDaysForward, final String expectedErrorMessage) throws Exception {
+        CustomerAccountBO customerAccount = customer.getCustomerAccount();
+
+        Date transactionDate = incrementCurrentDate(numberOfDaysForward);
+        PaymentData paymentData = PaymentData.createPaymentData(paymentAmount, customer.getPersonnel(), Short
+                .valueOf("1"), transactionDate);
+        paymentData.setCustomer(customer);
+
+        String actualErrorMessage = "No Error Message";
+        try {
+            customerAccount.makePayment(paymentData);
+        } catch (AccountException e) {
+            actualErrorMessage = e.getMessage();
+        }
+        Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
+    }
+
+    
     private void verifyExpectedMessageThrown(final CustomerBO customer, final Money paymentAmount,
             final Integer numberOfDaysForward, final String expectedErrorMessage) throws Exception {
         CustomerAccountBO customerAccount = customer.getCustomerAccount();
@@ -1042,6 +1059,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
+    
     public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenOnlyCustomerAccountFeesAreDue() throws Exception {
         createCenter();
         CustomerAccountBO customerAccount = center.getCustomerAccount();

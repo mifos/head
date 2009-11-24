@@ -59,7 +59,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         AccountPaymentDto accountPaymentDto = new AccountPaymentDto(
                 AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId()),
                 account.getVersionNo(), constructPaymentTypeList(paymentType, localeId),
-                account.getTotalAmountDue(), accountUser);
+                account.getTotalPaymentDue(), accountUser);
         
         return accountPaymentDto;
     }

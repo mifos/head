@@ -206,9 +206,8 @@ public class CustomerAccountBO extends AccountBO {
         }
         if (!totalPaid.equals(totalAllUnpaidInstallments)) {
             throw new AccountException(
-                    "errors.update",
-                    new String[] { "Attempting to pay a customer account balance that does not equal the total outstanding amount for customer: "
-                            + paymentData.getCustomer().getGlobalCustNum() });
+                    "errors.paymentmismatch",
+                    new String[] { totalPaid.toString(), totalAllUnpaidInstallments.toString() });
         }
 
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
