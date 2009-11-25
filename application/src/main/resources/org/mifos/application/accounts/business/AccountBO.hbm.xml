@@ -784,6 +784,11 @@
 	</sql-query>
 	
 	<!-- customer account queries for collection sheet -->
+	
+	<!-- 
+	Note: because of issue 2595 "and cs.currency_id is null" 
+	has been added to this query 
+	Could be taken out if data on customer_schedule pre about 2008-01-05 is removed -->
 	<sql-query name="findAccountCollectionsOnCustomerAccountForCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
@@ -806,10 +811,15 @@
 			and c.search_id like :SEARCH_ID
 			and c.branch_id = :BRANCH_ID
 			and c.status_id in (3,4,9,10,13)
+			and cs.currency_id is null
 			group by c.customer_id, a.account_id, cs.misc_fees_currency_id
 		]]>
 	</sql-query>
 
+	<!-- 
+	Note: because of issue 2595 "and cs.currency_id is null" 
+	has been added to this query 
+	Could be taken out if data on customer_schedule pre about 2008-01-05 is removed -->
 	<sql-query name="findAccountCollectionsOnCustomerAccountForTopCustomerOfHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
@@ -831,6 +841,7 @@
 			and cs.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
+			and cs.currency_id is null
 			group by c.customer_id, a.account_id, cs.misc_fees_currency_id
 		]]>
 	</sql-query>
