@@ -21,7 +21,7 @@ This file describes how to install Mifos for use in a production environment.
    http://www.mifos.org/knowledge/support/deploying-mifos/upgrading-mifos
 
    For upgrade instructions for this release see:
-   http://www.mifos.org/knowledge/support/deploying-mifos/upgrade-instructions-for-version-1.3
+   http://www.mifos.org/knowledge/support/deploying-mifos/upgradeto14
 
 3. Configuring MySQL
     3.1. Setting Database Parameters
@@ -120,23 +120,23 @@ This file describes how to install Mifos for use in a production environment.
          "trapdoor".
 
     7.2. Release Notes -
-         http://mifos.org/developers/wiki/ReleaseNotes/V13
+         http://www.mifos.org/developers/wiki/ReleaseNotes/V14
 
     7.3. System Recommendations (hardware, networking) -
-         http://mifos.org/developers/wiki/MifosSystemRecommendations
+    	 http://www.mifos.org/developers/wiki/MifosSystemRecommendations
 
     7.4. Ubuntu Install Guide -
-         http://mifos.org/developers/wiki/MifosUbuntuInstall
+         http://www.mifos.org/developers/wiki/MifosUbuntuInstall
          This is an installation guide describing how to install Mifos by
          building it from the source code.
 
     7.5. Ubuntu Quick Install Guide -
-         http://mifos.org/developers/wiki/UbuntuWARInstall
+         http://www.mifos.org/developers/wiki/UbuntuWARInstall
          This is an installation guide describing how to install Mifos from the
          WAR file, similar to this INSTALL file.
 
     7.6. Windows Install Guide -
-         http://mifos.org/developers/install-mifos/install-windows
+         http://www.mifos.org/developers/install-mifos/install-windows
          This is an installation guide describing how to install Mifos by
          building it from the source code.
 
