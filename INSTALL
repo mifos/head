@@ -11,8 +11,7 @@ This file describes how to install Mifos for use in a production environment.
      * MySQL - Community Edition 5.1.31
      * Apache Tomcat - 6.0.18
 
-   Note: Java 1.6 is not supported in earlier versions of Mifos including
-   Mifos 1.2.  Also, while most Mifos testing has been done using the JDK,
+   Note: While most Mifos testing has been done using the JDK,
    only the JRE is needed to run Mifos.
 
 2. Upgrading Mifos
