@@ -60,7 +60,6 @@ import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -105,7 +104,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.application.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -1518,7 +1516,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         clientDetails1.setClientId("1");
         clientDetails1.setClientName("client 1");
         clientDetails1.setBusinessActivity("3");
-        clientDetails1.setLoanAmount(new Double(100));
+        clientDetails1.setLoanAmount("100.0");
 
         LoanAccountDetailsViewHelper clientDetails2 = new LoanAccountDetailsViewHelper();
         clientDetails2.setClientId("2");

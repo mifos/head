@@ -20,17 +20,15 @@
 
 package org.mifos.application.accounts.loan.util.helpers;
 
-import org.mifos.framework.util.helpers.NumberUtils;
-
 public class LoanAccountActionFormTestConstants {
 
     public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL = new LoanAccountDetailsViewHelper(
             "1", null, null);
 
     public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO = new LoanAccountDetailsViewHelper(
-            "1", null, NumberUtils.DOUBLE_ZERO);
+            "1", null, "0.0");
     public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100 = new LoanAccountDetailsViewHelper(
-            "1", null, Double.valueOf(100));
+            "1", null, "100.0");
     public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL = new LoanAccountDetailsViewHelper(
             "1", null, null);
     public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE = new LoanAccountDetailsViewHelper(
@@ -43,5 +41,5 @@ public class LoanAccountActionFormTestConstants {
             "3", null, null);
 
     public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_200 = new LoanAccountDetailsViewHelper(
-            "2", "1", Double.valueOf(200), "1");
+            "2", "1", "200.0", "1");
 }

@@ -53,7 +53,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
         List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
         LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsViewHelper
-                .createInstanceForTest("3", "2", Double.valueOf(300), "2");
+                .createInstanceForTest("3", "2", "300.0", "2");
         clientDetails.add(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
         List<LoanBO> loans = new ArrayList<LoanBO>();
         glimLoanUpdaterMock.createIndividualLoan(loanAccountActionForm, parentLoanMock, true,
@@ -77,7 +77,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
         List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
         LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsViewHelper
-                .createInstanceForTest("3", "2", Double.valueOf(300), "2");
+                .createInstanceForTest("3", "2", "300.0", "2");
         clientDetails.add(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
         List<LoanBO> loans = new ArrayList<LoanBO>();
         loans.add(loanMock);

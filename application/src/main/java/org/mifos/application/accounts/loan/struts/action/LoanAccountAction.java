@@ -166,6 +166,7 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -348,8 +349,8 @@ public class LoanAccountAction extends AccountAppAction {
                 loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
                 loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
                 loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
-                        && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
-                        .getAmountDoubleValue() : Double.valueOf(0.0));
+                        && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount().toString()
+                         : "0.0");
 
                 if (null != individualLoan.getBusinessActivityId()) {
                     loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());
@@ -667,7 +668,7 @@ public class LoanAccountAction extends AccountAppAction {
         for (LoanAccountDetailsViewHelper loanAccount : clientDetails) {
             if (ids_clients_selected.contains(loanAccount.getClientId())) {
                 if (loanAccount.getLoanAmount() != null) {
-                    totalAmount = totalAmount + loanAccount.getLoanAmount().doubleValue();
+                    totalAmount = totalAmount + new LocalizationConverter().getDoubleValueForCurrentLocale(loanAccount.getLoanAmount());
                 }
             }
 
@@ -897,7 +898,7 @@ public class LoanAccountAction extends AccountAppAction {
                             tempLoanAccount.setClientId(clt.getGlobalCustNum().toString());
                             tempLoanAccount.setClientName(clt.getDisplayName());
                             tempLoanAccount.setLoanAmount((null != account.getLoanAmount() && !EMPTY.equals(account
-                                    .getLoanAmount().toString()) ? account.getLoanAmount() : Double.valueOf(0.0)));
+                                    .getLoanAmount().toString()) ? account.getLoanAmount() : "0.0"));
 
                             List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
                                     .getAttribute("BusinessActivities", request);
@@ -1178,8 +1179,7 @@ public class LoanAccountAction extends AccountAppAction {
                     clientDetail.setBusinessActivityName(businessActivityElement.getName());
                 }
 
-                clientDetail.setLoanAmount(loanAccount.getLoanAmount() != null ? loanAccount.getLoanAmount()
-                        .getAmountDoubleValue() : new Double(0));
+                clientDetail.setLoanAmount(loanAccount.getLoanAmount() != null ? loanAccount.getLoanAmount().toString() : "0.0");
             }
             clientDetails.add(clientDetail);
         }

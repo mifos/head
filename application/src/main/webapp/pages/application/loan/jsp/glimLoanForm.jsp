@@ -98,7 +98,7 @@ explanation of the license and how it is applied.
 					<br>
 					</c:if>										
 					</td>
-					<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
+					<td width="31%" valign="top" class="drawtablerow"><html-el:text
 						styleId="glimLoanForm.input.loanAmount"
 						property="clientDetails[${indice}].loanAmount" readonly="${loanfn:isDisabledWhileEditingGlim('clientDetails.loanAmount',accountState)}"
 						 onchange="CalculateTotalLoanAmount(CLIENTS_COUNT);"/></td>
@@ -121,7 +121,6 @@ explanation of the license and how it is applied.
 									</mifos:select>
 					       </c:otherwise>
 					   </c:choose>
-</td>										
 				</tr>
 				<script type="text/javascript">CLIENTS_COUNT++;</script>
 			</c:forEach>
@@ -131,7 +130,7 @@ explanation of the license and how it is applied.
 				<tr>
 					<td align="right" class="fontnormalbold" width="28%"><span id="glimLoanForm.label.totalAmount"><mifos:mifoslabel
 						name="loan.totalamount" /></span>:</td>
-					<td valign="top" class="fontnormal"><mifos:mifosdecimalinput
+					<td valign="top" class="fontnormal"><html-el:text
 						property="loanAmount" value="0.0" readonly="true"  styleId="sumLoanAmount"  />
 					<mifos:mifoslabel
 						name="loan.allowed_amount" /> &nbsp; <c:out

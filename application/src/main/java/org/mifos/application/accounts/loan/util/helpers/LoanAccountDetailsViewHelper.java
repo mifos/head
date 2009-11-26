@@ -23,6 +23,7 @@ package org.mifos.application.accounts.loan.util.helpers;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class LoanAccountDetailsViewHelper extends BusinessObject {
 
@@ -34,14 +35,14 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
         this(null);
     }
 
-    LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount) {
+    LoanAccountDetailsViewHelper(String clientId, String businessActivity, String loanAmount) {
         this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
         this.loanAmount = loanAmount;
     }
 
-    LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount, String accountId) {
+    LoanAccountDetailsViewHelper(String clientId, String businessActivity, String loanAmount, String accountId) {
         this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
@@ -61,7 +62,7 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
 
     private String loanPurpose;
 
-    private Double loanAmount;
+    private String loanAmount;
 
     private String businessActivity;
 
@@ -75,11 +76,11 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
         this.businessActivityName = businessActivityName;
     }
 
-    public Double getLoanAmount() {
+    public String getLoanAmount() {
         return loanAmount;
     }
 
-    public void setLoanAmount(Double loanAmount) {
+    public void setLoanAmount(String loanAmount) {
         this.loanAmount = loanAmount;
     }
 
@@ -140,7 +141,9 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
     }
 
     public boolean isAmountZeroOrNull() {
-        return loanAmount == null || (Double.compare(loanAmount, NumberUtils.DOUBLE_ZERO) == 0);
+        return loanAmount == null
+                || (Double.compare(new LocalizationConverter().getDoubleValueForCurrentLocale(loanAmount),
+                        NumberUtils.DOUBLE_ZERO) == 0);
     }
 
     @Override
@@ -217,7 +220,7 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
     }
 
     public static LoanAccountDetailsViewHelper createInstanceForTest(String clientId, String businessActivity,
-            Double loanAmount, String accountId) {
+            String loanAmount, String accountId) {
         return new LoanAccountDetailsViewHelper(clientId, businessActivity, loanAmount, accountId);
     }
 }
