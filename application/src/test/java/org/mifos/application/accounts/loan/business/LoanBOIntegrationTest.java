@@ -3460,7 +3460,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
          * year in the future (it really means an end date less than the end of
          * next year).
          */
-        long sampleTime = new DateMidnight(2009, 11, 25).getMillis();
+        long sampleTime = new DateMidnight().plusDays(1).getMillis();
 
         MeetingBO meeting = TestObjectFactory.getNewMeeting(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
         Calendar meetingStart = Calendar.getInstance();
