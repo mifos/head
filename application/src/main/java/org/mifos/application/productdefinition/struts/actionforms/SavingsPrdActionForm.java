@@ -34,7 +34,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.Methods;
@@ -47,6 +46,7 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.security.util.UserContext;
@@ -270,8 +270,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
     }
 
     public SavingsType getSavingsTypeValue() {
-        return (StringUtils.isNotBlank(getSavingsType())) ? SavingsType
-                .fromInt(getShortValue(getSavingsType())) : null;
+        return (StringUtils.isNotBlank(getSavingsType())) ? SavingsType.fromInt(getShortValue(getSavingsType())) : null;
     }
 
     public Money getRecommendedAmountValue() {
@@ -383,35 +382,10 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
                 if (method.equals(Methods.preview.toString())) {
                     errors.add(super.validate(mapping, request));
-                    Date startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
-                    Date endingDate = getEndDateValue(getUserContext(request).getPreferredLocale());
-                    if (startingDate != null
-                            && ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime()).compareTo(
-                                    DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils
-                                    .getDateWithoutTimeStamp(startingDate.getTime()).compareTo(
-                                            DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0))) {
-                        addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
-                    }
-                    if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0)
-                        addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
-                    if (getSavingsTypeValue() != null && getSavingsTypeValue().equals(SavingsType.MANDATORY)
-                            && getRecommendedAmountValue().getAmountDoubleValue() <= 0.0) {
-                        addError(errors, "recommendedAmount", ProductDefinitionConstants.ERRORMANDAMOUNT);
-                    }
-
-                    validateInterestRate(errors, request);
-                    validateInterestGLCode(request, errors);
+                    checkPreviewValidation(errors, request);
                 } else if (method.equals(Methods.previewManage.toString())) {
                     errors.add(super.validate(mapping, request));
-                    validateMandatoryAmount(errors);
-                    validateInterestRate(errors, request);
-                    Date startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
-                    Date endingDate = getEndDateValue(getUserContext(request).getPreferredLocale());
-                    SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(
-                            Constants.BUSINESS_KEY, request);
-                    validateStartDate(errors, savingsOffering.getStartDate(), startingDate);
-                    validateEndDateAgainstCurrentDate(errors, startingDate, savingsOffering.getEndDate(), endingDate);
-                    validateInterestGLCode(request, errors);
+                    checkPreviewManageValidation(errors, request);
                 }
             }
         } catch (ApplicationException ae) {
@@ -425,9 +399,76 @@ public class SavingsPrdActionForm extends BaseActionForm {
         return errors;
     }
 
+    private void checkPreviewValidation(ActionErrors errors, HttpServletRequest request) throws ApplicationException {
+        Date startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
+        Date endingDate = getEndDateValue(getUserContext(request).getPreferredLocale());
+        //validate start date
+        if (startingDate != null
+                && ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime()).compareTo(
+                        DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils.getDateWithoutTimeStamp(
+                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0))) {
+            addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+        }
+      //validate end date
+        if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0)
+            addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
+
+        validateRecommendedAmount(errors, request);
+        validateMaxAmntWithdrawl(errors, request);
+        validateInterestRate(errors, request);
+        validateMinAmntForInt(errors, request);
+        validateInterestGLCode(request, errors);
+    }
+
+    private void checkPreviewManageValidation(ActionErrors errors, HttpServletRequest request) throws ApplicationException {
+        validateMandatoryAmount(errors);
+        validateInterestRate(errors, request);
+        Date startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
+        Date endingDate = getEndDateValue(getUserContext(request).getPreferredLocale());
+        SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(
+                Constants.BUSINESS_KEY, request);
+        validateStartDate(errors, savingsOffering.getStartDate(), startingDate);
+        validateEndDateAgainstCurrentDate(errors, startingDate, savingsOffering.getEndDate(), endingDate);
+        validateInterestGLCode(request, errors);
+    }
+
+    private void validateRecommendedAmount(ActionErrors errors, HttpServletRequest request) {
+        Locale locale = getUserContext(request).getPreferredLocale();
+        if (getSavingsTypeValue() != null && getSavingsTypeValue().equals(SavingsType.MANDATORY)
+                && getRecommendedAmountValue().getAmountDoubleValue() <= 0.0) {
+            addError(errors, "recommendedAmount", ProductDefinitionConstants.ERRORMANDAMOUNT);
+            return;
+        }
+        if (getRecommendedAmount() != null && !getRecommendedAmount().equals("")) {
+            if (getSavingsTypeValue() != null && getSavingsTypeValue().equals(SavingsType.MANDATORY)) {
+                validateAmount(getRecommendedAmount(), ProductDefinitionConstants.MANDATORY_AMOUNT_FOR_DEPOSIT_KEY,
+                        errors, locale, FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
+            } else {
+                validateAmount(getRecommendedAmount(), ProductDefinitionConstants.RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY,
+                        errors, locale, FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
+            }
+        }
+
+    }
+    
+    private void validateMaxAmntWithdrawl(ActionErrors errors, HttpServletRequest request) {
+        Locale locale = getUserContext(request).getPreferredLocale();
+        if(getMaxAmntWithdrawl() != null && !getMaxAmntWithdrawl().equals("")){
+            validateAmount(getMaxAmntWithdrawl(), ProductDefinitionConstants.MAX_AMOUNT_WITHDRAWL_KEY, errors, locale, 
+                    FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
+        }
+    }
+    
+    private void validateMinAmntForInt(ActionErrors errors, HttpServletRequest request) {
+        Locale locale = getUserContext(request).getPreferredLocale();
+        if(getMinAmntForInt() != null && !getMinAmntForInt().equals("")){
+            validateAmount(getMinAmntForInt(), ProductDefinitionConstants.MIN_BALANCE_FOR_CALC_KEY, errors, locale, 
+                    FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
+        }
+    }
+    
     private void validateInterestRate(ActionErrors errors, HttpServletRequest request) {
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
+        Locale locale = getUserContext(request).getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,
                 locale);
         String prdrate = resources.getString("product.prdrate");
@@ -442,10 +483,19 @@ public class SavingsPrdActionForm extends BaseActionForm {
                     + " " + prdrate);
         } else {
             Double intRate = getInterestRateValue();
+            // FIXME: hardcoded limit for maximum interest rate.
             if (intRate != null && intRate > 100)
                 addError(errors, "interestRate", ProductDefinitionConstants.ERRORINTRATE, getLabel(
                         ConfigurationConstants.INTEREST, request)
                         + " " + prdrate);
+           
+            DoubleConversionResult conversionResult = validateInterest(getInterestRate(),
+                    ProductDefinitionConstants.ERRORINTRATE, errors, locale, FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
+            if (conversionResult.getErrors().size() == 0 && conversionResult.getDoubleValue() < 0.0) {
+                addError(errors, ProductDefinitionConstants.ERRORINTRATE, ProductDefinitionConstants.ERROR_MUST_NOT_BE_NEGATIVE,
+                        lookupLocalizedPropertyValue(ProductDefinitionConstants.ERRORINTRATE, locale,
+                                FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE));
+            }
         }
         if (StringUtils.isBlank(getInterestCalcType()))
             addError(errors, "interestCalcType", ProductDefinitionConstants.ERROR_SELECT, balanceInterest
@@ -478,9 +528,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
     }
 
-    private void validateStartDate(ActionErrors errors, java.util.Date oldStartDate, Date changedStartDate)
-            throws ProductDefinitionException {
-
+    private void validateStartDate(ActionErrors errors, java.util.Date oldStartDate, Date changedStartDate) {
         if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime()).compareTo(
                 DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
                 && (changedStartDate != null && DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime()).compareTo(
@@ -509,8 +557,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
     }
 
-    private void validateStartDateAgainstCurrentDate(ActionErrors errors, Date startDate)
-            throws ProductDefinitionException {
+    private void validateStartDateAgainstCurrentDate(ActionErrors errors, Date startDate) {
         if (DateUtils.getDateWithoutTimeStamp(startDate.getTime())
                 .compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
             addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
@@ -518,14 +565,13 @@ public class SavingsPrdActionForm extends BaseActionForm {
     }
 
     private void validateEndDateAgainstCurrentDate(ActionErrors errors, Date startDate, java.util.Date oldEndDate,
-            Date endDate) throws ProductDefinitionException {
+            Date endDate) {
         if ((oldEndDate == null && endDate != null)
                 || (oldEndDate != null && endDate != null && DateUtils.getDateWithoutTimeStamp(oldEndDate.getTime())
                         .compareTo(DateUtils.getDateWithoutTimeStamp(endDate.getTime())) != 0)) {
-            if (endDate != null
-                    && (DateUtils.getDateWithoutTimeStamp(endDate.getTime()).compareTo(
+            if (DateUtils.getDateWithoutTimeStamp(endDate.getTime()).compareTo(
                             DateUtils.getCurrentDateWithoutTimeStamp()) < 0 || DateUtils.getDateWithoutTimeStamp(
-                            startDate.getTime()).compareTo(DateUtils.getDateWithoutTimeStamp(endDate.getTime())) >= 0)) {
+                            startDate.getTime()).compareTo(DateUtils.getDateWithoutTimeStamp(endDate.getTime())) >= 0) {
                 addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
             }
         }

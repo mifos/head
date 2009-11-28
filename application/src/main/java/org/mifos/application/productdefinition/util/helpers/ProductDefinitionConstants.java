@@ -284,4 +284,11 @@ public interface ProductDefinitionConstants {
     public String EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR = "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR";
     public String NOT_ALL_NUMBER = "NOT_ALL_NUMBER";
     public String CONVERSION_ERROR = "CONVERSION_ERROR";
+    
+    //Create Saving Products
+    public static final String MANDATORY_AMOUNT_FOR_DEPOSIT_KEY = "product.mandamntdep";
+    public static final String RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY = "product.recamtdep";
+    public static final String MAX_AMOUNT_WITHDRAWL_KEY = "product.maxamtwid";
+    public static final String MIN_BALANCE_FOR_CALC_KEY = "product.minBalForCalc";
+    public static final String ERROR_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
 }
