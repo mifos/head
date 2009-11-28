@@ -98,7 +98,7 @@ explanation of the license and how it is applied.
                  </td>
                 <td width="70%" valign="top">
                
-                <mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount"	/>
+                <html-el:text name="savingsActionForm" property="recommendedAmount"	/>
 	                  <c:choose>
 	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    (<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 

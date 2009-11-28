@@ -41,9 +41,13 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.FormUtils;
@@ -72,7 +76,7 @@ public class SavingsActionForm extends AccountAppActionForm {
         UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE, locale);
-        String mandatoryAmount = resources.getString("Savings.mandatoryAmountForDeposit");
+        String mandatoryAmount = resources.getString(SavingsConstants.MANDATORY_AMOUNT_FOR_DEPOSIT_KEY);
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 
         if (method.equals("getPrdOfferings") || method.equals("create") || method.equals("edit")
@@ -89,6 +93,17 @@ public class SavingsActionForm extends AccountAppActionForm {
                         errors.add(SavingsConstants.MANDATORY, new ActionMessage(SavingsConstants.MANDATORY,
                                 mandatoryAmount));
                     }
+                    if (StringUtils.isNotBlank(getRecommendedAmount())) {
+                        if (savingsOffering.getSavingsType().equals(SavingsType.MANDATORY)) {
+                            validateAmount(getRecommendedAmount(),
+                                    SavingsConstants.MANDATORY_AMOUNT_FOR_DEPOSIT_KEY, errors, locale,
+                                    FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
+                        } else {
+                            validateAmount(getRecommendedAmount(),
+                                    SavingsConstants.RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY, errors, locale,
+                                    FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
+                        }
+                    }
                     validateCustomFields(request, errors);
                 } catch (PageExpiredException e) {
                     errors.add(SavingsConstants.MANDATORY, new ActionMessage(SavingsConstants.MANDATORY,
@@ -102,6 +117,52 @@ public class SavingsActionForm extends AccountAppActionForm {
             request.setAttribute("methodCalled", method);
         }
         return errors;
+    }
+
+    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors,
+            Locale locale, String propertyfileName) {
+        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
+        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale,
+                propertyfileName), errors, locale, conversionResult);
+        return conversionResult;
+    }
+
+    protected String lookupLocalizedPropertyValue(String key, Locale locale, String propertyFile) {
+        ResourceBundle resources = ResourceBundle.getBundle(propertyFile, locale);
+        String errorText = resources.getString(key);
+        return errorText;
+    }
+
+    protected DoubleConversionResult parseDoubleForMoney(String doubleString) {
+        return new LocalizationConverter().parseDoubleForMoney(doubleString);
+
+    }
+
+    private void addConversionResultErrors(String fieldPropertyKey, String propertyName, ActionErrors errors,
+            Locale locale, DoubleConversionResult conversionResult) {
+        List<ConversionError> errorList = conversionResult.getErrors();
+        if (errorList.size() > 0) {
+            for (int i = 0; i < errorList.size(); i++) {
+                addError(errors, fieldPropertyKey, "errors.generic", propertyName, getConversionErrorText(errorList
+                        .get(i), locale));
+            }
+        }
+    }
+
+    protected void addError(ActionErrors errors, String property, String key, String... arg) {
+        errors.add(property, new ActionMessage(key, arg));
+    }
+
+    protected String getConversionErrorText(ConversionError error, Locale locale) {
+
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.UI_RESOURCE_PROPERTYFILE, locale);
+        String errorText = resources.getString(error.toString());
+        if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY)) {
+            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimal().toString());
+        } else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY)) {
+            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimal().toString());
+        }
+        return errorText;
     }
 
     public double getRecommendedAmntDoubleValue() {

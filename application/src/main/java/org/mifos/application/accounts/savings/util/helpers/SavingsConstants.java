@@ -88,6 +88,10 @@ public class SavingsConstants {
     public static final String RECOMMENDED_AMOUNT = "Recommended amount for deposit";
 
     public static final String MANDATORY_AMOUNT = "Mandatory amount for deposit";
+    
+    public static final String MANDATORY_AMOUNT_FOR_DEPOSIT_KEY = "Savings.mandatoryAmountForDeposit";
+    
+    public static final String RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY = "Savings.recommendedAmountForDeposit";
 
     // error messages
     public static final String MANDATORY = "errors.mandatory";

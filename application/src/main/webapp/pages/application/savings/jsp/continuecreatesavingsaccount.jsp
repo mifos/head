@@ -251,7 +251,7 @@ explanation of the license and how it is applied.
 	                </c:choose>
                   </td>
                   <td width="65%" valign="top">                  
-                  	<mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount" styleId="continuecreatesavingsaccount.input.recommendedAmount"	
+                  	<html-el:text name="savingsActionForm" property="recommendedAmount" styleId="continuecreatesavingsaccount.input.recommendedAmount"	
 		                  />
 		                   
 	                  <c:choose>
