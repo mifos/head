@@ -421,7 +421,8 @@ public class SavingsPrdActionForm extends BaseActionForm {
     }
 
     private void checkPreviewManageValidation(ActionErrors errors, HttpServletRequest request) throws ApplicationException {
-        validateMandatoryAmount(errors);
+        validateRecommendedAmount(errors, request);
+        validateMaxAmntWithdrawl(errors, request);
         validateInterestRate(errors, request);
         Date startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
         Date endingDate = getEndDateValue(getUserContext(request).getPreferredLocale());
@@ -429,6 +430,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
                 Constants.BUSINESS_KEY, request);
         validateStartDate(errors, savingsOffering.getStartDate(), startingDate);
         validateEndDateAgainstCurrentDate(errors, startingDate, savingsOffering.getEndDate(), endingDate);
+        validateMinAmntForInt(errors, request);
         validateInterestGLCode(request, errors);
     }
 
@@ -518,13 +520,6 @@ public class SavingsPrdActionForm extends BaseActionForm {
                 addError(errors, "freqOfInterest", ProductDefinitionConstants.ERRORINTRATE, frequencyString
                         + getLabel(ConfigurationConstants.INTEREST, request) + " " + postingAccounts);
         }
-
-    }
-
-    private void validateMandatoryAmount(ActionErrors errors) {
-        if (getSavingsTypeValue() != null && getSavingsTypeValue().equals(SavingsType.MANDATORY)
-                && getRecommendedAmountValue().getAmountDoubleValue() <= 0.0)
-            addError(errors, "recommendedAmount", ProductDefinitionConstants.ERRORMANDAMOUNT);
 
     }
 

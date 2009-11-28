@@ -269,7 +269,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.mandamntdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<mifos:mifosdecimalinput property="recommendedAmount"  />
+									<html-el:text property="recommendedAmount"  />
 								</td>
 							</tr>
 							<script type="text/javascript">
@@ -295,7 +295,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<mifos:mifosdecimalinput property="maxAmntWithdrawl" />
+									<html-el:text property="maxAmntWithdrawl" />
 								</td>
 							</tr>
 						</table>
@@ -340,7 +340,7 @@ explanation of the license and how it is applied.
 									</fmt:message>:
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosdecimalinput property="interestRate" max="100" min="0" decimalFmt="10.5" />
+									<html-el:text property="interestRate" />
 									<mifos:mifoslabel name="product.savingsintrateperc" bundle="ProductDefUIResources" />
 								</td>
 							</tr>
@@ -396,7 +396,7 @@ explanation of the license and how it is applied.
 									</fmt:message>:
 								</td>
 								<td valign="top">
-									<mifos:mifosdecimalinput property="minAmntForInt" />
+									<html-el:text property="minAmntForInt" />
 								</td>
 							</tr>
 						</table>
