@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.security.util.UserContext;
@@ -169,17 +170,17 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         if (null != methodCalled) {
             if (Methods.previewHistoricalData.toString().equals(methodCalled)) {
-                errors = handlePreviewValidations(request, errors);
+                checkPreviewValidations(request, errors);
             }
         }
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", methodCalled);
         }
         return errors;
     }
 
-    private ActionErrors handlePreviewValidations(HttpServletRequest request, ActionErrors errors) {
+    private void checkPreviewValidations(HttpServletRequest request, ActionErrors errors) {
         UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
@@ -189,6 +190,43 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
                         resources.getString("Customer.notes"), CustomerConstants.HISTORICALDATA_COMMENT_LENGTH));
             }
         }
-        return errors;
+        if(getLoanAmount()!=null && !getLoanAmount().equals("") ){
+        validateLoanAmount(errors, locale);
+        } 
+        
+        if(getInterestPaid()!=null && !getInterestPaid().equals("") ){
+        validateInterestPaid(errors, locale);
+        }
+        
+        if(getTotalAmountPaid()!=null && !getTotalAmountPaid().equals("") ){
+            validateTotalAmountPaid(errors, locale);
+        }
+    }
+    
+    private void validateLoanAmount(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), CustomerConstants.AMOUNT_OF_LOAN_KEY, errors, locale, 
+                FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
+            addError(errors, CustomerConstants.AMOUNT_OF_LOAN_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
+                    lookupLocalizedPropertyValue(CustomerConstants.AMOUNT_OF_LOAN_KEY, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE));
+        }
+    }
+    
+    private void validateInterestPaid(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(getInterestPaid(), CustomerConstants.INTEREST_PAID_KEY, errors, locale, 
+                FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
+            addError(errors, CustomerConstants.INTEREST_PAID_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
+                    lookupLocalizedPropertyValue(CustomerConstants.INTEREST_PAID_KEY, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE));
+        }
+    }
+    
+    private void validateTotalAmountPaid(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(getTotalAmountPaid(), CustomerConstants.TOTAL_AMOUNT_PAID_KEY, errors, locale, 
+                FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
+            addError(errors, CustomerConstants.TOTAL_AMOUNT_PAID_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
+                    lookupLocalizedPropertyValue(CustomerConstants.TOTAL_AMOUNT_PAID_KEY, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE));
+        }
     }
 }

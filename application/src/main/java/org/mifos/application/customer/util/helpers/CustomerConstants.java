@@ -227,6 +227,7 @@ public interface CustomerConstants {
     public static final String ERRORS_SPECIFY_MEETING = "errors.Customer.specifyMeeting";
     public static final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE = "errors.Customer.specifyCustomFieldValue";
     public static final String ERRORS_DUPLICATE_PERIODIC_FEE = "errors.Customer.duplicatePeriodicFee";
+    public static final String ERRORS_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
     public static final String ERRORS_SPECIFY_FEE_AMOUNT = "errors.Customer.specifyFeeAmount";
     public static final String ERRORS_FEE_FREQUENCY_MISMATCH = "errors.Customer.feeFrequencyMismatch";
     public static final String ERRORS_SAME_BRANCH_TRANSFER = "errors.Customer.sameBranchTransfer";
@@ -265,4 +266,8 @@ public interface CustomerConstants {
     public static final String SURVEY_KEY = "customerSurveys";
     public static final String SURVEY_COUNT = "surveyCount";
     public static final String CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED = "warning.clientWithSameGovtIdExistInClosed";
+    public static final String AMOUNT_OF_LOAN_KEY = "label.amountofloanLabel";
+    public static final String INTEREST_PAID_KEY = "Customer.History.InterestPaid";
+    public static final String TOTAL_AMOUNT_PAID_KEY = "label.totalamountpaidLabel";
+    
 }

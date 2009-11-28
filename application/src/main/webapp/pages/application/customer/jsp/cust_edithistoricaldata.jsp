@@ -96,7 +96,7 @@ explanation of the license and how it is applied.
 								bundle="CustomerUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="label.colon" bundle="CustomerUIResources" /></span></td>
-							<td><mifos:mifosdecimalinput styleId="cust_edithistoricaldata.input.loanAmount"
+							<td><html-el:text styleId="cust_edithistoricaldata.input.loanAmount"
 								name="customerHistoricalDataActionForm" property="loanAmount"
 								value="${sessionScope.custHistoricalDataActionForm.loanAmount}" />
 							</td>
@@ -104,7 +104,7 @@ explanation of the license and how it is applied.
 						<tr class="fontnormal">
 							<td align="right"><span id="cust_edithistoricaldata.label.totalAmountPaid"><mifos:mifoslabel name="label.totalamountpaid"
 								bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosdecimalinput styleId="cust_edithistoricaldata.input.totalAmountPaid"
+							<td><html-el:text styleId="cust_edithistoricaldata.input.totalAmountPaid"
 								name="customerHistoricalDataActionForm"
 								property="totalAmountPaid"
 								value="${sessionScope.custHistoricalDataActionForm.totalAmountPaid}" />
@@ -114,7 +114,7 @@ explanation of the license and how it is applied.
 							<td align="right"><span id="cust_edithistoricaldata.label.interestPaid"><mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
 								name="label.interestpaid" bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosdecimalinput styleId="cust_edithistoricaldata.input.interestPaid"
+							<td><html-el:text styleId="cust_edithistoricaldata.input.interestPaid"
 								name="customerHistoricalDataActionForm" property="interestPaid"
 								value="${sessionScope.custHistoricalDataActionForm.interestPaid}" />
 							</td>
