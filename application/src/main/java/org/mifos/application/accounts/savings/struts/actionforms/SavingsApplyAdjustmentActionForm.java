@@ -20,6 +20,8 @@
 
 package org.mifos.application.accounts.savings.struts.actionforms;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +39,8 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 
@@ -96,17 +100,22 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
             if (method != null && method.equals("preview")) {
                 SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
                 AccountPaymentEntity payment = savings.getLastPmnt();
-                if (payment == null
-                        || savings.getLastPmntAmnt() == 0
-                        || !(new SavingsHelper().getPaymentActionType(payment).equals(
+                if (payment == null || savings.getLastPmntAmnt() == 0 
+                    || !(new SavingsHelper().getPaymentActionType(payment).equals(
                                 AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()) || new SavingsHelper()
                                 .getPaymentActionType(payment).equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue()))) {
                     errors.add(SavingsConstants.INVALID_LAST_PAYMENT, new ActionMessage(
                             SavingsConstants.INVALID_LAST_PAYMENT));
                 } else {
-                    if (StringUtils.isBlank(lastPaymentAmount))
+                    if (StringUtils.isBlank(getLastPaymentAmount())) {
                         errors.add(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT, new ActionMessage(
                                 SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
+                    }
+                    
+                    if(StringUtils.isNotBlank(getLastPaymentAmount())) {
+                        Locale locale = getUserContext(request).getPreferredLocale();
+                        validateAmount(errors, locale);
+                    }
 
                     if (StringUtils.isNotBlank(getNote())
                             && getNote().length() > CustomerConstants.COMMENT_LENGTH) {
@@ -119,10 +128,19 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
         } catch (ApplicationException ae) {
             errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae.getValues()));
         }
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", method);
         }
         return errors;
+    }
+    
+    private void validateAmount(ActionErrors errors, Locale locale) {
+        DoubleConversionResult conversionResult = validateAmount(getLastPaymentAmount(), SavingsConstants.AMOUNT, errors, locale, 
+                FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, SavingsConstants.AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                    lookupLocalizedPropertyValue(SavingsConstants.AMOUNT, locale, FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE));
+        }
     }
 }

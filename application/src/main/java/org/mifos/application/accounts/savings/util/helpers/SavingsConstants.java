@@ -22,6 +22,8 @@ package org.mifos.application.accounts.savings.util.helpers;
 
 public class SavingsConstants {
     // constants used at jsps
+    public static final String AMOUNT = "Amount";
+        
     public static final String SAVINGS_PRD_OFFERINGS = "savingsPrdOfferings";
 
     public static final String CREATE_SAVINGS_ACCOUNT = "createSavingsAccount";

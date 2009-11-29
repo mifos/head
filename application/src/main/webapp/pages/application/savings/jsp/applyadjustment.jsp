@@ -88,10 +88,10 @@ explanation of the license and how it is applied.
                 <c:out value="${accountActionValue.name}"/>
                 <mifos:mifoslabel name="Savings.amount" isColonRequired="yes" />
                    <c:if test="${param.method == 'load'}">
-						<mifos:mifosdecimalinput styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" value=""/>
+						<html-el:text styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" value=""/>
 					</c:if>
 					<c:if test="${param.method != 'load'}">
-						<mifos:mifosdecimalinput styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/>
+						<html-el:text styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/>
 					</c:if>
 				   	<c:if test="${isLastPaymentValid == 1}">
                     &nbsp; <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
