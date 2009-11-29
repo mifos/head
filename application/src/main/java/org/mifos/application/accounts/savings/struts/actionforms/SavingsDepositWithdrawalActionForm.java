@@ -20,6 +20,7 @@
 
 package org.mifos.application.accounts.savings.struts.actionforms;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -135,9 +137,20 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
                         resources.getString("Savings.paymentType")));
             }
 
-            if (getAmount() == null || getAmountValue().getAmountDoubleValue() <= 0.0)
+            if (StringUtils.isBlank(getAmount())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.amount")));
+            }
+            
+            if(StringUtils.isNotBlank(getAmount())) {
+                Locale locale = getUserContext(request).getPreferredLocale();
+                DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+                        FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+                if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                    addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                            lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
+                }
+            }
 
             if (StringUtils.isBlank(getPaymentTypeId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
@@ -185,8 +198,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
             }
         } else {
             errors = new ActionErrors();
-            errors
-                    .add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                             fieldName));
         }
         return errors;

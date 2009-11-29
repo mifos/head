@@ -143,7 +143,7 @@ explanation of the license and how it is applied.
                 	<mifos:mifoslabel name="Savings.enterAmount" mandatory="Yes" isColonRequired="Yes"/>
                 </td>
                 <td width="76%">
-	                <mifos:mifosdecimalinput  styleId="applypayment_savingsaccount.input.amount" property="amount"/>
+	                <html-el:text  styleId="applypayment_savingsaccount.input.amount" property="amount"/>
                 </td>
               </tr>
               
