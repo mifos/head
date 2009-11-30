@@ -28,6 +28,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
@@ -40,41 +41,31 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
 
     private static final short FLAG_FEET_TOO_BIG = 12;
 
-    // private TestDatabase database;
-
-    /*
-     * @Before public void setUp() throws SystemException, ApplicationException
-     * {
-     * 
-     * database = TestDatabase.makeStandard(); database.installInThreadLocal();
-     * 
-     * }
-     */
+    private Session session;
+    
+    @Override
+    public void setUp() {
+        session = StaticHibernateUtil.getSessionTL();
+    }
+    
+    @Override
+    public void tearDown() throws Exception {
+        TestDatabase.resetMySQLDatabase();
+    }
 
     public void testStartFromStandardStore() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
-        String start = database.dumpForComparison();
+
 
         Upgrade upgrade = new AddAccountStateFlag(72, FLAG_FEET_TOO_BIG, "Feet too big", TEST_LOCALE,
                 "Rejected because feet are too big");
 
-        upgradeAndCheck(database, upgrade);
+        upgradeAndCheck(upgrade);
     }
 
-    private void upgradeAndCheck(TestDatabase database, Upgrade upgrade) throws Exception {
-        upgrade.upgrade(database.openConnection());
-        /*
-         * Below is a workaround to make this test case work The upgrade is
-         * being done in a Mayfly database. After the upgrade, we set up the
-         * Mayfly session to be used by the next call to
-         * HibernateUtils.getSessionTL() Then call init() on MifosConfiguration
-         * to refresh the values from the Mayfly database, so that the call to
-         * flag.getName() below can find the new value.
-         */
-        database.installInThreadLocal();
+    private void upgradeAndCheck(Upgrade upgrade) throws Exception {
+        upgrade.upgrade(session.connection());
         MifosConfiguration.getInstance().init();
-
-        Session session = database.openSession();
+        session = StaticHibernateUtil.getSessionTL();
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class,
                 FLAG_FEET_TOO_BIG);
         flag.setLocaleId(TEST_LOCALE);
@@ -96,7 +87,6 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     }
 
     public void testConstructor() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
         short newId = 31500;
         AddAccountStateFlag upgrade = null;
         try {
@@ -118,10 +108,9 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         String goodKey = "AccountFlags-NewAccountStateFlag";
         // use valid construtor and valid key
         upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey, goodKey);
-        upgrade.upgrade(database.openConnection());
-        Session session = database.openSession();
+        upgrade.upgrade(session.connection());
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
-       Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
+        Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
         MifosConfiguration.getInstance().init();
 
     }

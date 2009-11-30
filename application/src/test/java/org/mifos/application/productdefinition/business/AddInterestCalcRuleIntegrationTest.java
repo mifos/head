@@ -28,6 +28,7 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 
@@ -46,7 +47,6 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
     }
 
     public void testConstructor() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
         short newRuleId = 2555;
         short categoryId = 1;
         String description = "DecliningBalance";
@@ -71,10 +71,14 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         // use valid construtor and valid key
         upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId, categoryId,
                 goodKey, description);
-        upgrade.upgrade(database.openConnection());
-        Session session = database.openSession();
-        InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
-       Assert.assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
+        try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            upgrade.upgrade(session.connection());
+            InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
+            Assert.assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
+        } finally {
+            TestDatabase.resetMySQLDatabase();
+        }
     }
 
 }

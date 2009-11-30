@@ -38,7 +38,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 
 public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -48,17 +47,19 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private ReportsPersistence reportsPersistence;
 
+    private Session session;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        session = StaticHibernateUtil.getSessionTL();
         reportsPersistence = new ReportsPersistence();
     }
 
     public void testGetAllReportCategories() {
         List<ReportsCategoryBO> listOfReportCategories = reportsPersistence.getAllReportCategories();
-        Session session = StaticHibernateUtil.getSessionTL();
         Query query = session.createQuery("select count(*) from ReportsCategoryBO");
-        List list = query.list();
+        List<?> list = query.list();
 
        Assert.assertEquals(((Long) list.get(0)).intValue(), listOfReportCategories.size());
        Assert.assertEquals("1", listOfReportCategories.get(0).getReportCategoryId().toString());
@@ -75,7 +76,6 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
        Assert.assertEquals("Analysis", listOfReportCategories.get(5).getReportCategoryName());
        Assert.assertEquals("7", listOfReportCategories.get(6).getReportCategoryId().toString());
        Assert.assertEquals("Miscellaneous", listOfReportCategories.get(6).getReportCategoryName());
-
     }
 
     public void testGetAllReportsForACategory() {
@@ -113,8 +113,8 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         List<ReportsCategoryBO> listOfReportCategories = reportsPersistence.getAllReportCategories();
         Set<ReportsBO> reportsSet = listOfReportCategories.get(0).getReportsSet();
 
-        for (Iterator iter = reportsSet.iterator(); iter.hasNext();) {
-            ReportsBO reports = (ReportsBO) iter.next();
+        for (Iterator<ReportsBO> iter = reportsSet.iterator(); iter.hasNext();) {
+            ReportsBO reports = iter.next();
             if (reports.getReportId().equals("1"))
                Assert.assertEquals("report_designer", reports.getReportIdentifier());
         }
@@ -126,10 +126,10 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
            Assert.assertEquals(0, parameters.size());
         }
 
-        TestDatabase database = TestDatabase.makeStandard();
-        database.execute("insert into report_parameter(name, type, classname)"
-                + "values('my_report', 'my_type', 'my_class')");
-        Session session = database.openSession();
+        String sql = "insert into report_parameter(name, type, classname)"
+                + "values('my_report', 'my_type', 'my_class')";
+        session.connection().createStatement().execute(sql);
+
         List<ReportsParams> moreParameters = reportsPersistence.getAllReportParams(session);
        Assert.assertEquals(1, moreParameters.size());
         ReportsParams parameter = moreParameters.get(0);
@@ -137,26 +137,14 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
        Assert.assertEquals("my_type", parameter.getType());
        Assert.assertEquals("my_class", parameter.getClassname());
 
-        /*
-         * Just a sanity check that the above is mucking with the local database
-         * not the global test database.
-         */
-        {
-            List<ReportsParams> parameters = reportsPersistence.getAllReportParams();
-           Assert.assertEquals(0, parameters.size());
-        }
     }
 
     public void testCreateJasper() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
-        Session session = database.openSession();
         ReportsJasperMap jasperMap = new ReportsJasperMap(null, "report.jrxml");
         new ReportsPersistence().createJasperMap(session, jasperMap);
         short reportId = jasperMap.getReportId();
-
-        Session session2 = database.openSession();
-        ReportsJasperMap reRead = new ReportsPersistence().oneJasperOfReportId(session2, reportId);
-       Assert.assertEquals("report.jrxml", reRead.getReportJasper());
+        ReportsJasperMap reRead = new ReportsPersistence().oneJasperOfReportId(session, reportId);
+        Assert.assertEquals("report.jrxml", reRead.getReportJasper());
     }
 
     public void testGetReport() {
@@ -172,18 +160,17 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     }
 
     public void testGetAllReports() {
-        org.hibernate.Session session = StaticHibernateUtil.getSessionTL();
         Query query = session.createQuery("select count(*) from ReportsBO");
-        List list = query.list();
+        List<?> list = query.list();
         int reportsNum = ((Long) list.get(0)).intValue();
        Assert.assertEquals(reportsNum, reportsPersistence.getAllReports().size());
     }
 
     public void testViewDataSource() throws Exception {
         List<ReportsDataSource> queryResult = reportsPersistence.viewDataSource(1);
-        Iterator itrQueryResult = queryResult.iterator();
+        Iterator<ReportsDataSource> itrQueryResult = queryResult.iterator();
         while (itrQueryResult.hasNext()) {
-            ReportsDataSource objReportsDataSource = (ReportsDataSource) itrQueryResult.next();
+            ReportsDataSource objReportsDataSource = itrQueryResult.next();
            Assert.assertEquals(ReportsConstants.HIDDEN_PASSWORD, objReportsDataSource.getPassword());
         }
     }

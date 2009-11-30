@@ -27,8 +27,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.struts.action.ActionMapping;
-import org.hibernate.Session;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
@@ -37,11 +35,8 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.SessionHolder;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -53,19 +48,9 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         super();
     }
 
-    private TestDatabase database;
-    ActionMapping moduleMapping;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        database = TestDatabase.makeStandard();
-        StaticHibernateUtil.closeSession();
-        AuditInterceptor interceptor = new AuditInterceptor();
-        Session session = database.openSession(interceptor);
-        SessionHolder holder = new SessionHolder(session);
-        holder.setInterceptor(interceptor);
-        StaticHibernateUtil.setThreadLocal(holder);
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
@@ -76,7 +61,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        StaticHibernateUtil.resetDatabase();
+        TestDatabase.resetMySQLDatabase();
     }
 
     private Question makeTestSelectQuestion(String name, int choiceNumber) throws Exception {
@@ -119,7 +104,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         String shortName1 = "testDefineQuestion 1";
         setRequestPathInfo("/questionsAction");
         addRequestParameter("method", "defineQuestions");
-        List<String> choices = new LinkedList();
+        List<String> choices = new LinkedList<String>();
         choices.add("TestChoice1");
         choices.add("TestChoice2");
         getRequest().getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
@@ -143,7 +128,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("value(shortName)", shortName2);
         addRequestParameter("value(questionText)", questionText2);
         addRequestParameter("value(answerType)", Integer.toString(AnswerType.CHOICE.getValue()));
-        choices = new LinkedList();
+        choices = new LinkedList<String>();
         choices.add("TestChoice1");
         choices.add("TestChoice2");
         getRequest().getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);

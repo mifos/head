@@ -27,7 +27,7 @@ import java.sql.SQLException;
 
 import junit.framework.Assert;
 
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -38,6 +38,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
@@ -52,41 +53,46 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     public AddActivityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
+    
+    private Session session;
+    
+    @Override
+    public void setUp() {
+        session = StaticHibernateUtil.getSessionTL(); 
+    }
+    
+    @Override
+    public void tearDown() throws Exception {
+        TestDatabase.resetMySQLDatabase();
+    }
 
     public void testStartFromStandardStore() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
-        upgradeAndCheck(database);
+        upgradeAndCheck();
     }
 
     public void testStartFromSystemWithAddedLookupValues() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
 
-        Session writer = database.openSession();
         for (int i = 0; i < 10; ++i) {
             LookUpValueEntity entity = new LookUpValueEntity();
             entity.setLookUpName("test look up value " + i);
             MifosLookUpEntity mifosLookUpEntity = new MifosLookUpEntity();
             mifosLookUpEntity.setEntityId((short) 87);
             entity.setLookUpEntity(mifosLookUpEntity);
-            writer.save(entity);
+            session.save(entity);
         }
-        writer.close();
-
-        upgradeAndCheck(database);
+        upgradeAndCheck();
     }
 
-    private Upgrade upgradeAndCheck(TestDatabase database) throws IOException, SQLException, ApplicationException {
+    private Upgrade upgradeAndCheck() throws IOException, SQLException, ApplicationException {
         short newId = 17032;
         int databaseVersion = 172;
         AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, SecurityConstants.LOAN_MANAGEMENT,
                 TEST_LOCALE, "Can use the executive washroom");
-        upgrade.upgrade(database.openConnection());
+        upgrade.upgrade(session.connection());
 
-        // now reinitialize the cache from the Mayfly database
-        database.installInThreadLocal();
         MifosConfiguration.getInstance().init();
-
-        ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
+        session = StaticHibernateUtil.getSessionTL(); 
+        ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
 
        Assert.assertEquals("Can use the executive washroom", fetched.getActivityName());
 
@@ -94,7 +100,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
         ActivityContext activityContext = new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
         AuthorizationManager authorizer = AuthorizationManager.getInstance();
-        authorizer.init(database.openSession());
+        authorizer.init(session);
 
         UserContext admin = TestUtils.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
        Assert.assertTrue(authorizer.isActivityAllowed(admin, activityContext));
@@ -105,14 +111,12 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testNoParent() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
-
         short newId = 17032;
         int databaseVersion = 172;
         AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, null, TEST_LOCALE,
                 "Can use the executive washroom");
-        upgrade.upgrade(database.openConnection());
-        ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
+        upgrade.upgrade(session.connection());
+        ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
        Assert.assertEquals(null, fetched.getParent());
     }
 
@@ -125,7 +129,6 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testConstructorTest() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
         short newId = 30000;
         AddActivity upgrade = null;
         try {
@@ -146,8 +149,8 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         String goodKey = "Permissions-NewActivity";
         // use valid construtor and valid key
         upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, goodKey, newId, null);
-        upgrade.upgrade(database.openConnection());
-        ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
+        upgrade.upgrade(session.connection());
+        ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
        Assert.assertEquals(null, fetched.getParent());
        Assert.assertEquals(goodKey, fetched.getActivityName());
        Assert.assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());

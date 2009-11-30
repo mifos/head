@@ -26,7 +26,7 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.application.ppi.business.PPISurvey;
-import org.mifos.application.ppi.business.PPISurveyTest;
+import org.mifos.application.ppi.business.PPISurveyIntegrationTest;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.surveys.SurveysConstants;
@@ -38,7 +38,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
@@ -51,19 +50,9 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
         super();
     }
 
-    private TestDatabase database;
-    private Session session;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        database = TestDatabase.makeStandard();
-        StaticHibernateUtil.closeSession();
-        AuditInterceptor interceptor = new AuditInterceptor();
-        session = database.openSession(interceptor);
-        SessionHolder holder = new SessionHolder(session);
-        holder.setInterceptor(interceptor);
-        StaticHibernateUtil.setThreadLocal(holder);
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
@@ -73,12 +62,12 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        StaticHibernateUtil.resetDatabase();
+        TestDatabase.resetMySQLDatabase();
         super.tearDown();
     }
 
     public void testGet() throws Exception {
-        new PPIPersistence().createOrUpdate(PPISurveyTest.makePPISurvey("Test Survey"));
+        new PPIPersistence().createOrUpdate(PPISurveyIntegrationTest.makePPISurvey("Test Survey"));
 
         setRequestPathInfo("/ppiAction");
         addRequestParameter("method", "get");

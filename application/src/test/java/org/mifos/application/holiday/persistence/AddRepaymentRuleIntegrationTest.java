@@ -28,14 +28,13 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.persistence.TestDatabase;
 
 public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
 
     public AddRepaymentRuleIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
-
+    
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "RepaymentRule-NewSameDay";
         String format = "RepaymentRule-";
@@ -45,8 +44,6 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testConstructor() throws Exception {
-        TestDatabase database = TestDatabase.makeStandard();
-        String start = database.dumpForComparison();
         AddRepaymentRule upgrade = null;
         try {
             // use deprecated construtor
@@ -65,13 +62,9 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
            Assert.assertEquals(e.getMessage(), AddRepaymentRule.wrongLookupValueKeyFormat);
         }
 
-        String goodKey = "RepaymentRule-NextWorkingDay";
+        String goodKey = "RepaymentRule-NextWorkingDayTest";
         // use valid construtor and valid key
         upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
                 RepaymentRuleTypes.NEXT_WORKING_DAY, goodKey);
-        String afterUpAndDownGrade = database.dumpForComparison();
-       Assert.assertEquals(start, afterUpAndDownGrade);
-
     }
-
 }
