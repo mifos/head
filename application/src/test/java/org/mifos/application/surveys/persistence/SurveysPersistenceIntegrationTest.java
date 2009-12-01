@@ -29,16 +29,15 @@ import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
-import org.mifos.framework.MifosInMemoryIntegrationTestCase;
+import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-public class SurveysPersistenceTest extends MifosInMemoryIntegrationTestCase {
+public class SurveysPersistenceIntegrationTest extends MifosIntegrationTestCase {
     
-    public SurveysPersistenceTest() throws SystemException {
+    public SurveysPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
-        StaticHibernateUtil.initialize();
     }
 
     private Question question1;

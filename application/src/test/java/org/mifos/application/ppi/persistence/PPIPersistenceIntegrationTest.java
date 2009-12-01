@@ -20,6 +20,7 @@
 
 package org.mifos.application.ppi.persistence;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -46,24 +47,35 @@ import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
-import org.mifos.framework.MifosInMemoryIntegrationTestCase;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PPIPersistenceTest extends MifosInMemoryIntegrationTestCase {
+public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
 
-    public PPIPersistenceTest() {
+    public PPIPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
-        StaticHibernateUtil.initialize();
     }
 
-    public void setUp() {
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
         persistence = new PPIPersistence();
+    }
+    
+    @Override
+    public void tearDown() throws Exception {
+        Statement stmt = StaticHibernateUtil.getSessionTL().connection().createStatement();
+        stmt.execute("truncate ppi_survey");
+        StaticHibernateUtil.resetDatabase();
+        super.tearDown();
     }
 
     public void testLikelihoods() throws Exception {
@@ -99,11 +111,13 @@ public class PPIPersistenceTest extends MifosInMemoryIntegrationTestCase {
     }
 
     public void testGetPPISurvey() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         createSurveyWithLikelihoods("surveyName");
        Assert.assertEquals("surveyName", persistence.getPPISurvey(1).getName());
     }
 
     public void testPersistPPISurveyInstance() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         int surveyId = createSurveyWithLikelihoods("surveyName");
         PPISurvey survey = persistence.getPPISurvey(surveyId);
         int instanceId = createSurveyInstance(survey);

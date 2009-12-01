@@ -339,11 +339,6 @@
             <version>3.2.5.ga</version>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.mayfly</groupId>
-            <artifactId>mayfly</artifactId>
-            <version>cvs-2008-03-25</version>
-        </dependency>
-        <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.7.0</version>

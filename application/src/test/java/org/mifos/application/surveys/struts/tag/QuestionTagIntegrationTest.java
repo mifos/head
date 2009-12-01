@@ -20,6 +20,9 @@
 
 package org.mifos.application.surveys.struts.tag;
 
+import java.sql.Connection;
+import java.sql.Statement;
+
 import junit.framework.Assert;
 
 import org.hibernate.Session;
@@ -27,12 +30,9 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
@@ -42,34 +42,27 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
     }
 
     Session session;
-    TestDatabase database;
 
     XmlBuilder result;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        session = StaticHibernateUtil.getSessionTL();
         result = new XmlBuilder();
-        database = TestDatabase.makeStandard();
-        StaticHibernateUtil.closeSession();
-        AuditInterceptor interceptor = new AuditInterceptor();
-        Session session1 = database.openSession(interceptor);
-        SessionHolder holder = new SessionHolder(session1);
-        holder.setInterceptor(interceptor);
-        StaticHibernateUtil.setThreadLocal(holder);
-        session = session1;
     }
 
     @Override
     public void tearDown() throws Exception {
-        session.close();
+        Statement stmt = session.connection().createStatement();
+        stmt.execute("truncate questions");
         StaticHibernateUtil.resetDatabase();
         super.tearDown();
     }
 
     public void testFreetext() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
-        String questionText = "QuestionTagIntegrationTest testFreetext question";
+        String questionText = "question";
         String shortName = "QuestionTagIntegrationTest Name";
         Question question = new Question(shortName, questionText, AnswerType.FREETEXT);
         persistence.createOrUpdate(question);
@@ -82,8 +75,8 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
     public void testNumber() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
-        String questionText = "QuestionTagIntegrationTest testNumber question";
-        String shortName = "QuestionTagIntegrationTest Name";
+        String questionText = "question";
+        String shortName = "QuestionTagIntegrationTest Name1";
         Question question = new Question(shortName, questionText, AnswerType.NUMBER);
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "42", false);
@@ -97,8 +90,8 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
     public void testDate() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
-        String questionText = "QuestionTagIntegrationTest testDate question";
-        String shortName = "QuestionTagIntegrationTest Name";
+        String questionText = "question";
+        String shortName = "QuestionTagIntegrationTest Name2";
         Question question = new Question(shortName, questionText, AnswerType.DATE);
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "20/3/2000", false);

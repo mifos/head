@@ -42,18 +42,25 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.MifosInMemoryIntegrationTestCase;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
+public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public PPIChoiceTest() {
+    public PPIChoiceIntegrationTest() throws SystemException, ApplicationException {
         super();
-        StaticHibernateUtil.initialize();
     }
 
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        TestDatabase.resetMySQLDatabase();
+    }
+    
     public void testRetrievePPIChoice() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
@@ -62,20 +69,16 @@ public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
         new SurveysPersistence().createOrUpdate(question);
         int choiceId = ppiChoice.getChoiceId();
 
-        database.installInThreadLocal();
-
         PPIChoice retrievedChoice = new PPIPersistence().getPPIChoice(choiceId);
        Assert.assertEquals("Hello World", retrievedChoice.getChoiceText());
     }
 
     public void testRetrieveRegularChoice() throws Exception {
-        Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
+        Question question = new Question("question2", "what is your question", AnswerType.CHOICE);
         QuestionChoice regularChoice = new QuestionChoice("Hello World");
         question.addChoice(regularChoice);
         new SurveysPersistence().createOrUpdate(question);
         int choiceId = regularChoice.getChoiceId();
-
-        database.installInThreadLocal();
 
         QuestionChoice retrievedChoice = (QuestionChoice) new SurveysPersistence().getPersistentObject(
                 QuestionChoice.class, choiceId);
@@ -96,7 +99,7 @@ public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
      */
     // marked @Ignore in JUnit 4 so converting to xtest
     public void xtestViaResponses() throws Exception {
-        Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
+        Question question = new Question("question3", "what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
         question.addChoice(ppiChoice);
         ppiChoice.setPoints(34);
@@ -120,7 +123,6 @@ public class PPIChoiceTest extends MifosInMemoryIntegrationTestCase {
         new SurveysPersistence().createOrUpdate(instance);
         new SurveysPersistence().createOrUpdate(surveyResponse);
         int instanceId = instance.getInstanceId();
-        database.installInThreadLocal();
 
         PPIPersistence ppiPersistence = new PPIPersistence();
         SurveyInstance retrievedInstance = ppiPersistence.getInstance(instanceId);

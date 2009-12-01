@@ -389,7 +389,6 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     // this test was created because of problems persisting number survey
     // responses
-    // in mayfly
     public void testNumberSurveyResponse() throws Exception {
         SurveyInstance instance = makeSurveyInstance("Test number survey response");
         Survey survey = instance.getSurvey();
