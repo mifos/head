@@ -248,6 +248,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void createLatestDatabaseWithLatestData() throws Exception {
+        executeScript("mifosdroptables-checkpoint.sql", connection);
         executeScript("latest-schema.sql", connection);
         executeScript("latest-data.sql", connection);
         connection.commit();
