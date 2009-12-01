@@ -32,6 +32,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -436,8 +438,13 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
     private void validateRecommendedAmount(ActionErrors errors, HttpServletRequest request) {
         Locale locale = getUserContext(request).getPreferredLocale();
-        if (getSavingsTypeValue() != null && getSavingsTypeValue().equals(SavingsType.MANDATORY)
-                && getRecommendedAmountValue().getAmountDoubleValue() <= 0.0) {
+        try {
+            if (getSavingsTypeValue() != null && getSavingsTypeValue().equals(SavingsType.MANDATORY)
+                    && getRecommendedAmountValue().getAmountDoubleValue() <= 0.0) {
+                addError(errors, "recommendedAmount", ProductDefinitionConstants.ERRORMANDAMOUNT);
+                return;
+            }
+        } catch (NumberFormatException nfe) {
             addError(errors, "recommendedAmount", ProductDefinitionConstants.ERRORMANDAMOUNT);
             return;
         }
@@ -484,13 +491,18 @@ public class SavingsPrdActionForm extends BaseActionForm {
                     ConfigurationConstants.INTEREST, request)
                     + " " + prdrate);
         } else {
-            Double intRate = getInterestRateValue();
-            // FIXME: hardcoded limit for maximum interest rate.
-            if (intRate != null && intRate > 100)
+            try {
+                Double intRate = getInterestRateValue();
+                // FIXME: hardcoded limit for maximum interest rate.
+                if (intRate != null && intRate > 100)
+                    addError(errors, "interestRate", ProductDefinitionConstants.ERRORINTRATE, getLabel(
+                            ConfigurationConstants.INTEREST, request)
+                            + " " + prdrate);
+            } catch (NumberFormatException nfe) {
                 addError(errors, "interestRate", ProductDefinitionConstants.ERRORINTRATE, getLabel(
                         ConfigurationConstants.INTEREST, request)
                         + " " + prdrate);
-           
+            }
             DoubleConversionResult conversionResult = validateInterest(getInterestRate(),
                     ProductDefinitionConstants.ERRORINTRATE, errors, locale, FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
             if (conversionResult.getErrors().size() == 0 && conversionResult.getDoubleValue() < 0.0) {

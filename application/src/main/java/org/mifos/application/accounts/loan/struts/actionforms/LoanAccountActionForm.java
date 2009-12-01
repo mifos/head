@@ -894,23 +894,38 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     void checkForMinMax(ActionErrors errors, String currentValue, AmountRange amountRange, String field) {
-        if (isBlank(currentValue) || !amountRange.isInRange(getDoubleValue(currentValue))) {
+        try {
+            if (isBlank(currentValue) || !amountRange.isInRange(getDoubleValue(currentValue))) {
+                addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(amountRange
+                        .getMinLoanAmount()), getStringValue(amountRange.getMaxLoanAmount()));
+            }
+        } catch (NumberFormatException nfe) {
             addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(amountRange
                     .getMinLoanAmount()), getStringValue(amountRange.getMaxLoanAmount()));
         }
     }
 
     void checkForMinMax(ActionErrors errors, String currentValue, InstallmentRange installmentRange, String field) {
-        if (StringUtils.isBlank(currentValue) || !installmentRange.isInRange(getShortValue(currentValue))) {
+        try {
+            if (StringUtils.isBlank(currentValue) || !installmentRange.isInRange(getShortValue(currentValue))) {
+                addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(installmentRange
+                        .getMinNoOfInstall()), getStringValue(installmentRange.getMaxNoOfInstall()));
+            }
+        } catch (NumberFormatException nfe) {
             addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(installmentRange
                     .getMinNoOfInstall()), getStringValue(installmentRange.getMaxNoOfInstall()));
         }
     }
 
     private void checkForMinMax(ActionErrors errors, String currentValue, Double maxValue, Double minValue, String field) {
-        if (StringUtils.isBlank(currentValue)
-                || getDoubleValue(currentValue).doubleValue() > maxValue.doubleValue()
-                || getDoubleValue(currentValue).doubleValue() < minValue.doubleValue()) {
+        try {
+            if (StringUtils.isBlank(currentValue)
+                    || getDoubleValue(currentValue).doubleValue() > maxValue.doubleValue()
+                    || getDoubleValue(currentValue).doubleValue() < minValue.doubleValue()) {
+                addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(minValue),
+                        getStringValue(maxValue));
+            }
+        } catch (NumberFormatException nfe) {
             addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(minValue),
                     getStringValue(maxValue));
         }

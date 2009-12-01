@@ -211,7 +211,14 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         Locale locale = getUserContext(request).getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
         for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
-            if (!clientDetail.isLoanAmountInRange()) {
+            try {
+                if (!clientDetail.isLoanAmountInRange()) {
+                    addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX, resources
+                            .getString("loan.loanAmountFor")
+                            + clientDetail.getClientName(), clientDetail.getMinLoanAmount().toString(), clientDetail
+                            .getMaxLoanAmount().toString());
+                }
+            } catch (NumberFormatException nfe) {
                 addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX, resources
                         .getString("loan.loanAmountFor")
                         + clientDetail.getClientName(), clientDetail.getMinLoanAmount().toString(), clientDetail
