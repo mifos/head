@@ -52,12 +52,13 @@ public class LoanAccountAssembler {
     }
 
     public List<LoanBO> fromDto(final List<LoanAccountsProductView> loanAccountProductViews,
-            final AccountPaymentEntity payment) {
+            final AccountPaymentEntity payment, final List<String> failedLoanDisbursementAccountNumbers,
+            final List<String> failedLoanRepaymentAccountNumbers) {
 
         final List<LoanBO> loans = new ArrayList<LoanBO>();
-        
+
         for (LoanAccountsProductView loanAccountsProductView : loanAccountProductViews) {
-            
+
             for (LoanAccountView accountView : loanAccountsProductView.getLoanAccountViews()) {
                 final Integer accountId = accountView.getAccountId();
                 final LoanBO account = findLoanAccountByIdWithLoanSchedulesInitialized(accountId);
@@ -79,7 +80,8 @@ public class LoanAccountAssembler {
                             loans.add(account);
                         } catch (AccountException ae) {
                             logger.warn("Disbursal of loan on account [" + globalAccountNum
-                                    + "] failed. Account changes will not be persisted.");
+                                    + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
+                            failedLoanDisbursementAccountNumbers.add(accountId.toString());
                         }
                     }
                 } else {
@@ -110,14 +112,15 @@ public class LoanAccountAssembler {
                             loans.add(account);
                         } catch (AccountException ae) {
                             logger.warn("Payment of loan on account [" + globalAccountNum
-                                    + "] failed. Account changes will not be persisted.");
+                                    + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
+                            failedLoanRepaymentAccountNumbers.add(accountId.toString());
                         }
                     }
                 }
             }
-            
+
         }
-        
+
         return loans;
     }
 
@@ -128,9 +131,8 @@ public class LoanAccountAssembler {
             throw new MifosRuntimeException(e);
         }
     }
-    
+
     private Double getDoubleValue(final String str) {
-        return StringUtils.isNotBlank(str) ? new LocalizationConverter()
-                .getDoubleValueForCurrentLocale(str) : null;
+        return StringUtils.isNotBlank(str) ? new LocalizationConverter().getDoubleValueForCurrentLocale(str) : null;
     }
 }

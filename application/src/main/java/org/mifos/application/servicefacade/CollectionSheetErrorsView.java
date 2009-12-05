@@ -29,15 +29,20 @@ public class CollectionSheetErrorsView {
 
     private final List<String> savingsDepNames;
     private final List<String> savingsWithNames;
+    private final List<String> loanDisbursementAccountNumbers;
+    private final List<String> loanRepaymentAccountNumbers;
     private final List<String> customerAccountNumbers;
     private final boolean isDatabaseError;
     private final Throwable databaseError;
 
     public CollectionSheetErrorsView(final List<String> savingsDepNames, final List<String> savingsWithNames,
-            final List<String> customerAccountNumbers, final boolean databaseErrorOccurred,
-            final Throwable databaseError) {
+            final List<String> loanDisbursementAccountNumbers, final List<String> loanRepaymentAccountNumbers,
+            final List<String> customerAccountNumbers,
+            final boolean databaseErrorOccurred, final Throwable databaseError) {
         this.savingsDepNames = savingsDepNames;
         this.savingsWithNames = savingsWithNames;
+        this.loanDisbursementAccountNumbers = loanDisbursementAccountNumbers;
+        this.loanRepaymentAccountNumbers = loanRepaymentAccountNumbers;
         this.customerAccountNumbers = customerAccountNumbers;
         this.isDatabaseError = databaseErrorOccurred;
         this.databaseError = databaseError;
@@ -49,6 +54,14 @@ public class CollectionSheetErrorsView {
 
     public List<String> getSavingsWithNames() {
         return this.savingsWithNames;
+    }
+
+    public List<String> getLoanDisbursementAccountNumbers() {
+        return this.loanDisbursementAccountNumbers;
+    }
+
+    public List<String> getLoanRepaymentAccountNumbers() {
+        return this.loanRepaymentAccountNumbers;
     }
 
     public List<String> getCustomerAccountNumbers() {

@@ -161,7 +161,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(),
                 loanOfficerList, formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
-                        .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed());
+                .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed());
     }
 
     public CollectionSheetEntryFormDto loadCustomersForBranchAndLoanOfficer(final Short personnelId,
@@ -216,7 +216,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         try {
             final List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(
                     MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",
-                    "attendanceId").getCustomValueListElements();
+            "attendanceId").getCustomValueListElements();
 
             final CollectionSheetEntryGridDto translatedGridView = collectionSheetTranslator.toLegacyDto(
                     collectionSheet, formEnteredDataDto, attendanceTypesList, currency);
@@ -258,20 +258,23 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         final List<String> failedSavingsDepositAccountNums = new ArrayList<String>();
         final List<String> failedSavingsWithdrawalNums = new ArrayList<String>();
+        final List<String> failedLoanDisbursementAccountNumbers = new ArrayList<String>();
+        final List<String> failedLoanRepaymentAccountNumbers = new ArrayList<String>();
         final List<String> failedCustomerAccountPaymentNums = new ArrayList<String>();
 
         final List<CollectionSheetEntryView> collectionSheeetEntryViews = decomposedViews
-                .getParentCollectionSheetEntryViews();
+        .getParentCollectionSheetEntryViews();
         final List<SavingsBO> savingsAccounts = savingsAccountAssembler.fromDto(collectionSheeetEntryViews, payment,
                 failedSavingsDepositAccountNums, failedSavingsWithdrawalNums);
 
         final List<CollectionSheetEntryView> collectionSheetEntryViews = decomposedViews
-                .getParentCollectionSheetEntryViews();
+        .getParentCollectionSheetEntryViews();
         final List<ClientAttendanceBO> clientAttendances = clientAttendanceAssembler.fromDto(collectionSheetEntryViews,
                 payment.getPaymentDate());
 
         final List<LoanAccountsProductView> loanAccountProductViews = decomposedViews.getLoanAccountViews();
-        final List<LoanBO> loanAccounts = loanAccountAssembler.fromDto(loanAccountProductViews, payment);
+        final List<LoanBO> loanAccounts = loanAccountAssembler.fromDto(loanAccountProductViews, payment,
+                failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers);
 
         final List<CustomerAccountView> customerAccountViews = decomposedViews.getCustomerAccountViews();
         final List<AccountBO> customerAccounts = customerAccountAssembler.fromDto(customerAccountViews, payment,
@@ -290,6 +293,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         }
 
         return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
+                failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers,
                 failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
     }
 

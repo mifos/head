@@ -20,10 +20,14 @@
 
 package org.mifos.test.acceptance.collectionsheet;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
@@ -34,9 +38,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","collectionsheet","acceptance","ui"})
+@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@Test(sequential = true, groups = { "smoke", "collectionsheet", "acceptance", "ui" })
 public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
+
+    String collectionSheetAccountError = "The following accounts have not been updated due to simultaneous updates/insufficient balance/invalid disbursement date";
+    String loanRepayments = "Loan Repayments";
+    String savingsWithdrawal = "Savings Withdrawal";
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -50,7 +58,8 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     public void enteringAnInvalidAmountAndClickingPreviewShouldCauseAReturnToCollectionSheetEntryPage()
     throws Exception {
         initRemote
@@ -67,9 +76,70 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
 
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void enteringOverpaymentForLoanAndClickingSubmitShouldWarnUserOfOverpayment() throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        SubmitFormParameters formParameters = getFormParametersForTestOffice();
+        CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
+        enterDataPage.verifyPage();
+
+        Double overPayment = 8500.8;
+        enterDataPage.enterAccountValue(0, 1, overPayment);
+
+        CollectionSheetEntryPreviewDataPage previewPage = enterDataPage
+        .submitAndGotoCollectionSheetEntryPreviewDataPage();
+        previewPage.verifyPage(formParameters);
+
+        CollectionSheetEntryConfirmationPage confirmationPage = previewPage
+        .submitAndGotoCollectionSheetEntryConfirmationPage();
+
+        confirmationPage.verifyPage();
+
+        // Not able to bring in internationalized string yet - jpw
+        // Locale defaultLocale = Locale.getDefault();
+        // String errorsUpdate =
+        // StringUtils.getMessageWithSubstitution(FilePaths.BULKENTRY_RESOURCE,
+        // defaultLocale,
+        // CollectionSheetEntryConstants.ERRORSUPDATE, null);
+        //
+
+
+        Assert
+        .assertTrue(confirmationPage
+                .isCollectionSheetAccountErrorMessageDisplayed(collectionSheetAccountError,
+                        loanRepayments));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void enteringExcessiveWithdrawalAmountAndClickingSubmitShouldWarnUserOfInvalidWithdrawal() throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        SubmitFormParameters formParameters = getFormParametersForTestOffice();
+        CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
+        enterDataPage.verifyPage();
+
+        Double excessiveWithdrawal = 80000.8;
+        enterDataPage.enterWithdrawalAccountValue(0, 5, excessiveWithdrawal);
+
+        CollectionSheetEntryPreviewDataPage previewPage = enterDataPage
+        .submitAndGotoCollectionSheetEntryPreviewDataPage();
+        previewPage.verifyPage(formParameters);
+
+        CollectionSheetEntryConfirmationPage confirmationPage = previewPage
+        .submitAndGotoCollectionSheetEntryConfirmationPage();
+
+        confirmationPage.verifyPage();
+
+        Assert.assertTrue(confirmationPage.isCollectionSheetAccountErrorMessageDisplayed(collectionSheetAccountError,
+                savingsWithdrawal));
+    }
 
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryPage(SubmitFormParameters formParameters) {
-        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
+        .loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage
         .submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
@@ -85,7 +155,4 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
         return formParameters;
     }
 
-
-
 }
-

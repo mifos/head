@@ -20,12 +20,12 @@
  
 package org.mifos.test.acceptance.framework.collectionsheet;
 
-import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CollectionSheetEntryConfirmationPage extends AbstractPage {
+public class CollectionSheetEntryConfirmationPage extends MifosPage {
 
     public CollectionSheetEntryConfirmationPage(Selenium selenium) {
         super(selenium);
