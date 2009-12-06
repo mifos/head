@@ -334,7 +334,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         final String savingsWithdrawal = resources.getString(CollectionSheetEntryConstants.SAVING_WITHDRAWAL);
         final String savingsDeposit = resources.getString(CollectionSheetEntryConstants.SAVING_DEPOSIT);
         final String loanDisbursement = resources.getString(CollectionSheetEntryConstants.LOAN_DISBURSEMENT);
-        final String loanRepayment = "Loan Repayments"; // resources.getString(CollectionSheetEntryConstants.LOAN_REPAYMENT);
+        final String loanRepayment = resources.getString(CollectionSheetEntryConstants.LOAN_REPAYMENT);
         final String acCollection = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
 
         final StringBuilder builder = new StringBuilder();

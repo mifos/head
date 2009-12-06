@@ -42,8 +42,8 @@ import org.testng.annotations.Test;
 @Test(sequential = true, groups = { "smoke", "collectionsheet", "acceptance", "ui" })
 public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
 
-    String collectionSheetAccountError = "The following accounts have not been updated due to simultaneous updates/insufficient balance/invalid disbursement date";
-    String loanRepayments = "Loan Repayments";
+    String collectionSheetAccountError = "The following accounts have not been updated due to simultaneous updates/insufficient balance/invalid disbursement date/invalid repayment";
+    String loanRepayments = "Loan repayments";
     String savingsWithdrawal = "Savings Withdrawal";
 
     @Autowired

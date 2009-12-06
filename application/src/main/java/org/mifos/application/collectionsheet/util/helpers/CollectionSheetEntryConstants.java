@@ -108,6 +108,7 @@ public interface CollectionSheetEntryConstants {
     public String TOTAL_ISSUE_WITHDRAWAL = "bulkEntry.totalIssuesWithdrawals";
     public String DUE_COLLECTION2 = "bulkEntry.dueCollections2";
     public String LOAN_DISBURSEMENT = "bulkEntry.loanDisbursements";
+    public String LOAN_REPAYMENT = "bulkEntry.loanRepayments";
     public String NET_CASH = "bulkEntry.netCash";
     public String WITHDRAWAL = "bulkEntry.withdrawals";
     public String OTHER_COLLECTION = "bulkEntry.otherCollections";
