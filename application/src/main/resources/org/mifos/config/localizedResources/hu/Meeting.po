@@ -3,14 +3,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-16 15:28-0700\n"
+"POT-Creation-Date: 2009-12-07 10:56+1100\n"
 "PO-Revision-Date: 2009-11-11 14:57+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.2.1\n"
+"X-Generator: Translate Toolkit 1.5.1\n"
 "X-Accelerator-Marker: &\n"
 
 #: error.activity.not.allowed
@@ -145,11 +145,13 @@ msgid "of every"
 msgstr "minden"
 
 #: meeting.labelPlaceOfMeeting
-msgid "Location of meeting\\:"
+#, fuzzy
+msgid "Location of meeting:"
 msgstr "Találkozó helyszíne\\:"
 
 #: meeting.labelRecurDays
-msgid "If days, specify the recurrence\\:"
+#, fuzzy
+msgid "If days, specify the recurrence:"
 msgstr "Napi viszonylat esetén határozza meg a gyakoriságot\\:"
 
 #: meeting.labelRecurEvery
@@ -157,15 +159,18 @@ msgid "Recur every"
 msgstr "Minden"
 
 #: meeting.labelRecurMonths
-msgid "If months, select between the following\\:"
+#, fuzzy
+msgid "If months, select between the following:"
 msgstr "Havi viszonylat esetén válasszon az alábbiak közül\\:"
 
 #: meeting.labelRecurWeeks
-msgid "If weeks, specify the following\\:"
+#, fuzzy
+msgid "If weeks, specify the following:"
 msgstr "Heti viszonylat esetén határozza meg az alábbiakat\\:"
 
 #: meeting.labelRepaymentDay
-msgid "Repayment day\\:"
+#, fuzzy
+msgid "Repayment day:"
 msgstr "Törlesztési nap\\:"
 
 #: meeting.labelThe
@@ -177,7 +182,8 @@ msgid "week(s) on"
 msgstr "héten"
 
 #: meeting.labelmeetingschedule&groupMembership
-msgid "Meeting schedule & Group Membership\\:"
+#, fuzzy
+msgid "Meeting schedule & Group Membership:"
 msgstr "Találkozó ütemterv és csoport tagság\\:"
 
 #: meeting.monthDay.number
