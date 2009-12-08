@@ -81,7 +81,7 @@ public class LoanAccountAssembler {
                         } catch (AccountException ae) {
                             logger.warn("Disbursal of loan on account [" + globalAccountNum
                                     + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
-                            failedLoanDisbursementAccountNumbers.add(accountId.toString());
+                            failedLoanDisbursementAccountNumbers.add(globalAccountNum);
                         }
                     }
                 } else {
@@ -113,7 +113,7 @@ public class LoanAccountAssembler {
                         } catch (AccountException ae) {
                             logger.warn("Payment of loan on account [" + globalAccountNum
                                     + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
-                            failedLoanRepaymentAccountNumbers.add(accountId.toString());
+                            failedLoanRepaymentAccountNumbers.add(globalAccountNum);
                         }
                     }
                 }

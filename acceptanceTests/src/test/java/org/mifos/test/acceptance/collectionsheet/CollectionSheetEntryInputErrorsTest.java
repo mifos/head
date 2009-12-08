@@ -105,11 +105,8 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
         // CollectionSheetEntryConstants.ERRORSUPDATE, null);
         //
 
-
-        Assert
-        .assertTrue(confirmationPage
-                .isCollectionSheetAccountErrorMessageDisplayed(collectionSheetAccountError,
-                        loanRepayments));
+        Assert.assertTrue(confirmationPage.isCollectionSheetAccountErrorMessageDisplayed(collectionSheetAccountError,
+                loanRepayments));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -137,6 +134,84 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
                 savingsWithdrawal));
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void clickingContinueInBulkEntryPageWithNoInputShouldResultInErrorMessage() throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
+        .loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+
+        selectPage.submit();
+
+        selectPage.verifyPage();
+        Assert.assertTrue(selectPage.isErrorMessageDisplayed());
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void clickingContinueInBulkEntryPageAndOnlyEnteringBranchShouldResultInErrorMessage() throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
+        .loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+
+
+        SubmitFormParameters formParameters = setFormParametersForTestOffice("MyOffice1233265929385", null, null, null);
+        selectPage.fillOutDropDownMenusWithGivenInput(formParameters);
+
+        selectPage.submit();
+
+        selectPage.verifyPage();
+        Assert.assertTrue(selectPage.isErrorMessageDisplayed());
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void clickingContinueInBulkEntryPageAndOnlyEnteringBranchAndLoanOfficerShouldResultInErrorMessage()
+    throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
+        .loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+
+        SubmitFormParameters formParameters = setFormParametersForTestOffice("MyOffice1233265929385",
+                "Joe1233265931256 Guy1233265931256", null, null);
+        selectPage.fillOutDropDownMenusWithGivenInput(formParameters);
+
+        selectPage.submit();
+
+        selectPage.verifyPage();
+        Assert.assertTrue(selectPage.isErrorMessageDisplayed());
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void clickingContinueInBulkEntryPageAndOnlyEnteringBranchAndLoanOfficerAndCenterShouldResultInErrorMessage()
+    throws Exception {
+        initRemote
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
+        .loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+
+        SubmitFormParameters formParameters = setFormParametersForTestOffice("MyOffice1233265929385",
+                "Joe1233265931256 Guy1233265931256", "MyCenter1233265933427", null);
+        selectPage.fillOutDropDownMenusWithGivenInput(formParameters);
+
+        selectPage.submit();
+
+        selectPage.verifyPage();
+        Assert.assertTrue(selectPage.isErrorMessageDisplayed());
+    }
+
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryPage(SubmitFormParameters formParameters) {
         CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
         .loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -152,6 +227,16 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
         formParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");
         formParameters.setCenter("MyCenter1233265933427");
         formParameters.setPaymentMode("Cash");
+        return formParameters;
+    }
+
+    private SubmitFormParameters setFormParametersForTestOffice(String branch, String loanOfficer, String center,
+            String paymentMode) {
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+        formParameters.setBranch(branch);
+        formParameters.setLoanOfficer(loanOfficer);
+        formParameters.setCenter(center);
+        formParameters.setPaymentMode(paymentMode);
         return formParameters;
     }
 

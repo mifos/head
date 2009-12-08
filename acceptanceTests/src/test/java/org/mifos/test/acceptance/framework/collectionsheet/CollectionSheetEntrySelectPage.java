@@ -17,45 +17,43 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.test.acceptance.framework.collectionsheet;
 
+package org.mifos.test.acceptance.framework.collectionsheet;
 
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-
 public class CollectionSheetEntrySelectPage extends MifosPage {
 
-	private static final String RECEIPT_INPUT_ID	= "bulkentry.input.receiptId";
-	private static final String CONTINUE_BUTTON_ID = "bulkentry.button.continue";
-	private static final String CANCEL_BUTTON_ID = "bulkentry.button.cancel";
+    private static final String RECEIPT_INPUT_ID = "bulkentry.input.receiptId";
+    private static final String CONTINUE_BUTTON_ID = "bulkentry.button.continue";
+    private static final String CANCEL_BUTTON_ID = "bulkentry.button.cancel";
 
-	public CollectionSheetEntrySelectPage() {
-		super();
-	}
+    public CollectionSheetEntrySelectPage() {
+        super();
+    }
 
-	public CollectionSheetEntrySelectPage(Selenium selenium) {
-		super(selenium);
-	}
+    public CollectionSheetEntrySelectPage(Selenium selenium) {
+        super(selenium);
+    }
 
-	public CollectionSheetEntrySelectPage verifyPage() {
+    public CollectionSheetEntrySelectPage verifyPage() {
         this.verifyPage("BulkEntry");
-		return this;
-	}
+        return this;
+    }
 
-	public HomePage cancelPage() {
-		verifyPage();
-		selenium.click(CANCEL_BUTTON_ID);
-		waitForPageToLoad();
-		return new HomePage(selenium);
-	}
-	
-	public static class SubmitFormParameters {
-	    public static final String CASH = "Cash"; 
-	    
+    public HomePage cancelPage() {
+        verifyPage();
+        selenium.click(CANCEL_BUTTON_ID);
+        waitForPageToLoad();
+        return new HomePage(selenium);
+    }
+
+    public static class SubmitFormParameters {
+        public static final String CASH = "Cash";
+
         public String getBranch() {
             return this.branch;
         }
@@ -155,27 +153,35 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
         private String receiptDay;
         private String receiptMonth;
         private String receiptYear;
-        
+
         @SuppressWarnings("PMD.OnlyOneReturn")
         public int getPaymentModeValue() {
-            if (CASH.equals(paymentMode)) { return 1; }
+            if (CASH.equals(paymentMode)) {
+                return 1;
+            }
 
             return -1;
         }
+    }
+
+    public void submit() {
+        selenium.click(CONTINUE_BUTTON_ID);
+        waitForPageToLoad();
     }
 
     public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(
             SubmitFormParameters parameters) {
         boolean onlyTypeIfEmpty = true;
         boolean waitForPageToLoad = true;
-        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(parameters, onlyTypeIfEmpty,waitForPageToLoad);
+        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(
+                parameters, onlyTypeIfEmpty, waitForPageToLoad);
         collectionSheetEntryEnterDataPage.verifyPage();
         return collectionSheetEntryEnterDataPage;
     }
 
     public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(
             SubmitFormParameters parameters, boolean onlyTypeIfEmpty, boolean waitForPageToLoad) {
-        
+
         fillOutDropDownMenus(parameters, waitForPageToLoad);
         CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = fillOutTransactionAndReceiptFieldsAndContinue(
                 parameters, onlyTypeIfEmpty);
@@ -189,11 +195,29 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
         waitForPageToLoadIfNecessary(waitForPageToLoad);
         selenium.select("customerId", "label=" + parameters.getCenter());
         waitForPageToLoadIfNecessary(waitForPageToLoad);
-    }    
+    }
+
+    public void fillOutDropDownMenusWithGivenInput(SubmitFormParameters parameters) {
+        if (parameters.getBranch() != null) {
+            selenium.select("officeId", "label=" + parameters.getBranch());
+            waitForPageToLoadIfNecessary(true);
+        }
+        if (parameters.getLoanOfficer() != null) {
+            selenium.select("loanOfficerId", "label=" + parameters.getLoanOfficer());
+            waitForPageToLoadIfNecessary(true);
+        }
+        if (parameters.getCenter() != null) {
+            selenium.select("customerId", "label=" + parameters.getCenter());
+            waitForPageToLoadIfNecessary(true);
+        }
+        if (parameters.getPaymentMode() != null) {
+            selenium.select("paymentId", "value=" + parameters.getPaymentModeValue());
+        }
+    }
 
     private void waitForPageToLoadIfNecessary(boolean waitForPageToLoad) {
         if (waitForPageToLoad) {
-           waitForPageToLoad();
+            waitForPageToLoad();
         }
     }
 
@@ -212,12 +236,11 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
         CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = new CollectionSheetEntryEnterDataPage(
                 selenium);
         return collectionSheetEntryEnterDataPage;
-    }    
+    }
 
-    
     private void typeText(String locator, String value, boolean onlyTypeIfEmpty) {
-		if (value!= null && (!onlyTypeIfEmpty || !value.isEmpty())) {
-			selenium.type(locator, value);
-		}
-	}
+        if (value != null && (!onlyTypeIfEmpty || !value.isEmpty())) {
+            selenium.type(locator, value);
+        }
+    }
 }

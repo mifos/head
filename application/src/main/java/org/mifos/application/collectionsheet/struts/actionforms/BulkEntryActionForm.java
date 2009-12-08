@@ -208,14 +208,15 @@ public class BulkEntryActionForm extends BaseActionForm {
         logger.debug("BulkEntryActionForm.validate");
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         ActionErrors errors = new ActionErrors();
-        
+
         if (request.getParameter(CollectionSheetEntryConstants.METHOD).equalsIgnoreCase(
                 CollectionSheetEntryConstants.GETMETHOD)) {
             java.sql.Date meetingDate = null;
             try {
-                meetingDate = new java.sql.Date(
-                        ((java.util.Date) SessionUtils.getAttribute("LastMeetingDate", request))
-                        .getTime());
+                Object lastMeetingDate = SessionUtils.getAttribute("LastMeetingDate", request);
+                if (lastMeetingDate != null) {
+                    meetingDate = new java.sql.Date(((java.util.Date) lastMeetingDate).getTime());
+                }
 
             } catch (PageExpiredException e) {
                 throw new RuntimeException(e);
@@ -254,7 +255,8 @@ public class BulkEntryActionForm extends BaseActionForm {
             currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils
                     .getCurrentDate(userContext.getPreferredLocale()));
         } catch (InvalidDateException ide) {
-            errors.add(CollectionSheetEntryConstants.INVALIDDATE, new ActionMessage(CollectionSheetEntryConstants.INVALIDDATE));
+            errors.add(CollectionSheetEntryConstants.INVALIDDATE, new ActionMessage(
+                    CollectionSheetEntryConstants.INVALIDDATE));
         }
         java.sql.Date trxnDate = null;
         String customerLabel = isCenterHierarchyExists == Constants.YES ? ConfigurationConstants.CENTER
@@ -279,9 +281,8 @@ public class BulkEntryActionForm extends BaseActionForm {
         if (getTransactionDate() != null && !getTransactionDate().equals("")) {
             try {
                 trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
-            } catch(InvalidDateException ide) {
-                errors.add(AccountConstants.ERROR_INVALID_TRXN, new ActionMessage(
-                        AccountConstants.ERROR_INVALID_TRXN));
+            } catch (InvalidDateException ide) {
+                errors.add(AccountConstants.ERROR_INVALID_TRXN, new ActionMessage(AccountConstants.ERROR_INVALID_TRXN));
             }
         } else {
             errors.add(CollectionSheetEntryConstants.MANDATORYENTER, new ActionMessage(
