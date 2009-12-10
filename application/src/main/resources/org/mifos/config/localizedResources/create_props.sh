@@ -6,8 +6,18 @@ set -o errexit
 sourceDir=$1
 targetDir=$2
 
-for localeDir in `find $sourceDir -mindepth 1 -maxdepth 1 \
-    -regex '[^.]*/[a-zA-Z_]+$' -type d`
+if [ -z "$sourceDir" ] || [ -z "$targetDir" ]; then
+    echo "Usage: $0 SOURCE_DIR TARGET_DIR"
+    exit 1
+fi
+
+localeDirs=`find $sourceDir -mindepth 1 -maxdepth 1 -regex '[^.]*/[a-zA-Z_]+$' -type d`
+if [ -z "$localeDirs" ]; then
+    echo "ERROR: no locale directories found in $sourceDir"
+    exit 1
+fi
+
+for localeDir in $localDirs
 do
     locale=`basename $localeDir`
     for translated in `find $localeDir -type f -name "*.po"`
