@@ -29,21 +29,21 @@ import org.mifos.framework.util.helpers.Money;
 
 public class RepaymentScheduleInstallment implements Serializable {
 
-    private Integer installment = 0;
+    private Integer installment;
 
-    private java.util.Date dueDate = null;
+    private java.util.Date dueDate;
 
-    private Money principal = new Money();
+    private Money principal;
 
-    private Money interest = new Money();
+    private Money interest;
 
-    private Money fees = new Money();
+    private Money fees;
 
-    private Money miscFees = new Money();
+    private Money miscFees;
 
-    private Money miscPenalty = new Money();
+    private Money miscPenalty;
 
-    private Locale locale = null;
+    private Locale locale;
 
     public RepaymentScheduleInstallment(int installment, Date dueDate, Money principal, Money interest, Money fees,
             Money miscFees, Money miscPenalty) {
@@ -57,6 +57,11 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public RepaymentScheduleInstallment() {
+        principal = new Money();
+        interest = new Money();
+        fees = new Money();
+        miscFees = new Money();
+        miscPenalty = new Money();
     }
 
     public void setInstallment(Integer installment) {

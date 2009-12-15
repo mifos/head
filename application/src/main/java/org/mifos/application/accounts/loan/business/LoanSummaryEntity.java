@@ -74,11 +74,11 @@ public class LoanSummaryEntity extends PersistentObject {
         this.originalInterest = originalInterest;
         this.originalFees = originalFees;
         this.rawAmountTotal = rawAmountTotal;
-        this.originalPenalty = new Money();
-        this.principalPaid = new Money();
-        this.interestPaid = new Money();
-        this.feesPaid = new Money();
-        this.penaltyPaid = new Money();
+        this.originalPenalty = new Money(loan.getCurrency());
+        this.principalPaid = new Money(loan.getCurrency());
+        this.interestPaid = new Money(loan.getCurrency());
+        this.feesPaid = new Money(loan.getCurrency());
+        this.penaltyPaid = new Money(loan.getCurrency());
     }
 
     public Money getFeesPaid() {
@@ -178,7 +178,7 @@ public class LoanSummaryEntity extends PersistentObject {
     }
 
     public Money getOustandingBalance() {
-        Money totalAmount = new Money();
+        Money totalAmount = new Money(loan.getCurrency());
         totalAmount = totalAmount.add(getOriginalPrincipal()).subtract(getPrincipalPaid());
         totalAmount = totalAmount.add(getOriginalInterest()).subtract(getInterestPaid());
         totalAmount = totalAmount.add(getOriginalPenalty()).subtract(getPenaltyPaid());

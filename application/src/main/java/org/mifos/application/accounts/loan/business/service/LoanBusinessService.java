@@ -142,7 +142,7 @@ public class LoanBusinessService implements BusinessService {
     }
 
     private LoanActivityView getLoanActivityView(final LoanActivityEntity loanActivity) {
-        LoanActivityView loanActivityView = new LoanActivityView();
+        LoanActivityView loanActivityView = new LoanActivityView(loanActivity.getAccount().getCurrency());
         loanActivityView.setId(loanActivity.getAccount().getAccountId());
         loanActivityView.setActionDate(loanActivity.getTrxnCreatedDate());
         loanActivityView.setActivity(loanActivity.getComments());

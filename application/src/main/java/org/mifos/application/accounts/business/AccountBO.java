@@ -59,6 +59,7 @@ import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -853,9 +854,14 @@ public class AccountBO extends BusinessObject {
         return totalAmt;
     }
 
+    public MifosCurrency getCurrency() {
+        // TODO: will be replaced by a way to get currency from the loan product
+        return Money.getDefaultCurrency();
+    }
+
     public Money getTotalAmountInArrears() {
         List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
-        Money totalAmount = new Money();
+        Money totalAmount = new Money(getCurrency());
         if (installmentsInArrears != null && installmentsInArrears.size() > 0) {
             for (AccountActionDateEntity accountAction : installmentsInArrears) {
                 totalAmount = totalAmount.add(getDueAmount(accountAction));
@@ -1362,7 +1368,7 @@ public class AccountBO extends BusinessObject {
     }
 
     protected Money updateAccountActionDateEntity(final List<Short> intallmentIdList, final Short feeId) {
-        return new Money();
+        return new Money(getCurrency());
     }
 
     protected boolean isAdjustPossibleOnLastTrxn() {

@@ -45,76 +45,76 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     public void testGetPrincipalDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
-        accountActionDate.setPrincipalPaid(new Money("10.0"));
+        accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
        Assert.assertEquals(90.0, accountActionDate.getPrincipalDue().getAmountDoubleValue(), DELTA);
 
     }
 
     public void testGetInterestDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
-        accountActionDate.setInterestPaid(new Money("2.0"));
+        accountActionDate.setInterestPaid(new Money(getCurrency(), "2.0"));
        Assert.assertEquals(10.0, accountActionDate.getInterestDue().getAmountDoubleValue(), DELTA);
 
     }
 
     public void testGetPenaltyDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
-        accountActionDate.setPenalty(new Money("20.0"));
-        accountActionDate.setPenaltyPaid(new Money("5.0"));
-        accountActionDate.setMiscPenalty(new Money("10.0"));
-        accountActionDate.setMiscPenaltyPaid(new Money("5.0"));
+        accountActionDate.setPenalty(new Money(getCurrency(), "20.0"));
+        accountActionDate.setPenaltyPaid(new Money(getCurrency(), "5.0"));
+        accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
+        accountActionDate.setMiscPenaltyPaid(new Money(getCurrency(), "5.0"));
        Assert.assertEquals(20.0, accountActionDate.getPenaltyDue().getAmountDoubleValue(), DELTA);
 
     }
 
     public void testGetTotalDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
-        accountActionDate.setPrincipalPaid(new Money("10.0"));
-        accountActionDate.setInterestPaid(new Money("2.0"));
-        accountActionDate.setPenalty(new Money("20.0"));
-        accountActionDate.setPenaltyPaid(new Money("5.0"));
-        accountActionDate.setMiscPenalty(new Money("10.0"));
-        accountActionDate.setMiscFee(new Money("20.0"));
-        accountActionDate.setMiscFeePaid(new Money("5.0"));
+        accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
+        accountActionDate.setInterestPaid(new Money(getCurrency(), "2.0"));
+        accountActionDate.setPenalty(new Money(getCurrency(), "20.0"));
+        accountActionDate.setPenaltyPaid(new Money(getCurrency(), "5.0"));
+        accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
+        accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
+        accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
        Assert.assertEquals(140.0, accountActionDate.getTotalDue().getAmountDoubleValue(), DELTA);
 
     }
 
     public void testGetTotalDueWithFees() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
-        accountActionDate.setPrincipalPaid(new Money("10.0"));
-        accountActionDate.setInterestPaid(new Money("2.0"));
-        accountActionDate.setPenalty(new Money("20.0"));
-        accountActionDate.setPenaltyPaid(new Money("5.0"));
-        accountActionDate.setMiscPenalty(new Money("10.0"));
-        accountActionDate.setMiscFee(new Money("20.0"));
-        accountActionDate.setMiscFeePaid(new Money("5.0"));
+        accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
+        accountActionDate.setInterestPaid(new Money(getCurrency(), "2.0"));
+        accountActionDate.setPenalty(new Money(getCurrency(), "20.0"));
+        accountActionDate.setPenaltyPaid(new Money(getCurrency(), "5.0"));
+        accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
+        accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
+        accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
        Assert.assertEquals(240.0, accountActionDate.getTotalDueWithFees().getAmountDoubleValue(), DELTA);
 
     }
 
     public void testGetDueAmounts() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
-        accountActionDate.setPrincipalPaid(new Money("10.0"));
-        accountActionDate.setInterestPaid(new Money("2.0"));
-        accountActionDate.setPenalty(new Money("20.0"));
-        accountActionDate.setPenaltyPaid(new Money("5.0"));
-        accountActionDate.setMiscPenalty(new Money("10.0"));
-        accountActionDate.setMiscFee(new Money("20.0"));
-        accountActionDate.setMiscFeePaid(new Money("5.0"));
+        accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
+        accountActionDate.setInterestPaid(new Money(getCurrency(), "2.0"));
+        accountActionDate.setPenalty(new Money(getCurrency(), "20.0"));
+        accountActionDate.setPenaltyPaid(new Money(getCurrency(), "5.0"));
+        accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
+        accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
+        accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
        Assert.assertEquals(115.0, accountActionDate.getDueAmnts().getFeesOverdue().getAmountDoubleValue(), DELTA);
 
     }
 
     public void testGetTotalDueAmounts() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
-        accountActionDate.setPrincipalPaid(new Money("10.0"));
-        accountActionDate.setInterestPaid(new Money("2.0"));
-        accountActionDate.setPenalty(new Money("20.0"));
-        accountActionDate.setPenaltyPaid(new Money("5.0"));
-        accountActionDate.setMiscPenalty(new Money("10.0"));
-        accountActionDate.setMiscFee(new Money("20.0"));
-        accountActionDate.setMiscFeePaid(new Money("5.0"));
+        accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
+        accountActionDate.setInterestPaid(new Money(getCurrency(), "2.0"));
+        accountActionDate.setPenalty(new Money(getCurrency(), "20.0"));
+        accountActionDate.setPenaltyPaid(new Money(getCurrency(), "5.0"));
+        accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
+        accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
+        accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
         OverDueAmounts totalDue = accountActionDate.getDueAmnts();
        Assert.assertEquals(115.0, totalDue.getFeesOverdue().getAmountDoubleValue(), DELTA);
        Assert.assertEquals(90.0, totalDue.getPrincipalOverDue().getAmountDoubleValue(), DELTA);
@@ -125,35 +125,35 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     public void testGetTotalScheduleAmountWithFees() {
         LoanScheduleEntity accountActionDate = new LoanScheduleEntity(accountBO, accountBO.getCustomer(), Short
-                .valueOf("1"), new java.sql.Date(System.currentTimeMillis()), PaymentStatus.UNPAID, new Money("100"),
-                new Money("10"));
-        accountActionDate.setPenalty(new Money("10.0"));
-        accountActionDate.setMiscPenalty(new Money("10.0"));
-        accountActionDate.setMiscFee(new Money("20.0"));
+                .valueOf("1"), new java.sql.Date(System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(getCurrency(), "100"),
+                new Money(getCurrency(), "10"));
+        accountActionDate.setPenalty(new Money(getCurrency(), "10.0"));
+        accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
+        accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
 
-        accountActionDate.setPrincipalPaid(new Money());
-        accountActionDate.setInterestPaid(new Money());
-        accountActionDate.setPenaltyPaid(new Money());
-        accountActionDate.setMiscPenaltyPaid(new Money());
-        accountActionDate.setMiscFeePaid(new Money());
+        accountActionDate.setPrincipalPaid(new Money(getCurrency()));
+        accountActionDate.setInterestPaid(new Money(getCurrency()));
+        accountActionDate.setPenaltyPaid(new Money(getCurrency()));
+        accountActionDate.setMiscPenaltyPaid(new Money(getCurrency()));
+        accountActionDate.setMiscFeePaid(new Money(getCurrency()));
 
         LoanFeeScheduleEntity loanFeeSchedule = new LoanFeeScheduleEntity(accountActionDate, null, null,
-                new Money("10"));
-        loanFeeSchedule.setFeeAmountPaid(new Money());
+                new Money(getCurrency(), "10"));
+        loanFeeSchedule.setFeeAmountPaid(new Money(getCurrency()));
         LoanFeeScheduleEntity loanFeeSchedule1 = new LoanFeeScheduleEntity(accountActionDate, null, null, new Money(
-                "10"));
-        loanFeeSchedule1.setFeeAmountPaid(new Money());
+                getCurrency(), "10"));
+        loanFeeSchedule1.setFeeAmountPaid(new Money(getCurrency()));
         accountActionDate.addAccountFeesAction(loanFeeSchedule);
         accountActionDate.addAccountFeesAction(loanFeeSchedule1);
 
-       Assert.assertEquals(new Money("170"), accountActionDate.getTotalScheduleAmountWithFees());
+       Assert.assertEquals(new Money(getCurrency(), "170"), accountActionDate.getTotalScheduleAmountWithFees());
     }
 
     public void testIsPricipalZero() {
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId() == 1) {
-                accountActionDateEntity.setPrincipal(new Money());
+                accountActionDateEntity.setPrincipal(new Money(getCurrency()));
                Assert.assertTrue(accountActionDateEntity.isPrincipalZero());
             } else
                 Assert.assertFalse(accountActionDateEntity.isPrincipalZero());
@@ -192,7 +192,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
             break;
         }
         Set<AccountActionDateEntity> accountActionDateEntitySet = accountBO.getAccountActionDates();
-        Iterator itr = accountActionDateEntitySet.iterator();
+        Iterator<AccountActionDateEntity> itr = accountActionDateEntitySet.iterator();
         while (itr.hasNext()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) itr.next();
             accountActionDateEntity.removeFees(feeId);

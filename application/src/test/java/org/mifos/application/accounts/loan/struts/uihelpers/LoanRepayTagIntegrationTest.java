@@ -91,8 +91,8 @@ public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
         LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
         loanRepaymentTag.locale = userContext.getPreferredLocale();
         assertContains("90.0", loanRepaymentTag.createRunningBalanceRow(
-                (LoanScheduleEntity) accountBO.getAccountActionDate(Short.valueOf("1")), new Money("50"),
-                new Money("20"), new Money("20")).toString());
+                (LoanScheduleEntity) accountBO.getAccountActionDate(Short.valueOf("1")), new Money(getCurrency(), "50"),
+                new Money(getCurrency(), "20"), new Money(getCurrency(), "20")).toString());
     }
 
     private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
@@ -104,8 +104,8 @@ public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
         LoanActivityEntity loanActivity = new LoanActivityEntity(accountBO, TestObjectFactory.getPersonnel(userContext
-                .getId()), "testing", new Money("100"), new Money("100"), new Money("100"), new Money("100"),
-                new Money("100"), new Money("100"), new Money("100"), new Money("100"), startDate);
+                .getId()), "testing", new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"),
+                new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), startDate);
         accountBO.addLoanActivity(loanActivity);
         TestObjectFactory.updateObject(accountBO);
         return accountBO;

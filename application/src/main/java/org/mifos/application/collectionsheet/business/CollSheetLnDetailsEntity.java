@@ -219,7 +219,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
      * to ease reporting) or as a historical artifact.
      */
     public Money getTotalAmntOverDue() {
-        return new Money("0").add(getPrincipalOverDue()).add(getInterestOverDue()).add(getFeesOverDue()).add(
+        return new Money().add(getPrincipalOverDue()).add(getInterestOverDue()).add(getFeesOverDue()).add(
                 getPenaltyOverDue());
     }
 

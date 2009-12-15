@@ -151,7 +151,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
         boolean interestDeductedAtDisbursement = false;
         boolean principalDueInLastInstallment = false;
-        Money loanAmount = new Money("300");
+        Money loanAmount = new Money(getCurrency(), "300");
         Double interestRate = new Double(1.2);
         Short installments = new Short((short) 6);
         LoanOfferingBO loanOffering = LoanOfferingTestUtils.createInstanceForTest(userContext, "TestLoanOffering", "TLO",
@@ -256,14 +256,14 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     protected LoanBO redoLoanWithMondayMeetingAndVerify(UserContext userContext, int numberOfDaysInPast,
             List<FeeView> feeViews) throws Exception {
         LoanBO loan = redoLoanWithMondayMeeting(userContext, createPreviousDate(numberOfDaysInPast), feeViews);
-       Assert.assertEquals(new Money("300.0"), loan.getLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanAmount());
         return loan;
     }
 
     protected LoanBO redoLoanWithMeetingTodayAndVerify(UserContext userContext, int numberOfDaysInPast,
             List<FeeView> feeViews) throws Exception {
         LoanBO loan = redoLoanWithMeetingToday(userContext, createPreviousDate(numberOfDaysInPast), feeViews);
-       Assert.assertEquals(new Money("300.0"), loan.getLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanAmount());
         return loan;
     }
 
@@ -286,7 +286,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     protected LoanBO redoLoanAndVerify(UserContext userContext, Date disbursementDate, List<FeeView> feeViews)
             throws Exception {
         LoanBO loan = redoLoanWithMondayMeeting(userContext, disbursementDate, new ArrayList<FeeView>());
-       Assert.assertEquals(new Money("300.0"), loan.getLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanAmount());
         return loan;
     }
 
@@ -415,7 +415,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-        applyAndVerifyPayment(userContext, loan, paymentDaysAgo, new Money("50"));
+        applyAndVerifyPayment(userContext, loan, paymentDaysAgo, new Money(getCurrency(), "50"));
 
        Assert.assertTrue(loan.havePaymentsBeenMade());
 
@@ -460,7 +460,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-        applyAndVerifyPayment(userContext, loan, 7, new Money("50"));
+        applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "50"));
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 1.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -493,7 +493,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
         // make one full repayment
-        applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+        applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -542,7 +542,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-            applyAndVerifyPayment(userContext, loan, 7, new Money("50"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "50"));
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 1.0, 0.0, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -552,7 +552,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
             Assert.assertFalse(loan.isRoundedAmount(33.7));
-            Assert.assertFalse(loan.canApplyMiscCharge(new Money(new BigDecimal(33.7))));
+            Assert.assertFalse(loan.canApplyMiscCharge(new Money(getCurrency(), new BigDecimal(33.7))));
             // Should throw AccountExcption
             applyCharge(loan, Short.valueOf(AccountConstants.MISC_PENALTY), new Double("33.7"));
 
@@ -581,7 +581,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
             // make one full repayment
-            applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -637,7 +637,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-        applyAndVerifyPayment(userContext, loan, 7, new Money("50"));
+        applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "50"));
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 1.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -669,7 +669,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
         // make one full repayment
-        applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+        applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -716,7 +716,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-            applyAndVerifyPayment(userContext, loan, 7, new Money("50"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "50"));
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 1.0, 0.0, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -726,7 +726,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
             Assert.assertFalse(loan.isRoundedAmount(33.7));
-            Assert.assertFalse(loan.canApplyMiscCharge(new Money(new BigDecimal(33.7))));
+            Assert.assertFalse(loan.canApplyMiscCharge(new Money(getCurrency(), new BigDecimal(33.7))));
             // Should throw AccountExcption
             applyCharge(loan, Short.valueOf(AccountConstants.MISC_FEES), new Double("33.7"));
 
@@ -755,7 +755,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
             // make one full repayment
-            applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -827,7 +827,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 6, 46.0, 45.5, 0.5, 0.0, 0.0, 0.0);
 
         // make one full repayment
-        applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+        applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -894,7 +894,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 6, 46.0, 45.5, 0.5, 0.0, 0.0, 0.0);
 
             // make one full repayment
-            applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -958,7 +958,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 6, 46.0, 45.5, 0.5, 0.0, 0.0, 0.0);
 
         // make one full repayment
-        applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+        applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -1027,7 +1027,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 6, 46.0, 45.5, 0.5, 0.0, 0.0, 0.0);
 
             // make one full repayment
-            applyAndVerifyPayment(userContext, loan, 7, new Money("51"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "51"));
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -1080,7 +1080,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 10.0, 0.0, 0.0);
 
         // make one full repayment
-        applyAndVerifyPayment(userContext, loan, 7, new Money("61"));
+        applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "61"));
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 0.0, 0.0, 0.0, 0.0, 0.0);
         LoanTestUtils.assertInstallmentDetails(loan, 2, 50.9, 0.1, 10.0, 0.0, 0.0);
@@ -1148,7 +1148,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
             disburseLoanAndVerify(userContext, loan, 14);
 
-            applyAndVerifyPayment(userContext, loan, 7, new Money("50"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "50"));
 
             // expect account exception
             removeAccountFee(loan);
@@ -1194,7 +1194,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 15.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 15.0, 0.0, 0.0);
 
-            applyAndVerifyPayment(userContext, loan, 7, new Money("50"));
+            applyAndVerifyPayment(userContext, loan, 7, new Money(getCurrency(), "50"));
 
             // Expect AccountException
             removeAccountFee(loan);

@@ -35,6 +35,7 @@ import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
@@ -43,12 +44,14 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
 
 public abstract class FeeBO extends BusinessObject {
 
     private final Short feeId;
     private final String feeName;
     private Short changeType;
+    private MifosCurrency currency;
     private FeeStatusEntity feeStatus;
     private final OfficeBO office;
     private final CategoryTypeEntity categoryType;
@@ -159,6 +162,17 @@ public abstract class FeeBO extends BusinessObject {
 
     public CategoryTypeEntity getCategoryType() {
         return categoryType;
+    }
+
+    public void setCurrency(MifosCurrency currency) {
+        this.currency = currency;
+    }
+
+    public MifosCurrency getCurrency() {
+        if(currency == null) {
+            return Money.getDefaultCurrency();
+        }
+        return currency;
     }
 
     public FeeFrequencyEntity getFeeFrequency() {

@@ -343,7 +343,7 @@ public class LoanBOTestUtils {
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
 
         try {
-            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money("300.0"),
+            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(TestUtils.getCurrency(),"300.0"),
                     (short) 6, meetingDates.get(0), false, 0.0, (short) 0, new FundBO(), feeViewList, null,
                     DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                     eligibleInstallmentRange.getMinNoOfInstall(), false, null);
@@ -382,8 +382,8 @@ public class LoanBOTestUtils {
      */
     public LoanScheduleEntity[] createLoanRepaymentSchedule() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
-        AccountBO accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3, new Money("20"),
-                new Money("30"));
+        AccountBO accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3, new Money(
+                TestUtils.getCurrency(), "20"), new Money(TestUtils.getCurrency(), "30"));
 
         Set<AccountActionDateEntity> intallments = accountBO.getAccountActionDates();
 

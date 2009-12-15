@@ -22,6 +22,7 @@ package org.mifos.application.productdefinition.struts.action;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,6 +45,7 @@ import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.fund.business.service.FundBusinessService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -80,6 +82,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -132,13 +135,15 @@ public class LoanPrdAction extends BaseAction {
                 new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
         loadSelectedFeesAndFunds(new ArrayList<FeeView>(), new ArrayList<FundBO>(), request);
         prdDefLogger.debug("Load method of loan Product Action called");
+        request.setAttribute("currencies", getCurrencies());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
-
+    
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         prdDefLogger.debug("start preview method of loan Product Action");
+        request.setAttribute("currencyCode", getSelectedCurrencyFromList(form).getCurrencyCode());
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -180,7 +185,7 @@ public class LoanPrdAction extends BaseAction {
                         .getPrdCategoryValue()), (PrdApplicableMasterEntity) findMasterEntity(request,
                         ProductDefinitionConstants.LOANAPPLFORLIST, loanPrdActionForm.getPrdApplicableMasterEnum()
                                 .getValue()), loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
-                        .getEndDateValue(locale), loanPrdActionForm.getDescription(),
+                           .getEndDateValue(locale), loanPrdActionForm.getDescription(),
                 (GracePeriodTypeEntity) findMasterEntity(request, ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
                         loanPrdActionForm.getGracePeriodTypeValue()), loanPrdActionForm.getGracePeriodDurationValue(),
                 (InterestTypesEntity) findMasterEntity(request, ProductDefinitionConstants.INTERESTTYPESLIST,
@@ -196,11 +201,11 @@ public class LoanPrdAction extends BaseAction {
                         ProductDefinitionConstants.LOANPRICIPALGLCODELIST, loanPrdActionForm.getPrincipalGLCode()),
                 findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm
                         .getInterestGLCode()), loanPrdActionForm);
+        loanOffering.setCurrency(getSelectedCurrencyFromList(loanPrdActionForm));
         loanOffering.save();
         request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID, loanOffering.getPrdOfferingId());
         request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering
                 .getGlobalPrdOfferingNum());
-
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -318,6 +323,27 @@ public class LoanPrdAction extends BaseAction {
         return mapping.findForward(ActionForwards.viewAllLoanProducts_success.toString());
     }
 
+    private LinkedList<MifosCurrency> getCurrencies() {
+        //FIXME TODO stubbed code: required to retrieve real list of currencies from configuration
+        // First currency to be added in the list should be default currency
+        // Depends on mingle story 2176
+        LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
+        currencies.add(Money.getDefaultCurrency());
+        return currencies;
+    }
+    
+    private MifosCurrency getSelectedCurrencyFromList(ActionForm form) {
+        LinkedList<MifosCurrency> currencies = getCurrencies();
+        Iterator<MifosCurrency> i = currencies.iterator();
+        while(i.hasNext()) {
+            MifosCurrency a = i.next();
+            if(a.getCurrencyId().equals(((LoanPrdActionForm)form).getCurrencyId())) {
+                return a;
+            }
+        }
+        return null;
+    }
+    
     private void loadMasterData(HttpServletRequest request) throws Exception {
         prdDefLogger.debug("start Load master data method of Loan Product Action ");
         LoanPrdBusinessService service = new LoanPrdBusinessService();

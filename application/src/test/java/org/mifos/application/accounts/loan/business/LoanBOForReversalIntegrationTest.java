@@ -186,7 +186,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      * reverseLoan(); loan = retrieveLoanAccount();Assert.assertEquals(noOfPayments,
      * loan.getAccountPayments().size()); int noOfTransactionsAfterReversal = 0;
      * int noOfFinancialTransactionsAfterReversal = 0; for (AccountPaymentEntity
-     * accountPayment : loan.getAccountPayments()) {Assert.assertEquals(new Money(),
+     * accountPayment : loan.getAccountPayments()) {Assert.assertEquals(new Money(getCurrency()),
      * accountPayment.getAmount()); noOfTransactionsAfterReversal +=
      * accountPayment.getAccountTrxns() .size(); for (AccountTrxnEntity
      * accountTrxn : accountPayment .getAccountTrxns()) {
@@ -201,7 +201,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      *Assert.assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),
      * accountFlagMapping.getFlag().getId()); }Assert.assertEquals(noOfNotes + 1,
      * loan.getAccountNotes().size());Assert.assertEquals(loan.getLoanAmount(),
-     * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(),
+     * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(getCurrency()),
      * loan.getLoanSummary().getTotalAmntPaid());
      * StaticHibernateUtil.closeSession(); }
      */
@@ -226,7 +226,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      *Assert.assertEquals(noOfPayments + 1, loan.getAccountPayments().size()); int
      * noOfTransactionsAfterReversal = 0; int
      * noOfFinancialTransactionsAfterReversal = 0; for (AccountPaymentEntity
-     * accountPayment : loan.getAccountPayments()) {Assert.assertEquals(new Money(),
+     * accountPayment : loan.getAccountPayments()) {Assert.assertEquals(new Money(getCurrency()),
      * accountPayment.getAmount()); noOfTransactionsAfterReversal +=
      * accountPayment.getAccountTrxns() .size(); for (AccountTrxnEntity
      * accountTrxn : accountPayment .getAccountTrxns()) {
@@ -241,7 +241,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      *Assert.assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),
      * accountFlagMapping.getFlag().getId()); }Assert.assertEquals(noOfNotes + 1,
      * loan.getAccountNotes().size());Assert.assertEquals(loan.getLoanAmount(),
-     * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(),
+     * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(getCurrency()),
      * loan.getLoanSummary().getTotalAmntPaid());
      * StaticHibernateUtil.closeSession(); }
      */

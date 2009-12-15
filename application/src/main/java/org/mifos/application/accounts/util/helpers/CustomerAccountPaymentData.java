@@ -106,7 +106,6 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
     }
 
     public Money getTotalPaidAmnt() {
-        Money totalAmount = new Money();
-        return totalAmount.add(getMiscFeePaid()).add(getMiscPenaltyPaid());
+        return getMiscFeePaid().add(getMiscPenaltyPaid());
     }
 }

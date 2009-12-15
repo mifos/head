@@ -20,6 +20,7 @@
 
 package org.mifos.application.accounts.loan.business;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -178,7 +179,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     }
 
     public Money getFeeAmount() {
-        Money feeAmnt = new Money();
+        Money feeAmnt = new Money(getAccount().getCurrency());
         if (null != feesTrxnDetails && feesTrxnDetails.size() > 0) {
             for (FeesTrxnDetailEntity feesTrxn : feesTrxnDetails) {
                 feeAmnt = feeAmnt.add(feesTrxn.getFeeAmount());

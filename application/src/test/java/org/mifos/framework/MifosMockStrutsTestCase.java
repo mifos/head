@@ -31,6 +31,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -39,6 +40,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -183,4 +185,8 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    public MifosCurrency getCurrency() {
+        // TODO: will be replaced by a way to get currency for mock struts tests
+        return Money.getDefaultCurrency();
+    }
 }

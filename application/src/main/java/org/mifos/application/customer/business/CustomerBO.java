@@ -52,6 +52,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -604,21 +605,8 @@ public abstract class CustomerBO extends BusinessObject {
                 && getStatus() == CustomerStatus.CENTER_ACTIVE;
     }
 
-    public Money getBalanceForAccountsAtRisk() {
-        Money amount = new Money();
-        for (AccountBO account : getAccounts()) {
-            if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
-                LoanBO loan = (LoanBO) account;
-                if (loan.hasPortfolioAtRisk()) {
-                    amount = amount.add(loan.getRemainingPrincipalAmount());
-                }
-            }
-        }
-        return amount;
-    }
-
-    public Money getBalanceForAccountsAtRiskForTask() {
-        Money amount = new Money();
+    public Money getBalanceForAccountsAtRiskForTask(MifosCurrency currency) {
+        Money amount = new Money(currency);
         for (AccountBO account : getAccounts()) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
                 LoanBO loan = (LoanBO) account;
@@ -630,8 +618,8 @@ public abstract class CustomerBO extends BusinessObject {
         return amount;
     }
 
-    public Money getOutstandingLoanAmount() {
-        Money amount = new Money();
+    public Money getOutstandingLoanAmount(MifosCurrency currency) {
+        Money amount = new Money(currency);
         Set<AccountBO> accounts = getAccounts();
         if (accounts != null) {
             for (AccountBO account : getAccounts()) {
@@ -657,19 +645,17 @@ public abstract class CustomerBO extends BusinessObject {
      * This method is unused and is a candidate for removal.
      */
     @Deprecated
-    public Money getDelinquentPortfolioAmount() {
-        Money amountOverDue = new Money();
-        Money totalOutStandingAmount = new Money();
+    public Money getDelinquentPortfolioAmount(MifosCurrency currency) {
+        Money amountOverDue = new Money(currency);
+        Money totalOutStandingAmount = new Money(currency);
         for (AccountBO accountBO : getAccounts()) {
             if (accountBO.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) accountBO).isAccountActive()) {
                 amountOverDue = amountOverDue.add(((LoanBO) accountBO).getTotalPrincipalAmountInArrears());
-                totalOutStandingAmount = totalOutStandingAmount.add(((LoanBO) accountBO).getLoanSummary()
-                        .getOriginalPrincipal());
+                totalOutStandingAmount = totalOutStandingAmount.add(((LoanBO) accountBO).getLoanSummary().getOriginalPrincipal());
             }
         }
         if (totalOutStandingAmount.getAmountDoubleValue() != 0.0) {
-            return new Money(String.valueOf(amountOverDue.getAmountDoubleValue()
-                    / totalOutStandingAmount.getAmountDoubleValue()));
+            return amountOverDue.divide(totalOutStandingAmount);
         }
         return new Money();
     }
@@ -686,8 +672,8 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    public Money getSavingsBalance() {
-        Money amount = new Money();
+    public Money getSavingsBalance(MifosCurrency currency) {
+        Money amount = new Money(currency);
         for (AccountBO account : getAccounts()) {
             if (account.getType() == AccountTypes.SAVINGS_ACCOUNT) {
                 SavingsBO savingsBO = (SavingsBO) account;

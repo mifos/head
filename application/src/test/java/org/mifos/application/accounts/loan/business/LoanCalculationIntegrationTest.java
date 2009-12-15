@@ -303,7 +303,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(list.size(), schedules.length);
         for (int i = 0; i < schedules.length; i++) {
             if (i == schedules.length - 1) {
-                Money zeroAmount = new Money("0");
+                Money zeroAmount = new Money(getCurrency(), "0");
                Assert.assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
                Assert.assertEquals(schedules[i].getPaymentDate(), null);
                Assert.assertEquals(schedules[i].isPaid(), false);
@@ -353,7 +353,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO.adjustLastPayment("Adjust last payment");
         new TestObjectPersistence().persist(accountBO);
         accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO.getAccountId());
-       Assert.assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this
+       Assert.assertEquals(accountPayments.get(0).getAmount(), new Money(getCurrency(), "0")); // this
         // is
         // the
         // last
@@ -372,7 +372,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void runOneLoanScheduleGenerationForLastPaymentReversal(String fileName) throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException
+            SystemException, ApplicationException, URISyntaxException
 
     {
 
@@ -406,7 +406,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         List<PaymentDetail> list = expectedResults.getPayments();
        Assert.assertEquals(list.size(), schedules.length);
         for (int i = 0; i < schedules.length; i++) {
-            Money zeroAmount = new Money("0");
+            Money zeroAmount = new Money(getCurrency(), "0");
            Assert.assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
            Assert.assertEquals(schedules[i].getPaymentDate(), null);
            Assert.assertEquals(schedules[i].isPaid(), false);
@@ -454,7 +454,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 .getAccountId());
         // every payment is reversed so amount is 0
         for (AccountPaymentEntity payment : accountPayments)
-           Assert.assertEquals(payment.getAmount(), new Money("0"));
+           Assert.assertEquals(payment.getAmount(), new Money(getCurrency(), "0"));
 
     }
 
@@ -497,7 +497,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(loanParams.getPrincipal()), loanParams
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
@@ -580,7 +580,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         loan.adjustLastPayment("Adjust last payment");
         new TestObjectPersistence().persist(loan);
         accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan.getAccountId());
-       Assert.assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this
+       Assert.assertEquals(accountPayments.get(0).getAmount(), new Money(getCurrency(), "0")); // this
         // is
         // the
         // last
@@ -592,7 +592,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // 0
         actionDateEntities = loan.getAccountActionDates();
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
-       Assert.assertEquals(paymentsArray[paymentToReverse - 1].getPrincipalPaid(), new Money("0"));
+       Assert.assertEquals(paymentsArray[paymentToReverse - 1].getPrincipalPaid(), new Money(getCurrency(), "0"));
 
         if (payLastPayment) {
             for (int i = paymentToReverse - 1; i < paymentsArray.length; i++) {
@@ -875,7 +875,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(loanParams.getPrincipal()), loanParams
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
@@ -941,7 +941,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(loanParams.getPrincipal()), loanParams
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
@@ -1565,7 +1565,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(loanParams.getPrincipal()), loanParams
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
@@ -1611,12 +1611,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         BigDecimal totalPrincipal = new BigDecimal(0, context);
         BigDecimal totalInterest = new BigDecimal(0, context);
         BigDecimal totalFees = new BigDecimal(0, context);
-        Money totalPayments = new Money("0");
+        Money totalPayments = new Money(getCurrency(), "0");
         Results calculatedResult = new Results();
         List<PaymentDetail> payments = new ArrayList<PaymentDetail>();
         for (LoanScheduleEntity loanEntry : paymentsArray) {
             PaymentDetail payment = new PaymentDetail();
-            Money calculatedPayment = new Money(loanEntry.getPrincipal().getAmount().add(
+            Money calculatedPayment = new Money(getCurrency(), loanEntry.getPrincipal().getAmount().add(
                     loanEntry.getInterest().getAmount().add(loanEntry.getTotalFees().getAmount())));
             payment.setPayment(calculatedPayment);
             payment.setInterest(loanEntry.getInterest());
@@ -1631,10 +1631,10 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             payments.add(payment);
         }
         calculatedResult.setPayments(payments);
-        calculatedResult.setTotalInterest(new Money(totalInterest));
+        calculatedResult.setTotalInterest(new Money(getCurrency(), totalInterest));
         calculatedResult.setTotalPayments(totalPayments);
-        calculatedResult.setTotalPrincipal(new Money(totalPrincipal));
-        calculatedResult.setTotalFee(new Money(totalFees));
+        calculatedResult.setTotalPrincipal(new Money(getCurrency(), totalPrincipal));
+        calculatedResult.setTotalFee(new Money(getCurrency(), totalFees));
 
         /*
          * Set balance after each installment is paid, excluding fees or
@@ -1643,13 +1643,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
          * total remaining principal.
          */
         if (loanParams.loanType.getValue() == InterestType.FLAT.getValue()) {
-            Money balance = new Money(totalPrincipal.add(totalInterest));
+            Money balance = new Money(getCurrency(), totalPrincipal.add(totalInterest));
             for (PaymentDetail paymentDetail : payments) {
                 balance = balance.subtract(paymentDetail.getPrincipal()).subtract(paymentDetail.getInterest());
                 paymentDetail.setBalance(balance);
             }
         } else if (loanParams.loanType.getValue() == InterestType.DECLINING.getValue()) {
-            Money balance = new Money(totalPrincipal);
+            Money balance = new Money(getCurrency(), totalPrincipal);
             for (PaymentDetail paymentDetail : payments) {
                 balance = balance.subtract(paymentDetail.getPrincipal());
                 paymentDetail.setBalance(balance);
@@ -1801,18 +1801,18 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             String token = tokens[i].trim();
             if (StringUtils.isNotBlank(token)) {
                 if (totalPayments == false) {
-                    result.setTotalPayments(new Money(token));
+                    result.setTotalPayments(new Money(getCurrency(), token));
                     totalPayments = true;
                     totalPrincipals = false;
                 } else if (totalInterests == false) {
-                    result.setTotalInterest(new Money(token));
+                    result.setTotalInterest(new Money(getCurrency(), token));
                     totalInterests = true;
                     totalFee = false;
                 } else if (totalFee == false) {
-                    result.setTotalFee(new Money(token));
+                    result.setTotalFee(new Money(getCurrency(), token));
                     totalFee = true;
                 } else if (totalPrincipals == false) {
-                    result.setTotalPrincipal(new Money(token));
+                    result.setTotalPrincipal(new Money(getCurrency(), token));
                     totalPrincipals = true;
                     totalInterests = false;
                 } else
@@ -1830,7 +1830,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String[] tokens = tempLine.split(",");
         if (tokens.length < 2)
             return;
-        result.setAccount999(new Money(tokens[1]).negate());
+        result.setAccount999(new Money(getCurrency(), tokens[1]).negate());
 
     }
 
@@ -1841,7 +1841,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String[] tokens = tempLine.split(",");
         if (tokens.length < 8)
             return;
-        result.setRoundedTotalInterest(new Money(tokens[3]));
+        result.setRoundedTotalInterest(new Money(getCurrency(), tokens[3]));
 
     }
 
@@ -1869,23 +1869,23 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     paymentIndex = true;
                     payment = false;
                 } else if (payment == false) {
-                    paymentDetail.setPayment(new Money(token));
+                    paymentDetail.setPayment(new Money(getCurrency(), token));
                     payment = true;
                     principal = false;
                 } else if (principal == false) {
-                    paymentDetail.setPrincipal(new Money(token));
+                    paymentDetail.setPrincipal(new Money(getCurrency(), token));
                     principal = true;
                     interest = false;
                 } else if (interest == false) {
-                    paymentDetail.setInterest(new Money(token));
+                    paymentDetail.setInterest(new Money(getCurrency(), token));
                     interest = true;
                     fee = false;
                 } else if (fee == false) {
-                    paymentDetail.setFee(new Money(token));
+                    paymentDetail.setFee(new Money(getCurrency(), token));
                     fee = true;
                     balance = false;
                 } else if (balance == false) {
-                    paymentDetail.setBalance(new Money(token));
+                    paymentDetail.setBalance(new Money(getCurrency(), token));
                     result.getPayments().add(paymentDetail);
                     return;
                 }
@@ -2216,44 +2216,44 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         // set up expected results
         Results expectedResult = new Results();
-        expectedResult.setTotalInterest(new Money("11.53"));
-        expectedResult.setTotalPayments(new Money("1013.53"));
-        expectedResult.setTotalPrincipal(new Money("1002")); // this loan amount
+        expectedResult.setTotalInterest(new Money(getCurrency(), "11.53"));
+        expectedResult.setTotalPayments(new Money(getCurrency(), "1013.53"));
+        expectedResult.setTotalPrincipal(new Money(getCurrency(), "1002")); // this loan amount
         List<PaymentDetail> list = new ArrayList<PaymentDetail>();
         // 1st payment
         PaymentDetail payment = new PaymentDetail();
-        payment.setPayment(new Money("203.000"));
-        payment.setInterest(new Money("2.306"));
-        payment.setBalance(new Money("810.530"));
-        payment.setPrincipal(new Money("200.694"));
+        payment.setPayment(new Money(getCurrency(), "203.000"));
+        payment.setInterest(new Money(getCurrency(), "2.306"));
+        payment.setBalance(new Money(getCurrency(), "810.530"));
+        payment.setPrincipal(new Money(getCurrency(), "200.694"));
         list.add(payment);
         // 2nd payment
         payment = new PaymentDetail();
-        payment.setPayment(new Money("203.000"));
-        payment.setInterest(new Money("2.306"));
-        payment.setBalance(new Money("607.530"));
-        payment.setPrincipal(new Money("200.694"));
+        payment.setPayment(new Money(getCurrency(), "203.000"));
+        payment.setInterest(new Money(getCurrency(), "2.306"));
+        payment.setBalance(new Money(getCurrency(), "607.530"));
+        payment.setPrincipal(new Money(getCurrency(), "200.694"));
         list.add(payment);
         // 3rd payment
         payment = new PaymentDetail();
-        payment.setPayment(new Money("203.000"));
-        payment.setInterest(new Money("2.306"));
-        payment.setBalance(new Money("404.530"));
-        payment.setPrincipal(new Money("200.694"));
+        payment.setPayment(new Money(getCurrency(), "203.000"));
+        payment.setInterest(new Money(getCurrency(), "2.306"));
+        payment.setBalance(new Money(getCurrency(), "404.530"));
+        payment.setPrincipal(new Money(getCurrency(), "200.694"));
         list.add(payment);
         // 4th payment
         payment = new PaymentDetail();
-        payment.setPayment(new Money("203.000"));
-        payment.setInterest(new Money("2.306"));
-        payment.setBalance(new Money("201.530"));
-        payment.setPrincipal(new Money("200.694"));
+        payment.setPayment(new Money(getCurrency(), "203.000"));
+        payment.setInterest(new Money(getCurrency(), "2.306"));
+        payment.setBalance(new Money(getCurrency(), "201.530"));
+        payment.setPrincipal(new Money(getCurrency(), "200.694"));
         list.add(payment);
         // last payment
         payment = new PaymentDetail();
-        payment.setPayment(new Money("201.530"));
-        payment.setInterest(new Money("2.306"));
-        payment.setBalance(new Money("0"));
-        payment.setPrincipal(new Money("199.224"));
+        payment.setPayment(new Money(getCurrency(), "201.530"));
+        payment.setInterest(new Money(getCurrency(), "2.306"));
+        payment.setBalance(new Money(getCurrency(), "0"));
+        payment.setPrincipal(new Money(getCurrency(), "199.224"));
         list.add(payment);
         expectedResult.setPayments(list);
 

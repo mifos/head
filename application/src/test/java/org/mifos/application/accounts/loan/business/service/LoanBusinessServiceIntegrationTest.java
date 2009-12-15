@@ -181,18 +181,18 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
             Assert.assertNotNull(view.getActivity());
             Assert.assertNotNull(view.getUserPrefferedDate());
             Assert.assertNotNull(view.getActionDate().getTime());
-           Assert.assertEquals(new Money("100.0"), view.getFees());
+           Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getFees());
             Assert.assertNotNull(view.getId());
-           Assert.assertEquals(new Money("12.0"), view.getInterest());
+           Assert.assertEquals(new Money(getCurrency(), "12.0"), view.getInterest());
             Assert.assertNull(view.getLocale());
-           Assert.assertEquals(new Money("0.0"), view.getPenalty());
-           Assert.assertEquals(new Money("100.0"), view.getPrincipal());
-           Assert.assertEquals(new Money("212.0"), view.getTotal());
+           Assert.assertEquals(new Money(getCurrency(), "0.0"), view.getPenalty());
+           Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getPrincipal());
+           Assert.assertEquals(new Money(getCurrency(), "212.0"), view.getTotal());
             Assert.assertNotNull(view.getTimeStamp());
-           Assert.assertEquals(new Money("-100.0"), view.getRunningBalanceFees());
-           Assert.assertEquals(new Money("24.0"), view.getRunningBalanceInterest());
-           Assert.assertEquals(new Money("0.0"), view.getRunningBalancePenalty());
-           Assert.assertEquals(new Money("200.0"), view.getRunningBalancePrinciple());
+           Assert.assertEquals(new Money(getCurrency(), "-100.0"), view.getRunningBalanceFees());
+           Assert.assertEquals(new Money(getCurrency(), "24.0"), view.getRunningBalanceInterest());
+           Assert.assertEquals(new Money(getCurrency(), "0.0"), view.getRunningBalancePenalty());
+           Assert.assertEquals(new Money(getCurrency(), "200.0"), view.getRunningBalancePrinciple());
             break;
         }
     }

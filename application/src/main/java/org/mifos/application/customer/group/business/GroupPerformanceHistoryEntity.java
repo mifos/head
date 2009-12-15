@@ -32,9 +32,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
@@ -45,6 +47,7 @@ import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpda
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnWriteOff;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -80,18 +83,43 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     private AccountBusinessService accountBusinessService;
 
     public GroupPerformanceHistoryEntity(GroupBO group) {
-        this(0, new Money(), new Money(), new Money(), new Money(), new Money());
+        this(0, null, null, null, null, null);
         this.group = group;
     }
 
     private GroupPerformanceHistoryEntity(Integer clientCount, Money lastGroupLoanAmount, Money avgLoanForMember,
             Money totalOutstandingPortfolio, Money totalSavings, Money portfolioAtRisk,
             ConfigurationBusinessService configService, AccountBusinessService accountBusinessService) {
-        this.portfolioAtRisk = portfolioAtRisk;
-        this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-        this.totalSavings = totalSavings;
-        this.avgLoanForMember = avgLoanForMember;
-        this.lastGroupLoanAmount = lastGroupLoanAmount;
+        if (null == portfolioAtRisk) {
+            this.portfolioAtRisk = new Money(getCurrency());
+        } else {
+            this.portfolioAtRisk = portfolioAtRisk;
+        }
+
+        if (null == totalOutstandingPortfolio) {
+            this.totalOutstandingPortfolio = new Money(getCurrency());
+        } else {
+            this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+        }
+
+        if (null == totalSavings) {
+            this.totalSavings = new Money(getCurrency());
+        } else {
+            this.totalSavings = totalSavings;
+        }
+
+        if (null == avgLoanForMember) {
+            this.avgLoanForMember = new Money(getCurrency());
+        } else {
+            this.avgLoanForMember = avgLoanForMember;
+        }
+
+        if (null == lastGroupLoanAmount) {
+            this.lastGroupLoanAmount = new Money(getCurrency());
+        } else {
+            this.lastGroupLoanAmount = lastGroupLoanAmount;
+        }
+
         this.clientCount = clientCount;
         this.configService = configService;
         this.accountBusinessService = accountBusinessService;
@@ -101,7 +129,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     GroupPerformanceHistoryEntity(ConfigurationBusinessService configService,
             AccountBusinessService accountBusinessService) {
-        this(0, new Money(), new Money(), new Money(), new Money(), new Money(), configService, accountBusinessService);
+        this(0, null, null, null, null, null, configService, accountBusinessService);
     }
 
     public GroupPerformanceHistoryEntity(Integer clientCount, Money lastGroupLoanAmount, Money avgLoanForMember,
@@ -179,19 +207,19 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public Money getAvgLoanAmountForMember() throws CustomerException {
-        Money amountForActiveAccount = new Money();
+        Money amountForActiveAccount = new Money(getCurrency());
         Integer countOfActiveLoans = 0;
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amountForActiveAccount = amountForActiveAccount.add(client.getOutstandingLoanAmount());
+                amountForActiveAccount = amountForActiveAccount.add(client.getOutstandingLoanAmount(getCurrency()));
                 countOfActiveLoans += client.getActiveLoanCounts();
             }
         }
         if (countOfActiveLoans.intValue() > 0)
             return new Money(String.valueOf(amountForActiveAccount.getAmountDoubleValue()
                     / countOfActiveLoans.intValue()));
-        return new Money();
+        return new Money(getCurrency());
     }
 
     public Integer getActiveClientCount() throws CustomerException {
@@ -203,14 +231,14 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public Money getTotalOutStandingLoanAmount() throws CustomerException {
-        Money amount = group.getOutstandingLoanAmount();
+        Money amount = group.getOutstandingLoanAmount(getCurrency());
         // System.out.println("group outstanding amount: " + amount.toString());
-        Money clientAmount = new Money();
+        Money clientAmount = new Money(getCurrency());
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amount = amount.add(client.getOutstandingLoanAmount());
-                clientAmount = clientAmount.add(client.getOutstandingLoanAmount());
+                amount = amount.add(client.getOutstandingLoanAmount(getCurrency()));
+                clientAmount = clientAmount.add(client.getOutstandingLoanAmount(getCurrency()));
             }
         }
         // System.out.println("client outstanding amount: " +
@@ -220,11 +248,29 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public Money getTotalSavingsAmount() throws CustomerException {
-        Money amount = group.getSavingsBalance();
+        Money amount = group.getSavingsBalance(getCurrency());
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amount = amount.add(client.getSavingsBalance());
+                amount = amount.add(client.getSavingsBalance(getCurrency()));
+            }
+        }
+        return amount;
+    }
+
+    public MifosCurrency getCurrency() {
+        // TODO: performance history will only work if all accounts use the default (or same?) currency
+        return Money.getDefaultCurrency();
+    }
+
+    private Money getBalanceForAccountsAtRisk(CustomerBO customer) {
+        Money amount = new Money(getCurrency());
+        for (AccountBO account : customer.getAccounts()) {
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
+                LoanBO loan = (LoanBO) account;
+                if (loan.hasPortfolioAtRisk()) {
+                    amount = amount.add(loan.getRemainingPrincipalAmount());
+                }
             }
         }
         return amount;
@@ -233,11 +279,11 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     // this method calculates the PAR using the method
     // LoanBO.hasPortfolioAtRisk() to determine if a loan is in arrears
     public void generatePortfolioAtRisk() throws CustomerException {
-        Money amount = group.getBalanceForAccountsAtRisk();
+        Money amount = getBalanceForAccountsAtRisk(group);
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amount = amount.add(client.getBalanceForAccountsAtRisk());
+                amount = amount.add(getBalanceForAccountsAtRisk(client));
             }
         }
         double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();

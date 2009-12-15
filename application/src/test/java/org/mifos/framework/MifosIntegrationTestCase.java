@@ -28,6 +28,7 @@ import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
 import org.hibernate.jmx.StatisticsService;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -129,4 +130,9 @@ public class MifosIntegrationTestCase extends TestCase {
         }
     }
 
+    public MifosCurrency getCurrency() {
+        // TODO: will be replaced by a better way to get currency for integration tests
+        // NOTE: TestObjectFactory.getCurrency also exists
+        return Money.getDefaultCurrency();
+    }
 }

@@ -70,6 +70,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -461,6 +462,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");
@@ -622,6 +624,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");
@@ -1129,6 +1132,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");
@@ -1232,6 +1236,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");

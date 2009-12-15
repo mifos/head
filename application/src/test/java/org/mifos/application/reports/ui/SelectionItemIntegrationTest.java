@@ -78,7 +78,7 @@ public class SelectionItemIntegrationTest extends MifosIntegrationTestCase {
 
     public void testRetrievesMeetingDateInclusiveOfFromDate() throws Exception {
         Set<CollSheetCustBO> clientSheets = new HashSet<CollSheetCustBO>();
-        clientSheets.add(new CollSheetCustBO(CUST_ID, "", CUST_LEVEL, BRANCH_ID.shortValue(), "", LOAN_OFFICER_ID));
+        clientSheets.add(new CollSheetCustBO(CUST_ID, "", CUST_LEVEL, BRANCH_ID.shortValue(), "", LOAN_OFFICER_ID, getCurrency()));
         CollectionSheetBO collectionSheet = new CollectionSheetBO();
         collectionSheet.populateTestInstance(DateUtils.convertToSqlDate(FROM_DATE), DateUtils.currentDateAsSqlDate(),
                 clientSheets, STATUS_FLAG);

@@ -36,26 +36,26 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.security.util.UserContext;
-import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private final MifosLogger logger;
@@ -77,6 +77,8 @@ public class LoanPrdActionForm extends BaseActionForm {
     private String prdApplicableMaster;
 
     private String loanCounter;
+    
+    private Short currencyId;
 
     private String minLoanAmount;
 
@@ -291,274 +293,235 @@ public class LoanPrdActionForm extends BaseActionForm {
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null)
             return lastLoanDefaultLoanAmt1Value;
-        else
-            return getDoubleValueForMoney(lastLoanDefaultLoanAmt1);
+        return getDoubleValueForMoney(lastLoanDefaultLoanAmt1);
     }
 
     public Double getLastLoanDefaultLoanAmt2Value() {
         if (lastLoanDefaultLoanAmt2Value != null)
             return lastLoanDefaultLoanAmt2Value;
-        else
-            return getDoubleValueForMoney(lastLoanDefaultLoanAmt2);
+        return getDoubleValueForMoney(lastLoanDefaultLoanAmt2);
     }
 
     public Double getLastLoanDefaultLoanAmt3Value() {
         if (lastLoanDefaultLoanAmt3Value != null)
             return lastLoanDefaultLoanAmt3Value;
-        else
-            return getDoubleValueForMoney(lastLoanDefaultLoanAmt3);
+        return getDoubleValueForMoney(lastLoanDefaultLoanAmt3);
     }
 
     public Double getLastLoanDefaultLoanAmt4Value() {
         if (lastLoanDefaultLoanAmt4Value != null)
             return lastLoanDefaultLoanAmt4Value;
-        else
-            return getDoubleValueForMoney(lastLoanDefaultLoanAmt4);
+        return getDoubleValueForMoney(lastLoanDefaultLoanAmt4);
     }
 
     public Double getLastLoanDefaultLoanAmt5Value() {
         if (lastLoanDefaultLoanAmt5Value != null)
             return lastLoanDefaultLoanAmt5Value;
-        else
-            return getDoubleValueForMoney(lastLoanDefaultLoanAmt5);
+        return getDoubleValueForMoney(lastLoanDefaultLoanAmt5);
     }
 
     public Double getLastLoanDefaultLoanAmt6Value() {
         if (lastLoanDefaultLoanAmt6Value != null)
             return lastLoanDefaultLoanAmt6Value;
-        else
-            return getDoubleValueForMoney(lastLoanDefaultLoanAmt6);
+        return getDoubleValueForMoney(lastLoanDefaultLoanAmt6);
     }
 
     public Double getMinLoanAmountValue() {
         if (minLoanAmountValue != null)
             return minLoanAmountValue;
-        else
-            return getDoubleValueForMoney(minLoanAmount);
+        return getDoubleValueForMoney(minLoanAmount);
     }
 
     public Double getMaxLoanAmountValue() {
         if (maxLoanAmountValue != null)
             return maxLoanAmountValue;
-        else
-            return getDoubleValueForMoney(maxLoanAmount);
+        return getDoubleValueForMoney(maxLoanAmount);
     }
 
     public Double getDefaultLoanAmountValue() {
         if (defaultLoanAmountValue != null)
             return defaultLoanAmountValue;
-        else
-            return getDoubleValueForMoney(defaultLoanAmount);
+        return getDoubleValueForMoney(defaultLoanAmount);
     }
 
     public Double getLastLoanMinLoanAmt1Value() {
         if (lastLoanMinLoanAmt1Value != null)
             return lastLoanMinLoanAmt1Value;
-        else
-            return getDoubleValueForMoney(lastLoanMinLoanAmt1);
+        return getDoubleValueForMoney(lastLoanMinLoanAmt1);
     }
 
     public Double getLastLoanMinLoanAmt2Value() {
         if (lastLoanMinLoanAmt2Value != null)
             return lastLoanMinLoanAmt2Value;
-        else
-            return getDoubleValueForMoney(lastLoanMinLoanAmt2);
+        return getDoubleValueForMoney(lastLoanMinLoanAmt2);
     }
 
     public Double getLastLoanMinLoanAmt3Value() {
         if (lastLoanMinLoanAmt3Value != null)
             return lastLoanMinLoanAmt3Value;
-        else
-            return getDoubleValueForMoney(lastLoanMinLoanAmt3);
+        return getDoubleValueForMoney(lastLoanMinLoanAmt3);
     }
 
     public Double getLastLoanMinLoanAmt4Value() {
         if (lastLoanMinLoanAmt4Value != null)
             return lastLoanMinLoanAmt4Value;
-        else
-            return getDoubleValueForMoney(lastLoanMinLoanAmt4);
+        return getDoubleValueForMoney(lastLoanMinLoanAmt4);
     }
 
     public Double getLastLoanMinLoanAmt5Value() {
         if (lastLoanMinLoanAmt5Value != null)
             return lastLoanMinLoanAmt5Value;
-        else
-            return getDoubleValueForMoney(lastLoanMinLoanAmt5);
+        return getDoubleValueForMoney(lastLoanMinLoanAmt5);
     }
 
     public Double getLastLoanMinLoanAmt6Value() {
         if (lastLoanMinLoanAmt6Value != null)
             return lastLoanMinLoanAmt6Value;
-        else
-            return getDoubleValueForMoney(lastLoanMinLoanAmt6);
+        return getDoubleValueForMoney(lastLoanMinLoanAmt6);
     }
 
     public Double getLastLoanMaxLoanAmt1Value() {
         if (lastLoanMaxLoanAmt1Value != null)
             return lastLoanMaxLoanAmt1Value;
-        else
-            return getDoubleValueForMoney(lastLoanMaxLoanAmt1);
+        return getDoubleValueForMoney(lastLoanMaxLoanAmt1);
     }
 
     public Double getLastLoanMaxLoanAmt2Value() {
         if (lastLoanMaxLoanAmt2Value != null)
             return lastLoanMaxLoanAmt2Value;
-        else
-            return getDoubleValueForMoney(lastLoanMaxLoanAmt2);
+        return getDoubleValueForMoney(lastLoanMaxLoanAmt2);
     }
 
     public Double getLastLoanMaxLoanAmt3Value() {
         if (lastLoanMaxLoanAmt3Value != null)
             return lastLoanMaxLoanAmt3Value;
-        else
-            return getDoubleValueForMoney(lastLoanMaxLoanAmt3);
+        return getDoubleValueForMoney(lastLoanMaxLoanAmt3);
     }
 
     public Double getLastLoanMaxLoanAmt4Value() {
         if (lastLoanMaxLoanAmt4Value != null)
             return lastLoanMaxLoanAmt4Value;
-        else
-            return getDoubleValueForMoney(lastLoanMaxLoanAmt4);
+        return getDoubleValueForMoney(lastLoanMaxLoanAmt4);
     }
 
     public Double getLastLoanMaxLoanAmt5Value() {
         if (lastLoanMaxLoanAmt5Value != null)
             return lastLoanMaxLoanAmt5Value;
-        else
-            return getDoubleValueForMoney(lastLoanMaxLoanAmt5);
+        return getDoubleValueForMoney(lastLoanMaxLoanAmt5);
     }
 
     public Double getLastLoanMaxLoanAmt6Value() {
         if (lastLoanMaxLoanAmt6Value != null)
             return lastLoanMaxLoanAmt6Value;
-        else
-            return getDoubleValueForMoney(lastLoanMaxLoanAmt6);
+        return getDoubleValueForMoney(lastLoanMaxLoanAmt6);
     }
 
     public Double getCycleLoanMinLoanAmt1Value() {
         if (cycleLoanMinLoanAmt1Value != null)
             return cycleLoanMinLoanAmt1Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMinLoanAmt1);
+        return getDoubleValueForMoney(cycleLoanMinLoanAmt1);
     }
 
     public Double getCycleLoanMinLoanAmt2Value() {
         if (cycleLoanMinLoanAmt2Value != null)
             return cycleLoanMinLoanAmt2Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMinLoanAmt2);
+        return getDoubleValueForMoney(cycleLoanMinLoanAmt2);
     }
 
     public Double getCycleLoanMinLoanAmt3Value() {
         if (cycleLoanMinLoanAmt3Value != null)
             return cycleLoanMinLoanAmt3Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMinLoanAmt3);
+        return getDoubleValueForMoney(cycleLoanMinLoanAmt3);
     }
 
     public Double getCycleLoanMinLoanAmt4Value() {
         if (cycleLoanMinLoanAmt4Value != null)
             return cycleLoanMinLoanAmt4Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMinLoanAmt4);
+        return getDoubleValueForMoney(cycleLoanMinLoanAmt4);
     }
 
     public Double getCycleLoanMinLoanAmt5Value() {
         if (cycleLoanMinLoanAmt5Value != null)
             return cycleLoanMinLoanAmt5Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMinLoanAmt5);
+        return getDoubleValueForMoney(cycleLoanMinLoanAmt5);
     }
 
     public Double getCycleLoanMinLoanAmt6Value() {
         if (cycleLoanMinLoanAmt6Value != null)
             return cycleLoanMinLoanAmt6Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMinLoanAmt6);
+        return getDoubleValueForMoney(cycleLoanMinLoanAmt6);
     }
 
     public Double getCycleLoanMaxLoanAmt1Value() {
         if (cycleLoanMaxLoanAmt1Value != null)
             return cycleLoanMaxLoanAmt1Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMaxLoanAmt1);
+        return getDoubleValueForMoney(cycleLoanMaxLoanAmt1);
     }
 
     public Double getCycleLoanMaxLoanAmt2Value() {
         if (cycleLoanMaxLoanAmt2Value != null)
             return cycleLoanMaxLoanAmt2Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMaxLoanAmt2);
+        return getDoubleValueForMoney(cycleLoanMaxLoanAmt2);
     }
 
     public Double getCycleLoanMaxLoanAmt3Value() {
         if (cycleLoanMaxLoanAmt3Value != null)
             return cycleLoanMaxLoanAmt3Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMaxLoanAmt3);
+        return getDoubleValueForMoney(cycleLoanMaxLoanAmt3);
     }
 
     public Double getCycleLoanMaxLoanAmt4Value() {
         if (cycleLoanMaxLoanAmt4Value != null)
             return cycleLoanMaxLoanAmt4Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMaxLoanAmt4);
+        return getDoubleValueForMoney(cycleLoanMaxLoanAmt4);
     }
 
     public Double getCycleLoanMaxLoanAmt5Value() {
         if (cycleLoanMaxLoanAmt5Value != null)
             return cycleLoanMaxLoanAmt5Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMaxLoanAmt5);
+        return getDoubleValueForMoney(cycleLoanMaxLoanAmt5);
     }
 
     public Double getCycleLoanMaxLoanAmt6Value() {
         if (cycleLoanMaxLoanAmt6Value != null)
             return cycleLoanMaxLoanAmt6Value;
-        else
-            return getDoubleValueForMoney(cycleLoanMaxLoanAmt6);
+        return getDoubleValueForMoney(cycleLoanMaxLoanAmt6);
     }
 
     public Double getCycleLoanDefaultLoanAmt1Value() {
         if (cycleLoanDefaultLoanAmt1Value != null)
             return cycleLoanDefaultLoanAmt1Value;
-        else
-            return getDoubleValueForMoney(cycleLoanDefaultLoanAmt1);
+        return getDoubleValueForMoney(cycleLoanDefaultLoanAmt1);
     }
 
     public Double getCycleLoanDefaultLoanAmt2Value() {
         if (cycleLoanDefaultLoanAmt2Value != null)
             return cycleLoanDefaultLoanAmt2Value;
-        else
-            return getDoubleValueForMoney(cycleLoanDefaultLoanAmt2);
+        return getDoubleValueForMoney(cycleLoanDefaultLoanAmt2);
     }
 
     public Double getCycleLoanDefaultLoanAmt3Value() {
         if (cycleLoanDefaultLoanAmt3Value != null)
             return cycleLoanDefaultLoanAmt3Value;
-        else
-            return getDoubleValueForMoney(cycleLoanDefaultLoanAmt3);
+        return getDoubleValueForMoney(cycleLoanDefaultLoanAmt3);
     }
 
     public Double getCycleLoanDefaultLoanAmt4Value() {
         if (cycleLoanDefaultLoanAmt4Value != null)
             return cycleLoanDefaultLoanAmt4Value;
-        else
-            return getDoubleValueForMoney(cycleLoanDefaultLoanAmt4);
+        return getDoubleValueForMoney(cycleLoanDefaultLoanAmt4);
     }
 
     public Double getCycleLoanDefaultLoanAmt5Value() {
         if (cycleLoanDefaultLoanAmt5Value != null)
             return cycleLoanDefaultLoanAmt5Value;
-        else
-            return getDoubleValueForMoney(cycleLoanDefaultLoanAmt5);
+        return getDoubleValueForMoney(cycleLoanDefaultLoanAmt5);
     }
 
     public Double getCycleLoanDefaultLoanAmt6Value() {
         if (cycleLoanDefaultLoanAmt6Value != null)
             return cycleLoanDefaultLoanAmt6Value;
-        else
-            return getDoubleValueForMoney(cycleLoanDefaultLoanAmt6);
+        return getDoubleValueForMoney(cycleLoanDefaultLoanAmt6);
     }
 
     public String getCalcInstallmentType() {
@@ -1386,6 +1349,14 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public Short getCurrencyId() {
+        return this.currencyId;
+    }
+
+    public void setCurrencyId(Short currencyId) {
+        this.currencyId = currencyId;
     }
 
     public String getFreqOfInstallments() {

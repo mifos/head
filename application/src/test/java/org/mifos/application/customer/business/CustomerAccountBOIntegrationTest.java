@@ -304,7 +304,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountActionDateEntity accountActionDateEntity : customerAccount.getAccountActionDates()) {
             CustomerScheduleEntity customerSchEntity = (CustomerScheduleEntity) accountActionDateEntity;
             if (customerSchEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(new Money("33.0"), customerSchEntity.getMiscFee());
+                Assert.assertEquals(new Money(getCurrency(), "33.0"), customerSchEntity.getMiscFee());
             }
         }
         TestObjectFactory.flushandCloseSession();
@@ -315,7 +315,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountActionDateEntity accountAction : customerAccount.getAccountActionDates()) {
             CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(new Money(), accountActionDateEntity.getTotalFeeDueWithMiscFee());
+                Assert.assertEquals(new Money(getCurrency()), accountActionDateEntity.getTotalFeeDueWithMiscFee());
             }
         }
     }
@@ -333,9 +333,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
+                    assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
                 } else {
-                    assertEquals(new Money("100"), accountFeesActionDetailEntity.getFeeAmount());
+                    assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
             }
         }
@@ -359,9 +359,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
+                    assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
                 } else {
-                    assertEquals(new Money("100"), accountFeesActionDetailEntity.getFeeAmount());
+                    assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
             }
         }
@@ -417,7 +417,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
 
-        checkActivity(new Money(), customerAccountBO);
+        checkActivity(new Money(getCurrency()), customerAccountBO);
 
         getInactiveFee();
     }
@@ -466,7 +466,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     public void testUpdateAccountActivity() throws NumberFormatException, SystemException, ApplicationException {
         createInitialObjects();
         CustomerAccountBO customerAccountBO = group.getCustomerAccount();
-        customerAccountBO.updateAccountActivity(null, null, new Money("222"), null, Short.valueOf("1"),
+        customerAccountBO.updateAccountActivity(null, null, new Money(getCurrency(), "222"), null, Short.valueOf("1"),
                 "Mainatnence Fee removed");
         TestObjectFactory.updateObject(customerAccountBO);
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -615,12 +615,12 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         customerAccountBO.setUserContext(uc);
         customerAccountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
-        Money amount = new Money();
+        Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()) {
             CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
             if (customerScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 amount = customerScheduleEntity.getMiscFee();
-                Assert.assertEquals(new Money("33.0"), customerScheduleEntity.getMiscFee());
+                Assert.assertEquals(new Money(getCurrency(), "33.0"), customerScheduleEntity.getMiscFee());
             }
         }
         if (customerAccountBO.getCustomerActivitDetails() != null) {
@@ -669,12 +669,12 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         customerAccountBO.setUserContext(uc);
         customerAccountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
-        Money amount = new Money();
+        Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()) {
             CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
             if (customerScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 amount = customerScheduleEntity.getMiscFee();
-                Assert.assertEquals(new Money("33.0"), customerScheduleEntity.getMiscFee());
+                Assert.assertEquals(new Money(getCurrency(), "33.0"), customerScheduleEntity.getMiscFee());
             }
         }
         if (customerAccountBO.getCustomerActivitDetails() != null) {
@@ -702,12 +702,12 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .getAmountDoubleValue());
         StaticHibernateUtil.commitTransaction();
         Date lastAppliedDate = null;
-        Money amount = new Money();
+        Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()) {
             CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
             if (customerScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 Assert.assertEquals(2, customerScheduleEntity.getAccountFeesActionDetails().size());
-                amount = amount.add(new Money("200"));
+                amount = amount.add(new Money(getCurrency(), "200"));
                 lastAppliedDate = customerScheduleEntity.getActionDate();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
                         .getAccountFeesActionDetails()) {
@@ -794,7 +794,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .getAmountDoubleValue());
         StaticHibernateUtil.commitTransaction();
         Date lastAppliedDate = null;
-        Money amount = new Money("20");
+        Money amount = new Money(getCurrency(), "20");
 
         for (AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()) {
             CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
@@ -847,10 +847,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                         .getAccountFeesActionDetails()) {
 
                     if (accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee")) {
-                        Assert.assertEquals(new Money("100.0"), accountFeesActionDetailEntity.getFeeAmount());
+                        Assert.assertEquals(new Money(getCurrency(), "100.0"), accountFeesActionDetailEntity.getFeeAmount());
                     } else {
                         Assert.assertEquals("Upfront Fee", accountFeesActionDetailEntity.getFee().getFeeName());
-                        Assert.assertEquals(new Money("30.0"), accountFeesActionDetailEntity.getFeeAmount());
+                        Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesActionDetailEntity.getFeeAmount());
                     }
                 }
             } else if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
@@ -887,10 +887,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                         .getAccountFeesActionDetails()) {
 
                     if (accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee")) {
-                        Assert.assertEquals(new Money("100.0"), accountFeesActionDetailEntity.getFeeAmount());
+                        Assert.assertEquals(new Money(getCurrency(), "100.0"), accountFeesActionDetailEntity.getFeeAmount());
                     } else {
                         Assert.assertEquals("Upfront Fee", accountFeesActionDetailEntity.getFee().getFeeName());
-                        Assert.assertEquals(new Money("30.0"), accountFeesActionDetailEntity.getFeeAmount());
+                        Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesActionDetailEntity.getFeeAmount());
                     }
                 }
             } else if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
@@ -994,7 +994,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         CustomerAccountBO customerAccount = center.getCustomerAccount();
 
         Date transactionDate = incrementCurrentDate(14);
-        PaymentData paymentData = PaymentData.createPaymentData(new Money("300"), center.getPersonnel(), Short
+        PaymentData paymentData = PaymentData.createPaymentData(new Money(getCurrency(), "300"), center.getPersonnel(), Short
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
 
@@ -1007,18 +1007,18 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         createCenter();
         String expectedErrorMessage = "Attempting to pay a customer account balance of zero for customer: "
                 + center.getGlobalCustNum();
-        verifyExpectedMessageThrown(center, new Money("0.0"), 1, expectedErrorMessage);
+        verifyExpectedMessageThrown(center, new Money(getCurrency(), "0.0"), 1, expectedErrorMessage);
     }
 
     public void testAccountExceptionThrownForAPaymentNotEqualToTheTotalOutstandingCustomerAccountAmount()
             throws Exception {
         createCenter();
-        verifyExpectedDetailMessageThrown(center, new Money("299.99"), 14, "errors.paymentmismatch");
+        verifyExpectedDetailMessageThrown(center, new Money(getCurrency(), "299.99"), 14, "errors.paymentmismatch");
     }
 
     public void testAccountExceptionThrownForAPaymentWithNoOutstandingCustomerAccountInstallments() throws Exception {
         createCenter();
-        verifyExpectedMessageThrown(center, new Money("8.54"), -2, 
+        verifyExpectedMessageThrown(center, new Money(getCurrency(), "8.54"), -2, 
                 "Trying to pay account charges before the due date.");
     }
 
@@ -1065,7 +1065,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         CustomerAccountBO customerAccount = center.getCustomerAccount();
 
         Date transactionDate = incrementCurrentDate(14);
-        PaymentData paymentData = PaymentData.createPaymentData(new Money("300"), center.getPersonnel(), Short
+        PaymentData paymentData = PaymentData.createPaymentData(new Money(getCurrency(), "300"), center.getPersonnel(), Short
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
         customerAccount.applyPaymentWithPersist(paymentData);
@@ -1074,8 +1074,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
             for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
 
-                final Money zeroAmount = new Money("0.0");
-                final Money OneHundredAmount = new Money("100.0");
+                final Money zeroAmount = new Money(getCurrency(), "0.0");
+                final Money OneHundredAmount = new Money(getCurrency(), "100.0");
 
                 if (accountPaymentEntity.getAccountTrxns() != null
                         && accountPaymentEntity.getAccountTrxns().size() == 3) {
@@ -1115,10 +1115,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         CustomerAccountBO customerAccount = center.getCustomerAccount();
 
-        final Money fiftyAmount = new Money("50.0");
-        final Money seventyAmount = new Money("70.0");
-        final Money oneHundredTwentyAmount = new Money("120.0");
-        final Money twoHundredFortyAmount = new Money("240.0");
+        final Money fiftyAmount = new Money(getCurrency(), "50.0");
+        final Money seventyAmount = new Money(getCurrency(), "70.0");
+        final Money oneHundredTwentyAmount = new Money(getCurrency(), "120.0");
+        final Money twoHundredFortyAmount = new Money(getCurrency(), "240.0");
         for (AccountActionDateEntity accountActionDateEntity : customerAccount.getAccountActionDates()) {
             CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
             if (customerSchedule.getInstallmentId() != 2) {
@@ -1175,10 +1175,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         AccountFeesEntity extraAccountFeesEntity = new AccountFeesEntity(customerAccount, extraFee, 11.66);
         customerAccount.getAccountFees().add(extraAccountFeesEntity);
 
-        final Money eightAmount = new Money("8.0");
-        final Money fiftyAmount = new Money("50.0");
-        final Money seventyAmount = new Money("70.0");
-        final Money oneHundredTwentyAmount = new Money("120.0");
+        final Money eightAmount = new Money(getCurrency(), "8.0");
+        final Money fiftyAmount = new Money(getCurrency(), "50.0");
+        final Money seventyAmount = new Money(getCurrency(), "70.0");
+        final Money oneHundredTwentyAmount = new Money(getCurrency(), "120.0");
         for (AccountActionDateEntity accountActionDateEntity : customerAccount.getAccountActionDates()) {
             CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
             if (customerSchedule.getInstallmentId() == 2) {
@@ -1187,11 +1187,11 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             }
             if (customerSchedule.getInstallmentId() == 3) {
                 CustomerAccountBOTestUtils.applyPeriodicFees(customerSchedule, extraAccountFeesEntity.getFees()
-                        .getFeeId(), new Money("8"));
+                        .getFeeId(), new Money(getCurrency(), "8"));
             }
         }
         Date transactionDate = incrementCurrentDate(14);
-        PaymentData paymentData = PaymentData.createPaymentData(new Money("428"), center.getPersonnel(), Short
+        PaymentData paymentData = PaymentData.createPaymentData(new Money(getCurrency(), "428"), center.getPersonnel(), Short
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
         customerAccount.applyPaymentWithPersist(paymentData);

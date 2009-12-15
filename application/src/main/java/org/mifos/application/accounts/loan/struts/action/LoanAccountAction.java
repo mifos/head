@@ -118,6 +118,7 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -278,9 +279,9 @@ public class LoanAccountAction extends AccountAppAction {
         Integer accountId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
         LoanBO loanBO = loanBusinessService.getAccount(accountId);
         ViewInstallmentDetails viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO
-                .getDetailsOfNextInstallment());
+                .getDetailsOfNextInstallment(), loanBO.getCurrency());
         ViewInstallmentDetails viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO
-                .getDetailsOfInstallmentsInArrears());
+                .getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
         Money totalAmountDue = viewUpcomingInstallmentDetails.getSubTotal().add(
                 viewOverDueInstallmentDetails.getSubTotal());
         SessionUtils.setAttribute(VIEW_UPCOMING_INSTALLMENT_DETAILS, viewUpcomingInstallmentDetails, request);
@@ -994,7 +995,7 @@ public class LoanAccountAction extends AccountAppAction {
         if (isRedoOperation) {
             individualLoan = LoanBO.redoIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
                     getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
-                            .getState(), new Money(loanAccountDetail.getLoanAmount().toString()), loan
+                            .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()), loan
                             .getNoOfInstallments(), loan.getDisbursementDate(), false,
                     isRepaymentIndepOfMeetingEnabled, loan.getInterestRate(), loan.getGracePeriodDuration(), loan
                             .getFund(), new ArrayList<FeeView>(), new ArrayList<CustomFieldView>());
@@ -1002,7 +1003,7 @@ public class LoanAccountAction extends AccountAppAction {
         } else {
             individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
                     getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
-                            .getState(), new Money(loanAccountDetail.getLoanAmount().toString()), loan
+                            .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()), loan
                             .getNoOfInstallments(), loan.getDisbursementDate(), false,
                     isRepaymentIndepOfMeetingEnabled, loan.getInterestRate(), loan.getGracePeriodDuration(), loan
                             .getFund(), new ArrayList<FeeView>(), new ArrayList<CustomFieldView>());
@@ -1568,21 +1569,21 @@ public class LoanAccountAction extends AccountAppAction {
         loanAccountActionForm.setOriginalDisbursementDate(new java.sql.Date(loan.getDisbursementDate().getTime()));
     }
 
-    private ViewInstallmentDetails getUpcomingInstallmentDetails(final AccountActionDateEntity upcomingAccountActionDate) {
+    private ViewInstallmentDetails getUpcomingInstallmentDetails(final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
         if (upcomingAccountActionDate != null) {
             LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
             return new ViewInstallmentDetails(upcomingInstallment.getPrincipalDue(), upcomingInstallment
                     .getInterestDue(), upcomingInstallment.getTotalFeeDueWithMiscFeeDue(), upcomingInstallment
                     .getPenaltyDue());
         }
-        return new ViewInstallmentDetails(new Money(), new Money(), new Money(), new Money());
+        return new ViewInstallmentDetails(new Money(currency), new Money(currency), new Money(currency), new Money(currency));
     }
 
-    private ViewInstallmentDetails getOverDueInstallmentDetails(final List<AccountActionDateEntity> overDueInstallmentList) {
-        Money principalDue = new Money();
-        Money interestDue = new Money();
-        Money feesDue = new Money();
-        Money penaltyDue = new Money();
+    private ViewInstallmentDetails getOverDueInstallmentDetails(final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
+        Money principalDue = new Money(currency);
+        Money interestDue = new Money(currency);
+        Money feesDue = new Money(currency);
+        Money penaltyDue = new Money(currency);
         for (AccountActionDateEntity accountActionDate : overDueInstallmentList) {
             LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
             principalDue = principalDue.add(installment.getPrincipalDue());

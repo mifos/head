@@ -79,10 +79,10 @@ public class OverDueAmounts {
     }
 
     public void add(OverDueAmounts dueAmounts) {
-        this.principalOverDue = new Money().add(principalOverDue).add(dueAmounts.getPrincipalOverDue());
-        this.interestOverdue = new Money().add(interestOverdue).add(dueAmounts.getInterestOverdue());
-        this.penaltyOverdue = new Money().add(penaltyOverdue).add(dueAmounts.getPenaltyOverdue());
-        this.feesOverdue = new Money().add(feesOverdue).add(dueAmounts.getFeesOverdue());
+        this.principalOverDue = new Money(principalOverDue.getCurrency()).add(principalOverDue).add(dueAmounts.getPrincipalOverDue());
+        this.interestOverdue = new Money(interestOverdue.getCurrency()).add(interestOverdue).add(dueAmounts.getInterestOverdue());
+        this.penaltyOverdue = new Money(penaltyOverdue.getCurrency()).add(penaltyOverdue).add(dueAmounts.getPenaltyOverdue());
+        this.feesOverdue = new Money(feesOverdue.getCurrency()).add(feesOverdue).add(dueAmounts.getFeesOverdue());
 
     }
 }

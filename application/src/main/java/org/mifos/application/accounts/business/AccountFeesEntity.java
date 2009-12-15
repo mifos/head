@@ -70,7 +70,7 @@ public class AccountFeesEntity extends PersistentObject {
         this.account = account;
         this.fees = fee;
         this.feeAmount = feeAmount;
-        this.accountFeeAmount = new Money(String.valueOf(feeAmount));
+        this.accountFeeAmount = new Money(account.getCurrency(), String.valueOf(feeAmount));
     }
 
     public AccountFeesEntity(final AccountBO account, final FeeBO fees, final Double feeAmount, final Short feeStatus, final Date statusChangeDate,
@@ -78,7 +78,7 @@ public class AccountFeesEntity extends PersistentObject {
         accountFeeId = null;
         this.account = account;
         this.fees = fees;
-        this.accountFeeAmount = new Money(String.valueOf(feeAmount));
+        this.accountFeeAmount = new Money(account.getCurrency(), String.valueOf(feeAmount));
         this.feeAmount = feeAmount;
         this.feeStatus = feeStatus;
         this.statusChangeDate = statusChangeDate;

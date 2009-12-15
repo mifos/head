@@ -97,7 +97,7 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
        Assert.assertEquals(1, group.getUpdatedBy().intValue());
        Assert.assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
-       Assert.assertEquals(new Money("0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
+       Assert.assertEquals(new Money(getCurrency(), "0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
 
     }
 

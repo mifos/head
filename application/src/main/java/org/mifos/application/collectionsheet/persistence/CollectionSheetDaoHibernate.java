@@ -375,7 +375,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             if (Constants.YES == loanDisbursementAccount.getPayInterestAtDisbursement()) {
                 amountDueAtDisbursement = findAmountDueWhenInterestIsDueAtDibursementTime(accountId);
             } else {
-                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId);
+                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId).getAmountDoubleValue();
             }
 
             loanDisbursementAccount.setAmountDueAtDisbursement(amountDueAtDisbursement);

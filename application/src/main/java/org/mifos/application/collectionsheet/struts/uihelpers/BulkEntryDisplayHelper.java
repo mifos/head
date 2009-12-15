@@ -597,11 +597,12 @@ public class BulkEntryDisplayHelper {
             final StringBuilder builder, final MifosCurrency currency, final int rows, final Double[] groupTotals, final Double[] centerTotals,
             final int size, final int initialAccNo, final int loanProductSize,
             final int savingsProductSize, final int levelId) {
+        //FIXME calculation should be done using Money instances only, lots of double and string switching is done
         String amount = "";
         Double totalAmount = 0.0;
         if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
             totalAmount = customerAccountView.getTotalAmountDue().getAmountDoubleValue();
-            amount = new Money(totalAmount.toString()).toString();
+            amount = new Money(currency, totalAmount.toString()).toString();
         } else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
                 || method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)
                 || method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
@@ -665,7 +666,7 @@ public class BulkEntryDisplayHelper {
                 builder.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
                 for (int i = 0; i < loanProductsSize + savingsProductSize; i++) {
                     Double groupTotal = totals[i] == null ? 0.0 : totals[i];
-                    Money groupTotalMoney = new Money(groupTotal.toString());
+                    Money groupTotalMoney = new Money(collectionSheetEntryView.getCurrency(), groupTotal.toString());
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"group[" + rows + "][" + i + "]\" type=\"text\" style=\"width:40px\""
                             + " value=\"" + groupTotalMoney + "\" size=\"6\" disabled>");
@@ -675,7 +676,7 @@ public class BulkEntryDisplayHelper {
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
                 for (int i = loanProductsSize + savingsProductSize; i < 2 * (loanProductsSize + savingsProductSize); i++) {
                     Double groupTotal = totals[i] == null ? 0.0 : totals[i];
-                    Money groupTotalMoney = new Money(groupTotal.toString());
+                    Money groupTotalMoney = new Money(collectionSheetEntryView.getCurrency(), groupTotal.toString());
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"group[" + rows + "][" + i + "]\" type=\"text\" style=\"width:40px\""
                             + " value=\"" + groupTotalMoney + "\" size=\"6\" disabled>");
@@ -685,7 +686,7 @@ public class BulkEntryDisplayHelper {
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
                 Double groupTotal = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
                         : totals[(2 * (loanProductsSize + savingsProductSize))];
-                Money groupTotalMoney = new Money(groupTotal.toString());
+                Money groupTotalMoney = new Money(collectionSheetEntryView.getCurrency(), groupTotal.toString());
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append("<input name=\"group[" + rows + "][" + 2 * (loanProductsSize + savingsProductSize)
                         + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + groupTotalMoney
@@ -701,7 +702,7 @@ public class BulkEntryDisplayHelper {
 
                 for (int i = 0; i < loanProductsSize + savingsProductSize; i++) {
                     Double centerTotal = totals[i] == null ? 0.0 : totals[i];
-                    Money centerTotalMoney = new Money(centerTotal.toString());
+                    Money centerTotalMoney = new Money(collectionSheetEntryView.getCurrency(), centerTotal.toString());
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"center[" + i + "]\" type=\"text\" style=\"width:40px\"" + " value=\""
                             + centerTotalMoney + "\" size=\"6\" disabled>");
@@ -711,7 +712,7 @@ public class BulkEntryDisplayHelper {
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
                 for (int i = loanProductsSize + savingsProductSize; i < 2 * (loanProductsSize + savingsProductSize); i++) {
                     Double centerTotal = totals[i] == null ? 0.0 : totals[i];
-                    Money centerTotalMoney = new Money(centerTotal.toString());
+                    Money centerTotalMoney = new Money(collectionSheetEntryView.getCurrency(), centerTotal.toString());
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"center[" + i + "]\" type=\"text\" style=\"width:40px\"" + " value=\""
                             + centerTotalMoney + "\" size=\"6\" disabled>");
@@ -721,7 +722,7 @@ public class BulkEntryDisplayHelper {
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
                 Double centerTotal = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
                         : totals[(2 * (loanProductsSize + savingsProductSize))];
-                Money centerTotalMoney = new Money(centerTotal.toString());
+                Money centerTotalMoney = new Money(collectionSheetEntryView.getCurrency(), centerTotal.toString());
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append("<input name=\"center[" + 2 * (loanProductsSize + savingsProductSize)
                         + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + centerTotalMoney
@@ -743,7 +744,7 @@ public class BulkEntryDisplayHelper {
 
             for (int i = 0; i < loanProductsSize + savingsProductSize; i++) {
                 Double total = totals[i] == null ? 0.0 : totals[i];
-                Money totalMoney = new Money(total.toString());
+                Money totalMoney = new Money(collectionSheetEntryView.getCurrency(), total.toString());
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append(totalMoney);
                 builder.append("</td>");
@@ -752,7 +753,7 @@ public class BulkEntryDisplayHelper {
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
             for (int i = loanProductsSize + savingsProductSize; i < 2 * (loanProductsSize + savingsProductSize); i++) {
                 Double total = totals[i] == null ? 0.0 : totals[i];
-                Money totalMoney = new Money(total.toString());
+                Money totalMoney = new Money(collectionSheetEntryView.getCurrency(), total.toString());
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append(totalMoney);
                 builder.append("</td>");
@@ -761,7 +762,7 @@ public class BulkEntryDisplayHelper {
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
             Double total = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
                     : totals[(2 * (loanProductsSize + savingsProductSize))];
-            Money totalMoney = new Money(total.toString());
+            Money totalMoney = new Money(collectionSheetEntryView.getCurrency(), total.toString());
             builder.append("<td class=\"drawtablerow\">");
             builder.append(totalMoney);
             builder.append("</td>");
@@ -772,7 +773,7 @@ public class BulkEntryDisplayHelper {
         BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
     }
 
-    public StringBuilder buildTotals(final Double[] totals, final int loanProductsSize, final int savingsPoductsSize, final String method,
+    public StringBuilder buildTotals(final MifosCurrency currency, final Double[] totals, final int loanProductsSize, final int savingsPoductsSize, final String method,
             final UserContext userContext) {
         Double dueColl = 0.0;
         Double withDrawals = 0.0;
@@ -794,13 +795,13 @@ public class BulkEntryDisplayHelper {
         Double totIssue = withDrawals + loanDisb;
         Double netCash = totColl - totIssue;
 
-        Money totalDueCollection = new Money(dueColl.toString());
-        Money totalLoanDisburesed = new Money(loanDisb.toString());
-        Money otherCollection = new Money(otherColl.toString());
-        Money totalWithDrawals = new Money(withDrawals.toString());
-        Money totalCollection = new Money(totColl.toString());
-        Money totalIssue = new Money(totIssue.toString());
-        Money netCashAvailable = new Money(netCash.toString());
+        Money totalDueCollection = new Money(currency, dueColl.toString());
+        Money totalLoanDisburesed = new Money(currency, loanDisb.toString());
+        Money otherCollection = new Money(currency, otherColl.toString());
+        Money totalWithDrawals = new Money(currency, withDrawals.toString());
+        Money totalCollection = new Money(currency, totColl.toString());
+        Money totalIssue = new Money(currency, totIssue.toString());
+        Money netCashAvailable = new Money(currency, netCash.toString());
 
         return buildTotalstable(totalDueCollection, totalLoanDisburesed, otherCollection, totalWithDrawals,
                 totalCollection, totalIssue, netCashAvailable, method, userContext);

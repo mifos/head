@@ -336,7 +336,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
                 new CascadingReportParameterService(reportsParameterServiceMock, personnelBusinessServiceMock,
                         customerBusinessServiceMock));
         anyCollectionSheetCustomer = new ArrayList<CollSheetCustBO>();
-        anyCollectionSheetCustomer.add(CollectionSheetCustomerBOFixture.createCollectionSheet());
+        anyCollectionSheetCustomer.add(CollectionSheetCustomerBOFixture.createCollectionSheet(getCurrency()));
 
         centerCollectionSheets = new ArrayList<CollSheetCustBO>();
         centerCollectionSheet = generateCollectionSheet(CENTER_ID, LOAN_OFFICER_SHORT_ID, CustomerLevel.CENTER);
@@ -348,7 +348,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
 
         customerCollectionSheets = generateClientCollectionSheets(700, groupCollectionSheet, LOAN_OFFICER_SHORT_ID);
 
-        collectionSheet = CollectionSheetCustomerBOFixture.createCollectionSheet();
+        collectionSheet = CollectionSheetCustomerBOFixture.createCollectionSheet(getCurrency());
         clLoanDetailsEntity = CollectionSheetLoanDetailsEntityFixture.createLoanDetails(CL_LOAN_ACCNT_ID);
         bsklLoanDetailsEntity = CollectionSheetLoanDetailsEntityFixture.createLoanDetails(BSKL_LOAN_ACCNT_ID);
         mm1SavingDetailsEntity = CollectionSheetSavingDetailsEntityFixture.createSavingsDetails(MM1_SAVINGS_ACCNT_ID);

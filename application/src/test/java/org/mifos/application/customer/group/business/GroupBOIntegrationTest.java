@@ -179,7 +179,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }
         group.getGroupPerformanceHistory().generatePortfolioAtRisk();
-       Assert.assertEquals(new Money("1.0"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
+       Assert.assertEquals(new Money(getCurrency(), "1.0"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -610,8 +610,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
-       Assert.assertEquals(new Money("600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
-       Assert.assertEquals(new Money("600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -624,7 +624,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
-       Assert.assertEquals(new Money("300.0"), group.getGroupPerformanceHistory().getAvgLoanAmountForMember());
+       Assert.assertEquals(new Money(getCurrency(), "300.0"), group.getGroupPerformanceHistory().getAvgLoanAmountForMember());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -636,11 +636,11 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGetTotalSavingsBalance() throws Exception {
         createInitialObjects();
         SavingsBO savings1 = getSavingsAccount(group, "fsaf6", "ads6");
-        SavingBOTestUtils.setBalance(savings1, new Money("1000"));
+        SavingBOTestUtils.setBalance(savings1, new Money(getCurrency(), "1000"));
 
         savings1.update();
         SavingsBO savings2 = getSavingsAccount(client, "fsaf5", "ads5");
-        SavingBOTestUtils.setBalance(savings2, new Money("2000"));
+        SavingBOTestUtils.setBalance(savings2, new Money(getCurrency(), "2000"));
         savings1.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -648,10 +648,10 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         savings2 = TestObjectFactory.getObject(SavingsBO.class, savings2.getAccountId());
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
-       Assert.assertEquals(new Money("1000.0"), savings1.getSavingsBalance());
-       Assert.assertEquals(new Money("2000.0"), savings2.getSavingsBalance());
-       Assert.assertEquals(new Money("2000.0"), client.getSavingsBalance());
-       Assert.assertEquals(new Money("3000.0"), group.getGroupPerformanceHistory().getTotalSavingsAmount());
+       Assert.assertEquals(new Money(getCurrency(), "1000.0"), savings1.getSavingsBalance());
+       Assert.assertEquals(new Money(getCurrency(), "2000.0"), savings2.getSavingsBalance());
+       Assert.assertEquals(new Money(getCurrency(), "2000.0"), client.getSavingsBalance(getCurrency()));
+       Assert.assertEquals(new Money(getCurrency(), "3000.0"), group.getGroupPerformanceHistory().getTotalSavingsAmount());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());

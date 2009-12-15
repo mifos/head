@@ -174,7 +174,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testGetFeeAmountAtDisbursement() throws Exception {
         loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting, AccountState.LOAN_APPROVED);
         Assert.assertEquals(30.0,
-                loanPersistence.getFeeAmountAtDisbursement(loanAccountForDisbursement.getAccountId()), DELTA);
+                loanPersistence.getFeeAmountAtDisbursement(loanAccountForDisbursement.getAccountId()).getAmountDoubleValue(), DELTA);
     }
 
     public void testGetLoanAccountsInArrearsInGoodStanding() throws PersistenceException, InvalidDateException {

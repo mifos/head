@@ -283,7 +283,7 @@ public class CustomerAccountBO extends AccountBO {
     protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns)
             throws AccountException {
         if (null != reversedTrxns && reversedTrxns.size() > 0) {
-            Money totalAmountAdj = new Money();
+            Money totalAmountAdj = new Money(getCurrency());
             for (AccountTrxnEntity accntTrxn : reversedTrxns) {
                 CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
                 CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) getAccountActionDate(custTrxn
@@ -327,7 +327,7 @@ public class CustomerAccountBO extends AccountBO {
 
     @Override
     public void waiveAmountOverDue(@SuppressWarnings("unused") final WaiveEnum chargeType) throws AccountException {
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(getCurrency());
         List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
         accountActionDateList.remove(accountActionDateList.size() - 1);
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
@@ -513,7 +513,7 @@ public class CustomerAccountBO extends AccountBO {
 
     @Override
     public Money updateAccountActionDateEntity(final List<Short> intallmentIdList, final Short feeId) {
-        Money totalFeeAmount = new Money();
+        Money totalFeeAmount = new Money(getCurrency());
         Set<AccountActionDateEntity> accountActionDateEntitySet = this.getAccountActionDates();
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateEntitySet) {
             if (intallmentIdList.contains(accountActionDateEntity.getInstallmentId())) {
@@ -662,7 +662,7 @@ public class CustomerAccountBO extends AccountBO {
     private Money applyFeeToInstallments(final List<FeeInstallment> feeInstallmentList,
             final List<AccountActionDateEntity> accountActionDateList) {
         Date lastAppliedDate = null;
-        Money totalFeeAmountApplied = new Money();
+        Money totalFeeAmountApplied = new Money(getCurrency());
         AccountFeesEntity accountFeesEntity = null;
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
             CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;

@@ -144,15 +144,15 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         LoanArrearsAgingEntity entityAccount1 = loanAccount1.getLoanArrearsAgingEntity();
         LoanArrearsAgingEntity entityAccount2 = loanAccount2.getLoanArrearsAgingEntity();
 
-       Assert.assertEquals(new Money("100"), entityAccount1.getOverduePrincipal());
-       Assert.assertEquals(new Money("12"), entityAccount1.getOverdueInterest());
-       Assert.assertEquals(new Money("112"), entityAccount1.getOverdueBalance());
+       Assert.assertEquals(new Money(getCurrency(), "100"), entityAccount1.getOverduePrincipal());
+       Assert.assertEquals(new Money(getCurrency(), "12"), entityAccount1.getOverdueInterest());
+       Assert.assertEquals(new Money(getCurrency(), "112"), entityAccount1.getOverdueBalance());
 
        Assert.assertEquals(Short.valueOf("15"), entityAccount1.getDaysInArrears());
 
-       Assert.assertEquals(new Money("300"), entityAccount2.getOverduePrincipal());
-       Assert.assertEquals(new Money("36"), entityAccount2.getOverdueInterest());
-       Assert.assertEquals(new Money("336"), entityAccount2.getOverdueBalance());
+       Assert.assertEquals(new Money(getCurrency(), "300"), entityAccount2.getOverduePrincipal());
+       Assert.assertEquals(new Money(getCurrency(), "36"), entityAccount2.getOverdueInterest());
+       Assert.assertEquals(new Money(getCurrency(), "336"), entityAccount2.getOverdueBalance());
 
        Assert.assertEquals(Short.valueOf("22"), entityAccount2.getDaysInArrears());
 
@@ -211,15 +211,15 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         LoanArrearsAgingEntity entityAccount1 = loanAccount1.getLoanArrearsAgingEntity();
         LoanArrearsAgingEntity entityAccount2 = loanAccount2.getLoanArrearsAgingEntity();
 
-       Assert.assertEquals(new Money("300"), entityAccount1.getOverduePrincipal());
-       Assert.assertEquals(new Money("36"), entityAccount1.getOverdueInterest());
-       Assert.assertEquals(new Money("336"), entityAccount1.getOverdueBalance());
+       Assert.assertEquals(new Money(getCurrency(), "300"), entityAccount1.getOverduePrincipal());
+       Assert.assertEquals(new Money(getCurrency(), "36"), entityAccount1.getOverdueInterest());
+       Assert.assertEquals(new Money(getCurrency(), "336"), entityAccount1.getOverdueBalance());
 
        Assert.assertEquals(Short.valueOf("22"), entityAccount1.getDaysInArrears());
 
-       Assert.assertEquals(new Money("300"), entityAccount2.getOverduePrincipal());
-       Assert.assertEquals(new Money("36"), entityAccount2.getOverdueInterest());
-       Assert.assertEquals(new Money("336"), entityAccount2.getOverdueBalance());
+       Assert.assertEquals(new Money(getCurrency(), "300"), entityAccount2.getOverduePrincipal());
+       Assert.assertEquals(new Money(getCurrency(), "36"), entityAccount2.getOverdueInterest());
+       Assert.assertEquals(new Money(getCurrency(), "336"), entityAccount2.getOverdueBalance());
 
        Assert.assertEquals(Short.valueOf("22"), entityAccount2.getDaysInArrears());
 
@@ -227,10 +227,10 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         // balance and move it out of arrears
 
         final String RECEIPT_NUMBER = "001";
-        loanAccount1.makeEarlyRepayment(new Money("636"), RECEIPT_NUMBER, new Date(System.currentTimeMillis()),
+        loanAccount1.makeEarlyRepayment(new Money(getCurrency(), "636"), RECEIPT_NUMBER, new Date(System.currentTimeMillis()),
                 PaymentTypes.CASH.getValue().toString(), PersonnelConstants.SYSTEM_USER);
 
-        PaymentData paymentData2 = PaymentData.createPaymentData(new Money("636"), TestObjectFactory
+        PaymentData paymentData2 = PaymentData.createPaymentData(new Money(getCurrency(), "636"), TestObjectFactory
                 .getPersonnel(PersonnelConstants.SYSTEM_USER), PaymentTypes.CASH.getValue(), new Date(System
                 .currentTimeMillis()));
 

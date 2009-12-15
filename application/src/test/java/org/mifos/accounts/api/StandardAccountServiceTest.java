@@ -206,7 +206,7 @@ public class StandardAccountServiceTest {
         
         private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
         private final java.util.Date createdDate = new DateTime().minusDays(14).toDate();
-        private final Money loanAmount = new Money("1000");
+        private final Money loanAmount = new Money(TestUtils.getCurrency(), "1000");
         private final boolean noInterestDeductedAtDisbursement = false;
         private final double interestRate = 20;
         private final short gracePeriodDuration = 0;

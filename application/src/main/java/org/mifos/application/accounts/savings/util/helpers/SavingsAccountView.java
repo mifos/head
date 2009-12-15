@@ -105,11 +105,12 @@ public class SavingsAccountView extends View {
     }
 
     public Double getTotalDepositDue() {
-        Money totalDepositDue = new Money();
+        Money totalDepositDue = null;
         if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
             for (CollectionSheetEntryInstallmentView actionDates : accountTrxnDetails) {
-                totalDepositDue = totalDepositDue.add(((CollectionSheetEntrySavingsInstallmentView) actionDates)
-                        .getTotalDepositDue());
+                totalDepositDue = (totalDepositDue != null) ? totalDepositDue
+                        .add(((CollectionSheetEntrySavingsInstallmentView) actionDates).getTotalDepositDue())
+                        : ((CollectionSheetEntrySavingsInstallmentView) actionDates).getTotalDepositDue();
             }
         }
         return totalDepositDue.getAmountDoubleValue();

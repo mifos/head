@@ -26,6 +26,7 @@ import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanTestUtils {
@@ -45,34 +46,34 @@ public class LoanTestUtils {
 
     public static void assertInstallmentDetails(LoanScheduleEntity installment, Double principal, Double interest,
             Double accountFee, Double miscFee, Double miscPenalty) {
-        Assert.assertEquals(new Money(principal.toString()), installment.getPrincipalDue());
-        Assert.assertEquals(new Money(interest.toString()), installment.getInterestDue());
-        Assert.assertEquals(new Money(miscFee.toString()), installment.getMiscFeeDue());
-        Assert.assertEquals(new Money(miscPenalty.toString()), installment.getMiscPenaltyDue());
-        assertOneInstallmentFee(new Money(accountFee.toString()), installment);
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), principal.toString()), installment.getPrincipalDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), interest.toString()), installment.getInterestDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), miscFee.toString()), installment.getMiscFeeDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), miscPenalty.toString()), installment.getMiscPenaltyDue());
+        assertOneInstallmentFee(new Money(TestUtils.getCurrency(), accountFee.toString()), installment);
     }
 
     public static void assertInstallmentDetails(LoanBO loan, int installmentId, Double total, Double principal,
             Double interest, Double accountFee, Double miscFee, Double miscPenalty) {
 
         LoanScheduleEntity installment = (LoanScheduleEntity) loan.getAccountActionDate((short) installmentId);
-        Assert.assertEquals(new Money(total.toString()), installment.getTotalPaymentDue());
-        Assert.assertEquals(new Money(principal.toString()), installment.getPrincipalDue());
-        Assert.assertEquals(new Money(interest.toString()), installment.getInterestDue());
-        Assert.assertEquals(new Money(miscFee.toString()), installment.getMiscFeeDue());
-        Assert.assertEquals(new Money(miscPenalty.toString()), installment.getMiscPenaltyDue());
-        assertOneInstallmentFee(new Money(accountFee.toString()), installment);
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), total.toString()), installment.getTotalPaymentDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), principal.toString()), installment.getPrincipalDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), interest.toString()), installment.getInterestDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), miscFee.toString()), installment.getMiscFeeDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), miscPenalty.toString()), installment.getMiscPenaltyDue());
+        assertOneInstallmentFee(new Money(TestUtils.getCurrency(), accountFee.toString()), installment);
     }
 
     public static void assertInstallmentDetails(LoanBO loan, int installmentId, Double principal, Double interest,
             Double accountFee, Double miscFee, Double miscPenalty) {
 
         LoanScheduleEntity installment = (LoanScheduleEntity) loan.getAccountActionDate((short) installmentId);
-        Assert.assertEquals(new Money(principal.toString()), installment.getPrincipalDue());
-        Assert.assertEquals(new Money(interest.toString()), installment.getInterestDue());
-        Assert.assertEquals(new Money(miscFee.toString()), installment.getMiscFeeDue());
-        Assert.assertEquals(new Money(miscPenalty.toString()), installment.getMiscPenaltyDue());
-        assertOneInstallmentFee(new Money(accountFee.toString()), installment);
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), principal.toString()), installment.getPrincipalDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), interest.toString()), installment.getInterestDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), miscFee.toString()), installment.getMiscFeeDue());
+        Assert.assertEquals(new Money(TestUtils.getCurrency(), miscPenalty.toString()), installment.getMiscPenaltyDue());
+        assertOneInstallmentFee(new Money(TestUtils.getCurrency(), accountFee.toString()), installment);
     }
 
     public static LoanScheduleEntity[] getSortedAccountActionDateEntity(

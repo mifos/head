@@ -44,6 +44,7 @@ import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
@@ -103,8 +104,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     private ClientBO client;
 
     private CustomerPersistence customerPersistence = new CustomerPersistence();
-    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-    private MasterPersistence masterPersistence = new MasterPersistence();
 
     private MeetingBO meeting;
 
@@ -296,13 +295,13 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGroupPerfObject() throws PersistenceException {
         createInitialObjects();
         GroupPerformanceHistoryEntity groupPerformanceHistory = group.getGroupPerformanceHistory();
-        GroupTestUtils.setLastGroupLoanAmount(groupPerformanceHistory, new Money("100"));
+        GroupTestUtils.setLastGroupLoanAmount(groupPerformanceHistory, new Money(getCurrency(), "100"));
         TestObjectFactory.updateObject(group);
         StaticHibernateUtil.closeSession();
         group = (GroupBO) customerPersistence
                 .findBySystemId(group.getGlobalCustNum(), group.getCustomerLevel().getId());
        Assert.assertEquals(group.getCustomerId(), group.getGroupPerformanceHistory().getGroup().getCustomerId());
-       Assert.assertEquals(new Money("100"), group.getGroupPerformanceHistory().getLastGroupLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "100"), group.getGroupPerformanceHistory().getLastGroupLoanAmount());
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -311,9 +310,10 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGroupPerformanceObject() throws Exception {
         GroupPerformanceHistoryEntity groupPerformanceHistory = new GroupPerformanceHistoryEntity(Integer.valueOf("1"),
-                new Money("23"), new Money("24"), new Money("26"), new Money("25"), new Money("27"));
-       Assert.assertEquals(new Money("23"), groupPerformanceHistory.getLastGroupLoanAmount());
-       Assert.assertEquals(new Money("27"), groupPerformanceHistory.getPortfolioAtRisk());
+                new Money(getCurrency(), "23"), new Money(getCurrency(), "24"), new Money(getCurrency(), "26"),
+                new Money(getCurrency(), "25"), new Money(getCurrency(), "27"));
+        Assert.assertEquals(new Money(getCurrency(), "23"), groupPerformanceHistory.getLastGroupLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "27"), groupPerformanceHistory.getPortfolioAtRisk());
        Assert.assertEquals(1, groupPerformanceHistory.getClientCount().intValue());
 
     }
@@ -322,13 +322,13 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         ClientPerformanceHistoryEntity clientPerformanceHistory = client.getClientPerformanceHistory();
         clientPerformanceHistory.setNoOfActiveLoans(Integer.valueOf("1"));
-        clientPerformanceHistory.setLastLoanAmount(new Money("100"));
+        clientPerformanceHistory.setLastLoanAmount(new Money(getCurrency(), "100"));
         TestObjectFactory.updateObject(client);
         client = (ClientBO) customerPersistence.findBySystemId(client.getGlobalCustNum(), client.getCustomerLevel()
                 .getId());
        Assert.assertEquals(client.getCustomerId(), client.getClientPerformanceHistory().getClient().getCustomerId());
-       Assert.assertEquals(new Money("100"), client.getClientPerformanceHistory().getLastLoanAmount());
-       Assert.assertEquals(new Money("0"), client.getClientPerformanceHistory().getDelinquentPortfolioAmount());
+       Assert.assertEquals(new Money(getCurrency(), "100"), client.getClientPerformanceHistory().getLastLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "0"), client.getClientPerformanceHistory().getDelinquentPortfolioAmount());
     }
 
     public void testGetBalanceForAccountsAtRisk() throws PersistenceException {
@@ -338,9 +338,9 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-       Assert.assertEquals(new Money(), group.getBalanceForAccountsAtRisk());
+       Assert.assertEquals(new Money(getCurrency()), getBalanceForAccountsAtRisk());
         changeFirstInstallmentDate(accountBO, 31);
-       Assert.assertEquals(new Money("300"), group.getBalanceForAccountsAtRisk());
+       Assert.assertEquals(new Money(getCurrency(), "300"), getBalanceForAccountsAtRisk());
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -348,6 +348,18 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
+    private Money getBalanceForAccountsAtRisk() {
+        Money amount = new Money(getCurrency());
+        for (AccountBO account : group.getAccounts()) {
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
+                LoanBO loan = (LoanBO) account;
+                if (loan.hasPortfolioAtRisk()) {
+                    amount = amount.add(loan.getRemainingPrincipalAmount());
+                }
+            }
+        }
+        return amount;
+    }
     /*
      * Removing this test for now since this test case is the only place the
      * method getDelinquentPortfolioAmount() is called
@@ -359,7 +371,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
      * setActionDateToPastDate(); TestObjectFactory.updateObject(accountBO);
      * TestObjectFactory.flushandCloseSession(); client =
      * TestObjectFactory.getClient(ClientBO.class, client.getCustomerId());
-     *Assert.assertEquals(new Money("0.7"), client.getDelinquentPortfolioAmount());
+     *Assert.assertEquals(new Money(getCurrency(), "0.7"), client.getDelinquentPortfolioAmount());
      * TestObjectFactory.flushandCloseSession(); center =
      * TestObjectFactory.getCenter(CenterBO.class, center .getCustomerId());
      * group = TestObjectFactory.getGroup(GroupBO.class, group
@@ -373,7 +385,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
-       Assert.assertEquals(new Money("300.0"), group.getOutstandingLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "300.0"), group.getOutstandingLoanAmount(getCurrency()));
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -468,14 +480,14 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testgetSavingsBalance() throws Exception {
         SavingsBO savings = getSavingsAccount("fsaf4", "ads4");
-        SavingBOTestUtils.setBalance(savings, new Money("1000"));
+        SavingBOTestUtils.setBalance(savings, new Money(getCurrency(), "1000"));
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         client = TestObjectFactory.getClient(client.getCustomerId());
-       Assert.assertEquals(new Money("1000.0"), savings.getSavingsBalance());
-       Assert.assertEquals(new Money("1000.0"), client.getSavingsBalance());
+       Assert.assertEquals(new Money(getCurrency(), "1000.0"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(getCurrency(), "1000.0"), client.getSavingsBalance(getCurrency()));
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());

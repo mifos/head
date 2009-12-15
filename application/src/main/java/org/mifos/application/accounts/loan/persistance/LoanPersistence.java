@@ -58,22 +58,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanPersistence extends Persistence {
-    
-    @SuppressWarnings("unchecked")
-    public Money retrieveFeeAmountAtDisbursement(final Integer loanId) throws PersistenceException {
-        Money amount = new Money();
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("ACCOUNT_ID", loanId);
-        List<AccountFeesEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_FEE_AMOUNT_AT_DISBURSEMENT,
-                queryParameters);
-        for (AccountFeesEntity entity : queryResult) {
-            amount = amount.add(entity.getAccountFeeAmount());
-        }
-        return amount;
-    }
 
     @SuppressWarnings("unchecked")
-    public Double getFeeAmountAtDisbursement(final Integer accountId) {
+    public Money getFeeAmountAtDisbursement(final Integer accountId) {
         Money amount = new Money();
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("ACCOUNT_ID", accountId);
@@ -88,7 +75,7 @@ public class LoanPersistence extends Persistence {
             throw new MifosRuntimeException(e);
         }
 
-        return amount.getAmountDoubleValue();
+        return amount;
     }
 
     public LoanBO findBySystemId(final String accountGlobalNum) throws PersistenceException {

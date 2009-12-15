@@ -43,6 +43,9 @@
 			column="PRD_APPLICABLE_MASTER_ID"
 			class="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity"
 			cascade="none" />
+        <many-to-one name="currency" column="CURRENCY_ID"
+            class="org.mifos.application.master.business.MifosCurrency" cascade="none"
+            update="false" insert="true" unique="true" access="field" />
 
 		<!-- bi-directional one-to-many association to PrdOfferingMix -->
 		<set name="collectionProductMix" lazy="false" inverse="true"

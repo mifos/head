@@ -247,7 +247,7 @@ public class CustomerBusinessService implements BusinessService {
         // / amountAtRiskMoney.getAmountDoubleValue()));
         // }
 
-        Money portfolioAtRisk = new Money("0.25");
+        Money portfolioAtRisk = new Money(totalLoan.getCurrency(), "0.25");
         return new CenterPerformanceHistory(activeAndOnHoldGroupCount, activeAndOnHoldClientCount, totalLoan,
                 totalSavings, portfolioAtRisk);
     }
@@ -560,32 +560,22 @@ public class CustomerBusinessService implements BusinessService {
     private Money removeSign(Money amount) {
         if (amount != null && amount.getAmountDoubleValue() < 0)
             return amount.negate();
-        else
-            return amount;
+        return amount;
     }
 
-    private List<AccountBO> getAccountsForCustomer(String searchId, Short officeId, Short accountTypeId)
-    throws ServiceException {
-        try {
-            return new CustomerPersistence().retrieveAccountsUnderCustomer(searchId, officeId, accountTypeId);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
-    private Money getTotalUnpaidPrincipal(List<AccountBO> accountList) throws ServiceException {
-        Money total = new Money();
+    private Money getTotalUnpaidPrincipal(List<AccountBO> accountList) {
+        Money total = null;
         for (AccountBO accountBO : accountList) {
             LoanBO loanBO = (LoanBO) accountBO;
             if (loanBO.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)) {
-                total = total.add(loanBO.getLoanAmount());
+                total = (total != null)?total.add(loanBO.getLoanAmount()):loanBO.getLoanAmount();
             }
         }
         return total;
     }
 
     private Money getPortfolioAtRisk(List<AccountBO> accountList) throws ServiceException {
-        Money amount = new Money();
+        Money amount = null;
         for (AccountBO account : accountList) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()
                     && ((LoanBO) account).getDaysInArrears() > 1) {
@@ -599,12 +589,12 @@ public class CustomerBusinessService implements BusinessService {
         return amount;
     }
 
-    private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList) throws ServiceException {
-        Money amount = new Money();
+    private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList) {
+        Money amount = null;
         for (AccountBO account : accountList) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
                 LoanBO loan = (LoanBO) account;
-                amount = amount.add(loan.getRemainingPrincipalAmount());
+                amount = (amount != null)? amount.add(loan.getRemainingPrincipalAmount()): loan.getRemainingPrincipalAmount();
             }
         }
         return amount;

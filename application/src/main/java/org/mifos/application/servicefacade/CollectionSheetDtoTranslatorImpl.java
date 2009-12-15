@@ -132,11 +132,11 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
             final Integer actionDateId = null;
             final Date actionDate = null;
 
-            final Money miscFee = new Money(customer.getCollectionSheetCustomerAccount()
+            final Money miscFee = new Money(currency, customer.getCollectionSheetCustomerAccount()
                     .getTotalCustomerAccountCollectionFee().toString());
-            final Money miscFeePaid = new Money("0.0");
-            final Money miscPenalty = new Money("0.0");
-            final Money miscPenaltyPaid = new Money("0.0");
+            final Money miscFeePaid = new Money(currency, "0.0");
+            final Money miscPenalty = new Money(currency, "0.0");
+            final Money miscPenaltyPaid = new Money(currency, "0.0");
 
             final CustomerAccountView customerAccountDetails = new CustomerAccountView(customer
                     .getCollectionSheetCustomerAccount().getAccountId(), customer.getCustomerId());
@@ -170,8 +170,8 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final Integer savActionDateId = null;
                 final Date savActionDate = null;
 
-                final Money savDeposit = new Money(customerSavingDto.getTotalDepositAmount().toString());
-                final Money savDepositPaid = new Money("0.0");
+                final Money savDeposit = new Money(currency, customerSavingDto.getTotalDepositAmount().toString());
+                final Money savDepositPaid = new Money(currency, "0.0");
 
                 final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentView(
                         savAccountId, savCustomerId, savInstallmentId, savActionDateId, savActionDate, savDeposit,
@@ -199,8 +199,8 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final Integer savActionDateId = null;
                 final Date savActionDate = null;
 
-                final Money savDeposit = new Money(clientIndividualSavingsAccount.getDepositDue().toString());
-                final Money savDepositPaid = new Money(clientIndividualSavingsAccount.getDepositPaid().toString());
+                final Money savDeposit = new Money(currency, clientIndividualSavingsAccount.getDepositDue().toString());
+                final Money savDepositPaid = new Money(currency, clientIndividualSavingsAccount.getDepositPaid().toString());
 
                 final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentView(
                         savAccountId, savCustomerId, savInstallmentId, savActionDateId, savActionDate, savDeposit,
@@ -222,9 +222,9 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final Date loanActionDate = null;
                 final Short loanAccountState = customerLoanDto.getAccountStateId();
                 final Short interestDeductedAtDisbursement = customerLoanDto.getPayInterestAtDisbursement();
-                final Money loanAmount = new Money(customerLoanDto.getTotalDisbursement().toString());
+                final Money loanAmount = new Money(currency, customerLoanDto.getTotalDisbursement().toString());
 
-                final Money principal = new Money(customerLoanDto.getTotalRepaymentDue().toString());
+                final Money principal = new Money(currency, customerLoanDto.getTotalRepaymentDue().toString());
 
                 final LoanAccountView loanAccount = new LoanAccountView(loanAccountId, loanCustomerId,
                         loanOfferingShortName, loanOfferingId, loanAccountState, interestDeductedAtDisbursement,
@@ -233,8 +233,8 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
 
                 final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntryLoanInstallmentView(
                         loanAccountId, loanCustomerId, loanInstallmentId, loanActionDateId, loanActionDate, principal,
-                        new Money(), new Money(), new Money(), new Money(), new Money(), new Money(), new Money(),
-                        new Money(), new Money());
+                        new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency),
+                        new Money(currency), new Money(currency));
                 loanAccount.addTrxnDetails(Arrays.asList(accountTrxnDetail));
 
                 childView.addLoanAccountDetails(loanAccount);

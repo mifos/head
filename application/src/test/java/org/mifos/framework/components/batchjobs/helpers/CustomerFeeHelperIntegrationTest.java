@@ -178,15 +178,15 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
                         .getAccountFeesActionDetails()) {
                     if (accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Training_Fee")) {
-                       Assert.assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
+                       Assert.assertEquals(new Money(getCurrency(), "200.0"), accountFeesActionDetailEntity.getFeeAmount());
                     } else if (accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Maintenance Fee")) {
-                       Assert.assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
+                       Assert.assertEquals(new Money(getCurrency(), "200.0"), accountFeesActionDetailEntity.getFeeAmount());
                     }
                 }
             }
         }
         for (CustomerActivityEntity customerActivityEntity : center.getCustomerAccount().getCustomerActivitDetails()) {
-           Assert.assertEquals(new Money("200.0"), customerActivityEntity.getAmount());
+           Assert.assertEquals(new Money(getCurrency(), "200.0"), customerActivityEntity.getAmount());
         }
         Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
         for (AccountFeesEntity periodicFees : periodicFeeSet) {

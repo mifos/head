@@ -117,14 +117,14 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
         SavingBOTestUtils.setNextIntPostDate(savings1, helper.getDate("31/03/2006"));
         SavingBOTestUtils.setActivationDate(savings1, helper.getDate("05/03/2006"));
         SavingBOTestUtils.setInterestToBePosted(savings1, new Money(currency, "500"));
-        SavingBOTestUtils.setBalance(savings1, new Money("250"));
+        SavingBOTestUtils.setBalance(savings1, new Money(getCurrency(), "250"));
 
         savings1.update();
 
         SavingBOTestUtils.setNextIntPostDate(savings4, helper.getDate("31/03/2006"));
         SavingBOTestUtils.setActivationDate(savings4, helper.getDate("15/03/2006"));
         SavingBOTestUtils.setInterestToBePosted(savings4, new Money(currency, "800.40"));
-        SavingBOTestUtils.setBalance(savings4, new Money("250"));
+        SavingBOTestUtils.setBalance(savings4, new Money(getCurrency(), "250"));
         savings4.update();
 
         StaticHibernateUtil.commitTransaction();

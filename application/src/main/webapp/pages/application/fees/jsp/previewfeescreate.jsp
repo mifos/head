@@ -164,7 +164,11 @@ explanation of the license and how it is applied.
 													</c:otherwise>
 												</c:choose>
 												<br>
-												<br>
+                                                 <span class="fontnormalbold">
+                                                 <mifos:mifoslabel name="Fees.currency"
+                                                  bundle="FeesUIResources" isColonRequired="yes" />
+                                                 </span><c:out value="${requestScope.currencyCode}" /> 
+                                               <br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feecalculation" /> </span>
 												<br>
 												<c:choose>

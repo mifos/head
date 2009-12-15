@@ -71,7 +71,7 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testPopulateCustomerDetails() {
-        CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
         TestObjectFactory.createMeeting(meeting);
         CustomerBO centerBO = TestObjectFactory.createCenter("ash", meeting);
@@ -85,11 +85,11 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testPopulateAccountDetails() {
-        CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         LoanBO loan = (LoanBO) createLoanAccount();
 
         LoanScheduleEntity accountActionDate = new LoanScheduleEntity(loan, group, (short) 1, new java.sql.Date(System
-                .currentTimeMillis()), PaymentStatus.UNPAID, new Money(), new Money());
+                .currentTimeMillis()), PaymentStatus.UNPAID, new Money(getCurrency()), new Money(getCurrency()));
         LoanFeeScheduleEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accountActionDate, null, null,
                 TestObjectFactory.getMoneyForMFICurrency(5));
         LoanBOTestUtils
@@ -118,7 +118,7 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
         collectionSheetLoanDetail.setFeesDue(TestObjectFactory.getMoneyForMFICurrency(0));
         collectionSheetLoanDetail.setPenaltyDue(TestObjectFactory.getMoneyForMFICurrency(0));
 
-        CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         collSheetCustBO.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
 
        Assert.assertEquals(TestObjectFactory.getMoneyForMFICurrency(35), collSheetCustBO.getCollectiveLoanAmntDue());
@@ -130,18 +130,18 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
         CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity();
         collectionSheetLoanDetail.setAccountId(Integer.valueOf("1"));
 
-        CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         collSheetCustBO.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
        Assert.assertEquals(1, collSheetCustBO.getLoanDetailsForAccntId(1).getAccountId().intValue());
     }
 
     public void testGetLoanDetailsForNullAccountId() {
-        CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         Assert.assertNull(collSheetCustBO.getLoanDetailsForAccntId(Integer.valueOf("1")));
     }
 
     public void testAddCollectiveTotalsForChild() {
-        CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         collSheetCustBO.setCollectiveAccntCharges(TestObjectFactory.getMoneyForMFICurrency(5));
         collSheetCustBO.setCollectiveLoanAmntDue(TestObjectFactory.getMoneyForMFICurrency(5));
         collSheetCustBO.setCollectiveLoanDisbursal(TestObjectFactory.getMoneyForMFICurrency(5));
@@ -149,7 +149,7 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
         collSheetCustBO.setCollectiveSavingsAmntDue(TestObjectFactory.getMoneyForMFICurrency(5));
         collSheetCustBO.setCollectiveTotalCollection(TestObjectFactory.getMoneyForMFICurrency(5));
 
-        CollSheetCustBO collSheetCustObj = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustObj = new CollSheetCustBO(getCurrency());
         collSheetCustObj.setCollectiveAccntCharges(TestObjectFactory.getMoneyForMFICurrency(5));
         collSheetCustObj.setCollectiveLoanAmntDue(TestObjectFactory.getMoneyForMFICurrency(5));
         collSheetCustObj.setCollectiveLoanDisbursal(TestObjectFactory.getMoneyForMFICurrency(5));

@@ -21,6 +21,8 @@
 package org.mifos.application.fees.struts.action;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +50,7 @@ import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -66,6 +69,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -113,6 +117,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        request.setAttribute("currencyCode", getSelectedCurrencyFromList((FeeActionForm)form).getCurrencyCode());
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -128,6 +133,7 @@ public class FeeAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         FeeActionForm actionForm = (FeeActionForm) form;
         FeeBO fee = createFee(actionForm, request);
+        
         fee.save();
         actionForm.setFeeId(fee.getFeeId().toString());
         return mapping.findForward(ActionForwards.create_success.toString());
@@ -246,6 +252,27 @@ public class FeeAction extends BaseAction {
         return mapping.findForward(ActionForwards.cancelEdit_success.toString());
     }
 
+    private LinkedList<MifosCurrency> getCurrencies() {
+        //FIXME TODO stubbed code: required to retrieve real list of currencies from configuration
+        // First currency to be added in the list should be default currency
+        // Depends on mingle story 2176
+        LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
+        currencies.add(Money.getDefaultCurrency());
+        return currencies;
+    }
+    
+    private MifosCurrency getSelectedCurrencyFromList(FeeActionForm form) {
+        LinkedList<MifosCurrency> currencies = getCurrencies();
+        Iterator<MifosCurrency> i = currencies.iterator();
+        while(i.hasNext()) {
+            MifosCurrency a = i.next();
+            if(a.getCurrencyId().equals(form.getCurrencyId())) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     private FeeBO createFee(FeeActionForm actionForm, HttpServletRequest request) throws ApplicationException {
 
         CategoryTypeEntity feeCategory = (CategoryTypeEntity) findMasterEntity(request, FeeConstants.CATEGORYLIST,
@@ -254,10 +281,14 @@ public class FeeAction extends BaseAction {
                 FeeConstants.FEE_FREQUENCY_TYPE_LIST, actionForm.getFeeFrequencyTypeValue().getValue());
         GLCodeEntity glCode = findGLCodeEntity(request, FeeConstants.GLCODE_LIST, actionForm.getGlCodeValue());
 
-        if (feeFrequencyType.isOneTime())
-            return createOneTimeFee(actionForm, request, feeCategory, feeFrequencyType, glCode);
-        else
-            return createPeriodicFee(actionForm, request, feeCategory, feeFrequencyType, glCode);
+        FeeBO fee = null;
+        if (feeFrequencyType.isOneTime()) {
+            fee = createOneTimeFee(actionForm, request, feeCategory, feeFrequencyType, glCode);
+        } else {
+           fee = createPeriodicFee(actionForm, request, feeCategory, feeFrequencyType, glCode);
+        }
+        fee.setCurrency(getSelectedCurrencyFromList(actionForm));
+        return fee;
 
     }
 
@@ -272,10 +303,9 @@ public class FeeAction extends BaseAction {
                     actionForm.getFeeFormulaValue().getValue());
             return new RateFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feePayment);
-        } else {
-            return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
-                    actionForm.getAmountValue(), actionForm.isCustomerDefaultFee(), feePayment);
         }
+        return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
+                actionForm.getAmountValue(), actionForm.isCustomerDefaultFee(), feePayment);
     }
 
     private FeeBO createPeriodicFee(FeeActionForm actionForm, HttpServletRequest request,
@@ -292,10 +322,9 @@ public class FeeAction extends BaseAction {
                     actionForm.getFeeFormulaValue().getValue());
             return new RateFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feeFrequency);
-        } else {
-            return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
-                    actionForm.getAmountValue(), actionForm.isCustomerDefaultFee(), feeFrequency);
         }
+        return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
+                actionForm.getAmountValue(), actionForm.isCustomerDefaultFee(), feeFrequency);
     }
 
     private List<GLCodeEntity> getGLCodes() throws SystemException, ApplicationException {
@@ -330,6 +359,7 @@ public class FeeAction extends BaseAction {
         SessionUtils.setCollectionAttribute(FeeConstants.FEE_FREQUENCY_TYPE_LIST, getMasterEntities(
                 FeeFrequencyTypeEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(FeeConstants.GLCODE_LIST, getGLCodes(), request);
+        request.setAttribute("currencies", getCurrencies());
     }
 
     private void loadUpdateMasterData(HttpServletRequest request) throws ApplicationException, SystemException {

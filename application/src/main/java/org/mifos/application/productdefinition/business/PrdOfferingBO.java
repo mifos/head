@@ -23,6 +23,7 @@ package org.mifos.application.productdefinition.business;
 import java.util.Date;
 import java.util.Set;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
@@ -39,6 +40,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
 /**
@@ -71,6 +73,8 @@ public abstract class PrdOfferingBO extends BusinessObject {
     private Date startDate;
 
     private Date endDate;
+    
+    private MifosCurrency currency;
 
     private final OfficeBO office;
 
@@ -252,6 +256,17 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
     void setEndDate(final Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void setCurrency(MifosCurrency currency) {
+        this.currency = currency;
+    }
+
+    public MifosCurrency getCurrency() {
+        if(currency == null) {
+            return Money.getDefaultCurrency();
+        }
+        return currency;
     }
 
     public void setDescription(final String description) {

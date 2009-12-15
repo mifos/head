@@ -25,13 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.validator.ValidatorActionForm;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Money;
 
-public class RepayLoanActionForm extends ValidatorActionForm {
+public class RepayLoanActionForm extends BaseActionForm {
 
     private String accountId;
-    private Money amount;
+    private String amount;
     private String receiptNumber;
     private String receiptDate;
     private String dateOfPayment;
@@ -56,12 +56,16 @@ public class RepayLoanActionForm extends ValidatorActionForm {
         this.accountId = accountId;
     }
 
-    public Money getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(Money amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public Money getAmountValue() {
+        return getMoney(this.amount);
     }
 
     public String getDateOfPayment() {

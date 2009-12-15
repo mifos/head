@@ -334,7 +334,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward(ActionForwards.account_details_page.toString());
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-       Assert.assertEquals(new Money("200"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(getCurrency(), "200"), savings.getSavingsBalance());
     }
 
     public void testSuccessfulMakePayment_Withdrawal() throws Exception {
@@ -344,7 +344,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-        SavingBOTestUtils.setBalance(savings, new Money("500"));
+        SavingBOTestUtils.setBalance(savings, new Money(getCurrency(), "500"));
 
         savings.update();
         StaticHibernateUtil.commitTransaction();
@@ -373,7 +373,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward(ActionForwards.account_details_page.toString());
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
-       Assert.assertEquals(new Money("470"), savings.getSavingsBalance());
+       Assert.assertEquals(new Money(getCurrency(), "470"), savings.getSavingsBalance());
     }
 
     public void testSuccessfullPrevious() throws Exception {

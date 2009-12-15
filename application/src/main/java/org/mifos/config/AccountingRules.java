@@ -40,16 +40,6 @@ public class AccountingRules {
     private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
     private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
 
-    /*
-     * private static final BigDecimal defaultInitialRoundOffMultiple = new
-     * BigDecimal("1"); private static final BigDecimal
-     * defaultFinalRoundOffMultiple = new BigDecimal("1"); private static final
-     * RoundingMode defaultInitialRoundingMode = RoundingMode.CEILING; private
-     * static final RoundingMode defaultFinalRoundingMode =
-     * RoundingMode.CEILING; private static final RoundingMode
-     * defaultCurrencyRoundingMode = RoundingMode.CEILING;
-     */
-
     public static MifosCurrency getMifosCurrency() {
         String currencyCode = getCurrencyCode();
         MifosCurrency currency = new ConfigurationPersistence().getCurrency(getCurrencyCode());
@@ -65,43 +55,19 @@ public class AccountingRules {
     }
 
     public static String getCurrencyCode() {
-        String currencyCode;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.CURRENCY_CODE))
-            currencyCode = configMgr.getString(AccountingRulesConstants.CURRENCY_CODE);
-        else
-            throw new RuntimeException("The currency code is not defined in the config file.");
-        return currencyCode;
+        return ConfigurationManager.getInstance().getString(AccountingRulesConstants.CURRENCY_CODE);
     }
 
     public static Double getMaxInterest() {
-        Double maxInterest = null;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.MAX_INTEREST))
-            maxInterest = configMgr.getDouble(AccountingRulesConstants.MAX_INTEREST);
-        else
-            throw new RuntimeException("Max interest is not defined in the config file.");
-        return maxInterest;
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_INTEREST);
     }
 
     public static Double getMinInterest() {
-        Double maxInterest = null;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.MIN_INTEREST))
-            maxInterest = configMgr.getDouble(AccountingRulesConstants.MIN_INTEREST);
-        else
-            throw new RuntimeException("Min interest is not defined in the config file.");
-        return maxInterest;
+        return  ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
     }
 
     public static Short getDigitsAfterDecimal() {
-        Short digits;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.DIGITS_AFTER_DECIMAL))
-            digits = configMgr.getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
-        else
-            throw new RuntimeException("The number of digits after decimal is not defined in the config file.");
-        return digits;
+        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
 
     /**
@@ -133,27 +99,12 @@ public class AccountingRules {
     }
 
     public static Short getDigitsAfterDecimalForInterest() {
-
-        Short digits;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST))
-            digits = configMgr.getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
-        else
-            throw new RuntimeException(
-                    "The number of digits after decimal for interest is not defined in the config file.");
-        return digits;
+        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
     }
 
     // the defaultValue passed in should be the value from database
     public static Float getAmountToBeRoundedTo(Float defaultValue) {
-        Float amount;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO))
-            amount = configMgr.getFloat(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO);
-        else
-            amount = defaultValue;
-        return amount;
-
+        return ConfigurationManager.getInstance().getFloat(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO, defaultValue);
     }
 
     public static Short getRoundingMode(Short defaultValue) {
@@ -176,40 +127,13 @@ public class AccountingRules {
         return mode;
     }
 
-    // the defaultValue passed in should be the value from database
-    public static RoundingMode getRoundingRule(RoundingMode defaultValue) {
-        RoundingMode mode;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.ROUNDING_RULE)) {
-            String returnStr = configMgr.getString(AccountingRulesConstants.ROUNDING_RULE);
-            if (returnStr.equals("FLOOR"))
-                mode = RoundingMode.FLOOR;
-            else if (returnStr.equals("CEILING"))
-                mode = RoundingMode.CEILING;
-            else if (returnStr.equals("HALF_UP"))
-                mode = RoundingMode.HALF_UP;
-            else
-                throw new RuntimeException(
-                        "The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
-                                + returnStr);
-        } else
-            mode = defaultValue;
-        return mode;
-    }
-
     /*
      * Expected to return either 360 or 365
      */
     public static Short getNumberOfInterestDays() {
-        Short days;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS)) {
-            days = configMgr.getShort(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
-            if ((days != 365) && (days != 360))
-                throw new RuntimeException("Invalid number of interest days defined in property file " + days);
-        } else
-            throw new RuntimeException("The number of interest days is not defined in the config file ");
-
+        Short days = ConfigurationManager.getInstance().getShort(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
+        if ((days != 365) && (days != 360))
+            throw new RuntimeException("Invalid number of interest days defined in property file " + days);
         return days;
     }
 
@@ -239,8 +163,7 @@ public class AccountingRules {
     }
 
     private static RoundingMode getRoundingModeFromString(String modeStr, String type, RoundingMode defaultRoundingMode) {
-
-        if ((modeStr == null) || (StringUtils.isEmpty(modeStr))) {
+        if (StringUtils.isBlank(modeStr)) {
             return defaultRoundingMode;
         }
         RoundingMode mode = null;
@@ -263,25 +186,24 @@ public class AccountingRules {
         return getRoundingModeFromString(modeStr, "FinalRoundingMode", defaultFinalRoundingMode);
     }
 
-    private static BigDecimal getRoundOffMultipleFromString(String roundOffStr, String type,
+    private static BigDecimal getRoundOffMultipleFromString(String roundOffStr,
             BigDecimal defaultRoundOffMultiple) {
-        if ((roundOffStr == null) || (StringUtils.isEmpty(roundOffStr))) {
+        if (StringUtils.isBlank(roundOffStr)) {
             return defaultRoundOffMultiple;
         }
-        BigDecimal roundOffMultiple = new BigDecimal(roundOffStr);
-        return roundOffMultiple;
+        return new BigDecimal(roundOffStr);
     }
 
     public static BigDecimal getInitialRoundOffMultiple() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE);
-        return getRoundOffMultipleFromString(modeStr, "InitialRoundOffMultiple", defaultInitialRoundOffMultiple);
+        return getRoundOffMultipleFromString(modeStr, defaultInitialRoundOffMultiple);
     }
 
     public static BigDecimal getFinalRoundOffMultiple() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE);
-        return getRoundOffMultipleFromString(modeStr, "FinalRoundOffMultiple", defaultFinalRoundOffMultiple);
+        return getRoundOffMultipleFromString(modeStr, defaultFinalRoundOffMultiple);
     }
 
     public static RoundingMode getCurrencyRoundingMode() {
@@ -300,9 +222,8 @@ public class AccountingRules {
         if (digitsAfterDecimal >= 0) {
             BigDecimal divisor = new BigDecimal("10").pow(digitsAfterDecimal);
             return new BigDecimal("1").divide(divisor);
-        } else {
-            return new BigDecimal("10").pow(-digitsAfterDecimal);
         }
+        return new BigDecimal("10").pow(-digitsAfterDecimal);
     }
 
     public static void setDigitsAfterDecimal(Short value) {

@@ -93,15 +93,15 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment();
         long l = System.currentTimeMillis();
         repaymentScheduleInstallment.setDueDate(new Date(l));
-        repaymentScheduleInstallment.setFees(new Money("100.0"));
+        repaymentScheduleInstallment.setFees(new Money(getCurrency(), "100.0"));
         repaymentScheduleInstallment.setInstallment(10);
-        repaymentScheduleInstallment.setInterest(new Money("100.0"));
+        repaymentScheduleInstallment.setInterest(new Money(getCurrency(), "100.0"));
         repaymentScheduleInstallment.setLocale(new Locale("1"));
-        repaymentScheduleInstallment.setMiscFees(new Money("100.0"));
-        repaymentScheduleInstallment.setMiscPenalty(new Money("100.0"));
-        repaymentScheduleInstallment.setPrincipal(new Money("100.0"));
+        repaymentScheduleInstallment.setMiscFees(new Money(getCurrency(), "100.0"));
+        repaymentScheduleInstallment.setMiscPenalty(new Money(getCurrency(), "100.0"));
+        repaymentScheduleInstallment.setPrincipal(new Money(getCurrency(), "100.0"));
 
-        double m = new Money("100").getAmountDoubleValue();
+        double m = new Money(getCurrency(), "100").getAmountDoubleValue();
        Assert.assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDate());
        Assert.assertEquals("fees", m, repaymentScheduleInstallment.getFees().getAmountDoubleValue());
        Assert.assertEquals("Installment", "10", repaymentScheduleInstallment.getInstallment().toString());

@@ -111,6 +111,11 @@ explanation of the license and how it is applied.
 														<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
 													</c:otherwise>
 												</c:choose> <br> 
+                                                 <span class="fontnormal"> <mifos:mifoslabel name="product.currency"
+                                                 bundle="ProductDefUIResources" isColonRequired="yes" /> 
+                                                 <c:out value="${loanPrd.currency.currencyCode}" /> 
+                                                 </span> <br>
+                                
 												<%--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
 													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxLoanAmount}" /> <br> <mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.minLoanAmount}" /> <br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"

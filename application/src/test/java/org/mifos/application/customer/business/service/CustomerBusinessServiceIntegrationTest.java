@@ -243,12 +243,12 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Set<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
        Assert.assertEquals(1, customerActivityDetails.size());
         for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
-           Assert.assertEquals(new Money("100"), customerActivityEntity.getAmount());
+           Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());
         }
         List<CustomerRecentActivityView> customerActivityView = service.getAllActivityView(center.getGlobalCustNum());
        Assert.assertEquals(1, customerActivityView.size());
         for (CustomerRecentActivityView view : customerActivityView) {
-           Assert.assertEquals(new Money("100").toString(), view.getAmount());
+           Assert.assertEquals(new Money(getCurrency(), "100").toString(), view.getAmount());
            Assert.assertEquals("Amnt waived", view.getDescription());
            Assert.assertEquals(TestObjectFactory.getContext().getName(), view.getPostedBy());
         }
@@ -290,7 +290,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                     CustomerAccountBOTestUtils.setFeeAmount(
-                            (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("100"));
+                            (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money(getCurrency(), "100"));
                 }
             }
         }
@@ -307,7 +307,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                     CustomerAccountBOTestUtils.setFeeAmount(
-                            (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("100"));
+                            (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money(getCurrency(), "100"));
                 }
             }
         }
@@ -324,7 +324,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                     CustomerAccountBOTestUtils.setFeeAmount(
-                            (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("20"));
+                            (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money(getCurrency(), "20"));
                 }
             }
         }
@@ -337,13 +337,13 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Set<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
        Assert.assertEquals(3, customerActivityDetails.size());
         for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
-           Assert.assertEquals(new Money("100"), customerActivityEntity.getAmount());
+           Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());
         }
 
         List<CustomerRecentActivityView> customerActivityView = service.getRecentActivityView(center.getCustomerId());
        Assert.assertEquals(3, customerActivityView.size());
         for (CustomerRecentActivityView view : customerActivityView) {
-           Assert.assertEquals(new Money("100").toString(), view.getAmount());
+           Assert.assertEquals(new Money(getCurrency(), "100").toString(), view.getAmount());
            Assert.assertEquals(TestObjectFactory.getContext().getName(), view.getPostedBy());
         }
     }
@@ -425,9 +425,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     public void testGetCenterPerformanceHistory() throws Exception {
-        Money totalLoan = new Money();
-        Money totalSavings = new Money();
-        Money totalPortfolioAtRisk = new Money();
+        Money totalLoan = new Money(getCurrency());
+        Money totalSavings = new Money(getCurrency());
+        Money totalPortfolioAtRisk = new Money(getCurrency());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -523,9 +523,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         TestObjectFactory.cleanUp(account7);
 
         // temporarily(?) moved so assertion failure doesn't preclude cleanup
-       Assert.assertEquals(new Money("1200.0"), totalLoan);
-       Assert.assertEquals(new Money("400.0"), totalSavings);
-       Assert.assertEquals(new Money("0.25"), totalPortfolioAtRisk);
+       Assert.assertEquals(new Money(getCurrency(), "1200.0"), totalLoan);
+       Assert.assertEquals(new Money(getCurrency(), "400.0"), totalSavings);
+       Assert.assertEquals(new Money(getCurrency(), "0.25"), totalPortfolioAtRisk);
     }
 
 
@@ -839,7 +839,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 startDate, savingsOffering);
         StaticHibernateUtil.closeSession();
         savingsBO = (SavingsBO) (new AccountPersistence().getAccount(savingsBO.getAccountId()));
-        SavingBOTestUtils.setBalance(savingsBO, new Money());
+        SavingBOTestUtils.setBalance(savingsBO, new Money(getCurrency()));
         Money enteredAmount = new Money(currency, "100.0");
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savingsBO.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));

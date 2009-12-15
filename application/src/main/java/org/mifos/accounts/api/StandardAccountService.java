@@ -108,7 +108,7 @@ public class StandardAccountService implements AccountService {
             throw new AccountException("errors.invalidTxndate");
         }
 
-        Money amount = new Money(accountPaymentParametersDto.getPaymentAmount());
+        Money amount = new Money(account.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
 
         PaymentData paymentData = account.createPaymentData(accountPaymentParametersDto.getUserMakingPayment()
                 .getUserId(), amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(), null,
@@ -147,7 +147,7 @@ public class StandardAccountService implements AccountService {
                 errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
             }
         }
-        if (!accountBo.paymentAmountIsValid(new Money(payment.getPaymentAmount()))) {
+        if (!accountBo.paymentAmountIsValid(new Money(accountBo.getCurrency(), payment.getPaymentAmount()))) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         return errors;

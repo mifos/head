@@ -69,8 +69,8 @@ public abstract class BaseFinancialActivity {
     protected abstract List<BaseAccountingEntry> getFinancialActionEntry();
 
     public Money getMiscPenaltyAmount() {
-        Money amount = new Money();
         AccountBO account = getAccountTrxn().getAccount();
+        Money amount = new Money(account.getCurrency());
         if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
             amount = ((LoanTrxnDetailEntity) getAccountTrxn()).getMiscPenaltyAmount();
         } else if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {

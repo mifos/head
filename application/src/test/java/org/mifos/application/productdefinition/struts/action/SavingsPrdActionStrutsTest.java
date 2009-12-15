@@ -853,7 +853,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(2, product.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurrenceType()
                 .getRecurrenceId().shortValue());
        Assert.assertEquals(1, product.getFreqOfPostIntcalc().getMeeting().getMeetingDetails().getRecurAfter().intValue());
-       Assert.assertEquals("Recommended Amount", new Money("120"), product.getRecommendedAmount());
+       Assert.assertEquals("Recommended Amount", new Money(getCurrency(), "120"), product.getRecommendedAmount());
        Assert.assertEquals(9.0, product.getInterestRate(), DELTA);
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }

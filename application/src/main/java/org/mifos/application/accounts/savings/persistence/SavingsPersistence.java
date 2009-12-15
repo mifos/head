@@ -85,7 +85,7 @@ public class SavingsPersistence extends Persistence {
         Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.FIND_ACCOUNT_BY_SYSTEM_ID, queryParameters);
         SavingsBO savings = queryResult == null ? null : (SavingsBO) queryResult;
         if (savings != null && savings.getRecommendedAmount() == null) {
-            savings.setRecommendedAmount(new Money());
+            savings.setRecommendedAmount(new Money(savings.getCurrency()));
             initialize(savings.getAccountActionDates());
             initialize(savings.getAccountNotes());
             initialize(savings.getAccountFlags());

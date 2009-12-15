@@ -204,11 +204,11 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(4, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-               Assert.assertEquals(new Money("20.0"), new Money(applicableCharge.getAmountOrRate()));
+               Assert.assertEquals(new Money(getCurrency(), "20.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
                 Assert.assertNotNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
-               Assert.assertEquals(new Money("200.0"), new Money(applicableCharge.getAmountOrRate()));
+               Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNotNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Misc Fee")) {
@@ -236,11 +236,11 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(6, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-               Assert.assertEquals(new Money("20.0").toString(), applicableCharge.getAmountOrRate());
+               Assert.assertEquals(new Money(getCurrency(), "20.0").toString(), applicableCharge.getAmountOrRate());
                 Assert.assertNotNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
-               Assert.assertEquals(new Money("200.0"), new Money(applicableCharge.getAmountOrRate()));
+               Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNotNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Misc Fee")) {
@@ -266,7 +266,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(4, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-               Assert.assertEquals(new Money("20.0").toString(), applicableCharge.getAmountOrRate());
+               Assert.assertEquals(new Money(getCurrency(), "20.0").toString(), applicableCharge.getAmountOrRate());
                 Assert.assertNotNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Misc Fee")) {
@@ -274,7 +274,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
-               Assert.assertEquals(new Money("200.0"), new Money(applicableCharge.getAmountOrRate()));
+               Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNotNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Mainatnence Fee")) {
@@ -368,7 +368,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
         AccountTestUtils.addAccountFees(accountUpfrontFee, accountBO);
         AccountFeesActionDetailEntity accountUpfrontFeesaction = new LoanFeeScheduleEntity(loanScheduleEntity,
-                upfrontFee, accountUpfrontFee, new Money("20.0"));
+                upfrontFee, accountUpfrontFee, new Money(getCurrency(), "20.0"));
         loanScheduleEntity.addAccountFeesAction(accountUpfrontFeesaction);
         TestObjectFactory.updateObject(accountBO);
 
@@ -380,7 +380,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 "30.0"), FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
         AccountTestUtils.addAccountFees(accountDisbursmentFee, accountBO);
         AccountFeesActionDetailEntity accountDisbursmentFeesaction = new LoanFeeScheduleEntity(loanScheduleEntity,
-                timeOfDisbursmentFees, accountDisbursmentFee, new Money("30.0"));
+                timeOfDisbursmentFees, accountDisbursmentFee, new Money(getCurrency(), "30.0"));
         loanScheduleEntity.addAccountFeesAction(accountDisbursmentFeesaction);
         TestObjectFactory.updateObject(accountBO);
 
@@ -392,7 +392,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 new Double("40.0"), FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
         AccountTestUtils.addAccountFees(accountFirstLoanRepaymentFee, accountBO);
         AccountFeesActionDetailEntity accountTimeOfFirstLoanRepaymentFeesaction = new LoanFeeScheduleEntity(
-                loanScheduleEntity, firstLoanRepaymentFee, accountFirstLoanRepaymentFee, new Money("40.0"));
+                loanScheduleEntity, firstLoanRepaymentFee, accountFirstLoanRepaymentFee, new Money(getCurrency(), "40.0"));
         loanScheduleEntity.addAccountFeesAction(accountTimeOfFirstLoanRepaymentFeesaction);
         TestObjectFactory.updateObject(accountBO);
 
@@ -422,7 +422,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 FeeStatus.ACTIVE.getValue(), null, customerScheduleEntity.getActionDate());
         AccountTestUtils.addAccountFees(accountUpfrontFee, customerAccountBO);
         AccountFeesActionDetailEntity accountUpfrontFeesaction = new CustomerFeeScheduleEntity(customerScheduleEntity,
-                upfrontFee, accountUpfrontFee, new Money("20.0"));
+                upfrontFee, accountUpfrontFee, new Money(getCurrency(), "20.0"));
         customerScheduleEntity.addAccountFeesAction(accountUpfrontFeesaction);
         TestObjectFactory.updateObject(center);
 

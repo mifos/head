@@ -41,6 +41,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.spring.SpringUtil;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestUtils {
@@ -252,6 +253,12 @@ public class TestUtils {
             startDate = dateTimeMonday.toDate();
         }
         return startDate;
+    }
+    
+    public static MifosCurrency getCurrency() {
+        // TODO: will be replaced by a better way to get currency for integration tests
+        // NOTE: TestObjectFactory.getCurrency also exists
+        return Money.getDefaultCurrency();
     }
 
 }

@@ -41,7 +41,7 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
             PaymentStatus paymentStatus, Money deposit) {
         super(account, customer, installmentId, actionDate, paymentStatus);
         this.deposit = deposit;
-        this.depositPaid = new Money();
+        this.depositPaid = new Money(account.getCurrency());
     }
 
     public Money getDeposit() {

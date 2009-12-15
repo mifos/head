@@ -84,14 +84,14 @@ public class CollectionSheetServiceIntegrationTest extends AbstractCollectionShe
     protected void setUp() throws Exception {
         super.setUp();
         collectionSheetService = new CollectionSheetService();
-        CollSheetCustBO centerUnderDifferentLoanOfficer = new CollSheetCustBO();
+        CollSheetCustBO centerUnderDifferentLoanOfficer = new CollSheetCustBO(getCurrency());
         centerUnderDifferentLoanOfficer.populateInstanceForTest(CENTER_ID,
                 "Sample Center Under Different Loan Officer", CustomerLevel.CENTER.getValue(), ANY_SHORT_ID, "",
                 ANY_SHORT_ID);
-        CollSheetCustBO groupUnderDifferentLoanOfficer = new CollSheetCustBO();
+        CollSheetCustBO groupUnderDifferentLoanOfficer = new CollSheetCustBO(getCurrency());
         groupUnderDifferentLoanOfficer.populateInstanceForTest(GROUP_ID, "Sample Group",
                 CustomerLevel.GROUP.getValue(), ANY_SHORT_ID, "", ANY_SHORT_ID);
-        anotherGroup = new CollSheetCustBO();
+        anotherGroup = new CollSheetCustBO(getCurrency());
         anotherGroup.populateInstanceForTest(ANOTHER_GROUP_ID, "Another Sample Group", CustomerLevel.GROUP.getValue(),
                 ANY_SHORT_ID, "", LOAN_OFFICER_SHORT_ID);
 
@@ -115,7 +115,7 @@ public class CollectionSheetServiceIntegrationTest extends AbstractCollectionShe
         collectionSheetBO.populateTestInstance(meetingDate, TODAYS_DATE, generatedCollectionSheets,
                 CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
 
-        CollSheetCustBO customerForMeetingDateAfterSpecifiedDate = new CollSheetCustBO();
+        CollSheetCustBO customerForMeetingDateAfterSpecifiedDate = new CollSheetCustBO(getCurrency());
         customerForMeetingDateAfterSpecifiedDate.populateInstanceForTest(CENTER_ID,
                 "Customer with collectionsheet after specified meeting date", CustomerLevel.CENTER.getValue(),
                 BRANCH_SHORT_ID, "", LOAN_OFFICER_SHORT_ID);
@@ -124,7 +124,7 @@ public class CollectionSheetServiceIntegrationTest extends AbstractCollectionShe
                 2), TODAYS_DATE, CollectionUtils.asSet(customerForMeetingDateAfterSpecifiedDate),
                 CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
 
-        CollSheetCustBO customerForMeetingDateBeforeSpecifiedDate = new CollSheetCustBO();
+        CollSheetCustBO customerForMeetingDateBeforeSpecifiedDate = new CollSheetCustBO(getCurrency());
         customerForMeetingDateBeforeSpecifiedDate.populateInstanceForTest(CENTER_ID,
                 "Customer with collection sheet before meeting date", CustomerLevel.CENTER.getValue(), BRANCH_SHORT_ID,
                 "", LOAN_OFFICER_SHORT_ID);

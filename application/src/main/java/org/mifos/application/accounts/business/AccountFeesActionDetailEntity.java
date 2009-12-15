@@ -92,7 +92,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 
     protected void makePayment(Money feePaid) {
         if (getFeeAmountPaid() == null)
-            setFeeAmountPaid(new Money());
+            setFeeAmountPaid(new Money(accountFee.getAccount().getCurrency()));
         this.feeAmountPaid = getFeeAmountPaid().add(feePaid);
     }
 
@@ -110,7 +110,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
     }
 
     protected Money waiveCharges() {
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(accountFee.getAccount().getCurrency());
         chargeWaived = chargeWaived.add(getFeeDue());
         setFeeAmount(getFeeAmountPaid());
         return chargeWaived;

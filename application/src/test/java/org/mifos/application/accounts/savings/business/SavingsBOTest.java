@@ -44,6 +44,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
@@ -117,9 +118,9 @@ public class SavingsBOTest {
     public void accountIsAlwaysSetToActiveWhenADepositIsMade() throws AccountException {
 
         // setup
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).asInActive().build();
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -137,9 +138,9 @@ public class SavingsBOTest {
     public void savingsBalanceIsIncrementedByTotalAmountDeposited() throws AccountException {
 
         // setup
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).asInActive().build();
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -158,9 +159,9 @@ public class SavingsBOTest {
     public void savingsPerformanceDepositsIsIncrementedByTotalAmountDeposited() throws AccountException {
 
         // setup
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).asInActive().build();
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -179,11 +180,11 @@ public class SavingsBOTest {
     public void whenSingleDepositOneSavingsActivityRecordIsCreated() throws AccountException {
 
         // setup
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).build();
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money savingsBalance = new Money("100.0");
+        final Money savingsBalance = new Money(TestUtils.getCurrency(), "100.0");
 
         // stubbing
         when(accountPayment.getAmount()).thenReturn(amountToDeposit);
@@ -203,11 +204,11 @@ public class SavingsBOTest {
     public void whenMultipleDepositsOneSavingsActivityRecordIsCreatedForEachDeposit() throws AccountException {
 
         // setup
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).withSavingsOfficer(savingsOfficer).build();
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money savingsBalance = new Money("100.0");
+        final Money savingsBalance = new Money(TestUtils.getCurrency(), "100.0");
 
         // stubbing
         when(accountPayment.getAmount()).thenReturn(amountToDeposit);
@@ -236,7 +237,7 @@ public class SavingsBOTest {
 
         // setup
         savingsAccount = savingsAccountBuilder.build();
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
 
         // stubbing
         when(accountPayment.getAmount()).thenReturn(zero);
@@ -252,9 +253,9 @@ public class SavingsBOTest {
     public void whenSingleDepositThenOnePaymentIsMade() throws AccountException {
 
         // setup
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).build();
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -272,9 +273,9 @@ public class SavingsBOTest {
     public void whenMultipleDepositsThenOnePaymentIsMadeForEachDeposit() throws AccountException {
 
         // setup
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).build();
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -295,16 +296,17 @@ public class SavingsBOTest {
     public void shouldPayOffAnyPaymentsAssociatedWithPayingCustomerAndVoluntarySavingsAccount() throws AccountException {
 
         // setup
+        savingsAccount = savingsAccountBuilder.build();
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withAccount(savingsAccount)
                 .withCustomer(payingCustomer).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -323,16 +325,17 @@ public class SavingsBOTest {
     public void shouldPayOffAnyPaymentsAssociatedWithPayingCustomerAndMandatorySavingsAccount() throws AccountException {
 
         // setup
+        savingsAccount = savingsAccountBuilder.build();
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withAccount(savingsAccount)
                 .withCustomer(payingCustomer).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).mandatory().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -352,18 +355,19 @@ public class SavingsBOTest {
             throws AccountException {
 
         // setup
+        savingsAccount = savingsAccountBuilder.build();
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withAccount(savingsAccount)
                 .withCustomer(payingCustomer).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).mandatory().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money excessDepositAmount = new Money("25.0");
+        final Money excessDepositAmount = new Money(TestUtils.getCurrency(), "25.0");
         final Money expectedTotalBalance = amountToDeposit.add(zero);
 
         // stubbing
@@ -386,18 +390,19 @@ public class SavingsBOTest {
             throws AccountException {
 
         // setup
+        savingsAccount = savingsAccountBuilder.build();
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withAccount(savingsAccount)
                 .withCustomer(payingCustomer).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
-        final Money zero = new Money();
+        final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money("100.0");
+        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money excessDepositAmount = new Money("25.0");
+        final Money excessDepositAmount = new Money(TestUtils.getCurrency(), "25.0");
         final Money expectedTotalBalance = amountToDeposit.add(zero);
 
         // stubbing

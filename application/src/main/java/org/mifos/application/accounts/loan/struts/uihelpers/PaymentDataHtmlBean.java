@@ -75,9 +75,8 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         String date = getDate();
         if (date != null && !date.equals("")) {
             return DateUtils.getLocaleDate(locale, date);
-        } else {
-            return null;
         }
+        return null;
     }
 
     public RepaymentScheduleInstallment getInstallment() {

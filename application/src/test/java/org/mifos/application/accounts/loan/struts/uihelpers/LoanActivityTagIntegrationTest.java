@@ -98,8 +98,9 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
         LoanActivityEntity loanActivity = new LoanActivityEntity(accountBO, TestObjectFactory.getPersonnel(userContext
-                .getId()), "testing", new Money("100"), new Money("100"), new Money("100"), new Money("100"),
-                new Money("100"), new Money("100"), new Money("100"), new Money("100"), startDate);
+                .getId()), "testing", new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(
+                getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(
+                getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), startDate);
         ((LoanBO) accountBO).addLoanActivity(loanActivity);
         TestObjectFactory.updateObject(accountBO);
         return accountBO;

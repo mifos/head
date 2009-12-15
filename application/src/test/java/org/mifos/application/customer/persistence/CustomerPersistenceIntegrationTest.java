@@ -153,12 +153,12 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         AccountBO account2 = getLoanAccount(group1, meeting, "adspp", "kkaf");
         Money amount = customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
-       Assert.assertEquals(new Money("600"), amount);
+       Assert.assertEquals(new Money(getCurrency(), "600"), amount);
         AccountBO account3 = getLoanAccountInActiveBadStanding(group1, meeting, "adsfdsfsd1", "4sa");
         AccountBO account4 = getLoanAccountInActiveBadStanding(group1, meeting, "adspp2", "kaf5");
         Money amount2 = customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
                 AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
-       Assert.assertEquals(new Money("600"), amount2);
+       Assert.assertEquals(new Money(getCurrency(), "600"), amount2);
 
         TestObjectFactory.cleanUp(account1);
         TestObjectFactory.cleanUp(account2);
@@ -178,7 +178,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         AccountBO clientAccount2 = getLoanAccount(client, meeting, "fasdfdsfasdf", "1qwe");
         Money amount = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
-       Assert.assertEquals(new Money("600"), amount);
+       Assert.assertEquals(new Money(getCurrency(), "600"), amount);
         clientAccount1.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "none");
         clientAccount2.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "none");
         TestObjectFactory.updateObject(clientAccount1);
@@ -186,7 +186,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.commitTransaction();
         Money amount2 = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                 AccountState.LOAN_ACTIVE_IN_BAD_STANDING, group.getSearchId() + ".%");
-       Assert.assertEquals(new Money("600"), amount2);
+       Assert.assertEquals(new Money(getCurrency(), "600"), amount2);
 
         TestObjectFactory.cleanUp(clientAccount1);
         TestObjectFactory.cleanUp(clientAccount2);

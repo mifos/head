@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -32,17 +33,29 @@ public class LoanActivityView implements Serializable {
     private Integer id;
     private Date actionDate;
     private String activity;
-    private Money principal = new Money();
-    private Money interest = new Money();
-    private Money fees = new Money();
-    private Money penalty = new Money();
-    private Money total = new Money();
-    private Money runningBalancePrinciple = new Money();
-    private Money runningBalanceInterest = new Money();
-    private Money runningBalanceFees = new Money();
-    private Money runningBalancePenalty = new Money();
+    private Money principal;
+    private Money interest;
+    private Money fees;
+    private Money penalty;
+    private Money total;
+    private Money runningBalancePrinciple;
+    private Money runningBalanceInterest;
+    private Money runningBalanceFees;
+    private Money runningBalancePenalty;
     private Locale locale = null;
     private java.sql.Timestamp timeStamp;
+    
+    public LoanActivityView(MifosCurrency currency) {
+        this.principal = new Money(currency);
+        this.interest = new Money(currency);
+        this.fees = new Money(currency);
+        this.penalty = new Money(currency);
+        this.total = new Money(currency);
+        this.runningBalancePrinciple = new Money(currency);
+        this.runningBalanceInterest = new Money(currency);
+        this.runningBalanceFees = new Money(currency);
+        this.runningBalancePenalty = new Money(currency);
+    }
 
     public Date getActionDate() {
         return actionDate;

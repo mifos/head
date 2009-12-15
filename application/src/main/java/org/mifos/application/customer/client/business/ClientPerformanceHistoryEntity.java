@@ -33,6 +33,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -128,7 +129,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public Money getTotalSavingsAmount() {
-        return getClient().getSavingsBalance();
+        return getClient().getSavingsBalance(getCurrency());
     }
 
     @SuppressWarnings("unused")
@@ -164,6 +165,11 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
         });
     }
 
+    public MifosCurrency getCurrency() {
+        // TODO: performance history will only work if all accounts use the default (or same?) currency
+        return Money.getDefaultCurrency();
+    }
+    
     public Integer getLoanCycleNumber() {
         Integer loanCount = 0;
         for (LoanCounter loanCounter : getLoanCounters()) {

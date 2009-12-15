@@ -174,7 +174,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("sav prd2", "prd2", currentDate);
         savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_PARTIAL_APPLICATION,
-                new Money("100"), null);
+                new Money(getCurrency(), "100"), null);
         savings.save();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -438,7 +438,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         performNoErrors();
         verifyForward("edit_success");
         SavingsActionForm actionForm = (SavingsActionForm) request.getSession().getAttribute("savingsActionForm");
-       Assert.assertEquals(new Money("300"), actionForm.getRecommendedAmntValue());
+       Assert.assertEquals(new Money(getCurrency(), "300"), actionForm.getRecommendedAmntValue());
     }
 
     public void testSuccessfulEditPrevious() throws Exception {

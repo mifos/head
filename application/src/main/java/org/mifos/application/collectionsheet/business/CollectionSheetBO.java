@@ -174,7 +174,7 @@ public class CollectionSheetBO extends BusinessObject {
                 CollSheetCustBO collectionSheetCustomer = getCollectionSheetCustomerForCustomerId(loan.getCustomer()
                         .getCustomerId());
                 if (null == collectionSheetCustomer) {
-                    collectionSheetCustomer = new CollSheetCustBO();
+                    collectionSheetCustomer = new CollSheetCustBO(loan.getCurrency());
                     collectionSheetCustomer.populateCustomerDetails(loan.getCustomer());
                     MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
                             "after addng customer detals");
@@ -254,7 +254,7 @@ public class CollectionSheetBO extends BusinessObject {
             CollSheetCustBO collectionSheetCustomer = getCollectionSheetCustomerForCustomerId(accountActionDate
                     .getCustomer().getCustomerId());
             if (null == collectionSheetCustomer) {
-                collectionSheetCustomer = new CollSheetCustBO();
+                collectionSheetCustomer = new CollSheetCustBO(accountActionDate.getAccount().getCurrency());
                 CustomerBO customer = accountActionDate.getCustomer();
 
                 // add customer details to the fields in collectionSheetCustomer

@@ -231,9 +231,9 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
                 .getAcceptedPaymentTypesForATransaction(transactionId);
         // the list box on the left will get all payment types - the accepted
         // payment types (on the right listbox)
-        List<PaymentTypeData> inList = new ArrayList(payments);
+        List<PaymentTypeData> inList = new ArrayList<PaymentTypeData>(payments);
         // this outList will hold the current accepted payment types
-        List<PaymentTypeData> outList = new ArrayList();
+        List<PaymentTypeData> outList = new ArrayList<PaymentTypeData>();
 
         PaymentTypeData data = null;
         for (AcceptedPaymentType paymentType : paymentTypeList) {
@@ -299,16 +299,16 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
         List<PaymentTypeData> selectedList = null;
 
         if (transactionType == TrxnTypes.loan_repayment) {
-            selectedList = new ArrayList(repaymentOutList);
+            selectedList = new ArrayList<PaymentTypeData>(repaymentOutList);
 
         } else if (transactionType == TrxnTypes.fee) {
-            selectedList = new ArrayList(feeOutList);
+            selectedList = new ArrayList<PaymentTypeData>(feeOutList);
         } else if (transactionType == TrxnTypes.loan_disbursement) {
-            selectedList = new ArrayList(disbursementOutList);
+            selectedList = new ArrayList<PaymentTypeData>(disbursementOutList);
         } else if (transactionType == TrxnTypes.savings_deposit) {
-            selectedList = new ArrayList(depositOutList);
+            selectedList = new ArrayList<PaymentTypeData>(depositOutList);
         } else if (transactionType == TrxnTypes.savings_withdrawal) {
-            selectedList = new ArrayList(withdrawalOutList);
+            selectedList = new ArrayList<PaymentTypeData>(withdrawalOutList);
         }
         if ((selectedList != null) && (selectedList.size() > 0))
             selectedList.remove(0); // remove the first one

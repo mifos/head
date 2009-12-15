@@ -28,6 +28,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -87,17 +88,17 @@ public class CollSheetCustBO extends BusinessObject {
     private Short loanOfficerId;
 
     public CollSheetCustBO(final Integer custId, final String custDisplayName, final Short custLevel, final Short custOfficeId,
-            final String searchId, final Short loanOfficerId) {
+            final String searchId, final Short loanOfficerId, MifosCurrency currency) {
         super();
-        initFields(custId, custDisplayName, custLevel, custOfficeId, searchId, loanOfficerId);
+        initFields(custId, custDisplayName, custLevel, custOfficeId, searchId, loanOfficerId, currency);
     }
 
-    public CollSheetCustBO() {
-        this(null, null, null, null, null, null);
+    public CollSheetCustBO(MifosCurrency currency) {
+        this(null, null, null, null, null, null, currency);
     }
 
     private void initFields(final Integer custId, final String custDisplayName, final Short custLevel, final Short custOfficeId,
-            final String searchId, final Short loanOfficerId) {
+            final String searchId, final Short loanOfficerId, MifosCurrency currency) {
         this.custId = custId;
         this.custDisplayName = custDisplayName;
         this.custLevel = custLevel;
@@ -106,11 +107,21 @@ public class CollSheetCustBO extends BusinessObject {
         this.loanOfficerId = loanOfficerId;
         collectionSheetLoanDetails = new HashSet<CollSheetLnDetailsEntity>();
         collSheetSavingsDetails = new HashSet<CollSheetSavingsDetailsEntity>();
+        collectiveLoanAmntDue = new Money(currency);
+        collectiveLoanDisbursal = new Money(currency);;
+        collectiveSavingsAmntDue = new Money(currency);;
+        collectiveAccntCharges = new Money(currency);;
+        collectiveTotalCollection = new Money(currency);;
+        collectiveNetCashIn = new Money(currency);;
     }
 
     public void populateInstanceForTest(final Integer custId, final String custDisplayName, final Short custLevel, final Short custOfficeId,
             final String searchId, final Short loanOfficerId) {
-        initFields(custId, custDisplayName, custLevel, custOfficeId, searchId, loanOfficerId);
+        initFields(custId, custDisplayName, custLevel, custOfficeId, searchId, loanOfficerId, Money.getDefaultCurrency());
+    }
+    
+    public MifosCurrency getCurrency() {
+        return collectiveLoanAmntDue.getCurrency();
     }
 
     public Long getCollSheetCustId() {
@@ -274,10 +285,8 @@ public class CollSheetCustBO extends BusinessObject {
                 "after setting the collection sheet customer relation ship");
         MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
                 "Total Amnt due to be disbursed is" + collectionSheetLoanDetail.getAmntToBeDisbursed());
-        this.collectiveLoanAmntDue = new Money().add(collectiveLoanAmntDue).add(
-                collectionSheetLoanDetail.getTotalAmntDue());
-        this.collectiveLoanDisbursal = new Money().add(collectiveLoanDisbursal).add(
-                collectionSheetLoanDetail.getAmntToBeDisbursed());
+        this.collectiveLoanAmntDue =  collectiveLoanAmntDue.add(collectionSheetLoanDetail.getTotalAmntDue());
+        this.collectiveLoanDisbursal = collectiveLoanDisbursal.add(collectionSheetLoanDetail.getAmntToBeDisbursed());
         MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after updating the totals");
         if (null == collectionSheetLoanDetails) {
             collectionSheetLoanDetails = new HashSet<CollSheetLnDetailsEntity>();
@@ -310,7 +319,7 @@ public class CollSheetCustBO extends BusinessObject {
      */
     public void addCollectionSheetSavingsDetail(final CollSheetSavingsDetailsEntity collectionSheetSavingsDetail) {
         collectionSheetSavingsDetail.setCollectionSheetCustomer(this);
-        this.collectiveSavingsAmntDue = new Money().add(collectiveSavingsAmntDue).add(
+        this.collectiveSavingsAmntDue = collectiveSavingsAmntDue.add(
                 collectionSheetSavingsDetail.getRecommendedAmntDue())
                 .add(collectionSheetSavingsDetail.getAmntOverDue());
         if (null == collSheetSavingsDetails) {
@@ -322,12 +331,11 @@ public class CollSheetCustBO extends BusinessObject {
     }
 
     private void addToTotalSavingsForAccount(final Integer accountId, final Money accountSavingsAmntDue) {
-        Money totalAmountDueForAccount = new Money();
         if (null == totalSavingsAmountForAccount) {
             totalSavingsAmountForAccount = new HashMap<Integer, Money>();
         }
         if (totalSavingsAmountForAccount.containsKey(accountId)) {
-            totalAmountDueForAccount = totalSavingsAmountForAccount.get(accountId);
+            Money totalAmountDueForAccount = totalSavingsAmountForAccount.get(accountId);
             totalSavingsAmountForAccount.put(accountId, totalAmountDueForAccount.add(accountSavingsAmntDue));
         } else {
             totalSavingsAmountForAccount.put(accountId, accountSavingsAmntDue);
@@ -335,7 +343,7 @@ public class CollSheetCustBO extends BusinessObject {
     }
 
     public Money getTotalSavingsForAccount(final Integer accountId) {
-        Money totalAmountDueForAccount = new Money();
+        Money totalAmountDueForAccount = new Money(getCurrency());
         if (totalSavingsAmountForAccount.containsKey(accountId)) {
             totalAmountDueForAccount = totalSavingsAmountForAccount.get(accountId);
         }
@@ -423,16 +431,16 @@ public class CollSheetCustBO extends BusinessObject {
     }
 
     public void addCollectiveTotalsForChild(final CollSheetCustBO collSheetCustomer) {
-        this.collectiveAccntCharges = new Money().add(collectiveAccntCharges).add(
+        this.collectiveAccntCharges = collectiveAccntCharges.add(
                 collSheetCustomer.getCollectiveAccntCharges());
-        this.collectiveLoanAmntDue = new Money().add(collectiveLoanAmntDue).add(
+        this.collectiveLoanAmntDue = collectiveLoanAmntDue.add(
                 collSheetCustomer.getCollectiveLoanAmntDue());
-        this.collectiveLoanDisbursal = new Money().add(collectiveLoanDisbursal).add(
+        this.collectiveLoanDisbursal = collectiveLoanDisbursal.add(
                 collSheetCustomer.getCollectiveLoanDisbursal());
-        this.collectiveNetCashIn = new Money().add(collectiveNetCashIn).add(collSheetCustomer.getCollectiveNetCashIn());
-        this.collectiveSavingsAmntDue = new Money().add(collectiveSavingsAmntDue).add(
+        this.collectiveNetCashIn = collectiveNetCashIn.add(collSheetCustomer.getCollectiveNetCashIn());
+        this.collectiveSavingsAmntDue = collectiveSavingsAmntDue.add(
                 collSheetCustomer.getCollectiveSavingsAmntDue());
-        this.collectiveTotalCollection = new Money().add(collectiveTotalCollection).add(
+        this.collectiveTotalCollection = collectiveTotalCollection.add(
                 collSheetCustomer.getCollectiveTotalCollection());
 
     }

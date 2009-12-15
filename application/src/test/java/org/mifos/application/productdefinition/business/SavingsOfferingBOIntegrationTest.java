@@ -94,7 +94,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.getInterceptor().createInitialValueMap(savingsProduct);
         savingsProduct.update(Short.valueOf("1"), newName, newShortName, productCategory, prdApplicableMaster,
                 startDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType, intCalcMeeting,
-                intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
@@ -151,7 +151,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), null, "S", productCategory, prdApplicableMaster, new Date(
                     System.currentTimeMillis()), savingsType, intCalType, intCalcMeeting, intPostMeeting, new Money(
-                    "10"), 10.0, depglCodeEntity, intglCodeEntity);
+                    getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertTrue(true);
@@ -172,7 +172,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings offering", "S", productCategory, prdApplicableMaster,
                     new Date(System.currentTimeMillis()), null, intCalType, intCalcMeeting, intPostMeeting, new Money(
-                            "10"), 10.0, depglCodeEntity, intglCodeEntity);
+                            getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertTrue(true);
@@ -190,7 +190,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings offering", "S", productCategory, prdApplicableMaster,
                     new Date(System.currentTimeMillis()), savingsType, intCalType, intCalcMeeting, intPostMeeting,
-                    new Money("10"), 10.0, null, null);
+                    new Money(getCurrency(), "10"), 10.0, null, null);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertTrue(true);
@@ -213,7 +213,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savings", productCategory,
                     prdApplicableMaster, new Date(System.currentTimeMillis()), savingsType, intCalType, intCalcMeeting,
-                    intPostMeeting, new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
+                    intPostMeeting, new Money(getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertTrue(true);
@@ -237,7 +237,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savi", productCategory,
                     prdApplicableMaster, startDate, savingsType, intCalType, intCalcMeeting, intPostMeeting, new Money(
-                            "10"), 10.0, depglCodeEntity, intglCodeEntity);
+                            getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertTrue(true);
@@ -261,7 +261,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = offSetCurrentDate(0);
         SavingsOfferingBO product = new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savi",
                 productCategory, prdApplicableMaster, startDate, savingsType, intCalType, intCalcMeeting,
-                intPostMeeting, new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
+                intPostMeeting, new Money(getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
         Assert.assertNotNull(product.getGlobalPrdOfferingNum());
        Assert.assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
 
@@ -284,7 +284,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = offSetCurrentDate(2);
         SavingsOfferingBO product = new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savi",
                 productCategory, prdApplicableMaster, startDate, savingsType, intCalType, intCalcMeeting,
-                intPostMeeting, new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
+                intPostMeeting, new Money(getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
         Assert.assertNotNull(product.getGlobalPrdOfferingNum());
        Assert.assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
 
@@ -308,7 +308,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savi", productCategory,
                     prdApplicableMaster, startDate, endDate, "dssf", null, savingsType, intCalType, intCalcMeeting,
-                    intPostMeeting, new Money("10"), new Money(), new Money(), 10.0, depglCodeEntity, intglCodeEntity);
+                    intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency()), new Money(getCurrency()), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertTrue(true);
@@ -334,7 +334,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings Product", "Savi", productCategory,
                     prdApplicableMaster, startDate, savingsType, intCalType, intCalcMeeting, intPostMeeting, new Money(
-                            "10"), 10.0, depglCodeEntity, intglCodeEntity);
+                            getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException pde) {
            Assert.assertTrue(true);
@@ -361,7 +361,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings Product1", "SAVP", productCategory,
                     prdApplicableMaster, startDate, savingsType, intCalType, intCalcMeeting, intPostMeeting, new Money(
-                            "10"), 10.0, depglCodeEntity, intglCodeEntity);
+                            getCurrency(), "10"), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException pde) {
            Assert.assertTrue(true);
@@ -410,7 +410,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             new SavingsOfferingBO(TestUtils.makeUser(), "Savings Product1", "SAVP", productCategory,
                     prdApplicableMaster, startDate, savingsType, intCalType, intCalcMeeting, intPostMeeting, new Money(
-                            "10.0"), 10.0, depglCodeEntity, intglCodeEntity);
+                            getCurrency(), "10.0"), 10.0, depglCodeEntity, intglCodeEntity);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertTrue(true);
@@ -436,7 +436,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savingsProduct = new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savi", productCategory,
                     prdApplicableMaster, startDate, endDate, "dssf", null, savingsType, intCalType, intCalcMeeting,
-                    intPostMeeting, new Money("10"), new Money(), new Money(), 10.0, depglCodeEntity, intglCodeEntity);
+                    intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency()), new Money(getCurrency()), 10.0, depglCodeEntity, intglCodeEntity);
             savingsProduct.save();
             Assert.fail();
         } catch (Exception e) {
@@ -463,7 +463,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date endDate = offSetCurrentDate(7);
         savingsProduct = new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savi", productCategory,
                 prdApplicableMaster, startDate, endDate, "dssf", null, savingsType, intCalType, intCalcMeeting,
-                intPostMeeting, new Money("10"), new Money(), new Money(), 10.0, depglCodeEntity, intglCodeEntity);
+                intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency()), new Money(getCurrency()), 10.0, depglCodeEntity, intglCodeEntity);
         savingsProduct.save();
         StaticHibernateUtil.commitTransaction();
 
@@ -516,7 +516,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savingsProduct.update(Short.valueOf("1"), "Savings_offering1", "S", productCategory, prdApplicableMaster,
                     startDate, endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType,
-                    intCalcMeeting, intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                    intCalcMeeting, intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
             Assert.fail();
         } catch (ProductDefinitionException pde) {
            Assert.assertTrue(true);
@@ -540,7 +540,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             savingsProduct
                     .update(Short.valueOf("1"), "Savings_offeringChanged", "S1", productCategory, prdApplicableMaster,
                             startDate, endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType,
-                            intCalcMeeting, intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                            intCalcMeeting, intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
             Assert.fail();
         } catch (ProductDefinitionException pde) {
            Assert.assertTrue(true);
@@ -566,7 +566,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         savingsProduct.setStartDate(reduceCurrentDate(1));
         savingsProduct.update(Short.valueOf("1"), newName, "S1", productCategory, prdApplicableMaster, savingsProduct
                 .getStartDate(), endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType,
-                intCalcMeeting, intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                intCalcMeeting, intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
@@ -594,7 +594,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savingsProduct.update(Short.valueOf("1"), newName, "S1", productCategory, prdApplicableMaster,
                     newStartDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType,
-                    intCalcMeeting, intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                    intCalcMeeting, intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
             Assert.fail();
         } catch (ProductDefinitionException pde) {
            Assert.assertTrue(true);
@@ -622,7 +622,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savingsProduct.update(Short.valueOf("1"), newName, "S1", productCategory, prdApplicableMaster,
                     newStartDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType,
-                    intCalcMeeting, intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                    intCalcMeeting, intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
             Assert.fail();
         } catch (ProductDefinitionException pde) {
            Assert.assertTrue(true);
@@ -649,7 +649,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             savingsProduct.update(Short.valueOf("1"), newName, "S1", productCategory, prdApplicableMaster, startDate,
                     endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType, intCalcMeeting,
-                    intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                    intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
             Assert.fail();
         } catch (ProductDefinitionException pde) {
            Assert.assertEquals(ProductDefinitionConstants.INVALIDENDDATE, pde.getKey());
@@ -674,7 +674,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date newStartDate = offSetCurrentDate(6);
         savingsProduct.update(Short.valueOf("1"), newName, "S1", productCategory, prdApplicableMaster, newStartDate,
                 endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType, intCalcMeeting,
-                intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
@@ -702,7 +702,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 PrdStatus.SAVINGS_ACTIVE, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE);
         savingsProduct.update(Short.valueOf("1"), newName, newShortName, productCategory, prdApplicableMaster,
                 startDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType, intCalcMeeting,
-                intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
+                intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
@@ -725,10 +725,10 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                         .getRecurrenceId().shortValue());
        Assert.assertEquals(intPostMeeting.getMeetingDetails().getRecurAfter(), savingsProduct.getFreqOfPostIntcalc()
                 .getMeeting().getMeetingDetails().getRecurAfter());
-       Assert.assertEquals("Recommended Amount", new Money("10"), savingsProduct.getRecommendedAmount());
+       Assert.assertEquals("Recommended Amount", new Money(getCurrency(), "10"), savingsProduct.getRecommendedAmount());
        Assert.assertEquals(10.0, savingsProduct.getInterestRate(), DELTA);
-       Assert.assertEquals("Max Amount Withdrawl Amount", new Money("100"), savingsProduct.getMaxAmntWithdrawl());
-       Assert.assertEquals("Min Amount Withdrawl Amount", new Money("1"), savingsProduct.getMinAmntForInt());
+       Assert.assertEquals("Max Amount Withdrawl Amount", new Money(getCurrency(), "100"), savingsProduct.getMaxAmntWithdrawl());
+       Assert.assertEquals("Min Amount Withdrawl Amount", new Money(getCurrency(), "1"), savingsProduct.getMinAmntForInt());
     }
 
     private SavingsOfferingBO createSavingsOfferingBO(final String prdOfferingName, final String shortName) {

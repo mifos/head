@@ -231,9 +231,24 @@ explanation of the license and how it is applied.
 															</td>
 														</tr>
 													</table>
-												</div>
+												</div>                                                               
 											</td>
 										</tr>
+                                        <tr class="fontnormal">
+                                        <td align="right">
+                                           <mifos:mifoslabel mandatory="yes"
+                                                                 name="Fees.currency" bundle="FeesUIResources" 
+                                                                 isColonRequired="yes"/>
+                                                                 </td><td>
+                                                                 <html-el:select property="currencyId">
+                                                                 <c:forEach
+                                                                    items="${requestScope.currencies}"
+                                                                    var="currency">
+                                                                     <html-el:option value="${currency.currencyId}">${currency.currencyCode}</html-el:option>
+                                                                 </c:forEach>
+                                                                </html-el:select>
+                                        </td>
+                                        </tr>
 										<tr class="fontnormal">
 											<td colspan="2" valign="top" class="fontnormalbold">
 												<mifos:mifoslabel name="Fees.feecalculation" />

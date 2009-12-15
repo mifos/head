@@ -85,13 +85,13 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
 
         CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group.getCustomerAccount()
                 .getAccountActionDates().toArray()[0];
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(getCurrency());
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDate
                 .getAccountFeesActionDetails()) {
             chargeWaived = accountFeesActionDetailEntity.waiveCharges();
-           Assert.assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
+           Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
         }
-       Assert.assertEquals(new Money("100"), chargeWaived);
+       Assert.assertEquals(new Money(getCurrency(), "100"), chargeWaived);
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());

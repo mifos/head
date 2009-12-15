@@ -117,6 +117,11 @@ explanation of the license and how it is applied.
 										</c:otherwise>
 									</c:choose>
 									<br>
+                                      <span class="fontnormal"> 
+                                      <mifos:mifoslabel name="Fees.currency" bundle="FeesUIResources" isColonRequired="yes" />
+                                      <c:out value="${BusinessKey.currency.currencyCode}" />
+                                      </span> 
+                                    <br>
 									<br>
 									<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feecalculation" bundle="FeesUIResources">
 										</mifos:mifoslabel> </span>

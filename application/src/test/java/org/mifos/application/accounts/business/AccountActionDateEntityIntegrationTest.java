@@ -66,14 +66,14 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
 
         CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group.getCustomerAccount()
                 .getAccountActionDates().toArray()[0];
-        CustomerAccountBOTestUtils.setMiscFee(accountActionDate, new Money("20"));
+        CustomerAccountBOTestUtils.setMiscFee(accountActionDate, new Money(getCurrency(), "20"));
         Money chargeWaived = CustomerAccountBOTestUtils.waiveCharges(accountActionDate);
-       Assert.assertEquals(new Money(), accountActionDate.getMiscFee());
+       Assert.assertEquals(new Money(getCurrency()), accountActionDate.getMiscFee());
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDate
                 .getAccountFeesActionDetails()) {
-           Assert.assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
+           Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
         }
-       Assert.assertEquals(new Money("120.0"), chargeWaived);
+       Assert.assertEquals(new Money(getCurrency(), "120.0"), chargeWaived);
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -105,7 +105,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         for (AccountFeesEntity accFeesEntity : accountFeeSet) {
             if (accFeesEntity.getFees().getFeeName().equalsIgnoreCase("Periodic Fee")) {
                 CustomerAccountBOTestUtils.applyPeriodicFees(accountActionDateEntity, accFeesEntity.getFees()
-                        .getFeeId(), new Money("100"));
+                        .getFeeId(), new Money(getCurrency(), "100"));
                 break;
             }
         }

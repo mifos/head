@@ -323,7 +323,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
             CustomerBO group, AccountState state) throws Exception {
         SavingsBO savings = TestObjectFactory.createSavingsAccount(globalAccountNum, group, state, new Date(),
                 savingsOffering, userContext);
-        PaymentData paymentData = PaymentData.createPaymentData(new Money("100"), savings.getPersonnel(), Short
+        PaymentData paymentData = PaymentData.createPaymentData(new Money(getCurrency(), "100"), savings.getPersonnel(), Short
                 .valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setCustomer(group);
         paymentData.setReceiptDate(new Date(System.currentTimeMillis()));

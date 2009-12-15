@@ -57,6 +57,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
@@ -177,8 +178,8 @@ public class SavingsTestHelper {
 
     public SavingsBO createSavingsAccount(SavingsOfferingBO savingsOffering, CustomerBO customer,
             AccountState accountState, UserContext userContext) throws Exception {
-        SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, accountState, new Money("500.0"),
-                null);
+        SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, accountState, new Money(TestUtils
+                .getCurrency(), "500.0"), null);
         savings.save();
         return savings;
     }

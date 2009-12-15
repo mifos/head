@@ -178,7 +178,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward("loan_detail_page");
-       Assert.assertEquals(new Money(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(new Money(getCurrency()), accountBO.getTotalPaymentDue());
        Assert.assertEquals(0, accountBO.getTotalInstallmentsDue().size());
        Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
     }
@@ -241,7 +241,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-       Assert.assertEquals(new Money(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(new Money(getCurrency()), accountBO.getTotalPaymentDue());
        Assert.assertEquals(0, accountBO.getTotalInstallmentsDue().size());
        Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
 
@@ -287,7 +287,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward("loan_detail_page");
-       Assert.assertEquals(new Money(), accountBO.getTotalPaymentDue());
+       Assert.assertEquals(new Money(getCurrency()), accountBO.getTotalPaymentDue());
        Assert.assertEquals(0, accountBO.getTotalInstallmentsDue().size());
        Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
     }

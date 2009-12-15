@@ -25,17 +25,18 @@ import org.mifos.framework.util.helpers.Money;
 
 public class ViewInstallmentDetails extends View {
 
-    private Money principal;
+    private final Money principal;
 
-    private Money interest;
+    private final Money interest;
 
-    private Money fees;
+    private final Money fees;
 
-    private Money penalty;
-
-    private Money subTotal;
+    private final Money penalty;
 
     public ViewInstallmentDetails(Money principal, Money interest, Money fees, Money penalty) {
+        if (principal == null || interest == null || fees == null || penalty == null) {
+            throw new IllegalArgumentException("Illegal null argument passed");
+        }
         this.principal = principal;
         this.interest = interest;
         this.fees = fees;
@@ -59,9 +60,7 @@ public class ViewInstallmentDetails extends View {
     }
 
     public Money getSubTotal() {
-        this.subTotal = new Money();
-        this.subTotal = this.subTotal.add(this.principal).add(this.interest).add(this.fees).add(this.penalty);
-        return this.subTotal;
+        return this.principal.add(this.interest).add(this.fees).add(this.penalty);
     }
 
 }

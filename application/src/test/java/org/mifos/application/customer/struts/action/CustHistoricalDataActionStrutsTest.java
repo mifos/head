@@ -217,9 +217,9 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         group = TestObjectFactory.getGroup(group.getCustomerId());
        Assert.assertEquals("Test", group.getHistoricalData().getProductName());
        Assert.assertEquals("Test notes", group.getHistoricalData().getNotes());
-       Assert.assertEquals(new Money("100"), group.getHistoricalData().getLoanAmount());
-       Assert.assertEquals(new Money("50"), group.getHistoricalData().getTotalAmountPaid());
-       Assert.assertEquals(new Money("10"), group.getHistoricalData().getInterestPaid());
+       Assert.assertEquals(new Money(getCurrency(), "100"), group.getHistoricalData().getLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "50"), group.getHistoricalData().getTotalAmountPaid());
+       Assert.assertEquals(new Money(getCurrency(), "10"), group.getHistoricalData().getInterestPaid());
        Assert.assertEquals(1, group.getHistoricalData().getMissedPaymentsCount().intValue());
        Assert.assertEquals(2, group.getHistoricalData().getTotalPaymentsCount().intValue());
        Assert.assertEquals(1, group.getHistoricalData().getLoanCycleNumber().intValue());
@@ -255,9 +255,9 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         group = TestObjectFactory.getGroup(group.getCustomerId());
        Assert.assertEquals("Test", group.getHistoricalData().getProductName());
        Assert.assertEquals("Test notes", group.getHistoricalData().getNotes());
-       Assert.assertEquals(new Money("200"), group.getHistoricalData().getLoanAmount());
-       Assert.assertEquals(new Money("150"), group.getHistoricalData().getTotalAmountPaid());
-       Assert.assertEquals(new Money("50"), group.getHistoricalData().getInterestPaid());
+       Assert.assertEquals(new Money(getCurrency(), "200"), group.getHistoricalData().getLoanAmount());
+       Assert.assertEquals(new Money(getCurrency(), "150"), group.getHistoricalData().getTotalAmountPaid());
+       Assert.assertEquals(new Money(getCurrency(), "50"), group.getHistoricalData().getInterestPaid());
        Assert.assertEquals(2, group.getHistoricalData().getMissedPaymentsCount().intValue());
        Assert.assertEquals(3, group.getHistoricalData().getTotalPaymentsCount().intValue());
        Assert.assertEquals(2, group.getHistoricalData().getLoanCycleNumber().intValue());

@@ -607,9 +607,10 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(defLnAmnt.toString()),
-                    new Money(defLnAmnt.toString()), new Money(defLnAmnt.toString()), defIntRate, defIntRate,
-                    defIntRate, defInstallments, defInstallments, defInstallments, true,
+                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(
+                            TestUtils.getCurrency(), defLnAmnt.toString()), new Money(TestUtils.getCurrency(),
+                            defLnAmnt.toString()), new Money(TestUtils.getCurrency(), defLnAmnt.toString()),
+                    defIntRate, defIntRate, defIntRate, defInstallments, defInstallments, defInstallments, true,
                     interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
                     new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest);
         } catch (ProductDefinitionException e) {
@@ -638,9 +639,10 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(defLnAmnt.toString()),
-                    new Money(defLnAmnt.toString()), new Money(defLnAmnt.toString()), defIntRate, defIntRate,
-                    defIntRate, defInstallments, defInstallments, defInstallments, true,
+                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(
+                            TestUtils.getCurrency(), defLnAmnt.toString()), new Money(TestUtils.getCurrency(),
+                            defLnAmnt.toString()), new Money(TestUtils.getCurrency(), defLnAmnt.toString()),
+                    defIntRate, defIntRate, defIntRate, defInstallments, defInstallments, defInstallments, true,
                     interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
                     new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest, loanAmountCalcType,
                     noOfInstallCalcType);
@@ -701,7 +703,8 @@ public class TestObjectFactory {
         funds.add(fundBO);
         LoanOfferingBO loanOfferingBO = new LoanOfferingBO(getContext(), "Loan Offering", "LOAP", productCategory,
                 prdApplicableMaster, DateUtils.getCurrentDateWithoutTimeStamp(), null, null, gracePeriodType,
-                (short) 2, interestTypes, new Money("1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0,
+                (short) 2, interestTypes, new Money(TestUtils.getCurrency(), "1000"), new Money(
+                        TestUtils.getCurrency(), "3000"), new Money(TestUtils.getCurrency(), "2000.0"), 12.0, 2.0, 3.0,
                 (short) 20, (short) 11, (short) 17, false, false, false, funds, fees, frequency, principalglCodeEntity,
                 intglCodeEntity);
         loanOfferingBO.save();
@@ -787,8 +790,8 @@ public class TestObjectFactory {
         try {
             product = new SavingsOfferingBO(TestUtils.makeUserWithLocales(), name, shortName, productCategory,
                     prdApplicableMaster, startDate, null, null, amountUnit, savingsTypeEntity, intCalType,
-                    intCalcMeeting, intPostMeeting, new Money(recommendedAmount.toString()), new Money(maxAmtWithdrawl
-                            .toString()), new Money(minAmtForInt.toString()), intRate, depglCodeEntity, intglCodeEntity);
+                    intCalcMeeting, intPostMeeting, new Money(TestUtils.getCurrency(), recommendedAmount.toString()), new Money(TestUtils.getCurrency(), maxAmtWithdrawl
+                            .toString()), new Money(TestUtils.getCurrency(), minAmtForInt.toString()), intRate, depglCodeEntity, intglCodeEntity);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         } catch (SystemException e) {
@@ -1436,14 +1439,12 @@ public class TestObjectFactory {
         }
     }
 
+    // FIXME: rename to getRupees()?
     public static MifosCurrency getMFICurrency() {
         return testObjectPersistence.getCurrency();
     }
 
-    public static MifosCurrency getCurrency(final Short currencyId) {
-        return testObjectPersistence.getCurrency(currencyId);
-    }
-
+    // FIXME: rename to getRupees()?
     public static MifosCurrency getCurrency() {
         return testObjectPersistence.getCurrency();
     }
@@ -1453,7 +1454,7 @@ public class TestObjectFactory {
      * integer.
      */
     public static Money getMoneyForMFICurrency(final int amount) {
-        return new Money(String.valueOf(amount));
+        return new Money(TestUtils.getCurrency(), String.valueOf(amount));
     }
 
     public static Money getMoneyForMFICurrency(final String amount) {

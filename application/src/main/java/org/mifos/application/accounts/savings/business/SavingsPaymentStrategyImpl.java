@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.util.helpers.Money;
 
@@ -43,9 +44,10 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
     public Money makeScheduledPayments(final AccountPaymentEntity payment,
             final List<SavingsScheduleEntity> scheduledDeposits, final CustomerBO payingCustomer,
             final SavingsType savingsType, final Money savingsBalanceBeforeDeposit) {
-
-        Money amountRemaining = new Money(payment.getAmount().getAmount());
-        Money runningBalance = new Money(savingsBalanceBeforeDeposit.getAmount());
+        
+        MifosCurrency currency = payment.getAccount().getCurrency();
+        Money amountRemaining = new Money(currency, payment.getAmount().getAmount());
+        Money runningBalance = new Money(currency, savingsBalanceBeforeDeposit.getAmount());
         final Date transactionDate = payment.getPaymentDate();
         Money depositAmount;
         PaymentStatus paymentStatus;
@@ -56,10 +58,9 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
             // latest installment
             paymentStatus = PaymentStatus.PAID;
             SavingsScheduleEntity lastExpectedPayment = null;
-            
             for (SavingsScheduleEntity expectedPayment : scheduledDeposits) {
                 lastExpectedPayment = expectedPayment;
-                expectedPayment.setPaymentDetails(new Money(), paymentStatus,
+                expectedPayment.setPaymentDetails(new Money(currency), paymentStatus,
                         new java.sql.Date(transactionDate.getTime()));
             }
             
@@ -69,8 +70,8 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
                     depositAmount = lastExpectedPayment.getTotalDepositDue();
                     amountRemaining = amountRemaining.subtract(lastExpectedPayment.getTotalDepositDue());
                 } else {
-                    depositAmount = new Money(amountRemaining.getAmount());
-                    amountRemaining = new Money();
+                    depositAmount = new Money(currency, amountRemaining.getAmount());
+                    amountRemaining = new Money(currency);
                 }
                 
                 lastExpectedPayment.setPaymentDetails(depositAmount, paymentStatus, new java.sql.Date(transactionDate
@@ -92,8 +93,8 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
                     amountRemaining = amountRemaining.subtract(accountAction.getTotalDepositDue());
                     paymentStatus = PaymentStatus.PAID;
                 } else {
-                    depositAmount = new Money(amountRemaining.getAmount());
-                    amountRemaining = new Money();
+                    depositAmount = new Money(currency, amountRemaining.getAmount());
+                    amountRemaining = new Money(currency);
                 }
 
                 accountAction.setPaymentDetails(depositAmount, paymentStatus, new java.sql.Date(transactionDate

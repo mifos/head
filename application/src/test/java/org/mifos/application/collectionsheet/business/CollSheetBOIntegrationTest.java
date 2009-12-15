@@ -103,7 +103,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testAddCollectionSheetCustomer() {
-        CollSheetCustBO collectionSheetCustomer = new CollSheetCustBO();
+        CollSheetCustBO collectionSheetCustomer = new CollSheetCustBO(getCurrency());
         collectionSheetCustomer.setCustId(Integer.valueOf("1"));
 
         CollectionSheetBO collSheet = new CollectionSheetBO();
@@ -113,7 +113,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetCollectionSheetCustomerForCustomerId() {
 
-        CollSheetCustBO collectionSheetCustomer = new CollSheetCustBO();
+        CollSheetCustBO collectionSheetCustomer = new CollSheetCustBO(getCurrency());
         collectionSheetCustomer.setCustId(Integer.valueOf("1"));
 
         CollectionSheetBO collSheet = new CollectionSheetBO();
@@ -240,13 +240,13 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 
         AccountActionDateEntity accntActionDateClient = new LoanScheduleEntity(account, client, installmentId,
-                new Date(System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(), new Money());
+                new Date(System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(getCurrency()), new Money(getCurrency()));
 
         AccountActionDateEntity accntActionDateGrp = new LoanScheduleEntity(account, group, installmentId, new Date(
-                System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(), new Money());
+                System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(getCurrency()), new Money(getCurrency()));
 
         AccountActionDateEntity accntActionDateCenter = new LoanScheduleEntity(account, center, installmentId,
-                new Date(System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(), new Money());
+                new Date(System.currentTimeMillis()), PaymentStatus.UNPAID, new Money(getCurrency()), new Money(getCurrency()));
 
         accntActionDates.add(accntActionDateClient);
         accntActionDates.add(accntActionDateGrp);
@@ -281,7 +281,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountActionDateEntity accountActionDateEntity : accntActionDates) {
             LoanScheduleEntity accntActionDate = (LoanScheduleEntity) accountActionDateEntity;
             AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accntActionDate,
-                    null, null, new Money("5"));
+                    null, null, new Money(getCurrency(), "5"));
 
             LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
                     .getMoneyForMFICurrency(3));
@@ -305,9 +305,9 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         for (CustomerBO customer : customers) {
             LoanBO loan = createLoanAccount(customer, "loan" + i++, "LN" + i++);
             LoanScheduleEntity accntActionDate = new LoanScheduleEntity(loan, customer, (short) 2, new Date(System
-                    .currentTimeMillis()), PaymentStatus.UNPAID, new Money(), new Money());
+                    .currentTimeMillis()), PaymentStatus.UNPAID, new Money(getCurrency()), new Money(getCurrency()));
             AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accntActionDate,
-                    null, null, new Money("5"));
+                    null, null, new Money(getCurrency(), "5"));
             LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
                     .getMoneyForMFICurrency(3));
 

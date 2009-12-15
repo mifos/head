@@ -106,7 +106,7 @@ public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegration
     }
 
     protected CollSheetCustBO generateCollectionSheet(int custId, Short loanOfficerId, CustomerLevel customerLevel) {
-        CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+        CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         collSheetCustBO.populateInstanceForTest(Integer.valueOf(custId), "Sample Individual Customer", customerLevel
                 .getValue(), ANY_SHORT_ID, "", loanOfficerId);
         return collSheetCustBO;
@@ -117,10 +117,10 @@ public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegration
         super.setUp();
         LOAN_OFFICER = PersonnelFixture.createLoanOfficer(LOAN_OFFICER_SHORT_ID);
         ANY_PERSONNEL = PersonnelFixture.createNonLoanOfficer(PERSONNEL_ANY_SHORT_ID);
-        centerCollectionSheet = new CollSheetCustBO();
+        centerCollectionSheet = new CollSheetCustBO(getCurrency());
         centerCollectionSheet.populateInstanceForTest(CENTER_ID, "Sample Center", CustomerLevel.CENTER.getValue(),
                 ANY_SHORT_ID, "", LOAN_OFFICER_SHORT_ID);
-        groupCollectionSheet = new CollSheetCustBO();
+        groupCollectionSheet = new CollSheetCustBO(getCurrency());
         groupCollectionSheet.populateInstanceForTest(GROUP_ID, "Sample Group", CustomerLevel.GROUP.getValue(),
                 ANY_SHORT_ID, "", LOAN_OFFICER_SHORT_ID);
         branchOffices = new ArrayList<OfficeBO>();

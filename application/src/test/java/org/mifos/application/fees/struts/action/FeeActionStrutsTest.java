@@ -269,6 +269,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
         addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY.getValue().toString());
         addRequestParameter("weekRecurAfter", "2");
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("rate", "10");
         addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());
         addRequestParameter("glCode", GLOCDE_ID);
@@ -288,6 +289,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("amount", "100");
         addRequestParameter("feeName", "Customer_One_time");
         addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME.getValue().toString());
@@ -308,7 +310,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("Customer_One_time", fee.getFeeName());
         Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
         Assert.assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-        Assert.assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+        Assert.assertEquals(new Money(getCurrency(), "100.0"), ((AmountFeeBO) fee).getFeeAmount());
         Assert.assertTrue(fee.isOneTime());
         Assert.assertFalse(fee.isCustomerDefaultFee());
         Assert.assertTrue(fee.isActive());
@@ -323,6 +325,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("amount", "100");
         addRequestParameter("customerDefaultFee", "1");
         addRequestParameter("feeName", "Customer_One_time_Default_Fee");
@@ -346,7 +349,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("Customer_One_time_Default_Fee", fee.getFeeName());
         Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
         Assert.assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-        Assert.assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+        Assert.assertEquals(new Money(getCurrency(), "100.0"), ((AmountFeeBO) fee).getFeeAmount());
         Assert.assertTrue(fee.isOneTime());
         Assert.assertTrue(fee.isCustomerDefaultFee());
         Assert.assertTrue(fee.isActive());
@@ -361,6 +364,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("amount", "100");
         addRequestParameter("customerDefaultFee", "1");
         addRequestParameter("feeName", "Customer Periodic Fee");
@@ -387,7 +391,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("Customer Periodic Fee", fee.getFeeName());
         Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
         Assert.assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-        Assert.assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+        Assert.assertEquals(new Money(getCurrency(), "100.0"), ((AmountFeeBO) fee).getFeeAmount());
         Assert.assertTrue(fee.isPeriodic());
         Assert.assertTrue(fee.isCustomerDefaultFee());
         Assert.assertTrue(fee.isActive());
@@ -402,6 +406,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
+        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
         addRequestParameter("rate", "23");
         addRequestParameter("amount", "");
         addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());
@@ -557,7 +562,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editPreview_success.toString());
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
-        Assert.assertEquals(new Money("200"), actionForm.getAmountValue());
+        Assert.assertEquals(new Money(getCurrency(), "200"), actionForm.getAmountValue());
         Assert.assertEquals(FeeStatus.INACTIVE, actionForm.getFeeStatusValue());
         Assert.assertNull(actionForm.getRate());
         Assert.assertNull(actionForm.getFeeFormula());
@@ -589,7 +594,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
         Assert.assertFalse(fee.isActive());
-        Assert.assertEquals(new Money("200.0"), ((AmountFeeBO) fee).getFeeAmount());
+        Assert.assertEquals(new Money(getCurrency(), "200.0"), ((AmountFeeBO) fee).getFeeAmount());
     }
 
     public void testSuccessfulGetFee() throws Exception {

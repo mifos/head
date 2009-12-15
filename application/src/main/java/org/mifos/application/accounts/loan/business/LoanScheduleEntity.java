@@ -72,14 +72,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         this.principal = principal;
         this.interest = interest;
         accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
-        this.penalty = new Money();
-        this.miscFee = new Money();
-        this.miscPenalty = new Money();
-        this.principalPaid = new Money();
-        this.interestPaid = new Money();
-        this.penaltyPaid = new Money();
-        this.miscFeePaid = new Money();
-        this.miscPenaltyPaid = new Money();
+        this.penalty = new Money(account.getCurrency());
+        this.miscFee = new Money(account.getCurrency());
+        this.miscPenalty = new Money(account.getCurrency());
+        this.principalPaid = new Money(account.getCurrency());
+        this.interestPaid = new Money(account.getCurrency());
+        this.penaltyPaid = new Money(account.getCurrency());
+        this.miscFeePaid = new Money(account.getCurrency());
+        this.miscPenaltyPaid = new Money(account.getCurrency());
     }
 
     public Money getInterest() {
@@ -271,10 +271,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     Money waiveCharges() {
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(getAccount().getCurrency());
         chargeWaived = chargeWaived.add(getMiscFee()).add(getMiscPenalty());
-        setMiscFee(new Money());
-        setMiscPenalty(new Money());
+        setMiscFee(new Money(getAccount().getCurrency()));
+        setMiscPenalty(new Money(getAccount().getCurrency()));
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             chargeWaived = chargeWaived.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
         }
@@ -282,7 +282,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     Money waiveFeeCharges() {
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(getAccount().getCurrency());
         chargeWaived = chargeWaived.add(getMiscFeeDue());
         setMiscFee(getMiscFeePaid());
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
@@ -300,7 +300,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalFeeDue() {
-        Money totalFees = new Money();
+        Money totalFees = new Money(getAccount().getCurrency());
         for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
             totalFees = totalFees.add(obj.getFeeDue());
         }
@@ -308,7 +308,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalFeeAmountPaidWithMiscFee() {
-        Money totalFees = new Money();
+        Money totalFees = new Money(getAccount().getCurrency());
         for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
             totalFees = totalFees.add(obj.getFeeAmountPaid());
         }
@@ -317,7 +317,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalScheduledFeeAmountWithMiscFee() {
-        Money totalFees = new Money();
+        Money totalFees = new Money(getAccount().getCurrency());
         for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
             totalFees = totalFees.add(obj.getFeeAmount());
         }
@@ -382,7 +382,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     Money waivePenaltyCharges() {
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(getAccount().getCurrency());
         chargeWaived = chargeWaived.add(getMiscPenaltyDue());
         setMiscPenalty(getMiscPenaltyPaid());
         return chargeWaived;

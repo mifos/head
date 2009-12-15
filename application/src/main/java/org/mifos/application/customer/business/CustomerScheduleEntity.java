@@ -53,10 +53,10 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
             PaymentStatus paymentStatus) {
         super(account, customer, installmentId, actionDate, paymentStatus);
         accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
-        miscFee = new Money();
-        miscFeePaid = new Money();
-        miscPenalty = new Money();
-        miscPenaltyPaid = new Money();
+        miscFee = new Money(account.getCurrency());
+        miscFeePaid = new Money(account.getCurrency());
+        miscPenalty = new Money(account.getCurrency());
+        miscPenaltyPaid = new Money(account.getCurrency());
     }
 
     public Set<AccountFeesActionDetailEntity> getAccountFeesActionDetails() {
@@ -108,7 +108,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalFeeDue() {
-        Money totalFees = new Money();
+        Money totalFees = new Money(getAccount().getCurrency());
         for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
             totalFees = totalFees.add(obj.getFeeDue());
         }
@@ -116,7 +116,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalFeeDueWithMiscFee() {
-        Money totalFees = new Money();
+        Money totalFees = new Money(getAccount().getCurrency());
         totalFees = totalFees.add(getTotalFeeDue()).add(getMiscFeeDue());
         return totalFees;
     }
@@ -144,10 +144,10 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
     }
 
     Money waiveCharges() {
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(getAccount().getCurrency());
         chargeWaived = chargeWaived.add(getMiscFee()).add(getMiscPenalty());
-        setMiscFee(new Money());
-        setMiscPenalty(new Money());
+        setMiscFee(new Money(getAccount().getCurrency()));
+        setMiscPenalty(new Money(getAccount().getCurrency()));
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
         }
@@ -155,9 +155,9 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
     }
 
     Money waiveFeeCharges() {
-        Money chargeWaived = new Money();
+        Money chargeWaived = new Money(getAccount().getCurrency());
         chargeWaived = chargeWaived.add(getMiscFee());
-        setMiscFee(new Money());
+        setMiscFee(new Money(getAccount().getCurrency()));
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
         }

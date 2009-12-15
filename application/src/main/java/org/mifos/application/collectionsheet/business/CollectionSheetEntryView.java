@@ -367,7 +367,7 @@ public class CollectionSheetEntryView extends View {
                     collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
         }
         
-        return new LoanPersistence().getFeeAmountAtDisbursement(loanAccountView.getAccountId());
+        return new LoanPersistence().getFeeAmountAtDisbursement(loanAccountView.getAccountId()).getAmountDoubleValue();
     }
 
     private Double getInterestAmountDedAtDisb(final List<CollectionSheetEntryInstallmentView> installments) {

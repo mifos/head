@@ -53,6 +53,8 @@ public class FeeActionForm extends BaseActionForm {
     private String feeFrequencyType;
 
     private String feeRecurrenceType;
+    
+    private Short currencyId;
 
     private String amount;
 
@@ -82,6 +84,14 @@ public class FeeActionForm extends BaseActionForm {
 
     public void setFeeId(String feeId) {
         this.feeId = feeId;
+    }
+
+    public void setCurrencyId(Short currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    public Short getCurrencyId() {
+        return currencyId;
     }
 
     public String getAmount() {

@@ -20,16 +20,15 @@
 
 package org.mifos.application.accounts.savings.business;
 
-import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
@@ -75,22 +74,23 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
         super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, transactionDate,
                 amount, comment, null, persistence, postingDate);
         this.balance = balance;
+        MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
         if (accountActionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL)) {
-            this.depositAmount = new Money();
+            this.depositAmount = new Money(currency);
             this.withdrawlAmount = amount;
-            this.interestAmount = new Money();
+            this.interestAmount = new Money(currency);
         } else if (accountActionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
             this.depositAmount = amount;
-            this.withdrawlAmount = new Money();
-            this.interestAmount = new Money();
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
         } else if (accountActionType.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
-            this.depositAmount = new Money();
-            this.withdrawlAmount = new Money();
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
             this.interestAmount = amount;
         } else {
-            this.depositAmount = new Money();
-            this.withdrawlAmount = new Money();
-            this.interestAmount = new Money();
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
         }
     }
 
@@ -100,23 +100,24 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
         super(accountPaymentEntity, accountActionType, null, dueDate, createdBy, customer, transactionDate, amount,
                 comments, relatedTrxn, persistence);
         this.balance = balance;
+        MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
         Short lastAccountAction = new SavingsHelper().getPaymentActionType(accountPaymentEntity);
         if (lastAccountAction.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
-            this.depositAmount = new Money();
+            this.depositAmount = new Money(currency);
             this.withdrawlAmount = amount;
-            this.interestAmount = new Money();
+            this.interestAmount = new Money(currency);
         } else if (lastAccountAction.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
             this.depositAmount = amount;
-            this.withdrawlAmount = new Money();
-            this.interestAmount = new Money();
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
         } else if (lastAccountAction.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
-            this.depositAmount = new Money();
-            this.withdrawlAmount = new Money();
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
             this.interestAmount = amount;
         } else {
-            this.depositAmount = new Money();
-            this.withdrawlAmount = new Money();
-            this.interestAmount = new Money();
+            this.depositAmount = new Money(currency);
+            this.withdrawlAmount = new Money(currency);
+            this.interestAmount = new Money(currency);
         }
     }
 

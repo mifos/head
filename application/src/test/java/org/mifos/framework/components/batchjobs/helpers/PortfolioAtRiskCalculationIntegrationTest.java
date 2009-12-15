@@ -195,14 +195,14 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         for (AccountBO account : group.getAccounts()) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
                 LoanBO loan = (LoanBO) account;
-                createPayment(loan, new Money("200"));
+                createPayment(loan, new Money(getCurrency(), "200"));
             }
         }
         for (AccountBO account : client.getAccounts()) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
                 LoanBO loan = (LoanBO) account;
                 changeFirstInstallmentDate(account, 31);
-                createPayment(loan, new Money("200"));
+                createPayment(loan, new Money(getCurrency(), "200"));
                 loan.handleArrears();
             }
         }

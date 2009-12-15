@@ -39,7 +39,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 
-    private Money loanAmount;
+    private String loanAmount;
 
     private String paymentModeOfPayment;
 
@@ -51,7 +51,7 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
             errors.add(errors1);
 
         String method = request.getParameter(MethodNameConstants.METHOD);
-        if (isPreviewMethod(method) && isAmountGreaterThanZero(new Money(getAmount()))
+        if (isPreviewMethod(method) && isAmountGreaterThanZero(new Money(getLoanAmountValue().getCurrency(), getAmount()))
                 && StringUtils.isBlank(paymentModeOfPayment)) {
             String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
@@ -85,12 +85,16 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
         this.paymentModeOfPayment = paymentModeOfPayment;
     }
 
-    public Money getLoanAmount() {
+    public String getLoanAmount() {
         return loanAmount;
     }
 
-    public void setLoanAmount(Money loanAmount) {
+    public void setLoanAmount(String loanAmount) {
         this.loanAmount = loanAmount;
+    }
+
+    public Money getLoanAmountValue() {
+        return getMoney(this.loanAmount);
     }
 
     @Override

@@ -183,7 +183,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         schedulePreviewPageParams.put("disbursementDate", disbursementDate);
         schedulePreviewPageParams.put("gracePeriodDuration", "1");
         schedulePreviewPageParams.put("businessActivityId", "1");
-
     }
 
     private void createPayment(LoanBO loan, Money amountPaid) throws Exception {
@@ -235,7 +234,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         boolean interestDeductedAtDisbursement = false;
         boolean principalDueInLastInstallment = false;
-        Money loanAmount = new Money("300");
+        Money loanAmount = new Money(getCurrency(), "300");
         Double interestRate = new Double(1.2);
         Short installments = new Short((short) 6);
         LoanOfferingBO loanOffering = LoanOfferingTestUtils.createInstanceForTest(userContext, "TestLoanOffering", "TLO",
@@ -344,7 +343,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
                 "loanAccountActionForm");
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        createPayment(loan, new Money("100"));
+        createPayment(loan, new Money(getCurrency(), "100"));
         StaticHibernateUtil.commitTransaction();
         loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
         Assert.assertEquals(new LocalDate(), new LocalDate(loan.getAccountApprovalDate().getTime()));
@@ -611,10 +610,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         ViewInstallmentDetails view = (ViewInstallmentDetails) SessionUtils.getAttribute(
                 LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS, request);
-        Assert.assertEquals(new Money("12.0"), view.getInterest());
-        Assert.assertEquals(new Money("100.0"), view.getFees());
-        Assert.assertEquals(new Money("0.0"), view.getPenalty());
-        Assert.assertEquals(new Money("100.0"), view.getPrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "12.0"), view.getInterest());
+        Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getFees());
+        Assert.assertEquals(new Money(getCurrency(), "0.0"), view.getPenalty());
+        Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getPrincipal());
     }
 
     public void testGet() throws Exception {
@@ -1168,7 +1167,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 "loanAccountActionForm");
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
 
-        Assert.assertEquals(new Money("200"), loan.getLoanAmount());
+        Assert.assertEquals(new Money(getCurrency(), "200"), loan.getLoanAmount());
         Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
         TestObjectFactory.cleanUp(loan);
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
@@ -1190,7 +1189,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
                 "loanAccountActionForm");
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        Assert.assertEquals(new Money("2000"), loan.getLoanAmount());
+        Assert.assertEquals(new Money(getCurrency(), "2000"), loan.getLoanAmount());
         Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
         TestObjectFactory.cleanUp(loan);
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
@@ -1199,10 +1198,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     private void modifyActionDateForFirstInstallment() throws Exception {
         LoanScheduleEntity installment = (LoanScheduleEntity) accountBO.getAccountActionDate((short) 1);
-        LoanBOTestUtils.modifyData(installment, new Money("5.0"), installment.getPenaltyPaid(),
+        LoanBOTestUtils.modifyData(installment, new Money(getCurrency(), "5.0"), installment.getPenaltyPaid(),
                 installment.getMiscPenalty(), installment.getMiscPenaltyPaid(), installment.getMiscFee(), installment
-                        .getMiscFeePaid(), new Money("20.0"), installment.getPrincipalPaid(), new Money("10.0"),
-                installment.getInterestPaid());
+                        .getMiscFeePaid(), new Money(getCurrency(), "20.0"), installment.getPrincipalPaid(), new Money(
+                        getCurrency(), "10.0"), installment.getInterestPaid());
         LoanBOTestUtils.setActionDate(installment, offSetCurrentDate(1));
         accountBO = saveAndFetch(accountBO);
     }
@@ -1252,8 +1251,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         accountBO = TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
         LoanActivityEntity loanActivity = new LoanActivityEntity(accountBO, TestObjectFactory.getPersonnel(userContext
-                .getId()), "testing", new Money("100"), new Money("100"), new Money("100"), new Money("100"),
-                new Money("100"), new Money("100"), new Money("100"), new Money("100"), startDate);
+                .getId()), "testing", new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(
+                getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(
+                getCurrency(), "100"), new Money(getCurrency(), "100"), new Money(getCurrency(), "100"), startDate);
         ((LoanBO) accountBO).addLoanActivity(loanActivity);
         addNotes();
         TestObjectFactory.updateObject(accountBO);
@@ -1351,7 +1351,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         funds.add(fundBO);
         LoanOfferingBO loanOfferingBO = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, null, null, gracePeriodType, (short) 2, interestTypes,
-                new Money("1000"), new Money("3000"), new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+                new Money(getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
                 (short) 17, false, false, false, funds, fees, frequency, principalglCodeEntity, intglCodeEntity);
         loanOfferingBO.save();
         return loanOfferingBO;
@@ -1510,7 +1510,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         LoanBO loanMock = createMock(LoanBO.class);
         expect(loanMock.getCustomer()).andReturn(clientMock1).anyTimes();
         expect(loanMock.getBusinessActivityId()).andReturn(3);
-        expect(loanMock.getLoanAmount()).andReturn(new Money("100")).anyTimes();
+        expect(loanMock.getLoanAmount()).andReturn(new Money(getCurrency(), "100")).anyTimes();
 
         LoanAccountDetailsViewHelper clientDetails1 = new LoanAccountDetailsViewHelper();
         clientDetails1.setClientId("1");

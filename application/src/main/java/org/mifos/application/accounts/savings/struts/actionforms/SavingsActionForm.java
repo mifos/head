@@ -88,7 +88,7 @@ public class SavingsActionForm extends AccountAppActionForm {
                     SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(
                             SavingsConstants.PRDOFFCERING, request);
                     if (savingsOffering.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())
-                            && getRecommendedAmntValue().equals(new Money())) {
+                            && StringUtils.isBlank(getRecommendedAmount())) {
                         // check for mandatory amount
                         errors.add(SavingsConstants.MANDATORY, new ActionMessage(SavingsConstants.MANDATORY,
                                 mandatoryAmount));

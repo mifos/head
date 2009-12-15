@@ -31,6 +31,7 @@ import java.util.Locale;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
+import org.mifos.core.CurrencyMismatchException;
 
 /**
  * This class represents Money objects in the system, it should be used for all
@@ -97,6 +98,10 @@ public final class Money implements Serializable {
         }
     }
 
+    public Money() {
+        this(getDefaultCurrency(), "0");
+    }
+    
     public Money(String amount) {
         this(getDefaultCurrency(), amount);
     }
@@ -117,8 +122,8 @@ public final class Money implements Serializable {
      * This creates a Money object with currency set to MFICurrency and amount
      * set to zero.
      */
-    public Money() {
-        this.currency = getDefaultCurrency();
+    public Money(MifosCurrency currency) {
+        this.currency = currency;
         this.amount = new BigDecimal(0, internalPrecisionAndRounding);
     }
 
@@ -149,9 +154,10 @@ public final class Money implements Serializable {
     public Money add(Money money) {
         if (null != money) {
             if (isCurrencyDifferent(money)) {
-                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+                throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
+        // FIXME: don't allow null Money
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
             return this;
@@ -167,7 +173,7 @@ public final class Money implements Serializable {
     public Money subtract(Money money) {
         if (null != money) {
             if (isCurrencyDifferent(money)) {
-                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+                throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
         // why not disallow null amounts and currencies?
@@ -176,7 +182,7 @@ public final class Money implements Serializable {
         }
 
         return new Money(currency, amount.subtract(money.getAmount()));
-        
+
     }
 
     /**
@@ -187,21 +193,21 @@ public final class Money implements Serializable {
     public Money multiply(Money money) {
         if (null != money) {
             if (isCurrencyDifferent(money)) {
-                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+                throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
             return this;
-        } 
+        }
 
         return new Money(currency, amount.multiply(money.getAmount()).setScale(
-                    internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode()));
+                internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode()));
     }
 
     public Money multiply(Double factor) {
         if (factor == null) {
-            throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
         return new Money(currency, amount.multiply(new BigDecimal(factor)).setScale(
                 internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode()));
@@ -209,7 +215,7 @@ public final class Money implements Serializable {
 
     public Money multiply(BigDecimal factor) {
         if (factor == null) {
-            throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
         return new Money(currency, amount.multiply(factor).setScale(internalPrecisionAndRounding.getPrecision(),
                 internalPrecisionAndRounding.getRoundingMode()));
@@ -222,7 +228,7 @@ public final class Money implements Serializable {
     public Money divide(Money money) {
         if (null != money) {
             if (isCurrencyDifferent(money)) {
-                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+                throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
         // why not disallow null amounts and currencies?

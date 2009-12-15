@@ -29,6 +29,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.core.CurrencyMismatchException;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
@@ -56,7 +57,7 @@ public class MoneyTest extends TestCase {
             Money addendendWithDiffCurrecny = new Money(EURO, "200");
             money.add(addendendWithDiffCurrecny);
             Assert.fail("testing Add with different currencies should throw an exception.");
-        } catch (IllegalArgumentException e) {
+        } catch (CurrencyMismatchException e) {
         }
     }
 
@@ -72,7 +73,7 @@ public class MoneyTest extends TestCase {
             Money subtrahendWithDiffCurrecny = new Money(EURO, "100");
             money.subtract(subtrahendWithDiffCurrecny);
             Assert.fail("testing subtract with different currencies should throw an exception.");
-        } catch (IllegalArgumentException e) {
+        } catch (CurrencyMismatchException e) {
         }
     }
 
@@ -95,7 +96,7 @@ public class MoneyTest extends TestCase {
             Money multiplicandWithDiffCurrecny = new Money(EURO, "10");
             money.multiply(multiplicandWithDiffCurrecny);
             Assert.fail("testing multiply with different currencies should throw an exception.");
-        } catch (IllegalArgumentException e) {
+        } catch (CurrencyMismatchException e) {
         }
     }
 
@@ -123,7 +124,7 @@ public class MoneyTest extends TestCase {
             Money dividendWithDiffCurrecny = new Money(EURO, "10");
             money.divide(dividendWithDiffCurrecny);
             Assert.fail("testing divide with different currencies should throw an exception.");
-        } catch (IllegalArgumentException e) {
+        } catch (CurrencyMismatchException e) {
         }
     }
 
