@@ -102,7 +102,15 @@ explanation of the license and how it is applied.
 												</c:if> <mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.prdCategory.productCategoryName}" /><br> <mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" />: <c:out
 													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.startDate)}" /> <br> <mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out
 													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.endDate)}" /> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.prdApplicableMaster.name}" /> <br>
-												<mifos:mifoslabel name="product.inclin" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.cyclecounter" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<c:if test='${requestScope.isMultiCurrencyEnabled}'>
+                                                 <span class="fontnormal"> <mifos:mifoslabel name="product.currency"
+                                                 bundle="ProductDefUIResources" isColonRequired="yes" /> 
+                                                 <c:out value="${loanPrd.currency.currencyCode}" /> 
+                                                 </span> <br>
+                                                 </c:if>
+                                                <mifos:mifoslabel name="product.inclin" bundle="ProductDefUIResources" /> 
+                                                <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> 
+                                                <mifos:mifoslabel name="product.cyclecounter" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												<c:choose>
 													<c:when test="${loanPrd.includeInLoanCounter}">
 														<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
@@ -111,11 +119,6 @@ explanation of the license and how it is applied.
 														<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
 													</c:otherwise>
 												</c:choose> <br> 
-                                                 <span class="fontnormal"> <mifos:mifoslabel name="product.currency"
-                                                 bundle="ProductDefUIResources" isColonRequired="yes" /> 
-                                                 <c:out value="${loanPrd.currency.currencyCode}" /> 
-                                                 </span> <br>
-                                
 												<%--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
 													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxLoanAmount}" /> <br> <mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.minLoanAmount}" /> <br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
