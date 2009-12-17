@@ -21,6 +21,7 @@ package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
 
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
@@ -203,5 +204,10 @@ public class CollectionSheetCustomerLoanDto {
 
     public Double getTotalDisbursement() {
         return disbursementAmount.doubleValue();
+    }
+
+    public boolean isDisbursalAccount() {
+        return getAccountStateId().equals(AccountState.LOAN_APPROVED.getValue())
+                || getAccountStateId().equals(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
     }
 }

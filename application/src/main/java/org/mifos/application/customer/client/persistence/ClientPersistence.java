@@ -36,6 +36,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.ClientTemplate;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerDao;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -51,11 +52,11 @@ import org.mifos.framework.security.util.UserContext;
 
 public class ClientPersistence extends Persistence {
 
-    private CustomerPersistence customerPersistence = new CustomerPersistence();
-    private OfficePersistence officePersistence = new OfficePersistence();
-    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final CustomerPersistence customerPersistence = new CustomerPersistence();
+    private final OfficePersistence officePersistence = new OfficePersistence();
+    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
-    public ClientBO createClient(UserContext userContext, ClientTemplate template) throws CustomerException,
+    public ClientBO createClient(final UserContext userContext, final ClientTemplate template) throws CustomerException,
             PersistenceException, ValidationException {
         CustomerBO parentCustomer = null;
         if (template.getParentCustomerId() != null) {
@@ -79,13 +80,13 @@ public class ClientPersistence extends Persistence {
     /**
      * Get a client by Id and inject any required dependencies
      */
-    public ClientBO getClient(Integer customerId) throws PersistenceException {
+    public ClientBO getClient(final Integer customerId) throws PersistenceException {
         return (ClientBO) getPersistentObject(ClientBO.class, customerId);
     }
 
     // Returns true if another client with same govt id is found with a state
     // other than closed
-    public boolean checkForDuplicacyOnGovtIdForNonClosedClients(String governmentId, Integer customerId)
+    public boolean checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId)
             throws PersistenceException {
         return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_NON_CLOSED_CLIENT_BASEDON_GOVTID, governmentId,
                 customerId);
@@ -94,12 +95,12 @@ public class ClientPersistence extends Persistence {
     // Integer.valueOf(0) because of the way query is written in
     // CustomerBO.hbm.xml
     // Returns true if another client in closed state with same govt id is found
-    public boolean checkForDuplicacyOnGovtIdForClosedClients(String governmentId) throws PersistenceException {
+    public boolean checkForDuplicacyOnGovtIdForClosedClients(final String governmentId) throws PersistenceException {
         return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId, Integer
                 .valueOf(0));
     }
 
-    private boolean checkForClientsBasedOnGovtId(String queryName, String governmentId, Integer customerId)
+    private boolean checkForClientsBasedOnGovtId(final String queryName, final String governmentId, final Integer customerId)
             throws PersistenceException {
 
         // if government id is null or empty, do not match against closed
@@ -118,7 +119,7 @@ public class ClientPersistence extends Persistence {
 
     // returns true if a duplicate client is found with same display name and
     // dob in state other than closed
-    public boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(String name, Date dob, Integer customerId)
+    public boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(final String name, final Date dob, final Integer customerId)
             throws PersistenceException {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_NON_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dob,
                 customerId);
@@ -126,12 +127,12 @@ public class ClientPersistence extends Persistence {
 
     // returns true if a duplicate client is found with same display name and
     // dob in closed state
-    public boolean checkForDuplicacyForClosedClientsOnNameAndDob(String name, Date dob) throws PersistenceException {
+    public boolean checkForDuplicacyForClosedClientsOnNameAndDob(final String name, final Date dob) throws PersistenceException {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dob, Integer
                 .valueOf(0));
     }
 
-    private boolean checkForDuplicacyBasedOnName(String queryName, String name, Date dob, Integer customerId)
+    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final Date dob, final Integer customerId)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientName", name);
@@ -143,7 +144,7 @@ public class ClientPersistence extends Persistence {
         return ((Number) queryResult.get(0)).intValue() > 0;
     }
 
-    public Blob createBlob(InputStream picture) throws PersistenceException {
+    public Blob createBlob(final InputStream picture) throws PersistenceException {
         try {
             return Hibernate.createBlob(picture);
         } catch (IOException ioe) {
@@ -157,7 +158,7 @@ public class ClientPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, queryParameters);
     }
 
-    public List<ClientBO> getActiveClientsUnderParent(String searchId, Short officeId) throws PersistenceException {
+    public List<ClientBO> getActiveClientsUnderParent(final String searchId, final Short officeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
         queryParameters.put("OFFICE_ID", officeId);
@@ -165,7 +166,11 @@ public class ClientPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<ClientBO> getActiveClientsUnderGroup(Integer groupId) throws PersistenceException {
+    /**
+     * @deprecated use {@link CustomerDao#findActiveClientsUnderGroup}
+     */
+    @Deprecated
+    public List<ClientBO> getActiveClientsUnderGroup(final Integer groupId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("GROUP_ID", groupId.intValue());
         List<ClientBO> queryResult = executeNamedQuery(NamedQueryConstants.ACTIVE_CLIENTS_UNDER_GROUP, queryParameters);
@@ -180,7 +185,7 @@ public class ClientPersistence extends Persistence {
         return officePersistence;
     }
 
-    public void saveClient(ClientBO clientBO) throws CustomerException {
+    public void saveClient(final ClientBO clientBO) throws CustomerException {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         customerPersistence.saveCustomer(clientBO);
         try {

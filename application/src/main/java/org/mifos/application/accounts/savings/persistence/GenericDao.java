@@ -27,11 +27,14 @@ import java.util.Map;
  */
 public interface GenericDao {
 
-    Object executeUniqueResultNamedQueryWithResultTransformer(String namedQuery,
-            Map<String, ?> nameQueryParameters, Class<?> className);
+    Object executeUniqueResultNamedQueryWithResultTransformer(String namedQuery, Map<String, ?> nameQueryParameters,
+            Class<?> className);
 
     List<? extends Object> executeNamedQueryWithResultTransformer(String namedQuery,
-            Map<String, ?> nameQueryParameters,
-            Class<?> className);
+            Map<String, ?> nameQueryParameters, Class<?> className);
+
+    List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters);
+    
+    Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
 
 }

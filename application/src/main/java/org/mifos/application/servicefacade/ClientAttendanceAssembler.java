@@ -47,38 +47,45 @@ public class ClientAttendanceAssembler {
     }
 
     public List<ClientAttendanceBO> fromDto(final List<CollectionSheetEntryView> collectionSheetEntryViews,
-            final Date transactionDate) {
-       
-        final List<ClientAttendanceBO> clientAttendanceList = new ArrayList<ClientAttendanceBO>();
+            final Short branchId, final String searchId, final Date transactionDate) {
+
+        final LocalDate meetingDate = new LocalDate(transactionDate);
+        List<ClientAttendanceBO> clientAttendanceList = null;
+        
+        try {
+            clientAttendanceList = clientAttendanceDao.findClientAttendance(branchId, searchId, meetingDate);
+
         for (CollectionSheetEntryView collectionSheetEntryView : collectionSheetEntryViews) {
             final Short levelId = collectionSheetEntryView.getCustomerDetail().getCustomerLevelId();
 
             if (levelId.equals(CustomerLevel.CLIENT.getValue())) {
-                final LocalDate meetingDate = new LocalDate(transactionDate);
-                final Integer clientId = collectionSheetEntryView.getCustomerDetail().getCustomerId();
-
-                try {
-                    final ClientBO client = clientPersistence.getClient(clientId);
-
-                    ClientAttendanceBO clientAttendance = clientAttendanceDao.findClientAttendance(clientId,
-                            meetingDate);
-                    if (clientAttendance == null) {
-                        clientAttendance = new ClientAttendanceBO();
-                    }
-
+                ClientBO client = clientPersistence.getClient(collectionSheetEntryView.getCustomerDetail()
+                        .getCustomerId());
+                ClientAttendanceBO clientAttendance = findClientAttendance(clientAttendanceList, client);
+                if (clientAttendance == null) {
+                    clientAttendance = new ClientAttendanceBO();
+                    clientAttendance.setCustomer(client);
                     clientAttendance.setMeetingDate(meetingDate.toDateMidnight().toDate());
-                    clientAttendance.setAttendance(collectionSheetEntryView.getAttendence());
+                }
+                clientAttendance.setAttendance(collectionSheetEntryView.getAttendence());
+                clientAttendanceList.add(clientAttendance);
+            }
+        }
+        }
+        catch (PersistenceException e) {
+            throw new MifosRuntimeException("Failure when assembling client attendance list.", e);
+                                    }
+        return clientAttendanceList;
+    }
 
-                    client.addClientAttendance(clientAttendance);
-
-                    clientAttendanceList.add(clientAttendance);
-                } catch (PersistenceException e) {
-                    throw new MifosRuntimeException("Failure fetching client using id [" + clientId
-                            + "] when assembling client attendance list.", e);
+    private ClientAttendanceBO findClientAttendance(final List<ClientAttendanceBO> clientAttendanceList, final ClientBO client) {
+        if (clientAttendanceList != null && clientAttendanceList.size() > 0) {
+            for (ClientAttendanceBO clientAttendance : clientAttendanceList) {
+                if (clientAttendance.getCustomer() == client) {
+                    return clientAttendance;
                 }
             }
         }
-        
-        return clientAttendanceList;
+        return null;
     }
 }

@@ -215,6 +215,9 @@
 		where savings.customer.customerId=:CUSTOMER_ID and 
 			savings.accountState.id in (13,14,16,18) ]]>
 	</query>
+    <query name="customer.findById">
+		<![CDATA[from CustomerBO customer where customer.customerId = :CUSTOMER_ID ]]>
+	</query>
 	<query name="customer.findBySystemId">
 		<![CDATA[from org.mifos.application.customer.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
 	</query>
@@ -1201,4 +1204,6 @@
 		<![CDATA[select new org.mifos.application.customer.group.BasicGroupInfo(customer.customerId, customer.office.officeId, customer.searchId, customer.displayName)
 		 from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
 	</query>
+	
+	
 </hibernate-mapping>

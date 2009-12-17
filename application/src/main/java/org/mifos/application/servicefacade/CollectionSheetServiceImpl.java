@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.commons.lang.ObjectUtils;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
@@ -35,9 +36,18 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
+/**
+ * implementation of CollectionSheetService
+ * 
+ */
 public class CollectionSheetServiceImpl implements CollectionSheetService {
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
 
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;
@@ -62,14 +72,12 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             StaticHibernateUtil.startTransaction();
 
             clientAttendanceDao.save(clientAttendances);
-
             loanPersistence.save(loanAccounts);
-
             accountPersistence.save(customerAccountList);
-
             savingsPersistence.save(savingAccounts);
 
             StaticHibernateUtil.commitTransaction();
+
         } catch (HibernateException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw e;
@@ -78,14 +86,116 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
     }
 
+    /**
+     * The method saves a collection sheet. TODO JPW - provide comment on the
+     * difference between Errors and Warnings returned
+     * 
+     * @throws SaveCollectionSheetException
+     * */
+    public CollectionSheetErrorsView saveCollectionSheetWIP(final SaveCollectionSheetDto saveCollectionSheet)
+            throws SaveCollectionSheetException {
+
+        Long eTime;
+        Long sTime = System.currentTimeMillis();
+        Long sTotalTime = System.currentTimeMillis();
+
+        Integer topCustomerId = saveCollectionSheet.getSaveCollectionSheetCustomers().get(0).getCustomerId();
+        CollectionSheetCustomerDto collectionSheetTopCustomer = new CustomerPersistence()
+                .findCustomerWithNoAssocationsLoaded(topCustomerId);
+        if (collectionSheetTopCustomer == null) {
+            List<InvalidSaveCollectionSheetReason> invalidSaveCollectionSheetReasons = new ArrayList<InvalidSaveCollectionSheetReason>();
+            invalidSaveCollectionSheetReasons.add(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER);
+            throw new SaveCollectionSheetException(invalidSaveCollectionSheetReasons);
+        }
+        Short branchId = collectionSheetTopCustomer.getBranchId();
+        String searchId = collectionSheetTopCustomer.getSearchId();
+
+        // session caching: prefetch collection sheet data
+        // done prior to structure validation because it loads
+        // the customers and accounts to be validated into the session
+        new SaveCollectionSheetSessionCache().loadSessionCacheWithCollectionSheetData(saveCollectionSheet, branchId,
+                searchId);
+
+        // make message more specific accounts
+        try {
+            new SaveCollectionSheetStructureValidator().execute(saveCollectionSheet);
+        } catch (SaveCollectionSheetException e) {
+            System.out.println(e.printInvalidSaveCollectionSheetReasons());
+            throw e;
+        }
+
+        // just to mark off validation queries above - temporary
+        CollectionSheetCustomerDto collectionSheetCustomerDto2 = new CustomerPersistence()
+                .findCustomerWithNoAssocationsLoaded(Integer.valueOf("123456"));
+
+        /*
+         * With preprocessing complete...
+         * 
+         * only errors and warnings from the business model remain
+         */
+
+        final List<String> failedSavingsDepositAccountNums = new ArrayList<String>();
+        final List<String> failedSavingsWithdrawalNums = new ArrayList<String>();
+        final List<String> failedLoanDisbursementAccountNumbers = new ArrayList<String>();
+        final List<String> failedLoanRepaymentAccountNumbers = new ArrayList<String>();
+        final List<String> failedCustomerAccountPaymentNums = new ArrayList<String>();
+
+        SaveCollectionSheetAssembler saveCollectionSheetAssembler = new SaveCollectionSheetAssembler(
+                clientAttendanceDao, loanPersistence, accountPersistence, savingsPersistence);
+
+        final List<ClientAttendanceBO> clientAttendances = saveCollectionSheetAssembler
+                .clientAttendanceAssemblerfromDto(saveCollectionSheet.getSaveCollectionSheetCustomers(),
+                        saveCollectionSheet.getTransactionDate(), branchId, searchId);
+
+        final AccountPaymentEntity payment = saveCollectionSheetAssembler.accountPaymentAssemblerFromDto(
+                saveCollectionSheet.getTransactionDate(), saveCollectionSheet.getPaymentType(), saveCollectionSheet
+                        .getReceiptId(), saveCollectionSheet.getReceiptDate(), saveCollectionSheet.getUserId());
+
+        final List<SavingsBO> savingsAccounts = saveCollectionSheetAssembler.savingsAccountAssemblerFromDto(
+                saveCollectionSheet.getSaveCollectionSheetCustomers(), payment, failedSavingsDepositAccountNums,
+                failedSavingsWithdrawalNums);
+
+        final List<LoanBO> loanAccounts = saveCollectionSheetAssembler.loanAccountAssemblerFromDto(saveCollectionSheet
+                .getSaveCollectionSheetCustomers(), payment, failedLoanDisbursementAccountNumbers,
+                failedLoanRepaymentAccountNumbers);
+
+        final List<AccountBO> customerAccounts = saveCollectionSheetAssembler.customerAccountAssemblerFromDto(
+                saveCollectionSheet.getSaveCollectionSheetCustomers(), payment, failedCustomerAccountPaymentNums);
+
+        boolean databaseErrorOccurred = false;
+        Throwable databaseError = null;
+        eTime = System.currentTimeMillis() - sTime;
+        doLog("Id: " + topCustomerId + " - Building up collection sheet model took " + eTime + "ms");
+
+        try {
+            sTime = System.currentTimeMillis();
+            saveCollectionSheet(clientAttendances, loanAccounts, customerAccounts, savingsAccounts);
+            eTime = System.currentTimeMillis() - sTime;
+            doLog("Id: " + topCustomerId + " - Committing Model took " + eTime + "ms");
+
+        } catch (HibernateException e) {
+            logger.error("database error saving collection sheet", e);
+            databaseErrorOccurred = true;
+            databaseError = e;
+        }
+
+        eTime = System.currentTimeMillis() - sTotalTime;
+        doLog("Id: " + topCustomerId + " - CollectionSheetAPI Save took " + eTime + "ms");
+
+        return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
+                failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers, failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
+    }
+
     public CollectionSheetDto retrieveCollectionSheet(final Integer customerId, final Date transactionDate) {
 
         final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(customerId,
                 transactionDate);
+        Long eTime;
+        Long sTime = System.currentTimeMillis();
 
         final Short branchId = customerHierarchy.get(0).getBranchId();
         final String searchId = customerHierarchy.get(0).getSearchId() + ".%";
-        
+
         final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerId, branchId,
                 searchId, transactionDate);
 
@@ -104,14 +214,13 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
                 .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
-        
+
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = collectionSheetDao
                 .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
-        
+
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = collectionSheetDao
                 .findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams);
-        
-        
+
         final List<CollectionSheetCustomerDto> populatedCollectionSheetCustomer = new ArrayList<CollectionSheetCustomerDto>();
         for (CollectionSheetCustomerDto collectionSheetCustomer : customerHierarchy) {
 
@@ -127,23 +236,24 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
             final List<CollectionSheetCustomerSavingDto> associatedSavingAccount = allSavingsDepositsGroupedByCustomerId
                     .get(customerInHierarchyId);
-            
+
             final List<CollectionSheetCustomerSavingDto> associatedIndividualSavingsAccounts = allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId
                     .get(customerInHierarchyId);
-            
+
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollections = allAccountCollectionsByCustomerId
                     .get(customerInHierarchyId);
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollectionFees = feesAssociatedWithAccountCollectionsByCustomerId
                     .get(customerInHierarchyId);
 
             final CollectionSheetCustomerAccountDto customerAccount = sumAssociatedCustomerAccountCollectionFees(
-                    customerAccountCollections,
-                    customerAccountCollectionFees);
+                    customerAccountCollections, customerAccountCollectionFees);
 
             populatedCollectionSheetCustomer.add(createNullSafeCollectionSheetCustomer(collectionSheetCustomer,
                     associatedLoanRepayments, outstandingFeesOnLoanRepayments, associatedLoanDisbursements,
                     associatedSavingAccount, associatedIndividualSavingsAccounts, customerAccount));
         }
+        eTime = System.currentTimeMillis() - sTime;
+        doLog("Id: " + customerId + " - RetrieveCollectionSheet took " + eTime + "ms");
 
         return new CollectionSheetDto(populatedCollectionSheetCustomer);
     }
@@ -151,10 +261,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     private CollectionSheetCustomerAccountDto sumAssociatedCustomerAccountCollectionFees(
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollections,
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollectionFees) {
-        
+
         final CollectionSheetCustomerAccountDto totalCollection = sumAccountCollections(customerAccountCollections);
         final CollectionSheetCustomerAccountDto totalCollectionFee = sumAccountCollectionFees(customerAccountCollectionFees);
-        
+
         final int accountId = Math.max(totalCollection.getAccountId(), totalCollectionFee.getAccountId());
         final int currencyId = Math.max(totalCollection.getCurrencyId(), totalCollectionFee.getCurrencyId());
 
@@ -176,14 +286,14 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
 
         return new CollectionSheetCustomerAccountDto(customerAccountCollectionFees.get(0).getAccountId(),
-                customerAccountCollectionFees.get(0).getCurrencyId(),
-                customerAccountCollectionFees.get(0).getTotalFeeAmountDue());
+                customerAccountCollectionFees.get(0).getCurrencyId(), customerAccountCollectionFees.get(0)
+                        .getTotalFeeAmountDue());
     }
 
     private CollectionSheetCustomerAccountDto sumAccountCollections(
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollections) {
         Double totalFee = Double.valueOf("0.0");
-        
+
         if (customerAccountCollections == null) {
             return new CollectionSheetCustomerAccountDto(-1, Short.valueOf("-1"), totalFee);
         }
@@ -191,10 +301,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         if (customerAccountCollections.size() > 1) {
             throw new IllegalStateException("Multiple currency");
         }
-        
+
         return new CollectionSheetCustomerAccountDto(customerAccountCollections.get(0).getAccountId(),
-                customerAccountCollections.get(0).getCurrencyId(),
-                customerAccountCollections.get(0).getAccountCollectionPayment());
+                customerAccountCollections.get(0).getCurrencyId(), customerAccountCollections.get(0)
+                        .getAccountCollectionPayment());
     }
 
     @SuppressWarnings("unchecked")
@@ -206,17 +316,17 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             final List<CollectionSheetCustomerSavingDto> associatedSavingAccount,
             final List<CollectionSheetCustomerSavingDto> associatedIndividualSavingsAccounts,
             final CollectionSheetCustomerAccountDto customerAccount) {
-        
+
         final List<CollectionSheetCustomerSavingDto> savingAccounts = (List<CollectionSheetCustomerSavingDto>) ObjectUtils
                 .defaultIfNull(associatedSavingAccount, new ArrayList<CollectionSheetCustomerSavingDto>());
-        
+
         final List<CollectionSheetCustomerSavingDto> individualSavingAccounts = (List<CollectionSheetCustomerSavingDto>) ObjectUtils
                 .defaultIfNull(associatedIndividualSavingsAccounts, new ArrayList<CollectionSheetCustomerSavingDto>());
 
         if (outstandingFeesOnLoanRepayments == null) {
 
             List<CollectionSheetCustomerLoanDto> loanRepaymentsAndDisbursements = new ArrayList<CollectionSheetCustomerLoanDto>();
-            
+
             if (associatedLoanRepayments != null) {
                 loanRepaymentsAndDisbursements.addAll(associatedLoanRepayments);
             }
@@ -224,13 +334,13 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             if (allLoanDisbursements != null) {
                 loanRepaymentsAndDisbursements.addAll(allLoanDisbursements);
             }
-            
+
             return new CollectionSheetCustomerDto(collectionSheetCustomer, loanRepaymentsAndDisbursements,
                     savingAccounts, individualSavingAccounts, customerAccount);
         }
 
         final List<CollectionSheetCustomerLoanDto> loanRepaymentsAndDisbursementsWithFees = new ArrayList<CollectionSheetCustomerLoanDto>();
-        
+
         if (associatedLoanRepayments != null) {
             for (CollectionSheetCustomerLoanDto collectionSheetCustomerLoan : associatedLoanRepayments) {
                 final List<CollectionSheetLoanFeeDto> loanFeesAgainstAccountOfCustomer = outstandingFeesOnLoanRepayments
@@ -240,7 +350,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                         collectionSheetCustomerLoan, loanFeesAgainstAccountOfCustomer));
             }
         }
-        
+
         if (allLoanDisbursements != null) {
             loanRepaymentsAndDisbursementsWithFees.addAll(allLoanDisbursements);
         }
@@ -249,8 +359,8 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                 savingAccounts, individualSavingAccounts, customerAccount);
     }
 
-    private CollectionSheetCustomerLoanDto populateCollectionSheetCustomerLoan(final CollectionSheetCustomerLoanDto loan,
-            final List<CollectionSheetLoanFeeDto> loanFees) {
+    private CollectionSheetCustomerLoanDto populateCollectionSheetCustomerLoan(
+            final CollectionSheetCustomerLoanDto loan, final List<CollectionSheetLoanFeeDto> loanFees) {
 
         if (loanFees == null || loanFees.isEmpty()) {
             return loan;
@@ -263,5 +373,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         loan.setTotalAccountFees(loanFees.get(0).getTotalFeeAmountDue());
         return loan;
+    }
+
+    private void doLog(String str) {
+        System.out.println(str);
     }
 }

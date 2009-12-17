@@ -34,7 +34,7 @@ import org.mifos.framework.util.helpers.Constants;
  *
  */
 public class GroupBuilder {
-    
+
     private GroupBO group;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private final CustomerLevel customerLevel = CustomerLevel.GROUP;
@@ -42,23 +42,26 @@ public class GroupBuilder {
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
     private PersonnelBO loanOfficer;
-    private final String searchId = "1.1.1";
+    private String searchId;
     private final Short updatedFlag = Constants.NO;
     private final CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
     private CustomerBO parentCustomer;
-    
+
     public GroupBO build() {
 
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
+        setSearchId();
+
         group = new GroupBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, searchId,
                 parentCustomer);
 
         // add relationship between customer account and group.
-        customerAccountBuilder.withCustomer(group).withOffice(office).withLoanOfficer(loanOfficer).buildForIntegrationTests();
+        customerAccountBuilder.withCustomer(group).withOffice(office).withLoanOfficer(loanOfficer)
+                .buildForIntegrationTests();
 
         return group;
     }
-    
+
     public GroupBuilder withName(final String withName) {
         this.name = withName;
         return this;
@@ -78,14 +81,24 @@ public class GroupBuilder {
         this.loanOfficer = withLoanOfficer;
         return this;
     }
-    
+
     public GroupBuilder withFee(final AmountFeeBO withFee) {
         customerAccountBuilder.withFee(withFee);
         return this;
     }
-    
+
     public GroupBuilder withParentCustomer(final CustomerBO withParentCustomer) {
         this.parentCustomer = withParentCustomer;
         return this;
+    }
+
+    private void setSearchId() {
+
+        Integer childCount = 1;
+        if (parentCustomer.getChildren() != null) {
+            childCount = parentCustomer.getChildren().size() + 1;
+        }
+
+        this.searchId = parentCustomer.getSearchId() + "." + childCount;
     }
 }

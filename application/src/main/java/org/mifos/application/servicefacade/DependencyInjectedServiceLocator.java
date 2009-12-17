@@ -31,10 +31,16 @@ import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
+import org.mifos.application.customer.persistence.CustomerDao;
+import org.mifos.application.customer.persistence.CustomerDaoHibernate;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.productdefinition.business.LoanProductDaoHibernate;
+import org.mifos.application.productdefinition.persistence.LoanProductDao;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * I contain static factory methods for locating/creating application services.
@@ -46,10 +52,12 @@ public class DependencyInjectedServiceLocator {
 
     // service facade
     private static CollectionSheetServiceFacade collectionSheetServiceFacade;
+    private static LoanServiceFacade loanServiceFacade;
+
 
     // services
     private static CollectionSheetService collectionSheetService;
-
+    
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
     private static MasterPersistence masterPersistence = new MasterPersistence();
@@ -62,9 +70,12 @@ public class DependencyInjectedServiceLocator {
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
     
     private static GenericDao genericDao = new GenericDaoHibernate();
+    private static CustomerDao customerDao = new CustomerDaoHibernate(genericDao);
+    private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
     
+
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
 
@@ -97,6 +108,17 @@ public class DependencyInjectedServiceLocator {
                     collectionSheetTranslator);
         }
         return collectionSheetServiceFacade;
+    }
+
+    public static LoanServiceFacade locateLoanServiceFacade() {
+        if (loanServiceFacade == null) {
+            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao);
+        }
+        return loanServiceFacade;
+    }
+
+    public static CustomerDao locateCustomerDao() {
+        return customerDao;
     }
 
 }

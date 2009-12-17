@@ -20,11 +20,18 @@
 
 package org.mifos.application.customer.persistence;
 
-import org.mifos.framework.persistence.DataAccessObject;
+import java.util.List;
+
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientBO;
 
 /**
- * Implements CRUD operations for Customer objects.
+ * 
  */
-public class CustomerDao implements DataAccessObject {
+public interface CustomerDao {
+
+    CustomerBO findCustomerById(Integer customerId);
+
+    List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);
 
 }

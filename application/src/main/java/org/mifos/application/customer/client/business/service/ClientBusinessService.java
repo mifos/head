@@ -24,7 +24,9 @@ import java.util.List;
 
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
+import org.mifos.application.customer.persistence.CustomerDao;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -34,7 +36,7 @@ import org.mifos.framework.security.util.UserContext;
 public class ClientBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public BusinessObject getBusinessObject(final UserContext userContext) {
         return null;
     }
 
@@ -46,7 +48,7 @@ public class ClientBusinessService implements BusinessService {
         }
     }
 
-    public ClientBO getClient(Integer customerId) throws ServiceException {
+    public ClientBO getClient(final Integer customerId) throws ServiceException {
         try {
             return new ClientPersistence().getClient(customerId);
         } catch (PersistenceException pe) {
@@ -54,7 +56,7 @@ public class ClientBusinessService implements BusinessService {
         }
     }
 
-    public List<ClientBO> getActiveClientsUnderParent(String searchId, Short officeId) throws ServiceException {
+    public List<ClientBO> getActiveClientsUnderParent(final String searchId, final Short officeId) throws ServiceException {
         try {
             return new ClientPersistence().getActiveClientsUnderParent(searchId, officeId);
         } catch (PersistenceException pe) {
@@ -62,7 +64,14 @@ public class ClientBusinessService implements BusinessService {
         }
     }
 
-    public List<ClientBO> getActiveClientsUnderGroup(Integer groupId) throws ServiceException {
+    /**
+     * @deprecated use
+     *             {@link LoanServiceFacade#retrieveGlimSpecificDataForGroup(org.mifos.application.customer.business.CustomerBO)}
+     *             or specifically use
+     *             {@link CustomerDao#findActiveClientsUnderGroup}
+     */
+    @Deprecated
+    public List<ClientBO> getActiveClientsUnderGroup(final Integer groupId) throws ServiceException {
         try {
             return new ClientPersistence().getActiveClientsUnderGroup(groupId);
         } catch (PersistenceException pe) {

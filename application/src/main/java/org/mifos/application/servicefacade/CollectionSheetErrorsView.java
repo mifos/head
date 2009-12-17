@@ -75,4 +75,47 @@ public class CollectionSheetErrorsView {
     public Throwable getDatabaseError() {
         return this.databaseError;
     }
+
+    public void Print() {
+
+            if (this.isDatabaseError()){
+                doLog("Database Error: " + this.getDatabaseError().getMessage());
+            }
+
+            if (this.getSavingsDepNames() != null && this.getSavingsDepNames().size() > 0) {
+                doLog("Failed Deposits - Account Ids:");
+                for (String accountId : this.getSavingsDepNames()) {
+                    doLog(accountId);
+                }
+            }
+            if (this.getSavingsWithNames() != null && this.getSavingsWithNames().size() > 0) {
+                doLog("Failed Withdrawals - Account Ids:");
+                for (String accountId : this.getSavingsWithNames()) {
+                    doLog(accountId);
+                }
+            }
+            if (this.getLoanDisbursementAccountNumbers() != null && this.getLoanDisbursementAccountNumbers().size() > 0) {
+                doLog("Failed Loan Disbursements - Account Ids:");
+                for (String accountId : this.getLoanDisbursementAccountNumbers()) {
+                    doLog(accountId);
+                }
+            }
+            if (this.getLoanRepaymentAccountNumbers() != null && this.getLoanRepaymentAccountNumbers().size() > 0) {
+                doLog("Failed Loan Repayments - Account Ids:");
+                for (String accountId : this.getLoanRepaymentAccountNumbers()) {
+                    doLog(accountId);
+                }
+            }
+            if (this.getCustomerAccountNumbers() != null && this.getCustomerAccountNumbers().size() > 0) {
+                doLog("Failed Customer Account Payments - Account Ids:");
+                for (String accountId : this.getCustomerAccountNumbers()) {
+                    doLog(accountId);
+                }
+            }
+    }
+
+    private void doLog(String str) {
+        System.out.println(str);
+    }
+
 }

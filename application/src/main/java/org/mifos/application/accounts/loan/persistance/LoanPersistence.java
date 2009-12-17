@@ -309,7 +309,6 @@ public class LoanPersistence extends Persistence {
         for (LoanBO loan : loans) {
             session.save(loan);
         }
-        session.flush();
     }
 
     @SuppressWarnings("unchecked")

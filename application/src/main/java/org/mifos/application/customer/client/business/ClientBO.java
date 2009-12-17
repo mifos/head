@@ -161,6 +161,7 @@ public class ClientBO extends CustomerBO {
         this.clientPerformanceHistory = null;
         this.offeringsAssociatedInCreate = null;
         this.familyDetailSet=null;
+        this.groupFlag = YesNoFlag.YES.getValue();
     }
 
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,

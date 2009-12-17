@@ -37,6 +37,7 @@ public class GenericDaoHibernate implements GenericDao {
     private HibernateUtil hibernateUtil;
 
     @SuppressWarnings("unchecked")
+    @Override
     public List<? extends Object> executeNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
@@ -49,7 +50,8 @@ public class GenericDaoHibernate implements GenericDao {
             throw new MifosRuntimeException(e);
         }
     }
-    
+
+    @Override
     public Object executeUniqueResultNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
@@ -57,6 +59,36 @@ public class GenericDaoHibernate implements GenericDao {
             Session session = getHibernateUtil().getSessionTL();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(className));
             setParametersInQuery(query, nameQueryParameters);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) {
+
+        try {
+            Session session = getHibernateUtil().getSessionTL();
+            Query query = session.getNamedQuery(queryName);
+
+            setParametersInQuery(query, queryParameters);
+            return query.list();
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public Object executeUniqueResultNamedQuery(final String queryName,
+            final Map<String, ?> queryParameters) {
+
+        try {
+            Session session = getHibernateUtil().getSessionTL();
+            Query query = session.getNamedQuery(queryName);
+
+            setParametersInQuery(query, queryParameters);
             return query.uniqueResult();
         } catch (Exception e) {
             throw new MifosRuntimeException(e);

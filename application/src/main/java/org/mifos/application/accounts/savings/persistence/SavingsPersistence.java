@@ -211,6 +211,5 @@ public class SavingsPersistence extends Persistence {
         for (SavingsBO savingsBO : savingsAccounts) {
             session.saveOrUpdate(savingsBO);
         }
-        session.flush();
     }
 }

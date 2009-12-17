@@ -37,7 +37,7 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
 
     private String valueKey;
 
-    public BusinessActivityEntity(Integer id, String name, String valueKey) {
+    public BusinessActivityEntity(final Integer id, final String name, final String valueKey) {
         this.id = id;
         this.name = name;
         this.valueKey = valueKey;
@@ -47,7 +47,7 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -59,12 +59,12 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
          */
         if (lookupName == null) {
             return name;
-        } else {
-            return lookupName;
         }
+
+        return lookupName;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -72,7 +72,7 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
         return valueKey;
     }
 
-    public void setValueKey(String valueKey) {
+    public void setValueKey(final String valueKey) {
         this.valueKey = valueKey;
     }
 

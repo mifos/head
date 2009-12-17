@@ -69,10 +69,10 @@ public class SavingsOfferingBO extends PrdOfferingBO {
      */
     public SavingsOfferingBO(final SavingsType savingsType, final String name, final String shortName,
             final String globalProductNumber, final Date startDate, final ApplicableTo applicableToCustomer,
-            final ProductCategoryBO category, final PrdStatus productStatus, final InterestCalcType interestCalcType,
-            final Double interestRate, final Money maxAmountOfWithdrawal, final GLCodeEntity depositGLCode,
-            final GLCodeEntity interestGLCode,
-            final Date createdDate, final Short createdByUserId) {
+            final ProductCategoryBO category, final PrdStatusEntity productStatus,
+            final InterestCalcType interestCalcType, final Double interestRate, final Money maxAmountOfWithdrawal,
+            final GLCodeEntity depositGLCode, final GLCodeEntity interestGLCode, final Date createdDate,
+            final Short createdByUserId) {
         super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, productStatus,
                 createdDate, createdByUserId);
         this.maxAmntWithdrawl = maxAmountOfWithdrawal;

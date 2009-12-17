@@ -344,7 +344,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         return convertListToMapGroupedByCustomerId(allIndividualSavings);
     }
-
+    
     private Map<Integer, List<CollectionSheetCustomerSavingDto>> convertListToMapGroupedByCustomerId(
             final List<CollectionSheetCustomerSavingDto> allSavingsAccounts) {
         

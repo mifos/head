@@ -22,6 +22,7 @@ package org.mifos.application.holiday.persistence;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -63,7 +64,6 @@ public class HolidayPersistence extends MasterPersistence {
         } catch (ParseException e) {
             throw new PersistenceException(e);
         }
-
         return executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS, parameters);
     }
 

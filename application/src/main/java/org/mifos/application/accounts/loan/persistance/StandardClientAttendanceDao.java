@@ -47,21 +47,16 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         this.masterPersistence = masterPersistence;
     }
 
-    public ClientAttendanceBO findClientAttendance(final Integer clientId, final LocalDate meetingDate) {
-        
-        ClientAttendanceBO result;
-        try {
-            Map<String, Object> queryParameters = new HashMap<String, Object>();
-            queryParameters.put("CUSTOMER_ID", clientId);
-            queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
-            result = (ClientAttendanceBO) masterPersistence.execUniqueResultNamedQuery(
-                    "ClientAttendance.getAttendanceForClientAndMeetingDate", queryParameters);
-            return result;
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
-        } catch (PersistenceException pe) {
-            throw new RuntimeException(pe);
-        }
+    @SuppressWarnings("unchecked")
+    public List<ClientAttendanceBO> findClientAttendance(final Short branchId, final String searchId,
+            final LocalDate meetingDate) throws PersistenceException {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("BRANCH_ID", branchId);
+        queryParameters.put("SEARCH_ID", searchId + ".%");
+        queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
+        return masterPersistence.executeNamedQuery("ClientAttendance.getAttendanceForClientsOnMeetingDate",
+                queryParameters);
     }
     
     public void save(final List<ClientAttendanceBO> clientAttendances) {
@@ -70,7 +65,6 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         for (ClientAttendanceBO clientAttendanceBO : clientAttendances) {
             session.saveOrUpdate(clientAttendanceBO);
         }
-        session.flush();
     }
     
     private HibernateUtil getHibernateUtil() {

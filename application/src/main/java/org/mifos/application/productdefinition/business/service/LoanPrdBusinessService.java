@@ -38,6 +38,7 @@ import org.mifos.application.productdefinition.persistence.PrdOfferingPersistenc
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -47,7 +48,7 @@ import org.mifos.framework.security.util.UserContext;
 public class LoanPrdBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public BusinessObject getBusinessObject(final UserContext userContext) {
         return null;
     }
 
@@ -60,7 +61,7 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public List<MasterDataEntity> getLoanApplicableCustomerTypes(Short localeId) throws ServiceException {
+    public List<MasterDataEntity> getLoanApplicableCustomerTypes(final Short localeId) throws ServiceException {
         try {
             List<MasterDataEntity> applList = new MasterPersistence().retrieveMasterEntities(
                     PrdApplicableMasterEntity.class, localeId);
@@ -77,7 +78,7 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public LoanOfferingBO getLoanOffering(Short prdofferingId) throws ServiceException {
+    public LoanOfferingBO getLoanOffering(final Short prdofferingId) throws ServiceException {
         try {
             return new LoanPrdPersistence().getLoanOffering(prdofferingId);
         } catch (PersistenceException e) {
@@ -85,7 +86,7 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId) throws ServiceException {
+    public List<PrdStatusEntity> getApplicablePrdStatus(final Short localeId) throws ServiceException {
         try {
             return new PrdOfferingPersistence().getApplicablePrdStatus(ProductType.LOAN, localeId);
         } catch (PersistenceException e) {
@@ -93,7 +94,7 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId) throws ServiceException {
+    public LoanOfferingBO getLoanOffering(final Short loanOfferingId, final Short localeId) throws ServiceException {
         try {
             return new LoanPrdPersistence().getLoanOffering(loanOfferingId, localeId);
         } catch (PersistenceException e) {
@@ -101,7 +102,7 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public List<LoanOfferingBO> getAllLoanOfferings(Short localeId) throws ServiceException {
+    public List<LoanOfferingBO> getAllLoanOfferings(final Short localeId) throws ServiceException {
         try {
             return new LoanPrdPersistence().getAllLoanOfferings(localeId);
         } catch (PersistenceException e) {
@@ -117,7 +118,13 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public List<LoanOfferingBO> getApplicablePrdOfferings(CustomerLevelEntity customerLevel) throws ServiceException {
+    /**
+     * @deprecated use
+     *             {@link LoanServiceFacade#loadActiveProductsApplicableForCustomer(org.mifos.application.customer.business.CustomerBO)}
+     *             or use {@link LoanProductDao#}
+     */
+    @Deprecated
+    public List<LoanOfferingBO> getApplicablePrdOfferings(final CustomerLevelEntity customerLevel) throws ServiceException {
         try {
             return new LoanPrdPersistence().getApplicablePrdOfferings(customerLevel);
         } catch (PersistenceException e) {
@@ -125,7 +132,7 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public FeeBO getfee(Short feeId, RateAmountFlag rateflag) throws ServiceException {
+    public FeeBO getfee(final Short feeId, final RateAmountFlag rateflag) throws ServiceException {
 
         try {
             return new FeePersistence().getFee(feeId, rateflag);

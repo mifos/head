@@ -27,10 +27,26 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 
+/**
+ * The Interface CollectionSheetService provides methods to retrieve and save collection sheets. 
+ */
 public interface CollectionSheetService {
 
+    /**
+     * Persists Collection Sheet model.  Will be removed from this interface once saveCollectionSheetWIP is ready
+     */
     void saveCollectionSheet(List<ClientAttendanceBO> clientAttendances, List<LoanBO> loanAccounts,
             List<AccountBO> customerAccounts, List<SavingsBO> savingAccounts);
 
+    /**
+     * Saves a Collection Sheet
+     * @throws SaveCollectionSheetException 
+     */
+    CollectionSheetErrorsView saveCollectionSheetWIP(SaveCollectionSheetDto saveCollectionSheetDto) throws SaveCollectionSheetException;
+    
+    /**
+     * Retrieves a Collection Sheet
+     */
     CollectionSheetDto retrieveCollectionSheet(Integer customerId, Date transactionDate);
+
 }

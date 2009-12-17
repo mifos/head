@@ -46,7 +46,6 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
-import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
@@ -68,7 +67,7 @@ public class LoanAccountActionEasyMockTest extends TestCase {
         before();
     }
 
-    public LoanAccountActionEasyMockTest(String name) {
+    public LoanAccountActionEasyMockTest(final String name) {
         super(name);
         before();
     }
@@ -87,7 +86,6 @@ public class LoanAccountActionEasyMockTest extends TestCase {
         LoanPrdBusinessService mockLoanPrdBusinessService = createMock(LoanPrdBusinessService.class);
         ClientBusinessService mockClientBusinessService = createMock(ClientBusinessService.class);
         MasterDataService mockMasterDataService = createMock(MasterDataService.class);
-        MeetingBusinessService mockMeetingBusinessService = createMock(MeetingBusinessService.class);
         ConfigurationPersistence mockConfigurationPersistence = createMock(ConfigurationPersistence.class);
         AccountBusinessService mockAccountBusinessService = createMock(AccountBusinessService.class);
 
@@ -96,8 +94,7 @@ public class LoanAccountActionEasyMockTest extends TestCase {
 
         LoanAccountAction loanAccountAction = new LoanAccountAction(mockConfigurationBusinessService,
                 mockLoanBusinessService, mockGlimLoanUpdater, mockFeeBusinessService, mockLoanPrdBusinessService,
-                mockClientBusinessService, mockMasterDataService, mockMeetingBusinessService,
-                mockConfigurationPersistence,
+                mockClientBusinessService, mockMasterDataService, mockConfigurationPersistence,
                 new LoanProductService(mockLoanPrdBusinessService, mockFeeBusinessService), mockAccountBusinessService);
 
         List<FeeView> defaultFees = new ArrayList<FeeView>();
@@ -146,8 +143,8 @@ public class LoanAccountActionEasyMockTest extends TestCase {
         return mockUserContext;
     }
 
-    private AmountFeeBO createMockAmountFeeBO(Short feeId, String feeName, String feeAmountString, boolean isPeriodic,
-            MeetingBO meeting) {
+    private AmountFeeBO createMockAmountFeeBO(final Short feeId, final String feeName, final String feeAmountString, final boolean isPeriodic,
+            final MeetingBO meeting) {
         Money feeAmount = new Money(new MifosCurrency((short) 1, "USD", "USD", (short) 1, Float.valueOf(1), (short) 1,
                 (short) 1, "USD"), feeAmountString);
 

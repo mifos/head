@@ -78,6 +78,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -179,6 +180,10 @@ public class CustomerPersistence extends Persistence {
 
     }
 
+    /**
+     * @deprecated use {@link CustomerDao#findCustomerById(Integer)}
+     */
+    @Deprecated
     public CustomerBO getCustomer(final Integer customerId) throws PersistenceException {
         return (CustomerBO) getPersistentObject(CustomerBO.class, customerId);
     }
@@ -1074,4 +1079,16 @@ public class CustomerPersistence extends Persistence {
         }
         return new Money(totalLoan);
     }
+    
+
+    public CollectionSheetCustomerDto findCustomerWithNoAssocationsLoaded(final Integer customerId) {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMER_ID", customerId);
+
+        return (CollectionSheetCustomerDto) execUniqueResultNamedQueryWithResultTransformer(
+                "findCustomerWithNoAssocationsLoaded", queryParameters, CollectionSheetCustomerDto.class);
+
+    }
+    
 }

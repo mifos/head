@@ -1370,9 +1370,10 @@ public class TestObjectFactory {
         session.delete(customer);
     }
 
-    private static void deleteCustomer(final CustomerBO customer) {
+    private static void deleteCustomer(CustomerBO customer) {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
+        customer = (CustomerBO) session.load(CustomerBO.class, customer.getCustomerId());
         session.lock(customer, LockMode.NONE);
         deleteCenterMeeting(customer);
         deleteClientAttendence(customer);
@@ -1422,7 +1423,7 @@ public class TestObjectFactory {
     private static void deleteCenterMeeting(final CustomerBO customer) {
         Session session = StaticHibernateUtil.getSessionTL();
         if (customer instanceof CenterBO) {
-            session.delete(customer.getCustomerMeeting());
+            // session.delete(customer.getCustomerMeeting());
         }
     }
 
@@ -2178,10 +2179,10 @@ public class TestObjectFactory {
         transaction.commit();
     }
 
-    private static void deleteMeeting(final MeetingBO meeting) {
+    private static void deleteMeeting(MeetingBO meeting) {
         Session session = StaticHibernateUtil.getSessionTL();
-        session.lock(meeting, LockMode.UPGRADE);
         Transaction transaction = StaticHibernateUtil.startTransaction();
+        meeting = (MeetingBO) session.load(MeetingBO.class, meeting.getMeetingId());
         session.delete(meeting);
         transaction.commit();
     }

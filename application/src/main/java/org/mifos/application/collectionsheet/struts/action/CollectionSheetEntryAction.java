@@ -76,7 +76,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
 
     private final CollectionSheetServiceFacade collectionSheetServiceFacade = DependencyInjectedServiceLocator
-    .locateCollectionSheetServiceFacade();
+            .locateCollectionSheetServiceFacade();
 
     public CollectionSheetEntryAction() {
     }
@@ -126,7 +126,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         final UserContext userContext = getUserContext(request);
         final CollectionSheetEntryFormDto collectionSheetForm = collectionSheetServiceFacade
-        .loadAllActiveBranchesAndSubsequentDataIfApplicable(userContext);
+                .loadAllActiveBranchesAndSubsequentDataIfApplicable(userContext);
 
         // settings for action
         request.setAttribute(CollectionSheetEntryConstants.REFRESH, collectionSheetForm.getReloadFormAutomatically());
@@ -146,7 +146,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
 
         final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade
-        .loadLoanOfficersForBranch(officeId, userContext, previousCollectionSheetEntryFormDto);
+                .loadLoanOfficersForBranch(officeId, userContext, previousCollectionSheetEntryFormDto);
 
         // add reference data for view
         storeOnRequestCollectionSheetEntryFormDto(request, latestCollectionSheetEntryFormDto);
@@ -163,7 +163,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
 
         final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade
-        .loadCustomersForBranchAndLoanOfficer(personnelId, officeId, previousCollectionSheetEntryFormDto);
+                .loadCustomersForBranchAndLoanOfficer(personnelId, officeId, previousCollectionSheetEntryFormDto);
 
         // add reference data for view
         storeOnRequestCollectionSheetEntryFormDto(request, latestCollectionSheetEntryFormDto);
@@ -187,7 +187,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
 
         final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade
-        .loadMeetingDateForCustomer(customerId, previousCollectionSheetEntryFormDto);
+                .loadMeetingDateForCustomer(customerId, previousCollectionSheetEntryFormDto);
 
         actionForm.setTransactionDate(latestCollectionSheetEntryFormDto.getMeetingDate());
 
@@ -221,7 +221,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
 
         final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade
-        .generateCollectionSheetEntryGridView(formEnteredDataDto, currency);
+                .generateCollectionSheetEntryGridView(formEnteredDataDto, currency);
 
         storeOnRequestCollectionSheetEntryDto(request, collectionSheetEntry);
 
@@ -240,7 +240,7 @@ public class CollectionSheetEntryAction extends BaseAction {
                 previousCollectionSheetEntryDto);
 
         final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade
-        .previewCollectionSheetEntry(previousCollectionSheetEntryDto, dataView);
+                .previewCollectionSheetEntry(previousCollectionSheetEntryDto, dataView);
 
         storeOnRequestCollectionSheetEntryDto(request, collectionSheetEntry);
 
@@ -261,18 +261,24 @@ public class CollectionSheetEntryAction extends BaseAction {
             final HttpServletResponse response) throws PageExpiredException {
 
         logTrackingInfo("create", request, form);
+
+        //temporary performance testing
+        Long eTime;
+        Long sTime = System.currentTimeMillis();
+        
+        
         final BulkEntryActionForm collectionSheetActionForm = (BulkEntryActionForm) form;
 
         final CollectionSheetEntryGridDto previousCollectionSheetEntryDto = retrieveFromRequestCollectionSheetEntryDto(request);
 
         final CollectionSheetEntryDecomposedView decomposedViews = new CollectionSheetEntryViewTranslator()
-        .toDecomposedView(previousCollectionSheetEntryDto.getBulkEntryParent());
+                .toDecomposedView(previousCollectionSheetEntryDto.getBulkEntryParent());
 
         logBeforeSave(request, collectionSheetActionForm, previousCollectionSheetEntryDto);
         final long beforeSaveData = System.currentTimeMillis();
 
-        final CollectionSheetErrorsView collectionSheetErrors = this.collectionSheetServiceFacade.saveCollectionSheet(
-                previousCollectionSheetEntryDto, decomposedViews, getUserContext(request).getId());
+        final CollectionSheetErrorsView collectionSheetErrors = this.collectionSheetServiceFacade.saveCollectionSheetWIP(
+                previousCollectionSheetEntryDto, getUserContext(request).getId());
 
         logAfterSave(request, decomposedViews, System.currentTimeMillis() - beforeSaveData, collectionSheetErrors
                 .isDatabaseError());
@@ -284,6 +290,9 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         setErrorMessagesIfErrorsExist(request, collectionSheetErrors);
 
+//only in for temporary performance testing
+        eTime = System.currentTimeMillis() - sTime;
+        System.out.println("Id: " + previousCollectionSheetEntryDto.getBulkEntryParent().getCustomerDetail().getCustomerId() + " - Struts Create Action " + eTime + "ms");
         /*
          * Visit CREATESUCCESS if user entered data that breaks business rules,
          * such as withdrawing more than the total amount in a savings account.
@@ -360,7 +369,7 @@ public class CollectionSheetEntryAction extends BaseAction {
             actionErrors.add(CollectionSheetEntryConstants.DATABASE_ERROR, new ActionMessage(
                     CollectionSheetEntryConstants.DATABASE_ERROR, collectionSheetErrors.getDatabaseError()));
         }
-
+        
         if (savingsOrCollectionsErrors || persistenceError) {
             request.setAttribute(Globals.ERROR_KEY, actionErrors);
         }
@@ -452,7 +461,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     private CollectionSheetEntryFormDto retrieveFromRequestCollectionSheetEntryFormDto(final HttpServletRequest request)
-    throws PageExpiredException {
+            throws PageExpiredException {
         return (CollectionSheetEntryFormDto) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO, request);
     }
@@ -480,9 +489,9 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     private CollectionSheetEntryGridDto retrieveFromRequestCollectionSheetEntryDto(final HttpServletRequest request)
-    throws PageExpiredException {
+            throws PageExpiredException {
         return (CollectionSheetEntryGridDto) SessionUtils
-        .getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
+                .getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
     }
 
     private void storeOnRequestCollectionSheetEntryDto(final HttpServletRequest request,

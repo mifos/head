@@ -39,6 +39,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsProductBuilder;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;

@@ -509,7 +509,7 @@ public interface NamedQueryConstants {
     public String RETRIEVE_CUSTOMER_FEES = "retrieveCustomerFees";
     public String RETRIEVE_PRODUCT_FEES = "retrieveProductFees";
 
-    public String APPLICABLE_LOAN_OFFERINGS = "loanOffering.getApplicableProduts";
+    public String APPLICABLE_LOAN_PRODUCTS = "loanOffering.getApplicableProducts";
 
     public String GET_ALL_APPLICABLE_CUSTOMER_FEE = "getAllApplicableFeesForCustomer";
     public String GET_ALL_APPLICABLE_LOAN_FEE = "getAllApplicableFeesForLoan";

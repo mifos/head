@@ -17,15 +17,12 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.collectionsheet.persistence;
+package org.mifos.application.productdefinition.business;
 
 import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
-import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -39,7 +36,7 @@ import org.mifos.framework.util.helpers.Constants;
 public class LoanProductBuilder {
 
     // PRD_OFFERING FIELDS
-    private final String globalProductNumber = "ZZZZZ-1111";
+    private String globalProductNumber = "ZZZZZ-1111";
     private final Date startDate = new DateTime().minusDays(14).toDate();
     private final String name = "testLoanProduct";
     private final String shortName = "TLP1";
@@ -50,7 +47,7 @@ public class LoanProductBuilder {
     private final GLCodeEntity depositGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
     private final GLCodeEntity interesetGLCode = new GLCodeEntity(Short.valueOf("2"), "11000");
 
-    private final ApplicableTo applicableToCustomer = ApplicableTo.GROUPS;
+    private ApplicableTo applicableToCustomer = ApplicableTo.GROUPS;
 
     private ProductCategoryBO category = new ProductCategoryBO(Short.valueOf("1"), "testXX");
 
@@ -65,6 +62,7 @@ public class LoanProductBuilder {
     private final Short maxNoOfInstallmentsForLoan = Short.valueOf("11");
     private final Short defaultNoOfInstallmentsForLoan = Short.valueOf("6");
     private PrdStatus productStatus = PrdStatus.LOAN_ACTIVE;
+    private PrdStatusEntity productStatusEntity;
     
     public LoanOfferingBO buildForUnitTests() {
 
@@ -78,7 +76,7 @@ public class LoanProductBuilder {
         final LoanOfferingBO loanProduct = new LoanOfferingBO(depositGLCode, interesetGLCode, interestType,
                 minInterestRate, maxInterestRate, defaultInterestRate, interestPaidAtDisbursement,
                 principalDueLastInstallment, new NoOfInstallSameForAllLoanBO(), name, shortName, globalProductNumber,
-                startDate, applicableToCustomer, category, productStatus);
+                startDate, applicableToCustomer, category, productStatusEntity, createdDate, createdByUserId);
         
         final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan = new NoOfInstallSameForAllLoanBO(
                 minNoOfInstallmentsForLoan, maxNoOfInstallmentsForLoan, defaultNoOfInstallmentsForLoan, loanProduct);
@@ -93,6 +91,9 @@ public class LoanProductBuilder {
         category = (ProductCategoryBO) StaticHibernateUtil.getSessionTL().get(ProductCategoryBO.class,
                 Short.valueOf("2"));
 
+        productStatusEntity = (PrdStatusEntity) StaticHibernateUtil.getSessionTL().get(
+                PrdStatusEntity.class, this.productStatus.getValue());
+
         LoanOfferingBO loanProduct = build();
 
         return loanProduct;
@@ -103,4 +104,28 @@ public class LoanProductBuilder {
         return this;
     }
 
+    public LoanProductBuilder inActive() {
+        this.productStatus = PrdStatus.LOAN_INACTIVE;
+        return this;
+    }
+
+    public LoanProductBuilder appliesToCentersOnly() {
+        this.applicableToCustomer = ApplicableTo.CENTERS;
+        return this;
+    }
+
+    public LoanProductBuilder appliesToGroupsOnly() {
+        this.applicableToCustomer = ApplicableTo.GROUPS;
+        return this;
+    }
+
+    public LoanProductBuilder appliesToClientsOnly() {
+        this.applicableToCustomer = ApplicableTo.CLIENTS;
+        return this;
+    }
+
+    public LoanProductBuilder withGlobalProductNumber(final String withGlobalProductNumber) {
+        this.globalProductNumber = withGlobalProductNumber;
+        return this;
+    }
 }

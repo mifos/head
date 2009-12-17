@@ -124,15 +124,15 @@ public class LoanDisbursmentAction extends BaseAction {
     }
 
     private String getProposedDisbursementDateFromSession(final HttpServletRequest request) throws PageExpiredException {
-        return SessionUtils.getAttribute(LoanConstants.PROPOSEDDISBDATE, request).toString();
+        return SessionUtils.getAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, request).toString();
     }
 
     private void setProposedDisbursementDate(final HttpServletRequest request, final Date currentDate, final LoanBO loan)
             throws PageExpiredException {
         if (AccountingRules.isBackDatedTxnAllowed()) {
-            SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loan.getDisbursementDate(), request);
+            SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, loan.getDisbursementDate(), request);
         } else {
-            SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, DateUtils.toDatabaseFormat(currentDate), request);
+            SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, DateUtils.toDatabaseFormat(currentDate), request);
         }
     }
 

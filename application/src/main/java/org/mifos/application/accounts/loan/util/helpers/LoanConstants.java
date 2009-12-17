@@ -149,7 +149,7 @@ public interface LoanConstants {
     public static final String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
     public static final String ERRORS_SPECIFY_FEE_AMOUNT = "errors.loan.specifyFeeAmount";
     public static final String FEE = "Fee";
-    public static final String PROPOSEDDISBDATE = "proposedDisbDate";
+    public static final String PROPOSED_DISBURSAL_DATE = "proposedDisbDate";
     public static final String RECURRENCEID = "recurrenceId";
     public static final String RECURRENCENAME = "recurrenceName";
 

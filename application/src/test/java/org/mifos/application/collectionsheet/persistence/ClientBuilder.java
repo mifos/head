@@ -41,18 +41,19 @@ public class ClientBuilder {
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxxx-112").build();
     private PersonnelBO loanOfficer;
-    private final String searchId = "1.1.1.1";
+    private String searchId;
     private final Short updatedFlag = Constants.NO;
-    private final CustomerStatus customerStatus = CustomerStatus.CLIENT_ACTIVE;
-    private CustomerBO parentCustomer;
+    private CustomerStatus customerStatus = CustomerStatus.CLIENT_ACTIVE;
+    private CustomerBO parentCustomer; 
     
     
     public ClientBO buildForIntegrationTests() {
         
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        final ClientBO client = new ClientBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting,
-                searchId, parentCustomer);
+        setSearchId();
         
+        final ClientBO client = new ClientBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting,
+                searchId, parentCustomer); 
         customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer)
                 .buildForIntegrationTests();
         return client;
@@ -96,5 +97,25 @@ public class ClientBuilder {
     public ClientBuilder withParentCustomer(final CustomerBO withParentCustomer) {
         this.parentCustomer = withParentCustomer;
         return this;
+    }
+    
+    public ClientBuilder active() {
+        this.customerStatus = CustomerStatus.CLIENT_ACTIVE;
+        return this;
+    }
+
+    public ClientBuilder inActive() {
+        this.customerStatus = CustomerStatus.CENTER_INACTIVE;
+        return this;
+    }
+
+    private void setSearchId() {
+
+        Integer childCount = 1;
+        if (parentCustomer.getChildren() != null) {
+            childCount = parentCustomer.getChildren().size() + 1;
+        }
+
+        this.searchId = parentCustomer.getSearchId() + "." + childCount;
     }
 }

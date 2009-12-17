@@ -133,6 +133,10 @@
 		<mapping resource="org/mifos/application/fees/business/FeeTypeEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/fees/business/ApplicableAccountsTypeEntity.hbm.xml" />
 
+		<!-- Mapping files for collection sheet retrieve and save-->
+		<mapping
+			resource="org/mifos/application/collectionsheet/business/CollectionSheetRetrieveAndSave.hbm.xml" />
+
 		<!-- Mapping files for collection sheet generation-->
 		<mapping resource="org/mifos/application/collectionsheet/business/CollectionSheetBO.hbm.xml" />
 		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetCustBO.hbm.xml" />

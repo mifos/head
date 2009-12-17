@@ -192,6 +192,9 @@ public abstract class CustomerBO extends BusinessObject {
         this.customerLevel = new CustomerLevelEntity(customerLevel);
         this.customerStatus = new CustomerStatusEntity(customerStatus);
         this.formedByPersonnel = null;
+
+        this.customerNotes = new HashSet<CustomerNoteEntity>();
+        this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
         
         // FIXME - keithw - not convinced UserContext is required along with
         // Personnel and Office. inserting to satisfy id generation
@@ -388,6 +391,10 @@ public abstract class CustomerBO extends BusinessObject {
 
     public CustomerMeetingEntity getCustomerMeeting() {
         return customerMeeting;
+    }
+
+    public MeetingBO getCustomerMeetingValue() {
+        return customerMeeting.getMeeting();
     }
 
     protected void setCustomerMeeting(final CustomerMeetingEntity customerMeeting) {

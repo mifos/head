@@ -24,12 +24,14 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.DataAccessObject;
 
 public interface ClientAttendanceDao extends DataAccessObject {
 
-    public ClientAttendanceBO findClientAttendance(Integer clientId, LocalDate meetingDate);
-
+    public List<ClientAttendanceBO> findClientAttendance(Short branchId, String searchId, LocalDate meetingDate)
+            throws PersistenceException;
+    
     public void save(List<ClientAttendanceBO> clientAttendances);
 
 }

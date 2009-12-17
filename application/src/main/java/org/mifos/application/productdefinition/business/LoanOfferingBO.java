@@ -81,33 +81,20 @@ public class LoanOfferingBO extends PrdOfferingBO {
     static {
         ALL_LOAN_PRD.setPrdOfferingName("ALL");
     }
-    
+
     private GracePeriodTypeEntity gracePeriodType;
-
     private InterestTypesEntity interestTypes;
-
     private Short gracePeriodDuration;
-
     private Double maxInterestRate;
-
     private Double minInterestRate;
-
     private Double defInterestRate;
-
     private Short intDedDisbursement;
-
     private Short prinDueLastInst;
-
     private Short loanCounter;
-
     private PrdOfferingMeetingEntity loanOfferingMeeting;
-
     private final GLCodeEntity principalGLcode;
-
     private final GLCodeEntity interestGLcode;
-    
     private final Set<LoanOfferingFundEntity> loanOfferingFunds;
-
     private final Set<LoanOfferingFeesEntity> loanOfferingFees;
 
     // FIXME: the implementation of defaults for loan amounts and number of
@@ -115,28 +102,27 @@ public class LoanOfferingBO extends PrdOfferingBO {
     // offerings are instantiated, such as LoanPrdActionForm,
     // LoanProductDetails.jsp,CreateMultipleLoanAccountsSearchResults.jsp, etc.
     private final Set<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoan;
-
     private final Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycle;
-
     private final Set<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoan;
-
     private final Set<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoan;
-
     private final Set<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycle;
-
     private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
+    /**
+     * TODO - keithw - work in progress
+     * 
+     * used by builders to construct legal {@link LoanOfferingBO}'s
+     */
     public LoanOfferingBO(final GLCodeEntity principalGLcode, final GLCodeEntity interestGLCode,
-            final InterestType interestType,
-            final Double minInterestRate,
-            final Double maxInterestRate, final Double defaultInterestRate, final Short interestPaidAtDisbursement,
+            final InterestType interestType, final Double minInterestRate, final Double maxInterestRate,
+            final Double defaultInterestRate, final Short interestPaidAtDisbursement,
             final Short principalDueLastInstallment, final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO,
-            final String name, final String shortName,
-            final String globalProductNumber, final Date startDate, final ApplicableTo applicableToCustomer,
-            final ProductCategoryBO category, final PrdStatus productStatus) {
-        
-        super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, productStatus, null,
-                null);
+            final String name, final String shortName, final String globalProductNumber, final Date startDate,
+            final ApplicableTo applicableToCustomer, final ProductCategoryBO category,
+            final PrdStatusEntity productStatus, final Date createdDate, final Short createdByUserId) {
+
+        super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, productStatus,
+                createdDate, createdByUserId);
         this.interestTypes = new InterestTypesEntity(interestType);
         this.principalGLcode = principalGLcode;
         this.interestGLcode = interestGLCode;
@@ -156,11 +142,18 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.loanAmountFromLoanCycle = null;
     }
 
-    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount, final Double maxInterestRate,
-            final Double minInterestRate, final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
-            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement, final boolean prinDueLastInst,
+    /**
+     * @deprecated use {@link LoanProductBuilder} to construct legal
+     *             {@link LoanOfferingBO}'s for tests.
+     */
+    @Deprecated
+    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
+            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate,
+            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+            final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
+            final Short maxNoInstallments, final Short minNoInstallments, final Short defNoInstallments,
+            final boolean loanCounter, final boolean intDedDisbursement, final boolean prinDueLastInst,
             final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode)
             throws ProductDefinitionException {
         this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, null,
@@ -169,12 +162,19 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 intDedDisbursement, prinDueLastInst, null, null, meeting, principalGLcode, interestGLcode);
     }
 
-    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+    /**
+     * @deprecated use {@link LoanProductBuilder} to construct legal
+     *             {@link LoanOfferingBO}'s for tests.
+     */
+    @Deprecated
+    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
+            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
             final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount, final Money defaultLoanAmount,
-            final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate, final Short maxNoInstallments,
-            final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
             final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode) throws ProductDefinitionException {
         this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
@@ -185,12 +185,19 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 NOOFINSTALLSAMEFORALLLOAN.toString());
     }
 
-    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+    /**
+     * @deprecated use {@link LoanProductBuilder} to construct legal
+     *             {@link LoanOfferingBO}'s for tests.
+     */
+    @Deprecated
+    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
+            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
             final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount, final Money defaultLoanAmount,
-            final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate, final Short maxNoInstallments,
-            final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
             final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode, final String loanAmtCalcType,
             final String calcInstallmentType) throws ProductDefinitionException {
@@ -225,9 +232,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
                     this));
         }
         if (new Short(calcInstallmentType).equals(NOOFINSTALLSAMEFORALLLOAN)) {
-            noOfInstallSameForAllLoan.add(new NoOfInstallSameForAllLoanBO(Short.parseShort(minNoInstallments
-                    .toString()), Short.parseShort(maxNoInstallments.toString()), Short.parseShort(defNoInstallments
-                    .toString()), this));
+            noOfInstallSameForAllLoan.add(new NoOfInstallSameForAllLoanBO(Short
+                    .parseShort(minNoInstallments.toString()), Short.parseShort(maxNoInstallments.toString()), Short
+                    .parseShort(defNoInstallments.toString()), this));
         }
         if (funds != null && funds.size() > 0) {
             for (FundBO fund : funds) {
@@ -246,12 +253,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
         prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
     }
 
-    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+    public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
+            final String prdOfferingShortName, final ProductCategoryBO prdCategory,
+            final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
             final String description, final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
-            final boolean loanCounter, final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds,
-            final List<FeeBO> fees, final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode,
+            final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
+            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
+            final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode,
             final LoanPrdActionForm loanPrdActionForm) throws ProductDefinitionException {
 
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
@@ -296,8 +305,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
         prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
     }
 
-    // TODO Remove these constructors, do not go through the guard clause of
-    // other contructors
+    /**
+     * @deprecated use {@link LoanProductBuilder} to construct legal
+     *             {@link LoanOfferingBO}'s for tests.
+     */
+    @Deprecated
     protected LoanOfferingBO() {
         this(null, null, null, null, null, null, new HashSet<LoanOfferingFundEntity>(),
                 new HashSet<LoanOfferingFeesEntity>(), new HashSet<LoanAmountFromLastLoanAmountBO>(),
@@ -306,9 +318,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 new HashSet<NoOfInstallSameForAllLoanBO>());
     }
 
-    private LoanOfferingBO(final Short prdOfferingId, final String globalPrdOfferingNum, final ProductTypeEntity prdType,
-            final OfficeBO office, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode,
-            final Set<LoanOfferingFundEntity> loanOfferingFunds, final Set<LoanOfferingFeesEntity> loanOfferingFees,
+    private LoanOfferingBO(final Short prdOfferingId, final String globalPrdOfferingNum,
+            final ProductTypeEntity prdType, final OfficeBO office, final GLCodeEntity principalGLcode,
+            final GLCodeEntity interestGLcode, final Set<LoanOfferingFundEntity> loanOfferingFunds,
+            final Set<LoanOfferingFeesEntity> loanOfferingFees,
             final Set<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoan,
             final Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycle,
             final Set<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoan,
@@ -328,6 +341,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.noOfInstallSameForAllLoan = noOfInstallSameForAllLoan;
     }
 
+    /**
+     * @deprecated use {@link LoanProductBuilder} to construct legal
+     *             {@link LoanOfferingBO}'s for tests.
+     */
+    @Deprecated
     public static LoanOfferingBO createInstanceForTest(final Short prdOfferingId) {
         return new LoanOfferingBO(prdOfferingId, null, null, null, null, null, new HashSet<LoanOfferingFundEntity>(),
                 new HashSet<LoanOfferingFeesEntity>(), new HashSet<LoanAmountFromLastLoanAmountBO>(),
@@ -390,6 +408,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public PrdOfferingMeetingEntity getLoanOfferingMeeting() {
         return loanOfferingMeeting;
+    }
+
+    public MeetingBO getLoanOfferingMeetingValue() {
+        return loanOfferingMeeting.getMeeting();
     }
 
     public GLCodeEntity getPrincipalGLcode() {
@@ -498,13 +520,15 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     // FIXME this update is only used by tests, is not the right logic
     public void update(final Short userId, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
-            final String description, final PrdStatus status, final GracePeriodTypeEntity gracePeriodType,
-            final InterestTypesEntity interestTypes, final Short gracePeriodDuration, final Money maxLoanAmount, final Money minLoanAmount,
-            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
-            final Short maxNoInstallments, final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter,
-            final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees,
-            final Short recurAfter, final RecurrenceType recurrenceType) throws ProductDefinitionException {
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
+            final Date startDate, final Date endDate, final String description, final PrdStatus status,
+            final GracePeriodTypeEntity gracePeriodType, final InterestTypesEntity interestTypes,
+            final Short gracePeriodDuration, final Money maxLoanAmount, final Money minLoanAmount,
+            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
+            final RecurrenceType recurrenceType) throws ProductDefinitionException {
         prdLogger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, status);
@@ -560,12 +584,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     public void update(final Short userId, final String prdOfferingName, final String prdOfferingShortName,
-            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
-            final String description, final PrdStatus status, final GracePeriodTypeEntity gracePeriodType,
-            final InterestTypesEntity interestTypes, final Short gracePeriodDuration, final Double maxInterestRate,
-            final Double minInterestRate, final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
+            final Date startDate, final Date endDate, final String description, final PrdStatus status,
+            final GracePeriodTypeEntity gracePeriodType, final InterestTypesEntity interestTypes,
+            final Short gracePeriodDuration, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
-            final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm) throws ProductDefinitionException {
+            final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm)
+            throws ProductDefinitionException {
         prdLogger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, status);
@@ -620,9 +646,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     private void validate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount, final Money defaultLoanAmount,
-            final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate, final Short maxNoInstallments,
-            final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
             final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode) throws ProductDefinitionException {
         prdLogger.debug("validating fields in Loan offering ");
@@ -639,20 +666,19 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 || principalGLcode == null
                 || interestGLcode == null
                 || minLoanAmount.getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue()
-                || defaultLoanAmount != null && (defaultLoanAmount.getAmountDoubleValue() < minLoanAmount
-                        .getAmountDoubleValue() || defaultLoanAmount.getAmountDoubleValue() > maxLoanAmount
-                        .getAmountDoubleValue())
-                || minInterestRate > maxInterestRate
-                || defInterestRate < minInterestRate || defInterestRate > maxInterestRate
-                || minNoInstallments > maxNoInstallments
+                || defaultLoanAmount != null
+                && (defaultLoanAmount.getAmountDoubleValue() < minLoanAmount.getAmountDoubleValue() || defaultLoanAmount
+                        .getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue())
+                || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
+                || defInterestRate > maxInterestRate || minNoInstallments > maxNoInstallments
                 || defNoInstallments < minNoInstallments || defNoInstallments > maxNoInstallments
                 || !intDedDisbursement && gracePeriodType != null
-                        && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
+                && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
             throw new ProductDefinitionException("errors.create");
         }
 
-        if ((interestTypes.getId().equals(InterestType.DECLINING.getValue()) || interestTypes.getId()
-                .equals(InterestType.DECLINING_EPI.getValue()))
+        if ((interestTypes.getId().equals(InterestType.DECLINING.getValue()) || interestTypes.getId().equals(
+                InterestType.DECLINING_EPI.getValue()))
                 && intDedDisbursement) {
             throw new ProductDefinitionException(DECLINEINTERESTDISBURSEMENTDEDUCTION);
         }
@@ -660,35 +686,29 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     private void validate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
-            final boolean loanCounter, final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds,
-            final List<FeeBO> fees, final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode)
-            throws ProductDefinitionException {
+            final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
+            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
+            final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode) throws ProductDefinitionException {
         prdLogger.debug("validating fields in Loan offering ");
-        if (interestTypes == null
-                || maxInterestRate == null
-                || minInterestRate == null
-                || defInterestRate == null
-                || meeting == null
-                || principalGLcode == null
-                || interestGLcode == null
-                || minInterestRate > maxInterestRate
-                || defInterestRate < minInterestRate || defInterestRate > maxInterestRate
-                || !intDedDisbursement && gracePeriodType != null
-                        && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
+        if (interestTypes == null || maxInterestRate == null || minInterestRate == null || defInterestRate == null
+                || meeting == null || principalGLcode == null || interestGLcode == null
+                || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
+                || defInterestRate > maxInterestRate || !intDedDisbursement && gracePeriodType != null
+                && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
             throw new ProductDefinitionException("errors.create");
         }
 
-        if ((interestTypes.getId().equals(InterestType.DECLINING.getValue()) || interestTypes.getId()
-                .equals(InterestType.DECLINING_EPI.getValue()))
+        if ((interestTypes.getId().equals(InterestType.DECLINING.getValue()) || interestTypes.getId().equals(
+                InterestType.DECLINING_EPI.getValue()))
                 && intDedDisbursement) {
             throw new ProductDefinitionException(DECLINEINTERESTDISBURSEMENTDEDUCTION);
         }
 
     }
 
-    private void setGracePeriodTypeAndDuration(final boolean intDedDisbursement, final GracePeriodTypeEntity gracePeriodType,
-            final Short gracePeriodDuration) {
+    private void setGracePeriodTypeAndDuration(final boolean intDedDisbursement,
+            final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration) {
         prdLogger
                 .debug("Loan offering setGracePeriodTypeAndDuration called - intDedDisbursement:" + intDedDisbursement);
         if (intDedDisbursement || gracePeriodType == null || gracePeriodType.getId().equals(GraceType.NONE.getValue())) {
@@ -717,9 +737,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     private void validateForUpdate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount, final Money defaultLoanAmount,
-            final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate, final Short maxNoInstallments,
-            final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
+            final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
+            final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final Short maxNoInstallments, final Short minNoInstallments,
+            final Short defNoInstallments, final boolean loanCounter, final boolean intDedDisbursement,
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter)
             throws ProductDefinitionException {
         prdLogger.debug("validating fields in Loan offering for update");
@@ -734,33 +755,28 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 || defNoInstallments == null
                 || recurAfter == null
                 || minLoanAmount.getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue()
-                || defaultLoanAmount != null && (defaultLoanAmount.getAmountDoubleValue() < minLoanAmount
-                        .getAmountDoubleValue() || defaultLoanAmount.getAmountDoubleValue() > maxLoanAmount
-                        .getAmountDoubleValue())
-                || minInterestRate > maxInterestRate
-                || defInterestRate < minInterestRate || defInterestRate > maxInterestRate
-                || minNoInstallments > maxNoInstallments
+                || defaultLoanAmount != null
+                && (defaultLoanAmount.getAmountDoubleValue() < minLoanAmount.getAmountDoubleValue() || defaultLoanAmount
+                        .getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue())
+                || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
+                || defInterestRate > maxInterestRate || minNoInstallments > maxNoInstallments
                 || defNoInstallments < minNoInstallments || defNoInstallments > maxNoInstallments
                 || !intDedDisbursement && gracePeriodType != null
-                        && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
+                && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
             throw new ProductDefinitionException("errors.update");
         }
     }
 
     private void validateForUpdate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,
-            final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
-            final boolean loanCounter, final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds,
-            final List<FeeBO> fees, final Short recurAfter) throws ProductDefinitionException {
+            final InterestTypesEntity interestTypes, final Double maxInterestRate, final Double minInterestRate,
+            final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
+            final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter)
+            throws ProductDefinitionException {
         prdLogger.debug("validating fields in Loan offering for update");
-        if (interestTypes == null
-                || maxInterestRate == null
-                || minInterestRate == null
-                || defInterestRate == null
-                || recurAfter == null
-                || minInterestRate > maxInterestRate
-                || defInterestRate < minInterestRate || defInterestRate > maxInterestRate
-                || !intDedDisbursement && gracePeriodType != null
-                        && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
+        if (interestTypes == null || maxInterestRate == null || minInterestRate == null || defInterestRate == null
+                || recurAfter == null || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
+                || defInterestRate > maxInterestRate || !intDedDisbursement && gracePeriodType != null
+                && !gracePeriodType.getId().equals(GraceType.NONE.getValue()) && gracePeriodDuration == null) {
             throw new ProductDefinitionException("errors.update");
         }
     }
@@ -797,7 +813,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredLoanAmountFromCycle = find(getLoanAmountFromLoanCycle(),
                         new Predicate<LoanAmountFromLoanCycleBO>() {
-                            public boolean evaluate(final LoanAmountFromLoanCycleBO loanAmountFromLoanCycle) throws Exception {
+                            public boolean evaluate(final LoanAmountFromLoanCycleBO loanAmountFromLoanCycle)
+                                    throws Exception {
                                 return loanAmountFromLoanCycle.sameRangeIndex(customerLastLoanCycleCount);
                             }
                         });
@@ -821,7 +838,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredLoanAmountRangeFromLastLoanAmount = find(getLoanAmountFromLastLoan(),
                         new Predicate<LoanAmountFromLastLoanAmountBO>() {
-                            public boolean evaluate(final LoanAmountFromLastLoanAmountBO lastLoanAmount) throws Exception {
+                            public boolean evaluate(final LoanAmountFromLastLoanAmountBO lastLoanAmount)
+                                    throws Exception {
                                 return lastLoanAmount.isLoanAmountBetweenRange(maxLoanAmount.getAmountDoubleValue());
                             }
                         });
@@ -894,7 +912,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredInstallmentRange = find(getNoOfInstallFromLastLoan(),
                         new Predicate<NoOfInstallFromLastLoanAmountBO>() {
-                            public boolean evaluate(final NoOfInstallFromLastLoanAmountBO noOfInstallmentFromLastLoanAmount)
+                            public boolean evaluate(
+                                    final NoOfInstallFromLastLoanAmountBO noOfInstallmentFromLastLoanAmount)
                                     throws Exception {
                                 return noOfInstallmentFromLastLoanAmount.loanAmountInRange(lastLoanAmount
                                         .getAmountDoubleValue());
@@ -1146,7 +1165,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     // FIXME: move this into test code.
-   
 
     public void setLoanAmountSameForAllLoan(final LoanAmountSameForAllLoanBO loanAmountSameForAllLoan) {
         getLoanAmountSameForAllLoan().clear();

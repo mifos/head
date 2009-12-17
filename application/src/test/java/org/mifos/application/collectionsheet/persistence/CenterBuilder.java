@@ -40,7 +40,7 @@ public class CenterBuilder {
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
     private PersonnelBO loanOfficer;
-    private final String searchId = "1.1";
+    private String searchId = "1.1";
     private final Short updatedFlag = Constants.NO;
     private final CustomerStatus customerStatus = CustomerStatus.CENTER_ACTIVE;
     
@@ -78,6 +78,11 @@ public class CenterBuilder {
 
     public CenterBuilder withFee(final AmountFeeBO withFee) {
         customerAccountBuilder.withFee(withFee);
+        return this;
+    }
+
+    public CenterBuilder withSearchId(final String withSearchId) {
+        this.searchId = withSearchId;
         return this;
     }
 }

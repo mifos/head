@@ -444,8 +444,7 @@ public class AccountPersistence extends Persistence {
 
         Session session = getHibernateUtil().getSessionTL();
         for (AccountBO account : customerAccounts) {
-            session.save(account);
+           session.save(account);
         }
-        session.flush();
     }
 }

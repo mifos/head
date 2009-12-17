@@ -1,0 +1,852 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+	<query name="prefetchCustomerHierarchy">
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as c	
+				left outer join fetch c.customerAddressDetail
+				 left outer join fetch c.historicalData
+				  left outer join fetch c.customerMeeting
+				left outer join fetch c.groupPerformanceHistory gph
+				 left outer join fetch gph.loanCounters
+				left outer join fetch c.customerDetail
+				left outer join fetch c.customerPicture
+				left outer join fetch c.clientPerformanceHistory cph
+				 left outer join fetch cph.loanCounters	
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
+	</query>
+
+	<query name="prefetchAccountData">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
+				left outer join fetch a.loanSummary
+				left outer join fetch a.performanceHistory
+				left outer join fetch a.loanArrearsAgingEntity
+				left outer join fetch a.maxMinLoanAmount
+				left outer join fetch a.maxMinNoOfInstall
+				left outer join fetch a.loanMeeting lm
+				left outer join fetch lm.meetingDetails md
+				left outer join fetch md.meetingRecurrence
+				left outer join fetch a.savingsPerformance
+				inner join a.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
+	</query>
+
+	<query name="prefetchLoanSchedules">
+		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO as la	
+				inner join fetch la.accountActionDates aad
+				left outer join fetch aad.accountFeesActionDetails
+				inner join la.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)
+			    and la.accountState.id in (3, 4, 5, 9)]]>
+	</query>
+	
+	<query name="prefetchCustomerSchedules">
+		<![CDATA[from org.mifos.application.customer.business.CustomerAccountBO as ca
+				inner join fetch ca.accountActionDates aad
+				left outer join fetch aad.accountFeesActionDetails
+				inner join ca.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
+	</query>
+
+	<query name="prefetchAccountPayments">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
+				inner join fetch a.accountPayments
+				inner join a.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
+	</query>
+
+
+	<query name="prefetchLoanActivityDetails">
+		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO as la	
+				inner join fetch la.loanActivityDetails
+				inner join la.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)
+			    and la.accountState.id in (3, 4, 5, 9)]]>
+	</query>
+
+	<query name="prefetchCustomerActivityDetails">
+		<![CDATA[from org.mifos.application.customer.business.CustomerAccountBO as ca	
+				inner join fetch ca.customerActivitDetails
+				inner join ca.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
+	</query>
+	
+	<query name="prefetchAccountStatusChangeHistory">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
+				inner join fetch a.accountStatusChangeHistory
+				inner join a.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
+	</query>
+
+
+	<query name="prefetchAccountFeeDetails">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
+				inner join fetch a.accountFees af
+				inner join fetch af.fees f
+				inner join fetch f.feeFrequency ff
+				left outer join fetch ff.feeMeetingFrequency fmf
+				left outer join fetch fmf.meetingDetails md
+				left outer join fetch md.meetingRecurrence
+				inner join a.customer c
+				where c.office.id = :BRANCH_ID 
+			    and c.customerStatus.id in (3,4,9,10,13)
+				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
+	</query>
+
+	
+	<query name="ClientAttendance.getAttendanceForClientsOnMeetingDate">
+       <![CDATA[select clientAttendance from org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance  
+       inner join clientAttendance.customer c
+       where c.office.id = :BRANCH_ID 
+	   and c.searchId like :SEARCH_ID
+	   and c.customerStatus.id in (3,4,9,10,13)
+	   and clientAttendance.meetingDate = :MEETING_DATE ]]>
+	</query>
+	
+	<sql-query name="findCustomerWithNoAssocationsLoaded">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="parentCustomerId" type="integer" />
+		<return-scalar column="levelId" type="short" />
+		<return-scalar column="name" type="string" />
+		<return-scalar column="searchId" type="string" />
+		<return-scalar column="branchId" type="short" />
+		<![CDATA[
+			select c.customer_id as customerId, 
+			        c.parent_customer_id as parentCustomerId, 
+					c.customer_level_id as levelId, 
+					c.display_name as name,
+					c.search_id as searchId, 
+					c.branch_id as branchId
+			from customer c
+			where c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3 , 4 , 9 , 10 , 13)
+		]]>
+	</sql-query>
+	
+	<!-- start of retrieve collectionsheet sql-queries -->
+	
+	<sql-query name="findCustomerAtTopOfHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="parentCustomerId" type="integer" />
+		<return-scalar column="levelId" type="short" />
+		<return-scalar column="name" type="string" />
+		<return-scalar column="searchId" type="string" />
+		<return-scalar column="branchId" type="short" />
+		<return-scalar column="attendanceId" type="short" />
+		<![CDATA[
+			select c.customer_id as customerId, 
+			        c.parent_customer_id as parentCustomerId, 
+					c.customer_level_id as levelId, 
+					c.display_name as name,
+					c.search_id as searchId, 
+					c.branch_id as branchId, 
+					ca.attendance as attendanceId
+			from customer c
+			left outer join customer_attendance ca on c.customer_id = ca.customer_id and ca.meeting_date = date(:TRANSACTION_DATE)
+			where c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3 , 4 , 9 , 10 , 13)
+		]]>
+	</sql-query>
+
+	<sql-query name="findCustomersWithinHierarchyAsDto">
+	    <return-scalar column="customerId" type="integer" />
+	    <return-scalar column="parentCustomerId" type="integer" />
+		<return-scalar column="levelId" type="short" />
+		<return-scalar column="name" type="string" />
+		<return-scalar column="searchId" type="string" />
+		<return-scalar column="branchId" type="short" />
+		<return-scalar column="attendanceId" type="short" />
+		<![CDATA[
+			select c.customer_id as customerId, 
+			        c.parent_customer_id as parentCustomerId, 
+					c.customer_level_id as levelId, 
+					c.display_name as name,
+					c.search_id as searchId, 
+					c.branch_id as branchId, 
+					ca.attendance as attendanceId
+			from customer c
+			left outer join customer_attendance ca on c.customer_id = ca.customer_id and ca.meeting_date = date(:TRANSACTION_DATE)
+			where c.branch_id = :BRANCH_ID
+			and c.search_id like :SEARCH_ID
+			and c.status_id in (3 , 4 , 9 , 10 , 13)
+			order by c.search_id
+		]]>
+	</sql-query>
+
+	<!-- loan queries for collection sheet -->
+		<sql-query name="findLoanDisbursementsforCustomerAtTopOfHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="accountStateId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="disbursementAmount" type="big_decimal" />
+		<return-scalar column="payInterestAtDisbursement" type="short" />
+		<![CDATA[
+		select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId,
+		        la.loan_amount_currency_id as currencyId, la.loan_amount as disbursementAmount, la.interest_at_disb as payInterestAtDisbursement       
+				from loan_account la
+				inner join account a on la.account_id=a.account_id
+				inner join customer c on a.customer_id=c.customer_id
+				inner join prd_offering po on la.prd_offering_id=po.prd_offering_id
+				where c.branch_id=:BRANCH_ID
+				and c.customer_id = :CUSTOMER_ID
+				and c.status_id in (3 , 4 , 9 , 10 , 13)
+				and (a.account_state_id in (3 , 4)) and date(:TRANSACTION_DATE) >= la.disbursement_date
+		]]>
+	</sql-query>
+	
+	<sql-query name="findLoanDisbursementsforCustomerHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="accountStateId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="disbursementAmount" type="big_decimal" />
+		<return-scalar column="payInterestAtDisbursement" type="short" />
+		<![CDATA[
+		select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId,
+		        la.loan_amount_currency_id as currencyId, la.loan_amount as disbursementAmount, la.interest_at_disb as payInterestAtDisbursement       
+				from loan_account la
+				inner join account a on la.account_id=a.account_id
+				inner join customer c on a.customer_id=c.customer_id
+				inner join prd_offering po on la.prd_offering_id=po.prd_offering_id
+				where c.branch_id=:BRANCH_ID
+				and c.search_id like :SEARCH_ID
+				and c.status_id in (3 , 4 , 9 , 10 , 13)
+				and (a.account_state_id in (3 , 4)) and date(:TRANSACTION_DATE) >= la.disbursement_date
+		]]>
+	</sql-query>
+	
+		<sql-query name="findLoanRepaymentsforCustomerAtTopOfHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="accountStateId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="principalDue" type="big_decimal" />
+		<return-scalar column="principalPaid" type="big_decimal" />
+		<return-scalar column="interestDue" type="big_decimal" />
+		<return-scalar column="interestPaid" type="big_decimal" />
+		<return-scalar column="penaltyDue" type="big_decimal" />
+		<return-scalar column="penaltyPaid" type="big_decimal" />
+		<return-scalar column="miscFeesDue" type="big_decimal" />
+		<return-scalar column="miscFeesPaid" type="big_decimal" />
+		<return-scalar column="miscPenaltyDue" type="big_decimal" />
+		<return-scalar column="miscPenaltyPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, lse.principal_currency_id as currencyId, 
+					sum(lse.principal) as principalDue,
+					sum(lse.principal_paid) as principalPaid,
+					sum(lse.interest) as interestDue,
+					sum(lse.interest_paid) as interestPaid,
+					sum(lse.penalty) as penaltyDue,
+					sum(lse.penalty_paid) as penaltyPaid,
+					sum(lse.misc_fees) as miscFeesDue,
+					sum(lse.misc_fees_paid) as miscFeesPaid,
+					sum(lse.misc_penalty) as miscPenaltyDue,
+					sum(lse.misc_penalty_paid) as miscPenaltyPaid
+			from loan_schedule as lse
+			join loan_account l on lse.account_id = l.account_id
+			join account a on l.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on l.prd_offering_id = po.prd_offering_id
+			where lse.action_date <= date(:TRANSACTION_DATE)
+			and lse.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.branch_id = :BRANCH_ID
+			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (5, 9)
+			group by c.customer_id, a.account_id, a.account_state_id, po.prd_offering_short_name, po.prd_offering_id, lse.principal_currency_id
+		]]>
+	</sql-query>
+	
+	<sql-query name="findLoanRepaymentsforCustomerHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="accountStateId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="principalDue" type="big_decimal" />
+		<return-scalar column="principalPaid" type="big_decimal" />
+		<return-scalar column="interestDue" type="big_decimal" />
+		<return-scalar column="interestPaid" type="big_decimal" />
+		<return-scalar column="penaltyDue" type="big_decimal" />
+		<return-scalar column="penaltyPaid" type="big_decimal" />
+		<return-scalar column="miscFeesDue" type="big_decimal" />
+		<return-scalar column="miscFeesPaid" type="big_decimal" />
+		<return-scalar column="miscPenaltyDue" type="big_decimal" />
+		<return-scalar column="miscPenaltyPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, lse.principal_currency_id as currencyId, 
+					sum(lse.principal) as principalDue,
+					sum(lse.principal_paid) as principalPaid,
+					sum(lse.interest) as interestDue,
+					sum(lse.interest_paid) as interestPaid,
+					sum(lse.penalty) as penaltyDue,
+					sum(lse.penalty_paid) as penaltyPaid,
+					sum(lse.misc_fees) as miscFeesDue,
+					sum(lse.misc_fees_paid) as miscFeesPaid,
+					sum(lse.misc_penalty) as miscPenaltyDue,
+					sum(lse.misc_penalty_paid) as miscPenaltyPaid
+			from loan_schedule as lse
+			join loan_account l on lse.account_id = l.account_id
+			join account a on l.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on l.prd_offering_id = po.prd_offering_id
+			where lse.action_date <= date(:TRANSACTION_DATE)
+			and lse.payment_status= 0
+			and c.search_id like :SEARCH_ID
+			and c.branch_id = :BRANCH_ID
+			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (5, 9)
+			group by c.customer_id, a.account_id, a.account_state_id, po.prd_offering_short_name, po.prd_offering_id, lse.principal_currency_id
+		]]>
+	</sql-query>
+	
+	<sql-query name="findOutstandingFeesForLoansOnCustomerAtTopOfHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="feeAmountDue" type="big_decimal" />
+		<return-scalar column="feeAmountPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId,
+			        lfs.amount_currency_id as currencyId,
+					sum(lfs.amount) as feeAmountDue,
+					sum(lfs.amount_paid) as feeAmountPaid
+			from loan_schedule as lse
+			join loan_fee_schedule lfs on lse.id = lfs.id
+			join loan_account l on lse.account_id = l.account_id
+			join account a on l.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on l.prd_offering_id = po.prd_offering_id
+			where lse.action_date <= date(:TRANSACTION_DATE)
+			and lse.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.branch_id = :BRANCH_ID
+			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (5, 9)
+			group by c.customer_id, a.account_id, lfs.amount_currency_id
+		]]>
+	</sql-query>
+
+	<sql-query name="findOutstandingFeesForLoansOnCustomerHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="feeAmountDue" type="big_decimal" />
+		<return-scalar column="feeAmountPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId,
+			        lfs.amount_currency_id as currencyId,
+					sum(lfs.amount) as feeAmountDue,
+					sum(lfs.amount_paid) as feeAmountPaid
+			from loan_schedule as lse
+			join loan_fee_schedule lfs on lse.id = lfs.id
+			join loan_account l on lse.account_id = l.account_id
+			join account a on l.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on l.prd_offering_id = po.prd_offering_id
+			where lse.action_date <= date(:TRANSACTION_DATE)
+			and lse.payment_status= 0
+			and c.search_id like :SEARCH_ID
+			and c.branch_id = :BRANCH_ID
+			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (5, 9)
+			group by c.customer_id, a.account_id, lfs.amount_currency_id
+		]]>
+	</sql-query>
+	
+	<!-- customer account queries for collection sheet -->
+	<!-- 
+	Note: because of issue 2595 "and cs.currency_id is null" 
+	has been added to this query 
+	Could be taken out if data on customer_schedule pre about 2008-01-05 is removed -->
+	<sql-query name="findAccountCollectionsOnCustomerAccountForCustomerHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="miscFeesDue" type="big_decimal" />
+		<return-scalar column="miscFeesPaid" type="big_decimal" />
+		<return-scalar column="miscPenaltyDue" type="big_decimal" />
+		<return-scalar column="miscPenaltyPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId, cs.misc_fees_currency_id as currencyId,
+					sum(cs.misc_fees) as miscFeesDue,
+					sum(cs.misc_fees_paid) as miscFeesPaid,
+					sum(cs.misc_penalty) as miscPenaltyDue,
+					sum(cs.misc_penalty_paid) as miscPenaltyPaid
+			from customer_schedule as cs
+			join account a on cs.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			where cs.action_date <= date(:TRANSACTION_DATE)
+			and cs.payment_status= 0
+			and c.search_id like :SEARCH_ID
+			and c.branch_id = :BRANCH_ID
+			and c.status_id in (3,4,9,10,13)
+			and cs.currency_id is null
+			group by c.customer_id, a.account_id, cs.misc_fees_currency_id
+		]]>
+	</sql-query>
+	
+	<!-- 
+	Note: because of issue 2595 "and cs.currency_id is null" 
+	has been added to this query 
+	Could be taken out if data on customer_schedule pre about 2008-01-05 is removed -->
+	<sql-query name="findAccountCollectionsOnCustomerAccountForTopCustomerOfHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="miscFeesDue" type="big_decimal" />
+		<return-scalar column="miscFeesPaid" type="big_decimal" />
+		<return-scalar column="miscPenaltyDue" type="big_decimal" />
+		<return-scalar column="miscPenaltyPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId, cs.misc_fees_currency_id as currencyId,
+					sum(cs.misc_fees) as miscFeesDue,
+					sum(cs.misc_fees_paid) as miscFeesPaid,
+					sum(cs.misc_penalty) as miscPenaltyDue,
+					sum(cs.misc_penalty_paid) as miscPenaltyPaid
+			from customer_schedule as cs
+			join account a on cs.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			where cs.action_date <= date(:TRANSACTION_DATE)
+			and cs.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3,4,9,10,13)
+			and cs.currency_id is null
+			group by c.customer_id, a.account_id, cs.misc_fees_currency_id
+		]]>
+	</sql-query>
+
+	<sql-query name="findOutstandingFeesForCustomerAccountOnCustomerHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="feeAmountDue" type="big_decimal" />
+		<return-scalar column="feeAmountPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId,
+          			cfs.amount_currency_id as currencyId,
+					sum(cfs.amount) as feeAmountDue,
+					sum(cfs.amount_paid) as feeAmountPaid
+			from customer_schedule as cs
+			join customer_fee_schedule cfs on cfs.id = cs.id
+			join account a on cs.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			where cs.action_date <= date(:TRANSACTION_DATE)
+			and cs.payment_status= 0
+			and c.search_id like :SEARCH_ID
+			and c.branch_id = :BRANCH_ID
+			and c.status_id in (3,4,9,10,13)
+			group by c.customer_id, a.account_id, cfs.amount_currency_id
+		]]>
+	</sql-query>
+	
+	<sql-query name="findOutstandingCustomerAccountFeesForTopCustomerOfHierarchyAsDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="feeAmountDue" type="big_decimal" />
+		<return-scalar column="feeAmountPaid" type="big_decimal" />
+		<![CDATA[
+			select c.customer_id as customerId, a.account_id as accountId,
+          			cfs.amount_currency_id as currencyId,
+					sum(cfs.amount) as feeAmountDue,
+					sum(cfs.amount_paid) as feeAmountPaid
+			from customer_schedule as cs
+			join customer_fee_schedule cfs on cfs.id = cs.id
+			join account a on cs.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			where cs.action_date <= date(:TRANSACTION_DATE)
+			and cs.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3,4,9,10,13)
+			group by c.customer_id, a.account_id, cfs.amount_currency_id
+		]]>
+	</sql-query>
+	
+	<!--  Loan disbursement queries for collection sheet -->
+	<sql-query name="findFirstLoanSchedule">
+		<return-scalar column="id" type="integer" />
+		<return-scalar column="principalDue" type="big_decimal" />
+		<return-scalar column="principalPaid" type="big_decimal" />
+		<return-scalar column="interestDue" type="big_decimal" />
+		<return-scalar column="interestPaid" type="big_decimal" />
+		<return-scalar column="penaltyDue" type="big_decimal" />
+		<return-scalar column="penaltyPaid" type="big_decimal" />
+		<return-scalar column="miscFeesDue" type="big_decimal" />
+		<return-scalar column="miscFeesPaid" type="big_decimal" />
+		<return-scalar column="miscPenaltyDue" type="big_decimal" />
+		<return-scalar column="miscPenaltyPaid" type="big_decimal" />
+		<![CDATA[
+		   select  	lse.id as id,
+		   			lse.principal as principalDue,
+					lse.principal_paid as principalPaid,
+					lse.interest as interestDue,
+					lse.interest_paid as interestPaid,
+					lse.penalty as penaltyDue,
+					lse.penalty_paid as penaltyPaid,
+					lse.misc_fees as miscFeesDue,
+					lse.misc_fees_paid as miscFeesPaid,
+					lse.misc_penalty as miscPenaltyDue,
+					lse.misc_penalty_paid as miscPenaltyPaid
+			from loan_schedule as lse
+			where lse.account_id = :ACCOUNT_ID
+      		and lse.installment_id  = 1
+		]]>
+	</sql-query>
+	
+	
+	<!-- queries around mandatory, voluntary (per_individual, complete_group) savings accounts applicable to center, group and clients -->
+	<sql-query name="findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForTopOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		   select c.customer_id as customerId,
+		   			a.account_id as accountId,
+		   			po.prd_offering_id as productId, 
+		   			po.prd_offering_short_name as productShortName,
+		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
+                    sse.deposit_currency_id as currencyId,
+					sum(sse.deposit) as depositDue,
+					sum(sse.deposit_paid) as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 1
+      		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
+			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
+			order by c.customer_id, a.account_id, po.prd_offering_name
+		]]>
+	</sql-query>
+	
+    <sql-query name="findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForRestOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		   select c.customer_id as customerId,
+		   			a.account_id as accountId,
+		   			po.prd_offering_id as productId, 
+		   			po.prd_offering_short_name as productShortName,
+		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
+                    sse.deposit_currency_id as currencyId,
+					sum(sse.deposit) as depositDue,
+					sum(sse.deposit_paid) as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.branch_id = :BRANCH_ID
+			and c.search_id like :SEARCH_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 1
+      		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
+			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
+			order by c.customer_id, a.account_id, po.prd_offering_name
+		]]>
+	</sql-query>
+	
+	<sql-query name="findAllVoluntarySavingsAccountsForClientsAndGroupsWithCompleteGroupStatusForTopOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		   select c.customer_id as customerId,
+		   			a.account_id as accountId,
+		   			po.prd_offering_id as productId, 
+		   			po.prd_offering_short_name as productShortName,
+		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
+                    sse.deposit_currency_id as currencyId,
+					s.recommended_amount as depositDue,
+					0 as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 2
+      		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
+			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
+			order by c.customer_id, a.account_id, po.prd_offering_name
+		]]>
+	</sql-query>
+	
+    <sql-query name="findAllVoluntarySavingsAccountsForClientsAndGroupsWithCompleteGroupStatusForRestOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		   select c.customer_id as customerId,
+		   			a.account_id as accountId,
+		   			po.prd_offering_id as productId, 
+		   			po.prd_offering_short_name as productShortName,
+		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
+                    sse.deposit_currency_id as currencyId,
+					s.recommended_amount as depositDue,
+					0 as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.branch_id = :BRANCH_ID
+			and c.search_id like :SEARCH_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 2
+      		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
+			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
+			order by c.customer_id, a.account_id, po.prd_offering_name
+		]]>
+	</sql-query>
+	
+	<sql-query name="findAllSavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		   	  select c.customer_id as customerId,
+		   			a.account_id as accountId,
+		   			po.prd_offering_id as productId,
+		   			po.prd_offering_short_name as productShortName,
+		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
+             	    sse.deposit_currency_id as currencyId,
+					0 as depositDue,
+					0 as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3,4,9,10,13)
+      		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
+			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
+			order by c.customer_id, a.account_id, po.prd_offering_name
+		]]>
+	</sql-query>
+	
+	<sql-query name="findAllSavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		   select c.customer_id as customerId,
+		   			a.account_id as accountId,
+		   			po.prd_offering_id as productId, 
+		   			po.prd_offering_short_name as productShortName,
+		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
+                    sse.deposit_currency_id as currencyId,
+					0 as depositDue,
+					0 as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.branch_id = :BRANCH_ID
+			and c.search_id like :SEARCH_ID
+			and c.status_id in (3,4,9,10,13)
+      		and c.customer_level_id = 2 
+      		and s.recommended_amnt_unit_id=1
+			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
+			order by c.customer_id, a.account_id, po.prd_offering_name
+		]]>
+	</sql-query>
+	
+    <sql-query name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
+        <return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		    select a.account_id as accountId,
+         	sse.customer_id as customerId,
+         	po.prd_offering_id as productId, 
+		    po.prd_offering_short_name as productShortName,
+         	sum(sse.deposit) as depositDue,
+         	sum(sse.deposit_paid) as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 1
+      		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
+		]]>
+	</sql-query>
+	
+	<sql-query name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
+	    <return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		    select a.account_id as accountId,
+         	sse.customer_id as customerId,
+         	po.prd_offering_id as productId, 
+		    po.prd_offering_short_name as productShortName,
+         	sum(sse.deposit) as depositDue,
+         	sum(sse.deposit_paid) as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.branch_id = :BRANCH_ID
+			and c.search_id like :SEARCH_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 1
+      		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
+		]]>
+	</sql-query>
+	
+	<sql-query name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		    select a.account_id as accountId,
+         	sse.customer_id as customerId,
+         	po.prd_offering_id as productId, 
+		   	po.prd_offering_short_name as productShortName,
+            s.recommended_amount as depositDue,
+            0 as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.customer_id = :CUSTOMER_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 2
+      		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
+		]]>
+	</sql-query>
+	
+	<sql-query name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="depositDue" type="big_decimal" />
+		<return-scalar column="depositPaid" type="big_decimal" />
+		<![CDATA[
+		    select a.account_id as accountId,
+         	sse.customer_id as customerId,
+         	po.prd_offering_id as productId, 
+		    po.prd_offering_short_name as productShortName,
+         	s.recommended_amount as depositDue,
+            0 as depositPaid
+			from saving_schedule as sse
+			join savings_account s on sse.account_id = s.account_id
+			join account a on s.account_id = a.account_id
+			join customer c on a.customer_id = c.customer_id
+			join prd_offering po on s.prd_offering_id = po.prd_offering_id
+			where sse.action_date <= date(:TRANSACTION_DATE)
+			and sse.payment_status= 0
+			and c.branch_id = :BRANCH_ID
+			and c.search_id like :SEARCH_ID
+			and c.status_id in (3,4,9,10,13)
+      		and s.savings_type_id = 2
+      		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
+			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
+      		order by a.account_id, sse.customer_id
+		]]>
+	</sql-query>
+	
+</hibernate-mapping>

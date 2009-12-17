@@ -542,7 +542,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(startDate, meeting);
-        LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", ApplicableTo.GROUPS,
+        LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", ApplicableTo.CLIENTS,
                 startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting);
         groupAccount = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering1);
@@ -842,7 +842,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType,
             final LoanOfferingBO loanOfferingBO) {
-        return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
+        return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", client, state, startDate,
                 loanOfferingBO, disbursalType);
 
     }

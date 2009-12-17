@@ -115,7 +115,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
      */
     public PrdOfferingBO(final String name, final String shortName, final String globalProductNumber,
             final Date startDate, final ApplicableTo applicableToCustomer, final ProductCategoryBO category,
-            final PrdStatus productStatus, final Date createdDate, final Short createdByUserId) {
+            final PrdStatusEntity prdStatus, final Date createdDate, final Short createdByUserId) {
         this.prdOfferingName = name;
         this.prdOfferingShortName = shortName;
         this.globalPrdOfferingNum = globalProductNumber;
@@ -125,7 +125,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         this.createdDate = createdDate;
         this.createdBy = createdByUserId;
         this.prdType = category.getProductType();
-        // this.prdStatus = new PrdStatusEntity(prdType, productStatus);
+        this.prdStatus = prdStatus;
         this.prdOfferingId = null;
         this.office = null;
     }

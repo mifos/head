@@ -34,7 +34,7 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
 
     private final Short meetingType;
 
-    public PrdOfferingMeetingEntity(MeetingBO meeting, PrdOfferingBO prdOffering, MeetingType meetingType) {
+    public PrdOfferingMeetingEntity(final MeetingBO meeting, final PrdOfferingBO prdOffering, final MeetingType meetingType) {
         prdOfferingMeetingId = null;
         this.meeting = meeting;
         this.prdOffering = prdOffering;
@@ -63,12 +63,12 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
         return meeting;
     }
 
-    public void setMeeting(MeetingBO meeting) {
+    public void setMeeting(final MeetingBO meeting) {
         this.meeting = meeting;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         PrdOfferingMeetingEntity prdOfferingMeeting = null;
         boolean value = false;
         if (object != null) {

@@ -35,6 +35,7 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -45,7 +46,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 public class IntegrationTestObjectMother {
 
     private static final String INTEGRATION_TEST_DATA_MISSING_MESSAGE = "This should exist within database for integration tests but does not.";
-    
+
     // user
     private static final Short DEFAULT_INTEGRATION_TEST_USER = PersonnelConstants.TEST_USER;
     private static PersonnelBO testUser = null;
@@ -53,7 +54,7 @@ public class IntegrationTestObjectMother {
     // office
     private static final Short SAMPLE_BRANCH_OFFICE = 3;
     private static OfficeBO sampleBranchOffice = null;
-    
+
     // DAO's for fetching existing data within database
     private static final OfficePersistence officePersistence = new OfficePersistence();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
@@ -66,14 +67,13 @@ public class IntegrationTestObjectMother {
             try {
                 sampleBranchOffice = officePersistence.getOffice(SAMPLE_BRANCH_OFFICE);
             } catch (PersistenceException e) {
-                throw new IllegalStateException("Office with id [" + SAMPLE_BRANCH_OFFICE
-                        + "]. "
+                throw new IllegalStateException("Office with id [" + SAMPLE_BRANCH_OFFICE + "]. "
                         + INTEGRATION_TEST_DATA_MISSING_MESSAGE);
             }
         }
         return sampleBranchOffice;
     }
-    
+
     public static PersonnelBO testUser() {
         if (testUser == null) {
             try {
@@ -83,7 +83,7 @@ public class IntegrationTestObjectMother {
                         + INTEGRATION_TEST_DATA_MISSING_MESSAGE);
             }
         }
-        
+
         return testUser;
     }
 
@@ -99,9 +99,50 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.closeSession();
         }
     }
-    
-    public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group, final ClientBO client,
-            final MeetingBO meeting, final AmountFeeBO weeklyPeriodicFeeForCenterOnly,
+
+    public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group,
+            final ClientBO client, final ClientBO client2, final MeetingBO meeting,
+            final AmountFeeBO weeklyPeriodicFeeForCenterOnly, final AmountFeeBO weeklyPeriodicFeeForGroupOnly,
+            final AmountFeeBO weeklyPeriodicFeeForClientsOnly,
+            final AmountFeeBO secondClientWeeklyPeriodicFeeForClientsOnly) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(meeting);
+            customerPersistence.createOrUpdate(weeklyPeriodicFeeForCenterOnly);
+            customerPersistence.createOrUpdate(weeklyPeriodicFeeForGroupOnly);
+            customerPersistence.createOrUpdate(weeklyPeriodicFeeForClientsOnly);
+            customerPersistence.createOrUpdate(secondClientWeeklyPeriodicFeeForClientsOnly);
+            customerPersistence.saveCustomer(center);
+            groupPersistence.saveGroup(group);
+            clientPersistence.saveClient(client);
+            clientPersistence.saveClient(client2);
+            StaticHibernateUtil.commitTransaction();
+        } catch (CustomerException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void cleanCustomerHierarchyWithMultipleClientsMeetingsAndFees(final ClientBO activeClient,
+            final ClientBO inActiveClient, final GroupBO group, final CustomerBO center, final MeetingBO weeklyMeeting) {
+        try {
+            TestObjectFactory.cleanUp(activeClient);
+            TestObjectFactory.cleanUp(inActiveClient);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+            TestObjectFactory.cleanUp(weeklyMeeting);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group,
+            final ClientBO client, final MeetingBO meeting, final AmountFeeBO weeklyPeriodicFeeForCenterOnly,
             final AmountFeeBO weeklyPeriodicFeeForGroupOnly, final AmountFeeBO weeklyPeriodicFeeForClientsOnly) {
         try {
             StaticHibernateUtil.startTransaction();
@@ -123,7 +164,7 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.closeSession();
         }
     }
-    
+
     public static void cleanCustomerHierarchyWithMeetingAndFees(final ClientBO client, final GroupBO group,
             final CustomerBO center, final MeetingBO weeklyMeeting) {
         try {
@@ -159,6 +200,21 @@ public class IntegrationTestObjectMother {
             for (SavingsBO savingsBO : savingsAccount) {
                 TestObjectFactory.cleanUp(savingsBO);
             }
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void saveLoanProducts(final LoanOfferingBO... loanProducts) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            for (LoanOfferingBO loanProduct : loanProducts) {
+                customerPersistence.createOrUpdate(loanProduct);
+            }
+            StaticHibernateUtil.commitTransaction();
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
         } finally {
             StaticHibernateUtil.closeSession();
         }

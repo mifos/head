@@ -35,4 +35,82 @@ public class CollectionSheetDto {
     public List<CollectionSheetCustomerDto> getCollectionSheetCustomer() {
         return this.collectionSheetCustomer;
     }
+
+    public void print() {
+
+        doLog("");
+        doLog("");
+        doLog(">>>>>Printing CollectionSheetDto ");
+        doLog("");
+        doLog("Listing Customers...");
+
+        for (CollectionSheetCustomerDto collectionSheetCustomer : this.getCollectionSheetCustomer()) {
+
+            doLog("Customer: Id: " + collectionSheetCustomer.getCustomerId() + ", Name: "
+                    + collectionSheetCustomer.getName() + ", Parent Id: "
+                    + collectionSheetCustomer.getParentCustomerId() + ", Level: " + collectionSheetCustomer.getLevelId()
+                    + ", Branch Id: " + collectionSheetCustomer.getBranchId() + ", Search Id: "
+                    + collectionSheetCustomer.getSearchId() + ", Attendance Id: "
+                    + collectionSheetCustomer.getAttendanceId());
+
+            CollectionSheetCustomerAccountDto collectionSheetCustomerAccount = collectionSheetCustomer
+                    .getCollectionSheetCustomerAccount();
+            if (null != collectionSheetCustomerAccount) {
+                doLog("            : A/C Collections");
+                doLog("            : Account Id: " + collectionSheetCustomerAccount.getAccountId() + ", Currency Id: "
+                        + collectionSheetCustomerAccount.getCurrencyId() + ", A/C Collections Due: "
+                        + collectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee());
+            } else {
+                doLog("            : No A/C Collections");
+            }
+
+            List<CollectionSheetCustomerLoanDto> collectionSheetCustomerLoans = collectionSheetCustomer
+                    .getCollectionSheetCustomerLoan();
+            if (null != collectionSheetCustomerLoans && collectionSheetCustomerLoans.size() > 0) {
+                doLog("            : Loans");
+                for (CollectionSheetCustomerLoanDto collectionSheetCustomerLoan : collectionSheetCustomerLoans) {
+                    doLog("            : Account Id: " + collectionSheetCustomerLoan.getAccountId() + ", Currency Id: "
+                            + collectionSheetCustomerLoan.getCurrencyId() + ", State Id: "
+                            + collectionSheetCustomerLoan.getAccountStateId() + ", Disbursal?: "
+                            + collectionSheetCustomerLoan.isDisbursalAccount() + ", Payment Due: "
+                            + collectionSheetCustomerLoan.getTotalRepaymentDue() + ", Disbursement Due: "
+                            + collectionSheetCustomerLoan.getTotalDisbursement());
+                }
+            } else {
+                doLog("            : No Loans");
+            }
+
+            List<CollectionSheetCustomerSavingDto> collectionSheetCustomerSavings = collectionSheetCustomer
+                    .getCollectionSheetCustomerSaving();
+            if (null != collectionSheetCustomerSavings && collectionSheetCustomerSavings.size() > 0) {
+                doLog("            : Normal Saving Accounts");
+                for (CollectionSheetCustomerSavingDto collectionSheetCustomerSaving : collectionSheetCustomerSavings) {
+                    doLog("            : Account Id: " + collectionSheetCustomerSaving.getAccountId()
+                            + ", Currency Id: " + collectionSheetCustomerSaving.getCurrencyId() + ", Deposit Due: "
+                            + collectionSheetCustomerSaving.getTotalDepositAmount());
+                }
+            } else {
+                doLog("            : No Normal Saving Accounts");
+            }
+
+            List<CollectionSheetCustomerSavingDto> collectionSheetCustomerIndividualSavings = collectionSheetCustomer
+                    .getIndividualSavingAccounts();
+            if (null != collectionSheetCustomerIndividualSavings && collectionSheetCustomerIndividualSavings.size() > 0) {
+                doLog("            : Individual Saving Accounts");
+                for (CollectionSheetCustomerSavingDto collectionSheetCustomerSaving : collectionSheetCustomerIndividualSavings) {
+                    doLog("            : Account Id: " + collectionSheetCustomerSaving.getAccountId()
+                            + ", Currency Id: " + collectionSheetCustomerSaving.getCurrencyId() + ", Deposit Due: "
+                            + collectionSheetCustomerSaving.getTotalDepositAmount());
+                }
+            } else {
+                doLog("            : No Individual Saving Accounts");
+            }
+        }
+
+    }
+
+    private void doLog(String str) {
+        System.out.println(str);
+    }
+
 }

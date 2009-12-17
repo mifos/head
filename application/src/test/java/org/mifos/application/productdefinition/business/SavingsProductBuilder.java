@@ -17,17 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.collectionsheet.persistence;
+package org.mifos.application.productdefinition.business;
 
 import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
-import org.mifos.application.productdefinition.business.ProductCategoryBO;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -63,6 +61,7 @@ public class SavingsProductBuilder {
     private ApplicableTo applicableToCustomer = ApplicableTo.CENTERS;
     private ProductCategoryBO category = new ProductCategoryBO(Short.valueOf("1"), "savtest");
     private final PrdStatus productStatus = PrdStatus.SAVINGS_ACTIVE;
+    private PrdStatusEntity productStatusEntity;
     
     public SavingsOfferingBO buildForUnitTests() {
         return build();
@@ -72,12 +71,15 @@ public class SavingsProductBuilder {
         category = (ProductCategoryBO) StaticHibernateUtil.getSessionTL().get(ProductCategoryBO.class,
                 Short.valueOf("2"));
         
+        productStatusEntity = (PrdStatusEntity) StaticHibernateUtil.getSessionTL().get(PrdStatusEntity.class,
+                this.productStatus.getValue());
+
         return build();
     }
 
     private SavingsOfferingBO build() {
         final SavingsOfferingBO savingsProduct = new SavingsOfferingBO(savingsType, name, shortName,
-                globalProductNumber, startDate, applicableToCustomer, category, productStatus, interestCalcType,
+                globalProductNumber, startDate, applicableToCustomer, category, productStatusEntity, interestCalcType,
                 interestRate, maxAmountOfWithdrawal, depositGLCode, interesetGLCode, createdDate, createdByUserId);
 
         final PrdOfferingMeetingEntity scheduleForInstcalc = new PrdOfferingMeetingEntity(
