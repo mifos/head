@@ -34,13 +34,11 @@ import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.persistence.CustomerDao;
 import org.mifos.application.customer.persistence.CustomerDaoHibernate;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanProductDaoHibernate;
 import org.mifos.application.productdefinition.persistence.LoanProductDao;
-import org.mifos.framework.util.helpers.Money;
 
 /**
  * I contain static factory methods for locating/creating application services.
@@ -93,19 +91,8 @@ public class DependencyInjectedServiceLocator {
         if (collectionSheetServiceFacade == null) {
             collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
 
-            final AccountPaymentAssembler accountPaymentAssembler = new AccountPaymentAssembler(personnelPersistence);
-            final SavingsAccountAssembler savingsAccountAssembler = new SavingsAccountAssembler(savingsPersistence,
-                    customerPersistence);
-            final ClientAttendanceAssembler clientAttendanceAssembler = new ClientAttendanceAssembler(
-                    clientPersistence, clientAttendanceDao);
-            final LoanAccountAssembler loanAccountAssembler = new LoanAccountAssembler(loanPersistence);
-            final CustomerAccountAssembler customerAccountAssember = new CustomerAccountAssembler(customerPersistence);
-
             collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence,
-                    masterPersistence, personnelPersistence, customerPersistence, collectionSheetService,
-                    clientAttendanceAssembler, loanAccountAssembler,
-                    customerAccountAssember, savingsAccountAssembler, accountPaymentAssembler,
-                    collectionSheetTranslator);
+                    masterPersistence, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator);
         }
         return collectionSheetServiceFacade;
     }

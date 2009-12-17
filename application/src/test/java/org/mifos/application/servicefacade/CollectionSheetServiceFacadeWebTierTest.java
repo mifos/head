@@ -82,21 +82,6 @@ public class CollectionSheetServiceFacadeWebTierTest {
     private CollectionSheetService collectionSheetService;
 
     @Mock
-    private ClientAttendanceAssembler clientAttendanceAssembler;
-
-    @Mock
-    private LoanAccountAssembler loanAccountAssembler;
-
-    @Mock
-    private CustomerAccountAssembler customerAccountAssembler;
-
-    @Mock
-    private SavingsAccountAssembler savingsAccountAssembler;
-
-    @Mock
-    private AccountPaymentAssembler accountPaymentAssembler;
-
-    @Mock
     private MasterDataEntity masterDataEntity;
 
     @Mock
@@ -129,9 +114,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         collectionSheetForm.setPaymentId("2");
 
         collectionSheetServiceFacadeWebTier = new CollectionSheetServiceFacadeWebTier(officePersistence,
-                masterPersistence, personnelPersistence, customerPersistence, collectionSheetService,
-                clientAttendanceAssembler, loanAccountAssembler,
-                customerAccountAssembler, savingsAccountAssembler, accountPaymentAssembler, collectionSheetTranslator);
+                masterPersistence, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator);
     }
 
     @Test

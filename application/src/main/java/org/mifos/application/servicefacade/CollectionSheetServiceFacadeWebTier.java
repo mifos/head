@@ -75,31 +75,17 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final PersonnelPersistence personnelPersistence;
     private final CustomerPersistence customerPersistence;
     private final CollectionSheetService collectionSheetService;
-    private final ClientAttendanceAssembler clientAttendanceAssembler;
-    private final LoanAccountAssembler loanAccountAssembler;
-    private final CustomerAccountAssembler customerAccountAssembler;
-    private final SavingsAccountAssembler savingsAccountAssembler;
-    private final AccountPaymentAssembler accountPaymentAssembler;
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
-            final ClientAttendanceAssembler clientAttendanceAssembler, final LoanAccountAssembler loanAccountAssembler,
-            final CustomerAccountAssembler customerAccountAssember,
-            final SavingsAccountAssembler savingsAccountAssembler,
-            final AccountPaymentAssembler accountPaymentAssembler,
             final CollectionSheetDtoTranslator collectionSheetTranslator) {
         this.officePersistence = officePersistence;
         this.masterPersistence = masterPersistence;
         this.personnelPersistence = personnelPersistence;
         this.customerPersistence = customerPersistence;
         this.collectionSheetService = collectionSheetService;
-        this.clientAttendanceAssembler = clientAttendanceAssembler;
-        this.loanAccountAssembler = loanAccountAssembler;
-        this.customerAccountAssembler = customerAccountAssember;
-        this.savingsAccountAssembler = savingsAccountAssembler;
-        this.accountPaymentAssembler = accountPaymentAssembler;
         this.collectionSheetTranslator = collectionSheetTranslator;
     }
 
@@ -493,58 +479,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         return new BigDecimal(amount);
     }
 
-    public CollectionSheetErrorsView saveCollectionSheet(
-            final CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
-            final CollectionSheetEntryDecomposedView decomposedViews, final Short userId) {
-
-        Integer centerId = previousCollectionSheetEntryDto.getBulkEntryParent().getCustomerDetail().getCustomerId();
-        CollectionSheetCustomerDto collectionSheetCustomerDto = customerPersistence
-                .findCustomerWithNoAssocationsLoaded(centerId);
-        Short branchId = collectionSheetCustomerDto.getBranchId();
-        String searchId = collectionSheetCustomerDto.getSearchId();
-
-        final AccountPaymentEntity payment = accountPaymentAssembler.fromDto(userId, previousCollectionSheetEntryDto);
-
-        final List<String> failedSavingsDepositAccountNums = new ArrayList<String>();
-        final List<String> failedSavingsWithdrawalNums = new ArrayList<String>();
-        final List<String> failedLoanDisbursementAccountNumbers = new ArrayList<String>();
-        final List<String> failedLoanRepaymentAccountNumbers = new ArrayList<String>();
-        final List<String> failedCustomerAccountPaymentNums = new ArrayList<String>();
-
-        final List<CollectionSheetEntryView> collectionSheeetEntryViews = decomposedViews
-                .getParentCollectionSheetEntryViews();
-        final List<SavingsBO> savingsAccounts = savingsAccountAssembler.fromDto(collectionSheeetEntryViews, payment,
-                failedSavingsDepositAccountNums, failedSavingsWithdrawalNums);
-
-        final List<CollectionSheetEntryView> collectionSheetEntryViews = decomposedViews
-                .getParentCollectionSheetEntryViews();
-        final List<ClientAttendanceBO> clientAttendances = clientAttendanceAssembler.fromDto(collectionSheetEntryViews,
-                branchId, searchId, payment.getPaymentDate());
-
-        final List<LoanAccountsProductView> loanAccountProductViews = decomposedViews.getLoanAccountViews();
-        final List<LoanBO> loanAccounts = loanAccountAssembler.fromDto(loanAccountProductViews, payment,
-                failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers);
-
-        final List<CustomerAccountView> customerAccountViews = decomposedViews.getCustomerAccountViews();
-        final List<AccountBO> customerAccounts = customerAccountAssembler.fromDto(customerAccountViews, payment,
-                failedCustomerAccountPaymentNums);
-
-        boolean databaseErrorOccurred = false;
-        Throwable databaseError = null;
-
-        try {
-            collectionSheetService.saveCollectionSheet(clientAttendances, loanAccounts, customerAccounts,
-                    savingsAccounts);
-        } catch (HibernateException e) {
-            logger.error("database error saving collection sheet", e);
-            databaseErrorOccurred = true;
-            databaseError = e;
-        }
-
-        return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
-                failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers,
-                failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
-    }
 
     private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<MasterDataEntity> paymentTypesList) {
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
