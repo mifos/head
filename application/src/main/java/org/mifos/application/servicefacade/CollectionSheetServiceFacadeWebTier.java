@@ -19,25 +19,14 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.HibernateException;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -62,13 +51,11 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.
  */
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
 
     private final OfficePersistence officePersistence;
     private final MasterPersistence masterPersistence;
@@ -243,8 +230,12 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetErrorsView saveCollectionSheet(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final Short userId) {
 
-        final SaveCollectionSheetDto saveCollectionSheet = fromLegacy(previousCollectionSheetEntryDto, userId);
+        final SaveCollectionSheetDto saveCollectionSheet = new SaveCollectionSheetFromLegacyAssembler()
+                .fromWebTierLegacyStructuretoSaveCollectionSheetDto(previousCollectionSheetEntryDto, userId);
 
+        // TODO - jpw - development/testing aid.
+        // This to be taken out or changed to logger rather than sysprint before
+        // release
         saveCollectionSheet.print();
 
         CollectionSheetErrorsView collectionSheetErrorsView = null;
@@ -256,229 +247,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         return collectionSheetErrorsView;
     }
-
-    private SaveCollectionSheetDto fromLegacy(CollectionSheetEntryGridDto previousCollectionSheetEntryDto, Short userId) {
-
-        List<CollectionSheetEntryView> collectionSheetEntryViews = new ArrayList<CollectionSheetEntryView>();
-        convertTreeToList(previousCollectionSheetEntryDto.getBulkEntryParent(), collectionSheetEntryViews);
-
-        SaveCollectionSheetDto saveCollectionSheet = null;
-
-        try {
-            saveCollectionSheet = new SaveCollectionSheetDto(assembleCustomers(collectionSheetEntryViews),
-                    previousCollectionSheetEntryDto.getPaymentTypeId(), previousCollectionSheetEntryDto
-                            .getTransactionDate(), previousCollectionSheetEntryDto.getReceiptId(),
-                    previousCollectionSheetEntryDto.getReceiptDate(), userId);
-        } catch (SaveCollectionSheetException e) {
-            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-        }
-
-        return saveCollectionSheet;
-
-    }
-
-    private List<SaveCollectionSheetCustomerDto> assembleCustomers(
-            List<CollectionSheetEntryView> collectionSheetEntryViews) {
-
-        List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers = new ArrayList<SaveCollectionSheetCustomerDto>();
-        for (CollectionSheetEntryView collectionSheetEntryView : collectionSheetEntryViews) {
-
-            Short currencyId = null;
-            if (collectionSheetEntryView.getCurrency() != null) {
-                currencyId = collectionSheetEntryView.getCurrency().getCurrencyId();
-            } else {
-                currencyId = Money.getDefaultCurrency().getCurrencyId();
-            }
-
-            final Integer customerId = collectionSheetEntryView.getCustomerDetail().getCustomerId();
-            final Integer parentCustomerId = collectionSheetEntryView.getCustomerDetail().getParentCustomerId();
-            final Short attendanceId = collectionSheetEntryView.getAttendence();
-
-            final SaveCollectionSheetCustomerAccountDto SaveCollectionSheetCustomerAccount = assembleCustomerAccount(
-                    collectionSheetEntryView.getCustomerAccountDetails(), currencyId);
-
-            final List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans = assembleCustomerLoans(
-                    collectionSheetEntryView.getLoanAccountDetails(), currencyId);
-
-            final List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings = assembleCustomerSavings(
-                    collectionSheetEntryView.getSavingsAccountDetails(), currencyId, false);
-
-            final List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerIndividualSavings = assembleCustomerSavings(
-                    collectionSheetEntryView.getSavingsAccountDetails(), currencyId, true);
-
-            SaveCollectionSheetCustomerDto saveCollectionSheetCustomerDto = null;
-
-            try {
-                saveCollectionSheetCustomerDto = new SaveCollectionSheetCustomerDto(customerId, parentCustomerId,
-                        attendanceId, SaveCollectionSheetCustomerAccount, saveCollectionSheetCustomerLoans,
-                        saveCollectionSheetCustomerSavings, saveCollectionSheetCustomerIndividualSavings);
-            } catch (SaveCollectionSheetException e) {
-                throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-            }
-
-            saveCollectionSheetCustomers.add(saveCollectionSheetCustomerDto);
-        }
-
-        return saveCollectionSheetCustomers;
-
-    }
-
-    private List<SaveCollectionSheetCustomerSavingDto> assembleCustomerSavings(
-            List<SavingsAccountView> savingsAccountDetails, Short currencyId, Boolean lookingForIndividualSavings) {
-
-        if ((null != savingsAccountDetails) && (savingsAccountDetails.size() > 0)) {
-
-            List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
-            for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
-                Short recommendedAmntUnitId = savingsAccountView.getRecommendedAmntUnitId();
-                Boolean match = false;
-                if (lookingForIndividualSavings && (recommendedAmntUnitId == Short.valueOf("1"))) {
-                    match = true;
-                }
-                if ((!lookingForIndividualSavings)
-                        && ((recommendedAmntUnitId == null) || (recommendedAmntUnitId != Short.valueOf("1")))) {
-                    match = true;
-                }
-
-                if (match) {
-
-                    BigDecimal depositEntered = setBigDecimalAmount(savingsAccountView.getDepositAmountEntered());
-                    BigDecimal withdrawalEntered = setBigDecimalAmount(savingsAccountView.getWithDrawalAmountEntered());
-                    SaveCollectionSheetCustomerSavingDto saveCollectionSheetCustomerSaving = null;
-
-                    try {
-                        saveCollectionSheetCustomerSaving = new SaveCollectionSheetCustomerSavingDto(savingsAccountView
-                                .getAccountId(), currencyId, depositEntered, withdrawalEntered);
-                    } catch (SaveCollectionSheetException e) {
-                        throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-                    }
-
-                    saveCollectionSheetCustomerSavings.add(saveCollectionSheetCustomerSaving);
-                }
-            }
-
-            if (saveCollectionSheetCustomerSavings.size() > 0) {
-                return saveCollectionSheetCustomerSavings;
-            }
-        }
-        return null;
-
-    }
-
-    private List<SaveCollectionSheetCustomerLoanDto> assembleCustomerLoans(
-            List<LoanAccountsProductView> loanAccountDetails, Short currencyId) {
-
-        if (null != loanAccountDetails && loanAccountDetails.size() > 0) {
-
-            List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans = new ArrayList<SaveCollectionSheetCustomerLoanDto>();
-
-            for (LoanAccountsProductView loanAccountDetail : loanAccountDetails) {
-
-                List<LoanAccountView> loanAccountViews = loanAccountDetail.getLoanAccountViews();
-
-                if ((null != loanAccountViews) && (loanAccountViews.size() == 1)) {
-
-                    BigDecimal repaymentAmount = setBigDecimalAmount(loanAccountDetail.getEnteredAmount());
-                    BigDecimal disbursementAmount = setBigDecimalAmount(loanAccountDetail
-                            .getDisBursementAmountEntered());
-
-                    SaveCollectionSheetCustomerLoanDto saveCollectionSheetCustomerLoan = null;
-
-                    try {
-                        saveCollectionSheetCustomerLoan = new SaveCollectionSheetCustomerLoanDto(loanAccountViews
-                                .get(0).getAccountId(), currencyId, repaymentAmount, disbursementAmount);
-                    } catch (SaveCollectionSheetException e) {
-                        throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-                    }
-
-                    saveCollectionSheetCustomerLoans.add(saveCollectionSheetCustomerLoan);
-
-                } else {
-                    if ((loanAccountViews == null) || (loanAccountViews.size() == 0)) {
-                        throw new RuntimeException("Loan Product: " + loanAccountDetail.getPrdOfferingShortName()
-                                + " has no loans associated with it.");
-                    }
-
-                    for (LoanAccountView loanAccountView : loanAccountViews) {
-                        // more than one loan against a particular loan product
-                        // offering
-                        // The user has to either set to zero or pay all
-                        // (enforced on web front end)
-                        BigDecimal repaymentAmount = setBigDecimalAmount(loanAccountDetail.getEnteredAmount());
-                        if (repaymentAmount.compareTo(BigDecimal.ZERO) > 0) {
-                            repaymentAmount = new BigDecimal(loanAccountView.getTotalAmountDue());
-                        }
-                        BigDecimal disbursementAmount = setBigDecimalAmount(loanAccountDetail
-                                .getDisBursementAmountEntered());
-                        if (disbursementAmount.compareTo(BigDecimal.ZERO) > 0) {
-                            disbursementAmount = new BigDecimal(loanAccountView.getTotalDisburseAmount());
-                        }
-
-                        SaveCollectionSheetCustomerLoanDto saveCollectionSheetCustomerLoan = null;
-
-                        try {
-                            saveCollectionSheetCustomerLoan = new SaveCollectionSheetCustomerLoanDto(loanAccountView
-                                    .getAccountId(), currencyId, repaymentAmount, disbursementAmount);
-                        } catch (SaveCollectionSheetException e) {
-                            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-                        }
-
-                        saveCollectionSheetCustomerLoans.add(saveCollectionSheetCustomerLoan);
-                    }
-                }
-            }
-            return saveCollectionSheetCustomerLoans;
-        }
-        return null;
-    }
-
-    private SaveCollectionSheetCustomerAccountDto assembleCustomerAccount(CustomerAccountView customerAccountDetails,
-            Short currencyId) {
-
-        // Account Id is set to -1 if no outstanding customer account
-        // installment
-        if ((null != customerAccountDetails) && (customerAccountDetails.getAccountId() != -1)) {
-            BigDecimal amountEntered = setBigDecimalAmount(customerAccountDetails.getCustomerAccountAmountEntered());
-
-            SaveCollectionSheetCustomerAccountDto saveCollectionSheetCustomerAccount = null;
-
-            try {
-                saveCollectionSheetCustomerAccount = new SaveCollectionSheetCustomerAccountDto(customerAccountDetails
-                        .getAccountId(), currencyId, amountEntered);
-            } catch (SaveCollectionSheetException e) {
-                throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-            }
-
-            return saveCollectionSheetCustomerAccount;
-        }
-        return null;
-    }
-
-    private void convertTreeToList(CollectionSheetEntryView collectionSheetEntryView,
-            List<CollectionSheetEntryView> collectionSheetEntryViews) {
-
-        collectionSheetEntryViews.add(collectionSheetEntryView);
-        if ((null != collectionSheetEntryView.getCollectionSheetEntryChildren())
-                && (collectionSheetEntryView.getCollectionSheetEntryChildren().size() > 0)) {
-
-            for (CollectionSheetEntryView collectionSheetEntryViewChild : collectionSheetEntryView
-                    .getCollectionSheetEntryChildren()) {
-
-                convertTreeToList(collectionSheetEntryViewChild, collectionSheetEntryViews);
-            }
-        }
-
-    }
-
-    private BigDecimal setBigDecimalAmount(String stringAmount) {
-        // TODO - look for number format exception JPW
-        Double amount = 0.0;
-        if (stringAmount != null && (!stringAmount.isEmpty())) {
-            amount = Double.parseDouble(stringAmount);
-        }
-        return new BigDecimal(amount);
-    }
-
 
     private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<MasterDataEntity> paymentTypesList) {
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
