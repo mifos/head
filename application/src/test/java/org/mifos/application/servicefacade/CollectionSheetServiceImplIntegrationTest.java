@@ -76,7 +76,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         // disburse loan
         CollectionSheetErrorsView errors = null;
         try {
-            errors = collectionSheetService.saveCollectionSheetWIP(saveCollectionSheet);
+            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
@@ -88,7 +88,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
                 .assembleSaveCollectionSheetFromCreatedCenterHierarchy(repaymentDate);
 
         try {
-            errors = collectionSheetService.saveCollectionSheetWIP(saveCollectionSheet);
+            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }

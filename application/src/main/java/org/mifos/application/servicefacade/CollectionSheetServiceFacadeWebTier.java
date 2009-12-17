@@ -240,7 +240,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         return newCollectionSheetEntryGridDto;
     }
 
-    public CollectionSheetErrorsView saveCollectionSheetWIP(
+    public CollectionSheetErrorsView saveCollectionSheet(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final Short userId) {
 
         final SaveCollectionSheetDto saveCollectionSheet = fromLegacy(previousCollectionSheetEntryDto, userId);
@@ -249,7 +249,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         CollectionSheetErrorsView collectionSheetErrorsView = null;
         try {
-            collectionSheetErrorsView = collectionSheetService.saveCollectionSheetWIP(saveCollectionSheet);
+            collectionSheetErrorsView = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }

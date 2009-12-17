@@ -35,14 +35,14 @@ public interface CollectionSheetService {
     /**
      * Persists Collection Sheet model.  Will be removed from this interface once saveCollectionSheetWIP is ready
      */
-    void saveCollectionSheet(List<ClientAttendanceBO> clientAttendances, List<LoanBO> loanAccounts,
+    void persistCollectionSheet(List<ClientAttendanceBO> clientAttendances, List<LoanBO> loanAccounts,
             List<AccountBO> customerAccounts, List<SavingsBO> savingAccounts);
 
     /**
      * Saves a Collection Sheet
      * @throws SaveCollectionSheetException 
      */
-    CollectionSheetErrorsView saveCollectionSheetWIP(SaveCollectionSheetDto saveCollectionSheetDto) throws SaveCollectionSheetException;
+    CollectionSheetErrorsView saveCollectionSheet(SaveCollectionSheetDto saveCollectionSheetDto) throws SaveCollectionSheetException;
     
     /**
      * Retrieves a Collection Sheet

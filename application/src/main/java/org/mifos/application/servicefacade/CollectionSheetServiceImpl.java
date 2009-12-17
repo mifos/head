@@ -65,7 +65,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         this.collectionSheetDao = collectionSheetDao;
     }
 
-    public void saveCollectionSheet(final List<ClientAttendanceBO> clientAttendances, final List<LoanBO> loanAccounts,
+    public void persistCollectionSheet(final List<ClientAttendanceBO> clientAttendances, final List<LoanBO> loanAccounts,
             final List<AccountBO> customerAccountList, final List<SavingsBO> savingAccounts) {
 
         try {
@@ -92,7 +92,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
      * 
      * @throws SaveCollectionSheetException
      * */
-    public CollectionSheetErrorsView saveCollectionSheetWIP(final SaveCollectionSheetDto saveCollectionSheet)
+    public CollectionSheetErrorsView saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
             throws SaveCollectionSheetException {
 
         Long eTime;
@@ -169,7 +169,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         try {
             sTime = System.currentTimeMillis();
-            saveCollectionSheet(clientAttendances, loanAccounts, customerAccounts, savingsAccounts);
+            persistCollectionSheet(clientAttendances, loanAccounts, customerAccounts, savingsAccounts);
             eTime = System.currentTimeMillis() - sTime;
             doLog("Id: " + topCustomerId + " - Committing Model took " + eTime + "ms");
 
@@ -190,8 +190,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(customerId,
                 transactionDate);
-        Long eTime;
-        Long sTime = System.currentTimeMillis();
 
         final Short branchId = customerHierarchy.get(0).getBranchId();
         final String searchId = customerHierarchy.get(0).getSearchId() + ".%";
@@ -252,8 +250,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                     associatedLoanRepayments, outstandingFeesOnLoanRepayments, associatedLoanDisbursements,
                     associatedSavingAccount, associatedIndividualSavingsAccounts, customerAccount));
         }
-        eTime = System.currentTimeMillis() - sTime;
-        doLog("Id: " + customerId + " - RetrieveCollectionSheet took " + eTime + "ms");
 
         return new CollectionSheetDto(populatedCollectionSheetCustomer);
     }
