@@ -657,8 +657,8 @@ public class LoanAccountActionForm extends BaseActionForm {
     protected void validateInterest(ActionErrors errors, Locale locale) {
         DoubleConversionResult conversionResult = validateInterest(getInterestRate(), LoanConstants.LOAN_INTEREST_RATE_KEY, errors, locale, 
                 FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
-        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, LoanConstants.LOAN_INTEREST_RATE_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
+            addError(errors, LoanConstants.LOAN_INTEREST_RATE_KEY, LoanConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
                     lookupLocalizedPropertyValue(LoanConstants.LOAN_INTEREST_RATE_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
         }
     }

@@ -147,6 +147,7 @@ public interface LoanConstants {
     public static final String ADDITIONAL_FEES_LIST = "additionalFeeList";
     public static final String ERRORS_DUPLICATE_PERIODIC_FEE = "errors.loan.duplicatePeriodicFee";
     public static final String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
+    public static final String ERRORS_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
     public static final String ERRORS_SPECIFY_FEE_AMOUNT = "errors.loan.specifyFeeAmount";
     public static final String FEE = "Fee";
     public static final String PROPOSED_DISBURSAL_DATE = "proposedDisbDate";
