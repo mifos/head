@@ -102,6 +102,20 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void newMonthlyClientLoanAccountWithZeroInterestRate() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Tesa Mendez");
+        searchParameters.setLoanProduct("MIFOS-2636-GKEmergencyLoanWithZeroInterest");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1000");
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml.zip", dataSource, selenium);
+
+        createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+    }
 
     private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
