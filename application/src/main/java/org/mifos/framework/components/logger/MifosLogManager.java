@@ -204,4 +204,10 @@ public class MifosLogManager {
         }
     }
 
+    /**
+     * Release any resources - the application is going away.
+     */
+    public static void shutdown() {
+	MifosDOMConfigurator.shutdown();
+    }
 }

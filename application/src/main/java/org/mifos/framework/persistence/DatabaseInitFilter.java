@@ -32,6 +32,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mifos.framework.ApplicationInitializer;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class DatabaseInitFilter implements Filter {
@@ -110,6 +111,9 @@ public class DatabaseInitFilter implements Filter {
         } catch (Exception e) {
             filterConfig.getServletContext().log("Failed to check database version", e);
         }
+	
+	// clear ThreadLocal handle to our session
+	StaticHibernateUtil.closeSession();
     }
 
     public void destroy() {
