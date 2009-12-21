@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 
-public class MifosScheduler {
+public class MifosScheduler extends Timer {
 
     private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
     Timer timer = null;
@@ -54,16 +54,6 @@ public class MifosScheduler {
     public MifosScheduler() {
         boolean isDaemonThread = true;
         timer = new Timer("Mifos Task Scheduler Thread", isDaemonThread);
-    }
-
-    /**
-     * Release any resources - the application is going away.
-     */
-    public void shutdown() {
-	if (timer != null) {
-	    timer.cancel();
-	    timer = null;
-	}
     }
 
     /**

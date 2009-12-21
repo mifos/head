@@ -50,13 +50,4 @@ public class MifosXMLWatchdog extends FileWatchdog {
         new MifosDOMConfigurator().doConfigure(filename, LogManager.getLoggerRepository());
     }
 
-    /**
-     * release any resources - the application is going away.
-     */
-    protected void shutdown() {
-	/* ugly - thread.stop is deprecated.  No real way to do this
-	   other than to rewrite FileWatchdog (which wouldn't be that
-	   hard, actually). */
-	this.stop();
-    }
 }

@@ -45,10 +45,6 @@ public class StaticHibernateUtil {
         hibernateUtil = new HibernateUtil();
     }
 
-    public static void shutdown() {
-	if (hibernateUtil != null) hibernateUtil.shutdown();
-    }
-
     public static void setThreadLocal(SessionHolder holder) {
         hibernateUtil.setThreadLocal(holder);
     }
