@@ -178,6 +178,25 @@ public class SaveCollectionSheetDto {
             validationErrors.add(InvalidSaveCollectionSheetReason.USERID_NULL);
         }
 
+        if (!uniqueCustomers(saveCollectionSheetCustomers)) {
+            validationErrors.add(InvalidSaveCollectionSheetReason.CUSTOMER_LISTED_MORE_THAN_ONCE);
+        }
+    }
+
+    private boolean uniqueCustomers(List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers) {
+
+        if (saveCollectionSheetCustomers != null && saveCollectionSheetCustomers.size() > 0) {
+
+            for (Integer i = 0; i < saveCollectionSheetCustomers.size() - 1; i++) {
+                for (Integer j = i + 1; j < saveCollectionSheetCustomers.size(); j++) {
+                    if (saveCollectionSheetCustomers.get(i).getCustomerId().compareTo(
+                            saveCollectionSheetCustomers.get(j).getCustomerId()) == 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private boolean validPaymentType(Short paymentType) {

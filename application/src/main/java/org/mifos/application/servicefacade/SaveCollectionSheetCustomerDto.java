@@ -19,7 +19,6 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +46,8 @@ public class SaveCollectionSheetCustomerDto {
      * 
      * CENTER and GROUP individual savings accounts appear in variable
      * saveCollectionSheetCustomerSavings above for the owning CENTER/GROUP but
-     * appear in variable saveCollectionSheetCustomerIndividualSavings below for CLIENTS
-     * 
+     * appear in variable saveCollectionSheetCustomerIndividualSavings below for
+     * CLIENTS
      */
     private List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerIndividualSavings;
 
@@ -62,7 +61,8 @@ public class SaveCollectionSheetCustomerDto {
             final List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerIndividualSavings)
             throws SaveCollectionSheetException {
 
-        validateInput(customerId, parentCustomerId);
+        validateInput(customerId, parentCustomerId, saveCollectionSheetCustomerLoans,
+                saveCollectionSheetCustomerSavings, saveCollectionSheetCustomerIndividualSavings);
         if (validationErrors.size() > 0) {
             throw new SaveCollectionSheetException(validationErrors);
         }
@@ -104,7 +104,10 @@ public class SaveCollectionSheetCustomerDto {
         return this.saveCollectionSheetCustomerIndividualSavings;
     }
 
-    private void validateInput(Integer customerId, Integer parentCustomerId) {
+    private void validateInput(Integer customerId, Integer parentCustomerId,
+            List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans,
+            List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings,
+            List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerIndividualSavings) {
 
         if (customerId == null) {
             validationErrors.add(InvalidSaveCollectionSheetReason.CUSTOMERID_NULL);
@@ -120,5 +123,48 @@ public class SaveCollectionSheetCustomerDto {
             }
         }
 
+        if (!uniqueLoanAccounts(saveCollectionSheetCustomerLoans)) {
+            validationErrors.add(InvalidSaveCollectionSheetReason.ACCOUNT_LISTED_MORE_THAN_ONCE);
+        }
+
+        if (!uniqueSavingsAccounts(saveCollectionSheetCustomerSavings)) {
+            validationErrors.add(InvalidSaveCollectionSheetReason.ACCOUNT_LISTED_MORE_THAN_ONCE);
+        }
+
+        if (!uniqueSavingsAccounts(saveCollectionSheetCustomerIndividualSavings)) {
+            validationErrors.add(InvalidSaveCollectionSheetReason.ACCOUNT_LISTED_MORE_THAN_ONCE);
+        }
+    }
+
+    private boolean uniqueLoanAccounts(List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans) {
+
+        if (saveCollectionSheetCustomerLoans != null && saveCollectionSheetCustomerLoans.size() > 0) {
+
+            for (Integer i = 0; i < saveCollectionSheetCustomerLoans.size() - 1; i++) {
+                for (Integer j = i + 1; j < saveCollectionSheetCustomerLoans.size(); j++) {
+                    if (saveCollectionSheetCustomerLoans.get(i).getAccountId().compareTo(
+                            saveCollectionSheetCustomerLoans.get(j).getAccountId()) == 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean uniqueSavingsAccounts(List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings) {
+
+        if (saveCollectionSheetCustomerSavings != null && saveCollectionSheetCustomerSavings.size() > 0) {
+
+            for (Integer i = 0; i < saveCollectionSheetCustomerSavings.size() - 1; i++) {
+                for (Integer j = i + 1; j < saveCollectionSheetCustomerSavings.size(); j++) {
+                    if (saveCollectionSheetCustomerSavings.get(i).getAccountId().compareTo(
+                            saveCollectionSheetCustomerSavings.get(j).getAccountId()) == 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

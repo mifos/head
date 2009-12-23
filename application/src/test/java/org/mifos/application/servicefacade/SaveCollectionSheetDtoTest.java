@@ -167,6 +167,29 @@ public class SaveCollectionSheetDtoTest {
     }
 
     @Test
+    public void shouldGetCUSTOMER_LISTED_MORE_THAN_ONCEIfCustomerDuplicated() {
+
+        List<InvalidSaveCollectionSheetReason> InvalidSaveCollectionSheetReasons = null;
+        try {
+            List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers = new ArrayList<SaveCollectionSheetCustomerDto>();
+            SaveCollectionSheetCustomerDto saveCollectionSheetCustomer = new SaveCollectionSheetCustomerDto(
+                    validCustomerId, null, null, null, null, null, null);
+            saveCollectionSheetCustomers.add(saveCollectionSheetCustomer);
+            saveCollectionSheetCustomer = new SaveCollectionSheetCustomerDto(
+                    validCustomerId, null, null, null, null, null, null);
+            saveCollectionSheetCustomers.add(saveCollectionSheetCustomer);
+
+            new SaveCollectionSheetDto(saveCollectionSheetCustomers, validPaymentType, validDate, null, null, validUserId);
+        } catch (SaveCollectionSheetException e) {
+            InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
+        }
+
+        assertNotNull("List was not set", InvalidSaveCollectionSheetReasons);
+        assertThat(InvalidSaveCollectionSheetReasons.size(), is(1));
+        assertThat(InvalidSaveCollectionSheetReasons.get(0), is(InvalidSaveCollectionSheetReason.CUSTOMER_LISTED_MORE_THAN_ONCE));
+    }
+
+    @Test
     public void shouldGetFourReasonsForAllInvalidInput() {
 
         List<InvalidSaveCollectionSheetReason> InvalidSaveCollectionSheetReasons = null;
@@ -198,7 +221,7 @@ public class SaveCollectionSheetDtoTest {
         } catch (SaveCollectionSheetException e) {
             InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
         }
-
+        
         assertNull("There were errors", InvalidSaveCollectionSheetReasons);
         assertNotNull("saveCollectionSheet is null", saveCollectionSheet);
         assertThat("countOneLevelUnder", saveCollectionSheet.countOneLevelUnder(), is(2));
@@ -366,13 +389,14 @@ public class SaveCollectionSheetDtoTest {
             Short attendanceId) throws SaveCollectionSheetException {
 
         List<SaveCollectionSheetCustomerSavingDto> customerSavingsAccounts = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
+        customerSavingsAccounts.add(customerSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
+        customerSavingsAccounts.add(customerSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
+        customerSavingsAccounts.add(customerSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
+        customerSavingsAccounts.add(customerSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
 
         List<SaveCollectionSheetCustomerSavingDto> customerIndividualSavingsAccounts = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
-        customerSavingsAccounts.add(customerIndividualSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
-        customerSavingsAccounts.add(customerIndividualSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
-        customerSavingsAccounts.add(customerIndividualSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
-        customerSavingsAccounts.add(customerIndividualSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
-
+        customerIndividualSavingsAccounts.add(customerIndividualSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
+        
         List<SaveCollectionSheetCustomerLoanDto> customerLoans = null;
 
         SaveCollectionSheetCustomerAccountDto customerAccount = customerCharge(CUSTOMER_ACCOUNT_AMOUNT.ZERO);

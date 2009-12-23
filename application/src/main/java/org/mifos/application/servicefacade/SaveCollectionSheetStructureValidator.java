@@ -33,7 +33,6 @@ import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
@@ -214,7 +213,6 @@ public class SaveCollectionSheetStructureValidator {
 
         if (null != saveCollectionSheetCustomerLoans && saveCollectionSheetCustomerLoans.size() > 0) {
             for (SaveCollectionSheetCustomerLoanDto saveCollectionSheetCustomerLoan : saveCollectionSheetCustomerLoans) {
-
                 validateAccount(customerId, saveCollectionSheetCustomerLoan.getAccountId(),
                         saveCollectionSheetCustomerLoan.getCurrencyId(), ValidationAccountTypes.LOAN);
             }

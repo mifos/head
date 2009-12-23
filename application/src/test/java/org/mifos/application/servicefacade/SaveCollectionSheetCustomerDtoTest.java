@@ -23,7 +23,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -83,7 +83,7 @@ public class SaveCollectionSheetCustomerDtoTest {
     }
 
     @Test
-    public void shouldGetPARENTCUSTOMERID_NULLIfParentCustomerIdNull() {
+    public void shouldGetPARENTCUSTOMERID_NEGATIVEIfParentCustomerIdNegative() {
 
         List<InvalidSaveCollectionSheetReason> InvalidSaveCollectionSheetReasons = null;
         try {
@@ -96,6 +96,81 @@ public class SaveCollectionSheetCustomerDtoTest {
         assertThat(InvalidSaveCollectionSheetReasons.size(), is(1));
         assertThat(InvalidSaveCollectionSheetReasons.get(0),
                 is(InvalidSaveCollectionSheetReason.PARENTCUSTOMERID_NEGATIVE));
+    }
+
+    @Test
+    public void shouldGetACCOUNT_LISTED_MORE_THAN_ONCEIfDuplicateCustomerLoanAccount() {
+
+        List<InvalidSaveCollectionSheetReason> InvalidSaveCollectionSheetReasons = null;
+        Integer validAccountId = 78;
+        Short validCurrencyId = Short.valueOf("2");
+        try {
+            List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans = new ArrayList<SaveCollectionSheetCustomerLoanDto>();
+            saveCollectionSheetCustomerLoans.add(new SaveCollectionSheetCustomerLoanDto(validAccountId,
+                    validCurrencyId, null, null));
+            saveCollectionSheetCustomerLoans.add(new SaveCollectionSheetCustomerLoanDto(validAccountId,
+                    validCurrencyId, null, null));
+
+            new SaveCollectionSheetCustomerDto(validcustomerId, null, null, null, saveCollectionSheetCustomerLoans,
+                    null, null);
+        } catch (SaveCollectionSheetException e) {
+            InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
+        }
+
+        assertNotNull("List was not set", InvalidSaveCollectionSheetReasons);
+        assertThat(InvalidSaveCollectionSheetReasons.size(), is(1));
+        assertThat(InvalidSaveCollectionSheetReasons.get(0),
+                is(InvalidSaveCollectionSheetReason.ACCOUNT_LISTED_MORE_THAN_ONCE));
+    }
+
+    @Test
+    public void shouldGetACCOUNT_LISTED_MORE_THAN_ONCEIfDuplicateCustomerSavingsAccount() {
+
+        List<InvalidSaveCollectionSheetReason> InvalidSaveCollectionSheetReasons = null;
+        Integer validAccountId = 78;
+        Short validCurrencyId = Short.valueOf("2");
+        try {
+            List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSaving = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
+            saveCollectionSheetCustomerSaving.add(new SaveCollectionSheetCustomerSavingDto(validAccountId,
+                    validCurrencyId, null, null));
+            saveCollectionSheetCustomerSaving.add(new SaveCollectionSheetCustomerSavingDto(validAccountId,
+                    validCurrencyId, null, null));
+
+            new SaveCollectionSheetCustomerDto(validcustomerId, null, null, null, null,
+                    saveCollectionSheetCustomerSaving, null);
+        } catch (SaveCollectionSheetException e) {
+            InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
+        }
+
+        assertNotNull("List was not set", InvalidSaveCollectionSheetReasons);
+        assertThat(InvalidSaveCollectionSheetReasons.size(), is(1));
+        assertThat(InvalidSaveCollectionSheetReasons.get(0),
+                is(InvalidSaveCollectionSheetReason.ACCOUNT_LISTED_MORE_THAN_ONCE));
+    }
+
+    @Test
+    public void shouldGetACCOUNT_LISTED_MORE_THAN_ONCEIfDuplicateCustomerIndividualSavingsAccount() {
+
+        List<InvalidSaveCollectionSheetReason> InvalidSaveCollectionSheetReasons = null;
+        Integer validAccountId = 78;
+        Short validCurrencyId = Short.valueOf("2");
+        try {
+            List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerIndividualSavings = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
+            saveCollectionSheetCustomerIndividualSavings.add(new SaveCollectionSheetCustomerSavingDto(validAccountId,
+                    validCurrencyId, null, null));
+            saveCollectionSheetCustomerIndividualSavings.add(new SaveCollectionSheetCustomerSavingDto(validAccountId,
+                    validCurrencyId, null, null));
+
+            new SaveCollectionSheetCustomerDto(validcustomerId, null, null, null, null,
+                    null, saveCollectionSheetCustomerIndividualSavings);
+        } catch (SaveCollectionSheetException e) {
+            InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
+        }
+
+        assertNotNull("List was not set", InvalidSaveCollectionSheetReasons);
+        assertThat(InvalidSaveCollectionSheetReasons.size(), is(1));
+        assertThat(InvalidSaveCollectionSheetReasons.get(0),
+                is(InvalidSaveCollectionSheetReason.ACCOUNT_LISTED_MORE_THAN_ONCE));
     }
 
     @Test

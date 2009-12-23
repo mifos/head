@@ -83,7 +83,15 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
     }
 
     /*
-     * variables that can be configured to create invalid entries for testing
+ * 
+ */
+    /*
+     * Below are variables that can be configured to create invalid entries for
+     * testing. They are inject during the assembling of the dto's. This is a
+     * very ugly way to inject invalid values. Set methods would be far tidier
+     * and more normal. But I (JW) preferred to keep all the save collection
+     * sheet dto's as create-only and non-updatable and pay the coding price for
+     * testing.
      */
     private final Integer nonExistingId = 500000;
     private Boolean firstClientExists = true;
@@ -102,6 +110,8 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
     private Boolean savingsAccountIdtoLoanAccountIdForFirstClient = false;
     private Integer firstClientCustomerAccountId = null;
     private Boolean overpayLoan = false;
+    private Boolean duplicateFirstClient = false;
+    private Boolean duplicateFirstClientLoanAccount = false;
 
     /*
      * 
@@ -291,12 +301,17 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
 
     }
 
+    /**
+     * @param collectionSheetCustomers
+     * @return
+     */
     private List<SaveCollectionSheetCustomerDto> assembleSCSCustomers(
             List<CollectionSheetCustomerDto> collectionSheetCustomers) {
 
         List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers = new ArrayList<SaveCollectionSheetCustomerDto>();
         Boolean firstClient = true;
         Boolean firstGroup = true;
+        Integer numberToCreate = 1;
         for (CollectionSheetCustomerDto collectionSheetCustomer : collectionSheetCustomers) {
 
             Integer customerId = collectionSheetCustomer.getCustomerId();
@@ -319,6 +334,10 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
                 attendanceId = AttendanceType.PRESENT.getValue();
 
                 if (firstClient) {
+                    if (duplicateFirstClient) {
+                        numberToCreate = 2;
+                        duplicateFirstClient = false;
+                    }
                     if (!firstClientExists) {
                         customerId = nonExistingId;
                     }
@@ -361,15 +380,17 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
 
             SaveCollectionSheetCustomerDto saveCollectionSheetCustomer = null;
 
-            try {
-                saveCollectionSheetCustomer = new SaveCollectionSheetCustomerDto(customerId, parentCustomerId,
-                        attendanceId, saveCollectionSheetCustomerAccount, saveCollectionSheetCustomerLoans,
-                        saveCollectionSheetCustomerSavings, saveCollectionSheetCustomerIndividualSavings);
-            } catch (SaveCollectionSheetException e) {
-                throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-            }
+            for (Integer i = 0; i < numberToCreate; i++) {
+                try {
+                    saveCollectionSheetCustomer = new SaveCollectionSheetCustomerDto(customerId, parentCustomerId,
+                            attendanceId, saveCollectionSheetCustomerAccount, saveCollectionSheetCustomerLoans,
+                            saveCollectionSheetCustomerSavings, saveCollectionSheetCustomerIndividualSavings);
+                } catch (SaveCollectionSheetException e) {
+                    throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+                }
 
-            saveCollectionSheetCustomers.add(saveCollectionSheetCustomer);
+                saveCollectionSheetCustomers.add(saveCollectionSheetCustomer);
+            }
         }
 
         if (nonCenterClient != null) {
@@ -423,9 +444,9 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
     private List<SaveCollectionSheetCustomerLoanDto> assembleSCSCustomerLoans(
             List<CollectionSheetCustomerLoanDto> collectionSheetCustomerLoans, Short customerLevelId,
             Boolean firstClient) {
-
         if (null != collectionSheetCustomerLoans && collectionSheetCustomerLoans.size() > 0) {
 
+            Integer numberToCreate = 1;
             List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans = new ArrayList<SaveCollectionSheetCustomerLoanDto>();
             Boolean firstLoan = true;
             for (CollectionSheetCustomerLoanDto collectionSheetCustomerLoan : collectionSheetCustomerLoans) {
@@ -438,6 +459,10 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
                 Short accountCurrencyId = collectionSheetCustomerLoan.getCurrencyId();
 
                 if (firstLoan && (customerLevelId.compareTo(CustomerLevel.CLIENT.getValue()) == 0) && firstClient) {
+                    if (duplicateFirstClientLoanAccount) {
+                        numberToCreate = 2;
+                        duplicateFirstClientLoanAccount = false;
+                    }
                     if (overpayLoan) {
                         loanRepayment = loanRepayment.add(new BigDecimal(1000000.00));
                     }
@@ -451,14 +476,15 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
                         accountId = nonExistingId;
                     }
                 }
-
-                try {
-                    saveCollectionSheetCustomerLoan = new SaveCollectionSheetCustomerLoanDto(accountId,
-                            accountCurrencyId, loanRepayment, loanDisbursement);
-                } catch (SaveCollectionSheetException e) {
-                    throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+                for (Integer i = 0; i < numberToCreate; i++) {
+                    try {
+                        saveCollectionSheetCustomerLoan = new SaveCollectionSheetCustomerLoanDto(accountId,
+                                accountCurrencyId, loanRepayment, loanDisbursement);
+                    } catch (SaveCollectionSheetException e) {
+                        throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+                    }
+                    saveCollectionSheetCustomerLoans.add(saveCollectionSheetCustomerLoan);
                 }
-                saveCollectionSheetCustomerLoans.add(saveCollectionSheetCustomerLoan);
                 firstLoan = false;
             }
 
@@ -658,6 +684,20 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
      */
     public void setOverpayLoan() {
         this.overpayLoan = true;
+    }
+
+    /**
+     * The first client will be duplicated
+     */
+    public void setDuplicateFirstClient() {
+        this.duplicateFirstClient = true;
+    }
+
+    /**
+     * The first client's loan account will be duplicated
+     */
+    public void setDuplicateFirstClientLoanAccount() {
+        this.duplicateFirstClientLoanAccount = true;
     }
 
 }

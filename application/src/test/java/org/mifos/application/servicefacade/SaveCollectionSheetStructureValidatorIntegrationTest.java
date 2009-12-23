@@ -45,7 +45,6 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
     private SaveCollectionSheetStructureValidator savecollectionSheetStructureValidator;
     private TestSaveCollectionSheetStructureValidatorUtils saveCollectionSheetUtils;
 
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -58,14 +57,13 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         try {
             saveCollectionSheetUtils.clearObjects();
         } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
 
         StaticHibernateUtil.closeSession();
         super.tearDown();
     }
-    
+
     public void testShouldBeNoStructureValidationErrorsWithValidInput() throws Exception {
 
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
@@ -86,7 +84,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         Short validPaymentType = PaymentTypes.CHEQUE.getValue();
         Short validUserId = Short.valueOf("1");
         Integer invalidCustomerId = 500000;
-        
+
         SaveCollectionSheetDto saveCollectionSheet = null;
         try {
             List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers = new ArrayList<SaveCollectionSheetCustomerDto>();
@@ -110,13 +108,12 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.CUSTOMER_NOT_FOUND);
     }
 
-
     public void testShouldGetATTENDANCE_TYPE_NULLIfNullClientAttendanceTypeInjected() throws Exception {
 
         saveCollectionSheetUtils.setFirstClientAttendanceType(null);
 
         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.ATTENDANCE_TYPE_NULL);
-        
+
     }
 
     public void testShouldGetUNSUPPORTED_ATTENDANCE_TYPEIfInvalidClientAttendanceTypeInjected() throws Exception {
@@ -133,7 +130,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         saveCollectionSheetUtils.setFirstGroupAttendanceType(AttendanceType.PRESENT.getValue());
 
         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.ATTENDANCE_TYPE_ONLY_VALID_FOR_CLIENTS);
-        
+
     }
 
     public void testShouldGetINDIVIDUAL_SAVINGS_ACCOUNTS_ONLY_VALID_FOR_CLIENTSIfGroupHasIndividualSavingsAccount()
@@ -194,7 +191,8 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
-    public void testShouldGetACCOUNT_NOT_A_CUSTOMER_ACCOUNTIfLoanAccountIdReplacesCustomerAccountIdForFirstClient() throws Exception {
+    public void testShouldGetACCOUNT_NOT_A_CUSTOMER_ACCOUNTIfLoanAccountIdReplacesCustomerAccountIdForFirstClient()
+            throws Exception {
 
         saveCollectionSheetUtils.setCustomerAccountIdtoLoanAccountIdForFirstClient();
 
@@ -202,7 +200,8 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
-    public void testShouldGetACCOUNT_NOT_A_LOAN_ACCOUNTIfCustomerAccountIdReplacesLoanAccountIdForFirstClient() throws Exception {
+    public void testShouldGetACCOUNT_NOT_A_LOAN_ACCOUNTIfCustomerAccountIdReplacesLoanAccountIdForFirstClient()
+            throws Exception {
 
         saveCollectionSheetUtils.setLoanAccountIdtoCustomerAccountIdForFirstClient();
 
@@ -210,7 +209,8 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
-    public void testShouldGetACCOUNT_NOT_A_SAVINGS_ACCOUNTIfLoanAccountIdReplacesSavingsAccountIdForFirstClient() throws Exception {
+    public void testShouldGetACCOUNT_NOT_A_SAVINGS_ACCOUNTIfLoanAccountIdReplacesSavingsAccountIdForFirstClient()
+            throws Exception {
 
         saveCollectionSheetUtils.setSavingsAccountIdtoLoanAccountIdForFirstClient();
 
@@ -218,25 +218,27 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
-    private void createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason invalidReason) throws Exception {
+    private void createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason invalidReason)
+            throws Exception {
 
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
 
         verifyInvalidReason(saveCollectionSheet, invalidReason);
     }
-    
-    private void verifyInvalidReason(SaveCollectionSheetDto saveCollectionSheet, InvalidSaveCollectionSheetReason invalidReason) throws Exception {
 
-        List<InvalidSaveCollectionSheetReason> InvalidSaveCollectionSheetReasons = null;
-        
+    private void verifyInvalidReason(SaveCollectionSheetDto saveCollectionSheet,
+            InvalidSaveCollectionSheetReason invalidReason) throws Exception {
+
+        List<InvalidSaveCollectionSheetReason> invalidSaveCollectionSheetReasons = null;
+
         try {
             savecollectionSheetStructureValidator.execute(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
-            InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
+            invalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
         }
 
-        assertNotNull("List was not set", InvalidSaveCollectionSheetReasons);
-        assertThat(InvalidSaveCollectionSheetReasons.size(), is(1));
-        assertThat(InvalidSaveCollectionSheetReasons.get(0), is(invalidReason));
+        assertNotNull("List was not set", invalidSaveCollectionSheetReasons);
+        assertThat(invalidSaveCollectionSheetReasons.size(), is(1));
+        assertThat(invalidSaveCollectionSheetReasons.get(0), is(invalidReason));
     }
 }

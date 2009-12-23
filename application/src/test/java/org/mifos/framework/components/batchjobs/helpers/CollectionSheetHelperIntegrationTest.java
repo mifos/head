@@ -31,8 +31,8 @@ import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -90,12 +90,14 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testOneDayInAdvance() throws Exception {
+
         int daysInAdvance = 1;
         configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
         basicTest(daysInAdvance);
     }
 
     public void testFiveDaysInAdvance() throws Exception {
+
         int daysInAdvance = 5;
         configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
         basicTest(daysInAdvance);
@@ -107,7 +109,7 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
         savingsBO = getSavingsAccount(center, "SAVINGS_OFFERING", "SAV");
         CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
 
-       Assert.assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
+        Assert.assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
 
         for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
             CustomerAccountBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
@@ -115,20 +117,20 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
         }
 
         for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-            LoanBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
-                    .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
+            LoanBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity.getActionDate(),
+                    collectionSheetHelper.getDaysInAdvance()));
         }
 
         for (AccountActionDateEntity accountActionDateEntity : savingsBO.getAccountActionDates()) {
-            SavingBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
-                    .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
+            SavingBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(
+                    accountActionDateEntity.getActionDate(), collectionSheetHelper.getDaysInAdvance()));
         }
 
         long runTime = System.currentTimeMillis();
         collectionSheetHelper.execute(runTime);
 
         List<CollectionSheetBO> collectionSheets = getCollectionSheets();
-       Assert.assertEquals("Size of collectionSheets should be 1", 1, collectionSheets.size());
+        Assert.assertEquals("Size of collectionSheets should be 1", 1, collectionSheets.size());
 
         CollectionSheetBO collectionSheet = collectionSheets.get(0);
 
@@ -146,8 +148,8 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
         collectionSheetDate.roll(Calendar.DATE, collectionSheetHelper.getDaysInAdvance());
         long normalizedCollectionSheetTime = collectionSheetDate.getTimeInMillis();
 
-       Assert.assertEquals(collectionSheet.getRunDate().getTime(), normalizedRunTime);
-       Assert.assertEquals(collectionSheet.getCollSheetDate().getTime(), normalizedCollectionSheetTime);
+        Assert.assertEquals(collectionSheet.getRunDate().getTime(), normalizedRunTime);
+        Assert.assertEquals(collectionSheet.getCollSheetDate().getTime(), normalizedCollectionSheetTime);
 
         clearCollectionSheets(collectionSheets);
     }
