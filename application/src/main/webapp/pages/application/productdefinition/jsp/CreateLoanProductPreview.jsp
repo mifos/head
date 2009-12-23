@@ -181,6 +181,13 @@ explanation of the license and how it is applied.
 
 										</c:if>
 									</c:forEach> </span> <br>
+                                    <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
+                                    <span class="fontnormalbold">
+                                    <mifos:mifoslabel name="product.currency"
+                                        bundle="ProductDefUIResources" isColonRequired="yes" />
+                                    </span> <span class="fontnormal">
+                                    <c:out value="${sessionScope.currencyCode}" /></span><br>
+                                    </c:if>
 									<fmt:message key="product.inclInLoanCycleCounter">
 									<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.LOAN}"
@@ -196,12 +203,7 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel name="product.no"
 												bundle="ProductDefUIResources" />
 										</c:otherwise>
-									</c:choose> <span> <br>
-                                    <span class="fontnormal">
-									<mifos:mifoslabel name="product.currency"
-										bundle="ProductDefUIResources" isColonRequired="yes" />
-									<c:out value="${requestScope.currencyCode}" />
-									</span> <br>
+									</c:choose> </span> <br>
 									<!--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
@@ -216,15 +218,21 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
 												: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.defaultLoanAmount}" /></span>
-											--> <c:if
-										test="${sessionScope.loanproductactionform.loanAmtCalcType=='2'}">
+											--> 
+                                        <c:if test="${sessionScope.loanproductactionform.loanAmtCalcType=='2'}">
 										<br>
 										<table width="100%" border="0" cellpadding="3" cellspacing="0">
-											<mifos:mifoslabel name="product.calcloanamount"
+											<tr>
+                                                <td>
+                                                <span class="fontnormalbold">
+                                            <mifos:mifoslabel name="product.calcloanamount"
 												bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                </span>
 											<span class="fontnormal"> <mifos:mifoslabel
 												name="product.bylastloanamount"
 												bundle="ProductDefUIResources" /></span>
+                                                </td>
+                                                </tr>
 											<tr>
 												<td width="25%" class="drawtablehd"><mifos:mifoslabel
 													name="product.lastloanamount"

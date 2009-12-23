@@ -163,11 +163,13 @@ explanation of the license and how it is applied.
 														</c:forEach>
 													</c:otherwise>
 												</c:choose>
+                                                <c:if test='${sessionScope.isMultiCurrencyEnabled && sessionScope.feeactionform.categoryType==FeeCategory.LOAN.value}'>
 												<br>
                                                  <span class="fontnormalbold">
                                                  <mifos:mifoslabel name="Fees.currency"
                                                   bundle="FeesUIResources" isColonRequired="yes" />
-                                                 </span><c:out value="${requestScope.currencyCode}" /> 
+                                                 </span><c:out value="${sessionScope.currencyCode}" />
+                                                 </c:if>
                                                <br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feecalculation" /> </span>
 												<br>

@@ -236,17 +236,23 @@ explanation of the license and how it is applied.
 										</tr>
                                         <tr class="fontnormal">
                                         <td align="right">
-                                           <mifos:mifoslabel mandatory="yes"
-                                                                 name="Fees.currency" bundle="FeesUIResources" 
-                                                                 isColonRequired="yes"/>
-                                                                 </td><td>
-                                                                 <html-el:select property="currencyId">
-                                                                 <c:forEach
-                                                                    items="${requestScope.currencies}"
-                                                                    var="currency">
-                                                                     <html-el:option value="${currency.currencyId}">${currency.currencyCode}</html-el:option>
-                                                                 </c:forEach>
-                                                                </html-el:select>
+                                        <div id="currencyDivHeading">
+                                        <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
+                                           <mifos:mifoslabel mandatory="yes" name="Fees.currency" bundle="FeesUIResources" 
+                                            isColonRequired="yes"/>
+                                          </c:if> 
+                                          </div>
+                                        </td>
+                                        <td>
+                                        <div id="currencyDiv">
+                                        <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
+                                               <html-el:select property="currencyId">
+                                                 <c:forEach items="${sessionScope.currencies}" var="currency">
+                                                     <html-el:option value="${currency.currencyId}">${currency.currencyCode}</html-el:option>
+                                                 </c:forEach>
+                                               </html-el:select>
+                                          </c:if>
+                                          </div>
                                         </td>
                                         </tr>
 										<tr class="fontnormal">
@@ -324,7 +330,6 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 										<tr class="fontnormal">
-
 											<td align="right">
 												<mifos:mifoslabel name="Fees.GLCode" mandatory="yes" />
 											</td>

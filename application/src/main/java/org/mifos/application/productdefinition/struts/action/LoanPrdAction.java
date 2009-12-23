@@ -135,7 +135,8 @@ public class LoanPrdAction extends BaseAction {
                 new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
         loadSelectedFeesAndFunds(new ArrayList<FeeView>(), new ArrayList<FundBO>(), request);
         prdDefLogger.debug("Load method of loan Product Action called");
-        request.setAttribute("currencies", getCurrencies());
+        request.getSession().setAttribute("isMultiCurrencyEnabled", isMultiCurrencyEnabled());
+        request.getSession().setAttribute("currencies", getCurrencies());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
     
@@ -143,7 +144,10 @@ public class LoanPrdAction extends BaseAction {
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         prdDefLogger.debug("start preview method of loan Product Action");
-        request.setAttribute("currencyCode", getSelectedCurrencyFromList(form).getCurrencyCode());
+        request.getSession().setAttribute("isMultiCurrencyEnabled", isMultiCurrencyEnabled());
+        if (isMultiCurrencyEnabled()) {
+            request.getSession().setAttribute("currencyCode", getSelectedCurrencyFromList(form).getCurrencyCode());
+        }
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -308,6 +312,7 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanOffering, request);
         loanPrdActionForm.clear();
         loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering.getPrdOfferingId()));
+        request.getSession().setAttribute("isMultiCurrencyEnabled", isMultiCurrencyEnabled());
         prdDefLogger.debug("get method of Loan Product Action called" + loanOffering.getPrdOfferingId());
         return mapping.findForward(ActionForwards.get_success.toString());
     }
@@ -330,6 +335,12 @@ public class LoanPrdAction extends BaseAction {
         LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
         currencies.add(Money.getDefaultCurrency());
         return currencies;
+    }
+    
+    private Boolean isMultiCurrencyEnabled(){
+        //FIXME this method might be called from AccountingRules 
+        // for now testing is being done so the value is true        
+        return true;
     }
     
     private MifosCurrency getSelectedCurrencyFromList(ActionForm form) {

@@ -96,6 +96,12 @@ public class CollSheetCustBO extends BusinessObject {
     public CollSheetCustBO(MifosCurrency currency) {
         this(null, null, null, null, null, null, currency);
     }
+    
+    /**
+     * default constructor for hibernate usage
+     */
+    protected CollSheetCustBO() {
+    }
 
     private void initFields(final Integer custId, final String custDisplayName, final Short custLevel, final Short custOfficeId,
             final String searchId, final Short loanOfficerId, MifosCurrency currency) {

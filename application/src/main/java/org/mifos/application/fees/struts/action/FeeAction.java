@@ -117,7 +117,11 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        request.setAttribute("currencyCode", getSelectedCurrencyFromList((FeeActionForm)form).getCurrencyCode());
+        SessionUtils.setAttribute("isMultiCurrencyEnabled", isMultiCurrencyEnabled(), request);
+        if (isMultiCurrencyEnabled()) {
+            String currencyCode = getSelectedCurrencyFromList((FeeActionForm) form).getCurrencyCode();
+            request.getSession().setAttribute("currencyCode", currencyCode);
+        }
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -261,6 +265,12 @@ public class FeeAction extends BaseAction {
         return currencies;
     }
     
+
+    private Boolean isMultiCurrencyEnabled(){
+        //FIXME this method might be called from AccountingRules    
+        return true;
+    }
+    
     private MifosCurrency getSelectedCurrencyFromList(FeeActionForm form) {
         LinkedList<MifosCurrency> currencies = getCurrencies();
         Iterator<MifosCurrency> i = currencies.iterator();
@@ -272,7 +282,7 @@ public class FeeAction extends BaseAction {
         }
         return null;
     }
-
+    
     private FeeBO createFee(FeeActionForm actionForm, HttpServletRequest request) throws ApplicationException {
 
         CategoryTypeEntity feeCategory = (CategoryTypeEntity) findMasterEntity(request, FeeConstants.CATEGORYLIST,
@@ -359,11 +369,11 @@ public class FeeAction extends BaseAction {
         SessionUtils.setCollectionAttribute(FeeConstants.FEE_FREQUENCY_TYPE_LIST, getMasterEntities(
                 FeeFrequencyTypeEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(FeeConstants.GLCODE_LIST, getGLCodes(), request);
-        request.setAttribute("currencies", getCurrencies());
+        request.getSession().setAttribute("isMultiCurrencyEnabled", isMultiCurrencyEnabled());
+        request.getSession().setAttribute("currencies", getCurrencies());
     }
 
     private void loadUpdateMasterData(HttpServletRequest request) throws ApplicationException, SystemException {
-
         SessionUtils.setCollectionAttribute(FeeConstants.STATUSLIST, getMasterEntities(FeeStatusEntity.class,
                 getUserContext(request).getLocaleId()), request);
     }

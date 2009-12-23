@@ -316,6 +316,20 @@ explanation of the license and how it is applied.
 										</c:forEach>
 									</mifos:select></td>
 								</tr>
+                                <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
+                                <tr class="fontnormal">
+                                    <td align="right"><mifos:mifoslabel mandatory="yes"
+                                        name="product.currency" bundle="ProductDefUIResources" /> :</td>
+                                    <td valign="top">
+                                    <html-el:select property="currencyId">
+                                        <c:forEach
+                                            items="${sessionScope.currencies}"
+                                            var="currency">
+                                            <html-el:option value="${currency.currencyId}">${currency.currencyCode}</html-el:option>
+                                        </c:forEach>
+                                    </html-el:select></td>
+                                </tr>
+                                </c:if>
 								<tr class="fontnormal">
 									<td align="right"><fmt:message
 										key="product.inclInLoanCycleCounter">
@@ -326,18 +340,6 @@ explanation of the license and how it is applied.
 									</fmt:message> :</td>
 									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.loanCounter" property="loanCounter"
 										value="1" /></td>
-								</tr>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel mandatory="yes"
-										name="product.currency" bundle="ProductDefUIResources" /> :</td>
-									<td valign="top">
-									<html-el:select property="currencyId">
-										<c:forEach
-											items="${requestScope.currencies}"
-											var="currency">
-											<html-el:option value="${currency.currencyId}">${currency.currencyCode}</html-el:option>
-										</c:forEach>
-									</html-el:select></td>
 								</tr>
 								<!--<tr class="fontnormal">
 									<td align="right">
