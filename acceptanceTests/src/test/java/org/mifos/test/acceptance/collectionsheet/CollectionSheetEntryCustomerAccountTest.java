@@ -276,15 +276,8 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
                                    FINANCIAL_TRXN,
                                    CUSTOMER_ACCOUNT_ACTIVITY,
                                    CUSTOMER_TRXN_DETAIL });
-        
-                                   
-        verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);
+
         verifyTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
-         
-    }
-    private void verifyTablesWithoutSorting(IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
-    DatabaseUnitException {
-        dbUnitUtilities.verifyTables(new String[] { CollectionSheetEntryCustomerAccountTest.CUSTOMER_ACCOUNT_ACTIVITY }, databaseDataSet, expectedDataSet);
     }
 
     private void verifyTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
@@ -309,8 +302,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         dbUnitUtilities.verifyTableWithSort(orderLoanActivityDetailsByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_ACTIVITY_DETAILS, expectedDataSet, databaseDataSet);
         String [] orderAccountStatusChangeHistoryByColumns = new String[] {"account_id"};
         dbUnitUtilities.verifyTableWithSort(orderAccountStatusChangeHistoryByColumns,CollectionSheetEntryCustomerAccountTest.ACCOUNT_STATUS_CHANGE_HISTORY, expectedDataSet, databaseDataSet);
-        
+        String [] orderCustomerAccountActivityByColumns = new String[] {"account_id"};
+        dbUnitUtilities.verifyTableWithSort(orderCustomerAccountActivityByColumns,CollectionSheetEntryCustomerAccountTest.CUSTOMER_ACCOUNT_ACTIVITY, expectedDataSet, databaseDataSet);
      }
-      
-    
 }
