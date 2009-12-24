@@ -144,6 +144,8 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
             if (bo.getArrearsAgingId().equals(loanArrearsAging.getArrearsAgingId())) {
                Assert.assertEquals(bo.getPeriodDescription(), loanArrearsAging.getPeriodDescription());
                Assert.assertEquals(bo.getAgingPeriod(), loanArrearsAging.getAgingPeriod());
+               bo.getAmountAging();
+               loanArrearsAging.getAmountAging(); // causes NPE at MoneyUtils.java:46
                Assert.assertEquals(bo.getAmountAging(), loanArrearsAging.getAmountAging());
                Assert.assertEquals(bo.getAmountOutstandingAging(), loanArrearsAging.getAmountOutstandingAging());
                 result = true;

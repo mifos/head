@@ -419,7 +419,6 @@ public interface NamedQueryConstants {
     public String COUNT_CUSTOMERSFORSAVINGSACCOUNTNONLO_NOCLIENTS = "accounts.count_customersForSavingsAccount_noclientsNonLO";
 
     /* Configuration Queries */
-    public String GET_DEFAULT_CURRENCY = "getDefaultCurrency";
     public String ACCOUNT_ISCURRENTDATEGREATERTHENFIRSTINSTALLMENTDATE = "Account.isCurrentDateGreaterThenFirstInstallmentDate";
     public String GET_ENTITIES = "entities";
     public String GET_LOOKUPVALUES = "lookupvalues";

@@ -36,13 +36,13 @@ public class MoneyUtils {
         return money == null ? null : money.getAmountDoubleValue();
     }
 
-    public static BigDecimal getMoneyAmount(Money money) {
+    public static BigDecimal getMoneyAmount(Money money, Short digitsAfterDecimal) {
         BigDecimal amount = money.getAmount();
         MifosCurrency currency = money.getCurrency();
         if (amount == null)
             return null;
         if (currency == null)
             return amount;
-        return amount.setScale(currency.getDefaultDigitsAfterDecimal(), RoundingMode.HALF_UP);
+        return amount.setScale(digitsAfterDecimal, RoundingMode.HALF_UP);
     }
 }

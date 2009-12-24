@@ -20,48 +20,35 @@
 
 package org.mifos.config;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import junit.framework.Assert;
-
-import org.apache.commons.configuration.Configuration;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mifos.framework.util.helpers.Money;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@Test(groups = { "integration", "configTestSuite" })
-public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class AccountingRulesTest {
 
-    public AccountingRulesIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
-
-    Configuration configuration;
-
-    @BeforeMethod
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @AfterMethod
-    @Override
-    protected void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
-        super.tearDown();
-    }
+    @Mock
+    private static ConfigurationPersistence configurationPersistence;
 
     @BeforeClass
-    public static void init() throws Exception {
+    public static void setupMifosLoggerDueToUseOfStaticClientRules() {
         MifosLogManager.configureLogging();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
     }
 
     @Test
@@ -73,12 +60,12 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
-        Assert.assertEquals(configRoundingMode, AccountingRules.getCurrencyRoundingMode());
+        assertEquals(configRoundingMode, AccountingRules.getCurrencyRoundingMode());
         // clear the RoundingRule property from the config file so should get
         // the default value
         configMgr.clearProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
         RoundingMode defaultValue = AccountingRules.getCurrencyRoundingMode();
-        Assert.assertEquals(defaultValue, RoundingMode.HALF_UP);
+        assertEquals(defaultValue, RoundingMode.HALF_UP);
         // now set a wrong rounding mode in config
         roundingMode = "UP";
         configMgr.addProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, roundingMode);
@@ -86,9 +73,8 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
             AccountingRules.getCurrencyRoundingMode();
             fail();
         } catch (RuntimeException e) {
-            Assert.assertEquals(
-                    "CurrencyRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
-                            + roundingMode, e.getMessage());
+            assertEquals("CurrencyRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
+                    + roundingMode, e.getMessage());
         }
         // save it back
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, configuredMode.toString());
@@ -104,11 +90,11 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
-        Assert.assertEquals(configRoundingMode, AccountingRules.getInitialRoundingMode());
+        assertEquals(configRoundingMode, AccountingRules.getInitialRoundingMode());
         // clear the RoundingRule property from the config file
         configMgr.clearProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE);
         RoundingMode defaultValue = AccountingRules.getInitialRoundingMode();
-        Assert.assertEquals(defaultValue, RoundingMode.HALF_UP);
+        assertEquals(defaultValue, RoundingMode.HALF_UP);
         // now set a wrong rounding mode in config
         roundingMode = "UP";
         configMgr.addProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, roundingMode);
@@ -116,7 +102,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
             AccountingRules.getInitialRoundingMode();
             fail();
         } catch (RuntimeException e) {
-            Assert.assertEquals("InitialRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
+            assertEquals("InitialRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
                     + roundingMode, e.getMessage());
         }
         // save it back
@@ -132,11 +118,11 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
-        Assert.assertEquals(configRoundingMode, AccountingRules.getFinalRoundingMode());
+        assertEquals(configRoundingMode, AccountingRules.getFinalRoundingMode());
         // clear the RoundingRule property from the config file
         configMgr.clearProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE);
         RoundingMode defaultValue = AccountingRules.getFinalRoundingMode();
-        Assert.assertEquals(defaultValue, RoundingMode.CEILING);
+        assertEquals(defaultValue, RoundingMode.CEILING);
         // now set a wrong rounding mode in config
         roundingMode = "DOWN";
         configMgr.addProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, roundingMode);
@@ -144,7 +130,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
             AccountingRules.getFinalRoundingMode();
             fail();
         } catch (RuntimeException e) {
-            Assert.assertEquals("FinalRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
+            assertEquals("FinalRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
                     + roundingMode, e.getMessage());
         }
         // save it back
@@ -160,11 +146,11 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, roundOffMultiple);
         // return value from accounting rules class has to be the value defined
         // in the config file
-        Assert.assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getFinalRoundOffMultiple());
+        assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getFinalRoundOffMultiple());
         // clear the RoundingRule property from the config file
         configMgr.clearProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE);
         BigDecimal defaultValue = AccountingRules.getFinalRoundOffMultiple();
-        Assert.assertEquals(defaultValue, new BigDecimal("1"));
+        assertEquals(defaultValue, new BigDecimal("1"));
         // save it back
         configMgr.addProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, configuredRoundOffMultiple.toString());
     }
@@ -177,29 +163,31 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE, roundOffMultiple);
         // return value from accounting rules class has to be the value defined
         // in the config file
-        Assert.assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getInitialRoundOffMultiple());
+        assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getInitialRoundOffMultiple());
         // clear the RoundingRule property from the config file
         configMgr.clearProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE);
         BigDecimal defaultValue = AccountingRules.getInitialRoundOffMultiple();
-        Assert.assertEquals(defaultValue, new BigDecimal("1"));
+        assertEquals(defaultValue, new BigDecimal("1"));
         // save it back
         configMgr.addProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE, configuredRoundOffMultiple
                 .toString());
     }
 
     @Test
-    public void testGetMifosCurrency() {
+    public void testgetMifosCurrency() {
+        when(configurationPersistence.getCurrency("INR")).thenReturn(TestUtils.RUPEE);
+        when(configurationPersistence.getCurrency("EUR")).thenReturn(TestUtils.EURO);
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String currencyCode = configMgr.getString(AccountingRulesConstants.CURRENCY_CODE);
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, "INR");
-        MifosCurrency currency = AccountingRules.getMifosCurrency();
-        Assert.assertEquals(currency.getCurrencyCode(), "INR");
+        MifosCurrency currency = AccountingRules.getMifosCurrency(configurationPersistence);
+        assertEquals(currency.getCurrencyCode(), "INR");
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, "EUR");
-        currency = AccountingRules.getMifosCurrency();
-        Assert.assertEquals(currency.getCurrencyCode(), "EUR");
+        currency = AccountingRules.getMifosCurrency(configurationPersistence);
+        assertEquals(currency.getCurrencyCode(), "EUR");
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, "UUU");
         try {
-            currency = AccountingRules.getMifosCurrency();
+            currency = AccountingRules.getMifosCurrency(configurationPersistence);
             fail();
         } catch (Exception e) {
 
@@ -214,13 +202,13 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Short insertedDays = 365;
         configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, insertedDays);
-        Assert.assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
+        assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
         insertedDays = 360;
         // set new value
         configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, insertedDays);
         // return value from accounting rules class has to be the value defined
         // in the config file
-        Assert.assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
+        assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
         insertedDays = 355;
         configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, insertedDays);
         // throw exception because the invalid value 355
@@ -228,9 +216,8 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
             AccountingRules.getNumberOfInterestDays();
             fail();
         } catch (RuntimeException e) {
-            Assert.assertEquals(
-                    "Invalid number of interest days defined in property file " + insertedDays.shortValue(), e
-                            .getMessage());
+            assertEquals("Invalid number of interest days defined in property file " + insertedDays.shortValue(), e
+                    .getMessage());
         } finally {
             configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, interestDaysInConfig);
         }
@@ -240,7 +227,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         Short digitsAfterDecimal = (short) digitsAfterDecimalInt;
         ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL,
                 digitsAfterDecimal);
-        Assert.assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple());
+        assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple());
     }
 
     @Test
@@ -259,4 +246,30 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Ignore
+    @Test
+    public void canConfigureAlternateCurrency() {
+        // TODO: implement
+    }
+
+    @Ignore
+    @Test
+    public void canConfigureAlternateCurrencyWithNonDefaultDigitsAfterDecimal() {
+        // TODO: implement
+    }
+
+    /**
+     * Example usage: LBP should round to the 10s or 100s. Not sure if
+     * DigitsAfterDecimal is the correct configuration option (there may be
+     * several that need to go negative).
+     * 
+     * See: <a href="http://mingle.mifos.org/projects/mifos/cards/2306">Card
+     * 2306</a> and <a href="http://mifosforge.jira.com/browse/MIFOS-2600">Issue
+     * 2600</a>.
+     */
+    @Ignore
+    @Test
+    public void canConfigureNegativeDigitsAfterDecimal() {
+        // TODO: implement
+    }
 }

@@ -63,11 +63,6 @@ public class MifosLabelTag extends BodyTagSupport {
 
     private String bundle;
 
-    /**
-     * The type of the Label is to check whether it is currency or not
-     */
-    private String type;
-
     private String isColonRequired;
 
     private String isManadatoryIndicationNotRequired;
@@ -110,14 +105,6 @@ public class MifosLabelTag extends BodyTagSupport {
 
     public void setMandatory(String mandatory) {
         this.mandatory = mandatory;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getBundle() {
@@ -177,7 +164,6 @@ public class MifosLabelTag extends BodyTagSupport {
     public void release() {
         super.release();
         name = null;
-        type = null;
     }
 
     // ------------------------------------------------------ Protected Methods
@@ -225,15 +211,6 @@ public class MifosLabelTag extends BodyTagSupport {
         outputHtml.append(html);
         outputHtml.append(LabelTagUtils.getInstance().getLabel(pageContext, getLabelBundle(),
                 LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext), name, null));
-        // check the label type.
-        if (null != type && "currency".equalsIgnoreCase(type)) {
-            // if label type is currency add the currency of the Locale.
-            // TODO change the string locale to get the locale of the user from
-            // UserContext
-            // String locale =(UserContext)
-            // (pageContext.getSession().getAttribute("UserContext")).getLocale();
-            outputHtml.append(" (" + LabelTagUtils.getInstance().getCurrency("locale") + ") ");
-        }
         return outputHtml.toString();
     }
 

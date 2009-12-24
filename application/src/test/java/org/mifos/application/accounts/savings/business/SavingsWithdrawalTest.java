@@ -88,7 +88,7 @@ public class SavingsWithdrawalTest {
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
         MifosLogManager.configureLogging();
-        defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null, null, null, null, null);
+        defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
     }
 

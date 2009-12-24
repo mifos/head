@@ -49,6 +49,7 @@ public final class Money implements Serializable {
     public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
         public int compare(Money m1, Money m2) {
             if (m1.isCurrencyDifferent(m2)) {
+                // FIXME: should be CurrencyMismatchException
                 throw new RuntimeException("Cannot compare money in differenct currencies");
             }
             return m1.amount.compareTo(m2.amount);

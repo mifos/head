@@ -47,6 +47,7 @@ import org.mifos.application.reports.business.service.BranchReportConfigService;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.IBranchReportService;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -96,7 +97,7 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
         Money agingAmount = createMoney(3.3333);
         BranchReportLoanArrearsAgingBO loanArrears = new BranchReportLoanArrearsAgingBO(null, null, null, agingAmount,
                 createMoney(3.3333), createMoney(666.70));
-       Assert.assertEquals(agingAmount.getAmount().setScale(agingAmount.getCurrency().getDefaultDigitsAfterDecimal(),
+       Assert.assertEquals(agingAmount.getAmount().setScale(AccountingRules.getDigitsAfterDecimal(),
                 RoundingMode.HALF_UP), loanArrears.getAmountAging());
     }
 

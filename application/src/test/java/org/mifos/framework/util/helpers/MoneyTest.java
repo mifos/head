@@ -144,8 +144,8 @@ public class MoneyTest extends TestCase {
     }
 
     public void testRoundRepeating() {
-        MifosCurrency currency = new MifosCurrency((short) 1, "test", "$", MifosCurrency.CEILING_MODE, (float) 3.0,
-                (short) 1, (short) 1, "USD");
+        MifosCurrency currency = new MifosCurrency((short) 1, "test", MifosCurrency.CEILING_MODE, (float) 3.0, (short) 1,
+                "USD");
         Money money = new Money(currency, "1");
        Assert.assertEquals(new Money(currency, "3"), Money.round(money));
     }

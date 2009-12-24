@@ -121,19 +121,6 @@ public class LabelTagUtils {
     }
 
     /**
-     * The method is used to obtain the currency of the Locale
-     * 
-     * @param locale
-     *            --Locale associated with the user
-     * @return currency of the Locale
-     */
-    public String getCurrency(String locale) {
-        // TODO get the currency based on locale from a utility class.
-        // return "Rs";
-        return Configuration.getInstance().getSystemConfig().getCurrency().getDisplaySymbol();
-    }
-
-    /**
      * The method is used to check, if the element associated with the key is
      * hidden or not.
      * 

@@ -40,6 +40,7 @@ import org.mifos.application.cashconfirmationreport.persistence.BranchCashConfir
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -172,7 +173,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         persistence = new BranchCashConfirmationReportPersistence(new PrdOfferingPersistence());
         reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
         firstJanReportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, FIRST_JAN_2008);
-        currency = new MifosCurrency(Short.valueOf("2"), null, null, null, null, null, null, null);
+        currency = TestUtils.RUPEE;
     }
 
     @Override

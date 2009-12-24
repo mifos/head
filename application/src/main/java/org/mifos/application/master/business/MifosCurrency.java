@@ -36,40 +36,27 @@ public final class MifosCurrency extends PersistentObject {
     public static final short FLOOR_MODE = 2;
     public static final short HALF_UP_MODE = 3;
 
-    /** The composite primary key value. */
     private Short currencyId;
 
-    /** The value of the simple currencyName property. */
+    /** English multiple-word descriptive name. */
     private String currencyName;
 
-    /** The value of the simple displaySymbol property. */
-    private String displaySymbol;
-
-    /** The value of the simple roundUpDown property. */
+    /** One of {@link #CEILING_MODE}, {@link #FLOOR_MODE}, {@link#HALF_UP_MODE}. */
     private Short roundingMode;
 
-    /** The value of the simple roundingAmount property. */
     private Float roundingAmount;
-
-    /** The value of the simple defaultCurrency property. */
-    private Short defaultCurrency;
 
     private Short defaultDigitsAfterDecimal;
 
+    /** ISO 4217 currency code. */
     private String currencyCode;
 
-    /**
-     * This constructor will be used if the currency has to be created through
-     * the UI.
-     */
-    public MifosCurrency(Short currencyId, String currencyName, String displaySymbol, Short roundingMode,
-            Float roundingAmount, Short defaultCurrency, Short defaultDigitsAfterDecimal, String currencyCode) {
+    public MifosCurrency(Short currencyId, String currencyName, Short roundingMode, Float roundingAmount,
+            Short defaultDigitsAfterDecimal, String currencyCode) {
         this.currencyId = currencyId;
         this.currencyName = currencyName;
-        this.displaySymbol = displaySymbol;
         this.roundingMode = roundingMode;
         this.roundingAmount = roundingAmount;
-        this.defaultCurrency = defaultCurrency;
         this.defaultDigitsAfterDecimal = defaultDigitsAfterDecimal;
         this.currencyCode = currencyCode;
     }
@@ -95,30 +82,6 @@ public final class MifosCurrency extends PersistentObject {
     // See .hbm.xml file
     private void setCurrencyName(String currencyName) {
         this.currencyName = currencyName;
-    }
-
-    public Short getDefaultCurrency() {
-        return defaultCurrency;
-    }
-
-    @SuppressWarnings("unused")
-    // See .hbm.xml file
-    private void setDefaultCurrency(Short defaultCurrency) {
-        this.defaultCurrency = defaultCurrency;
-    }
-
-    public boolean isDefaultCurrency() {
-        return (this.defaultCurrency.shortValue() == 1) ? true : false;
-    }
-
-    public String getDisplaySymbol() {
-        return displaySymbol;
-    }
-
-    @SuppressWarnings("unused")
-    // See .hbm.xml file
-    private void setDisplaySymbol(String displaySymbol) {
-        this.displaySymbol = displaySymbol;
     }
 
     public RoundingMode getRoundingModeEnum() {
@@ -179,16 +142,6 @@ public final class MifosCurrency extends PersistentObject {
     // See .hbm.xml file
     private void setRoundingAmount(Float roundingAmount) {
         this.roundingAmount = roundingAmount;
-    }
-
-    public Short getDefaultDigitsAfterDecimal() {
-        return defaultDigitsAfterDecimal;
-    }
-
-    @SuppressWarnings("unused")
-    // See .hbm.xml file
-    private void setDefaultDigitsAfterDecimal(Short defaultDigitsAfterDecimal) {
-        this.defaultDigitsAfterDecimal = defaultDigitsAfterDecimal;
     }
 
 }

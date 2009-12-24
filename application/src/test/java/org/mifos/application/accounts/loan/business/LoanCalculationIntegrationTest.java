@@ -81,6 +81,7 @@ import org.mifos.config.ConfigurationManager;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -462,7 +463,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             throws AccountException, PersistenceException, MeetingException {
         setNumberOfInterestDays(config.getDaysInYear());
         AccountingRules.setDigitsAfterDecimal((short) config.getDigitsAfterDecimal());
-        Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
         setInitialRoundingMode(config.getInitialRoundingMode());
         setFinalRoundingMode(config.getFinalRoundingMode());
         AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
@@ -840,7 +841,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             Results calculatedResults) throws AccountException, PersistenceException, MeetingException {
         setNumberOfInterestDays(config.getDaysInYear());
         AccountingRules.setDigitsAfterDecimal((short) config.getDigitsAfterDecimal());
-        Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
         setInitialRoundingMode(config.getInitialRoundingMode());
         setFinalRoundingMode(config.getFinalRoundingMode());
         AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
@@ -905,7 +906,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             Results calculatedResults) throws AccountException, PersistenceException, MeetingException {
         setNumberOfInterestDays(config.getDaysInYear());
         AccountingRules.setDigitsAfterDecimal((short) config.getDigitsAfterDecimal());
-        Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
         setInitialRoundingMode(config.getInitialRoundingMode());
         setFinalRoundingMode(config.getFinalRoundingMode());
         AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
@@ -1536,7 +1537,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
         AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
         AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
-        Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
         /*
          * When constructing a "meeting" here, it looks like the frequency

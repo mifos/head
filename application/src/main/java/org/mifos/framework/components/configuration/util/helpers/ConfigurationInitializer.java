@@ -37,6 +37,7 @@ import org.mifos.framework.components.configuration.business.SystemConfiguration
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.cache.Key;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConstantsNotLoadedException;
 import org.mifos.framework.exceptions.StartUpException;
@@ -60,7 +61,7 @@ public class ConfigurationInitializer {
 
         MifosCurrency defaultCurrency = null;
         try {
-            defaultCurrency = AccountingRules.getMifosCurrency();
+            defaultCurrency = AccountingRules.getMifosCurrency(new ConfigurationPersistence());
         } catch (RuntimeException re) {
             throw new SystemException("cannot fetch default currency", re);
         }

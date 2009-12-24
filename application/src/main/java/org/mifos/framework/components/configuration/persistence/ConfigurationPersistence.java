@@ -50,25 +50,6 @@ public class ConfigurationPersistence extends Persistence {
 
     public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
 
-    public MifosCurrency getDefaultCurrency() throws PersistenceException {
-        List queryResult = executeNamedQuery(NamedQueryConstants.GET_DEFAULT_CURRENCY, null);
-        return defaultCurrencyFromList(queryResult);
-    }
-
-    MifosCurrency defaultCurrencyFromList(List queryResult) {
-        if (queryResult.size() == 1) {
-            return (MifosCurrency) queryResult.get(0);
-        } else if (queryResult.size() > 1) {
-            MifosCurrency candidate0 = (MifosCurrency) queryResult.get(0);
-            MifosCurrency candidate1 = (MifosCurrency) queryResult.get(1);
-
-            throw logAndThrow("Both " + candidate0.getCurrencyName() + " and " + candidate1.getCurrencyName()
-                    + " are marked as default currencies");
-        } else {
-            throw logAndThrow("No Default Currency Specified");
-        }
-    }
-
     public MifosCurrency getCurrency(String currencyCode) throws RuntimeException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("currencyCode", currencyCode);
@@ -86,11 +67,6 @@ public class ConfigurationPersistence extends Persistence {
             throw new RuntimeException("Multiple currencies found for currency code: " + currencyCode);
         }
         return (MifosCurrency) queryResult.get(0);
-    }
-
-    private FrameworkRuntimeException logAndThrow(String message) {
-        logger.error(message);
-        return new FrameworkRuntimeException(null, message);
     }
 
     /**

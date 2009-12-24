@@ -24,6 +24,7 @@ import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
 
 import java.math.BigDecimal;
 
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
@@ -69,15 +70,15 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
     }
 
     public BigDecimal getAmountAging() {
-        return MoneyUtils.getMoneyAmount(amountAging);
+        return MoneyUtils.getMoneyAmount(amountAging, AccountingRules.getDigitsAfterDecimal());
     }
 
     public BigDecimal getAmountOutstandingAging() {
-        return MoneyUtils.getMoneyAmount(amountOutstandingAging);
+        return MoneyUtils.getMoneyAmount(amountOutstandingAging, AccountingRules.getDigitsAfterDecimal());
     }
 
     public BigDecimal getInterestAging() {
-        return MoneyUtils.getMoneyAmount(interestAging);
+        return MoneyUtils.getMoneyAmount(interestAging, AccountingRules.getDigitsAfterDecimal());
     }
 
     public Integer getClientsAging() {

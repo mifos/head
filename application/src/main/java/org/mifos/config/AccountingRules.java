@@ -40,18 +40,17 @@ public class AccountingRules {
     private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
     private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
 
-    public static MifosCurrency getMifosCurrency() {
+    public static MifosCurrency getMifosCurrency(ConfigurationPersistence configurationPersistence) {
         String currencyCode = getCurrencyCode();
-        MifosCurrency currency = new ConfigurationPersistence().getCurrency(getCurrencyCode());
+        MifosCurrency currency = configurationPersistence.getCurrency(getCurrencyCode());
         if (currency == null)
             throw new RuntimeException("Can't find in the database the currency define in the config file "
                     + currencyCode);
         Short digitsAfterDecimal = getDigitsAfterDecimal();
         Float amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
         Short roundingMode = getRoundingMode(currency.getRoundingMode());
-        return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(), currency.getDisplaySymbol(),
-                roundingMode, amountToBeRoundedTo, currency.getDefaultCurrency(), digitsAfterDecimal, currencyCode);
-
+        return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(), roundingMode,
+                amountToBeRoundedTo, digitsAfterDecimal, currencyCode);
     }
 
     public static String getCurrencyCode() {

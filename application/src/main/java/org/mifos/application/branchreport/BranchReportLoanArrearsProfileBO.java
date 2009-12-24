@@ -24,6 +24,7 @@ import static org.mifos.framework.util.helpers.MoneyUtils.getMoneyAmount;
 
 import java.math.BigDecimal;
 
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.util.helpers.Money;
 
@@ -80,19 +81,19 @@ public class BranchReportLoanArrearsProfileBO extends BusinessObject {
     }
 
     public BigDecimal getOutstandingAmountAtRisk() {
-        return getMoneyAmount(outstandingAmountAtRisk);
+        return getMoneyAmount(outstandingAmountAtRisk, AccountingRules.getDigitsAfterDecimal());
     }
 
     public BigDecimal getOverdueAmountAtRisk() {
-        return getMoneyAmount(overdueAmountAtRisk);
+        return getMoneyAmount(overdueAmountAtRisk, AccountingRules.getDigitsAfterDecimal());
     }
 
     public BigDecimal getOverDueBalance() {
-        return getMoneyAmount(overDueBalance);
+        return getMoneyAmount(overDueBalance, AccountingRules.getDigitsAfterDecimal());
     }
 
     public BigDecimal getUnpaidBalance() {
-        return getMoneyAmount(unpaidBalance);
+        return getMoneyAmount(unpaidBalance, AccountingRules.getDigitsAfterDecimal());
     }
 
     @Override

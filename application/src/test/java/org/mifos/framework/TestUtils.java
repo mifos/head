@@ -107,11 +107,9 @@ public class TestUtils {
         return new Locale("EN", "GB");
     }
 
-    public static final MifosCurrency RUPEE = new MifosCurrency((short) 2, "RUPEE", "Rs", (short) 1, 1.0f, (short) 1,
-            (short) 1, "INR");
+    public static final MifosCurrency RUPEE = new MifosCurrency((short) 2, "RUPEE", (short) 1, 1.0f, (short) 1, "INR");
 
-    public static final MifosCurrency EURO = new MifosCurrency((short) 3, "EURO", "", (short) 2, 0.5f, (short) 0,
-            (short) 1, "EUR");
+    public static final MifosCurrency EURO = new MifosCurrency((short) 3, "EURO", (short) 2, 0.5f, (short) 1, "EUR");
 
     public static void assertWellFormedFragment(String xml) throws DocumentException {
         assertWellFormedDocument("<root>" + xml + "</root>");

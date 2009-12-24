@@ -26,6 +26,7 @@ import static org.mifos.framework.util.helpers.MoneyUtils.getMoneyAmount;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.util.helpers.Money;
 
@@ -112,11 +113,11 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
     }
 
     public BigDecimal getLoanAmountOutstanding() {
-        return getMoneyAmount(loanAmountOutstanding);
+        return getMoneyAmount(loanAmountOutstanding, AccountingRules.getDigitsAfterDecimal());
     }
 
     public BigDecimal getInterestAndFeesAmountOutstanding() {
-        return getMoneyAmount(interestAndFeesAmountOutstanding);
+        return getMoneyAmount(interestAndFeesAmountOutstanding, AccountingRules.getDigitsAfterDecimal());
     }
 
     public void setInterestAndFeesAmountOutstanding(Money interestAndFeesAmountOutstanding) {
@@ -156,7 +157,7 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
     }
 
     public BigDecimal getLoanArrearsAmount() {
-        return getMoneyAmount(loanArrearsAmount);
+        return getMoneyAmount(loanArrearsAmount, AccountingRules.getDigitsAfterDecimal());
     }
 
     @Override

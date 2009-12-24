@@ -41,6 +41,7 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -174,7 +175,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     ProcessFlowRules.init();
                     initializeSecurity();
 
-                    Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+                    Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
                     // 1/4/08 Hopefully a temporary change to force Spring
                     // to initialize here (rather than in struts-config.xml

@@ -51,6 +51,7 @@ import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -225,7 +226,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         branchReportPersistence.populateLoanArrearsAmountForPersonnel(staffSummaries, DEFAULT_CURRENCY);
         Assert.assertNull(org.apache.commons.collections.CollectionUtils.find(staffSummaries.values(), new Predicate() {
             public boolean evaluate(Object object) {
-                return !BigDecimal.ZERO.setScale(DEFAULT_CURRENCY.getDefaultDigitsAfterDecimal()).equals(
+                return !BigDecimal.ZERO.setScale(AccountingRules.getDigitsAfterDecimal()).equals(
                         ((BranchReportStaffSummaryBO) object).getLoanArrearsAmount());
             }
         }));

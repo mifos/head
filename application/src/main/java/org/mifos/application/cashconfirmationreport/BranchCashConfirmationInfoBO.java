@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyFactory;
 import org.mifos.framework.util.helpers.MoneyUtils;
@@ -104,6 +105,6 @@ public abstract class BranchCashConfirmationInfoBO extends BranchCashConfirmatio
     }
 
     public String getActual() {
-        return MoneyUtils.getMoneyAmount(actual).toString();
+        return MoneyUtils.getMoneyAmount(actual, AccountingRules.getDigitsAfterDecimal()).toString();
     }
 }
