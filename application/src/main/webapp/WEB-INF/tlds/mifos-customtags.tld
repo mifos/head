@@ -9,31 +9,6 @@
     <tlib-version>1.0</tlib-version>
     <short-name>mifoscustom</short-name>
     <uri>/mifos/customtags</uri>
-
-    <!-- Mifos LookUpValue tag -->
-	<tag>
-		<name>lookUpValue</name>
-		<tagclass>
-			org.mifos.framework.struts.tags.MifosLookUpValueTag
-		</tagclass>
-		<bodycontent>JSP</bodycontent>
-		
-		<attribute>
-			<name>id</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>searchResultName</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>mapToSeperateMasterTable</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
 	
 	<!-- Mifos custom table tag -->
 	<tag>
@@ -77,20 +52,6 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
     </tag>
-	<!-- Mifos loan header table tag -->
-	<tag>
-		<name>getLoanHeader</name>
-		<tagclass>
-			org.mifos.application.accounts.loan.struts.tags.LoanHeaderTag
-		</tagclass>
-		<bodycontent>JSP</bodycontent>
-		
-		<attribute>
-			<name>loanHeader</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
 	
 	<!-- Mifos Image tag.This is different from the one
 	in mifos-html.tld because it would support jstl expressions -->
