@@ -20,17 +20,28 @@
 
 package org.mifos.framework.plugin;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.spi.TransactionImport;
 
 public class PluginManager {
+
+    private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+    
     /**
      * Returns specified import plugin or null.
      */
@@ -50,13 +61,37 @@ public class PluginManager {
      */
     public List<TransactionImport> loadImportPlugins() {
         List<TransactionImport> plugins = new ArrayList<TransactionImport>();
-        ServiceLoader<TransactionImport> loader = ServiceLoader.load(TransactionImport.class);
+        ClassLoader pluginClassLoader = initializePluginClassLoader();
+        ServiceLoader<TransactionImport> loader = ServiceLoader.load(TransactionImport.class, pluginClassLoader);
         for (TransactionImport ti : loader) {
             ti.setAccountService(new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
                     new AcceptedPaymentTypePersistence()));
             plugins.add(ti);
         }
         return plugins;
+    }
+
+    /**
+     * Extend classloader by loading jars from ${MIFOS_CONF}/plugins at runtime
+     * 
+     * @return pluginClassLoader
+     */
+    private ClassLoader initializePluginClassLoader() {
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        String libDir = configurationLocator.getConfigurationDirectory() + "/plugins";
+        File dependencyDirectory = new File(libDir);
+        File[] files = dependencyDirectory.listFiles();
+        ArrayList<URL> urls = new ArrayList<URL>();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].getName().endsWith(".jar")) {
+                try {
+                    urls.add(files[i].toURI().toURL());
+                } catch (MalformedURLException e) {
+                    LOG.log(Level.WARNING, this.getClass().getName(), e);
+                }
+            }
+        }
+        return new URLClassLoader(urls.toArray(new URL[urls.size()]), Thread.currentThread().getContextClassLoader());
     }
 
     public List<String> getImportPluginNames() {
