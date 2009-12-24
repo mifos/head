@@ -154,6 +154,12 @@ public class AccountingRules {
         ConfigurationManager cm = ConfigurationManager.getInstance();
         return cm.getBoolean(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
     }
+    
+    public static Boolean isMultiCurrencyEnabled(){
+        //FIXME this method might be called from AccountingRules 
+        // for now testing is being done so the value returned is true        
+        return true;
+    }
 
     public static RoundingMode getInitialRoundingMode() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();

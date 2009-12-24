@@ -56,6 +56,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -117,8 +118,8 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        SessionUtils.setAttribute("isMultiCurrencyEnabled", isMultiCurrencyEnabled(), request);
-        if (isMultiCurrencyEnabled()) {
+        SessionUtils.setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled(), request);
+        if (AccountingRules.isMultiCurrencyEnabled()) {
             String currencyCode = getSelectedCurrencyFromList((FeeActionForm) form).getCurrencyCode();
             request.getSession().setAttribute("currencyCode", currencyCode);
         }
@@ -265,12 +266,6 @@ public class FeeAction extends BaseAction {
         return currencies;
     }
     
-
-    private Boolean isMultiCurrencyEnabled(){
-        //FIXME this method might be called from AccountingRules    
-        return true;
-    }
-    
     private MifosCurrency getSelectedCurrencyFromList(FeeActionForm form) {
         LinkedList<MifosCurrency> currencies = getCurrencies();
         Iterator<MifosCurrency> i = currencies.iterator();
@@ -369,7 +364,7 @@ public class FeeAction extends BaseAction {
         SessionUtils.setCollectionAttribute(FeeConstants.FEE_FREQUENCY_TYPE_LIST, getMasterEntities(
                 FeeFrequencyTypeEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(FeeConstants.GLCODE_LIST, getGLCodes(), request);
-        request.getSession().setAttribute("isMultiCurrencyEnabled", isMultiCurrencyEnabled());
+        request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         request.getSession().setAttribute("currencies", getCurrencies());
     }
 
