@@ -33,7 +33,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(enabled = false, sequential = true, groups = {"core","acceptance"})
+@Test(sequential = true, groups = {"core","acceptance"})
 public class DatasetVersionTest extends UiTestCaseBase {
 
     @Autowired
@@ -68,17 +68,15 @@ public class DatasetVersionTest extends UiTestCaseBase {
             }
         }
 
-        File f = new File("acceptanceTests/src/test/resources/dataSets");
-        FileExtensionFilter filter = new FileExtensionFilter("acceptance_", "dbunit.xml.zip");
+        // FIXME - Path works for maven build but not from eclipse
+        File f = new File("target/test-classes/dataSets");
+        FileExtensionFilter filter = new FileExtensionFilter("", "dbunit.xml.zip");
         File[] acceptList = f.listFiles(filter);
-
+        
         for(int j=0; j<acceptList.length; j++) {
             verifyDatabaseVersion(acceptList[j].getName());
         }
-
-
     }
-
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyDatabaseVersion(String acceptanceDataSetFile) throws Exception {

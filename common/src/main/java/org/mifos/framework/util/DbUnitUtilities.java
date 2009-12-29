@@ -99,7 +99,7 @@ public class DbUnitUtilities {
         columnsToIgnoreWhenVerifyingTables.put("SAVINGS_ACCOUNT", new String[] { "account_id" });
         columnsToIgnoreWhenVerifyingTables.put("SAVINGS_PERFORMANCE", new String[] { "id", "account_id" });
         columnsToIgnoreWhenVerifyingTables.put("SAVINGS_TRXN_DETAIL", new String[] { "account_trxn_id" });
-
+        columnsToIgnoreWhenVerifyingTables.put("DATABASE_VERSION", new String[] {});
     }
 
     /**
