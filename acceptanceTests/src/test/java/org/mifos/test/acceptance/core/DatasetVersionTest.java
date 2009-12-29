@@ -33,7 +33,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"core","acceptance"})
+@Test(enabled = false, sequential = true, groups = {"core","acceptance"})
 public class DatasetVersionTest extends UiTestCaseBase {
 
     @Autowired
@@ -52,17 +52,19 @@ public class DatasetVersionTest extends UiTestCaseBase {
 
 
         class FileExtensionFilter implements FilenameFilter{
-            private String prefix="*";
-            private String ext="*";
+            String prefix="*";
+            String ext="*";
             public FileExtensionFilter(String prefix, String ext){
                 this.prefix = prefix;
                 this.ext = ext;
-
             }
+            
             public boolean accept(@SuppressWarnings("unused") File dir, String name){
-                if (name.startsWith(prefix) && name.endsWith(ext) )
-                    return true;
-                return false;
+                boolean validFile = false;
+                if (name.startsWith(prefix) && name.endsWith(ext) ){
+                    validFile = true;
+                }    
+                return validFile;
             }
         }
 
@@ -71,7 +73,6 @@ public class DatasetVersionTest extends UiTestCaseBase {
         File[] acceptList = f.listFiles(filter);
 
         for(int j=0; j<acceptList.length; j++) {
-            System.out.println(acceptList[j].getName());
             verifyDatabaseVersion(acceptList[j].getName());
         }
 
