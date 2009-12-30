@@ -26,6 +26,7 @@ public class GeneralConfig {
     public static final String BatchSizeForBatchJobs = "GeneralConfig.BatchSizeForBatchJobs";
     public static final String RecordCommittingSizeForBatchJobs = "GeneralConfig.RecordCommittingSizeForBatchJobs";
     public static final String OutputIntervalForBatchJobs = "GeneralConfig.OutputIntervalForBatchJobs";
+    public static final String allowDataPrefetchingWhenSavingCollectionSheets = "GeneralConfig.allowDataPrefetchingWhenSavingCollectionSheets";
 
     public static int getMaxPointsPerPPISurvey() {
         int maxPointsPerPPISurvey = 101; // default value is 101
@@ -57,6 +58,14 @@ public class GeneralConfig {
         if (configMgr.containsKey(OutputIntervalForBatchJobs))
             outputRecordIntervalForBatchJobs = configMgr.getInt(OutputIntervalForBatchJobs);
         return outputRecordIntervalForBatchJobs;
+    }
+
+    public static Boolean getAllowDataPrefetchingWhenSavingCollectionSheets() {
+        Boolean allowDataPrefetching = true; // default value is true
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        if (configMgr.containsKey(allowDataPrefetchingWhenSavingCollectionSheets))
+            allowDataPrefetching = configMgr.getBoolean(allowDataPrefetchingWhenSavingCollectionSheets, allowDataPrefetching);
+        return allowDataPrefetching;
     }
 
 }

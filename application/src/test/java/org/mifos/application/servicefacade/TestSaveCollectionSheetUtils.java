@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -38,6 +36,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -49,21 +48,18 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.PersonnelStatusEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -74,9 +70,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * Class contains utility methods for setting up, processing and configuring a
  * sample collection sheet hierarchy for testing.
  */
-public class TestSaveCollectionSheetStructureValidatorUtils {
+public class TestSaveCollectionSheetUtils {
 
-    public TestSaveCollectionSheetStructureValidatorUtils() {
+    public TestSaveCollectionSheetUtils() {
         collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
         currency = Money.getDefaultCurrency();
         userContext = TestUtils.makeUser();
@@ -87,7 +83,7 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
  */
     /*
      * Below are variables that can be configured to create invalid entries for
-     * testing. They are inject during the assembling of the dto's. This is a
+     * testing. They are injected during the assembling of the dto's. This is a
      * very ugly way to inject invalid values. Set methods would be far tidier
      * and more normal. But I (JW) preferred to keep all the save collection
      * sheet dto's as create-only and non-updatable and pay the coding price for
@@ -112,6 +108,10 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
     private Boolean overpayLoan = false;
     private Boolean duplicateFirstClient = false;
     private Boolean duplicateFirstClientLoanAccount = false;
+    private Boolean overpayFirstClientAccountCollectionFee = false;
+    private Boolean underpayFirstClientAccountCollectionFee = false;
+    private Boolean invalidDisbursalAmountFirstClient = false;
+    
 
     /*
      * 
@@ -180,21 +180,27 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
 
     /**
      * By default generates 1 center, 1 group and 1 client with 1 loan to be
-     * disbursed. Can be configured to add in other invalid entries.
+     * disbursed and 1 weekly account collection fee. Can be configured to add
+     * in other invalid entries.
      */
     public void createSampleCenterHierarchy(Date date) throws Exception {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
 
-        center = new CenterBuilder().withSearchId("10.4").withMeeting(weeklyMeeting).withName("Center").withOffice(
-                sampleBranchOffice()).withLoanOfficer(testUser()).build();
+        center = new CenterBuilder().withSearchId("10.4").withMeeting(weeklyMeeting)
+                .withName("Center").withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.saveCustomer(center);
 
         group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withParentCustomer(center).build();
         IntegrationTestObjectMother.saveCustomer(group);
 
-        client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Client 1").withOffice(sampleBranchOffice())
+        AmountFeeBO weeklyPeriodicFeeForFirstClients = new FeeBuilder().appliesToClientsOnly().withFeeAmount("87.0").withName(
+                "First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
+                .build();
+        weeklyPeriodicFeeForFirstClients.save();
+        
+        client = new ClientBuilder().withFee(weeklyPeriodicFeeForFirstClients).withMeeting(weeklyMeeting).withName("Client 1").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
         IntegrationTestObjectMother.saveCustomer(client);
 
@@ -427,10 +433,21 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
                 accountId = loan.getAccountId();
             }
 
+            BigDecimal accountCollectionFee = new BigDecimal(collectionSheetCustomerAccount
+                    .getTotalCustomerAccountCollectionFee());
+
+            if (overpayFirstClientAccountCollectionFee
+                    && (customerLevelId.compareTo(CustomerLevel.CLIENT.getValue()) == 0) && firstClient) {
+                accountCollectionFee = new BigDecimal(1000000.00);
+            }
+
+            if (underpayFirstClientAccountCollectionFee
+                    && (customerLevelId.compareTo(CustomerLevel.CLIENT.getValue()) == 0) && firstClient) {
+                accountCollectionFee = new BigDecimal(1.45);
+            }
             try {
                 saveCollectionSheetCustomerAccount = new SaveCollectionSheetCustomerAccountDto(accountId,
-                        collectionSheetCustomerAccount.getCurrencyId(), new BigDecimal(collectionSheetCustomerAccount
-                                .getTotalCustomerAccountCollectionFee()));
+                        collectionSheetCustomerAccount.getCurrencyId(), accountCollectionFee);
             } catch (SaveCollectionSheetException e) {
                 throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
             }
@@ -466,6 +483,10 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
                     if (overpayLoan) {
                         loanRepayment = loanRepayment.add(new BigDecimal(1000000.00));
                     }
+                    if (invalidDisbursalAmountFirstClient) {
+                        loanDisbursement = new BigDecimal(1.10);
+                    }
+                    
                     if (loanInvalidCurrency != null) {
                         accountCurrencyId = loanInvalidCurrency;
                     }
@@ -698,6 +719,18 @@ public class TestSaveCollectionSheetStructureValidatorUtils {
      */
     public void setDuplicateFirstClientLoanAccount() {
         this.duplicateFirstClientLoanAccount = true;
+    }
+
+    public void setOverpayFirstClientAccountCollectionFee() {
+        this.overpayFirstClientAccountCollectionFee = true;
+    }
+
+    public void setUnderpayFirstClientAccountCollectionFee() {
+        this.underpayFirstClientAccountCollectionFee = true;
+    }
+
+    public void setInvalidDisbursalAmountFirstClient() {
+        this.invalidDisbursalAmountFirstClient = true;
     }
 
 }

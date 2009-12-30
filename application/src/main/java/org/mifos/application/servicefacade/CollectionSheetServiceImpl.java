@@ -124,7 +124,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             throw e;
         }
 
-        // just to mark off validation queries above - temporary
+        // just to mark off validation queries above - temporary whilst performance testing
         CollectionSheetCustomerDto collectionSheetCustomerDto2 = new CustomerPersistence()
                 .findCustomerWithNoAssocationsLoaded(Integer.valueOf("123456"));
 

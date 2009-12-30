@@ -43,12 +43,12 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
     }
 
     private SaveCollectionSheetStructureValidator savecollectionSheetStructureValidator;
-    private TestSaveCollectionSheetStructureValidatorUtils saveCollectionSheetUtils;
+    private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        saveCollectionSheetUtils = new TestSaveCollectionSheetStructureValidatorUtils();
+        saveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
         savecollectionSheetStructureValidator = new SaveCollectionSheetStructureValidator();
     }
 

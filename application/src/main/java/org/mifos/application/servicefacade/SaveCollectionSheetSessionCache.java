@@ -23,10 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.config.GeneralConfig;
 import org.mifos.framework.exceptions.PersistenceException;
 
 /**
- * Loads Collection Sheet data into session cache.
+ * Loads Collection Sheet data into Hibernate session cache.
  * 
  * This minimises the number of read requests required to process the Collection
  * Sheet.
@@ -44,60 +45,67 @@ public class SaveCollectionSheetSessionCache {
     public void loadSessionCacheWithCollectionSheetData(final SaveCollectionSheetDto saveCollectionSheet,
             Short branchId, String searchId) {
 
-        List<Object> prefetchObjectList = null;
-        Integer topCustomerId = saveCollectionSheet.getSaveCollectionSheetCustomers().get(0).getCustomerId();
+        Boolean allowDataPrefetching = GeneralConfig.getAllowDataPrefetchingWhenSavingCollectionSheets();
 
-        analyseSaveCollectionSheet(saveCollectionSheet);
+        if (allowDataPrefetching) {
+            List<Object> prefetchObjectList = null;
+            Integer topCustomerId = saveCollectionSheet.getSaveCollectionSheetCustomers().get(0).getCustomerId();
 
-        if (worthCaching) {
-            Long eTime;
-            Long sTime = System.currentTimeMillis();
+            analyseSaveCollectionSheet(saveCollectionSheet);
 
-            try {
+            if (worthCaching) {
+                Long eTime;
+                Long sTime = System.currentTimeMillis();
 
-                prefetchObjectList = submitSavePreFetch("prefetchCustomerHierarchy", branchId, searchId, topCustomerId);
-                prefetchObjectList = submitSavePreFetch("prefetchAccountData", branchId, searchId, topCustomerId);
+                try {
 
-                if (worthCachingRepayments || worthCachingDisbursals) {
-                    prefetchObjectList = submitSavePreFetch("prefetchLoanSchedules", branchId, searchId, topCustomerId);
+                    prefetchObjectList = submitSavePreFetch("prefetchCustomerHierarchy", branchId, searchId,
+                            topCustomerId);
+                    prefetchObjectList = submitSavePreFetch("prefetchAccountData", branchId, searchId, topCustomerId);
+
+                    if (worthCachingRepayments || worthCachingDisbursals) {
+                        prefetchObjectList = submitSavePreFetch("prefetchLoanSchedules", branchId, searchId,
+                                topCustomerId);
+                    }
+
+                    if (worthCachingRepayments || worthCachingDisbursals || worthCachingACCollections) {
+                        prefetchObjectList = submitSavePreFetch("prefetchAccountFeeDetails", branchId, searchId,
+                                topCustomerId);
+                    }
+
+                    if (worthCachingACCollections) {
+                        prefetchObjectList = submitSavePreFetch("prefetchCustomerSchedules", branchId, searchId,
+                                topCustomerId);
+                    }
+
+                    if (worthCachingRepayments) {
+                        prefetchObjectList = submitSavePreFetch("prefetchAccountPayments", branchId, searchId,
+                                topCustomerId);
+                        prefetchObjectList = submitSavePreFetch("prefetchLoanActivityDetails", branchId, searchId,
+                                topCustomerId);
+                        prefetchObjectList = submitSavePreFetch("prefetchCustomerActivityDetails", branchId, searchId,
+                                topCustomerId);
+                    }
+
+                    if (worthCachingDisbursals) {
+                        prefetchObjectList = submitSavePreFetch("prefetchAccountStatusChangeHistory", branchId,
+                                searchId, topCustomerId);
+                    }
+
+                } catch (PersistenceException e1) {
+                    e1.printStackTrace();
                 }
 
-                if (worthCachingRepayments || worthCachingDisbursals || worthCachingACCollections) {
-                    prefetchObjectList = submitSavePreFetch("prefetchAccountFeeDetails", branchId, searchId,
-                            topCustomerId);
-                }
-
-                if (worthCachingACCollections) {
-                    prefetchObjectList = submitSavePreFetch("prefetchCustomerSchedules", branchId, searchId,
-                            topCustomerId);
-                }
-
-                if (worthCachingRepayments) {
-                    prefetchObjectList = submitSavePreFetch("prefetchAccountPayments", branchId, searchId,
-                            topCustomerId);
-                    prefetchObjectList = submitSavePreFetch("prefetchLoanActivityDetails", branchId, searchId,
-                            topCustomerId);
-                    prefetchObjectList = submitSavePreFetch("prefetchCustomerActivityDetails", branchId, searchId,
-                            topCustomerId);
-                }
-
-                if (worthCachingDisbursals) {
-                    prefetchObjectList = submitSavePreFetch("prefetchAccountStatusChangeHistory", branchId, searchId,
-                            topCustomerId);
-                }
-
-            } catch (PersistenceException e1) {
-                e1.printStackTrace();
+                eTime = System.currentTimeMillis() - sTime;
+                doLog("Id: " + topCustomerId + " - prefetch took " + eTime + "ms" + "     Worth Caching: "
+                        + worthCaching.toString() + "     Worth Caching Repayments: "
+                        + worthCachingRepayments.toString() + "     Worth Caching Disbursals: "
+                        + worthCachingDisbursals.toString() + "     Worth Caching AC Collections: "
+                        + worthCachingACCollections.toString() + "     Worth Caching Savings: "
+                        + worthCachingSavings.toString());
+            } else {
+                doLog("Id: " + topCustomerId + " - Not worth caching");
             }
-
-            eTime = System.currentTimeMillis() - sTime;
-            doLog("Id: " + topCustomerId + " - prefetch took " + eTime + "ms" + "     Worth Caching: "
-                    + worthCaching.toString() + "     Worth Caching Repayments: " + worthCachingRepayments.toString()
-                    + "     Worth Caching Disbursals: " + worthCachingDisbursals.toString()
-                    + "     Worth Caching AC Collections: " + worthCachingACCollections.toString()
-                    + "     Worth Caching Savings: " + worthCachingSavings.toString());
-        } else {
-            doLog("Id: " + topCustomerId + " - Not worth caching");
         }
     }
 
@@ -120,7 +128,7 @@ public class SaveCollectionSheetSessionCache {
 
     private void analyseSaveCollectionSheet(SaveCollectionSheetDto saveCollectionSheet) {
 
-        if (saveCollectionSheet.countOneLevelUnder() +  saveCollectionSheet.countTwoLevelsUnder() > 2) {
+        if (saveCollectionSheet.countOneLevelUnder() + saveCollectionSheet.countTwoLevelsUnder() > 2) {
             worthCaching = true;
 
             if (saveCollectionSheet.countCustomerAccounts() > 2) {
