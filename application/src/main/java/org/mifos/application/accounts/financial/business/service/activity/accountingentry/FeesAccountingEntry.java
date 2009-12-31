@@ -37,7 +37,7 @@ public class FeesAccountingEntry extends BaseAccountingEntry {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
         Set<FeesTrxnDetailEntity> feesTrxn = loanTrxn.getFeesTrxnDetails();
         Iterator<FeesTrxnDetailEntity> iterFees = feesTrxn.iterator();
-        FinancialActionBO finActionFee = FinancialActionCache.getFinancialAction(FinancialActionConstants.FEEPOSTING);
+        FinancialActionBO finActionFee = getFinancialAction(FinancialActionConstants.FEEPOSTING);
         while (iterFees.hasNext()) {
             FeesTrxnDetailEntity feeTrxn = iterFees.next();
 

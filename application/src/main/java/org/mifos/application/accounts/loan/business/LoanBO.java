@@ -717,7 +717,8 @@ public class LoanBO extends AccountBO {
         Money amount = new Money(getCurrency());
         List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
         for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
-            amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getPrincipal());
+            LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+            amount = amount.add(loanScheduleEntity.getPrincipal().subtract(loanScheduleEntity.getPrincipalPaid()));
         }
         return amount;
     }
@@ -742,7 +743,8 @@ public class LoanBO extends AccountBO {
         Money amount = new Money(getCurrency());
         List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
         for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
-            amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getInterest());
+            LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+            amount = amount.add(loanScheduleEntity.getInterest().subtract(loanScheduleEntity.getInterestPaid()));
         }
         return amount;
     }
