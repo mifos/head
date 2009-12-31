@@ -23,31 +23,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.framework.exceptions.ApplicationException;
-
 /**
  * Holds customer account details as part of saving a collection sheet
  */
 public class SaveCollectionSheetCustomerAccountDto {
-    
+
     private final Integer accountId;
     private final Short currencyId;
     private final BigDecimal totalCustomerAccountCollectionFee;
-    
-    private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
-    private Integer zeroInteger = 0;
-    private Short zeroShort = Short.valueOf("0");
-    
-    
-    
+
     public SaveCollectionSheetCustomerAccountDto(final Integer accountId, final Short currencyId,
             final BigDecimal totalCustomerAccountCollectionFee) throws SaveCollectionSheetException {
-        
+
         validateInput(accountId, currencyId, totalCustomerAccountCollectionFee);
         if (validationErrors.size() > 0) {
             throw new SaveCollectionSheetException(validationErrors);
         }
-        
+
         this.accountId = accountId;
         this.currencyId = currencyId;
         this.totalCustomerAccountCollectionFee = totalCustomerAccountCollectionFee;
@@ -65,13 +57,20 @@ public class SaveCollectionSheetCustomerAccountDto {
         return this.currencyId;
     }
 
+    /*
+     * The Dto really ends here: All the fields and methods below are for
+     * validation purposes
+     */
 
+    private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
+    private final Integer zeroInteger = 0;
+    private final Short zeroShort = Short.valueOf("0");
+    
     private void validateInput(Integer accountId, Short currencyId, BigDecimal totalCustomerAccountCollectionFee) {
 
         if (accountId == null) {
             validationErrors.add(InvalidSaveCollectionSheetReason.ACCOUNTID_NULL);
-        }
-        else {
+        } else {
             if (accountId.compareTo(zeroInteger) < 0) {
                 validationErrors.add(InvalidSaveCollectionSheetReason.ACCOUNTID_NEGATIVE);
             }
@@ -79,17 +78,16 @@ public class SaveCollectionSheetCustomerAccountDto {
 
         if (currencyId == null) {
             validationErrors.add(InvalidSaveCollectionSheetReason.CURRENCYID_NULL);
-        }
-        else {
+        } else {
             if (currencyId.compareTo(zeroShort) < 0) {
                 validationErrors.add(InvalidSaveCollectionSheetReason.CURRENCYID_NEGATIVE);
             }
         }
-        
+
         if (totalCustomerAccountCollectionFee != null) {
             if (totalCustomerAccountCollectionFee.compareTo(BigDecimal.ZERO) < 0) {
                 validationErrors.add(InvalidSaveCollectionSheetReason.TOTALCUSTOMERACCOUNTCOLLECTIONFEE_NEGATIVE);
             }
-        }        
+        }
     }
 }

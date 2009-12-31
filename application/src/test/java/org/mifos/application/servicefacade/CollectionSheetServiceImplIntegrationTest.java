@@ -34,6 +34,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationTestCase {
 
@@ -85,7 +86,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         Date repaymentDate = incrementCurrentDate(14);
         saveCollectionSheetUtils.setOverpayLoan();
         saveCollectionSheet = saveCollectionSheetUtils
-                .assembleSaveCollectionSheetFromCreatedCenterHierarchy(repaymentDate);
+                .assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils.getLocalDateFromDate(repaymentDate));
 
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);

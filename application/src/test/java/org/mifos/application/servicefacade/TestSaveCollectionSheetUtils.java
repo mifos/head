@@ -62,6 +62,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -139,9 +140,9 @@ public class TestSaveCollectionSheetUtils {
      */
     public SaveCollectionSheetDto createSampleSaveCollectionSheet() throws AccountException, CustomerException {
 
-        Date transactionDate = new LocalDate().toDateMidnight().toDate();
+        LocalDate transactionDate = new LocalDate();
         try {
-            createSampleCenterHierarchy(transactionDate);
+            createSampleCenterHierarchy(DateUtils.getDateFromLocalDate(transactionDate));
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }
@@ -170,10 +171,10 @@ public class TestSaveCollectionSheetUtils {
      * Retrieve collection sheet information and put it into a
      * saveCollectionSheetDto
      */
-    public SaveCollectionSheetDto assembleSaveCollectionSheetFromCreatedCenterHierarchy(Date transactionDate) {
+    public SaveCollectionSheetDto assembleSaveCollectionSheetFromCreatedCenterHierarchy(LocalDate transactionDate) {
 
         CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(center.getCustomerId(),
-                transactionDate);
+                DateUtils.getDateFromLocalDate(transactionDate));
 
         return assembleSaveCollectionSheetDto(collectionSheet, transactionDate);
     }
@@ -290,7 +291,7 @@ public class TestSaveCollectionSheetUtils {
     }
 
     private SaveCollectionSheetDto assembleSaveCollectionSheetDto(CollectionSheetDto collectionSheet,
-            Date transactionDate) {
+            LocalDate transactionDate) {
 
         SaveCollectionSheetDto saveCollectionSheet = null;
         try {

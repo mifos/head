@@ -33,12 +33,6 @@ import org.mifos.application.customer.client.business.ClientAttendanceBO;
 public interface CollectionSheetService {
 
     /**
-     * Persists Collection Sheet model.  Will be removed from this interface once saveCollectionSheetWIP is ready
-     */
-    void persistCollectionSheet(List<ClientAttendanceBO> clientAttendances, List<LoanBO> loanAccounts,
-            List<AccountBO> customerAccounts, List<SavingsBO> savingAccounts);
-
-    /**
      * Saves a Collection Sheet
      * @throws SaveCollectionSheetException 
      */

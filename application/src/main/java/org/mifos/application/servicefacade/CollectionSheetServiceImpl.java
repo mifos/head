@@ -65,7 +65,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         this.collectionSheetDao = collectionSheetDao;
     }
 
-    public void persistCollectionSheet(final List<ClientAttendanceBO> clientAttendances, final List<LoanBO> loanAccounts,
+    private void persistCollectionSheet(final List<ClientAttendanceBO> clientAttendances, final List<LoanBO> loanAccounts,
             final List<AccountBO> customerAccountList, final List<SavingsBO> savingAccounts) {
 
         try {

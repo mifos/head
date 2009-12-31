@@ -51,9 +51,6 @@ public class SaveCollectionSheetCustomerDto {
      */
     private List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerIndividualSavings;
 
-    private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
-    private Integer zeroInteger = 0;
-
     public SaveCollectionSheetCustomerDto(final Integer customerId, final Integer parentCustomerId,
             final Short attendanceId, final SaveCollectionSheetCustomerAccountDto saveCollectionSheetCustomerAccount,
             final List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans,
@@ -103,6 +100,14 @@ public class SaveCollectionSheetCustomerDto {
     public List<SaveCollectionSheetCustomerSavingDto> getSaveCollectionSheetCustomerIndividualSavings() {
         return this.saveCollectionSheetCustomerIndividualSavings;
     }
+
+    /*
+     * The Dto really ends here: All the fields and methods below are for
+     * validation purposes
+     */
+
+    private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
+    private final Integer zeroInteger = 0;
 
     private void validateInput(Integer customerId, Integer parentCustomerId,
             List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans,

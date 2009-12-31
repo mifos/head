@@ -21,9 +21,9 @@ package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 
 /**
@@ -35,16 +35,20 @@ public class SaveCollectionSheetDto {
      * The "Contract" is that the first customer must be the "top customer"
      * (usually Center) but other customers can be any or all of the groups and
      * clients underneath the top customer in any order.
+     * 
+     * It would be normal to have them in order thought
+     * e.g center, group 1, client 1, client 2, group 2...
      */
     private List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers;
     private Short paymentType;
-    private Date transactionDate;
+    private LocalDate transactionDate;
     private String receiptId;
-    private Date receiptDate;
+    private LocalDate receiptDate;
     private Short userId;
 
     public SaveCollectionSheetDto(List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers, Short paymentType,
-            Date transactionDate, String receiptId, Date receiptDate, Short userId) throws SaveCollectionSheetException {
+            LocalDate transactionDate, String receiptId, LocalDate receiptDate, Short userId)
+            throws SaveCollectionSheetException {
 
         validateInput(saveCollectionSheetCustomers, paymentType, transactionDate, userId);
         if (validationErrors.size() > 0) {
@@ -69,7 +73,7 @@ public class SaveCollectionSheetDto {
         return this.paymentType;
     }
 
-    public Date getTransactionDate() {
+    public LocalDate getTransactionDate() {
         return this.transactionDate;
     }
 
@@ -77,7 +81,7 @@ public class SaveCollectionSheetDto {
         return this.receiptId;
     }
 
-    public Date getReceiptDate() {
+    public LocalDate getReceiptDate() {
         return this.receiptDate;
     }
 
@@ -96,12 +100,13 @@ public class SaveCollectionSheetDto {
      * debugging purposes. We'll see how it goes.
      * 
      * 
-     * b) analysing the save collection sheet input. Again some people this
-     * should not be in this class. However, even this simplified structure
+     * b) analysing the save collection sheet input. Again some people think
+     * this should not be in this class. However, even this simplified structure
      * takes quite a bit of set up and I thought it would be good to have
-     * methods that told the programmer how the collection sheet was made up
-     * Some fields used to determine if it is worth pre-fetching (into the
-     * Hibernate session cache) collection sheet data for performance reasons.
+     * methods that told the programmer how the collection sheet was made up.
+     * Some of the fields are used to determine if it is worth pre-fetching
+     * (into the Hibernate session cache) collection sheet data for performance
+     * reasons.
      */
 
     private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
@@ -156,7 +161,7 @@ public class SaveCollectionSheetDto {
     }
 
     private void validateInput(List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers, Short paymentType,
-            Date transactionDate, Short userId) {
+            LocalDate transactionDate, Short userId) {
 
         if (saveCollectionSheetCustomers == null || saveCollectionSheetCustomers.size() < 1) {
             validationErrors.add(InvalidSaveCollectionSheetReason.NO_TOP_CUSTOMER_PROVIDED);

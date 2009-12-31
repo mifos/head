@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
@@ -30,6 +31,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDt
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class SaveCollectionSheetFromLegacyAssembler {
@@ -44,9 +46,11 @@ public class SaveCollectionSheetFromLegacyAssembler {
 
         try {
             saveCollectionSheet = new SaveCollectionSheetDto(assembleCustomers(collectionSheetEntryViews),
-                    previousCollectionSheetEntryDto.getPaymentTypeId(), previousCollectionSheetEntryDto
-                            .getTransactionDate(), previousCollectionSheetEntryDto.getReceiptId(),
-                    previousCollectionSheetEntryDto.getReceiptDate(), userId);
+                    previousCollectionSheetEntryDto.getPaymentTypeId(), 
+                    DateUtils.getLocalDateFromDate(previousCollectionSheetEntryDto.getTransactionDate()), 
+                    previousCollectionSheetEntryDto.getReceiptId(),
+                    DateUtils.getLocalDateFromDate(previousCollectionSheetEntryDto.getReceiptDate()), 
+                    userId);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }

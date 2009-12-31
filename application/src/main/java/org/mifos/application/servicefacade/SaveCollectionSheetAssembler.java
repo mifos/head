@@ -49,6 +49,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -277,26 +278,25 @@ public class SaveCollectionSheetAssembler {
         return paymentData;
     }
 
-    public AccountPaymentEntity accountPaymentAssemblerFromDto(final Date transactionDate, final Short paymentType,
-            final String receiptId, final Date receiptDate, final Short userId) {
+    public AccountPaymentEntity accountPaymentAssemblerFromDto(final LocalDate transactionDate, final Short paymentType,
+            final String receiptId, final LocalDate receiptDate, final Short userId) {
 
         final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
-        final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(), receiptId, receiptDate,
-                new PaymentTypeEntity(paymentType), transactionDate);
+        final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(), receiptId, DateUtils.getDateFromLocalDate(receiptDate),
+                new PaymentTypeEntity(paymentType), DateUtils.getDateFromLocalDate(transactionDate));
         payment.setCreatedByUser(user);
 
         return payment;
     }
 
     public List<ClientAttendanceBO> clientAttendanceAssemblerfromDto(
-            final List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers, final Date transactionDate,
+            final List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers, final LocalDate transactionDate,
             final Short branchId, final String searchId) {
 
-        final LocalDate meetingDate = new LocalDate(transactionDate);
         List<ClientAttendanceBO> clientAttendanceList = null;
 
         try {
-            clientAttendanceList = clientAttendanceDao.findClientAttendance(branchId, searchId, meetingDate);
+            clientAttendanceList = clientAttendanceDao.findClientAttendance(branchId, searchId, transactionDate);
             for (SaveCollectionSheetCustomerDto saveCollectionSheetCustomer : saveCollectionSheetCustomers) {
                 ClientBO client = clientPersistence.getClient(saveCollectionSheetCustomer.getCustomerId());
 
@@ -305,7 +305,7 @@ public class SaveCollectionSheetAssembler {
                     if (clientAttendance == null) {
                         clientAttendance = new ClientAttendanceBO();
                         clientAttendance.setCustomer(client);
-                        clientAttendance.setMeetingDate(meetingDate.toDateMidnight().toDate());
+                        clientAttendance.setMeetingDate(transactionDate.toDateTimeAtStartOfDay().toDate());
                     }
                     clientAttendance.setAttendance(saveCollectionSheetCustomer.getAttendanceId());
                     clientAttendanceList.add(clientAttendance);

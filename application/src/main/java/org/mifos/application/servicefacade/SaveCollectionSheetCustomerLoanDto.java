@@ -33,10 +33,6 @@ public class SaveCollectionSheetCustomerLoanDto {
     private BigDecimal totalLoanPayment;
     private BigDecimal totalDisbursement;
 
-    private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
-    private Integer zeroInteger = 0;
-    private Short zeroShort = Short.valueOf("0");
-
     public SaveCollectionSheetCustomerLoanDto(Integer accountId, Short currencyId, final BigDecimal totalLoanPayment,
             final BigDecimal totalDisbursement) throws SaveCollectionSheetException {
 
@@ -67,6 +63,15 @@ public class SaveCollectionSheetCustomerLoanDto {
         return this.totalDisbursement;
     }
 
+    /*
+     * The Dto really ends here: All the fields and methods below are for
+     * validation purposes
+     */
+
+    private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
+    private final Integer zeroInteger = 0;
+    private final Short zeroShort = Short.valueOf("0");
+  
     private void validateInput(Integer accountId, Short currencyId, BigDecimal totalLoanPayment,
             BigDecimal totalDisbursement) {
 

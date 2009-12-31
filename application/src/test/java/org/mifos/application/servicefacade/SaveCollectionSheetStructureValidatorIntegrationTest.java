@@ -24,9 +24,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.core.MifosRuntimeException;
@@ -80,7 +80,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     public void testShouldGetINVALID_TOP_CUSTOMERIfTopCustomerNotFound() throws Exception {
 
-        Date validDate = new Date();
+        LocalDate validDate = new LocalDate();
         Short validPaymentType = PaymentTypes.CHEQUE.getValue();
         Short validUserId = Short.valueOf("1");
         Integer invalidCustomerId = 500000;

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.customer.client.business.AttendanceType;
@@ -43,7 +44,7 @@ public class SaveCollectionSheetDtoTest {
 
     private Short validUserId = Short.valueOf("1");
     private Integer validCustomerId = 0;
-    private Date validDate = new Date();
+    private LocalDate validDate = new LocalDate();
     private Short validPaymentType = PaymentTypes.CHEQUE.getValue();
     private Short invalidPaymentType = Short.valueOf("-1");
     private Short validAttendanceId = AttendanceType.LATE.getValue();
@@ -279,9 +280,9 @@ public class SaveCollectionSheetDtoTest {
         saveCollectionSheetCustomers.add(group2Client2);
 
         Short paymentType = PaymentTypes.CHEQUE.getValue();
-        Date transactionDate = new Date();
+        LocalDate transactionDate = new LocalDate();
         String receiptId = "Receipt 100";
-        Date receiptDate = new Date();
+        LocalDate receiptDate = new LocalDate();
         Short userId = Short.valueOf("1");
 
         SaveCollectionSheetDto saveCollectionSheet = new SaveCollectionSheetDto(saveCollectionSheetCustomers,

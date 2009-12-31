@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
@@ -46,13 +47,15 @@ public class DateUtils {
         FUTURE, PAST, NONE
     }
 
-    /* Date parsing with a pattern does not work correctly in all Locales
-     * (as documented here: http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html#SimpleDateFormat%28java.lang.String%29
-     * so when parsing with a pattern force a locale that is know to work 
-     * with patterns
+    /*
+     * Date parsing with a pattern does not work correctly in all Locales (as
+     * documented here:
+     * http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat
+     * .html#SimpleDateFormat%28java.lang.String%29 so when parsing with a
+     * pattern force a locale that is know to work with patterns
      */
     private static final Locale dateLocale = new Locale("en", "GB");
-    public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy",dateLocale);
+    public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", dateLocale);
 
     private final static String dbFormat = "yyyy-MM-dd";
 
@@ -68,7 +71,7 @@ public class DateUtils {
 
     public static String convertUserToDbFmt(String userDate, String userPattern) throws InvalidDateException {
         try {
-            SimpleDateFormat userFormat = new SimpleDateFormat(userPattern,dateLocale);
+            SimpleDateFormat userFormat = new SimpleDateFormat(userPattern, dateLocale);
             // userFormat.setLenient(false);
             java.util.Date date = userFormat.parse(userDate);
             return toDatabaseFormat(date);
@@ -83,7 +86,7 @@ public class DateUtils {
 
     public static String convertDbToUserFmt(String dbDate, String userPattern) throws InvalidDateException {
         try {
-            SimpleDateFormat databaseFormat = new SimpleDateFormat(dbFormat,dateLocale);
+            SimpleDateFormat databaseFormat = new SimpleDateFormat(dbFormat, dateLocale);
             java.util.Date date = databaseFormat.parse(dbDate);
             SimpleDateFormat userFormat = new SimpleDateFormat(userPattern);
             return userFormat.format(date);
@@ -145,7 +148,7 @@ public class DateUtils {
             try {
 
                 String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";
-                SimpleDateFormat format = new SimpleDateFormat(formatStr,dateLocale);
+                SimpleDateFormat format = new SimpleDateFormat(formatStr, dateLocale);
                 // Enable this once we've taken a bit more of a look
                 // at where this gets called, run the tests, etc.
                 // But when the user types "13" for the month, for example,
@@ -171,7 +174,7 @@ public class DateUtils {
      */
     public static java.util.Date getDateAsRetrievedFromDb(String date) {
         if (date != null && !date.equals("")) {
-            SimpleDateFormat format = new SimpleDateFormat(dbFormat,dateLocale);
+            SimpleDateFormat format = new SimpleDateFormat(dbFormat, dateLocale);
             try {
                 return format.parse(date);
             } catch (ParseException e) {
@@ -271,7 +274,8 @@ public class DateUtils {
         return parseBrowserDateFields(yearStr, monthStr, dayStr);
     }
 
-    public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr) throws InvalidDateException {
+    public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr)
+            throws InvalidDateException {
         return getDateAsSentFromBrowser(dayStr + dateSeparator + monthStr + dateSeparator + yearStr);
     }
 
@@ -279,7 +283,8 @@ public class DateUtils {
      * "as sent from browser" is a bit of a misnomer; it really is (at least in
      * many cases), as formatted by a routine on the server side like
      * {@link ClientCustActionForm#getDateOfBirth()}.
-     * @throws InvalidDateException 
+     * 
+     * @throws InvalidDateException
      */
     public static java.sql.Date getDateAsSentFromBrowser(String value) throws InvalidDateException {
         if (value == null || value == "") {
@@ -682,4 +687,17 @@ public class DateUtils {
         return WeekDay.getWeekDay(calendar.get(Calendar.DAY_OF_WEEK));
     }
 
+    public static Date getDateFromLocalDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+        return localDate.toDateTimeAtStartOfDay().toDate();
+    }
+
+    public static LocalDate getLocalDateFromDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+        return new LocalDate(date.getTime());
+    }
 }
