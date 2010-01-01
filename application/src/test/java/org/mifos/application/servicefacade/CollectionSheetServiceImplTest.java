@@ -27,11 +27,11 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,7 +76,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataCustomersCorrespondingToCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
         
         final Integer customerId = Integer.valueOf(3);
         final String name = "center";
@@ -111,7 +111,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataContainingAllLoanRepaymentsDueForCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         final Integer centerId = Integer.valueOf(3);
         final String name = "center";
@@ -160,7 +160,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataContainingAllLoanRepaymentsDueWithCorrespondingAccountCollectionFeesForLoansForCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         final Integer centerId = Integer.valueOf(3);
         final String name = "center";
@@ -227,7 +227,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataContainingAllAccountCollectionForCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         final Integer centerId = Integer.valueOf(3);
         final String name = "center";
@@ -278,7 +278,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataContainingAllAccountCollectionAndCorrespondingCollectionFeesForCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         final Integer centerId = Integer.valueOf(3);
         final String name = "center";
@@ -341,7 +341,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataContainingAllSavingAccountsForCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
         final Integer centerId = Integer.valueOf(3);
         final String searchId = "1.1";
         final Short branchId = Short.valueOf("6");
@@ -396,7 +396,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataContainingAllLoanDisbursementsForCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         final Integer centerId = Integer.valueOf(3);
         final String name = "center";
@@ -443,7 +443,7 @@ public class CollectionSheetServiceImplTest {
     public void shouldRetrieveCollectionSheetDataContainingAllLoanDisbursementsAndCorrespondingDisbursementFeesForCustomerHierarchy() {
 
         // setup
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         final Integer centerId = Integer.valueOf(3);
         final String name = "center";

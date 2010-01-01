@@ -188,7 +188,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
 
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
-                .getCustomer().getCustomerId(), formEnteredDataDto.getMeetingDate());
+                .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
 
         try {
             final List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(

@@ -20,12 +20,12 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.hibernate.HibernateException;
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -63,27 +63,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         this.accountPersistence = accountPersistence;
         this.savingsPersistence = savingsPersistence;
         this.collectionSheetDao = collectionSheetDao;
-    }
-
-    private void persistCollectionSheet(final List<ClientAttendanceBO> clientAttendances, final List<LoanBO> loanAccounts,
-            final List<AccountBO> customerAccountList, final List<SavingsBO> savingAccounts) {
-
-        try {
-            StaticHibernateUtil.startTransaction();
-
-            clientAttendanceDao.save(clientAttendances);
-            loanPersistence.save(loanAccounts);
-            accountPersistence.save(customerAccountList);
-            savingsPersistence.save(savingAccounts);
-
-            StaticHibernateUtil.commitTransaction();
-
-        } catch (HibernateException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw e;
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
     }
 
     /**
@@ -124,7 +103,8 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             throw e;
         }
 
-        // just to mark off validation queries above - temporary whilst performance testing
+        // just to mark off validation queries above - temporary whilst
+        // performance testing
         CollectionSheetCustomerDto collectionSheetCustomerDto2 = new CustomerPersistence()
                 .findCustomerWithNoAssocationsLoaded(Integer.valueOf("123456"));
 
@@ -183,10 +163,33 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         doLog("Id: " + topCustomerId + " - CollectionSheetAPI Save took " + eTime + "ms");
 
         return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
-                failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers, failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
+                failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers,
+                failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
     }
 
-    public CollectionSheetDto retrieveCollectionSheet(final Integer customerId, final Date transactionDate) {
+    private void persistCollectionSheet(final List<ClientAttendanceBO> clientAttendances,
+            final List<LoanBO> loanAccounts, final List<AccountBO> customerAccountList,
+            final List<SavingsBO> savingAccounts) {
+
+        try {
+            StaticHibernateUtil.startTransaction();
+
+            clientAttendanceDao.save(clientAttendances);
+            loanPersistence.save(loanAccounts);
+            accountPersistence.save(customerAccountList);
+            savingsPersistence.save(savingAccounts);
+
+            StaticHibernateUtil.commitTransaction();
+
+        } catch (HibernateException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw e;
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public CollectionSheetDto retrieveCollectionSheet(final Integer customerId, final LocalDate transactionDate) {
 
         final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(customerId,
                 transactionDate);

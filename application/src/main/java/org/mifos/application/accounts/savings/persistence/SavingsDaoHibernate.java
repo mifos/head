@@ -45,7 +45,7 @@ public class SavingsDaoHibernate implements SavingsDao {
 
         final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
         topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
-        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> mandatorySavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -55,7 +55,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
         restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
-        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> mandatorySavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -71,7 +71,7 @@ public class SavingsDaoHibernate implements SavingsDao {
 
         final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
         topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
-        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> voluntarySavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -81,7 +81,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
         restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
-        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> voluntarySavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -97,7 +97,7 @@ public class SavingsDaoHibernate implements SavingsDao {
 
         final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
         topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
-        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -107,7 +107,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
         restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
-        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -124,7 +124,7 @@ public class SavingsDaoHibernate implements SavingsDao {
 
         final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
         topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
-        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -134,7 +134,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
         restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
-        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -150,7 +150,7 @@ public class SavingsDaoHibernate implements SavingsDao {
             final CustomerHierarchyParams customerHierarchyParams) {
         final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
         topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
-        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(
@@ -160,7 +160,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
         restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
-        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate());
+        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
 
         final List<CollectionSheetCustomerSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
                 .executeNamedQueryWithResultTransformer(

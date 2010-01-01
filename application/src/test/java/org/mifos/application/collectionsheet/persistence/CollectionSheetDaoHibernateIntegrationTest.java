@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.GenericDao;
@@ -137,7 +137,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
 
         // setup
         final Integer customerId = center.getCustomerId();
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         // exercise test
         final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(customerId,
@@ -169,7 +169,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
 
         // setup
         final Integer customerId = group.getCustomerId();
-        final Date transactionDate = new Date();
+        final LocalDate transactionDate = new LocalDate();
 
         // exercise test
         final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(customerId,
@@ -213,9 +213,9 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
-        final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
-
+        final LocalDate transactionDate = new LocalDate();
         // exercise test
+        
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepayments = collectionSheetDao
                 .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate,
                         customerAtTopOfHierarchyId);
@@ -246,7 +246,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
-        final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
+        final LocalDate transactionDate = new LocalDate();
 
         // exercise test
         Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> allOutstandingFeesByCustomerThenAccountId = collectionSheetDao
@@ -277,7 +277,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         // setup
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
-        final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
+        final LocalDate transactionDate = new LocalDate();
 
         // exercise test
         Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> allCustomerAccountCollectionFees = collectionSheetDao
@@ -302,7 +302,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         // setup
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
-        final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
+        final LocalDate transactionDate = new LocalDate();
 
         // exercise test
         Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> allOutstandingFeesByCustomerId = collectionSheetDao
@@ -336,7 +336,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
-        final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
+        final LocalDate transactionDate = new LocalDate();
 
         // exercise test
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
@@ -372,20 +372,20 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
-        final java.util.Date transactionDate = new DateTime().toDateMidnight().toDate();
+        final LocalDate transactionDate = new LocalDate();
         
         final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerAtTopOfHierarchyId,
                 branchId, searchId, transactionDate);
 
         // exercise test
-        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allLoanDisbursements = collectionSheetDao
+        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDeposits = collectionSheetDao
                 .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        final List<CollectionSheetCustomerSavingDto> loanDisbursements = allLoanDisbursements
+        final List<CollectionSheetCustomerSavingDto> savingsDeposit = allSavingsDeposits
                 .get(center
                 .getCustomerId());
-        assertThat(loanDisbursements.size(), is(2));
+        assertThat(savingsDeposit.size(), is(2));
     }
     
 }

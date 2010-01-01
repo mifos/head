@@ -26,7 +26,7 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 
 import java.util.List;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
@@ -110,7 +110,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 weeklyPeriodicFeeForCenterOnly, weeklyPeriodicFeeForGroupOnly, weeklyPeriodicFeeForClientsOnly);
 
         customerHierarchyParams = new CustomerHierarchyParams(center.getCustomerId(), center.getOffice().getOfficeId(),
-                center.getSearchId() + ".%", new DateTime().toDateMidnight().toDate());
+                center.getSearchId() + ".%", new LocalDate());
 
         baseDao = new GenericDaoHibernate();
         savingsDao = new SavingsDaoHibernate(baseDao);

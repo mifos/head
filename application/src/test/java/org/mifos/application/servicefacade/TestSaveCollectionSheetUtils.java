@@ -134,7 +134,7 @@ public class TestSaveCollectionSheetUtils {
      * information and put it into a saveCollectionSheetDto.
      * 
      * Sample hierarchy contains one center, one group and one client with a
-     * loan to be disbursed.
+     * loan to be disbursed and 1 weekly account collection fee
      * 
      * Finally, change client and loan status if configured to do so.
      */
@@ -174,7 +174,7 @@ public class TestSaveCollectionSheetUtils {
     public SaveCollectionSheetDto assembleSaveCollectionSheetFromCreatedCenterHierarchy(LocalDate transactionDate) {
 
         CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(center.getCustomerId(),
-                DateUtils.getDateFromLocalDate(transactionDate));
+                transactionDate);
 
         return assembleSaveCollectionSheetDto(collectionSheet, transactionDate);
     }
@@ -197,8 +197,8 @@ public class TestSaveCollectionSheetUtils {
         IntegrationTestObjectMother.saveCustomer(group);
 
         AmountFeeBO weeklyPeriodicFeeForFirstClients = new FeeBuilder().appliesToClientsOnly().withFeeAmount("87.0").withName(
-                "First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
-                .build();
+        "First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
+        .build();
         weeklyPeriodicFeeForFirstClients.save();
         
         client = new ClientBuilder().withFee(weeklyPeriodicFeeForFirstClients).withMeeting(weeklyMeeting).withName("Client 1").withOffice(sampleBranchOffice())

@@ -19,10 +19,9 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.util.Date;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.joda.time.LocalDate;
 import org.mifos.application.customer.business.CustomerBO;
 
 /**
@@ -33,10 +32,10 @@ public class CustomerHierarchyParams {
     private final Integer customerAtTopOfHierarchyId;
     private final Short branchId;
     private final String searchId;
-    private final Date transactionDate;
+    private final LocalDate transactionDate;
 
     public CustomerHierarchyParams(final Integer customerAtTopOfHierarchyId, final Short branchId,
-            final String searchId, final Date transactionDate) {
+            final String searchId, final LocalDate transactionDate) {
         this.customerAtTopOfHierarchyId = customerAtTopOfHierarchyId;
         this.branchId = branchId;
         this.searchId = searchId;
@@ -55,7 +54,7 @@ public class CustomerHierarchyParams {
         return this.searchId;
     }
 
-    public Date getTransactionDate() {
+    public LocalDate getTransactionDate() {
         return this.transactionDate;
     }
     

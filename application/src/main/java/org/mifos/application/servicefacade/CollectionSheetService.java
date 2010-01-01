@@ -19,13 +19,7 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.util.Date;
-import java.util.List;
-
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.joda.time.LocalDate;
 
 /**
  * The Interface CollectionSheetService provides methods to retrieve and save collection sheets. 
@@ -41,6 +35,6 @@ public interface CollectionSheetService {
     /**
      * Retrieves a Collection Sheet
      */
-    CollectionSheetDto retrieveCollectionSheet(Integer customerId, Date transactionDate);
+    CollectionSheetDto retrieveCollectionSheet(Integer customerId, LocalDate transactionDate);
 
 }
