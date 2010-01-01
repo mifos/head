@@ -37,6 +37,7 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
 
     public CollectionSheetEntrySelectPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("BulkEntry");
     }
 
     public CollectionSheetEntrySelectPage verifyPage() {

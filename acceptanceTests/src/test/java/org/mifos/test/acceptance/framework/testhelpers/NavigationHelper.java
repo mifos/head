@@ -89,7 +89,7 @@ public class NavigationHelper {
         SearchResultsPage searchResultsPage = homePage.search(clientName);
         searchResultsPage.verifyPage();
 
-        return searchResultsPage.navigateToClientViewDetailsPage("link=" + clientName + "*");
+        return searchResultsPage.navigateToClientViewDetailsPage("link=*" + clientName + "*");
     }
 
     public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {

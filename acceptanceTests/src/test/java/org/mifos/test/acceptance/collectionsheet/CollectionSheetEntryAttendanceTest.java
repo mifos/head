@@ -26,23 +26,28 @@ import java.sql.SQLException;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.framework.util.SimpleDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
@@ -60,6 +65,9 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
     private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
 
+    private CollectionSheetEntryTestHelper collectionSheetEntryTestHelper;
+    private NavigationHelper navigationHelper;
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -67,23 +75,22 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @BeforeMethod(alwaysRun = true)
+    public void setUp() throws Exception {
+        super.setUp();
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2009,7,23,1,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        collectionSheetEntryTestHelper = new CollectionSheetEntryTestHelper(selenium);
+        navigationHelper = new NavigationHelper(selenium);
+    }
+
     @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(sequential = true, groups = {"smoke"})
-    public void defaultAdminUserEntersAttendanceData() throws Exception {
-        enterAndVerifyBasicAttendanceData();
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void secondCollectionSheetEntryOverwritesFirstAttendanceData() throws Exception {
-        CollectionSheetEntryConfirmationPage confirmationPage = enterAndVerifyBasicAttendanceData();
-        verifyAttendanceData(this.getBasicAttendanceDataSet());
-        SubmitFormParameters formParameters = getFormParametersForCenter2();
-        enterAttendanceDataForSecondCenter(confirmationPage, formParameters, OVERWRITE_ATTENDANCE_VALUES, getOverwriteAttendanceDataSet());
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -92,6 +99,34 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         verifyAttendanceData(this.getBasicAttendanceDataSet());
         SubmitFormParameters formParameters = getFormParametersForCenter1();
         enterAttendanceDataForSecondCenter(confirmationPage, formParameters, SECOND_CENTER_ATTENDANCE_VALUES, getTwoCenterAttendanceDataSet());
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyEnteringAttendanceForOneCenterDoesntAffectOtherCenters() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+        SubmitFormParameters collectionSheetParams = getFormParametersForCenter2();
+        int[] defaultAttendanceValues = {ATTENDANCE_P, ATTENDANCE_P, ATTENDANCE_P, ATTENDANCE_P};
+        String[] clients = {"Teja Kakarla", "Aarif Mawani", "Mutu Juma", "Anna Martin"};
+        String[] clientsNotAffected = {"Veronica Abisya", "Dauda Mayowa", "Polly Gikonyo"};
+        int[] meetingsAttended1 = {1, 1, 1, 1};
+        int[] meetingsMissed1 = {0, 0, 0, 0};
+        int[] meetingsAttended2 = {1, 0, 0, 1};
+        int[] meetingsMissed2 = {0, 1, 1, 0};
+
+        collectionSheetEntryTestHelper.submitCollectionSheetWithChangedAttendance(collectionSheetParams, defaultAttendanceValues, OVERWRITE_ATTENDANCE_VALUES);
+        for(int i = 0; i < clients.length; i++) {
+            verifyMeetingAttendances(clients[i], meetingsAttended1[i], meetingsMissed1[i]);
+        }
+        for (String element : clientsNotAffected) {
+            verifyMeetingAttendances(element, 0, 0);
+        }
+        collectionSheetEntryTestHelper.submitCollectionSheetWithChangedAttendance(collectionSheetParams, OVERWRITE_ATTENDANCE_VALUES, BASIC_ATTENDANCE_VALUES);
+        for(int i = 0; i < clients.length; i++) {
+            verifyMeetingAttendances(clients[i], meetingsAttended2[i], meetingsMissed2[i]);
+        }
+        for (String element : clientsNotAffected) {
+            verifyMeetingAttendances(element, 0, 0);
+        }
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -127,7 +162,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     }
 
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryPage(SubmitFormParameters formParameters) {
-        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+        CollectionSheetEntrySelectPage selectPage = collectionSheetEntryTestHelper.loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage
                 .submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
@@ -175,15 +210,6 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         return attendanceDataSet.getDataSet();
     }
 
-    private IDataSet getOverwriteAttendanceDataSet() throws DataSetException, IOException {
-        SimpleDataSet attendanceDataSet = new SimpleDataSet();
-        addAttendanceRow(attendanceDataSet, 1, 8, ATTENDANCE_P);
-        addAttendanceRow(attendanceDataSet, 2, 9, ATTENDANCE_P);
-        addAttendanceRow(attendanceDataSet, 3, 10, ATTENDANCE_P);
-        addAttendanceRow(attendanceDataSet, 4, 11, ATTENDANCE_L);
-        return attendanceDataSet.getDataSet();
-    }
-
     private IDataSet getTwoCenterAttendanceDataSet() throws DataSetException, IOException {
         SimpleDataSet attendanceDataSet = new SimpleDataSet();
         addBasicAttendanceRows(attendanceDataSet);
@@ -204,5 +230,10 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         dataSet.row(CUSTOMER_ATTENDANCE, "ID=" + id,"MEETING_DATE=[null]","CUSTOMER_ID=" + customerId,"ATTENDANCE=" + attendance);
     }
 
+    private void verifyMeetingAttendances(String client, int attended, int missed) {
+        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(client);
+        clientViewDetailsPage.verifyMeetingsAttended(attended);
+        clientViewDetailsPage.verifyMeetingsMissed(missed);
+    }
 }
 

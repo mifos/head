@@ -251,6 +251,14 @@ public class ClientViewDetailsPage extends MifosPage {
         return new LoanAccountPage(selenium);
     }
 
+    public void verifyMeetingsAttended(int meetings) {
+        Assert.assertTrue(selenium.isTextPresent("Meetings Attended: "+meetings));
+    }
+
+    public void verifyMeetingsMissed(int meetings) {
+        Assert.assertTrue(selenium.isTextPresent("Meetings Missed: "+meetings));
+    }
+
     public void verifyLoanCycle(Integer loanCycle) {
         Assert.assertEquals(selenium.getText("viewClientDetails.text.loancycle"), loanCycle.toString());
     }
