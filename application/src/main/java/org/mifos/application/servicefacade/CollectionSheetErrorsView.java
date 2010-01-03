@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 /**
- * I am a DTO for tracking problems with savings/customer accounts and
+ * I am a DTO for tracking problems with loan/savings/customer accounts and
  * persisting to the database during a collection sheet save/create.
  */
 public class CollectionSheetErrorsView {

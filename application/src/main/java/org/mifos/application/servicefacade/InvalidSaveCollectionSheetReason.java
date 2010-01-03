@@ -26,7 +26,7 @@ package org.mifos.application.servicefacade;
  */
 public enum InvalidSaveCollectionSheetReason {
     
-    //domain errors
+    //errors check at constructor time
     NO_TOP_CUSTOMER_PROVIDED,
     PAYMENT_TYPE_NULL,
     UNSUPPORTED_PAYMENT_TYPE,
@@ -51,7 +51,7 @@ public enum InvalidSaveCollectionSheetReason {
     TOTALDEPOSIT_NEGATIVE,
     TOTALWITHDRAWAL_NEGATIVE,
     
-    // structural errors
+    //errors checked when processing the saveCollectionSheet method
     INVALID_TOP_CUSTOMER,
     CUSTOMER_NOT_FOUND,
     INVALID_CUSTOMER_STATUS,

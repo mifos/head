@@ -25,16 +25,40 @@ import java.util.List;
 public class SaveCollectionSheetException extends Exception {
 
     private List<InvalidSaveCollectionSheetReason> invalidSaveCollectionSheetReasons;
+    private List<String> invalidSaveCollectionSheetReasonsExtended;
+
+    public SaveCollectionSheetException(List<InvalidSaveCollectionSheetReason> invalidSaveCollectionSheetReasons,
+            List<String> invalidSaveCollectionSheetReasonsExtended) {
+        this.invalidSaveCollectionSheetReasons = invalidSaveCollectionSheetReasons;
+        this.invalidSaveCollectionSheetReasonsExtended = invalidSaveCollectionSheetReasonsExtended;
+    }
 
     public SaveCollectionSheetException(List<InvalidSaveCollectionSheetReason> invalidSaveCollectionSheetReasons) {
         this.invalidSaveCollectionSheetReasons = invalidSaveCollectionSheetReasons;
+        this.invalidSaveCollectionSheetReasonsExtended = null;
     }
-
+    
     public List<InvalidSaveCollectionSheetReason> getInvalidSaveCollectionSheetReasons() {
         return this.invalidSaveCollectionSheetReasons;
     }
 
     public String printInvalidSaveCollectionSheetReasons() {
+//constructor errors don't add to invalidSaveCollectionSheetReasonsExtended
+//processing errors do add to invalidSaveCollectionSheetReasonsExtended
+        if (invalidSaveCollectionSheetReasonsExtended != null) {
+            final StringBuilder builder = new StringBuilder();
+            final String newline = System.getProperty("line.separator");
+
+            builder.append("Input Errors Found:");
+            builder.append(newline);
+            for (String ire : invalidSaveCollectionSheetReasonsExtended) {
+                builder.append(ire);
+                builder.append(newline);
+            }
+
+            return builder.toString();
+        }
+        
         if (invalidSaveCollectionSheetReasons != null) {
             final StringBuilder builder = new StringBuilder();
             final String newline = System.getProperty("line.separator");
@@ -42,7 +66,7 @@ public class SaveCollectionSheetException extends Exception {
             builder.append("Input Errors Found:");
             builder.append(newline);
             for (InvalidSaveCollectionSheetReason ir : invalidSaveCollectionSheetReasons) {
-                builder.append(ir.toString());
+                builder.append(ir);
                 builder.append(newline);
             }
 

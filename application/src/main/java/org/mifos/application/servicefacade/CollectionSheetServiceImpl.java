@@ -66,8 +66,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     /**
-     * The method saves a collection sheet. TODO JPW - provide comment on the
-     * difference between Errors and Warnings returned
+     * The method saves a collection sheet. 
      * 
      * @throws SaveCollectionSheetException
      * */
@@ -83,8 +82,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                 .findCustomerWithNoAssocationsLoaded(topCustomerId);
         if (collectionSheetTopCustomer == null) {
             List<InvalidSaveCollectionSheetReason> invalidSaveCollectionSheetReasons = new ArrayList<InvalidSaveCollectionSheetReason>();
+            List<String> invalidSaveCollectionSheetReasonsExtended = new ArrayList<String>();
             invalidSaveCollectionSheetReasons.add(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER);
-            throw new SaveCollectionSheetException(invalidSaveCollectionSheetReasons);
+            invalidSaveCollectionSheetReasonsExtended.add(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER.toString() + ": Customer Id: " + topCustomerId);
+            throw new SaveCollectionSheetException(invalidSaveCollectionSheetReasons, invalidSaveCollectionSheetReasonsExtended);
         }
         Short branchId = collectionSheetTopCustomer.getBranchId();
         String searchId = collectionSheetTopCustomer.getSearchId();
@@ -95,7 +96,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         new SaveCollectionSheetSessionCache().loadSessionCacheWithCollectionSheetData(saveCollectionSheet, branchId,
                 searchId);
 
-        // make message more specific accounts
+        
         try {
             new SaveCollectionSheetStructureValidator().execute(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
