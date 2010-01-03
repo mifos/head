@@ -98,10 +98,10 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
          * out to isolate it
          */
 
-        //
-        // saveCollectionSheetUtils.setFirstClientClosed();
-        //
-        // createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_STATUS);
+        
+//         saveCollectionSheetUtils.setFirstClientClosed();
+//        
+//         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_STATUS);
     }
 
     private void createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason invalidReason)

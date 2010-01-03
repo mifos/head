@@ -112,7 +112,6 @@ public class TestSaveCollectionSheetUtils {
     private Boolean overpayFirstClientAccountCollectionFee = false;
     private Boolean underpayFirstClientAccountCollectionFee = false;
     private Boolean invalidDisbursalAmountFirstClient = false;
-    
 
     /*
      * 
@@ -188,21 +187,22 @@ public class TestSaveCollectionSheetUtils {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
 
-        center = new CenterBuilder().withSearchId("10.4").withMeeting(weeklyMeeting)
-                .withName("Center").withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).build();
+        center = new CenterBuilder().withSearchId("10.4").withMeeting(weeklyMeeting).withName("Center").withOffice(
+                sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.saveCustomer(center);
 
         group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withParentCustomer(center).build();
         IntegrationTestObjectMother.saveCustomer(group);
 
-        AmountFeeBO weeklyPeriodicFeeForFirstClients = new FeeBuilder().appliesToClientsOnly().withFeeAmount("87.0").withName(
-        "First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
-        .build();
+        AmountFeeBO weeklyPeriodicFeeForFirstClients = new FeeBuilder().appliesToClientsOnly().withFeeAmount("87.0")
+                .withName("First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(
+                        sampleBranchOffice()).build();
         weeklyPeriodicFeeForFirstClients.save();
-        
-        client = new ClientBuilder().withFee(weeklyPeriodicFeeForFirstClients).withMeeting(weeklyMeeting).withName("Client 1").withOffice(sampleBranchOffice())
-                .withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
+
+        client = new ClientBuilder().withFee(weeklyPeriodicFeeForFirstClients).withMeeting(weeklyMeeting).withName(
+                "Client 1").withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group)
+                .buildForIntegrationTests();
         IntegrationTestObjectMother.saveCustomer(client);
 
         client.setClientPerformanceHistory(new ClientPerformanceHistoryEntity(client));
@@ -483,11 +483,12 @@ public class TestSaveCollectionSheetUtils {
                     }
                     if (overpayLoan) {
                         loanRepayment = loanRepayment.add(new BigDecimal(1000000.00));
+                        loanDisbursement = BigDecimal.ZERO;
                     }
                     if (invalidDisbursalAmountFirstClient) {
                         loanDisbursement = new BigDecimal(1.10);
                     }
-                    
+
                     if (loanInvalidCurrency != null) {
                         accountCurrencyId = loanInvalidCurrency;
                     }

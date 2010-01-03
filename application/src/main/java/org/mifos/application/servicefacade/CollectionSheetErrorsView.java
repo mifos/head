@@ -76,7 +76,7 @@ public class CollectionSheetErrorsView {
         return this.databaseError;
     }
 
-    public void Print() {
+    public void print() {
 
             if (this.isDatabaseError()){
                 doLog("Database Error: " + this.getDatabaseError().getMessage());

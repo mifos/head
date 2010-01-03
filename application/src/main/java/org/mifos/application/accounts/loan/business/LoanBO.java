@@ -983,8 +983,24 @@ public class LoanBO extends AccountBO {
         }
     }
 
+    /*
+     * This disburseLoan only used via saveCollectionSheet - JPW
+     * 
+     * During refactoring... the checks in here should be applied to any loan disbursal
+     * and the error msgs organised and internationalised
+     */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment, final Money feesAtDisbursement)
             throws AccountException {
+
+        if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
+                && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
+            throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
+        }
+        if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {
+            throw new AccountException("Loan Amount to be Disbursed Held on Database : " + this.getLoanAmount().getAmount() 
+                    + " does not match the Input Loan Amount to be Disbursed: " + disbursalPayment.getAmount().getAmount());
+        }
+            
         disburseLoan(disbursalPayment.getReceiptNumber(), disbursalPayment.getPaymentDate(), disbursalPayment
                 .getPaymentType().getId(), disbursalPayment.getCreatedByUser(), disbursalPayment.getReceiptDate(),
                 disbursalPayment.getPaymentType().getId(), false);
@@ -1663,7 +1679,8 @@ public class LoanBO extends AccountBO {
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
             RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
-            accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(), loanInterest));
+            accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
+                    loanInterest));
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                     "AccountFeeAmount for Formula fee.." + feeAmount);
         }
@@ -3000,7 +3017,8 @@ public class LoanBO extends AccountBO {
         if (getGraceType() == GraceType.NONE) {
             Money interestFirstInstallment = loanInterest;
             // principal starts only from the second installment
-            Money principalPerInstallment = new Money(getCurrency(), Double.toString(getLoanAmount().getAmountDoubleValue()
+            Money principalPerInstallment = new Money(getCurrency(), Double.toString(getLoanAmount()
+                    .getAmountDoubleValue()
                     / (getNoOfInstallments() - 1)));
             EMIInstallment installment = new EMIInstallment();
             installment.setPrincipal(new Money(getCurrency()));
@@ -3055,7 +3073,8 @@ public class LoanBO extends AccountBO {
         if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
             Money principalLastInstallment = getLoanAmount();
 
-            Money interestPerInstallment = new Money(getCurrency(), Double.toString(getLoanAmount().getAmountDoubleValue()
+            Money interestPerInstallment = new Money(getCurrency(), Double.toString(getLoanAmount()
+                    .getAmountDoubleValue()
                     * getInterestRate() / 100 / getDecliningInterestAnnualPeriods()));
             EMIInstallment installment = null;
             for (int i = 0; i < getNoOfInstallments() - 1; i++) {
@@ -3446,7 +3465,8 @@ public class LoanBO extends AccountBO {
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
             RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
-            accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(), loanInterest));
+            accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
+                    loanInterest));
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                     "AccountFeeAmount for Formula fee.." + feeAmount);
         }

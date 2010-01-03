@@ -85,22 +85,21 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         // over-repay loan
         Date repaymentDate = incrementCurrentDate(14);
         saveCollectionSheetUtils.setOverpayLoan();
-        saveCollectionSheet = saveCollectionSheetUtils
-                .assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils.getLocalDateFromDate(repaymentDate));
-
+        saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils
+                .getLocalDateFromDate(repaymentDate));
+        saveCollectionSheet.print();
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
-
+        
         if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
-            assertThat("There should have been one loan account error", errors.getLoanRepaymentAccountNumbers().size(),
+            assertThat("There should have been one loan account repayment error", errors.getLoanRepaymentAccountNumbers().size(),
                     is(1));
         } else {
             assertTrue("There should have been one loan account repayment error", false);
         }
-
     }
 
     public void testAccountCollectionFeeOverPaymentIsIdentified() throws Exception {
@@ -128,14 +127,13 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         saveCollectionSheetUtils.setUnderpayFirstClientAccountCollectionFee();
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
-        saveCollectionSheet.print();
         CollectionSheetErrorsView errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
-        
+
         if (errors != null && errors.getCustomerAccountNumbers() != null) {
             assertThat("There should have been one customer account error", errors.getCustomerAccountNumbers().size(),
                     is(1));
@@ -145,56 +143,78 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
     }
 
-//    public void testx() throws Exception {
-//
-//        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
-//        saveCollectionSheet.print();
-//        // disburse loan
-//        CollectionSheetErrorsView errors = null;
-//        try {
-//            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
-//        } catch (SaveCollectionSheetException e) {
-//            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-//        }
-//        
-//        // disburse loan again
-//        errors = null;
-//        try {
-//            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
-//        } catch (SaveCollectionSheetException e) {
-//            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-//        }
-//
-//        if (errors != null && errors.getLoanDisbursementAccountNumbers() != null) {
-//            assertThat("There should have been one loan disbursement account error", errors.getLoanDisbursementAccountNumbers().size(),
-//                    is(1));
-//        } else {
-//            assertTrue("There should have been one loan disbursement account error", false);
-//        }
-//        errors.Print();
-//
-//    }
+    public void testDisbursalDoesntSucceedIfLoanStatusIncorrect() throws Exception {
 
-//    public void testInvalidDisbursalAmountIsIdentified() throws Exception {
-//
-//        saveCollectionSheetUtils.setInvalidDisbursalAmountFirstClient();
-//        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
-//        saveCollectionSheet.print();
-//        CollectionSheetErrorsView errors = null;
-//        try {
-//            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
-//        } catch (SaveCollectionSheetException e) {
-//            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-//        }
-//        errors.Print();
-//        if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
-//            assertThat("There should have been one loan account error", errors.getLoanRepaymentAccountNumbers().size(),
-//                    is(1));
-//        } else {
-//            assertTrue("There should have been one loan account disbursal error", false);
-//        }
-//
-//    }
+        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
+        // disburse loan
+        CollectionSheetErrorsView errors = null;
+        try {
+            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
+        } catch (SaveCollectionSheetException e) {
+            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+        }
+        
+        // disburse loan again
+        errors = null;
+        try {
+            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
+        } catch (SaveCollectionSheetException e) {
+            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+        }
+
+        if (errors != null && errors.getLoanDisbursementAccountNumbers() != null) {
+            assertThat("There should have been one loan disbursement account error", errors
+                    .getLoanDisbursementAccountNumbers().size(), is(1));
+        } else {
+            assertTrue("There should have been one loan disbursement account error", false);
+        }
+
+    }
+
+    public void testInvalidDisbursalAmountIsIdentified() throws Exception {
+
+        saveCollectionSheetUtils.setInvalidDisbursalAmountFirstClient();
+        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
+
+        CollectionSheetErrorsView errors = null;
+        try {
+            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
+        } catch (SaveCollectionSheetException e) {
+            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+        }
+
+        if (errors != null && errors.getLoanDisbursementAccountNumbers() != null) {
+            assertThat("There should have been one loan disbursement account error", errors
+                    .getLoanDisbursementAccountNumbers().size(), is(1));
+        } else {
+            assertTrue("There should have been one loan disbursement account error", false);
+        }
+    }
+
+    // public void testRepaymentNotAllowedUnlessLoanStatusCorrect() throws Exception {
+    //
+    // saveCollectionSheetUtils.setInvalidDisbursalAmountFirstClient();
+    // SaveCollectionSheetDto saveCollectionSheet =
+    // saveCollectionSheetUtils.createSampleSaveCollectionSheet();
+    // saveCollectionSheet.print();
+    // CollectionSheetErrorsView errors = null;
+    // try {
+    // errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
+    // } catch (SaveCollectionSheetException e) {
+    // throw new
+    // MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+    // }
+    // errors.Print();
+    // if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
+    // assertThat("There should have been one loan account error",
+    // errors.getLoanRepaymentAccountNumbers().size(),
+    // is(1));
+    // } else {
+    // assertTrue("There should have been one loan account disbursal error",
+    // false);
+    // }
+    //
+    // }
 
     private Date incrementCurrentDate(final int noOfDays) {
         return new java.sql.Date(new DateTime().plusDays(noOfDays).toDate().getTime());
