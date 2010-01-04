@@ -38,5 +38,9 @@
             <outputDirectory></outputDirectory>
             <destName>mifos.war</destName>
         </file>
+        <file>
+            <source>release/install-ubuntu.sh</source>
+            <outputDirectory></outputDirectory>
+        </file>
     </files>
 </assembly>
