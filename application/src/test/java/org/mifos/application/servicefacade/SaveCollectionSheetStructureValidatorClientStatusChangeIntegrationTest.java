@@ -23,13 +23,8 @@ package org.mifos.application.servicefacade;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.customer.client.business.AttendanceType;
-import org.mifos.application.master.util.helpers.PaymentTypes;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;

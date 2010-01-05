@@ -20,8 +20,10 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -33,8 +35,10 @@ import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.config.AccountingRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -92,11 +96,13 @@ public class SaveCollectionSheetStructureValidator {
 
             if (customer == null) {
                 if (isTopCustomer) {
-                    addValidationError(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER, "Customer Id: " + saveCollectionSheetCustomer.getCustomerId());
+                    addValidationError(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER, "Customer Id: "
+                            + saveCollectionSheetCustomer.getCustomerId());
                     throw new SaveCollectionSheetException(validationErrors, validationErrorsExtended);
                 }
-                addValidationError(InvalidSaveCollectionSheetReason.CUSTOMER_NOT_FOUND, "Customer Id: " + saveCollectionSheetCustomer.getCustomerId());
-           } else {
+                addValidationError(InvalidSaveCollectionSheetReason.CUSTOMER_NOT_FOUND, "Customer Id: "
+                        + saveCollectionSheetCustomer.getCustomerId());
+            } else {
                 if (isTopCustomer) {
                     topCustomer = customer;
                 }
@@ -124,6 +130,13 @@ public class SaveCollectionSheetStructureValidator {
             isTopCustomer = false;
         }
 
+        LocalDate validMeetingDate = getValidMeetingDateForTopCustomer(topCustomer.getCustomerId());
+        if (saveCollectionSheet.getTransactionDate().compareTo(validMeetingDate) != 0) {
+            addValidationError(InvalidSaveCollectionSheetReason.INVALID_DATE, "Transaction Date: "
+                    + saveCollectionSheet.getTransactionDate());
+            throw new SaveCollectionSheetException(validationErrors, validationErrorsExtended);
+        }
+
         if (validationErrors.size() > 0) {
             throw new SaveCollectionSheetException(validationErrors, validationErrorsExtended);
         }
@@ -132,14 +145,16 @@ public class SaveCollectionSheetStructureValidator {
     private void validateCustomer(CustomerBO customer, SaveCollectionSheetCustomerDto saveCollectionSheetCustomer) {
 
         if (!(validCustomerStatuses.contains(customer.getStatus()))) {
-            addValidationError(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_STATUS, 
-                    "Customer Id: " + saveCollectionSheetCustomer.getCustomerId() + " Customer Status: " + customer.getStatus().toString());
+            addValidationError(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_STATUS, "Customer Id: "
+                    + saveCollectionSheetCustomer.getCustomerId() + " Customer Status: "
+                    + customer.getStatus().toString());
         }
         if (customer.getLevel().compareTo(CustomerLevel.CLIENT) != 0
                 && saveCollectionSheetCustomer.getSaveCollectionSheetCustomerIndividualSavings() != null
                 && saveCollectionSheetCustomer.getSaveCollectionSheetCustomerIndividualSavings().size() > 0) {
-            addValidationError(InvalidSaveCollectionSheetReason.INDIVIDUAL_SAVINGS_ACCOUNTS_ONLY_VALID_FOR_CLIENTS, 
-                    "Customer Id: " + saveCollectionSheetCustomer.getCustomerId() + " Customer Level: " + customer.getLevel().toString());
+            addValidationError(InvalidSaveCollectionSheetReason.INDIVIDUAL_SAVINGS_ACCOUNTS_ONLY_VALID_FOR_CLIENTS,
+                    "Customer Id: " + saveCollectionSheetCustomer.getCustomerId() + " Customer Level: "
+                            + customer.getLevel().toString());
         }
 
         Integer customerParentId = null;
@@ -147,12 +162,13 @@ public class SaveCollectionSheetStructureValidator {
             customerParentId = customer.getParentCustomer().getCustomerId();
         }
         if (customerParentInvalid(customerParentId, saveCollectionSheetCustomer.getParentCustomerId())) {
-            addValidationError(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_PARENT, 
-                    "Customer Id: " + saveCollectionSheetCustomer.getCustomerId() + " Customer Parent Id Should be: " + customerParentId);
+            addValidationError(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_PARENT, "Customer Id: "
+                    + saveCollectionSheetCustomer.getCustomerId() + " Customer Parent Id Should be: "
+                    + customerParentId);
         }
 
         if (customerNotPartOfTopCustomerHierarchy(customer.getOffice().getOfficeId(), customer.getSearchId())) {
-            addValidationError(InvalidSaveCollectionSheetReason.CUSTOMER_IS_NOT_PART_OF_TOPCUSTOMER_HIERARCHY, 
+            addValidationError(InvalidSaveCollectionSheetReason.CUSTOMER_IS_NOT_PART_OF_TOPCUSTOMER_HIERARCHY,
                     "Customer Id: " + saveCollectionSheetCustomer.getCustomerId());
         }
 
@@ -236,13 +252,13 @@ public class SaveCollectionSheetStructureValidator {
         }
 
         if (account == null) {
-            addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_FOUND, 
-                    "Customer Id: " + customerId + " Account Id: " + accountId);
+            addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_FOUND, "Customer Id: " + customerId
+                    + " Account Id: " + accountId);
             return;
         }
         if (!validAccountOwnership(account, customerId, accountType)) {
-            addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_DOESNT_BELONG_TO_CUSTOMER, 
-                    "Customer Id: " + customerId + " Account Id: " + accountId);
+            addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_DOESNT_BELONG_TO_CUSTOMER, "Customer Id: "
+                    + customerId + " Account Id: " + accountId);
             return;
         }
 
@@ -250,20 +266,21 @@ public class SaveCollectionSheetStructureValidator {
 
         if (accountType.compareTo(ValidationAccountTypes.CUSTOMER) == 0) {
             if (!(account instanceof CustomerAccountBO)) {
-                addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_A_CUSTOMER_ACCOUNT, 
-                        "Customer Id: " + customerId + " Account Id: " + accountId);
+                addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_A_CUSTOMER_ACCOUNT, "Customer Id: "
+                        + customerId + " Account Id: " + accountId);
             }
             return;
         }
         if (accountType.compareTo(ValidationAccountTypes.LOAN) == 0) {
             if (!(account instanceof LoanBO)) {
-                addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_A_LOAN_ACCOUNT, 
-                        "Customer Id: " + customerId + " Account Id: " + accountId);
+                addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_A_LOAN_ACCOUNT, "Customer Id: "
+                        + customerId + " Account Id: " + accountId);
             } else {
 
                 if (!(validLoanAccountStates.contains(account.getState()))) {
-                    addValidationError(InvalidSaveCollectionSheetReason.INVALID_LOAN_ACCOUNT_STATUS, 
-                            "Customer Id: " + customerId + " Account Id: " + accountId + " Account Status: " + account.getState().toString());
+                    addValidationError(InvalidSaveCollectionSheetReason.INVALID_LOAN_ACCOUNT_STATUS, "Customer Id: "
+                            + customerId + " Account Id: " + accountId + " Account Status: "
+                            + account.getState().toString());
                 }
             }
             return;
@@ -271,8 +288,8 @@ public class SaveCollectionSheetStructureValidator {
         if ((accountType.compareTo(ValidationAccountTypes.SAVINGS) == 0)
                 || (accountType.compareTo(ValidationAccountTypes.INDIVIDUAL_SAVINGS) == 0)) {
             if (!(account instanceof SavingsBO)) {
-                addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_A_SAVINGS_ACCOUNT, 
-                        "Customer Id: " + customerId + " Account Id: " + accountId);
+                addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_A_SAVINGS_ACCOUNT, "Customer Id: "
+                        + customerId + " Account Id: " + accountId);
             }
             return;
         }
@@ -373,8 +390,8 @@ public class SaveCollectionSheetStructureValidator {
 
         if (customer.getLevel().compareTo(CustomerLevel.CLIENT) == 0) {
             if (attendanceType == null) {
-                addValidationError(InvalidSaveCollectionSheetReason.ATTENDANCE_TYPE_NULL, 
-                        "Client Id: " + customer.getCustomerId());
+                addValidationError(InvalidSaveCollectionSheetReason.ATTENDANCE_TYPE_NULL, "Client Id: "
+                        + customer.getCustomerId());
             } else {
 
                 for (AttendanceType at : AttendanceType.values()) {
@@ -382,12 +399,12 @@ public class SaveCollectionSheetStructureValidator {
                         return;
                     }
                 }
-                addValidationError(InvalidSaveCollectionSheetReason.UNSUPPORTED_ATTENDANCE_TYPE, 
-                        "Client Id: " + customer.getCustomerId() + " Attendance Type Id: " + attendanceType);
+                addValidationError(InvalidSaveCollectionSheetReason.UNSUPPORTED_ATTENDANCE_TYPE, "Client Id: "
+                        + customer.getCustomerId() + " Attendance Type Id: " + attendanceType);
             }
         } else {
             if (attendanceType != null) {
-                addValidationError(InvalidSaveCollectionSheetReason.ATTENDANCE_TYPE_ONLY_VALID_FOR_CLIENTS, 
+                addValidationError(InvalidSaveCollectionSheetReason.ATTENDANCE_TYPE_ONLY_VALID_FOR_CLIENTS,
                         "Customer Id: " + customer.getCustomerId() + " Attendance Type Id: " + attendanceType);
             }
         }
@@ -397,12 +414,32 @@ public class SaveCollectionSheetStructureValidator {
         // TODO This needs to change if multi-currency is implemented in
         // mifos
         if (currencyId.compareTo(mifosCurrencyId) != 0) {
-            addValidationError(InvalidSaveCollectionSheetReason.INVALID_CURRENCY, 
-                    "Currency Id: " + currencyId);
+            addValidationError(InvalidSaveCollectionSheetReason.INVALID_CURRENCY, "Currency Id: " + currencyId);
         }
     }
 
-    private void addValidationError(InvalidSaveCollectionSheetReason invalidSaveCollectionSheetReason, String extendedMessage) {
+    private LocalDate getValidMeetingDateForTopCustomer(Integer customerId) {
+
+        if (AccountingRules.isBackDatedTxnAllowed()) {
+
+            try {
+                Date meetingDate = customerPersistence.getLastMeetingDateForCustomer(customerId);
+
+                if (meetingDate == null) {
+                    // shouldn't occur but returning current date is okay here
+                    return new LocalDate();
+                }
+                return DateUtils.getLocalDateFromDate(meetingDate);
+            } catch (PersistenceException e) {
+                throw new MifosRuntimeException(e);
+            }
+        }
+
+        return new LocalDate();
+    }
+
+    private void addValidationError(InvalidSaveCollectionSheetReason invalidSaveCollectionSheetReason,
+            String extendedMessage) {
         validationErrors.add(invalidSaveCollectionSheetReason);
         validationErrorsExtended.add(invalidSaveCollectionSheetReason.toString() + ": " + extendedMessage);
     }

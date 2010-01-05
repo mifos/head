@@ -66,7 +66,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     /**
-     * The method saves a collection sheet. 
+     * The method saves a collection sheet.
      * 
      * @throws SaveCollectionSheetException
      * */
@@ -84,8 +84,11 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             List<InvalidSaveCollectionSheetReason> invalidSaveCollectionSheetReasons = new ArrayList<InvalidSaveCollectionSheetReason>();
             List<String> invalidSaveCollectionSheetReasonsExtended = new ArrayList<String>();
             invalidSaveCollectionSheetReasons.add(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER);
-            invalidSaveCollectionSheetReasonsExtended.add(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER.toString() + ": Customer Id: " + topCustomerId);
-            throw new SaveCollectionSheetException(invalidSaveCollectionSheetReasons, invalidSaveCollectionSheetReasonsExtended);
+            invalidSaveCollectionSheetReasonsExtended.add(InvalidSaveCollectionSheetReason.INVALID_TOP_CUSTOMER
+                    .toString()
+                    + ": Customer Id: " + topCustomerId);
+            throw new SaveCollectionSheetException(invalidSaveCollectionSheetReasons,
+                    invalidSaveCollectionSheetReasonsExtended);
         }
         Short branchId = collectionSheetTopCustomer.getBranchId();
         String searchId = collectionSheetTopCustomer.getSearchId();
@@ -96,7 +99,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         new SaveCollectionSheetSessionCache().loadSessionCacheWithCollectionSheetData(saveCollectionSheet, branchId,
                 searchId);
 
-        
         try {
             new SaveCollectionSheetStructureValidator().execute(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
@@ -192,12 +194,23 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
     public CollectionSheetDto retrieveCollectionSheet(final Integer customerId, final LocalDate transactionDate) {
 
+        if (customerId == null) {
+            throw new IllegalArgumentException("Invalid Null Customer Id");
+        }
+        if (transactionDate == null) {
+            throw new IllegalArgumentException("Invalid Null Transaction Date: ");
+        }
+
         final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(customerId,
                 transactionDate);
 
+        if (customerHierarchy == null || customerHierarchy.size() == 0) {
+            throw new IllegalArgumentException("Invalid Customer Id: " + customerId);
+        }
+
         final Short branchId = customerHierarchy.get(0).getBranchId();
         final String searchId = customerHierarchy.get(0).getSearchId() + ".%";
-
+        
         final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerId, branchId,
                 searchId, transactionDate);
 

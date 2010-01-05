@@ -218,6 +218,14 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     }
 
+    public void testShouldGetINVALID_DATEIfInvalidTransactionDateTwoDaysInFuture() throws Exception {
+
+        saveCollectionSheetUtils.setInvalidTransactionDate();
+
+        createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.INVALID_DATE);
+
+    }
+
     private void createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason invalidReason)
             throws Exception {
 

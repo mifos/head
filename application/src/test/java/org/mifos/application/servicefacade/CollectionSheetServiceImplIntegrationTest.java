@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -34,6 +35,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationTestCase {
@@ -61,6 +63,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
             TestDatabase.resetMySQLDatabase();
         }
 
+        new DateTimeService().resetToCurrentSystemDateTime();
         StaticHibernateUtil.closeSession();
         super.tearDown();
     }
@@ -69,6 +72,47 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
     BigDecimal injectedLoanPayment;
     BigDecimal injectedDisbursement;
+
+    public void testIllegalArgumentExceptionIsThrownForANullCustomerId() {
+
+        Boolean illegalArgumentExceptionThrown = false;
+        try {
+            collectionSheetService.retrieveCollectionSheet(null, new LocalDate());
+        } catch (IllegalArgumentException e) {
+            illegalArgumentExceptionThrown = true;
+        }
+        
+        assertTrue("IllegalArgumentException should have been thrown for a null customer Id",
+                illegalArgumentExceptionThrown);
+    }
+
+    public void testIllegalArgumentExceptionIsThrownForANullTransactionDate() {
+
+        Integer anyCustomerId = 500000;
+        Boolean illegalArgumentExceptionThrown = false;
+        try {
+            collectionSheetService.retrieveCollectionSheet(anyCustomerId, null);
+        } catch (IllegalArgumentException e) {
+            illegalArgumentExceptionThrown = true;
+        }
+        
+        assertTrue("IllegalArgumentException should have been thrown for an invalid transaction date",
+                illegalArgumentExceptionThrown);
+    }
+    
+    public void testIllegalArgumentExceptionIsThrownForAnInvalidTopCustomer() {
+
+        Integer invalidTopCustomer = 500000;
+        Boolean illegalArgumentExceptionThrown = false;
+        try {
+            collectionSheetService.retrieveCollectionSheet(invalidTopCustomer, new LocalDate());
+        } catch (IllegalArgumentException e) {
+            illegalArgumentExceptionThrown = true;
+        }
+        
+        assertTrue("IllegalArgumentException should have been thrown for an invalid top customer",
+                illegalArgumentExceptionThrown);
+    }
 
     public void testLoanOverPaymentIsIdentified() throws Exception {
 
@@ -84,10 +128,12 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         // over-repay loan
         Date repaymentDate = incrementCurrentDate(14);
+        DateTime dateTime = initializeToFixedDateTime(repaymentDate);
+        
         saveCollectionSheetUtils.setOverpayLoan();
         saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils
                 .getLocalDateFromDate(repaymentDate));
-        saveCollectionSheet.print();
+        
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
@@ -95,8 +141,8 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
         
         if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
-            assertThat("There should have been one loan account repayment error", errors.getLoanRepaymentAccountNumbers().size(),
-                    is(1));
+            assertThat("There should have been one loan account repayment error", errors
+                    .getLoanRepaymentAccountNumbers().size(), is(1));
         } else {
             assertTrue("There should have been one loan account repayment error", false);
         }
@@ -153,7 +199,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
-        
+
         // disburse loan again
         errors = null;
         try {
@@ -191,31 +237,41 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
     }
 
-    // public void testRepaymentNotAllowedUnlessLoanStatusCorrect() throws Exception {
-    //
-    // saveCollectionSheetUtils.setInvalidDisbursalAmountFirstClient();
-    // SaveCollectionSheetDto saveCollectionSheet =
-    // saveCollectionSheetUtils.createSampleSaveCollectionSheet();
-    // saveCollectionSheet.print();
-    // CollectionSheetErrorsView errors = null;
-    // try {
-    // errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
-    // } catch (SaveCollectionSheetException e) {
-    // throw new
-    // MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-    // }
-    // errors.Print();
-    // if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
-    // assertThat("There should have been one loan account error",
-    // errors.getLoanRepaymentAccountNumbers().size(),
-    // is(1));
-    // } else {
-    // assertTrue("There should have been one loan account disbursal error",
-    // false);
-    // }
-    //
-    // }
+    public void testRepaymentNotAllowedUnlessLoanStatusCorrect() throws Exception {
 
+        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
+
+        // make a small repayment on loan without it being disbursed
+        Date repaymentDate = incrementCurrentDate(14);
+        DateTime dateTime = initializeToFixedDateTime(repaymentDate);
+        
+        saveCollectionSheetUtils.setNormalLoanRepayment();
+        saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils
+                .getLocalDateFromDate(repaymentDate));
+        
+        CollectionSheetErrorsView errors = null;
+        try {
+            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
+        } catch (SaveCollectionSheetException e) {
+            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+        }
+        
+        if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
+            assertThat("There should have been one loan account repayment error", errors
+                    .getLoanRepaymentAccountNumbers().size(), is(1));
+        } else {
+            assertTrue("There should have been one loan account repayment error", false);
+        }
+    }
+
+    private DateTime initializeToFixedDateTime(Date date) {
+        LocalDate localDate = DateUtils.getLocalDateFromDate(date).plusDays(3);
+        DateTime dateTime = new DateTime(localDate.getYear(),localDate.getMonthOfYear(),localDate.getDayOfMonth(),0,0,0,0);
+        DateTimeService dateTimeService = new DateTimeService();
+        dateTimeService.setCurrentDateTimeFixed(dateTime);
+        return dateTime;
+    }
+    
     private Date incrementCurrentDate(final int noOfDays) {
         return new java.sql.Date(new DateTime().plusDays(noOfDays).toDate().getTime());
     }

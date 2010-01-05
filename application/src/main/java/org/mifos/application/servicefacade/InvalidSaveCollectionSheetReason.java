@@ -70,11 +70,7 @@ public enum InvalidSaveCollectionSheetReason {
     INVALID_LOAN_ACCOUNT_STATUS,
     ACCOUNT_NOT_A_SAVINGS_ACCOUNT,
     
-    INVALID_CURRENCY,
-    
-    
-    
-    
-    INVALID_DATE;//to be done
+    INVALID_CURRENCY, 
+    INVALID_DATE;
     
 }

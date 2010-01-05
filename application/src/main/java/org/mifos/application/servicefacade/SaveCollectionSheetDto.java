@@ -93,14 +93,14 @@ public class SaveCollectionSheetDto {
      * The Dto really ends here: All the fields and methods below are only
      * 'helpers' derived because of:
      * 
-     * a) self-validation (any error is a programming problem) Some people think
+     * a) self-validation (any error is a programming problem) Some may think
      * this should not be part of this class and/or errors should just throw a
      * runtime exception. I (JPW) thought it might be useful for a programmer to
      * have the errors nicely put in an array with a method to print them for
      * debugging purposes. We'll see how it goes.
      * 
      * 
-     * b) analysing the save collection sheet input. Again some people think
+     * b) analysing the save collection sheet input. Again some may think
      * this should not be in this class. However, even this simplified structure
      * takes quite a bit of set up and I thought it would be good to have
      * methods that told the programmer how the collection sheet was made up.

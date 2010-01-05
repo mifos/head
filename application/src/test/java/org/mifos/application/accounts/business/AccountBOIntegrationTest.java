@@ -259,7 +259,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = accountBO;
 
-        loan.setAccountState(new AccountStateEntity(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
         loan.setUserContext(TestUtils.makeUser());
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
@@ -267,6 +266,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
                 TestObjectFactory.getMoneyForMFICurrency(712), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
         loan.applyPaymentWithPersist(accountPaymentDataView);
+        loan.setAccountState(new AccountStateEntity(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
 
         TestObjectFactory.updateObject(loan);
         try {

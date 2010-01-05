@@ -1398,6 +1398,11 @@ public class LoanBO extends AccountBO {
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
 
+        if ((this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) != 0)
+                && (this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) != 0)) {
+            throw new AccountException("Loan not in a State for a Repayment to be made: " + this.getState().toString());
+        }
+        
         if (!paymentAmountIsValid(paymentData.getTotalAmount())) {
             throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });
         }

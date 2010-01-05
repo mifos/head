@@ -80,9 +80,6 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /*
- * 
- */
-    /*
      * Below are variables that can be configured to create invalid entries for
      * testing. They are injected during the assembling of the dto's. This is a
      * very ugly way to inject invalid values. Set methods would be far tidier
@@ -112,17 +109,19 @@ public class TestSaveCollectionSheetUtils {
     private Boolean overpayFirstClientAccountCollectionFee = false;
     private Boolean underpayFirstClientAccountCollectionFee = false;
     private Boolean invalidDisbursalAmountFirstClient = false;
-
+    private Boolean invalidTransactionDate = false;
+    private Boolean normalLoanRepayment = false;
+    
     /*
      * 
      */
-    CenterBO center;
-    GroupBO group;
-    ClientBO client;
-    LoanBO loan;
-    CenterBO anotherCenter;
-    GroupBO anotherGroup;
-    ClientBO anotherClient;
+    private CenterBO center;
+    private GroupBO group;
+    private ClientBO client;
+    private LoanBO loan;
+    private CenterBO anotherCenter;
+    private GroupBO anotherGroup;
+    private ClientBO anotherClient;
 
     private CollectionSheetService collectionSheetService;
     private UserContext userContext;
@@ -228,6 +227,10 @@ public class TestSaveCollectionSheetUtils {
         StaticHibernateUtil.commitTransaction();
     }
 
+    public CenterBO getCenter() {
+        return this.center;
+    }
+
     /**
      * clears persistent objects created by this class
      */
@@ -293,11 +296,15 @@ public class TestSaveCollectionSheetUtils {
     private SaveCollectionSheetDto assembleSaveCollectionSheetDto(CollectionSheetDto collectionSheet,
             LocalDate transactionDate) {
 
+        LocalDate usedTransactionDate = transactionDate;
+        if (invalidTransactionDate) {
+            usedTransactionDate = transactionDate.plusDays(2);
+        }
         SaveCollectionSheetDto saveCollectionSheet = null;
         try {
             saveCollectionSheet = new SaveCollectionSheetDto(assembleSCSCustomers(collectionSheet
-                    .getCollectionSheetCustomer()), PaymentTypes.VOUCHER.getValue(), transactionDate, "my new receipt",
-                    transactionDate, testUser().getPersonnelId());
+                    .getCollectionSheetCustomer()), PaymentTypes.VOUCHER.getValue(), usedTransactionDate,
+                    "my new receipt", transactionDate, testUser().getPersonnelId());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } catch (SaveCollectionSheetException e) {
@@ -483,6 +490,10 @@ public class TestSaveCollectionSheetUtils {
                     }
                     if (overpayLoan) {
                         loanRepayment = loanRepayment.add(new BigDecimal(1000000.00));
+                        loanDisbursement = BigDecimal.ZERO;
+                    }
+                    if (normalLoanRepayment) {
+                        loanRepayment = loanRepayment.add(new BigDecimal(15.00));
                         loanDisbursement = BigDecimal.ZERO;
                     }
                     if (invalidDisbursalAmountFirstClient) {
@@ -733,6 +744,14 @@ public class TestSaveCollectionSheetUtils {
 
     public void setInvalidDisbursalAmountFirstClient() {
         this.invalidDisbursalAmountFirstClient = true;
+    }
+
+    public void setInvalidTransactionDate() {
+        this.invalidTransactionDate = true;
+    }
+
+    public void setNormalLoanRepayment() {
+        this.normalLoanRepayment = true;        
     }
 
 }
