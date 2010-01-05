@@ -21,14 +21,17 @@
 package org.mifos.config;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
@@ -246,13 +249,22 @@ public class AccountingRulesTest {
         }
     }
 
-    @Ignore
+    @Test
+    public void globalMulticurrencyFlagWorks() {
+        assertFalse(AccountingRules.isMultiCurrencyEnabled());
+        List<String> codes = new ArrayList<String>();
+        codes.add("LBP");
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, codes);
+        assertTrue(AccountingRules.isMultiCurrencyEnabled());
+        configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+    }
+
     @Test
     public void canConfigureAlternateCurrency() {
         // TODO: implement
     }
 
-    @Ignore
     @Test
     public void canConfigureAlternateCurrencyWithNonDefaultDigitsAfterDecimal() {
         // TODO: implement
@@ -267,7 +279,6 @@ public class AccountingRulesTest {
      * 2306</a> and <a href="http://mifosforge.jira.com/browse/MIFOS-2600">Issue
      * 2600</a>.
      */
-    @Ignore
     @Test
     public void canConfigureNegativeDigitsAfterDecimal() {
         // TODO: implement

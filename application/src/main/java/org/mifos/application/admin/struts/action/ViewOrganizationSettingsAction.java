@@ -107,7 +107,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     private Properties getAccountingRules() {
         Properties accountingRules = new Properties();
 
-        accountingRules.setProperty("currency", AccountingRules.getCurrencyCode());
+        accountingRules.setProperty("currency", AccountingRules.getDefaultCurrencyCode());
         accountingRules.setProperty("maxInterest", AccountingRules.getMaxInterest().toString());
         accountingRules.setProperty("minInterest", AccountingRules.getMinInterest().toString());
         accountingRules.setProperty("digitsAfterDecimal", AccountingRules.getDigitsAfterDecimal().toString());

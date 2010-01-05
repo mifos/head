@@ -22,6 +22,7 @@ package org.mifos.config;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
@@ -41,8 +42,8 @@ public class AccountingRules {
     private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
 
     public static MifosCurrency getMifosCurrency(ConfigurationPersistence configurationPersistence) {
-        String currencyCode = getCurrencyCode();
-        MifosCurrency currency = configurationPersistence.getCurrency(getCurrencyCode());
+        String currencyCode = getDefaultCurrencyCode();
+        MifosCurrency currency = configurationPersistence.getCurrency(getDefaultCurrencyCode());
         if (currency == null)
             throw new RuntimeException("Can't find in the database the currency define in the config file "
                     + currencyCode);
@@ -53,8 +54,13 @@ public class AccountingRules {
                 amountToBeRoundedTo, digitsAfterDecimal, currencyCode);
     }
 
-    public static String getCurrencyCode() {
+    public static String getDefaultCurrencyCode() {
         return ConfigurationManager.getInstance().getString(AccountingRulesConstants.CURRENCY_CODE);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static List<String> getAdditionalCurrencyCodes() {
+        return ConfigurationManager.getInstance().getList(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
     }
 
     public static Double getMaxInterest() {
@@ -71,7 +77,7 @@ public class AccountingRules {
 
     /**
      * Broken. See <a
-     * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1537">issue
+     * href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
      * 1537</a>
      */
     public static Short getDigitsBeforeDecimal() {
@@ -85,7 +91,7 @@ public class AccountingRules {
 
     /**
      * Broken. See <a
-     * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1537">issue
+     * href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
      * 1537</a>
      */
     public static Short getDigitsBeforeDecimalForInterest() {
@@ -156,8 +162,9 @@ public class AccountingRules {
     }
     
     public static Boolean isMultiCurrencyEnabled(){
-        //FIXME this method might be called from AccountingRules 
-        // for now testing is being done so the value returned is true        
+        if (getAdditionalCurrencyCodes().isEmpty()) {
+            return false;
+        }
         return true;
     }
 
