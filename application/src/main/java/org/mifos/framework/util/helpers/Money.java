@@ -89,14 +89,7 @@ public final class Money implements Serializable {
     private final BigDecimal amount;
 
     public Money(MifosCurrency currency, String amount) {
-        this.currency = currency;
-        if (amount == null || "".equals(amount.trim())) {
-            // seems like we shouldn't allow null values for money
-            // should we throw an exception or set a zero value here?
-            this.amount = null;
-        } else {
-            this.amount = new BigDecimal(amount, internalPrecisionAndRounding);
-        }
+        this(currency, new BigDecimal(amount, internalPrecisionAndRounding));
     }
 
     public Money() {
@@ -114,9 +107,8 @@ public final class Money implements Serializable {
     }
 
     public Money(BigDecimal amount) {
-        this.currency = getDefaultCurrency();
-        this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding
-                .getRoundingMode());
+        this(getDefaultCurrency(), amount.setScale(internalPrecisionAndRounding.getPrecision(),
+                internalPrecisionAndRounding.getRoundingMode()));
     }
 
     /**
@@ -124,8 +116,7 @@ public final class Money implements Serializable {
      * set to zero.
      */
     public Money(MifosCurrency currency) {
-        this.currency = currency;
-        this.amount = new BigDecimal(0, internalPrecisionAndRounding);
+        this(currency, new BigDecimal(0, internalPrecisionAndRounding));
     }
 
     public BigDecimal getAmount() {

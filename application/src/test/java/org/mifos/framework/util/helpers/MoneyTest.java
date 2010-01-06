@@ -85,7 +85,14 @@ public class MoneyTest extends TestCase {
 
     public void testFactorMultiply() {
         Money money = new Money(RUPEE, "100.0");
-        Double factor = new Double(1 + (24 / 100.0));
+        Double factor = new Double(1.24);
+       Assert.assertEquals("testing multiply with a factor, should succeed", new Money(RUPEE, "124.0"), money
+                .multiply(factor));
+    }
+    
+    public void testMultiplyBigDecimal() {
+        Money money = new Money(RUPEE, "100.0");
+        BigDecimal factor = new BigDecimal(1.24);
        Assert.assertEquals("testing multiply with a factor, should succeed", new Money(RUPEE, "124.0"), money
                 .multiply(factor));
     }
@@ -101,13 +108,13 @@ public class MoneyTest extends TestCase {
     }
 
     public void testDivideByMoney() {
-        Money dividend = new Money(RUPEE, "10.0");
+        Money dividend = new Money(RUPEE, new BigDecimal(10.0));
         Money money = new Money(RUPEE, "20.0");
        Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
     }
 
     public void testDivide() {
-        BigDecimal dividend = new BigDecimal("10.0", Money.getInternalPrecisionAndRounding());
+        BigDecimal dividend = new BigDecimal(10.0);
         Money money = new Money(RUPEE, "20.0");
        Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
     }
@@ -167,8 +174,9 @@ public class MoneyTest extends TestCase {
        Assert.assertEquals((money.getCurrency().getCurrencyId() * 100 + amnt.intValue()), money.hashCode());
     }
 
-    public void testHashCodeForNullAmnt() {
-        Money money = new Money(RUPEE, "");
+    public void testHashCodeForNullCurrency() {
+        //FIXME null currencies should not be allowed
+        Money money = new Money(null, "0");
        Assert.assertEquals(0, money.hashCode());
     }
 

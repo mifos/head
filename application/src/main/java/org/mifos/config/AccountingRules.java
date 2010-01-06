@@ -22,12 +22,14 @@ package org.mifos.config;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.config.AccountingRulesConstants;
+import org.mifos.framework.util.helpers.Money;
 
 public class AccountingRules {
 
@@ -42,16 +44,55 @@ public class AccountingRules {
     private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
 
     public static MifosCurrency getMifosCurrency(ConfigurationPersistence configurationPersistence) {
-        String currencyCode = getDefaultCurrencyCode();
-        MifosCurrency currency = configurationPersistence.getCurrency(getDefaultCurrencyCode());
+        return getMifosCurrency(getDefaultCurrencyCode(),configurationPersistence);
+    }
+    
+    public static MifosCurrency getMifosCurrency(String currencyCode,ConfigurationPersistence configurationPersistence) {
+        MifosCurrency currency = configurationPersistence.getCurrency(currencyCode);
         if (currency == null)
             throw new RuntimeException("Can't find in the database the currency define in the config file "
                     + currencyCode);
-        Short digitsAfterDecimal = getDigitsAfterDecimal();
+        Short digitsAfterDecimal = getDigitsAfterDecimal(currency);
         Float amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
         Short roundingMode = getRoundingMode(currency.getRoundingMode());
         return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(), roundingMode,
                 amountToBeRoundedTo, digitsAfterDecimal, currencyCode);
+    }
+    
+    /**
+     * 
+     * Gets the List of currencies configured to use in Mifos,
+     * the first element will be the default currency.
+     * 
+     * @return List of currencies
+     */
+    public static  LinkedList<MifosCurrency> getCurrencies() {
+        LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
+        currencies.add(Money.getDefaultCurrency());
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        for (String currencyCode: AccountingRules.getAdditionalCurrencyCodes()) {
+            currencies.add(getMifosCurrency(currencyCode, configurationPersistence));
+        }
+        return currencies;
+    }
+    
+    /**
+     * Gets the currency by currency id from the list of currencies configured to used in Mifos 
+     * {@link AccountingRules#getCurrencies()}
+     * 
+     * @param currencyId
+     * @return {@link MifosCurrency}
+     */
+    public static MifosCurrency getCurrencyByCurrencyId(Short currencyId) {
+        LinkedList<MifosCurrency> currencies = getCurrencies();
+        Iterator<MifosCurrency> i = currencies.iterator();
+        while(i.hasNext()) {
+            MifosCurrency a = i.next();
+            if(a.getCurrencyId().equals(currencyId)) {
+                return a;
+            }
+        }
+        return null;
     }
 
     public static String getDefaultCurrencyCode() {

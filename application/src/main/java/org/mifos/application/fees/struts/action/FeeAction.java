@@ -21,8 +21,6 @@
 package org.mifos.application.fees.struts.action;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +48,6 @@ import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -70,7 +67,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -120,7 +116,8 @@ public class FeeAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         SessionUtils.setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled(), request);
         if (AccountingRules.isMultiCurrencyEnabled()) {
-            String currencyCode = getSelectedCurrencyFromList((FeeActionForm) form).getCurrencyCode();
+            Short currencyId = ((FeeActionForm) form).getCurrencyId();
+            String currencyCode = AccountingRules.getCurrencyByCurrencyId(currencyId).getCurrencyCode();
             request.getSession().setAttribute("currencyCode", currencyCode);
         }
         return mapping.findForward(ActionForwards.preview_success.toString());
@@ -256,27 +253,6 @@ public class FeeAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancelEdit_success.toString());
     }
-
-    private LinkedList<MifosCurrency> getCurrencies() {
-        //FIXME TODO stubbed code: required to retrieve real list of currencies from configuration
-        // First currency to be added in the list should be default currency
-        // Depends on mingle story 2176
-        LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
-        currencies.add(Money.getDefaultCurrency());
-        return currencies;
-    }
-    
-    private MifosCurrency getSelectedCurrencyFromList(FeeActionForm form) {
-        LinkedList<MifosCurrency> currencies = getCurrencies();
-        Iterator<MifosCurrency> i = currencies.iterator();
-        while(i.hasNext()) {
-            MifosCurrency a = i.next();
-            if(a.getCurrencyId().equals(form.getCurrencyId())) {
-                return a;
-            }
-        }
-        return null;
-    }
     
     private FeeBO createFee(FeeActionForm actionForm, HttpServletRequest request) throws ApplicationException {
 
@@ -292,7 +268,8 @@ public class FeeAction extends BaseAction {
         } else {
            fee = createPeriodicFee(actionForm, request, feeCategory, feeFrequencyType, glCode);
         }
-        fee.setCurrency(getSelectedCurrencyFromList(actionForm));
+        Short currencyId = ((FeeActionForm) actionForm).getCurrencyId();
+        fee.setCurrency(AccountingRules.getCurrencyByCurrencyId(currencyId));
         return fee;
 
     }
@@ -365,7 +342,7 @@ public class FeeAction extends BaseAction {
                 FeeFrequencyTypeEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(FeeConstants.GLCODE_LIST, getGLCodes(), request);
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
-        request.getSession().setAttribute("currencies", getCurrencies());
+        request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
     }
 
     private void loadUpdateMasterData(HttpServletRequest request) throws ApplicationException, SystemException {
