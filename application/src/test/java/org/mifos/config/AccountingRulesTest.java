@@ -255,19 +255,43 @@ public class AccountingRulesTest {
         List<String> codes = new ArrayList<String>();
         codes.add("LBP");
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, codes);
-        assertTrue(AccountingRules.isMultiCurrencyEnabled());
-        configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+        try {
+            configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, codes);
+            assertTrue(AccountingRules.isMultiCurrencyEnabled());
+        } finally {
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void alternateCurrenciesNotConfigured() {
+        AccountingRules.getDigitsAfterDecimal(TestUtils.EURO);
     }
 
     @Test
-    public void canConfigureAlternateCurrency() {
-        // TODO: implement
+    public void digitsAfterDecimalFallsBackToDefault() {
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        try {
+            configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
+            assertEquals(new Short("1"), AccountingRules.getDigitsAfterDecimal(TestUtils.EURO));
+        } finally {
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+        }
     }
 
     @Test
     public void canConfigureAlternateCurrencyWithNonDefaultDigitsAfterDecimal() {
-        // TODO: implement
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        try {
+            configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
+            configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "."
+                    + TestUtils.EURO.getCurrencyCode(), (short) 2);
+            assertEquals(new Short("2"), AccountingRules.getDigitsAfterDecimal(TestUtils.EURO));
+        } finally {
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+            configMgr.clearProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "."
+                    + TestUtils.EURO.getCurrencyCode());
+        }
     }
 
     /**

@@ -57,7 +57,11 @@ public class AccountingRules {
     public static String getDefaultCurrencyCode() {
         return ConfigurationManager.getInstance().getString(AccountingRulesConstants.CURRENCY_CODE);
     }
-    
+
+    /*
+     * suppress unchecked casts to allow genericized List<String> to be used by
+     * callers
+     */
     @SuppressWarnings("unchecked")
     public static List<String> getAdditionalCurrencyCodes() {
         return ConfigurationManager.getInstance().getList(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
@@ -68,16 +72,27 @@ public class AccountingRules {
     }
 
     public static Double getMinInterest() {
-        return  ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
     }
 
     public static Short getDigitsAfterDecimal() {
         return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
 
+    public static Short getDigitsAfterDecimal(final MifosCurrency currency) {
+        final String code = currency.getCurrencyCode();
+        if (getDefaultCurrencyCode().equals(code)) {
+            return getDigitsAfterDecimal();
+        }
+        if (!getAdditionalCurrencyCodes().contains(code)) {
+            throw new IllegalArgumentException("Currency not configured. " + currency);
+        }
+        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "." + code,
+                getDigitsAfterDecimal());
+    }
+
     /**
-     * Broken. See <a
-     * href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
+     * Broken. See <a href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
      * 1537</a>
      */
     public static Short getDigitsBeforeDecimal() {
@@ -90,8 +105,7 @@ public class AccountingRules {
     }
 
     /**
-     * Broken. See <a
-     * href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
+     * Broken. See <a href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
      * 1537</a>
      */
     public static Short getDigitsBeforeDecimalForInterest() {
@@ -109,7 +123,8 @@ public class AccountingRules {
 
     // the defaultValue passed in should be the value from database
     public static Float getAmountToBeRoundedTo(Float defaultValue) {
-        return ConfigurationManager.getInstance().getFloat(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO, defaultValue);
+        return ConfigurationManager.getInstance().getFloat(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO,
+                defaultValue);
     }
 
     public static Short getRoundingMode(Short defaultValue) {
@@ -160,8 +175,8 @@ public class AccountingRules {
         ConfigurationManager cm = ConfigurationManager.getInstance();
         return cm.getBoolean(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
     }
-    
-    public static Boolean isMultiCurrencyEnabled(){
+
+    public static Boolean isMultiCurrencyEnabled() {
         if (getAdditionalCurrencyCodes().isEmpty()) {
             return false;
         }
@@ -198,8 +213,7 @@ public class AccountingRules {
         return getRoundingModeFromString(modeStr, "FinalRoundingMode", defaultFinalRoundingMode);
     }
 
-    private static BigDecimal getRoundOffMultipleFromString(String roundOffStr,
-            BigDecimal defaultRoundOffMultiple) {
+    private static BigDecimal getRoundOffMultipleFromString(String roundOffStr, BigDecimal defaultRoundOffMultiple) {
         if (StringUtils.isBlank(roundOffStr)) {
             return defaultRoundOffMultiple;
         }
@@ -212,9 +226,35 @@ public class AccountingRules {
         return getRoundOffMultipleFromString(modeStr, defaultInitialRoundOffMultiple);
     }
 
+    public static BigDecimal getInitialRoundOffMultiple(final MifosCurrency currency) {
+        final String code = currency.getCurrencyCode();
+        if (getDefaultCurrencyCode().equals(code)) {
+            return getInitialRoundOffMultiple();
+        }
+        if (!getAdditionalCurrencyCodes().contains(code)) {
+            throw new IllegalArgumentException("Currency not configured. " + currency);
+        }
+        String modeStr = ConfigurationManager.getInstance().getString(
+                AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE + "." + code);
+        return getRoundOffMultipleFromString(modeStr, defaultInitialRoundOffMultiple);
+    }
+
     public static BigDecimal getFinalRoundOffMultiple() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE);
+        return getRoundOffMultipleFromString(modeStr, defaultFinalRoundOffMultiple);
+    }
+    
+    public static BigDecimal getFinalRoundOffMultiple(final MifosCurrency currency) {
+        final String code = currency.getCurrencyCode();
+        if (getDefaultCurrencyCode().equals(code)) {
+            return getFinalRoundOffMultiple();
+        }
+        if (!getAdditionalCurrencyCodes().contains(code)) {
+            throw new IllegalArgumentException("Currency not configured. " + currency);
+        }
+        String modeStr = ConfigurationManager.getInstance().getString(
+                AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE + "." + code);
         return getRoundOffMultipleFromString(modeStr, defaultFinalRoundOffMultiple);
     }
 
@@ -247,11 +287,13 @@ public class AccountingRules {
     }
 
     public static void setDigitsBeforeDecimalForInterest(Short value) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL_FOR_INTEREST, value);
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL_FOR_INTEREST,
+                value);
     }
 
     public static void setDigitsAfterDecimalForInterest(Short value) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST, value);
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST,
+                value);
     }
 
     public static void setRoundingRule(RoundingMode mode) {
@@ -259,23 +301,28 @@ public class AccountingRules {
     }
 
     public static void setFinalRoundOffMultiple(BigDecimal finalRoundOffMultiple) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, finalRoundOffMultiple.toString());
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE,
+                finalRoundOffMultiple.toString());
     }
 
     public static void setInitialRoundOffMultiple(BigDecimal initialRoundOffMultiple) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE, initialRoundOffMultiple.toString());
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE,
+                initialRoundOffMultiple.toString());
     }
 
     public static void setCurrencyRoundingMode(RoundingMode currencyRoundingMode) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, currencyRoundingMode.name());
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE,
+                currencyRoundingMode.name());
     }
 
     public static void setInitialRoundingMode(RoundingMode intialRoundingMode) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, intialRoundingMode.name());
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE,
+                intialRoundingMode.name());
     }
 
     public static void setFinalRoundingMode(RoundingMode finalRoundingMode) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, finalRoundingMode.name());
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE,
+                finalRoundingMode.name());
     }
 
     public static void setBackDatedTransactionsAllowed(Boolean value) {
@@ -291,6 +338,7 @@ public class AccountingRules {
     }
 
     public static void setNumberOfInterestDays(Integer numberOfInterestDays) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, numberOfInterestDays);
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS,
+                numberOfInterestDays);
     }
 }
