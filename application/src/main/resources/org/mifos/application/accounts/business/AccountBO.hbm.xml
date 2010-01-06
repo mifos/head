@@ -258,9 +258,11 @@
 		</joined-subclass>
 	</class>
 	<query name="accounts.getLastMeetingDateforCustomer">
-		<![CDATA[from org.mifos.application.customer.business.CustomerScheduleEntity accountTrxn 
-			where accountTrxn.customer.customerId = :CUSTOMER_ID and accountTrxn.actionDate <= date(:ACTION_DATE)  
-			order by accountTrxn.actionDate desc]]>
+		<![CDATA[select max(accountTrxn.actionDate)	
+		    from org.mifos.application.customer.business.CustomerScheduleEntity accountTrxn 
+			where accountTrxn.customer.customerId = :CUSTOMER_ID 
+			and accountTrxn.actionDate <= date(:ACTION_DATE)
+		]]>
 	</query>
 
 	<query name="accounts.getApplicableSavingsProductOfferings">

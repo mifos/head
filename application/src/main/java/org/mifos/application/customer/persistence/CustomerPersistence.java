@@ -171,15 +171,11 @@ public class CustomerPersistence extends Persistence {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
         queryParameters.put("ACTION_DATE", actionDate);
-        List<AccountActionDateEntity> queryResult = executeNamedQuery(
+        meetingDate =  (Date) execUniqueResultNamedQuery(
                 NamedQueryConstants.GET_LAST_MEETINGDATE_FOR_CUSTOMER, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            meetingDate = queryResult.get(0).getActionDate();
-        }
         return meetingDate;
-
     }
-
+    
     /**
      * @deprecated use {@link CustomerDao#findCustomerById(Integer)}
      */
