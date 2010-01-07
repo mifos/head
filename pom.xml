@@ -8,8 +8,8 @@
     <name>Mifos - Parent</name>
     <description>Mifos is a Web application and platform for microfinance portfolio management.</description>
     <issueManagement>
-        <system>CollabNet Issuezilla</system>
-        <url>https://mifos.dev.java.net/issues/</url>
+        <system>JIRA</system>
+        <url>http://mifosforge.jira.com/</url>
     </issueManagement>
     <ciManagement>
         <system>Hudson</system>
