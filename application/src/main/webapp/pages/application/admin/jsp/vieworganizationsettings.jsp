@@ -96,17 +96,11 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.accountingrules" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.currency" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
-								<c:out value="${orgSettings.currency}"/>
-								<br/>
 								<mifos:mifoslabel name="VOS.maxInterest" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.maxInterest}"/>
 								<br/>
 								<mifos:mifoslabel name="VOS.minInterest" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.minInterest}"/>
-								<br/>
-								<mifos:mifoslabel name="VOS.digitsAfterDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
-								<c:out value="${orgSettings.digitsAfterDecimal}"/>
 								<br/>
 								<mifos:mifoslabel name="VOS.digitsBeforeDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.digitsBeforeDecimal}"/>
@@ -132,14 +126,29 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="VOS.finalRoundingMode" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.finalRoundingMode}"/>
 								<br/>
-								
-								<mifos:mifoslabel name="VOS.finalRoundOffMultiple" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
-								<c:out value="${orgSettings.finalRoundOffMultiple}"/>
 								<br/>
-								
-								<mifos:mifoslabel name="VOS.initialRoundOffMultiple" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
-								<c:out value="${orgSettings.initialRoundOffMultiple}"/>
-								<br/>
+							</span>
+						</span>
+						
+						<span class="fontnormalbold">
+							<mifos:mifoslabel name="VOS.currencies" bundle="viewOrganizationSettingsUIResources" />
+							<span class="fontnormal">
+
+								<c:forEach items="${orgSettings.currencies}" var="currency">
+									<br/>
+									<mifos:mifoslabel name="VOS.currency" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+									<c:out value="${currency.code}"/>
+									<br/>
+									<mifos:mifoslabel name="VOS.digitsAfterDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+									<c:out value="${currency.digitsAfterDecimal}"/>
+									<br/>
+									<mifos:mifoslabel name="VOS.finalRoundOffMultiple" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+									<c:out value="${currency.finalRoundOffMultiple}"/>
+									<br/>
+									<mifos:mifoslabel name="VOS.initialRoundOffMultiple" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+									<c:out value="${currency.initialRoundOffMultiple}"/>
+									<br/>
+								</c:forEach>
 								<br/>
 							</span>
 						</span>

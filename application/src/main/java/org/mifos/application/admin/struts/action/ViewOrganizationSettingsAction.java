@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -72,6 +73,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         orgSettings.putAll(getFiscalRules());
         orgSettings.putAll(getLocaleInfo());
         orgSettings.putAll(getAccountingRules());
+        orgSettings.put("currencies", getCurrencies());
         orgSettings.putAll(getClientRules());
         orgSettings.putAll(getProcessFlowRules());
         orgSettings.putAll(getMiscRules(request.getSession()));
@@ -107,10 +109,8 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     private Properties getAccountingRules() {
         Properties accountingRules = new Properties();
 
-        accountingRules.setProperty("currency", AccountingRules.getDefaultCurrencyCode());
         accountingRules.setProperty("maxInterest", AccountingRules.getMaxInterest().toString());
         accountingRules.setProperty("minInterest", AccountingRules.getMinInterest().toString());
-        accountingRules.setProperty("digitsAfterDecimal", AccountingRules.getDigitsAfterDecimal().toString());
         accountingRules.setProperty("digitsBeforeDecimal", AccountingRules.getDigitsBeforeDecimal().toString());
         accountingRules.setProperty("intDigitsAfterDecimal", AccountingRules.getDigitsAfterDecimalForInterest()
                 .toString());
@@ -120,9 +120,23 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         accountingRules.setProperty("currencyRoundingMode", AccountingRules.getCurrencyRoundingMode().toString());
         accountingRules.setProperty("initialRoundingMode", AccountingRules.getInitialRoundingMode().toString());
         accountingRules.setProperty("finalRoundingMode", AccountingRules.getFinalRoundingMode().toString());
-        accountingRules.setProperty("finalRoundOffMultiple", AccountingRules.getFinalRoundOffMultiple().toString());
-        accountingRules.setProperty("initialRoundOffMultiple", AccountingRules.getInitialRoundOffMultiple().toString());
         return accountingRules;
+    }
+    
+    private List<Properties> getCurrencies() {
+        List<Properties> currencies = new ArrayList<Properties>();
+        Properties currencyRules = new Properties();
+
+        for (MifosCurrency currency : AccountingRules.getCurrencies()) {
+            currencyRules = new Properties();
+            currencyRules.setProperty("code", currency.getCurrencyCode());
+            currencyRules.setProperty("digitsAfterDecimal", AccountingRules.getDigitsAfterDecimal(currency).toString());
+            currencyRules.setProperty("finalRoundOffMultiple", AccountingRules.getFinalRoundOffMultiple(currency).toString());
+            currencyRules.setProperty("initialRoundOffMultiple", AccountingRules.getInitialRoundOffMultiple(currency).toString());
+            currencies.add(currencyRules);
+        }
+
+        return currencies;
     }
 
     private Properties getClientRules() throws ConfigurationException {
