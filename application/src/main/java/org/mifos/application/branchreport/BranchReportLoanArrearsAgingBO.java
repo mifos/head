@@ -20,7 +20,7 @@
 
 package org.mifos.application.branchreport;
 
-import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.ZERO;
 
 import java.math.BigDecimal;
 

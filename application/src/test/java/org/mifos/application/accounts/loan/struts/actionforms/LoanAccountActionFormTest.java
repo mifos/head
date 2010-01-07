@@ -53,7 +53,7 @@ import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoa
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.MoneyFactory;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class LoanAccountActionFormTest extends TestCase {
 
@@ -107,7 +107,7 @@ public class LoanAccountActionFormTest extends TestCase {
         super.setUp();
         form = new LoanAccountActionForm();
         paymentMock = createMock(PaymentDataTemplate.class);
-        expect(paymentMock.getTotalAmount()).andReturn(MoneyFactory.ZERO);
+        expect(paymentMock.getTotalAmount()).andReturn(MoneyUtils.ZERO);
         actionErrors = new ActionErrors();
 
     }

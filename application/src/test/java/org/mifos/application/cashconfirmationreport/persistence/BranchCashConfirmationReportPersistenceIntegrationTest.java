@@ -20,7 +20,7 @@
 
 package org.mifos.application.cashconfirmationreport.persistence;
 
-import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.ZERO;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.AssertionUtils;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.MoneyFactory;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
     public BranchCashConfirmationReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
@@ -151,9 +151,9 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
 
     public void testRetrievesDisbursementsForGivenDateAndBranch() throws Exception {
         BranchCashConfirmationDisbursementBO disbursement = new BranchCashConfirmationDisbursementBO("SOME PRODUCT",
-                MoneyFactory.ZERO);
+                MoneyUtils.ZERO);
         BranchCashConfirmationDisbursementBO anotherDisbursement = new BranchCashConfirmationDisbursementBO(
-                "ANOTHER PRODUCT", MoneyFactory.ZERO);
+                "ANOTHER PRODUCT", MoneyUtils.ZERO);
         reportBO.addDisbursement(disbursement);
         reportBO.addDisbursement(anotherDisbursement);
         session.save(reportBO);

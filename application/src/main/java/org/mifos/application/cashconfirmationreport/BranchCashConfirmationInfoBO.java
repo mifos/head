@@ -27,7 +27,7 @@ import org.apache.commons.collections.Transformer;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyFactory;
+import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.MoneyUtils;
 
 public abstract class BranchCashConfirmationInfoBO extends BranchCashConfirmationSubReport {
@@ -93,7 +93,7 @@ public abstract class BranchCashConfirmationInfoBO extends BranchCashConfirmatio
             final MifosCurrency currency) {
         return (List<BranchCashConfirmationInfoBO>) CollectionUtils.collect(productOfferingNames, new Transformer() {
             public Object transform(Object input) {
-                return new BranchCashConfirmationIssueBO((String) input, MoneyFactory.zero(currency));
+                return new BranchCashConfirmationIssueBO((String) input, MoneyUtils.zero(currency));
             }
         });
     }

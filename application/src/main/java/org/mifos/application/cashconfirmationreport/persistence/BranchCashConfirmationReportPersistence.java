@@ -34,7 +34,7 @@ import static org.mifos.application.customer.util.helpers.QueryParamConstants.CU
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.DISBURSEMENT_DATE;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.PRODUCT_OFFERING_IDS;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.RUN_DATE;
-import static org.mifos.framework.util.helpers.MoneyFactory.createMoney;
+import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

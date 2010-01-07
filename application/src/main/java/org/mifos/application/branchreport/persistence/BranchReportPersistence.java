@@ -55,8 +55,8 @@ import static org.mifos.application.customer.util.helpers.QueryParamConstants.NO
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.RUN_DATE;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.TOTAL_STAFF_ROLE_ID_PARAM;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.TOTAL_STAFF_ROLE_NAME_PARAM;
-import static org.mifos.framework.util.helpers.MoneyFactory.createMoney;
-import static org.mifos.framework.util.helpers.MoneyFactory.zero;
+import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 import static org.mifos.framework.util.helpers.NumberUtils.ZERO;
 
 import java.math.BigDecimal;

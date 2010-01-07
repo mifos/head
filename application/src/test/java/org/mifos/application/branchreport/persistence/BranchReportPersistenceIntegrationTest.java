@@ -24,7 +24,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.framework.util.helpers.MoneyFixture.createMoney;
+import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
 
 import java.math.BigDecimal;
 import java.util.Calendar;

@@ -75,7 +75,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyFactory;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 /**
  * A class that represents a customer entity after being created.
@@ -1311,7 +1311,7 @@ public abstract class CustomerBO extends BusinessObject {
             }
         }
         if (loanAmounts.isEmpty()) {
-            loanAmounts.add(MoneyFactory.ZERO);
+            loanAmounts.add(MoneyUtils.ZERO);
         }
         return Collections.max(loanAmounts, Money.DEFAULT_COMPARATOR);
     }
