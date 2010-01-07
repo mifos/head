@@ -217,7 +217,7 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.miscellaneous" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.sessionTimeout" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> :
+								<mifos:mifoslabel name="VOS.sessionTimeout" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/>
 								<c:out value="${orgSettings.sessionTimeout}"/>
 								<mifos:mifoslabel name="VOS.minutes" bundle="viewOrganizationSettingsUIResources" />
 								<br/>
