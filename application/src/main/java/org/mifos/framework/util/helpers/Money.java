@@ -92,10 +92,6 @@ public final class Money implements Serializable {
         this(currency, new BigDecimal(amount, internalPrecisionAndRounding));
     }
 
-    public Money() {
-        this(getDefaultCurrency(), "0");
-    }
-    
     public Money(String amount) {
         this(getDefaultCurrency(), amount);
     }

@@ -34,6 +34,6 @@ public class MoneyFactory {
         return new Money(currency, BigDecimal.ZERO);
     }
 
-    public static final Money ZERO = new Money();
+    public static final Money ZERO = new Money(Money.getDefaultCurrency());
 
 }
