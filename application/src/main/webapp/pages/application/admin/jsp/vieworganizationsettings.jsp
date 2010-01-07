@@ -227,6 +227,12 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="VOS.backDatedTransactions" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.backDatedTransactions}"/>
 								<br/>
+								<mifos:mifoslabel name="VOS.glim" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.glim}"/>
+								<br/>
+								<mifos:mifoslabel name="VOS.lsim" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.lsim}"/>
+								<br/>
 								<br/>
 							</span>
 						</span>

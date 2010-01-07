@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
@@ -171,7 +172,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         return processFlowRules;
     }
 
-    private Properties getMiscRules(HttpSession httpSession) {
+    private Properties getMiscRules(HttpSession httpSession) throws ServiceException {
         Properties misc = new Properties();
 
         Integer timeoutVal = httpSession.getMaxInactiveInterval() / 60;
@@ -185,6 +186,9 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         }
 
         misc.setProperty("backDatedTransactions", booleanToYesNo(AccountingRules.isBackDatedTxnAllowed()));
+        ConfigurationBusinessService cbs = new ConfigurationBusinessService();
+        misc.setProperty("glim", booleanToYesNo(cbs.isGlimEnabled()));
+        misc.setProperty("lsim", booleanToYesNo(cbs.isRepaymentIndepOfMeetingEnabled()));
 
         return misc;
     }
