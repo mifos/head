@@ -25,6 +25,7 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.util.Arrays;
 
@@ -37,7 +38,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.helpers.MoneyUtils;
+
 
 public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrationTestCase {
 
@@ -64,7 +65,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
         replay(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
 
         new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnDisbursement(loan,
-                MoneyUtils.ZERO);
+                zero());
         verify(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
     }
 
@@ -72,7 +73,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
         expect(configServiceMock.isGlimEnabled()).andReturn(false);
         replay(configServiceMock, accountBusinessServiceMock);
         new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnDisbursement(loan,
-                MoneyUtils.ZERO);
+                zero());
         verify(configServiceMock, accountBusinessServiceMock);
     }
 

@@ -33,6 +33,7 @@ import static org.mifos.application.accounts.loan.util.helpers.LoanAccountAction
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY;
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL;
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,7 +54,7 @@ import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoa
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.MoneyUtils;
+
 
 public class LoanAccountActionFormTest extends TestCase {
 
@@ -107,7 +108,7 @@ public class LoanAccountActionFormTest extends TestCase {
         super.setUp();
         form = new LoanAccountActionForm();
         paymentMock = createMock(PaymentDataTemplate.class);
-        expect(paymentMock.getTotalAmount()).andReturn(MoneyUtils.ZERO);
+        expect(paymentMock.getTotalAmount()).andReturn(zero());
         actionErrors = new ActionErrors();
 
     }

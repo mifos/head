@@ -24,33 +24,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 
 /**
  * Utilities for working with monetary values that handle null.
  */
 public class MoneyUtils {
     
-    public static final Money ZERO = new Money(Money.getDefaultCurrency());
-
     /**
-     * Validates that the object specified is not null
-     *
-     * @param object  the object to check, not null
-     * @throws NullPointerException if the input value is null
-     */
-    static void checkNotNull(Object object, String message) {
-        if (object == null) {
-            throw new NullPointerException(message);
-        }
-    }
-
-    //-----------------------------------------------------------------------
-    /**
-     * Private constructor.
+     * Hide constructor of a static util
      */
     private MoneyUtils() {
     }
-    
     
     public static Money add(Money firstAmount, Money secondAmount) {
         Money sum = firstAmount == null ? secondAmount : firstAmount.add(secondAmount);
@@ -89,7 +74,43 @@ public class MoneyUtils {
         return new Money(currency, amount);
     }
 
+    public static Money zero() {
+        return zero(Money.getDefaultCurrency());
+    }
     public static Money zero(MifosCurrency currency) {
         return new Money(currency, BigDecimal.ZERO);
+    }
+    
+    public static Money currencyRoundAmount(Money money) {
+        return Money.round(money, AccountingRules.getDigitsAfterDecimalMultiple(), AccountingRules
+                .getCurrencyRoundingMode());
+    }
+
+    public static Money initialRoundedAmount(Money money) {
+        return Money
+                .round(money, AccountingRules.getInitialRoundOffMultiple(), AccountingRules.getInitialRoundingMode());
+    }
+
+    public static Money finalRoundedAmount(Money money) {
+        return Money.round(money, AccountingRules.getFinalRoundOffMultiple(), AccountingRules.getFinalRoundingMode());
+    }
+
+    public static boolean isRoundedAmount(Money money) {
+        return money.equals(initialRoundedAmount(money)) && money.equals(finalRoundedAmount(money));
+    }
+
+    public static Money roundToCurrencyPrecision(Money money) {
+        if (null != money) {
+            BigDecimal roundOffMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
+            // insure that we are using the correct internal precision
+            BigDecimal roundingAmount = roundOffMultiple.round(Money.getInternalPrecisionAndRounding());
+            BigDecimal nearestFactor = money.getAmount().divide(roundingAmount, Money.getInternalPrecisionAndRounding());
+            RoundingMode roundingMode = AccountingRules.getCurrencyRoundingMode();
+            nearestFactor = nearestFactor.setScale(0, roundingMode);
+
+            BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+            return new Money(money.getCurrency(), roundedAmount);
+        }
+        return money;
     }
 }

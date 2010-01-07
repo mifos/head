@@ -20,7 +20,7 @@
 
 package org.mifos.application.branchreport;
 
-import static org.mifos.framework.util.helpers.MoneyUtils.ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.math.BigDecimal;
 
@@ -58,7 +58,7 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
     }
 
     public BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod loanArrearsAgingPeriod) {
-        this(loanArrearsAgingPeriod, NumberUtils.ZERO, NumberUtils.ZERO, ZERO, ZERO, ZERO);
+        this(loanArrearsAgingPeriod, NumberUtils.ZERO, NumberUtils.ZERO, zero(), zero(), zero());
     }
 
     public String getPeriodDescription() {

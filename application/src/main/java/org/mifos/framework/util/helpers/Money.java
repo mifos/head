@@ -49,8 +49,7 @@ public final class Money implements Serializable {
     public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
         public int compare(Money m1, Money m2) {
             if (m1.isCurrencyDifferent(m2)) {
-                // FIXME: should be CurrencyMismatchException
-                throw new RuntimeException("Cannot compare money in differenct currencies");
+                throw new CurrencyMismatchException("Cannot compare money in differenct currencies");
             }
             return m1.amount.compareTo(m2.amount);
         }
@@ -88,23 +87,8 @@ public final class Money implements Serializable {
 
     private final BigDecimal amount;
 
-    public Money(MifosCurrency currency, String amount) {
-        this(currency, new BigDecimal(amount, internalPrecisionAndRounding));
-    }
-
-    public Money(String amount) {
-        this(getDefaultCurrency(), amount);
-    }
-
-    public Money(MifosCurrency currency, BigDecimal amount) {
-        this.currency = currency;
-        this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding
-                .getRoundingMode());
-    }
-
     public Money(BigDecimal amount) {
-        this(getDefaultCurrency(), amount.setScale(internalPrecisionAndRounding.getPrecision(),
-                internalPrecisionAndRounding.getRoundingMode()));
+        this(getDefaultCurrency(), amount.setScale(internalPrecision, internalRoundingMode));
     }
 
     /**
@@ -113,6 +97,22 @@ public final class Money implements Serializable {
      */
     public Money(MifosCurrency currency) {
         this(currency, new BigDecimal(0, internalPrecisionAndRounding));
+    }
+
+    public Money(String amount) {
+        this(getDefaultCurrency(), amount);
+    }
+    
+    public Money(MifosCurrency currency, String amount) {
+        this(currency, new BigDecimal(amount, internalPrecisionAndRounding));
+    }
+
+    public Money(MifosCurrency currency, BigDecimal amount) {
+        // FIXME null currency should not be allowed at Money creation
+        //checkCurrencyNotNull(currency);
+        checkAmountNotNull(amount);
+        this.currency = currency;
+        this.amount = amount.setScale(internalPrecision, internalRoundingMode);
     }
 
     public BigDecimal getAmount() {
@@ -145,9 +145,8 @@ public final class Money implements Serializable {
                 throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
-        // FIXME: don't allow null Money
-        // why not disallow null amounts and currencies?
-        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+        // FIXME null currency should not be allowed at Money creation
+        if (money == null || money.getCurrency() == null) {
             return this;
         }
         return new Money(currency, amount.add(money.getAmount()));
@@ -164,8 +163,8 @@ public final class Money implements Serializable {
                 throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
-        // why not disallow null amounts and currencies?
-        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+        // FIXME null currency should not be allowed at Money creation
+        if (money == null || money.getCurrency() == null) {
             return this;
         }
 
@@ -184,8 +183,8 @@ public final class Money implements Serializable {
                 throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
-        // why not disallow null amounts and currencies?
-        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+        // FIXME null currency should not be allowed at Money creation
+        if (money == null || money.getCurrency() == null) {
             return this;
         }
 
@@ -219,8 +218,8 @@ public final class Money implements Serializable {
                 throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
             }
         }
-        // why not disallow null amounts and currencies?
-        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+        // FIXME null currency should not be allowed at Money creation
+        if (money == null || money.getCurrency() == null) {
             return this;
         }
 
@@ -231,8 +230,9 @@ public final class Money implements Serializable {
         return new Money(currency, amount.divide(factor, internalPrecisionAndRounding));
     }
 
-    // no need to set scale since negation preserves scale
+    
     public Money negate() {
+     // no need to set scale since negation preserves scale
         return new Money(currency, amount.negate());
     }
 
@@ -277,39 +277,6 @@ public final class Money implements Serializable {
         return money;
     }
 
-    public Money currencyRoundAmount() {
-        return Money.round(this, AccountingRules.getDigitsAfterDecimalMultiple(), AccountingRules
-                .getCurrencyRoundingMode());
-    }
-
-    public Money initialRoundedAmount() {
-        return Money
-                .round(this, AccountingRules.getInitialRoundOffMultiple(), AccountingRules.getInitialRoundingMode());
-    }
-
-    public Money finalRoundedAmount() {
-        return Money.round(this, AccountingRules.getFinalRoundOffMultiple(), AccountingRules.getFinalRoundingMode());
-    }
-
-    public boolean isRoundedAmount() {
-        return this.equals(initialRoundedAmount()) && this.equals(finalRoundedAmount());
-    }
-
-    public static Money roundToCurrencyPrecision(Money money) {
-        if (null != money) {
-            BigDecimal roundOffMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
-            // insure that we are using the correct internal precision
-            BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
-            BigDecimal nearestFactor = money.getAmount().divide(roundingAmount, internalPrecisionAndRounding);
-            RoundingMode roundingMode = AccountingRules.getCurrencyRoundingMode();
-            nearestFactor = nearestFactor.setScale(0, roundingMode);
-
-            BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
-            return new Money(money.getCurrency(), roundedAmount);
-        }
-        return money;
-    }
-
     /**
      * This method return true if the currency associated with the two money
      * objects is equal and also the compareTo method of BigDecimal return 0 for
@@ -332,7 +299,8 @@ public final class Money implements Serializable {
 
     @Override
     public int hashCode() {
-        if (amount == null || currency == null) {
+    // FIXME null currency should not be allowed at Money creation
+        if (currency == null) {
             return System.identityHashCode(null);
         }
         return this.currency.getCurrencyId() * 100 + this.amount.intValue();
@@ -340,7 +308,10 @@ public final class Money implements Serializable {
 
     @Override
     public String toString() {
-        if (amount != null && currency != null) {
+    // FIXME null currency should not be allowed at Money creation
+    // FIXME string formating based on Accounting rule should be done in MoneyUtil class
+    //only string representation of BigDecimal should be returned here
+        if (currency != null) {
             double doubleValue = amount.doubleValue();
             String format = "%." + AccountingRules.getDigitsAfterDecimal().toString() + "f";
             String formatStr = String.format(Locale.ENGLISH, format, 0.0);
@@ -351,7 +322,6 @@ public final class Money implements Serializable {
                 decimalFormat.applyPattern(formatStr);
                 return decimalFormat.format(doubleValue);
             }
-
             return numberFormat.format(doubleValue);
         }
         return "0";
@@ -363,6 +333,19 @@ public final class Money implements Serializable {
 
     public boolean isLessThan(Money money) {
         return Money.DEFAULT_COMPARATOR.compare(this, money) < 0;
+    }
+    
+    private void checkCurrencyNotNull(MifosCurrency currency) {
+        if(currency == null) {
+            throw new NullPointerException("Currency must not be null");
+        }
+    }
+    
+    private void checkAmountNotNull(BigDecimal amount) {
+        if(amount == null) {
+            throw new NullPointerException("Amount must not be null");
+        }
+        
     }
 
 }

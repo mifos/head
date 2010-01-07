@@ -86,6 +86,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class SavingsBO extends AccountBO {
 
@@ -895,7 +896,7 @@ public class SavingsBO extends AccountBO {
         }
         Money interestAmount = principal.multiply(new Double(1 + intRate / 100.0)).subtract(principal);
 
-        interestAmount = Money.roundToCurrencyPrecision(interestAmount);
+        interestAmount = MoneyUtils.roundToCurrencyPrecision(interestAmount);
         return interestAmount;
     }
 

@@ -24,7 +24,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.framework.util.helpers.MoneyUtils.ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +53,9 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
 
     public void testGetCenterIssues() throws ServiceException {
         BranchCashConfirmationReportBO reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
-        BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", ZERO);
+        BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", zero());
         reportBO.addCenterIssue(issueBO);
-        BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO("SOMEMORE", ZERO);
+        BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO("SOMEMORE", zero());
         reportBO.addCenterIssue(anotherIssue);
         Session session = StaticHibernateUtil.getSessionTL();
         Transaction transaction = session.beginTransaction();

@@ -115,6 +115,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class LoanBO extends AccountBO {
 
@@ -2188,8 +2189,8 @@ public class LoanBO extends AccountBO {
         }
         fees = fees.add(getDisbursementFeeAmount());
         Money rawAmount = new Money(getCurrency());
-        fees = Money.roundToCurrencyPrecision(fees);
-        interest = Money.roundToCurrencyPrecision(interest);
+        fees = MoneyUtils.roundToCurrencyPrecision(fees);
+        interest = MoneyUtils.roundToCurrencyPrecision(interest);
         rawAmount = rawAmount.add(interest).add(fees);
         if (loanSummary == null) {
             // save it to LoanBO first and when loan summary is created it will

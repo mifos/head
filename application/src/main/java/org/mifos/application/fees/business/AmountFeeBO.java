@@ -33,6 +33,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class AmountFeeBO extends FeeBO {
 
@@ -106,7 +107,7 @@ public class AmountFeeBO extends FeeBO {
 
     @Override
     public boolean doesFeeInvolveFractionalAmounts() {
-        return !this.getFeeAmount().isRoundedAmount();
+        return !MoneyUtils.isRoundedAmount(this.getFeeAmount());
     }
 
     private void validateFeeAmount(final Money amount) throws FeeException {

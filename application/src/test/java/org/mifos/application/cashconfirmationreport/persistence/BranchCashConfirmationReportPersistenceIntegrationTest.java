@@ -20,7 +20,7 @@
 
 package org.mifos.application.cashconfirmationreport.persistence;
 
-import static org.mifos.framework.util.helpers.MoneyUtils.ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -47,14 +47,12 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.AssertionUtils;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
     public BranchCashConfirmationReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    @SuppressWarnings("unused")
     private static final int DIGITS_AFTER_DECIMAL_FOR_AMOUNT_IN_DB = 3;
     private static final List<Short> DISBURSEMENT_PRODUCT_OFFERING_IDS = Arrays.asList(new Short[] { 1, 2 });
     private Session session;
@@ -99,9 +97,9 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
     }
 
     public void testRetrieveIssueReportForGivenDateAndBranch() throws Exception {
-        BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", ZERO);
+        BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", zero());
         reportBO.addCenterIssue(issueBO);
-        BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO("SOMEMORE", ZERO);
+        BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO("SOMEMORE", zero());
         reportBO.addCenterIssue(anotherIssue);
         session.save(reportBO);
         List<BranchCashConfirmationInfoBO> retrievedIssues = persistence.getCenterIssues(BRANCH_ID_SHORT, RUN_DATE);
@@ -113,7 +111,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
 
     public void testRetrievesCenterRecoveryReport() throws Exception {
         BranchCashConfirmationCenterRecoveryBO recoveryReport = new BranchCashConfirmationCenterRecoveryBO("PRDOFF1",
-                ZERO, ZERO, ZERO);
+                zero(), zero(), zero());
         reportBO.addCenterRecovery(recoveryReport);
         session.save(reportBO);
         List<BranchCashConfirmationCenterRecoveryBO> retrievedRecoveryReport = persistence.getCenterRecoveries(
@@ -151,9 +149,9 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
 
     public void testRetrievesDisbursementsForGivenDateAndBranch() throws Exception {
         BranchCashConfirmationDisbursementBO disbursement = new BranchCashConfirmationDisbursementBO("SOME PRODUCT",
-                MoneyUtils.ZERO);
+                zero());
         BranchCashConfirmationDisbursementBO anotherDisbursement = new BranchCashConfirmationDisbursementBO(
-                "ANOTHER PRODUCT", MoneyUtils.ZERO);
+                "ANOTHER PRODUCT", zero());
         reportBO.addDisbursement(disbursement);
         reportBO.addDisbursement(anotherDisbursement);
         session.save(reportBO);

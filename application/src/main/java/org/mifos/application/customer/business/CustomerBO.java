@@ -21,6 +21,7 @@
 package org.mifos.application.customer.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +76,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyUtils;
 
 /**
  * A class that represents a customer entity after being created.
@@ -1311,7 +1311,7 @@ public abstract class CustomerBO extends BusinessObject {
             }
         }
         if (loanAmounts.isEmpty()) {
-            loanAmounts.add(MoneyUtils.ZERO);
+            loanAmounts.add(zero());
         }
         return Collections.max(loanAmounts, Money.DEFAULT_COMPARATOR);
     }

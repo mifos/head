@@ -158,8 +158,8 @@ public class MoneyTest extends TestCase {
     }
 
     public void testIsRoundedAmount() {
-       Assert.assertTrue((new Money(EURO, "1")).isRoundedAmount());
-        Assert.assertFalse((new Money(EURO, "1.1")).isRoundedAmount());
+       Assert.assertTrue(MoneyUtils.isRoundedAmount(new Money(EURO, "1")));
+        Assert.assertFalse(MoneyUtils.isRoundedAmount(new Money(EURO, "1.1")));
     }
 
     public void testDivideMoneyRepeating() {
@@ -175,7 +175,7 @@ public class MoneyTest extends TestCase {
     }
 
     public void testHashCodeForNullCurrency() {
-        //FIXME null currencies should not be allowed
+        //FIXME this test should catch currencyexception
         Money money = new Money(null, "0");
        Assert.assertEquals(0, money.hashCode());
     }

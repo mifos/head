@@ -102,6 +102,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
@@ -147,7 +148,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Money getRoundedMoney(Money value) {
-        return Money.roundToCurrencyPrecision(value);
+        return MoneyUtils.roundToCurrencyPrecision(value);
     }
 
     @Override
