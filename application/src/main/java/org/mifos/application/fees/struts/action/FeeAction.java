@@ -67,6 +67,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -208,9 +209,10 @@ public class FeeAction extends BaseAction {
         FeeChangeType feeChangeType;
         if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
             AmountFeeBO amountFee = ((AmountFeeBO) fee);
-            feeChangeType = amountFee.calculateNewFeeChangeType(feeActionForm.getAmountValue(), new FeeStatusEntity(
+            feeChangeType = amountFee.calculateNewFeeChangeType(
+                    new Money(fee.getCurrency(), feeActionForm.getAmount()), new FeeStatusEntity(
                     feeActionForm.getFeeStatusValue()));
-            amountFee.setFeeAmount(feeActionForm.getAmountValue());
+            amountFee.setFeeAmount(new Money(fee.getCurrency(), feeActionForm.getAmount()));
         } else {
             RateFeeBO rateFee = ((RateFeeBO) fee);
             feeChangeType = rateFee.calculateNewFeeChangeType(feeActionForm.getRateValue(), new FeeStatusEntity(
@@ -287,7 +289,8 @@ public class FeeAction extends BaseAction {
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feePayment);
         }
         return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
-                actionForm.getAmountValue(), actionForm.isCustomerDefaultFee(), feePayment);
+                new Money(AccountingRules.getCurrencyByCurrencyId(actionForm.getCurrencyId()), actionForm.getAmount()), 
+                actionForm.isCustomerDefaultFee(), feePayment);
     }
 
     private FeeBO createPeriodicFee(FeeActionForm actionForm, HttpServletRequest request,
@@ -306,7 +309,8 @@ public class FeeAction extends BaseAction {
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feeFrequency);
         }
         return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
-                actionForm.getAmountValue(), actionForm.isCustomerDefaultFee(), feeFrequency);
+                new Money(AccountingRules.getCurrencyByCurrencyId(actionForm.getCurrencyId()), actionForm.getAmount()), 
+                actionForm.isCustomerDefaultFee(), feeFrequency);
     }
 
     private List<GLCodeEntity> getGLCodes() throws SystemException, ApplicationException {

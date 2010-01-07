@@ -49,9 +49,6 @@ public class LoanRepaymentTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         boolean twoTables = false;
         XmlBuilder html = new XmlBuilder();
-        Money totalPrincipal = new Money();
-        Money totalInterest = new Money();
-        Money totalFees = new Money();
         LoanBO loanBO = null;
 
         try {
@@ -59,6 +56,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
             loanBO = (LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+            Money totalPrincipal = new Money(loanBO.getCurrency(),"0");
+            Money totalInterest = new Money(loanBO.getCurrency(),"0");
+            Money totalFees = new Money(loanBO.getCurrency(),"0");
 
             /*
              * LoanBO loanBO = (LoanBO) pageContext.getRequest().getAttribute(

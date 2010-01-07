@@ -90,16 +90,16 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testRepaymentScheduleInstallment() {
-        RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment();
         long l = System.currentTimeMillis();
-        repaymentScheduleInstallment.setDueDate(new Date(l));
-        repaymentScheduleInstallment.setFees(new Money(getCurrency(), "100.0"));
-        repaymentScheduleInstallment.setInstallment(10);
-        repaymentScheduleInstallment.setInterest(new Money(getCurrency(), "100.0"));
+        RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment(
+                10, 
+                new Date(l), 
+                new Money(getCurrency(), "100.0"),
+                new Money(getCurrency(), "100.0"),
+                new Money(getCurrency(), "100.0"),
+                new Money(getCurrency(), "100.0"),
+                new Money(getCurrency(), "100.0"));
         repaymentScheduleInstallment.setLocale(new Locale("1"));
-        repaymentScheduleInstallment.setMiscFees(new Money(getCurrency(), "100.0"));
-        repaymentScheduleInstallment.setMiscPenalty(new Money(getCurrency(), "100.0"));
-        repaymentScheduleInstallment.setPrincipal(new Money(getCurrency(), "100.0"));
 
         double m = new Money(getCurrency(), "100").getAmountDoubleValue();
        Assert.assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDate());

@@ -35,6 +35,7 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -117,10 +118,6 @@ public class BaseActionForm extends ValidatorActionForm {
     protected boolean getBooleanValue(String value) {
         Short shortValue = getShortValue(value);
         return shortValue != null && shortValue > 0;
-    }
-
-    protected Money getMoney(String str) {
-        return FormUtils.getMoney(str);
     }
 
     protected String getStringValue(Double value) {

@@ -503,10 +503,6 @@ public class LoanAccountActionForm extends BaseActionForm {
         return getShortValue(getGracePeriodDuration());
     }
 
-    public Money loanAmountValue() {
-        return getMoney(getLoanAmount());
-    }
-
     public Short getNoOfInstallmentsValue() {
         return getShortValue(getNoOfInstallments());
     }
@@ -537,10 +533,6 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     public Integer getCollateralTypeIdValue() {
         return getIntegerValue(getCollateralTypeId());
-    }
-
-    public Money getLoanAmountValue() {
-        return getMoney(loanAmount);
     }
 
     public Double getInterestRateValue() {

@@ -21,6 +21,7 @@
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FormUtils {
@@ -30,7 +31,7 @@ public class FormUtils {
                 .getDoubleValueForCurrentLocale(str) : null;
     }
 
-    public static Money getMoney(String str) {
-        return (StringUtils.isNotBlank(str) && !str.trim().equals(".")) ? new Money(str) : new Money();
+    public static Money getMoney(MifosCurrency currency, String str) {
+        return (StringUtils.isNotBlank(str) && !str.trim().equals(".")) ? new Money(currency, str) : new Money(currency);
     }
 }

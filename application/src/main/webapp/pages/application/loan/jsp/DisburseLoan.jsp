@@ -169,7 +169,7 @@ explanation of the license and how it is applied.
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
 							<td><c:choose>
 								<c:when
-									test="${loanDisbursmentActionForm.loanAmountValue.amountDoubleValue == 0.0}">
+									test="${loanDisbursmentActionForm.loanAmountGreaterThanZero}">
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;" disabled="true">
 										<c:forEach var="PT"

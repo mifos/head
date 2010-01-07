@@ -56,14 +56,6 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.miscPenalty = miscPenalty;
     }
 
-    public RepaymentScheduleInstallment() {
-        principal = new Money();
-        interest = new Money();
-        fees = new Money();
-        miscFees = new Money();
-        miscPenalty = new Money();
-    }
-
     public void setInstallment(Integer installment) {
         this.installment = installment;
     }

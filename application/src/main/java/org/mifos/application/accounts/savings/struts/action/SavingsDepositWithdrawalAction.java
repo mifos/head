@@ -47,6 +47,7 @@ import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -157,7 +158,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
                         persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit
                                 .getValue()), request);
             } else {
-                actionForm.setAmount(new Money().toString());
+                actionForm.setAmount(new Money(savings.getCurrency(),"0").toString());
                 SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
                         .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal
                                 .getValue()), request);
@@ -208,7 +209,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
             savings.applyPaymentWithPersist(createPaymentDataForDeposit(actionForm, uc, savings));
         } else if (trxnTypeId.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
             boolean persist = true;
-            savings.withdraw(createPaymentData(actionForm, uc), persist);
+            savings.withdraw(createPaymentData(actionForm, uc, savings.getCurrency()), persist);
         }
 
         return mapping.findForward(ActionForwards.account_details_page.toString());
@@ -223,11 +224,13 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         actionForm.setAmount(Constants.EMPTY_STRING);
     }
 
-    private PaymentData createPaymentData(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc)
+    private PaymentData createPaymentData(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc, 
+            final MifosCurrency currency)
             throws Exception {
         Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
-        PaymentData paymentData = PaymentData.createPaymentData(actionForm.getAmountValue(), new PersonnelPersistence()
+        PaymentData paymentData = PaymentData.createPaymentData(
+                new Money(currency, actionForm.getAmount()), new PersonnelPersistence()
                 .getPersonnel(uc.getId()), Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);
         paymentData.setReceiptDate(receiptDate);
         paymentData.setReceiptNum(actionForm.getReceiptId());
@@ -239,7 +242,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
     private PaymentData createPaymentDataForDeposit(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc,
             final SavingsBO savings) throws Exception {
-        PaymentData paymentData = createPaymentData(actionForm, uc);
+        PaymentData paymentData = createPaymentData(actionForm, uc, savings.getCurrency());
         for (AccountActionDateEntity installment : savings.getTotalInstallmentsDue(Integer.valueOf(actionForm
                 .getCustomerId()))) {
             AccountPaymentData accountPaymentData = new SavingsPaymentData(installment);

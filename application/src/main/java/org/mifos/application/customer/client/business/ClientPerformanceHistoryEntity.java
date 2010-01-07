@@ -66,9 +66,9 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
         this.client = client;
         this.loanCounters = new HashSet<LoanCounter>();
         this.noOfActiveLoans = 0;
-        this.lastLoanAmount = new Money();
-        this.delinquentPortfolio = new Money();
-        this.totalSavings = new Money();
+        this.lastLoanAmount = new Money(getCurrency());
+        this.delinquentPortfolio = new Money(getCurrency());
+        this.totalSavings = new Money(getCurrency());
     }
 
     protected ClientPerformanceHistoryEntity() {
@@ -185,8 +185,8 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public Money getDelinquentPortfolioAmount() {
-        Money amountOverDue = new Money();
-        Money totalOutStandingAmount = new Money();
+        Money amountOverDue = new Money(getCurrency());
+        Money totalOutStandingAmount = new Money(getCurrency());
         for (AccountBO accountBO : client.getAccounts()) {
             if (accountBO.isLoanAccount() && ((LoanBO) accountBO).isAccountActive()) {
                 amountOverDue = amountOverDue.add(((LoanBO) accountBO).getTotalPrincipalAmountInArrears());
@@ -197,7 +197,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
         if (totalOutStandingAmount.getAmountDoubleValue() != 0.0)
             return new Money(String.valueOf(amountOverDue.getAmountDoubleValue()
                     / totalOutStandingAmount.getAmountDoubleValue()));
-        return new Money();
+        return new Money(getCurrency());
     }
 
     public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering) {

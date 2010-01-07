@@ -86,10 +86,6 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
         this.lastPaymentAmountOption = lastPaymentAmountOption;
     }
 
-    public Money getLastPaymentAmountValue() {
-        return getMoney(lastPaymentAmount);
-    }
-
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");

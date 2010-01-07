@@ -39,6 +39,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -300,10 +301,6 @@ public abstract class BaseAction extends DispatchAction {
     protected Double getDoubleValue(String str) {
         return StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
-    }
-
-    protected Money getMoney(String str) {
-        return FormUtils.getMoney(str);
     }
 
     protected String getStringValue(Double value) {

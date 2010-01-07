@@ -40,6 +40,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -51,6 +52,7 @@ import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -152,7 +154,10 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
                     savings.getOffice().getOfficeId(), uc.getId());
 
         SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
-        savings.adjustLastUserAction(actionForm.getLastPaymentAmountValue(), actionForm.getNote());
+        if (actionForm.getLastPaymentAmount() == null) {
+            throw new MifosRuntimeException("Null payment amount is not allowed");
+        }
+        savings.adjustLastUserAction(new Money(savings.getCurrency(), actionForm.getLastPaymentAmount()), actionForm.getNote());
         doCleanUp(request);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.getSessionTL().evict(savings);

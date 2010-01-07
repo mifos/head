@@ -438,7 +438,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         performNoErrors();
         verifyForward("edit_success");
         SavingsActionForm actionForm = (SavingsActionForm) request.getSession().getAttribute("savingsActionForm");
-       Assert.assertEquals(new Money(getCurrency(), "300"), actionForm.getRecommendedAmntValue());
+       Assert.assertEquals("300.0", actionForm.getRecommendedAmount());
     }
 
     public void testSuccessfulEditPrevious() throws Exception {

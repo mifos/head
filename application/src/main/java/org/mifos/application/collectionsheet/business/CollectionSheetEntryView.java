@@ -38,6 +38,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.Money;
 
 public class CollectionSheetEntryView extends View {
 
@@ -367,7 +368,7 @@ public class CollectionSheetEntryView extends View {
                     collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
         }
         
-        return new LoanPersistence().getFeeAmountAtDisbursement(loanAccountView.getAccountId()).getAmountDoubleValue();
+        return new LoanPersistence().getFeeAmountAtDisbursement(loanAccountView.getAccountId(), Money.getDefaultCurrency()).getAmountDoubleValue();
     }
 
     private Double getInterestAmountDedAtDisb(final List<CollectionSheetEntryInstallmentView> installments) {
@@ -384,9 +385,9 @@ public class CollectionSheetEntryView extends View {
             final List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
             final List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
         int index = collectionSheetEntryAccountActionViews.indexOf(new CollectionSheetEntryLoanInstallmentView(
-                accountId, customerId));
+                accountId, customerId, getCurrency()));
         int lastIndex = collectionSheetEntryAccountActionViews.lastIndexOf(new CollectionSheetEntryLoanInstallmentView(
-                accountId, customerId));
+                accountId, customerId, getCurrency()));
         if (lastIndex != -1 && index != -1) {
             List<CollectionSheetEntryInstallmentView> applicableInstallments = collectionSheetEntryAccountActionViews
                     .subList(index, lastIndex + 1);
@@ -412,9 +413,9 @@ public class CollectionSheetEntryView extends View {
             final List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
             final List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
         int index = collectionSheetEntryAccountActionViews
-                .indexOf(new CollectionSheetEntryCustomerAccountInstallmentView(accountId, customerId));
+                .indexOf(new CollectionSheetEntryCustomerAccountInstallmentView(accountId, customerId, getCurrency()));
         int lastIndex = collectionSheetEntryAccountActionViews
-                .lastIndexOf(new CollectionSheetEntryCustomerAccountInstallmentView(accountId, customerId));
+                .lastIndexOf(new CollectionSheetEntryCustomerAccountInstallmentView(accountId, customerId, getCurrency()));
         if (lastIndex != -1 && index != -1) {
             List<CollectionSheetEntryInstallmentView> applicableInstallments = collectionSheetEntryAccountActionViews
                     .subList(index, lastIndex + 1);

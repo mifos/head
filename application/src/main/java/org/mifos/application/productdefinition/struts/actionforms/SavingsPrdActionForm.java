@@ -77,11 +77,11 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
     private String savingsType;
 
-    private String recommendedAmount;
+    private String recommendedAmount = "0";
 
     private String recommendedAmntUnit;
 
-    private String maxAmntWithdrawl;
+    private String maxAmntWithdrawl = "0";
 
     private String interestRate;
 
@@ -93,7 +93,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
     private String freqOfInterest;
 
-    private String minAmntForInt;
+    private String minAmntForInt = "0";
 
     private String depositGLCode;
 
@@ -275,10 +275,6 @@ public class SavingsPrdActionForm extends BaseActionForm {
         return (StringUtils.isNotBlank(getSavingsType())) ? SavingsType.fromInt(getShortValue(getSavingsType())) : null;
     }
 
-    public Money getRecommendedAmountValue() {
-        return getMoney(getRecommendedAmount());
-    }
-
     public Double getInterestRateValue() {
         return getDoubleValue(getInterestRate());
     }
@@ -325,14 +321,6 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
     public Short getFreqOfInterestValue() {
         return getShortValue(getFreqOfInterest());
-    }
-
-    public Money getMaxAmntWithdrawlValue() {
-        return getMoney(getMaxAmntWithdrawl());
-    }
-
-    public Money getMinAmntForIntValue() {
-        return getMoney(getMinAmntForInt());
     }
 
     public Short getDepositGLCodeValue() {
@@ -440,7 +428,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
         Locale locale = getUserContext(request).getPreferredLocale();
         try {
             if (getSavingsTypeValue() != null && getSavingsTypeValue().equals(SavingsType.MANDATORY)
-                    && getRecommendedAmountValue().getAmountDoubleValue() <= 0.0) {
+                    && Double.valueOf(getRecommendedAmount()) <= 0.0) {
                 addError(errors, "recommendedAmount", ProductDefinitionConstants.ERRORMANDAMOUNT);
                 return;
             }

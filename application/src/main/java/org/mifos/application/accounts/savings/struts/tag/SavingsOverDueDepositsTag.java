@@ -81,7 +81,7 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 
         for (int i = 0; i < installmentsInArrears.size();) {
             actionDate = installmentsInArrears.get(i).getActionDate();
-            Money totalAmount = new Money();
+            Money totalAmount = new Money(installmentsInArrears.get(i).getAccount().getCurrency());
             do {
                 installment = (SavingsScheduleEntity) installmentsInArrears.get(i);
                 if (!(installment.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()) && installment

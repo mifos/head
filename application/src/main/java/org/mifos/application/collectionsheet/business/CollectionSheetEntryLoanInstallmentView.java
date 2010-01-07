@@ -23,6 +23,7 @@ package org.mifos.application.collectionsheet.business;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
 public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntryInstallmentView {
@@ -48,11 +49,13 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
     private final Money miscPenaltyPaid;
 
     private List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions;
+    
+    private final MifosCurrency currency;
 
     public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId, Short installmentId,
             Integer actionDateId, Date actionDate, Money principal, Money principalPaid, Money interest,
             Money interestPaid, Money miscFee, Money miscFeePaid, Money penalty, Money penaltyPaid, Money miscPenalty,
-            Money miscPenaltyPaid) {
+            Money miscPenaltyPaid, MifosCurrency currency) {
         super(accountId, customerId, installmentId, actionDateId, actionDate);
         this.principal = principal;
         this.interest = interest;
@@ -64,9 +67,10 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
         this.principalPaid = principalPaid;
         this.interestPaid = interestPaid;
         this.penaltyPaid = penaltyPaid;
+        this.currency = currency;
     }
 
-    public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId) {
+    public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId, MifosCurrency currency) {
         super(accountId, customerId, null, null, null);
         this.principal = null;
         this.interest = null;
@@ -78,6 +82,7 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
         this.principalPaid = null;
         this.interestPaid = null;
         this.penaltyPaid = null;
+        this.currency = currency;
     }
 
     public Money getInterest() {
@@ -146,7 +151,7 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
     }
 
     public Money getTotalFeeDue() {
-        Money totalFees = new Money();
+        Money totalFees = new Money(currency);
         if (collectionSheetEntryAccountFeeActions != null)
             for (CollectionSheetEntryAccountFeeActionView obj : collectionSheetEntryAccountFeeActions) {
                 totalFees = totalFees.add(obj.getFeeDue());

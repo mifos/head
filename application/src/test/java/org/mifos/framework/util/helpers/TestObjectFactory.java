@@ -1780,7 +1780,7 @@ public class TestObjectFactory {
     }
 
     public static CustomerAccountView getCustomerAccountView(final CustomerBO customer) throws Exception {
-        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId());
+        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(), getCurrency());
         List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(customer.getCustomerAccount()
                 .getAccountId(), new java.sql.Date(System.currentTimeMillis()));
         customerAccountView.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
@@ -1891,7 +1891,7 @@ public class TestObjectFactory {
                             .getPrincipal(), actionDate.getPrincipalPaid(), actionDate.getInterest(), actionDate
                             .getInterestPaid(), actionDate.getMiscFee(), actionDate.getMiscFeePaid(), actionDate
                             .getPenalty(), actionDate.getPenaltyPaid(), actionDate.getMiscPenalty(), actionDate
-                            .getMiscPenaltyPaid());
+                            .getMiscPenaltyPaid(), getCurrency());
             installmentView
                     .setCollectionSheetEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
             bulkEntryAccountActionView = installmentView;
@@ -1909,7 +1909,7 @@ public class TestObjectFactory {
                     actionDate.getAccount().getAccountId(), actionDate.getCustomer().getCustomerId(), actionDate
                             .getInstallmentId(), actionDate.getActionDateId(), actionDate.getActionDate(), actionDate
                             .getMiscFee(), actionDate.getMiscFeePaid(), actionDate.getMiscPenalty(), actionDate
-                            .getMiscPenaltyPaid());
+                            .getMiscPenaltyPaid(), getCurrency());
             installmentView
                     .setCollectionSheetEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
             bulkEntryAccountActionView = installmentView;

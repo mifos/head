@@ -64,10 +64,6 @@ public class RepayLoanActionForm extends BaseActionForm {
         this.amount = amount;
     }
 
-    public Money getAmountValue() {
-        return getMoney(this.amount);
-    }
-
     public String getDateOfPayment() {
         return dateOfPayment;
     }

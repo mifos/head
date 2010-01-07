@@ -139,14 +139,14 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
             final Money miscPenaltyPaid = new Money(currency, "0.0");
 
             final CustomerAccountView customerAccountDetails = new CustomerAccountView(customer
-                    .getCollectionSheetCustomerAccount().getAccountId(), customer.getCustomerId());
+                    .getCollectionSheetCustomerAccount().getAccountId(), customer.getCustomerId(), currency);
             customerAccountDetails.setAccountId(customer.getCollectionSheetCustomerAccount().getAccountId());
 
             // we only create one installment fee and set the total amount due
             // in the miscFee column for now
             final CollectionSheetEntryInstallmentView installmentView = new CollectionSheetEntryCustomerAccountInstallmentView(
                     accountId, customerId, installmentId, actionDateId, actionDate, miscFee, miscFeePaid, miscPenalty,
-                    miscPenaltyPaid);
+                    miscPenaltyPaid, currency);
             final List<CollectionSheetEntryInstallmentView> installmentViewList = java.util.Arrays
                     .asList(installmentView);
             customerAccountDetails.setAccountActionDates(installmentViewList);
@@ -234,7 +234,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntryLoanInstallmentView(
                         loanAccountId, loanCustomerId, loanInstallmentId, loanActionDateId, loanActionDate, principal,
                         new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency),
-                        new Money(currency), new Money(currency));
+                        new Money(currency), new Money(currency), currency);
                 loanAccount.addTrxnDetails(Arrays.asList(accountTrxnDetail));
 
                 childView.addLoanAccountDetails(loanAccount);

@@ -265,8 +265,9 @@ public class SavingsAction extends AccountAppAction {
         convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
         SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer, AccountState
-                .fromShort(getShortValue(savingsActionForm.getStateSelected())), savingsActionForm
-                .getRecommendedAmntValue(), customFields);
+                .fromShort(getShortValue(savingsActionForm.getStateSelected())), 
+                new Money(savingsOfferingBO.getCurrency(), savingsActionForm
+                .getRecommendedAmount()), customFields);
         saving.save();
 
         request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, saving.getGlobalAccountNum());
@@ -358,7 +359,7 @@ public class SavingsAction extends AccountAppAction {
         savings.setVersionNo(version);
         savings.setUserContext(uc);
         setInitialObjectForAuditLogging(savings);
-        savings.update(actionForm.getRecommendedAmntValue(), actionForm.getAccountCustomFieldSet());
+        savings.update(new Money(savings.getCurrency(), actionForm.getRecommendedAmount()), actionForm.getAccountCustomFieldSet());
         request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, savings.getGlobalAccountNum());
         logger.info("In SavingsAction::update(), Savings object updated successfully");
 

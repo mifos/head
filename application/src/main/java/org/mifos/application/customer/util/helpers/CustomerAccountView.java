@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
@@ -39,21 +40,25 @@ public class CustomerAccountView extends View {
     private boolean isValidCustomerAccountAmountEntered;
 
     private final Integer customerId;
+    
+    private final MifosCurrency currency;
 
-    public CustomerAccountView(Integer accountId) {
+    public CustomerAccountView(Integer accountId, MifosCurrency currency) {
         this.accountId = accountId;
         this.customerId = null;
         customerAccountAmountEntered = "0.0";
         accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
         isValidCustomerAccountAmountEntered = true;
+        this.currency = currency;
     }
     
-    public CustomerAccountView(final Integer accountId, final Integer customerId) {
+    public CustomerAccountView(final Integer accountId, final Integer customerId, MifosCurrency currency) {
         this.accountId = accountId;
         this.customerId = customerId;
         customerAccountAmountEntered = "0.0";
         accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
         isValidCustomerAccountAmountEntered = true;
+        this.currency = currency;
     }
 
     public List<CollectionSheetEntryInstallmentView> getAccountActionDates() {
@@ -89,7 +94,7 @@ public class CustomerAccountView extends View {
     }
 
     public Money getTotalAmountDue() {
-        Money totalAmount = new Money();
+        Money totalAmount = new Money(currency);
         if (accountActionDates != null && accountActionDates.size() > 0) {
             for (CollectionSheetEntryInstallmentView accountAction : accountActionDates) {
                 totalAmount = totalAmount.add(((CollectionSheetEntryCustomerAccountInstallmentView) accountAction)

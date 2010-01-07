@@ -49,6 +49,7 @@ import org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActi
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -61,6 +62,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -156,8 +158,10 @@ public class SavingsPrdAction extends BaseAction {
                         savingsprdForm.getTimeForInterestCalcValue(), new DateTimeService().getCurrentJavaDateTime(),
                         MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD), new MeetingBO(RecurrenceType.MONTHLY,
                         savingsprdForm.getFreqOfInterestValue(), new DateTimeService().getCurrentJavaDateTime(),
-                        MeetingType.SAVINGS_INTEREST_POSTING), savingsprdForm.getRecommendedAmountValue(),
-                savingsprdForm.getMaxAmntWithdrawlValue(), savingsprdForm.getMinAmntForIntValue(), savingsprdForm
+                        MeetingType.SAVINGS_INTEREST_POSTING), 
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getRecommendedAmount()),
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMaxAmntWithdrawl()), 
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMinAmntForInt()), savingsprdForm
                         .getInterestRateValue(), findGLCodeEntity(request,
                         ProductDefinitionConstants.SAVINGSDEPOSITGLCODELIST, savingsprdForm.getDepositGLCodeValue()),
                 findGLCodeEntity(request, ProductDefinitionConstants.SAVINGSINTERESTGLCODELIST, savingsprdForm
@@ -259,8 +263,10 @@ public class SavingsPrdAction extends BaseAction {
                         new DateTimeService().getCurrentJavaDateTime(),
                         MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD), new MeetingBO(RecurrenceType.MONTHLY,
                         savingsprdForm.getFreqOfInterestValue(), new DateTimeService().getCurrentJavaDateTime(),
-                        MeetingType.SAVINGS_INTEREST_POSTING), savingsprdForm.getRecommendedAmountValue(),
-                savingsprdForm.getMaxAmntWithdrawlValue(), savingsprdForm.getMinAmntForIntValue(), savingsprdForm
+                        MeetingType.SAVINGS_INTEREST_POSTING), 
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getRecommendedAmount()),
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMaxAmntWithdrawl()),
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMinAmntForInt()), savingsprdForm
                         .getInterestRateValue());
         return mapping.findForward(ActionForwards.update_success.toString());
     }

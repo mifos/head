@@ -116,10 +116,6 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
         this.trxnTypeId = trxnTypeId;
     }
 
-    public Money getAmountValue() {
-        return getMoney(amount);
-    }
-
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");

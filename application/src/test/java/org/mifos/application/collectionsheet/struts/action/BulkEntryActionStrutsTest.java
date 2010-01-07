@@ -785,7 +785,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     @SuppressWarnings("deprecation")
     private CustomerAccountView getCustomerAccountView(final CustomerBO customer) {
-        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId());
+        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(), getCurrency());
 
         List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
         accountAction.add(customer.getCustomerAccount().getAccountActionDate(Short.valueOf("1")));

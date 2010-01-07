@@ -97,7 +97,8 @@ public class LoanService implements Service {
         loanProductService.getDefaultAndAdditionalFees(loanProductId, userContext, defaultFees, additionalFees);
 
         CustomerBO client = new CustomerBusinessService().getCustomer(clientId);
-        LoanBO loan = loanDao.createLoan(userContext, loanOffering, client, accountState, FormUtils.getMoney(loanAmount),
+        LoanBO loan = loanDao.createLoan(userContext, loanOffering, client, accountState, 
+                new Money(loanOffering.getCurrency(), loanAmount),
                 defaultNumberOfInstallments, center.getCustomerAccount().getNextMeetingDate(), loanOffering
                         .isIntDedDisbursement(), loanOffering.getDefInterestRate(), loanOffering
                         .getGracePeriodDuration(), NO_FUND, defaultFees, null, maxLoanAmount, minLoanAmount,

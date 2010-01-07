@@ -20,6 +20,7 @@
 
 package org.mifos.application.accounts.loan.util.helpers;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
 /*
@@ -33,8 +34,8 @@ public class EMIInstallment {
     private Money principal;
     private Money interest;
 
-    public EMIInstallment() {
-        this(new Money(), new Money());
+    public EMIInstallment(MifosCurrency currency) {
+        this(new Money(currency), new Money(currency));
     }
 
     public EMIInstallment(Money principal, Money interest) {

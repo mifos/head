@@ -26,6 +26,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -69,7 +70,15 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
     private Money penaltyOverDue;
 
     private Money amntToBeDisbursed;
-
+    
+    /*
+     * Collection sheets can only handle one currency for now.  For the time being punt on
+     * figuring it out and just use the default currency.
+     */
+    public MifosCurrency getCurrency() {
+        return Money.getDefaultCurrency();
+    }
+    
     public Integer getAccountId() {
         return accountId;
     }
@@ -219,7 +228,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
      * to ease reporting) or as a historical artifact.
      */
     public Money getTotalAmntOverDue() {
-        return new Money().add(getPrincipalOverDue()).add(getInterestOverDue()).add(getFeesOverDue()).add(
+        return new Money(getCurrency()).add(getPrincipalOverDue()).add(getInterestOverDue()).add(getFeesOverDue()).add(
                 getPenaltyOverDue());
     }
 
@@ -251,7 +260,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
      * to ease reporting) or as a historical artifact.
      */
     public Money getTotalScheduledAmntDue() {
-        return new Money().add(getPrincipalDue()).add(getInterestDue()).add(getFeesDue()).add(getPenaltyDue());
+        return new Money(getCurrency()).add(getPrincipalDue()).add(getInterestDue()).add(getFeesDue()).add(getPenaltyDue());
     }
 
     /**

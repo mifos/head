@@ -183,7 +183,8 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("freqOfInterest", "1");
         addRequestParameter("depositGLCode", "42");
         addRequestParameter("interestGLCode", "57");
-
+        addRequestParameter("recommendedAmount", "");
+        
         actionPerform();
         verifyActionErrors(new String[] { ProductDefinitionConstants.ERRORMANDAMOUNT });
         verifyInputForward();
@@ -625,7 +626,8 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("freqOfInterest", "1");
         addRequestParameter("depositGLCode", "42");
         addRequestParameter("interestGLCode", "57");
-
+        addRequestParameter("recommendedAmount", "");
+        
         actionPerform();
        Assert.assertEquals("Manadatory amount", 1, getErrorSize("recommendedAmount"));
         verifyInputForward();

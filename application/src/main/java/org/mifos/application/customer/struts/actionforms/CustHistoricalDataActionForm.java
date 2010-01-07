@@ -72,20 +72,12 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
         return interestPaid;
     }
 
-    public Money getInterestPaidValue() {
-        return getMoney(getInterestPaid());
-    }
-
     public void setInterestPaid(String interestPaid) {
         this.interestPaid = interestPaid;
     }
 
     public String getLoanAmount() {
         return loanAmount;
-    }
-
-    public Money getLoanAmountValue() {
-        return getMoney(getLoanAmount());
     }
 
     public void setLoanAmount(String loanAmount) {
@@ -134,10 +126,6 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
 
     public String getTotalAmountPaid() {
         return totalAmountPaid;
-    }
-
-    public Money getTotalAmountPaidValue() {
-        return getMoney(getTotalAmountPaid());
     }
 
     public void setTotalAmountPaid(String totalAmountPaid) {

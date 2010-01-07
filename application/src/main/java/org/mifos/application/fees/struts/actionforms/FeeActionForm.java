@@ -102,10 +102,6 @@ public class FeeActionForm extends BaseActionForm {
         this.amount = amount;
     }
 
-    public Money getAmountValue() {
-        return getMoney(amount);
-    }
-
     public String getCategoryType() {
         return categoryType;
     }

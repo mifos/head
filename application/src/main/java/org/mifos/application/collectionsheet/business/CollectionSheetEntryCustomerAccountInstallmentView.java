@@ -23,6 +23,7 @@ package org.mifos.application.collectionsheet.business;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
 public class CollectionSheetEntryCustomerAccountInstallmentView extends CollectionSheetEntryInstallmentView {
@@ -36,23 +37,27 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
     private final Money miscPenaltyPaid;
 
     private List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions;
+    
+    private final MifosCurrency currency;
 
     public CollectionSheetEntryCustomerAccountInstallmentView(Integer accountId, Integer customerId,
             Short installmentId, Integer actionDateId, Date actionDate, Money miscFee, Money miscFeePaid,
-            Money miscPenalty, Money miscPenaltyPaid) {
+            Money miscPenalty, Money miscPenaltyPaid, MifosCurrency currency) {
         super(accountId, customerId, installmentId, actionDateId, actionDate);
         this.miscFee = miscFee;
         this.miscFeePaid = miscFeePaid;
         this.miscPenalty = miscPenalty;
         this.miscPenaltyPaid = miscPenaltyPaid;
+        this.currency = currency;
     }
 
-    public CollectionSheetEntryCustomerAccountInstallmentView(Integer accountId, Integer customerId) {
+    public CollectionSheetEntryCustomerAccountInstallmentView(Integer accountId, Integer customerId, MifosCurrency currency) {
         super(accountId, customerId, null, null, null);
         this.miscFee = null;
         this.miscFeePaid = null;
         this.miscPenalty = null;
         this.miscPenaltyPaid = null;
+        this.currency = currency;
     }
 
     public Money getMiscFee() {
@@ -89,7 +94,7 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
     }
 
     public Money getTotalFeeDue() {
-        Money totalFees = new Money();
+        Money totalFees = new Money(currency);
         if (collectionSheetEntryAccountFeeActions != null)
             for (CollectionSheetEntryAccountFeeActionView obj : collectionSheetEntryAccountFeeActions) {
                 totalFees = totalFees.add(obj.getFeeDue());

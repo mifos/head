@@ -55,6 +55,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -218,13 +219,13 @@ public class CustHistoricalDataAction extends BaseAction {
 
     private void setCustomerHistoricalDataEntity(CustomerBO customerBO,
             CustHistoricalDataActionForm historicalActionForm, CustomerHistoricalDataEntity historicalDataEntity) throws InvalidDateException {
-        historicalDataEntity.setInterestPaid(historicalActionForm.getInterestPaidValue());
-        historicalDataEntity.setLoanAmount(historicalActionForm.getLoanAmountValue());
+        historicalDataEntity.setInterestPaid(new Money(Money.getDefaultCurrency(), historicalActionForm.getInterestPaid()));
+        historicalDataEntity.setLoanAmount(new Money(Money.getDefaultCurrency(), historicalActionForm.getLoanAmount()));
         historicalDataEntity.setLoanCycleNumber(historicalActionForm.getLoanCycleNumberValue());
         historicalDataEntity.setMissedPaymentsCount(historicalActionForm.getMissedPaymentsCountValue());
         historicalDataEntity.setNotes(historicalActionForm.getCommentNotes());
         historicalDataEntity.setProductName(historicalActionForm.getProductName());
-        historicalDataEntity.setTotalAmountPaid(historicalActionForm.getTotalAmountPaidValue());
+        historicalDataEntity.setTotalAmountPaid(new Money(Money.getDefaultCurrency(), historicalActionForm.getTotalAmountPaid()));
         historicalDataEntity.setTotalPaymentsCount(historicalActionForm.getTotalPaymentsCountValue());
         historicalDataEntity.setMfiJoiningDate(getDateFromString(historicalActionForm.getMfiJoiningDate(), customerBO
                 .getUserContext().getPreferredLocale()));

@@ -36,6 +36,7 @@ import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
+import java.math.BigDecimal;
 
 public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 
@@ -51,7 +52,7 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
             errors.add(errors1);
 
         String method = request.getParameter(MethodNameConstants.METHOD);
-        if (isPreviewMethod(method) && isAmountGreaterThanZero(new Money(getLoanAmountValue().getCurrency(), getAmount()))
+        if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount())
                 && StringUtils.isBlank(paymentModeOfPayment)) {
             String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
@@ -69,14 +70,15 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
         return ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
     }
 
-    private boolean isAmountGreaterThanZero(Money amount) {
-        return amount != null && amount.getAmountDoubleValue() > 0.0;
-    }
-
     private boolean isPreviewMethod(String methodName) {
         return methodName != null && methodName.equals(MethodNameConstants.PREVIEW);
     }
 
+    private boolean isAmountGreaterThanZero(String amount) {
+        double doubleAmount = (StringUtils.isNotBlank(amount) && !amount.trim().equals(".")) ? Double.parseDouble(amount) : 0.0;
+        return doubleAmount > 0.0;
+    }
+    
     public String getPaymentModeOfPayment() {
         return paymentModeOfPayment;
     }
@@ -89,12 +91,12 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
         return loanAmount;
     }
 
+    public boolean getLoanAmountGreaterThanZero() {
+        return isAmountGreaterThanZero(getLoanAmount());        
+    }
+    
     public void setLoanAmount(String loanAmount) {
         this.loanAmount = loanAmount;
-    }
-
-    public Money getLoanAmountValue() {
-        return getMoney(this.loanAmount);
     }
 
     @Override

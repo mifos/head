@@ -280,34 +280,6 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
-    public void testSuccessfullAdjustUserPayment_AmountNullified() throws Exception {
-        createInitialObjects();
-        savingsOffering = createSavingsOffering();
-        savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
-        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-        Money depositAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.0");
-        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositAmount, depositAmount,
-                helper.getDate("20/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-        AccountTestUtils.addAccountPayment(payment, savings);
-        SavingBOTestUtils.setBalance(savings, depositAmount);
-        savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
-       Assert.assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt().getAccountTrxns().size());
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        StaticHibernateUtil.closeSession();
-        setRequestPathInfo("/savingsApplyAdjustmentAction.do");
-        addRequestParameter("method", "adjustLastUserAction");
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward("account_detail_page");
-        StaticHibernateUtil.closeSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
-       Assert.assertEquals(Integer.valueOf(2).intValue(), savings.getLastPmnt().getAccountTrxns().size());
-    }
-
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center_Active_test", meeting);

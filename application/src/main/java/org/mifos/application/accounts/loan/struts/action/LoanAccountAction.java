@@ -803,8 +803,8 @@ public class LoanAccountAction extends AccountAppAction {
         LoanBO loan;
         if (isRedoOperation(request.getParameter(PERSPECTIVE))) {
             loan = LoanBO.redoLoan(getUserContext(request), loanOffering, customer,
-                    AccountState.LOAN_PARTIAL_APPLICATION, loanActionForm.loanAmountValue(), loanActionForm
-                            .getNoOfInstallmentsValue(), loanActionForm
+                    AccountState.LOAN_PARTIAL_APPLICATION, new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount()), 
+                            loanActionForm.getNoOfInstallmentsValue(), loanActionForm
                             .getDisbursementDateValue(getUserContext(request).getPreferredLocale()), loanActionForm
                             .isInterestDedAtDisbValue(), loanActionForm.getInterestDoubleValue(), loanActionForm
                             .getGracePeriodDurationValue(),
@@ -816,8 +816,8 @@ public class LoanAccountAction extends AccountAppAction {
             logger.debug("Loan redo, External account ID = " + loan.getExternalId());
         } else {
             loan = LoanBO.createLoan(getUserContext(request), loanOffering, customer,
-                    AccountState.LOAN_PARTIAL_APPLICATION, loanActionForm.loanAmountValue(), loanActionForm
-                            .getNoOfInstallmentsValue(), loanActionForm
+                    AccountState.LOAN_PARTIAL_APPLICATION, new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount()), 
+                            loanActionForm.getNoOfInstallmentsValue(), loanActionForm
                             .getDisbursementDateValue(getUserContext(request).getPreferredLocale()), loanActionForm
                             .isInterestDedAtDisbValue(), loanActionForm.getInterestDoubleValue(), loanActionForm
                             .getGracePeriodDurationValue(),
@@ -1289,7 +1289,8 @@ public class LoanAccountAction extends AccountAppAction {
         }
 
         loanBO.setExternalId(loanAccountActionForm.getExternalId());
-        loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(), loanAccountActionForm.getLoanAmountValue(),
+        loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(), 
+                new Money(loanBO.getCurrency(), loanAccountActionForm.getLoanAmount()),
                 loanAccountActionForm.getInterestDoubleValue(), loanAccountActionForm.getNoOfInstallmentsValue(),
                 loanAccountActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()),
                 loanAccountActionForm.getGracePeriodDurationValue(),

@@ -26,6 +26,7 @@ import java.util.List;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
@@ -44,6 +45,9 @@ public class LoanAccountView extends View {
 
     public LoanAccountView(Integer accountId, Integer customerId, String prdOfferingShortName,
             Short prdOfferingId, Short loanAccountState, Short interestDeductedAtDisbursement, Money loanAmount) {
+        if (loanAmount == null) {
+            throw new MifosRuntimeException("Null loanAmount is not allowed for LoanAccountView");
+        }
         this.accountId = accountId;
         this.customerId = customerId;
         this.prdOfferingShortName = prdOfferingShortName;
@@ -84,7 +88,7 @@ public class LoanAccountView extends View {
     }
 
     public Double getTotalAmountDue() {
-        Money totalAmount = new Money();
+        Money totalAmount = new Money(loanAmount.getCurrency());
         if (isDisbursalAccount()) {
             return amountPaidAtDisbursement;
         }

@@ -165,14 +165,6 @@ public class SavingsActionForm extends AccountAppActionForm {
         return errorText;
     }
 
-    public double getRecommendedAmntDoubleValue() {
-        return getRecommendedAmntValue().getAmountDoubleValue();
-    }
-
-    public Money getRecommendedAmntValue() {
-        return FormUtils.getMoney(recommendedAmount);
-    }
-
     public void clear() {
         this.setAccountId(null);
         this.setSelectedPrdOfferingId(null);

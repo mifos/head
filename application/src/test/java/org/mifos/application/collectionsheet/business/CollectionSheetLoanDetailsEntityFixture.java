@@ -20,11 +20,9 @@
 
 package org.mifos.application.collectionsheet.business;
 
-public class CollectionSheetLoanDetailsEntityFixture {
+import org.mifos.application.master.business.MifosCurrency;
 
-    public static CollSheetLnDetailsEntity createLoanDetails() {
-        return new CollSheetLnDetailsEntity();
-    }
+public class CollectionSheetLoanDetailsEntityFixture {
 
     public static CollSheetLnDetailsEntity createLoanDetails(Integer accountId) {
         CollSheetLnDetailsEntity collectionSheet = new CollSheetLnDetailsEntity();

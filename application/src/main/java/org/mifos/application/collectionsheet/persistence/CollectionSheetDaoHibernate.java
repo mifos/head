@@ -40,6 +40,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 
 
 /**
@@ -375,7 +376,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             if (Constants.YES == loanDisbursementAccount.getPayInterestAtDisbursement()) {
                 amountDueAtDisbursement = findAmountDueWhenInterestIsDueAtDibursementTime(accountId);
             } else {
-                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId).getAmountDoubleValue();
+                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId, Money.getDefaultCurrency()).getAmountDoubleValue();
             }
 
             loanDisbursementAccount.setAmountDueAtDisbursement(amountDueAtDisbursement);

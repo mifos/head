@@ -46,6 +46,7 @@ import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.core.MifosRuntimeException;
@@ -60,8 +61,8 @@ import org.mifos.framework.util.helpers.Money;
 public class LoanPersistence extends Persistence {
 
     @SuppressWarnings("unchecked")
-    public Money getFeeAmountAtDisbursement(final Integer accountId) {
-        Money amount = new Money();
+    public Money getFeeAmountAtDisbursement(final Integer accountId, final MifosCurrency currency) {
+        Money amount = new Money(currency);
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("ACCOUNT_ID", accountId);
 
@@ -69,7 +70,11 @@ public class LoanPersistence extends Persistence {
             List<AccountFeesEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_FEE_AMOUNT_AT_DISBURSEMENT,
                     queryParameters);
             for (AccountFeesEntity entity : queryResult) {
-                amount = amount.add(entity.getAccountFeeAmount());
+                if (amount == null) {
+                    amount = entity.getAccountFeeAmount();
+                } else {
+                    amount = amount.add(entity.getAccountFeeAmount());
+                }
             }
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);

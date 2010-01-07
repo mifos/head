@@ -943,7 +943,7 @@ public class LoanBO extends AccountBO {
                     receiptDate);
         } else {
             try {
-                if (getLoanPersistence().getFeeAmountAtDisbursement(this.getAccountId()).getAmountDoubleValue() > 0.0) {
+                if (getLoanPersistence().getFeeAmountAtDisbursement(this.getAccountId(), getCurrency()).getAmountDoubleValue() > 0.0) {
                     accountPaymentEntity = insertOnlyFeeAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId,
                             personnel);
                 }
@@ -1231,7 +1231,7 @@ public class LoanBO extends AccountBO {
             return getDueAmount(getAccountActionDate(Short.valueOf("1")));
         }
 
-        return getLoanPersistence().getFeeAmountAtDisbursement(this.getAccountId());
+        return getLoanPersistence().getFeeAmountAtDisbursement(this.getAccountId(), getCurrency());
     }
 
     public Boolean hasPortfolioAtRisk() {
@@ -1933,17 +1933,17 @@ public class LoanBO extends AccountBO {
             Money interestFirstInstallment = loanInterest;
 
             EMIInstallment installment = null;
-            installment = new EMIInstallment();
+            installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(new Money(getCurrency()));
             installment.setInterest(interestFirstInstallment);
             emiInstallments.add(installment);
             for (int i = 1; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment();
+                installment = new EMIInstallment(getCurrency());
                 installment.setPrincipal(new Money(getCurrency()));
                 installment.setInterest(new Money(getCurrency()));
                 emiInstallments.add(installment);
             }
-            installment = new EMIInstallment();
+            installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalLastInstallment);
             installment.setInterest(new Money(getCurrency()));
             emiInstallments.add(installment);
@@ -3025,12 +3025,12 @@ public class LoanBO extends AccountBO {
             Money principalPerInstallment = new Money(getCurrency(), Double.toString(getLoanAmount()
                     .getAmountDoubleValue()
                     / (getNoOfInstallments() - 1)));
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(new Money(getCurrency()));
             installment.setInterest(interestFirstInstallment);
             emiInstallments.add(installment);
             for (int i = 1; i < getNoOfInstallments(); i++) {
-                installment = new EMIInstallment();
+                installment = new EMIInstallment(getCurrency());
                 installment.setPrincipal(principalPerInstallment);
                 installment.setInterest(new Money(getCurrency()));
 
@@ -3053,13 +3053,13 @@ public class LoanBO extends AccountBO {
                     / getNoOfInstallments()));
             EMIInstallment installment = null;
             for (int i = 0; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment();
+                installment = new EMIInstallment(getCurrency());
                 installment.setPrincipal(new Money(getCurrency()));
                 installment.setInterest(interestPerInstallment);
                 emiInstallments.add(installment);
             }
             // principal set in the last installment
-            installment = new EMIInstallment();
+            installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalLastInstallment);
             installment.setInterest(interestPerInstallment);
             emiInstallments.add(installment);
@@ -3083,13 +3083,13 @@ public class LoanBO extends AccountBO {
                     * getInterestRate() / 100 / getDecliningInterestAnnualPeriods()));
             EMIInstallment installment = null;
             for (int i = 0; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment();
+                installment = new EMIInstallment(getCurrency());
                 installment.setPrincipal(new Money(getCurrency()));
                 installment.setInterest(interestPerInstallment);
                 emiInstallments.add(installment);
             }
             // principal set in the last installment
-            installment = new EMIInstallment();
+            installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalLastInstallment);
             installment.setInterest(interestPerInstallment);
             emiInstallments.add(installment);
@@ -3139,7 +3139,7 @@ public class LoanBO extends AccountBO {
         Money interestPerInstallment = loanInterest.divide(new BigDecimal(getNoOfInstallments(), Money
                 .getInternalPrecisionAndRounding()));
         for (int i = 0; i < getNoOfInstallments(); i++) {
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalPerInstallment);
             installment.setInterest(interestPerInstallment);
             emiInstallments.add(installment);
@@ -3162,7 +3162,7 @@ public class LoanBO extends AccountBO {
         Money interestPerInstallment = loanInterest.divide(new BigDecimal(getNoOfInstallments(), Money
                 .getInternalPrecisionAndRounding()));
         for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalPerInstallment);
             installment.setInterest(interestPerInstallment);
             emiInstallments.add(installment);
@@ -3181,7 +3181,7 @@ public class LoanBO extends AccountBO {
         Money zero = new Money(getCurrency(), new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
 
         for (int i = 0; i < getGracePeriodDuration(); i++) {
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setInterest(zero);
             installment.setPrincipal(zero);
             emiInstallments.add(installment);
@@ -3204,7 +3204,7 @@ public class LoanBO extends AccountBO {
                 .getInternalPrecisionAndRounding()));
 
         for (int i = 0; i < getGracePeriodDuration(); i++) {
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setInterest(interestPerInstallment);
             installment.setPrincipal(zero);
             emiInstallments.add(installment);
@@ -3319,7 +3319,7 @@ public class LoanBO extends AccountBO {
 
         for (int i = 0; i < numInstallments; i++) {
 
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
 
             Money interestThisPeriod = principalBalance.multiply(getInterestFractionalRatePerInstallment_v2());
             Money principalThisPeriod = paymentPerPeriod.subtract(interestThisPeriod);
@@ -3343,7 +3343,7 @@ public class LoanBO extends AccountBO {
         double interestRate = getInterestFractionalRatePerInstallment_v2();
 
         for (int i = 0; i < numInstallments; i++) {
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
             Money interestThisPeriod = principalBalance.multiply(interestRate);
             installment.setInterest(interestThisPeriod);
             installment.setPrincipal(principalPerPeriod);
@@ -3364,7 +3364,7 @@ public class LoanBO extends AccountBO {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         Money zero = new Money(getCurrency(), new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
         for (int i = 0; i < getGracePeriodDuration(); i++) {
-            EMIInstallment installment = new EMIInstallment();
+            EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setInterest(this.getLoanAmount().multiply(getInterestFractionalRatePerInstallment_v2()));
             installment.setPrincipal(zero);
             emiInstallments.add(installment);
@@ -3402,17 +3402,17 @@ public class LoanBO extends AccountBO {
             Money interestFirstInstallment = loanInterest;
 
             EMIInstallment installment = null;
-            installment = new EMIInstallment();
+            installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(new Money(getCurrency()));
             installment.setInterest(interestFirstInstallment);
             emiInstallments.add(installment);
             for (int i = 1; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment();
+                installment = new EMIInstallment(getCurrency());
                 installment.setPrincipal(new Money(getCurrency()));
                 installment.setInterest(new Money(getCurrency()));
                 emiInstallments.add(installment);
             }
-            installment = new EMIInstallment();
+            installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalLastInstallment);
             installment.setInterest(new Money(getCurrency()));
             emiInstallments.add(installment);

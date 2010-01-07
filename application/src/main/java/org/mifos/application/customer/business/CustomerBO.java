@@ -664,7 +664,7 @@ public abstract class CustomerBO extends BusinessObject {
         if (totalOutStandingAmount.getAmountDoubleValue() != 0.0) {
             return amountOverDue.divide(totalOutStandingAmount);
         }
-        return new Money();
+        return new Money(currency);
     }
 
     // TODO: Abstract method doesn't work with Hibernate 3.2?
