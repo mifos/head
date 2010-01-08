@@ -36,6 +36,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
@@ -410,18 +411,31 @@ public class ClientBO extends CustomerBO {
     @Override
     public void changeStatus(final Short newStatusId, final Short flagId, final String comment) throws CustomerException {
         super.changeStatus(newStatusId, flagId, comment);
-        if (isClientUnderGroup()
-                && (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
-                        .equals(CustomerStatus.CLIENT_CANCELLED.getValue()))) {
-            resetPositions(getParentCustomer());
-            getParentCustomer().setUserContext(getUserContext());
-            getParentCustomer().update();
-            CustomerBO center = getParentCustomer().getParentCustomer();
-            if (center != null) {
-                resetPositions(center);
-                center.setUserContext(getUserContext());
-                center.update();
-                center = null;
+        if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
+                .equals(CustomerStatus.CLIENT_CANCELLED.getValue())) {
+            if (isClientUnderGroup()) {
+                resetPositions(getParentCustomer());
+                getParentCustomer().setUserContext(getUserContext());
+                getParentCustomer().update();
+                CustomerBO center = getParentCustomer().getParentCustomer();
+                if (center != null) {
+                    resetPositions(center);
+                    center.setUserContext(getUserContext());
+                    center.update();
+                    center = null;
+                }
+            }
+            // close customer account - #MIFOS-1504
+            for (AccountBO account : getAccounts()) {
+                if (account.isOfType(AccountTypes.CUSTOMER_ACCOUNT) && account.isOpen()) {
+                    try {
+                        account.setUserContext(getUserContext());
+                        account.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, flagId, comment);
+                        account.update();
+                    } catch (AccountException e) {
+                        throw new CustomerException(e);
+                    }
+                }
             }
         }
     }

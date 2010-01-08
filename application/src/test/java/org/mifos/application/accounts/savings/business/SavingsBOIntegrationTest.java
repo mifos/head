@@ -3276,6 +3276,20 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
     }
 
+    public void testSuccessfulCloseCustomerAccount() throws Exception {
+        savings = getSavingsAccountForCenter();
+        client1.changeStatus(CustomerStatus.CLIENT_CLOSED, CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED,
+                "Client closed");
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        for (AccountBO account : client1.getAccounts()) {
+            Assert.assertNotNull(account.getClosedDate());
+            if (account.isOfType(AccountTypes.CUSTOMER_ACCOUNT)) {
+                Assert.assertTrue(account.getAccountState().isInState(AccountState.CUSTOMER_ACCOUNT_INACTIVE));
+            }
+        }
+    }
+
     public void testGetTotalAmountDueForCenter() throws Exception {
         savings = getSavingsAccountForCenter();
         Money dueAmount = new Money(getCurrency());

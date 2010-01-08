@@ -594,7 +594,8 @@ public class AccountBO extends BusinessObject {
             if (newStatusId.equals(AccountState.LOAN_CANCELLED.getValue())
                     || newStatusId.equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
                     || newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
-                    || newStatusId.equals(AccountState.SAVINGS_CANCELLED.getValue())) {
+                    || newStatusId.equals(AccountState.SAVINGS_CANCELLED.getValue())
+                    || newStatusId.equals(AccountState.CUSTOMER_ACCOUNT_INACTIVE.getValue())) {
                 this.setClosedDate(getDateTimeService().getCurrentJavaDateTime());
             }
             if (newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
