@@ -78,7 +78,7 @@ public class MoneyTest extends TestCase {
     }
 
     public void testMultiply() {
-        Money multiplicand = new Money(RUPEE, "10.0");
+        BigDecimal multiplicand = new BigDecimal("10.0");
         Money money = new Money(RUPEE, "20.0");
        Assert.assertEquals("testing multiply, should succeed", new Money(RUPEE, "200.0"), money.multiply(multiplicand));
     }
@@ -95,16 +95,6 @@ public class MoneyTest extends TestCase {
         BigDecimal factor = new BigDecimal(1.24);
        Assert.assertEquals("testing multiply with a factor, should succeed", new Money(RUPEE, "124.0"), money
                 .multiply(factor));
-    }
-
-    public void testMultiplyWithDiffCurrencies() {
-        Money money = new Money(RUPEE, "20.0");
-        try {
-            Money multiplicandWithDiffCurrecny = new Money(EURO, "10");
-            money.multiply(multiplicandWithDiffCurrecny);
-            Assert.fail("testing multiply with different currencies should throw an exception.");
-        } catch (CurrencyMismatchException e) {
-        }
     }
 
     public void testDivideByMoney() {

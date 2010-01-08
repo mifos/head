@@ -2700,7 +2700,7 @@ public class LoanBO extends AccountBO {
     public double getPaymentsInArrears() throws PersistenceException {
         Money principalInArrearsAndOutsideLateness = getTotalPrincipalAmountInArrearsAndOutsideLateness();
         Money totalPrincipal = getTotalPrincipalAmount();
-        Money numOfInstallments = new Money(getCurrency(), new BigDecimal(getNoOfInstallments()));
+        BigDecimal numOfInstallments = new BigDecimal(getNoOfInstallments());
         return principalInArrearsAndOutsideLateness.multiply(numOfInstallments).divide(totalPrincipal)
                 .getAmountDoubleValue();
 

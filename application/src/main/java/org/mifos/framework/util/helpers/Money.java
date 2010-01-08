@@ -172,26 +172,6 @@ public final class Money implements Serializable {
 
     }
 
-    /**
-     * If the object passed as parameter is null or if its currency or amount is
-     * null it returns this else performs the required operation and returns a
-     * new Money object corresponding to the value.
-     */
-    public Money multiply(Money money) {
-        if (null != money) {
-            if (isCurrencyDifferent(money)) {
-                throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
-            }
-        }
-        // FIXME null currency should not be allowed at Money creation
-        if (money == null || money.getCurrency() == null) {
-            return this;
-        }
-
-        return new Money(currency, amount.multiply(money.getAmount()).setScale(
-                internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode()));
-    }
-
     public Money multiply(Double factor) {
         if (factor == null) {
             throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
@@ -209,8 +189,12 @@ public final class Money implements Serializable {
     }
 
     /**
-     * Dividing by Money doesn't seem to make sense. It should be dividing by a
-     * BigDecimal. This method should be eliminated.
+     * Dividing by Money gives a fractional value
+     * <br><br>
+     * e.g. Money(USD)/Money(USD) = fraction (no unit)
+     * <br><br>
+     * FIXME return BigDecimal instead of Money
+     * 
      */
     public Money divide(Money money) {
         if (null != money) {
@@ -230,7 +214,6 @@ public final class Money implements Serializable {
         return new Money(currency, amount.divide(factor, internalPrecisionAndRounding));
     }
 
-    
     public Money negate() {
      // no need to set scale since negation preserves scale
         return new Money(currency, amount.negate());
