@@ -196,7 +196,7 @@ public final class Money implements Serializable {
      * FIXME return BigDecimal instead of Money
      * 
      */
-    public Money divide(Money money) {
+    public BigDecimal divide(Money money) {
         if (null != money) {
             if (isCurrencyDifferent(money)) {
                 throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
@@ -204,10 +204,10 @@ public final class Money implements Serializable {
         }
         // FIXME null currency should not be allowed at Money creation
         if (money == null || money.getCurrency() == null) {
-            return this;
+            return amount;
         }
 
-        return new Money(currency, amount.divide(money.getAmount(), internalPrecisionAndRounding));
+        return amount.divide(money.getAmount(), internalPrecisionAndRounding);
     }
 
     public Money divide(BigDecimal factor) {

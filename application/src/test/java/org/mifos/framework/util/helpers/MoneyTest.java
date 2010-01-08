@@ -100,7 +100,7 @@ public class MoneyTest extends TestCase {
     public void testDivideByMoney() {
         Money dividend = new Money(RUPEE, new BigDecimal(10.0));
         Money money = new Money(RUPEE, "20.0");
-       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new BigDecimal("2"), money.divide(dividend));
     }
 
     public void testDivide() {
@@ -155,7 +155,7 @@ public class MoneyTest extends TestCase {
     public void testDivideMoneyRepeating() {
         Money dividend = new Money(RUPEE, "3.0");
         Money money = new Money(RUPEE, "10.0");
-       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new BigDecimal("3.333333333333"), money.divide(dividend));
     }
 
     public void testHashCode() {

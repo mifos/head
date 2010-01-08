@@ -23,6 +23,7 @@ package org.mifos.application.customer.business;
 import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -652,7 +653,7 @@ public abstract class CustomerBO extends BusinessObject {
      * This method is unused and is a candidate for removal.
      */
     @Deprecated
-    public Money getDelinquentPortfolioAmount(MifosCurrency currency) {
+    public BigDecimal getDelinquentPortfolioAmount(MifosCurrency currency) {
         Money amountOverDue = new Money(currency);
         Money totalOutStandingAmount = new Money(currency);
         for (AccountBO accountBO : getAccounts()) {
@@ -664,7 +665,7 @@ public abstract class CustomerBO extends BusinessObject {
         if (totalOutStandingAmount.getAmountDoubleValue() != 0.0) {
             return amountOverDue.divide(totalOutStandingAmount);
         }
-        return new Money(currency);
+        return BigDecimal.ZERO;
     }
 
     // TODO: Abstract method doesn't work with Hibernate 3.2?

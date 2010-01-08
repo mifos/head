@@ -53,7 +53,7 @@ public class PortfolioAtRiskCalculation {
         atRiskLoanAmount = atRiskLoanAmount.add(clientAtRiskLoanAmount);
 
         if (!outstandingLoanAmount.equals(new Money(outstandingLoanAmount.getCurrency()))) {
-            portfolioAtRisk = atRiskLoanAmount.divide(outstandingLoanAmount).getAmountDoubleValue();
+            portfolioAtRisk = atRiskLoanAmount.divide(outstandingLoanAmount).doubleValue();
         } else if (atRiskLoanAmount.equals(new Money(atRiskLoanAmount.getCurrency()))) {
             portfolioAtRisk = 0.0;
         }

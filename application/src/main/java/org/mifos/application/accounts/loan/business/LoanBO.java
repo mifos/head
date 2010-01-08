@@ -2702,7 +2702,7 @@ public class LoanBO extends AccountBO {
         Money totalPrincipal = getTotalPrincipalAmount();
         BigDecimal numOfInstallments = new BigDecimal(getNoOfInstallments());
         return principalInArrearsAndOutsideLateness.multiply(numOfInstallments).divide(totalPrincipal)
-                .getAmountDoubleValue();
+                .doubleValue();
 
     }
 
