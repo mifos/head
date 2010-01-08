@@ -28,6 +28,8 @@ import java.util.Date;
 
 public interface PaymentDataTemplate {
     public Money getTotalAmount();
+    
+    public boolean hasValidAmount();
 
     public PersonnelBO getPersonnel();
 

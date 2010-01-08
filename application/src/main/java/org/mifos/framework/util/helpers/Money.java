@@ -99,17 +99,13 @@ public final class Money implements Serializable {
         this(currency, new BigDecimal(0, internalPrecisionAndRounding));
     }
 
-    public Money(String amount) {
-        this(getDefaultCurrency(), amount);
-    }
-    
     public Money(MifosCurrency currency, String amount) {
         this(currency, new BigDecimal(amount, internalPrecisionAndRounding));
     }
 
     public Money(MifosCurrency currency, BigDecimal amount) {
         // FIXME null currency should not be allowed at Money creation
-        //checkCurrencyNotNull(currency);
+        // checkCurrencyNotNull(currency);
         checkAmountNotNull(amount);
         this.currency = currency;
         this.amount = amount.setScale(internalPrecision, internalRoundingMode);

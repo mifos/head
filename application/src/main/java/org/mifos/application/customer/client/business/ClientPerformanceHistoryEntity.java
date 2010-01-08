@@ -195,7 +195,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
             }
         }
         if (totalOutStandingAmount.getAmountDoubleValue() != 0.0)
-            return new Money(String.valueOf(amountOverDue.getAmountDoubleValue()
+            return new Money(getCurrency(), String.valueOf(amountOverDue.getAmountDoubleValue()
                     / totalOutStandingAmount.getAmountDoubleValue()));
         return new Money(getCurrency());
     }

@@ -268,11 +268,6 @@ public class LocalizationConverter {
         return dNum;
     }
 
-    public Money getMoney(String amount) {
-        String doubleString = getDoubleValueForCurrentLocale(amount).toString();
-        return new Money(doubleString);
-    }
-
     public String getDoubleStringForMoney(Double dNumber) {
         return currentDecimalFormatForMoney.format(dNumber);
     }

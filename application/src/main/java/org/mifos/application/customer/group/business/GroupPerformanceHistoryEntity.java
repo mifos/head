@@ -217,7 +217,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
             }
         }
         if (countOfActiveLoans.intValue() > 0)
-            return new Money(String.valueOf(amountForActiveAccount.getAmountDoubleValue()
+            return new Money(getCurrency(), String.valueOf(amountForActiveAccount.getAmountDoubleValue()
                     / countOfActiveLoans.intValue()));
         return new Money(getCurrency());
     }
@@ -288,7 +288,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
         }
         double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
         if (totalOutstandingLoanAmount != 0.0)
-            setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue() / totalOutstandingLoanAmount)));
+            setPortfolioAtRisk(new Money(getCurrency(), String.valueOf(amount.getAmountDoubleValue() / totalOutstandingLoanAmount)));
     }
 
     private List<CustomerBO> getChildren() throws CustomerException {

@@ -415,16 +415,17 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public boolean isPaymentAppliedToAccountFees() {
-        Money feesPaid = new Money("0.0");
+        Money feesPaid = new Money(getCurrency(),"0.0");
         for (AccountFeesActionDetailEntity accountFeesActionDetail : getAccountFeesActionDetails()) {
             feesPaid = feesPaid.add(accountFeesActionDetail.getFeeAmountPaid());
         }
-        return !feesPaid.equals(new Money("0.0"));
+        return !feesPaid.equals(new Money(getCurrency(),"0.0"));
     }
 
     public boolean isPaymentApplied() {
-        Money zero = new Money("0.0");
+        Money zero = new Money(getCurrency(),"0.0");
         return !getPrincipalPaid().equals(zero) || !getInterestPaid().equals(zero) || !getMiscFeePaid().equals(zero)
                 || !getMiscPenaltyPaid().equals(zero) || isPaymentAppliedToAccountFees();
     }
+
 }

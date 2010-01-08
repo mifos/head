@@ -55,11 +55,15 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         this.installment = installment;
     }
 
+    public boolean hasValidAmount() {
+        return getAmount() != null && !getAmount().equals("");
+    }
+    
     public Money getTotalAmount() {
         if (getAmount() == null || getAmount().equals("")) {
             return null;
         } else {
-            return new Money(amount);
+            return new Money(installment.getPrincipal().getCurrency(), amount);
         }
     }
 

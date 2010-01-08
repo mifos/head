@@ -39,7 +39,7 @@ public class SavingsScheduleBuilder {
     private Short installmentNumber = Short.valueOf("1");
     private final Date actionDate = new DateTime().minusDays(1).toDate();
     private final PaymentStatus paymentStatus = PaymentStatus.UNPAID;
-    private Money depositDue = new Money("25.0");
+    private Money depositDue = new Money(Money.getDefaultCurrency(),"25.0");
 
     public SavingsScheduleEntity build() {
 

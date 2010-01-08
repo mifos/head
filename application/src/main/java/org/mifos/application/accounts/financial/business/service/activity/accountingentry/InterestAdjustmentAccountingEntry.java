@@ -93,7 +93,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
             return;
         }
         Money account999 = ((LoanBO) loanTrxn.getAccount()).calculate999Account(!isLastPayment);
-        Money zeroAmount = new Money("0");
+        Money zeroAmount = new Money(account999.getCurrency(),"0");
         // only log if amount > or < 0
         if (account999.equals(zeroAmount)) {
             return;

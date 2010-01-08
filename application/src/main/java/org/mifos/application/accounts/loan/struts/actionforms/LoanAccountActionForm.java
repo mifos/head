@@ -1120,7 +1120,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             for (PaymentDataTemplate template : paymentDataBeans) {
                 // No data for amount and transaction date, validation not
                 // applicable
-                if (template.getTotalAmount() == null || template.getTransactionDate() == null)
+                if (!template.hasValidAmount() || template.getTransactionDate() == null)
                     continue;
                 // Meeting date is invalid
                 if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),

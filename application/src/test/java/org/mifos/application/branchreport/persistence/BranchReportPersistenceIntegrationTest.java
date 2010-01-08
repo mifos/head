@@ -58,6 +58,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
 
@@ -241,7 +242,8 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     public void testSaveLoanArrearsBOWithLargeValueForAmountOutstanding() throws Exception {
         BranchReportLoanArrearsAgingBO branchReportLoanArrearsAgingBO = new BranchReportLoanArrearsAgingBO(
                 LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Integer.valueOf(1), Integer.valueOf(2),
-                createMoney(15724323.10), createMoney(1283439.70), createMoney(459625.70));
+                createMoney(Money.getDefaultCurrency(), 15724323.10), createMoney(Money.getDefaultCurrency(),1283439.70), 
+                createMoney(Money.getDefaultCurrency(), 459625.70));
         BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(null, Short.valueOf("2"), DateUtils
                 .currentDate());
         branchReport.addLoanArrearsAging(branchReportLoanArrearsAgingBO);

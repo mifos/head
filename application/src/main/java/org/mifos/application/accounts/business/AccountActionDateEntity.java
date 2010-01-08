@@ -24,6 +24,7 @@ import java.sql.Date;
 
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.PersistentObject;
 
 public abstract class AccountActionDateEntity extends PersistentObject implements Comparable<AccountActionDateEntity> {
@@ -116,5 +117,8 @@ public abstract class AccountActionDateEntity extends PersistentObject implement
     public int compareTo(final AccountActionDateEntity obj) {
         return this.getInstallmentId().compareTo(obj.getInstallmentId());
     }
-
+    
+    protected MifosCurrency getCurrency() {
+        return getAccount().getCurrency();
+    }    
 }

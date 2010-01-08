@@ -66,8 +66,8 @@ public class MoneyUtils {
         return amount.setScale(digitsAfterDecimal, RoundingMode.HALF_UP);
     }
     
-    public static Money createMoney(double amount) {
-        return new Money(BigDecimal.valueOf(amount).toString());
+    public static Money createMoney(MifosCurrency currency, double amount) {
+        return new Money(currency, BigDecimal.valueOf(amount).toString());
     }
     
     public static Money createMoney(MifosCurrency currency, BigDecimal amount) {

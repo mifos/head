@@ -94,9 +94,9 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
     }
 
     public void testLoanArrearsContructor() throws Exception {
-        Money agingAmount = createMoney(3.3333);
+        Money agingAmount = createMoney(Money.getDefaultCurrency(), 3.3333);
         BranchReportLoanArrearsAgingBO loanArrears = new BranchReportLoanArrearsAgingBO(null, null, null, agingAmount,
-                createMoney(3.3333), createMoney(666.70));
+                createMoney(Money.getDefaultCurrency(), 3.3333), createMoney(Money.getDefaultCurrency(), 666.70));
        Assert.assertEquals(agingAmount.getAmount().setScale(AccountingRules.getDigitsAfterDecimal(),
                 RoundingMode.HALF_UP), loanArrears.getAmountAging());
     }

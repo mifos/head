@@ -896,7 +896,7 @@ public class LoanAccountAction extends AccountAppAction {
         CustomerBO customer = getCustomer(request);
         try {
             for (PaymentDataTemplate template : paymentDataBeans) {
-                if (template.getTotalAmount() != null && template.getTransactionDate() != null) {
+                if (template.hasValidAmount() && template.getTransactionDate() != null) {
                     if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
                             DateUtils.getLastDayOfNextYear())) {
                         throw new AccountException("errors.invalidTxndate");

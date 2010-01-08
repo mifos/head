@@ -128,7 +128,7 @@ public class SaveCollectionSheetAssembler {
 
                         if (isDeposit) {
                             final AccountPaymentEntity accountDeposit = new AccountPaymentEntity(account, new Money(
-                                    amountToDeposit.toString()), receiptNumber, receiptDate, paymentType, paymentDate);
+                                    Money.getDefaultCurrency(), amountToDeposit.toString()), receiptNumber, receiptDate, paymentType, paymentDate);
                             accountDeposit.setCreatedByUser(user);
 
                             try {
@@ -143,7 +143,7 @@ public class SaveCollectionSheetAssembler {
 
                         if (isWithdrawal) {
                             final AccountPaymentEntity accountWithdrawal = new AccountPaymentEntity(account, new Money(
-                                    amountToWithdraw.toString()), receiptNumber, receiptDate, paymentType, paymentDate);
+                                    Money.getDefaultCurrency(), amountToWithdraw.toString()), receiptNumber, receiptDate, paymentType, paymentDate);
                             accountWithdrawal.setCreatedByUser(user);
 
                             try {
@@ -195,7 +195,7 @@ public class SaveCollectionSheetAssembler {
 
                         try {
                             final AccountPaymentEntity accountDisbursalPayment = new AccountPaymentEntity(account,
-                                    new Money(disbursalAmount.toString()), payment.getReceiptNumber(), payment
+                                    new Money(account.getCurrency(), disbursalAmount.toString()), payment.getReceiptNumber(), payment
                                             .getReceiptDate(), new PaymentTypeEntity(payment.getPaymentType().getId()),
                                     payment.getPaymentDate());
                             accountDisbursalPayment.setCreatedByUser(payment.getCreatedByUser());
@@ -214,7 +214,7 @@ public class SaveCollectionSheetAssembler {
                         if (loanPaymentAmount != null && loanPaymentAmount.compareTo(BigDecimal.ZERO) > 0) {
                             try {
                                 final PaymentData paymentData = getCustomerAccountPaymentDataView(new Money(
-                                        loanPaymentAmount.toString()), payment);
+                                        account.getCurrency(), loanPaymentAmount.toString()), payment);
                                 account.applyPayment(paymentData, false);
                                 loans.add(account);
                             } catch (AccountException ae) {
@@ -246,8 +246,8 @@ public class SaveCollectionSheetAssembler {
                     System.out.println("processing id:" + saveCollectionSheetCustomerAccount.getAccountId()
                             + "  amount: " + saveCollectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee());
 
-                    final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(new Money(amount
-                            .toString()), payment);
+                    final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(new Money(
+                            Money.getDefaultCurrency(), amount.toString()), payment);
 
                     final Integer accountId = saveCollectionSheetCustomer.getSaveCollectionSheetCustomerAccount()
                             .getAccountId();

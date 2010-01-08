@@ -44,7 +44,7 @@ public class SavingsProductBuilder {
             .monthly().every(1).build();
     private final MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
             .monthly().every(1).build();
-    private Money maxAmountOfWithdrawal = new Money("50.0");
+    private Money maxAmountOfWithdrawal = new Money(Money.getDefaultCurrency(), "50.0");
     private final Double interestRate = Double.valueOf("2.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;

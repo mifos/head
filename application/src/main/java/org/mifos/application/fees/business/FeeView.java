@@ -128,10 +128,6 @@ public class FeeView extends View {
         return StringUtils.isNotBlank(feeId) ? Short.valueOf(feeId) : null;
     }
 
-    public Double getAmountDoubleValue() {
-        return new Money(amount).getAmountDoubleValue();
-    }
-
     public String getFeeFormula() {
         return feeFormula;
     }
