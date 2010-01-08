@@ -2874,11 +2874,9 @@ public class LoanBO extends AccountBO {
      */
     private Money getFlatInterestAmount_v2() throws AccountException {
         // TODO: interest rate should be a BigDecimal ?
-        Double interestRateDouble = getInterestRate();
+        Double interestRate = getInterestRate();
         // TODO: durationInYears should be a BigDeciaml ?
-        Double durationInYearsDouble = getTotalDurationInYears_v2();
-        BigDecimal interestRate = new BigDecimal(interestRateDouble, Money.getInternalPrecisionAndRounding());
-        BigDecimal durationInYears = new BigDecimal(durationInYearsDouble, Money.getInternalPrecisionAndRounding());
+        Double durationInYears = getTotalDurationInYears_v2();
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                 "Get interest duration in years..." + durationInYears);
         // the calls to Money.multiply() and Money.divide() round prematurely!
@@ -3135,10 +3133,8 @@ public class LoanBO extends AccountBO {
      */
     private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money principalPerInstallment = getLoanAmount().divide(
-                new BigDecimal(getNoOfInstallments(), Money.getInternalPrecisionAndRounding()));
-        Money interestPerInstallment = loanInterest.divide(new BigDecimal(getNoOfInstallments(), Money
-                .getInternalPrecisionAndRounding()));
+        Money principalPerInstallment = getLoanAmount().divide(getNoOfInstallments());
+        Money interestPerInstallment = loanInterest.divide(getNoOfInstallments());
         for (int i = 0; i < getNoOfInstallments(); i++) {
             EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalPerInstallment);
@@ -3157,11 +3153,8 @@ public class LoanBO extends AccountBO {
     private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(final Money loanInterest)
             throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money principalPerInstallment = getLoanAmount().divide(
-                new BigDecimal(getNoOfInstallments().shortValue() - getGracePeriodDuration().shortValue(), Money
-                        .getInternalPrecisionAndRounding()));
-        Money interestPerInstallment = loanInterest.divide(new BigDecimal(getNoOfInstallments(), Money
-                .getInternalPrecisionAndRounding()));
+        Money principalPerInstallment = getLoanAmount().divide(getNoOfInstallments() - getGracePeriodDuration());
+        Money interestPerInstallment = loanInterest.divide(getNoOfInstallments());
         for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
             EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setPrincipal(principalPerInstallment);
@@ -3179,7 +3172,7 @@ public class LoanBO extends AccountBO {
     private List<EMIInstallment> generateSkippedGraceInstallments_v2() {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money zero = new Money(getCurrency(), new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
+        Money zero = MoneyUtils.zero(getCurrency());
 
         for (int i = 0; i < getGracePeriodDuration(); i++) {
             EMIInstallment installment = new EMIInstallment(getCurrency());
@@ -3199,10 +3192,9 @@ public class LoanBO extends AccountBO {
     private List<EMIInstallment> generateFlatInstallmentsInterestOnly_v2(final Money loanInterest) {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money zero = new Money(getCurrency(), new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
+        Money zero = MoneyUtils.zero(getCurrency());
 
-        Money interestPerInstallment = loanInterest.divide(new BigDecimal(getNoOfInstallments(), Money
-                .getInternalPrecisionAndRounding()));
+        Money interestPerInstallment = loanInterest.divide(getNoOfInstallments());
 
         for (int i = 0; i < getGracePeriodDuration(); i++) {
             EMIInstallment installment = new EMIInstallment(getCurrency());
@@ -3240,14 +3232,12 @@ public class LoanBO extends AccountBO {
     private Money getPaymentPerPeriodForDecliningInterest_v2(final int numInstallments) {
         double factor = 0.0;
         if (interestRate == 0.0) {
-            Money paymentPerPeriod = getLoanAmount().divide(
-                    new BigDecimal(numInstallments, Money.getInternalPrecisionAndRounding()));
+            Money paymentPerPeriod = getLoanAmount().divide(numInstallments);
             return paymentPerPeriod;
         } else {
             factor = getInterestFractionalRatePerInstallment_v2()
-                    / (1.0 - Math.pow(1.0 + getInterestFractionalRatePerInstallment_v2(), -numInstallments));
-            Money paymentPerPeriod = getLoanAmount().multiply(
-                    new BigDecimal(factor, Money.getInternalPrecisionAndRounding()));
+                    / (1.0 - Math.pow(1.0 + getInterestFractionalRatePerInstallment_v2(), - numInstallments));
+            Money paymentPerPeriod = getLoanAmount().multiply(factor);
             return paymentPerPeriod;
         }
     }
@@ -3363,7 +3353,7 @@ public class LoanBO extends AccountBO {
     private List<EMIInstallment> generateDecliningInstallmentsInterestOnly_v2() {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money zero = new Money(getCurrency(), new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
+        Money zero = MoneyUtils.zero(getCurrency());
         for (int i = 0; i < getGracePeriodDuration(); i++) {
             EMIInstallment installment = new EMIInstallment(getCurrency());
             installment.setInterest(this.getLoanAmount().multiply(getInterestFractionalRatePerInstallment_v2()));

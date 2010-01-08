@@ -110,7 +110,7 @@ public class MoneyTest extends TestCase {
     }
 
     public void testDivideRepeating() {
-        BigDecimal dividend = new BigDecimal("3.0", Money.getInternalPrecisionAndRounding());
+        BigDecimal dividend = new BigDecimal("3.0");
         Money money = new Money(RUPEE, "10.0");
        Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"), money.divide(dividend));
     }

@@ -43,9 +43,7 @@ import org.mifos.core.CurrencyMismatchException;
  * 
  */
 public final class Money implements Serializable {
-    // adding a comparator, if currency are different throws a RuntimeException
-    // saying cannot compare
-    // otherwise delegates to BigDecimal.compareTo for comparision
+
     public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
         public int compare(Money m1, Money m2) {
             if (m1.isCurrencyDifferent(m2)) {
@@ -73,14 +71,6 @@ public final class Money implements Serializable {
 
     public static void setDefaultCurrency(MifosCurrency defaultCurrency) {
         Money.defaultCurrency = defaultCurrency;
-    }
-
-    public static int getInternalPrecision() {
-        return internalPrecision;
-    }
-
-    public static MathContext getInternalPrecisionAndRounding() {
-        return internalPrecisionAndRounding;
     }
 
     private final MifosCurrency currency;
@@ -165,7 +155,6 @@ public final class Money implements Serializable {
         }
 
         return new Money(currency, amount.subtract(money.getAmount()));
-
     }
 
     public Money multiply(Double factor) {
@@ -208,6 +197,16 @@ public final class Money implements Serializable {
 
     public Money divide(BigDecimal factor) {
         return new Money(currency, amount.divide(factor, internalPrecisionAndRounding));
+    }
+    
+    public Money divide(Short shortVal) {
+        BigDecimal shortValue = new BigDecimal(shortVal, internalPrecisionAndRounding);
+        return new Money(currency, amount.divide(shortValue, internalPrecisionAndRounding));
+    }
+    
+    public Money divide(Integer intVal) {
+        BigDecimal intValue = new BigDecimal(intVal, internalPrecisionAndRounding);
+        return new Money(currency, amount.divide(intValue, internalPrecisionAndRounding));
     }
 
     public Money negate() {
@@ -326,5 +325,4 @@ public final class Money implements Serializable {
         }
         
     }
-
 }

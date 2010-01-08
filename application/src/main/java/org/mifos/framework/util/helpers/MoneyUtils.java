@@ -102,13 +102,11 @@ public class MoneyUtils {
     public static Money roundToCurrencyPrecision(Money money) {
         if (null != money) {
             BigDecimal roundOffMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
-            // insure that we are using the correct internal precision
-            BigDecimal roundingAmount = roundOffMultiple.round(Money.getInternalPrecisionAndRounding());
-            BigDecimal nearestFactor = money.getAmount().divide(roundingAmount, Money.getInternalPrecisionAndRounding());
+            BigDecimal nearestFactor = money.getAmount().divide(roundOffMultiple);
             RoundingMode roundingMode = AccountingRules.getCurrencyRoundingMode();
             nearestFactor = nearestFactor.setScale(0, roundingMode);
 
-            BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+            BigDecimal roundedAmount = nearestFactor.multiply(roundOffMultiple);
             return new Money(money.getCurrency(), roundedAmount);
         }
         return money;
