@@ -111,7 +111,7 @@ public class TestSaveCollectionSheetUtils {
     private Boolean invalidDisbursalAmountFirstClient = false;
     private Boolean invalidTransactionDate = false;
     private Boolean normalLoanRepayment = false;
-    
+
     /*
      * 
      */
@@ -293,7 +293,12 @@ public class TestSaveCollectionSheetUtils {
         return anotherClient;
     }
 
-    private SaveCollectionSheetDto assembleSaveCollectionSheetDto(CollectionSheetDto collectionSheet,
+    /*
+     * Return a SaveCollectionSheetDto that matches the input CollectionSheetDto
+     * Handy if doing performance tests that want to read and save
+     * collection sheets without altering the values
+     */
+    public SaveCollectionSheetDto assembleSaveCollectionSheetDto(CollectionSheetDto collectionSheet,
             LocalDate transactionDate) {
 
         LocalDate usedTransactionDate = transactionDate;
@@ -751,7 +756,7 @@ public class TestSaveCollectionSheetUtils {
     }
 
     public void setNormalLoanRepayment() {
-        this.normalLoanRepayment = true;        
+        this.normalLoanRepayment = true;
     }
 
 }
