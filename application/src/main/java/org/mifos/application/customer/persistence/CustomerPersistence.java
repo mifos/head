@@ -1099,14 +1099,22 @@ public class CustomerPersistence extends Persistence {
         queryParameters.put("SEARCH_STRING1", searchId);
         queryParameters.put("SEARCH_STRING2", searchId + ".%");
         queryParameters.put("OFFICE_ID", officeId);
-        Object[] queryResult = (Object[]) execUniqueResultNamedQuery(
+        List queryResult = executeNamedQuery(
                 NamedQueryConstants.RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER, queryParameters);
 
-        BigDecimal totalSavings = new BigDecimal("0.0");
-        if (queryResult != null) {
-            totalSavings = (BigDecimal) queryResult[1];
+        if (queryResult.size() > 1) {
+            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
-        return new Money(totalSavings);
+        if (queryResult.size() == 0) {
+            // if we found no results, then return zero using the default currency
+            return new Money(Money.getDefaultCurrency(),"0.0");
+        }
+        Integer currencyId = (Integer)((Object[])queryResult.get(0))[0];
+        MifosCurrency currency =  AccountingRules.getCurrencyByCurrencyId(currencyId.shortValue());
+        
+        BigDecimal total = (BigDecimal)((Object[])queryResult.get(0))[1];
+        
+        return new Money(currency, total);
     }
 
     public Money retrieveTotalLoan(final String searchId, final Short officeId) throws PersistenceException {

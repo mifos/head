@@ -74,10 +74,6 @@ public final class Money implements Serializable {
 
     private final BigDecimal amount;
 
-    public Money(BigDecimal amount) {
-        this(getDefaultCurrency(), amount);
-    }
-
     /**
      * This creates a Money object with currency set to MFICurrency and amount
      * set to zero.

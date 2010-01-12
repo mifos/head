@@ -168,7 +168,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     // TODO: story 2182 work in progress
-    public void testGetCenterPerformanceHistoryWithMultipleCurrencies() throws Exception {
+    public void testGetCenterPerformanceHistoryWithMultipleLoanCurrencies() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -265,7 +265,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         TestObjectFactory.cleanUp(account7);
 
     }
-
+    
     public void testSearchGropAndClient() throws Exception {
         createInitialCustomers();
         QueryResult queryResult = new CustomerBusinessService().searchGroupClient("cl", Short.valueOf("1"));
