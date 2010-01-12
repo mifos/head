@@ -378,6 +378,8 @@ public interface NamedQueryConstants {
     public String GET_SQL_REPLACEMENT_COUNT_FOR_OFFICE = "Customer.Sql.getReplacementCountForOffice";
     public String GET_SQL_VERY_POOR_REPLACEMENT_COUNT_FOR_OFFICE = "Customer.Sql.getVeryPoorReplacementCountForOffice";
     public String GET_TOTAL_AMOUNT_FOR_GROUP = "Customer.getTotalAmountForGroup";
+    public String GET_LOAN_SUMMARY_CURRENCIES_FOR_ALL_CLIENTS_OF_GROUP= "Customer.getLoanSummaryCurrenciesForAllClientsOfGroup";
+    public String GET_LOAN_SUMMARY_CURRENCIES_FOR_GROUP = "Customer.getLoanSummaryCurrenciesForGroup";
     public String GET_TOTAL_AMOUNT_FOR_ALL_CLIENTS_OF_GROUP = "Customer.getTotalAmountForAllClientsOfGroup";
     public String GET_ALL_BASIC_GROUP_INFO = "Customer.getAllBasicGroupInfo";
 

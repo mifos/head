@@ -188,6 +188,28 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.cleanUp(clientAccount2);
     }
     
+    // work in progress on story 2182
+    public void testGetTotalAmountForGroupForMultipleCurrencies() throws Exception {
+        CustomerPersistence customerPersistence = new CustomerPersistence();
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("Center", meeting);
+        GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+        AccountBO account1 = getLoanAccount(group1, meeting, "adsfdsfsd", "3saf", TestUtils.RUPEE);
+        AccountBO account2 = getLoanAccount(group1, meeting, "adspp", "kkaf", TestUtils.EURO);
+
+        try {
+            Money amount = customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
+                    AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+            fail("didn't get the expected CurrencyMismatchException");
+        } catch (CurrencyMismatchException e) {
+            // if we got here then we got the exception we were expecting
+        }
+
+        TestObjectFactory.cleanUp(account1);
+        TestObjectFactory.cleanUp(account2);
+        TestObjectFactory.cleanUp(group1);
+    }
     
     public void testGetTotalAmountForGroup() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();

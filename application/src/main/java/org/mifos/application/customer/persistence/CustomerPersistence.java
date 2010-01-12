@@ -952,15 +952,36 @@ public class CustomerPersistence extends Persistence {
     }
 
     public Money getTotalAmountForGroup(final Integer groupId, final AccountState accountState) throws PersistenceException {
+        MifosCurrency currency = getCurrencyForTotalAmountForGroup(groupId, accountState);
+
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("customerId", groupId);
         params.put("accountState", accountState.getValue());
         BigDecimal amount = getCalculateValueFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_TOTAL_AMOUNT_FOR_GROUP, params));
-        Money totalAmount = new Money(amount);
+        Money totalAmount = new Money(currency, amount);
         return totalAmount;
     }
 
+    // TODO: work in progress for 2182
+    public MifosCurrency getCurrencyForTotalAmountForGroup(final Integer groupId, final AccountState accountState)
+    throws PersistenceException {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("customerId", groupId);
+        params.put("accountState", accountState.getValue());
+        List queryResult = executeNamedQuery(
+                NamedQueryConstants.GET_LOAN_SUMMARY_CURRENCIES_FOR_GROUP, params);
+        if (queryResult.size() > 1) {
+            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        if (queryResult.size() == 0) {
+            // if we found no results, then return the default currency
+            return Money.getDefaultCurrency();
+        }
+        Short currencyId = (Short)queryResult.get(0);
+        return AccountingRules.getCurrencyByCurrencyId(currencyId);
+    }
+    
     public List<BasicGroupInfo> getAllBasicGroupInfo() throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         return executeNamedQuery(NamedQueryConstants.GET_ALL_BASIC_GROUP_INFO, params);
@@ -989,8 +1010,7 @@ public class CustomerPersistence extends Persistence {
         params.put("accountState", accountState.getValue());
         params.put("searchId", searchIdString);
         List queryResult = executeNamedQuery(
-                // create a constant for the query
-                "Customer.GetLoanSummaryCurrencies", params);
+                NamedQueryConstants.GET_LOAN_SUMMARY_CURRENCIES_FOR_ALL_CLIENTS_OF_GROUP, params);
         if (queryResult.size() > 1) {
             throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }

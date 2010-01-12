@@ -1186,6 +1186,14 @@
 			and cust.customer_id=:customerId and acc.account_type_id=1
 		]]>	
 	</sql-query>
+	<sql-query name="Customer.getLoanSummaryCurrenciesForGroup">
+		<![CDATA[
+			select distinct(loanSummary.orig_principal_currency_id)  
+			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
+			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
+			and cust.customer_id=:customerId and acc.account_type_id=1
+		]]>	
+	</sql-query>
 	<!-- account_type_id=1 is for loan account, customer_level_id=1 is for client, and status_id=3 for active
 	     and status_id=4 is for active on hold. The clients of the group are found by  -->
 	<sql-query name="Customer.getTotalAmountForAllClientsOfGroup">
@@ -1196,11 +1204,10 @@
 			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
 			and cust.customer_level_id = 1 and cust.status_id in (3,4)
 			and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
-		]]>
-		
+		]]>		
 	</sql-query>
 	<!-- work in progress on 2182 -->
-	<sql-query name="Customer.GetLoanSummaryCurrencies">
+	<sql-query name="Customer.getLoanSummaryCurrenciesForAllClientsOfGroup">
 		<![CDATA[
 			select distinct(loanSummary.orig_principal_currency_id)  
 			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
