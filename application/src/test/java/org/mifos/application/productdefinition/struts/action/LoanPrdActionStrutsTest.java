@@ -60,6 +60,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -1291,6 +1292,6 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
                 LOAN_INSTALLMENT, MONDAY));
         return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
-                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1");
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1",TestUtils.getCurrency());
     }
 }

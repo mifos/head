@@ -566,21 +566,30 @@ public class TestObjectFactory {
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
             final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final int defInstallments,
-            final InterestType interestType, final MeetingBO meeting, final String loanAmtCalcType, final String calcInstallmentType) {
+            final InterestType interestType, final MeetingBO meeting, final String loanAmtCalcType, final String calcInstallmentType,
+            final MifosCurrency currency) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
-                loanAmtCalcType, calcInstallmentType);
+                loanAmtCalcType, calcInstallmentType, currency);
     }
 
+    
     public static LoanOfferingBO createLoanOffering(final Date currentTime, final MeetingBO meeting) {
         return TestObjectFactory.createLoanOffering("Loan", "L", currentTime, meeting);
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime, final MeetingBO meeting) {
         return TestObjectFactory.createLoanOffering(name, shortName, ApplicableTo.GROUPS, currentTime,
-                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting, "1", "1");
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting, "1", "1", TestUtils.getCurrency());
     }
 
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime, final MeetingBO meeting, 
+            final MifosCurrency currency) {
+        return TestObjectFactory.createLoanOffering(name, shortName, ApplicableTo.GROUPS, currentTime,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting, "1", "1", currency);
+    }
+
+    
     /**
      * @param defLnAmnt
      *            - Loan Amount same would be set as min and max amounts
@@ -627,6 +636,16 @@ public class TestObjectFactory {
             final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
             final InterestType interestType, final boolean interestDeductedAtDisbursement, final boolean principalDueInLastInstallment,
             final MeetingBO meeting, final GraceType graceType, final String loanAmountCalcType, final String noOfInstallCalcType) {
+        return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate, defInstallments,
+                interestType, interestDeductedAtDisbursement, principalDueInLastInstallment, meeting, graceType, 
+                loanAmountCalcType, noOfInstallCalcType, TestUtils.getCurrency());
+    }
+    
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
+            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
+            final InterestType interestType, final boolean interestDeductedAtDisbursement, final boolean principalDueInLastInstallment,
+            final MeetingBO meeting, final GraceType graceType, final String loanAmountCalcType, final String noOfInstallCalcType,
+            final MifosCurrency currency) {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(applicableTo);
         ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(graceType);
@@ -639,10 +658,10 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(
-                            TestUtils.getCurrency(), defLnAmnt.toString()), new Money(TestUtils.getCurrency(),
-                            defLnAmnt.toString()), new Money(TestUtils.getCurrency(), defLnAmnt.toString()),
-                    defIntRate, defIntRate, defIntRate, defInstallments, defInstallments, defInstallments, true,
+                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, 
+                    new Money(currency, defLnAmnt.toString()), new Money(currency, defLnAmnt.toString()), 
+                    new Money(currency, defLnAmnt.toString()), defIntRate, defIntRate, defIntRate, 
+                    defInstallments, defInstallments, defInstallments, true,
                     interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
                     new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest, loanAmountCalcType,
                     noOfInstallCalcType);
@@ -650,6 +669,7 @@ public class TestObjectFactory {
             throw new RuntimeException(e);
         }
 
+        loanOffering.setCurrency(currency);
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
         LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
         LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);

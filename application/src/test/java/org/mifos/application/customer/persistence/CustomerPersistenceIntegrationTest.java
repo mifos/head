@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,6 +66,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
@@ -77,7 +77,9 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -145,6 +147,48 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         super.tearDown();
     }
 
+    // work in progress on story 2182
+    public void testGetTotalAmountForAllClientsOfGroupForSingleCurrency() throws Exception {
+
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = createCenter("new_center");
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+
+        AccountBO clientAccount1 = getLoanAccount(client, meeting, "fdbdhgsgh", "54hg", TestUtils.RUPEE);
+        AccountBO clientAccount2 = getLoanAccount(client, meeting, "fasdfdsfasdf", "1qwe", TestUtils.RUPEE);
+        Money amount = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
+        Assert.assertEquals(new Money(TestUtils.RUPEE, "600"), amount);
+
+        TestObjectFactory.cleanUp(clientAccount1);
+        TestObjectFactory.cleanUp(clientAccount2);
+
+    }
+
+    // work in progress on story 2182
+    public void testGetTotalAmountForAllClientsOfGroupForMultipleCurrencies() throws Exception {
+
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = createCenter("new_center");
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+
+        AccountBO clientAccount1 = getLoanAccount(client, meeting, "fdbdhgsgh", "54hg", TestUtils.RUPEE);
+        AccountBO clientAccount2 = getLoanAccount(client, meeting, "fasdfdsfasdf", "1qwe", TestUtils.EURO);
+        
+        try {
+            Money amount = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
+               AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
+            fail("didn't get the expected CurrencyMismatchException");
+        } catch (CurrencyMismatchException e) {
+            // if we got here then we got the exception we were expecting
+        }
+        TestObjectFactory.cleanUp(clientAccount1);
+        TestObjectFactory.cleanUp(clientAccount2);
+    }
+    
+    
     public void testGetTotalAmountForGroup() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -1172,6 +1216,16 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     }
 
+    private AccountBO getLoanAccount(final CustomerBO group, final MeetingBO meeting, final String offeringName,
+            final String shortName, MifosCurrency currency) {
+        Date startDate = new Date(System.currentTimeMillis());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting, currency);
+        return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+
+    }
+
+    
     private AccountBO getLoanAccountInActiveBadStanding(final CustomerBO group, final MeetingBO meeting,
             final String offeringName, final String shortName) {
         Date startDate = new Date(System.currentTimeMillis());

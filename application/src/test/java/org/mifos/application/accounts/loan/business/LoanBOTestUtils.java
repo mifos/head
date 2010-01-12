@@ -99,7 +99,7 @@ public class LoanBOTestUtils {
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
 
         LoanBO loan;
-        MifosCurrency currency = TestObjectFactory.getCurrency();
+        MifosCurrency currency = loanOffering.getCurrency();
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
         try {

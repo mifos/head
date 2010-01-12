@@ -50,6 +50,7 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -118,7 +119,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         center = TestObjectFactory.createCenter("Center", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loandsdasd", "fsad", startDate, meeting);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loandsdasd", "fsad", startDate, meeting, TestUtils.getCurrency());
         account1 = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
         loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd", ApplicableTo.CLIENTS, startDate,

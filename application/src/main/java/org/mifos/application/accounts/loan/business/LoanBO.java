@@ -82,6 +82,7 @@ import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -116,6 +117,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
+
+import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
 
 public class LoanBO extends AccountBO {
 
@@ -4020,4 +4023,15 @@ public class LoanBO extends AccountBO {
     private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
         return (PaymentTypeEntity) getLoanPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
+    
+    /*
+     * A loan account knows its currency from its associated loan product 
+     * @see org.mifos.application.accounts.business.AccountBO#getCurrency()
+     */
+    @Override
+    public MifosCurrency getCurrency() {
+        return getLoanOffering().getCurrency();
+    }
+
+    
 }

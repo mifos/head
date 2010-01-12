@@ -70,6 +70,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.customer.util.helpers.QueryParamConstants;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -80,7 +81,10 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.core.CurrencyMismatchException;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -92,6 +96,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerPersistence extends Persistence {
@@ -963,16 +968,40 @@ public class CustomerPersistence extends Persistence {
 
     public Money getTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState, final String searchIdString)
             throws PersistenceException {
+        MifosCurrency currency = getCurrencyForTotalAmountForAllClientsOfGroup(officeId, accountState, searchIdString);
+        
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("officeId", officeId);
         params.put("accountState", accountState.getValue());
         params.put("searchId", searchIdString);
+                
         BigDecimal amount = getCalculateValueFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_TOTAL_AMOUNT_FOR_ALL_CLIENTS_OF_GROUP, params));
-        Money totalAmount = new Money(amount);
+        Money totalAmount = new Money(currency, amount);
         return totalAmount;
     }
 
+    // TODO: work in progress for 2182
+    public MifosCurrency getCurrencyForTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState, final String searchIdString)
+    throws PersistenceException {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("officeId", officeId);
+        params.put("accountState", accountState.getValue());
+        params.put("searchId", searchIdString);
+        List queryResult = executeNamedQuery(
+                // create a constant for the query
+                "Customer.GetLoanSummaryCurrencies", params);
+        if (queryResult.size() > 1) {
+            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        if (queryResult.size() == 0) {
+            // if we found no results, then return the default currency
+            return Money.getDefaultCurrency();
+        }
+        Short currencyId = (Short)queryResult.get(0);
+        return AccountingRules.getCurrencyByCurrencyId(currencyId);
+    }
+    
     private HashMap<String, Object> populateDormantQueryParams(final OfficeBO office, final Integer loanCyclePeriod) {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put(CustomerSearchConstants.OFFICEID, office.getOfficeId());
