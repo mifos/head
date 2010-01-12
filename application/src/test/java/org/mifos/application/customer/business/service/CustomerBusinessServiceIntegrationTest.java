@@ -167,7 +167,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         super.tearDown();
     }
 
-    // TODO: story 2182 work in progress
     public void testGetCenterPerformanceHistoryWithMultipleLoanCurrencies() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center_Active_test", meeting);
@@ -185,6 +184,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         AccountBO account5 = getSavingsAccountWithBalance(group, meeting, "savings prd1235", "xyz6");
         AccountBO account6 = getSavingsAccountWithBalance(center1, meeting, "savings prd1236", "xyz7");
 
+        // one loan uses Euro, while the rest use rupee, so we should throw an exception below 
         AccountBO account7 = getLoanAccount(client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "fdbdhgsgh",
         "54hg", TestUtils.EURO);
         changeFirstInstallmentDateToPastDate(account7);

@@ -147,9 +147,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         super.tearDown();
     }
 
-    // work in progress on story 2182
     public void testGetTotalAmountForAllClientsOfGroupForSingleCurrency() throws Exception {
-
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = createCenter("new_center");
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -166,9 +164,10 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     }
 
-    // work in progress on story 2182
+    /*
+     * When trying to sum amounts across loans with different currencies, we should get an exception
+     */
     public void testGetTotalAmountForAllClientsOfGroupForMultipleCurrencies() throws Exception {
-
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = createCenter("new_center");
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -178,17 +177,23 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         AccountBO clientAccount2 = getLoanAccount(client, meeting, "fasdfdsfasdf", "1qwe", TestUtils.EURO);
         
         try {
-            Money amount = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
+            customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
             fail("didn't get the expected CurrencyMismatchException");
-        } catch (CurrencyMismatchException e) {
+        } catch (CurrencyMismatchException e) {            
             // if we got here then we got the exception we were expecting
+            assertNotNull(e);
+        } catch (Exception e) {
+            fail("didn't get the expected CurrencyMismatchException");            
         }
+                
         TestObjectFactory.cleanUp(clientAccount1);
         TestObjectFactory.cleanUp(clientAccount2);
     }
     
-    // work in progress on story 2182
+    /*
+     * When trying to sum amounts across loans with different currencies, we should get an exception
+     */
     public void testGetTotalAmountForGroupForMultipleCurrencies() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -199,11 +204,14 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         AccountBO account2 = getLoanAccount(group1, meeting, "adspp", "kkaf", TestUtils.EURO);
 
         try {
-            Money amount = customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
+            customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
                     AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
             fail("didn't get the expected CurrencyMismatchException");
-        } catch (CurrencyMismatchException e) {
+        } catch (CurrencyMismatchException e) {            
             // if we got here then we got the exception we were expecting
+            assertNotNull(e);
+        } catch (Exception e) {
+            fail("didn't get the expected CurrencyMismatchException");            
         }
 
         TestObjectFactory.cleanUp(account1);

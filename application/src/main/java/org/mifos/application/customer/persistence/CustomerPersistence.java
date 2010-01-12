@@ -962,8 +962,7 @@ public class CustomerPersistence extends Persistence {
         return totalAmount;
     }
 
-    // TODO: work in progress for 2182
-    public MifosCurrency getCurrencyForTotalAmountForGroup(final Integer groupId, final AccountState accountState)
+    private MifosCurrency getCurrencyForTotalAmountForGroup(final Integer groupId, final AccountState accountState)
     throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("customerId", groupId);
@@ -1001,8 +1000,7 @@ public class CustomerPersistence extends Persistence {
         return totalAmount;
     }
 
-    // TODO: work in progress for 2182
-    public MifosCurrency getCurrencyForTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState, final String searchIdString)
+    private MifosCurrency getCurrencyForTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState, final String searchIdString)
     throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("officeId", officeId);
@@ -1094,13 +1092,21 @@ public class CustomerPersistence extends Persistence {
         return count;
     }
 
+    public Money retrieveTotalLoan(final String searchId, final Short officeId) throws PersistenceException {
+        return retrieveTotalForQuery(NamedQueryConstants.RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER, searchId, officeId);
+    }
+    
     public Money retrieveTotalSavings(final String searchId, final Short officeId) throws PersistenceException {
+        return retrieveTotalForQuery(NamedQueryConstants.RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER, searchId, officeId);
+    }
+
+    private Money retrieveTotalForQuery(String query, final String searchId, final Short officeId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING1", searchId);
         queryParameters.put("SEARCH_STRING2", searchId + ".%");
         queryParameters.put("OFFICE_ID", officeId);
         List queryResult = executeNamedQuery(
-                NamedQueryConstants.RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER, queryParameters);
+                query, queryParameters);
 
         if (queryResult.size() > 1) {
             throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
@@ -1117,29 +1123,6 @@ public class CustomerPersistence extends Persistence {
         return new Money(currency, total);
     }
 
-    public Money retrieveTotalLoan(final String searchId, final Short officeId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING1", searchId);
-        queryParameters.put("SEARCH_STRING2", searchId + ".%");
-        queryParameters.put("OFFICE_ID", officeId);
-        List queryResult = executeNamedQuery(
-                NamedQueryConstants.RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER, queryParameters);
-
-        if (queryResult.size() > 1) {
-            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
-        }
-        if (queryResult.size() == 0) {
-            // if we found no results, then return zero using the default currency
-            return new Money(Money.getDefaultCurrency(),"0.0");
-        }
-        Integer currencyId = (Integer)((Object[])queryResult.get(0))[0];
-        MifosCurrency currency =  AccountingRules.getCurrencyByCurrencyId(currencyId.shortValue());
-        
-        BigDecimal totalLoan = (BigDecimal)((Object[])queryResult.get(0))[1];
-        
-        return new Money(currency, totalLoan);
-    }
-    
 
     public CollectionSheetCustomerDto findCustomerWithNoAssocationsLoaded(final Integer customerId) {
 
