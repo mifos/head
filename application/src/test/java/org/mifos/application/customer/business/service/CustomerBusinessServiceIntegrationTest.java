@@ -79,6 +79,7 @@ import org.mifos.application.office.business.OfficecFixture;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -166,6 +167,104 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         super.tearDown();
     }
 
+    // TODO: story 2182 work in progress
+    public void testGetCenterPerformanceHistoryWithMultipleCurrencies() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", meeting);
+        GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+        ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
+        ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_ACTIVE, group1);
+        account = getSavingsAccountWithBalance(center, meeting, "savings prd123", "xyz1");
+        AccountBO account1 = getSavingsAccountWithBalance(client, meeting, "savings prd1231", "xyz2");
+        AccountBO account2 = getSavingsAccountWithBalance(client2, meeting, "savings prd1232", "xyz3");
+        AccountBO account3 = getSavingsAccountWithBalance(client3, meeting, "savings prd1233", "xyz4");
+        AccountBO account4 = getSavingsAccountWithBalance(group1, meeting, "savings prd1234", "xyz5");
+        AccountBO account5 = getSavingsAccountWithBalance(group, meeting, "savings prd1235", "xyz6");
+        AccountBO account6 = getSavingsAccountWithBalance(center1, meeting, "savings prd1236", "xyz7");
+
+        AccountBO account7 = getLoanAccount(client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "fdbdhgsgh",
+        "54hg", TestUtils.EURO);
+        changeFirstInstallmentDateToPastDate(account7);
+        AccountBO account8 = getLoanAccount(client2, AccountState.LOAN_ACTIVE_IN_BAD_STANDING, meeting, "dsafasdf",
+        "32fs", TestUtils.RUPEE);
+        changeFirstInstallmentDateToPastDate(account8);
+        AccountBO account9 = getLoanAccount(client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afvasfgfdg",
+        "a12w", TestUtils.RUPEE);
+        changeFirstInstallmentDateToPastDate(account9);
+        AccountBO account10 = getLoanAccount(group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afadsff",
+        "23e", TestUtils.RUPEE);
+        CustomerBOTestUtils.setCustomerStatus(client2, new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
+
+        TestObjectFactory.updateObject(client2);
+        client2 = TestObjectFactory.getClient(client2.getCustomerId());
+        CustomerBOTestUtils.setCustomerStatus(client3, new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
+        TestObjectFactory.updateObject(client3);
+        client3 = TestObjectFactory.getClient(client3.getCustomerId());
+
+        try {
+            service.getCenterPerformanceHistory(center.getSearchId(), center.getOffice().getOfficeId());
+            fail("CurrencyMismatchException should have been thrown.");
+        } catch (CurrencyMismatchException e) {
+            assertNotNull(e);
+        } catch (Exception e) {
+            fail("CurrencyMismatchException should have been thrown.");
+        }
+
+        account1 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account1
+                .getAccountId())));
+        account2 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account2
+                .getAccountId())));
+        account3 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account3
+                .getAccountId())));
+        account4 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account4
+                .getAccountId())));
+        account5 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account5
+                .getAccountId())));
+        account6 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account6
+                .getAccountId())));
+        account7 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account7
+                .getAccountId())));
+        account8 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account8
+                .getAccountId())));
+        account9 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account9
+                .getAccountId())));
+        account10 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account10
+                .getAccountId())));
+        account = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account
+                .getAccountId())));
+        client = (ClientBO) (StaticHibernateUtil.getSessionTL().get(ClientBO.class, Integer.valueOf(client
+                .getCustomerId())));
+        group = (GroupBO) (StaticHibernateUtil.getSessionTL()
+                .get(GroupBO.class, Integer.valueOf(group.getCustomerId())));
+        center = (CenterBO) (StaticHibernateUtil.getSessionTL().get(CenterBO.class, Integer.valueOf(center
+                .getCustomerId())));
+        client2 = (ClientBO) (StaticHibernateUtil.getSessionTL().get(ClientBO.class, Integer.valueOf(client2
+                .getCustomerId())));
+        client3 = (ClientBO) (StaticHibernateUtil.getSessionTL().get(ClientBO.class, Integer.valueOf(client3
+                .getCustomerId())));
+        group1 = (GroupBO) (StaticHibernateUtil.getSessionTL().get(GroupBO.class, Integer.valueOf(group1
+                .getCustomerId())));
+        center1 = (CenterBO) (StaticHibernateUtil.getSessionTL().get(CenterBO.class, Integer.valueOf(center1
+                .getCustomerId())));
+        TestObjectFactory.cleanUp(account3);
+        TestObjectFactory.cleanUp(account2);
+        TestObjectFactory.cleanUp(account1);
+        TestObjectFactory.cleanUp(account8);
+        TestObjectFactory.cleanUp(account9);
+        TestObjectFactory.cleanUp(client3);
+        TestObjectFactory.cleanUp(client2);
+        TestObjectFactory.cleanUp(account4);
+        TestObjectFactory.cleanUp(account5);
+        TestObjectFactory.cleanUp(account10);
+        TestObjectFactory.cleanUp(group1);
+        TestObjectFactory.cleanUp(account6);
+        TestObjectFactory.cleanUp(center1);
+        TestObjectFactory.cleanUp(account7);
+
+    }
 
     public void testSearchGropAndClient() throws Exception {
         createInitialCustomers();
@@ -445,16 +544,16 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         AccountBO account6 = getSavingsAccountWithBalance(center1, meeting, "savings prd1236", "xyz7");
 
         AccountBO account7 = getLoanAccount(client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "fdbdhgsgh",
-        "54hg");
+        "54hg", getCurrency());
         changeFirstInstallmentDateToPastDate(account7);
         AccountBO account8 = getLoanAccount(client2, AccountState.LOAN_ACTIVE_IN_BAD_STANDING, meeting, "dsafasdf",
-        "32fs");
+        "32fs", getCurrency());
         changeFirstInstallmentDateToPastDate(account8);
         AccountBO account9 = getLoanAccount(client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afvasfgfdg",
-        "a12w");
+        "a12w", getCurrency());
         changeFirstInstallmentDateToPastDate(account9);
         AccountBO account10 = getLoanAccount(group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afadsff",
-        "23e");
+        "23e", getCurrency());
         CustomerBOTestUtils.setCustomerStatus(client2, new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
 
         TestObjectFactory.updateObject(client2);
@@ -464,7 +563,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         client3 = TestObjectFactory.getClient(client3.getCustomerId());
 
         CenterPerformanceHistory centerPerformanceHistory = service.getCenterPerformanceHistory(center.getSearchId(),
-                Short.valueOf("3"));
+                center.getOffice().getOfficeId());
         totalLoan = centerPerformanceHistory.getTotalOutstandingPortfolio();
         totalSavings = centerPerformanceHistory.getTotalSavings();
         totalPortfolioAtRisk = centerPerformanceHistory.getPortfolioAtRisk();
@@ -823,9 +922,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     private AccountBO getLoanAccount(CustomerBO customer, AccountState accountState, MeetingBO meeting,
-            String offeringName, String shortName) {
+            String offeringName, String shortName, MifosCurrency currency) {
         Date startDate = new Date(System.currentTimeMillis());
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting, currency);
         return TestObjectFactory.createBasicLoanAccount(customer, accountState, startDate, loanOffering);
 
     }

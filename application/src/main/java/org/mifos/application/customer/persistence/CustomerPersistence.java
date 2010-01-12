@@ -84,7 +84,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.core.CurrencyMismatchException;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -1115,14 +1114,22 @@ public class CustomerPersistence extends Persistence {
         queryParameters.put("SEARCH_STRING1", searchId);
         queryParameters.put("SEARCH_STRING2", searchId + ".%");
         queryParameters.put("OFFICE_ID", officeId);
-        Object[] queryResult = (Object[]) execUniqueResultNamedQuery(
+        List queryResult = executeNamedQuery(
                 NamedQueryConstants.RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER, queryParameters);
 
-        BigDecimal totalLoan = new BigDecimal("0.0");
-        if (queryResult != null) {
-            totalLoan = (BigDecimal) queryResult[1];
+        if (queryResult.size() > 1) {
+            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
-        return new Money(totalLoan);
+        if (queryResult.size() == 0) {
+            // if we found no results, then return zero using the default currency
+            return new Money(Money.getDefaultCurrency(),"0.0");
+        }
+        Integer currencyId = (Integer)((Object[])queryResult.get(0))[0];
+        MifosCurrency currency =  AccountingRules.getCurrencyByCurrencyId(currencyId.shortValue());
+        
+        BigDecimal totalLoan = (BigDecimal)((Object[])queryResult.get(0))[1];
+        
+        return new Money(currency, totalLoan);
     }
     
 
