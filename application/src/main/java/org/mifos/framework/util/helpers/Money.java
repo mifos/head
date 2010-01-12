@@ -52,7 +52,15 @@ public final class Money implements Serializable {
     };
 
     /**
-     * The precision used for internal calculations.
+     * The precision used for internal calculations
+     *  7 (before decimal) + 6(after decimal) = 13.
+     *  Assuming that we are bounding the calculations to 7 digits 
+     *  before decimal, we get 6 digits after the decimal which is enough
+     *  for the precision.
+     *  <br><br>
+     *  Why we bound the before decimal digits to 7 ?
+     *  <br>see latest_schema.sql for amount (DECIMAL(10,3))
+     * 
      */
     private static int internalPrecision = 13;
     /**
@@ -179,16 +187,10 @@ public final class Money implements Serializable {
     }
 
     /**
-     * This method returns a new Money object with currency same as current
-     * currency and amount calculated after rounding based on rounding mode and
-     * roundingAmount where in both are obtained from MifosCurrency object.
-     * 
-     * The rounding calculation is as follows:- Lets say we want to round 142.34
-     * to nearest 50 cents and and rounding mode is ceil (i.e. to greater
-     * number) we will divide 142.34 by .5 which will result in 284.68 now we
-     * will round this to a whole number using ceil mode which will result in
-     * 285 and then multiply 285 by 0.5 resulting in 142.5.
-     * 
+     * Does rounding using {@link Money#round(Money, BigDecimal, RoundingMode)} with
+     * <br /> {@link MifosCurrency#getRoundingAmount()} 
+     * <br />(can be override with AccountingRules.AmountToBeRoundedTo)
+     * <br /> {@link MifosCurrency#getRoundingModeEnum()}
      */
     public static Money round(Money money) {
         if (null != money) {
@@ -199,6 +201,18 @@ public final class Money implements Serializable {
         return money;
     }
 
+    /**
+     * This method returns a new Money object with currency same as current
+     * currency and amount calculated after rounding based on rounding mode and
+     * roundingAmount where in both are obtained from MifosCurrency object.
+     * <br /><br />
+     * The rounding calculation is as follows:- Lets say we want to round 142.34
+     * to nearest 50 cents and and rounding mode is ceil (i.e. to greater
+     * number) we will divide 142.34 by .5 which will result in 284.68 now we
+     * will round this to a whole number using ceil mode which will result in
+     * 285 and then multiply 285 by 0.5 resulting in 142.5.
+     * 
+     */
     public static Money round(Money money, BigDecimal roundOffMultiple, RoundingMode roundingMode) {
         // should we allow a null money or throw and exception instead?
         if (null != money) {

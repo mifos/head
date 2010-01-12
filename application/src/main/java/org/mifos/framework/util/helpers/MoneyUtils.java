@@ -79,12 +79,32 @@ public class MoneyUtils {
         return new Money(currency, BigDecimal.ZERO);
     }
 
+    /**
+     * Does the rounding based on <br />
+     * {@link Money#round(Money, BigDecimal, RoundingMode)} with <br />
+     * {@link AccountingRules#getInitialRoundOffMultiple()} (Default 1) <br />
+     * {@link AccountingRules#getInitialRoundingMode()} (Default
+     * {@link RoundingMode#HALF_UP}
+     * 
+     * @param money
+     * @return {@link Money}
+     */
     public static Money initialRound(Money money) {
         BigDecimal initialRoundOffMutiple = AccountingRules.getInitialRoundOffMultiple();
         RoundingMode initialRoundingMode = AccountingRules.getInitialRoundingMode();
         return Money.round(money, initialRoundOffMutiple, initialRoundingMode);
     }
 
+    /**
+     * Does the rounding based on <br />
+     * {@link Money#round(Money, BigDecimal, RoundingMode)} with <br />
+     * {@link AccountingRules#getFinalRoundOffMultiple()} (Default 1) <br />
+     * {@link AccountingRules#getFinalRoundingMode()} (Default
+     * {@link RoundingMode#CEILING}
+     * 
+     * @param money
+     * @return {@link Money}
+     */
     public static Money finalRound(Money money) {
         BigDecimal finalRoundOffMutiple = AccountingRules.getFinalRoundOffMultiple();
         RoundingMode finalRoundingMode = AccountingRules.getFinalRoundingMode();
@@ -99,6 +119,16 @@ public class MoneyUtils {
         return isRoundedAmount(new Money(Money.getDefaultCurrency(), new BigDecimal(amount)));
     }
 
+    /**
+     * Does the rounding based on <br />
+     * {@link Money#round(Money, BigDecimal, RoundingMode)} with <br />
+     * {@link AccountingRules#getDigitsAfterDecimalMultiple()} (Default 0.1) <br />
+     * {@link AccountingRules#getCurrencyRoundingMode()} (Default
+     * {@link RoundingMode#HALF_UP}
+     * 
+     * @param money
+     * @return {@link Money}
+     */
     public static Money currencyRound(Money money) {
         BigDecimal digitAfterDecimaMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
         RoundingMode currencyRoundingMode = AccountingRules.getCurrencyRoundingMode();
