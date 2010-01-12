@@ -91,31 +91,31 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
             Money totalOutstandingPortfolio, Money totalSavings, Money portfolioAtRisk,
             ConfigurationBusinessService configService, AccountBusinessService accountBusinessService) {
         if (null == portfolioAtRisk) {
-            this.portfolioAtRisk = new Money(getCurrency());
+            this.portfolioAtRisk = null;
         } else {
             this.portfolioAtRisk = portfolioAtRisk;
         }
 
         if (null == totalOutstandingPortfolio) {
-            this.totalOutstandingPortfolio = new Money(getCurrency());
+            this.totalOutstandingPortfolio = null;
         } else {
             this.totalOutstandingPortfolio = totalOutstandingPortfolio;
         }
 
         if (null == totalSavings) {
-            this.totalSavings = new Money(getCurrency());
+            this.totalSavings = null;
         } else {
             this.totalSavings = totalSavings;
         }
 
         if (null == avgLoanForMember) {
-            this.avgLoanForMember = new Money(getCurrency());
+            this.avgLoanForMember = null;
         } else {
             this.avgLoanForMember = avgLoanForMember;
         }
 
         if (null == lastGroupLoanAmount) {
-            this.lastGroupLoanAmount = new Money(getCurrency());
+            this.lastGroupLoanAmount = null;
         } else {
             this.lastGroupLoanAmount = lastGroupLoanAmount;
         }

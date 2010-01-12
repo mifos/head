@@ -64,6 +64,7 @@ import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -222,14 +223,14 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
 
-        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center), null);
+        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center), TestUtils.getCurrency());
         SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
         centerSavingsAccountView.setDepositAmountEntered("100");
         centerSavingsAccountView.setWithDrawalAmountEntered("10");
         bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
         bulkEntryParent.setCustomerAccountDetails(getCustomerAccountView(center));
 
-        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group), null);
+        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group), TestUtils.getCurrency());
         LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
         SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
         groupSavingsAccountView.setDepositAmountEntered("100");
@@ -238,7 +239,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
         bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client), null);
+        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client), TestUtils.getCurrency());
         LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
         clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
         SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);

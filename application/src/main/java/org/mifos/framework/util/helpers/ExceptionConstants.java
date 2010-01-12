@@ -36,4 +36,6 @@ public interface ExceptionConstants {
     public static String PAGEEXPIREDEXCEPTION = "exception.framework.PageExpiredException";
     public static String INVALIDDATEEXCEPTION = "exception.validation.InvalidDate";
     public static String PERMISSIONFAILUREEXCEPTION = "exception.framework.permission";
+    public static String CURRENCY_MUST_NOT_BE_NULL ="Currency must not be null";
+    public static String AMMOUNT_MUST_NOT_BE_NULL = "Amount must not be null";
 }

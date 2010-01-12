@@ -111,4 +111,8 @@ public class MoneyUtils {
         }
         return money;
     }
+    
+    public static boolean isCurrenciesDifferent(Money m1, Money m2) {
+        return !m1.getCurrency().equals(m2.getCurrency());
+    }
 }

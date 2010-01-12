@@ -100,19 +100,33 @@ public class MoneyTest extends TestCase {
     public void testDivideByMoney() {
         Money dividend = new Money(RUPEE, new BigDecimal(10.0));
         Money money = new Money(RUPEE, "20.0");
-       Assert.assertEquals("testing divide, should succeed", new BigDecimal("2"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new BigDecimal("2.0000000000000"), money.divide(dividend));
     }
 
-    public void testDivide() {
+    public void testDivideByBigDecimal() {
         BigDecimal dividend = new BigDecimal(10.0);
         Money money = new Money(RUPEE, "20.0");
        Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"), money.divide(dividend));
     }
 
+    public void testDivideByShort() {
+        Short dividend = new Short("3");
+        Money money = new Money(RUPEE, "20.0");
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "6.6666666666667"), money.divide(dividend));
+    }
+
+    public void testDivideByInteger() {
+        Integer dividend = new Integer("3");
+        Money money = new Money(RUPEE, "20.0");
+        Money expected = new Money(RUPEE, "6.6666666666667");
+        Money result = money.divide(dividend);
+       Assert.assertEquals("testing divide, should succeed", expected, result);
+    }
+    
     public void testDivideRepeating() {
         BigDecimal dividend = new BigDecimal("3.0");
         Money money = new Money(RUPEE, "10.0");
-       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333333"), money.divide(dividend));
     }
 
     public void testDivideWithDiffCurrencies() {
@@ -155,7 +169,7 @@ public class MoneyTest extends TestCase {
     public void testDivideMoneyRepeating() {
         Money dividend = new Money(RUPEE, "3.0");
         Money money = new Money(RUPEE, "10.0");
-       Assert.assertEquals("testing divide, should succeed", new BigDecimal("3.333333333333"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new BigDecimal("3.3333333333333"), money.divide(dividend));
     }
 
     public void testHashCode() {
@@ -165,9 +179,12 @@ public class MoneyTest extends TestCase {
     }
 
     public void testHashCodeForNullCurrency() {
-        //FIXME this test should catch currencyexception
+        try {
         Money money = new Money(null, "0");
        Assert.assertEquals(0, money.hashCode());
+        }catch (NullPointerException e) {
+            Assert.assertEquals(e.getLocalizedMessage(), ExceptionConstants.CURRENCY_MUST_NOT_BE_NULL);
+        }
     }
 
     public void testSetScaleNewMoney() {
