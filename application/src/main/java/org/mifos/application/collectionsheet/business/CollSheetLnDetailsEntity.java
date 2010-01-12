@@ -33,7 +33,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class CollSheetLnDetailsEntity extends PersistentObject {
 
@@ -355,10 +354,10 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
     }
 
     public Money getTotalFees() {
-        return MoneyUtils.add(getFeesDue(), getFeesOverDue());
+        return getFeesDue().add(getFeesOverDue());
     }
 
     public Money getTotalPenalty() {
-        return MoneyUtils.add(getPenaltyDue(), getPenaltyOverDue());
+        return getPenaltyDue().add(getPenaltyOverDue());
     }
 }

@@ -3,25 +3,10 @@ package org.mifos.framework.util.helpers;
 import java.math.BigDecimal;
 
 import org.junit.Test;
-import org.mifos.config.AccountingRules;
-import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.TestUtils;
 import org.testng.Assert;
 
 public class MoneyUtilsTest {
-
-    @Test
-    public void testAdd() {
-        Assert.assertNull(MoneyUtils.add(null, null));
-        Assert.assertNotNull(MoneyUtils.add(new Money(TestUtils.EURO), null));
-        Assert.assertNotNull(MoneyUtils.add(null, new Money(TestUtils.EURO)));
-        Assert.assertNotNull(MoneyUtils.add(new Money(TestUtils.EURO), new Money(TestUtils.EURO)));
-    }
-
-    @Test(expected = CurrencyMismatchException.class)
-    public void testAddWithDifferentCurrencies() {
-        MoneyUtils.add(new Money(TestUtils.EURO), new Money(TestUtils.RUPEE));
-    }
     
     @Test
     public void testCreatMoneyWithBigDecimal() {
@@ -42,28 +27,24 @@ public class MoneyUtilsTest {
     @Test
     public void testRoundToCurrencyPrecision(){
         Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.54);
-        Assert.assertEquals(MoneyUtils.roundToCurrencyPrecision(m), new Money(TestUtils.EURO, "454.5"));
+        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.5"));
         m = MoneyUtils.createMoney(TestUtils.EURO, 454.554);
-        Assert.assertEquals(MoneyUtils.roundToCurrencyPrecision(m), new Money(TestUtils.EURO, "454.6"));
+        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.6"));
     }
     
     @Test
-    public void testGetAmount(){
-        BigDecimal m = MoneyUtils.getMoneyAmount(new Money(TestUtils.EURO, "454.544"), AccountingRules.getDigitsAfterDecimal());
-        Assert.assertEquals(m, new BigDecimal("454.5"));
-        m = MoneyUtils.getMoneyAmount(new Money(TestUtils.EURO, "454.554"), AccountingRules.getDigitsAfterDecimal());
-        Assert.assertEquals(m, new BigDecimal("454.6"));
+    public void testInitialRoundedAmount(){
+        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.44);
+        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "454.0"));
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.554);
+        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "455.0"));
     }
     
     @Test
-    public void testGetAmount_RoundToCurrencyPrecision_CurrencyRoundAmount_AreSame() {
-        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.54);
-        Assert.assertEquals(MoneyUtils.getMoneyAmount(m, AccountingRules.getDigitsAfterDecimal()), new BigDecimal("454.5"));
-        Assert.assertEquals(MoneyUtils.roundToCurrencyPrecision(m), new Money(TestUtils.EURO, "454.5"));
-        
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.554);
-        Assert.assertEquals(MoneyUtils.getMoneyAmount(m, AccountingRules.getDigitsAfterDecimal()), new BigDecimal("454.6"));
-        Assert.assertEquals(MoneyUtils.roundToCurrencyPrecision(m), new Money(TestUtils.EURO, "454.6"));
+    public void testFinalRoundedAmount(){
+        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.00);
+        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "454.0"));
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.0001);
+        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "455.0"));
     }
-
 }

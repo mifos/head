@@ -896,7 +896,7 @@ public class SavingsBO extends AccountBO {
         }
         Money interestAmount = principal.multiply(new Double(1 + intRate / 100.0)).subtract(principal);
 
-        interestAmount = MoneyUtils.roundToCurrencyPrecision(interestAmount);
+        interestAmount = MoneyUtils.currencyRound(interestAmount);
         return interestAmount;
     }
 

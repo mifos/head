@@ -92,6 +92,7 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -434,7 +435,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         disburseLoanAndVerify(userContext, loan, 14);
 
         Double feeAmount = new Double("33.0");
-       Assert.assertTrue(loan.isRoundedAmount(feeAmount));
+       Assert.assertTrue(MoneyUtils.isRoundedAmount(feeAmount));
         applyCharge(loan, Short.valueOf(AccountConstants.MISC_PENALTY), feeAmount);
 
         Assert.assertFalse(loan.havePaymentsBeenMade());
@@ -551,7 +552,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-            Assert.assertFalse(loan.isRoundedAmount(33.7));
+            Assert.assertFalse(MoneyUtils.isRoundedAmount(33.7));
             Assert.assertFalse(loan.canApplyMiscCharge(new Money(getCurrency(), new BigDecimal(33.7))));
             // Should throw AccountExcption
             applyCharge(loan, Short.valueOf(AccountConstants.MISC_PENALTY), new Double("33.7"));
@@ -611,7 +612,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         disburseLoanAndVerify(userContext, loan, 14);
 
         Double feeAmount = new Double("33.0");
-       Assert.assertTrue(loan.isRoundedAmount(feeAmount));
+       Assert.assertTrue(MoneyUtils.isRoundedAmount(feeAmount));
         applyCharge(loan, Short.valueOf(AccountConstants.MISC_FEES), feeAmount);
 
         Assert.assertFalse(loan.havePaymentsBeenMade());
@@ -725,7 +726,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
             LoanTestUtils.assertInstallmentDetails(loan, 5, 50.9, 0.1, 0.0, 0.0, 0.0);
             LoanTestUtils.assertInstallmentDetails(loan, 6, 45.5, 0.5, 0.0, 0.0, 0.0);
 
-            Assert.assertFalse(loan.isRoundedAmount(33.7));
+            Assert.assertFalse(MoneyUtils.isRoundedAmount(33.7));
             Assert.assertFalse(loan.canApplyMiscCharge(new Money(getCurrency(), new BigDecimal(33.7))));
             // Should throw AccountExcption
             applyCharge(loan, Short.valueOf(AccountConstants.MISC_FEES), new Double("33.7"));

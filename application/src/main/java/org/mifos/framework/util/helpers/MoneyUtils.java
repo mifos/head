@@ -37,11 +37,6 @@ public class MoneyUtils {
     private MoneyUtils() {
     }
 
-    public static Money add(Money firstAmount, Money secondAmount) {
-        Money sum = firstAmount == null ? secondAmount : firstAmount.add(secondAmount);
-        return sum;
-    }
-
     public static Double getMoneyDoubleValue(Money money) {
         return money == null ? null : money.getAmountDoubleValue();
     }
@@ -84,20 +79,27 @@ public class MoneyUtils {
         return new Money(currency, BigDecimal.ZERO);
     }
 
-    public static Money initialRoundedAmount(Money money) {
-        return Money.round(money, AccountingRules.getInitialRoundOffMultiple(), AccountingRules
-                .getInitialRoundingMode());
+    public static Money initialRound(Money money) {
+        BigDecimal initialRoundOffMutiple = AccountingRules.getInitialRoundOffMultiple();
+        RoundingMode initialRoundingMode = AccountingRules.getInitialRoundingMode();
+        return Money.round(money, initialRoundOffMutiple, initialRoundingMode);
     }
 
-    public static Money finalRoundedAmount(Money money) {
-        return Money.round(money, AccountingRules.getFinalRoundOffMultiple(), AccountingRules.getFinalRoundingMode());
+    public static Money finalRound(Money money) {
+        BigDecimal finalRoundOffMutiple = AccountingRules.getFinalRoundOffMultiple();
+        RoundingMode finalRoundingMode = AccountingRules.getFinalRoundingMode();
+        return Money.round(money, finalRoundOffMutiple, finalRoundingMode);
     }
 
     public static boolean isRoundedAmount(Money money) {
-        return money.equals(initialRoundedAmount(money)) && money.equals(finalRoundedAmount(money));
+        return money.equals(initialRound(money)) && money.equals(finalRound(money));
     }
 
-    public static Money roundToCurrencyPrecision(Money money) {
+    public static boolean isRoundedAmount(final Double amount) {
+        return isRoundedAmount(new Money(Money.getDefaultCurrency(), new BigDecimal(amount)));
+    }
+
+    public static Money currencyRound(Money money) {
         BigDecimal digitAfterDecimaMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
         RoundingMode currencyRoundingMode = AccountingRules.getCurrencyRoundingMode();
         return Money.round(money, digitAfterDecimaMultiple, currencyRoundingMode);

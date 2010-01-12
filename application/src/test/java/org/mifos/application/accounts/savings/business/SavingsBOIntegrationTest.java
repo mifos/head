@@ -148,7 +148,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Money getRoundedMoney(Money value) {
-        return MoneyUtils.roundToCurrencyPrecision(value);
+        return MoneyUtils.currencyRound(value);
     }
 
     @Override
@@ -2119,9 +2119,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // helper.getDate("10/04/2006")).getAmountDoubleValue();
         //Assert.assertEquals(Double.valueOf("78.2"), getRoundedDouble(intAmount));
 
-        Money roundedInterestForClosure = Money.round(
-                savings.calculateInterestForClosure(helper.getDate("10/04/2006")), AccountingRules
-                        .getDigitsAfterDecimalMultiple(), AccountingRules.getCurrencyRoundingMode());
+        Money roundedInterestForClosure = MoneyUtils.currencyRound(
+                savings.calculateInterestForClosure(helper.getDate("10/04/2006")));
        Assert.assertEquals("78.3", roundedInterestForClosure.toString());
     }
 
