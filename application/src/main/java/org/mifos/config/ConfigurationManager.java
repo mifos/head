@@ -82,6 +82,9 @@ public class ConfigurationManager implements Configuration {
     private Configuration configuration;
 
     public static final ConfigurationManager getInstance() {
+        if(configurationManagerInstance == null || configurationManagerInstance.isEmpty()) {
+            configurationManagerInstance = new ConfigurationManager();
+        }
         return configurationManagerInstance;
     }
 

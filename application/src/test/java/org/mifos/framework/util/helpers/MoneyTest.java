@@ -24,6 +24,7 @@ import static org.mifos.framework.TestUtils.EURO;
 import static org.mifos.framework.TestUtils.RUPEE;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -110,9 +111,9 @@ public class MoneyTest extends TestCase {
     }
 
     public void testDivideByShort() {
-        Short dividend = new Short("3");
+        Short dividend = new Short("4");
         Money money = new Money(RUPEE, "20.0");
-       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "6.6666666666667"), money.divide(dividend));
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "5.00000000000000"), money.divide(dividend));
     }
 
     public void testDivideByInteger() {
@@ -127,6 +128,8 @@ public class MoneyTest extends TestCase {
         BigDecimal dividend = new BigDecimal("3.0");
         Money money = new Money(RUPEE, "10.0");
        Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333333"), money.divide(dividend));
+       money = new Money(RUPEE, "20.0");
+       Assert.assertEquals("testing divide, should succeed", new Money(RUPEE, "6.6666666666667"), money.divide(dividend));
     }
 
     public void testDivideWithDiffCurrencies() {
@@ -160,10 +163,41 @@ public class MoneyTest extends TestCase {
         Money money = new Money(currency, "1");
        Assert.assertEquals(new Money(currency, "3"), Money.round(money));
     }
+    
+    public void testRoundWhenRoundingOffMultipleIsHundred() {
+        BigDecimal roundingOffMultiple = BigDecimal.valueOf(100);
+        
+        Money roundedMoney = Money.round(new Money(EURO, "1100"), roundingOffMultiple, RoundingMode.CEILING);
+        Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
+        
+        roundedMoney = Money.round(new Money(EURO, "1101"), roundingOffMultiple, RoundingMode.CEILING);
+        Assert.assertEquals(new Money(EURO, "1200"), roundedMoney);
+
+        roundedMoney = Money.round(new Money(EURO, "1149"), roundingOffMultiple, RoundingMode.HALF_UP);
+        Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
+        
+        roundedMoney = Money.round(new Money(EURO, "1150"), roundingOffMultiple, RoundingMode.HALF_UP);
+        Assert.assertEquals(new Money(EURO, "1200"), roundedMoney);
+        
+        roundedMoney = Money.round(new Money(EURO, "1199"), roundingOffMultiple, RoundingMode.FLOOR);
+        Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
+        
+        roundedMoney = Money.round(new Money(EURO, "1199"), roundingOffMultiple, RoundingMode.FLOOR);
+        Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
+    }
+    
+    public void testRoundingExceptionWhenRoundingOffMultipleIsZero() {
+        BigDecimal roundingOffMultiple = BigDecimal.valueOf(0);
+        try {
+          Money.round(new Money(EURO, "1100"), roundingOffMultiple, RoundingMode.CEILING);
+        } catch (ArithmeticException e) {}
+    }
 
     public void testIsRoundedAmount() {
        Assert.assertTrue(MoneyUtils.isRoundedAmount(new Money(EURO, "1")));
         Assert.assertFalse(MoneyUtils.isRoundedAmount(new Money(EURO, "1.1")));
+        Money.setDefaultCurrency(RUPEE);
+        Assert.assertFalse(MoneyUtils.isRoundedAmount(1.1));
     }
 
     public void testDivideMoneyRepeating() {

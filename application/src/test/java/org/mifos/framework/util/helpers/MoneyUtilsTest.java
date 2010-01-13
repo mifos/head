@@ -20,13 +20,37 @@
 package org.mifos.framework.util.helpers;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.TestUtils;
 import org.testng.Assert;
 
 public class MoneyUtilsTest {
+
+    private static ConfigurationManager configMgr;
+    
+    @BeforeClass
+    public static void init() {
+        configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, RoundingMode.HALF_UP.toString());
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, "1");
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, RoundingMode.HALF_UP.toString());
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE, "1");
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, RoundingMode.CEILING.toString());
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, "1");
+    }
+    
+    @AfterClass
+    public static void destroy() {
+        configMgr.clear();
+    }
+
     
     @Test
     public void testCreatMoneyWithBigDecimal() {
@@ -44,29 +68,33 @@ public class MoneyUtilsTest {
         Assert.assertEquals(m.getCurrency(), TestUtils.EURO);
     }
 
-    @Ignore("FIXME: failing at trunk build 644")
     @Test
-    public void testCurrencyRound(){
-        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.54);
+    public void testCurrencyRound() {
+        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.545);
         Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.5"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.554);
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.559);
+        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.6"));
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.551);
         Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.6"));
     }
 
-    @Ignore("FIXME: failing at trunk build 644")
     @Test
-    public void testInitialRound(){
-        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.44);
+    public void testInitialRound() {
+        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.49);
         Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "454.0"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.554);
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.50);
+        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "455.0"));
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.51);
         Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "455.0"));
     }
 
     @Test
-    public void testFinalRound(){
-        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.00);
-        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "454.0"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.0001);
+    public void testFinalRound() {
+        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.49);
         Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "455.0"));
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.01);
+        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "455.0"));
+        m = MoneyUtils.createMoney(TestUtils.EURO, 454.00);
+        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "454.0"));
     }
 }

@@ -31,42 +31,27 @@ import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
-
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.testng.annotations.Test;
 
-@Test(groups={"unit", "configTestSuite"})
-public class FiscalCalendarRulesTest extends TestCase {
+public class FiscalCalendarRulesTest {
 
-    public FiscalCalendarRulesTest() {
-        super();
-        init();
-    }
-
-    public FiscalCalendarRulesTest(String name) {
-        super(name);
-        init();
-    }
 
     private static ConfigurationManager configMgr = null;
-    private static String savedConfigWorkingDays = null;
 
+    @BeforeClass
     public static void init() {
         MifosLogManager.configureLogging();
         configMgr = ConfigurationManager.getInstance();
-        savedConfigWorkingDays = configMgr.getProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays).toString();
-        savedConfigWorkingDays = savedConfigWorkingDays.replace("[", "");
-        savedConfigWorkingDays = savedConfigWorkingDays.replace("]", "");
-
     }
-
-    private void setSavedConfig() {
-        configMgr.setProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays, savedConfigWorkingDays);
-        FiscalCalendarRules.reloadConfigWorkingDays();
+    
+    @AfterClass
+    public static void destroy(){
+        configMgr.clear();
     }
 
     private void setNewWorkingDays(String newWorkingDays) {
@@ -74,26 +59,24 @@ public class FiscalCalendarRulesTest extends TestCase {
         FiscalCalendarRules.reloadConfigWorkingDays();
     }
 
+    @Test
     public void testGetWorkingDays() {
-
         String configWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY";
         setNewWorkingDays(configWorkingDays);
         List<WeekDay> workingDays = FiscalCalendarRules.getWorkingDays();
        Assert.assertEquals(workingDays.size(), 6);
         WeekDay[] weekDays = WeekDay.values();
         for (int i = 0; i < workingDays.size(); i++)
-           Assert.assertEquals(workingDays.get(i).toString(), weekDays[i + 1].name());
+        Assert.assertEquals(workingDays.get(i).toString(), weekDays[i + 1].name());
         configWorkingDays = "TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
         workingDays = FiscalCalendarRules.getWorkingDays();
        Assert.assertEquals(workingDays.size(), 4);
         for (int i = 0; i < workingDays.size(); i++)
-           Assert.assertEquals(workingDays.get(i).toString().toUpperCase(), weekDays[i + 2].name().toUpperCase());
-        // set it back
-        setSavedConfig();
-
+        Assert.assertEquals(workingDays.get(i).toString().toUpperCase(), weekDays[i + 2].name().toUpperCase());
     }
 
+    @Test
     public void testGetWeekDaysList() {
         List<WeekDay> weekDaysFromFiscalCalendarRules = FiscalCalendarRules.getWeekDaysList();
         WeekDay[] weekDays = WeekDay.values();
@@ -101,6 +84,7 @@ public class FiscalCalendarRulesTest extends TestCase {
            Assert.assertEquals(weekDaysFromFiscalCalendarRules.get(i).toString(), weekDays[i].name());
     }
 
+    @Test
     public void testGetWeekDayOffList() {
         String configWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
@@ -108,10 +92,9 @@ public class FiscalCalendarRulesTest extends TestCase {
        Assert.assertEquals(list.size(), 2);
         Short dayOff = 1;
        Assert.assertEquals(list.get(0), dayOff);
-        // set it back
-        setSavedConfig();
     }
 
+    @Test
     public void testIsWorkingDay() {
         String configWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
@@ -157,21 +140,22 @@ public class FiscalCalendarRulesTest extends TestCase {
        Assert.assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
         calendar.add(Calendar.DAY_OF_WEEK, 1); // Sunday
        Assert.assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
-        // set it back
-        setSavedConfig();
     }
 
+    @Test
     public void testGetStartOfWeek() {
         Short startOfWeekDay = FiscalCalendarRules.getStartOfWeek();
         Short start = 2;
        Assert.assertEquals(startOfWeekDay, start);
     }
 
+    @Test
     public void testGetScheduleTypeForMeetingOnHoliday() {
         String scheduleType = FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday();
        Assert.assertEquals(scheduleType.toUpperCase(), "same_day".toUpperCase());
     }
 
+    @Test
     public void testGetDaysForCalDefinition() {
         Short days = FiscalCalendarRules.getDaysForCalendarDefinition();
        Assert.assertEquals(days.shortValue(), 30);
