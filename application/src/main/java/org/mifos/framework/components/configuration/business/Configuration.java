@@ -91,5 +91,13 @@ public class Configuration {
     public AccountConfig getAccountConfig(Short officeId) {
         return getOfficeConfig(officeId).getAccountConfig();
     }
+    
+    /**
+     * For injecting mock configuration instance
+     * @param config
+     */
+    public static void setConfig(Configuration config) {
+        Configuration.config = config;
+    }
 
 }

@@ -25,29 +25,42 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INT
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.business.SystemConfiguration;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mockito.Mockito;
 
-public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
-    public SavingsHelperIntegrationTest() throws SystemException, ApplicationException {
+public class SavingsHelperTest extends TestCase {
+    public SavingsHelperTest() {
         super();
+        MifosLogManager.configureLogging();
     }
 
     private static final short EVERY_FOUR_MONTHS = 4;
     SavingsHelper helper = new SavingsHelper();
 
     public void testCalculateDays() throws Exception {
+        // Mocking the configuration to avoid database access
+        Configuration config = Mockito.mock(Configuration.class);
+        Configuration.setConfig(config);
+        //FIXME the TimeZone offset is  take a hardcoded value from
+        //ConfigurationInitializer#createSystemConfiguration() (Protected method)
+        SystemConfiguration systemConfig = new SystemConfiguration(TestUtils.EURO, 19800000);
+        Mockito.when(config.getSystemConfig()).thenReturn(systemConfig);
+        
         Date fromDate = getDate("01/01/2006");
         Date toDate = getDate("08/01/2006");
         int days = helper.calculateDays(fromDate, toDate);
@@ -75,6 +88,9 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
         toDate = getDate("06/07/2006");
         days = helper.calculateDays(fromDate, toDate);
        Assert.assertEquals("182", String.valueOf(days));
+       
+       // Destroy mock configuration instance
+       Configuration.setConfig(null);
     }
 
     public void testGetNextInterestCalculationDateEveryMonth() throws Exception {
@@ -298,5 +314,10 @@ public class SavingsHelperIntegrationTest extends MifosIntegrationTestCase {
                 .valueOf("31"), Short.valueOf("6"), getDate("01/01/2006"), MeetingType.SAVINGS_INTEREST_POSTING,
                 "somePlace"));
        Assert.assertEquals(getDate("30/06/2008"), interestPostingDate);
+    }
+    
+    protected Date getDate(String date) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        return format.parse(date);
     }
 }
