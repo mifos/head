@@ -177,25 +177,22 @@ public final class Money implements Serializable {
     }
 
     /**
-     * Does rounding using {@link Money#round(Money, BigDecimal, RoundingMode)} with
-     * <br /> {@link MifosCurrency#getRoundingAmount()} 
-     * <br />(can be override with AccountingRules.AmountToBeRoundedTo)
-     * <br /> {@link MifosCurrency#getRoundingModeEnum()}
+     * Does rounding using {@link Money#round(Money, BigDecimal, RoundingMode)}
+     * with <br /> {@link MifosCurrency#getRoundingAmount()} <br />
+     * (can be override with AccountingRules.AmountToBeRoundedTo) <br />
+     * {@link MifosCurrency#getRoundingModeEnum()}
      */
     public static Money round(Money money) {
-        if (null != money) {
-            BigDecimal roundingAmount = new BigDecimal(money.getCurrency().getRoundingAmount().doubleValue());
-            RoundingMode roundingMode = money.getCurrency().getRoundingModeEnum();
-            return round(money, roundingAmount, roundingMode);
-        }
-        return money;
+        BigDecimal roundingAmount = new BigDecimal(money.getCurrency().getRoundingAmount().doubleValue());
+        RoundingMode roundingMode = money.getCurrency().getRoundingModeEnum();
+        return round(money, roundingAmount, roundingMode);
     }
 
     /**
      * This method returns a new Money object with currency same as current
      * currency and amount calculated after rounding based on rounding mode and
-     * roundingAmount where in both are obtained from MifosCurrency object.
-     * <br /><br />
+     * roundingAmount where in both are obtained from MifosCurrency object. <br />
+     * <br />
      * The rounding calculation is as follows:- Lets say we want to round 142.34
      * to nearest 50 cents and and rounding mode is ceil (i.e. to greater
      * number) we will divide 142.34 by .5 which will result in 284.68 now we
@@ -204,22 +201,18 @@ public final class Money implements Serializable {
      * 
      */
     public static Money round(Money money, BigDecimal roundOffMultiple, RoundingMode roundingMode) {
-        // should we allow a null money or throw and exception instead?
-        if (null != money) {
-            // insure that we are using the correct internal precision
-            BigDecimal roundingAmount = roundOffMultiple.setScale(internalPrecision, internalRoundingMode);
-            // FIXME: are we loosing precision here
-            // mathcontext only take cares of significant digits
-            // not digit right to the decimal
-            BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,
-                    new MathContext(internalPrecision, internalRoundingMode));
+        // insure that we are using the correct internal precision
+        BigDecimal roundingAmount = roundOffMultiple.setScale(internalPrecision, internalRoundingMode);
+        // FIXME: are we loosing precision here
+        // mathcontext only take cares of significant digits
+        // not digit right to the decimal
+        BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,
+                new MathContext(internalPrecision, internalRoundingMode));
 
-            nearestFactor = nearestFactor.setScale(0, roundingMode);
+        nearestFactor = nearestFactor.setScale(0, roundingMode);
 
-            BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
-            return new Money(money.getCurrency(), roundedAmount);
-        }
-        return money;
+        BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+        return new Money(money.getCurrency(), roundedAmount);
     }
 
     /**
