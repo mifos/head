@@ -144,9 +144,6 @@ public final class Money implements Serializable {
     }
 
     public Money multiply(BigDecimal factor) {
-        if (factor == null) {
-            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
-        }
         return new Money(currency, amount.multiply(factor).setScale(internalPrecision, internalRoundingMode));
     }
 
@@ -157,9 +154,6 @@ public final class Money implements Serializable {
      * <br>
      */
     public BigDecimal divide(Money money) {
-        if (money == null) {
-            return amount;
-        }
         checkCurrenciesDifferent(this, money);
         return amount.divide(money.getAmount(), internalPrecision, internalRoundingMode);
     }
