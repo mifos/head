@@ -1035,7 +1035,6 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private void validateRepaymentDayRequired(ActionErrors errors) {
         try {
-            // Default
             Short recurrenceId = RecurrenceType.WEEKLY.getValue();
             if (null != this.getRecurrenceId()) {
                 recurrenceId = new Short(this.getRecurrenceId());
@@ -1048,12 +1047,14 @@ public class LoanAccountActionForm extends BaseActionForm {
                         addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                     }
                 } else {
-                    if (monthType.equals("1")) {
+                    if (getMonthType().equals("1")) {
+                        // "10th day of the month"
                         if (StringUtils.isBlank(this.getMonthDay())
                                 || StringUtils.isBlank(this.getDayRecurMonth())) {
                             addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                         }
                     } else {
+                        // "1st Monday of every month"
                         if (StringUtils.isBlank(this.getMonthRank())
                                 || StringUtils.isBlank(this.getMonthWeek())
                                 || StringUtils.isBlank(this.getRecurMonth())) {

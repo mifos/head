@@ -359,8 +359,8 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setCustomFields(customFields);
         // end of loadCreateCustomFields
 
-        MeetingDetailsEntity loanMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails();
-        RecurrenceType recurrenceType = loanMeetingDetail.getRecurrenceTypeEnum();
+        MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails();
+        RecurrenceType recurrenceType = loanOfferingMeetingDetail.getRecurrenceTypeEnum();
 
         SessionUtils.setAttribute(RECURRENCEID, recurrenceType.getValue(), request);
         request.setAttribute(RECURRENCEID, recurrenceType.getValue());
@@ -373,15 +373,8 @@ public class LoanAccountAction extends AccountAppAction {
             customerBO = (CustomerBO) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
 
         }
-        loanActionForm.setMonthDay("");
-        loanActionForm.setMonthWeek("0");
-        loanActionForm.setMonthRank("0");
-        MeetingDetailsEntity meetingDetails = customerBO.getCustomerMeeting().getMeeting().getMeetingDetails();
-
-        if (recurrenceType == RecurrenceType.MONTHLY) {
-            setMonthlySchedule(loanActionForm, loanMeetingDetail, meetingDetails);
-        } else {
-            setWeeklySchedule(loanActionForm, loanMeetingDetail, meetingDetails);
+        if (configService.isRepaymentIndepOfMeetingEnabled()) {
+            setRepaymentDayFieldsOnForm(loanActionForm, loanOfferingMeetingDetail);
         }
 
         SessionUtils.removeAttribute(LOANOFFERING, request);
@@ -389,6 +382,18 @@ public class LoanAccountAction extends AccountAppAction {
         SessionUtils.setCollectionAttribute(LOANFUNDS, getFunds(loanOffering), request);
         storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
         return mapping.findForward(ActionForwards.load_success.toString());
+    }
+    
+    private void setRepaymentDayFieldsOnForm(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail) {
+        loanActionForm.setMonthDay("");
+        loanActionForm.setMonthWeek("0");
+        loanActionForm.setMonthRank("0");
+
+        if (meetingDetail.getRecurrenceTypeEnum() == RecurrenceType.MONTHLY) {
+            setMonthlySchedule(loanActionForm, meetingDetail);
+        } else {
+            setWeeklySchedule(loanActionForm, meetingDetail);
+        }
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -694,8 +699,7 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(actionForward.toString());
     }
 
-    private void setMonthlySchedule(final LoanAccountActionForm loanActionForm,
-            final MeetingDetailsEntity loanMeetingDetail, final MeetingDetailsEntity meetingDetails) {
+    private void setMonthlySchedule(final LoanAccountActionForm loanActionForm, final MeetingDetailsEntity meetingDetails) {
         // 2 is signaled as the schedule is monthly on jsp page (Monthradio
         // button is clicked)
         loanActionForm.setFrequency("2");
@@ -716,13 +720,12 @@ public class LoanAccountAction extends AccountAppAction {
         }
     }
 
-    private void setWeeklySchedule(final LoanAccountActionForm loanActionForm,
-            final MeetingDetailsEntity loanMeetingDetail, final MeetingDetailsEntity meetingDetails) {
+    private void setWeeklySchedule(final LoanAccountActionForm loanActionForm, final MeetingDetailsEntity meetingDetail) {
         // 1 is signaled as the schedule is weekly on jsp page. Week radio
         // button is clicked
         loanActionForm.setFrequency("1");
-        loanActionForm.setRecurWeek(loanMeetingDetail.getRecurAfter().toString());
-        loanActionForm.setWeekDay(meetingDetails.getWeekDay().getValue().toString());
+        loanActionForm.setRecurWeek(meetingDetail.getRecurAfter().toString());
+        loanActionForm.setWeekDay(meetingDetail.getWeekDay().getValue().toString());
     }
 
     public ActionForward redoLoanBegin(final ActionMapping mapping, final ActionForm form,
@@ -1028,29 +1031,12 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
         loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
         loanActionForm.setExternalId(loanBO.getExternalId());
+        if (configService.isRepaymentIndepOfMeetingEnabled()) {
+            setRepaymentDayFieldsOnForm(loanActionForm, loanBO.getLoanMeeting().getMeetingDetails());
+        }
         SessionUtils.setAttribute(LOANOFFERING, loanOffering, request);
         loadUpdateMasterData(request);
 
-        // Set repayment day form and request variables
-        if (loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType().isWeekly()) {
-            WeekDay weekday = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getWeekDayValue();
-            if (null != weekday) {
-                loanActionForm.setMonthWeek(new Short(weekday.getValue()).toString());
-                request.setAttribute("weekDayId", weekday.getValue());
-            }
-        } else if (loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType().isMonthly()) {
-            WeekDay weekDay = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getWeekDayValue();
-            if (null != weekDay) {
-                loanActionForm.setMonthWeek(weekDay.getValue().toString());
-                request.setAttribute("weekDayId", weekDay.getValue());
-            }
-            RankOfDaysEntity rankOfDays = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence()
-                    .getRankOfDays();
-            if (null != rankOfDays) {
-                loanActionForm.setMonthRank(rankOfDays.getId().toString());
-                request.setAttribute("ordinalOfMonth", rankOfDays.getId());
-            }
-        }
         SessionUtils.setAttribute(RECURRENCEID, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum()
                 .getValue(), request);
         SessionUtils.setAttribute(RECURRENCENAME, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType()

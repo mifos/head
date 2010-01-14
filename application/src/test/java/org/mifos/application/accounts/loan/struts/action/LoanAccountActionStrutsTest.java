@@ -237,9 +237,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Money loanAmount = new Money(getCurrency(), "300");
         Double interestRate = new Double(1.2);
         Short installments = new Short((short) 6);
-        LoanOfferingBO loanOffering = LoanOfferingTestUtils.createInstanceForTest(userContext, "TestLoanOffering", "TLO",
-                productCategory, prdApplicableMaster, loanProductStartDate, null, null, gracePeriodType, (short) 0,
-                interestType, loanAmount, loanAmount, loanAmount, interestRate, interestRate, interestRate,
+        LoanOfferingBO loanOffering = LoanOfferingTestUtils.createInstanceForTest(userContext, "TestLoanOffering",
+                "TLO", productCategory, prdApplicableMaster, loanProductStartDate, null, null, gracePeriodType,
+                (short) 0, interestType, loanAmount, loanAmount, loanAmount, interestRate, interestRate, interestRate,
                 installments, installments, installments, true, interestDeductedAtDisbursement,
                 principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting,
                 glCodePrincipal, glCodeInterest);
@@ -397,6 +397,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("method", "manage");
+        addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
         actionPerform();
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -978,8 +979,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
      * TODO: turn back on when IntersetDeductedAtDisbursement is re-enabled
      * 
      * 
-     * public void testSchedulePreviewWithDataForIntDedAtDisb() throws Exception
-     * { request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+     * public void testSchedulePreviewWithDataForIntDedAtDisb() throws
+     * Exception { request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
      * schedulePreviewPageParams.put("intDedDisbursement", "1");
      * jumpToSchedulePreview(); performNoErrors();
      * verifyForward(ActionForwards.schedulePreview_success.toString());
@@ -1019,27 +1020,29 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     }
 
     public void testManage() throws Exception {
-        try {
-            request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-            Date startDate = new Date(System.currentTimeMillis());
-            accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-            LoanBO loan = (LoanBO) accountBO;
-            SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        Date startDate = new Date(System.currentTimeMillis());
+        accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
+        LoanBO loan = (LoanBO) accountBO;
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 
-            setRequestPathInfo("/loanAccountAction.do");
-            addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-            addRequestParameter("method", "manage");
-            actionPerform();
-            verifyForward(ActionForwards.manage_success.toString());
-            Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
-            Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.COLLATERAL_TYPES, request));
-            Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request));
-            Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setRequestPathInfo("/loanAccountAction.do");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("method", "manage");
+        addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
+        actionPerform();
+        verifyForward(ActionForwards.manage_success.toString());
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.COLLATERAL_TYPES, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
     }
 
+    /*
+     * this test appears to be confirming that an unauthenticated user gets a
+     * "page expired" exception, but the catch() block doesn't appear to be
+     * reached.
+     */
     public void testManageWithoutFlow() throws Exception {
         try {
             request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -1049,7 +1052,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
             setRequestPathInfo("/loanAccountAction.do");
             addRequestParameter("method", "manage");
+            addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
             actionPerform();
+            // I'd normally expect to see a call to JUnit 3's fail() here
         } catch (PageExpiredException pe) {
             Assert.assertTrue(true);
             Assert.assertEquals(ExceptionConstants.PAGEEXPIREDEXCEPTION, pe.getKey());
@@ -1058,11 +1063,12 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     }
 
     /*
-     * public void testManagePreview() throws ServiceException, SystemException,
-     * ApplicationException { request.setAttribute(Constants.CURRENTFLOWKEY,
-     * flowKey); Date startDate = new Date(System.currentTimeMillis());
-     * accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
-     * ((LoanBO) accountBO).setBusinessActivityId(1); accountBO.update();
+     * public void testManagePreview() throws ServiceException,
+     * SystemException, ApplicationException {
+     * request.setAttribute(Constants.CURRENTFLOWKEY, flowKey); Date startDate =
+     * new Date(System.currentTimeMillis()); accountBO =
+     * getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1); ((LoanBO)
+     * accountBO).setBusinessActivityId(1); accountBO.update();
      * StaticHibernateUtil.commitTransaction(); LoanBO loan = (LoanBO)
      * accountBO; LoanOfferingBO loanOffering = loan.getLoanOffering();
      * loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -1266,18 +1272,18 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(meetingFrequency,
                 recurAfter, CUSTOMER_MEETING, MONDAY));
         Date currentDate = new Date(System.currentTimeMillis());
-        loanPrdActionForm = LoanOfferingTestUtils.populateNoOfInstallFromLastLoanAmount("2", new Integer("0"), new Integer(
-                "100"), new Integer("101"), new Integer("200"), new Integer("201"), new Integer("300"), new Integer(
-                "301"), new Integer("400"), new Integer("401"), new Integer("500"), new Integer("501"), new Integer(
-                "600"), "10", "30", "20", "20", "40", "30", "30", "50", "40", "40", "60", "50", "50", "70", "60", "60",
-                "80", "70", LoanOfferingTestUtils.populateLoanAmountFromLastLoanAmount("2", new Integer("0"), new Integer(
-                        "100"), new Integer("101"), new Integer("200"), new Integer("201"), new Integer("300"),
-                        new Integer("301"), new Integer("400"), new Integer("401"), new Integer("500"), new Integer(
-                                "501"), new Integer("600"), new Double("100"), new Double("300"), new Double("200"),
-                        new Double("200"), new Double("400"), new Double("300"), new Double("300"), new Double("500"),
-                        new Double("400"), new Double("400"), new Double("600"), new Double("500"), new Double("500"),
-                        new Double("700"), new Double("600"), new Double("600"), new Double("800"), new Double("700"),
-                        loanPrdActionForm));
+        loanPrdActionForm = LoanOfferingTestUtils.populateNoOfInstallFromLastLoanAmount("2", new Integer("0"),
+                new Integer("100"), new Integer("101"), new Integer("200"), new Integer("201"), new Integer("300"),
+                new Integer("301"), new Integer("400"), new Integer("401"), new Integer("500"), new Integer("501"),
+                new Integer("600"), "10", "30", "20", "20", "40", "30", "30", "50", "40", "40", "60", "50", "50", "70",
+                "60", "60", "80", "70", LoanOfferingTestUtils.populateLoanAmountFromLastLoanAmount("2",
+                        new Integer("0"), new Integer("100"), new Integer("101"), new Integer("200"),
+                        new Integer("201"), new Integer("300"), new Integer("301"), new Integer("400"), new Integer(
+                                "401"), new Integer("500"), new Integer("501"), new Integer("600"), new Double("100"),
+                        new Double("300"), new Double("200"), new Double("200"), new Double("400"), new Double("300"),
+                        new Double("300"), new Double("500"), new Double("400"), new Double("400"), new Double("600"),
+                        new Double("500"), new Double("500"), new Double("700"), new Double("600"), new Double("600"),
+                        new Double("800"), new Double("700"), loanPrdActionForm));
         return TestObjectFactory.createLoanOfferingFromLastLoan(name, shortName, applicableTo, currentDate,
                 PrdStatus.LOAN_ACTIVE, 1.2, InterestType.FLAT, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
                 loanPrdActionForm);
@@ -1289,8 +1295,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(meetingFrequency,
                 recurAfter, CUSTOMER_MEETING, MONDAY));
         Date currentDate = new Date(System.currentTimeMillis());
-        loanPrdActionForm = LoanOfferingTestUtils.populateNoOfInstallFromLoanCycle("3", "10", "30", "20", "20", "40", "30",
-                "30", "50", "40", "40", "60", "50", "50", "70", "60", "60", "80", "70", LoanOfferingTestUtils
+        loanPrdActionForm = LoanOfferingTestUtils.populateNoOfInstallFromLoanCycle("3", "10", "30", "20", "20", "40",
+                "30", "30", "50", "40", "40", "60", "50", "50", "70", "60", "60", "80", "70", LoanOfferingTestUtils
                         .populateLoanAmountFromLoanCycle("3", new Double("1000"), new Double("3000"),
                                 new Double("2000"), new Double("2000"), new Double("4000"), new Double("3000"),
                                 new Double("3000"), new Double("5000"), new Double("4000"), new Double("4000"),
@@ -1332,7 +1338,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 startDate, loanOffering);
     }
 
-    
     private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
         MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -1351,8 +1356,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         funds.add(fundBO);
         LoanOfferingBO loanOfferingBO = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, null, null, gracePeriodType, (short) 2, interestTypes,
-                new Money(getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                (short) 17, false, false, false, funds, fees, frequency, principalglCodeEntity, intglCodeEntity);
+                new Money(getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"),
+                12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false, false, false, funds, fees, frequency,
+                principalglCodeEntity, intglCodeEntity);
         loanOfferingBO.save();
         return loanOfferingBO;
     }
