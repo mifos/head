@@ -79,15 +79,13 @@ public class SaveCollectionSheetSessionCache {
                     }
 
                     if (worthCachingRepayments) {
-                        prefetchObjectList = submitSavePreFetch("prefetchAccountPayments", branchId, searchId,
-                                topCustomerId);
-                        prefetchObjectList = submitSavePreFetch("prefetchLoanActivityDetails", branchId, searchId,
-                                topCustomerId);
+                        //this next one should go in ACCollection I think and can probably be ditched like account_payment query
                         prefetchObjectList = submitSavePreFetch("prefetchCustomerActivityDetails", branchId, searchId,
                                 topCustomerId);
                     }
 
                     if (worthCachingDisbursals) {
+                        //can probably be ditched like account_payment query
                         prefetchObjectList = submitSavePreFetch("prefetchAccountStatusChangeHistory", branchId,
                                 searchId, topCustomerId);
                     }

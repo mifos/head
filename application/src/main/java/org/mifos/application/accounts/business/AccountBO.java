@@ -99,7 +99,7 @@ public class AccountBO extends BusinessObject {
     private final Set<AccountFlagMapping> accountFlags;
     private final Set<AccountFeesEntity> accountFees;
     private final Set<AccountActionDateEntity> accountActionDates;
-    private Set<AccountPaymentEntity> accountPayments;
+    private List<AccountPaymentEntity> accountPayments;
     private final Set<AccountCustomFieldEntity> accountCustomFields;
 
     /*
@@ -243,7 +243,7 @@ public class AccountBO extends BusinessObject {
         this.accountId = null;
         this.accountFlags = new HashSet<AccountFlagMapping>();
         this.accountCustomFields = new HashSet<AccountCustomFieldEntity>();
-        this.accountPayments = new LinkedHashSet<AccountPaymentEntity>();
+        this.accountPayments = new ArrayList<AccountPaymentEntity>();
     }
 
     AccountBO(final Integer accountId) {
@@ -254,9 +254,7 @@ public class AccountBO extends BusinessObject {
         personnel = null;
         accountType = null;
         accountFees = new HashSet<AccountFeesEntity>();
-        // TODO: Need an ordered collection here - this generalized Set
-        // attribute should ultimately be a List
-        accountPayments = new LinkedHashSet<AccountPaymentEntity>();
+        accountPayments = new ArrayList<AccountPaymentEntity>();
         // TODO: Need an ordered collection here - this generalized Set
         // attribute should ultimately be a List
         accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
@@ -272,9 +270,7 @@ public class AccountBO extends BusinessObject {
         super(userContext);
         validate(userContext, customer, accountType, accountState);
         accountFees = new HashSet<AccountFeesEntity>();
-        // TODO: Need an ordered collection here - this generalized Set
-        // attribute should ultimately be a List
-        accountPayments = new LinkedHashSet<AccountPaymentEntity>();
+        accountPayments = new ArrayList<AccountPaymentEntity>();
         // TODO: Need an ordered collection here - this generalized Set
         // attribute should ultimately be a List
         accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
@@ -347,7 +343,8 @@ public class AccountBO extends BusinessObject {
         return accountActionDates;
     }
 
-    public Set<AccountPaymentEntity> getAccountPayments() {
+    public List<AccountPaymentEntity> getAccountPayments() {
+        
         return accountPayments;
     }
 
@@ -363,8 +360,10 @@ public class AccountBO extends BusinessObject {
         this.globalAccountNum = globalAccountNum;
     }
 
-    public void setAccountPayments(final Set<AccountPaymentEntity> accountPayments) {
+    public void setAccountPayments(final List<AccountPaymentEntity> accountPayments) {
+        
         this.accountPayments = accountPayments;
+                
     }
 
     protected void setAccountState(final AccountStateEntity accountState) {
@@ -396,7 +395,7 @@ public class AccountBO extends BusinessObject {
 
     protected void addAccountPayment(final AccountPaymentEntity payment) {
         if (accountPayments == null) {
-            accountPayments = new LinkedHashSet<AccountPaymentEntity>();
+            accountPayments = new ArrayList<AccountPaymentEntity>();
         }
         accountPayments.add(payment);
     }

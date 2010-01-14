@@ -243,8 +243,6 @@ public class SaveCollectionSheetAssembler {
             if (null != saveCollectionSheetCustomerAccount) {
                 final BigDecimal amount = saveCollectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee();
                 if (null != amount && amount.compareTo(BigDecimal.ZERO) > 0) {
-                    System.out.println("processing id:" + saveCollectionSheetCustomerAccount.getAccountId()
-                            + "  amount: " + saveCollectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee());
 
                     final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(new Money(
                             Money.getDefaultCurrency(), amount.toString()), payment);
@@ -305,7 +303,7 @@ public class SaveCollectionSheetAssembler {
                     if (clientAttendance == null) {
                         clientAttendance = new ClientAttendanceBO();
                         clientAttendance.setCustomer(client);
-                        clientAttendance.setMeetingDate(transactionDate.toDateTimeAtStartOfDay().toDate());
+                        clientAttendance.setMeetingDate(DateUtils.getDateFromLocalDate(transactionDate));
                     }
                     clientAttendance.setAttendance(saveCollectionSheetCustomer.getAttendanceId());
                     clientAttendanceList.add(clientAttendance);

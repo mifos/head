@@ -1458,7 +1458,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }
 
-        Set<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
+        List<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
         Assert.assertEquals(1, accountpayments.size());
         for (AccountPaymentEntity entity : accountpayments) {
 
@@ -1518,7 +1518,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         session.save(accountBO);
         StaticHibernateUtil.getTransaction().commit();
         ((LoanBO) accountBO).setLoanMeeting(null);
-        Set<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
+        List<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
         Assert.assertEquals(1, accountpayments.size());
         for (AccountPaymentEntity entity : accountpayments) {
 
@@ -2252,7 +2252,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         session.save(accountBO);
         StaticHibernateUtil.getTransaction().commit();
         ((LoanBO) accountBO).setLoanMeeting(null);
-        Set<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
+        List<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
         Assert.assertEquals(1, accountpayments.size());
         for (AccountPaymentEntity entity : accountpayments) {
             Assert.assertEquals("1234", entity.getReceiptNumber());

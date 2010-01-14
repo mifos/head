@@ -191,7 +191,7 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 
     private List<LoanActivityView> getApplicablePayments(LoanBO loan) {
         List<LoanActivityView> payments = new ArrayList<LoanActivityView>();
-        Set<AccountPaymentEntity> accountPayments = loan.getAccountPayments();
+        List<AccountPaymentEntity> accountPayments = loan.getAccountPayments();
         int i = accountPayments.size() - 1;
         if (accountPayments != null && accountPayments.size() > 0) {
             for (AccountPaymentEntity accountPayment : accountPayments) {

@@ -293,7 +293,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 
-        Set<AccountPaymentEntity> payments = loan.getAccountPayments();
+        List<AccountPaymentEntity> payments = loan.getAccountPayments();
         Assert.assertEquals(1, payments.size());
         AccountPaymentEntity accntPmnt = payments.iterator().next();
         TestObjectFactory.flushandCloseSession();

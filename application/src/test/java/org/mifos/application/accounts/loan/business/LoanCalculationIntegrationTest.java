@@ -223,7 +223,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO = setUpLoanFor999AccountTestLastPaymentReversal(config, loanParams, calculatedResults,
                 paymentToReverse, payLastPayment);
 
-        Set<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int transactionCount = 0;
         for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
             AccountPaymentEntity payment = paymentIterator.next();
@@ -267,7 +267,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO = setUpLoanFor999AccountTestLoanReversal(config, loanParams, calculatedResults, paymentToReverse,
                 payLastPayment);
 
-        Set<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int transactionCount = 0;
         for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
             AccountPaymentEntity payment = paymentIterator.next();
@@ -347,10 +347,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         printLoanScheduleEntities(paymentsArray);
         List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO
                 .getAccountId());
-        Set<AccountPaymentEntity> list = new LinkedHashSet<AccountPaymentEntity>();
-        for (AccountPaymentEntity payment : accountPayments)
-            list.add(payment);
-        accountBO.setAccountPayments(list);
+        accountBO.setAccountPayments(accountPayments);
         accountBO.adjustLastPayment("Adjust last payment");
         new TestObjectPersistence().persist(accountBO);
         accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO.getAccountId());
@@ -574,10 +571,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan
                 .getAccountId());
        Assert.assertEquals(accountPayments.size(), paymentToReverse);
-        Set<AccountPaymentEntity> list = new LinkedHashSet<AccountPaymentEntity>();
-        for (AccountPaymentEntity payment : accountPayments)
-            list.add(payment);
-        loan.setAccountPayments(list);
+        loan.setAccountPayments(accountPayments);
         loan.adjustLastPayment("Adjust last payment");
         new TestObjectPersistence().persist(loan);
         accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan.getAccountId());
@@ -645,7 +639,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
         printLoanScheduleEntities(paymentsArray);
         // no 999 account is logged
-        Set<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int i = 0;
         for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
             AccountPaymentEntity payment = paymentIterator.next();
@@ -985,7 +979,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanParameters loanParams = testCaseData.getLoanParams();
         accountBO = setUpLoanFor999AccountTest(config, loanParams, calculatedResults);
         AccountPaymentEntity lastPmt = null;
-        Set<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int i = 1;
         for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
             AccountPaymentEntity payment = paymentIterator.next();
@@ -1032,7 +1026,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanParameters loanParams = testCaseData.getLoanParams();
         accountBO = setUpLoanFor999AccountTestLoanWithFees(config, loanParams, calculatedResults);
         AccountPaymentEntity lastPmt = null;
-        Set<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int i = 1;
         for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
             AccountPaymentEntity payment = paymentIterator.next();

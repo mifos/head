@@ -398,7 +398,7 @@ public class SavingsAction extends AccountAppAction {
         // accountTrxnSet and financialBoSet. They all should be set for their
         // primay key column desc in both. If stated is not there, the code
         // below will behave abnormally.
-        Set<AccountPaymentEntity> accountPaymentSet = savings.getAccountPayments();
+        List<AccountPaymentEntity> accountPaymentSet = savings.getAccountPayments();
         for (AccountPaymentEntity accountPaymentEntity : accountPaymentSet) {
             Set<AccountTrxnEntity> accountTrxnEntitySet = accountPaymentEntity.getAccountTrxns();
             for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntitySet) {

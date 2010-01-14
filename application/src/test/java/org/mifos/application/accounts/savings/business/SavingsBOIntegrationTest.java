@@ -2257,7 +2257,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
        Assert.assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue(), DELTA);
        Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
-        Set<AccountPaymentEntity> payments = savings.getAccountPayments();
+        List<AccountPaymentEntity> payments = savings.getAccountPayments();
        Assert.assertEquals(1, payments.size());
         for (AccountPaymentEntity payment : payments) {
            Assert.assertEquals(1, payment.getAccountTrxns().size());

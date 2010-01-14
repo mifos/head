@@ -57,26 +57,6 @@
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>
 
-	<query name="prefetchAccountPayments">
-		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
-				inner join fetch a.accountPayments
-				inner join a.customer c
-				where c.office.id = :BRANCH_ID 
-			    and c.customerStatus.id in (3,4,9,10,13)
-				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
-	</query>
-
-
-	<query name="prefetchLoanActivityDetails">
-		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO as la	
-				inner join fetch la.loanActivityDetails
-				inner join la.customer c
-				where c.office.id = :BRANCH_ID 
-			    and c.customerStatus.id in (3,4,9,10,13)
-				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)
-			    and la.accountState.id in (3, 4, 5, 9)]]>
-	</query>
-
 	<query name="prefetchCustomerActivityDetails">
 		<![CDATA[from org.mifos.application.customer.business.CustomerAccountBO as ca	
 				inner join fetch ca.customerActivitDetails
