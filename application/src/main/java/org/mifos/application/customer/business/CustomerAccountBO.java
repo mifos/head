@@ -80,7 +80,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class CustomerAccountBO extends AccountBO {
 
-    private Set<CustomerActivityEntity> customerActivitDetails = new HashSet<CustomerActivityEntity>();
+    private List<CustomerActivityEntity> customerActivitDetails = new ArrayList<CustomerActivityEntity>();
 
     private FeePersistence feePersistence;
 
@@ -162,13 +162,13 @@ public class CustomerAccountBO extends AccountBO {
         generateCustomerFeeSchedule(getCustomer());
     }
 
-    public Set<CustomerActivityEntity> getCustomerActivitDetails() {
+    public List<CustomerActivityEntity> getCustomerActivitDetails() {
         return customerActivitDetails;
     }
 
     @SuppressWarnings("unused")
     // see .hbm.xml file
-    private void setCustomerActivitDetails(final Set<CustomerActivityEntity> customerActivitDetails) {
+    private void setCustomerActivitDetails(final List<CustomerActivityEntity> customerActivitDetails) {
         this.customerActivitDetails = customerActivitDetails;
     }
 

@@ -241,13 +241,13 @@
 			name="org.mifos.application.customer.business.CustomerAccountBO"
 			table="CUSTOMER_ACCOUNT">
 			<key column="ACCOUNT_ID" />
-			<set name="customerActivitDetails" cascade="all" inverse="true"
+			<bag name="customerActivitDetails" cascade="all" inverse="true"
 				table="CUSTOMER_ACCOUNT_ACTIVITY" lazy="true"
 				order-by="CUSTOMER_ACCOUNT_ACTIVITY_ID desc">
 				<key column="ACCOUNT_ID" />
 				<one-to-many
 					class="org.mifos.application.customer.business.CustomerActivityEntity" />
-			</set>
+			</bag>
 			<set name="accountActionDates" cascade="all" inverse="true"
 				table="CUSTOMER_SCHEDULE" lazy="true" order-by="INSTALLMENT_ID asc"
 				access="field">

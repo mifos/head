@@ -56,15 +56,6 @@
 			    and c.customerStatus.id in (3,4,9,10,13)
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>
-
-	<query name="prefetchCustomerActivityDetails">
-		<![CDATA[from org.mifos.application.customer.business.CustomerAccountBO as ca	
-				inner join fetch ca.customerActivitDetails
-				inner join ca.customer c
-				where c.office.id = :BRANCH_ID 
-			    and c.customerStatus.id in (3,4,9,10,13)
-				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
-	</query>
 	
 	<query name="prefetchAccountStatusChangeHistory">
 		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
@@ -74,7 +65,6 @@
 			    and c.customerStatus.id in (3,4,9,10,13)
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>
-
 
 	<query name="prefetchAccountFeeDetails">
 		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	

@@ -346,7 +346,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        Set<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
+        List<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
        Assert.assertEquals(1, customerActivityDetails.size());
         for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
            Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());
@@ -440,7 +440,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         TestObjectFactory.flushandCloseSession();
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        Set<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
+        List<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
        Assert.assertEquals(3, customerActivityDetails.size());
         for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
            Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());

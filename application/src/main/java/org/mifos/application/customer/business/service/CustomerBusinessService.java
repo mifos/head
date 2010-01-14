@@ -168,7 +168,7 @@ public class CustomerBusinessService implements BusinessService {
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
-        Set<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
+        List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
         .getCustomerActivitDetails();
         List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
 
@@ -183,7 +183,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<CustomerRecentActivityView> getAllActivityView(String globalCustNum) throws ServiceException {
         CustomerBO customerBO = findBySystemId(globalCustNum);
-        Set<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
+        List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
         .getCustomerActivitDetails();
         List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
         for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {

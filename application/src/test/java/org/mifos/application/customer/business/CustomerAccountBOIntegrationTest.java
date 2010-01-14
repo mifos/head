@@ -139,10 +139,11 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccount = center.getCustomerAccount();
         customerAccount.applyPaymentWithPersist(accountPaymentDataView);
         StaticHibernateUtil.commitTransaction();
+
+        Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
         Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
         Assert.assertEquals("The size of the due insallments after payment is", TestObjectFactory
                 .getDueActionDatesForAccount(customerAccount.getAccountId(), transactionDate).size(), 0);
-        Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
 
         for (CustomerActivityEntity activity : customerAccount.getCustomerActivitDetails()) {
 
@@ -288,13 +289,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccount = center.getCustomerAccount();
         customerAccount.applyPaymentWithPersist(accountPaymentDataView);
         StaticHibernateUtil.commitTransaction();
-        Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
-        Assert.assertEquals("The size of the due insallments after payment is", TestObjectFactory
-                .getDueActionDatesForAccount(customerAccount.getAccountId(), transactionDate).size(), 0);
+        
         Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
         for (CustomerActivityEntity activity : customerAccount.getCustomerActivitDetails()) {
             Assert.assertEquals(transactionDate, activity.getCreatedDate());
         }
+        Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
+        Assert.assertEquals("The size of the due insallments after payment is", TestObjectFactory
+                .getDueActionDatesForAccount(customerAccount.getAccountId(), transactionDate).size(), 0);
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         UserContext uc = TestUtils.makeUser();
@@ -455,9 +457,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void checkActivity(final Money expectedAmount, final CustomerAccountBO customerAccountBO) {
-        Set<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();
+        List<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();
         Assert.assertEquals(1, customerActivitySet.size());
-        CustomerActivityEntity customerActivityEntity = customerActivitySet.iterator().next();
+        CustomerActivityEntity customerActivityEntity = customerActivitySet.get(0);
         Assert.assertEquals(1, customerActivityEntity.getPersonnel().getPersonnelId().intValue());
         Assert.assertEquals("Maintenance Fee removed", customerActivityEntity.getDescription());
         Assert.assertEquals(expectedAmount, customerActivityEntity.getAmount());
@@ -471,7 +473,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.updateObject(customerAccountBO);
         group = TestObjectFactory.getGroup(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
-        Set<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();
+        List<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();
         for (CustomerActivityEntity customerActivityEntity : customerActivitySet) {
             Assert.assertEquals(1, customerActivityEntity.getPersonnel().getPersonnelId().intValue());
             Assert.assertEquals("Mainatnence Fee removed", customerActivityEntity.getDescription());
@@ -929,10 +931,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         // verification
+        assertThat(customerAccount.getCustomerActivitDetails().size(), is(1));
         assertThat("The size of the payments done is", customerAccount.getAccountPayments().size(), is(1));
         assertThat("The size of the due insallments after payment is", TestObjectFactory.getDueActionDatesForAccount(
                 customerAccount.getAccountId(), transactionDate).size(), is(0));
-        assertThat(customerAccount.getCustomerActivitDetails().size(), is(1));
 
         assertThat(customerAccount.getAccountPayments().size(), is(1));
         for (AccountPaymentEntity accountPayment : customerAccount.getAccountPayments()) {
