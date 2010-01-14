@@ -272,33 +272,73 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
     }
 
-    
+    /*
+     * Note: defaults are digits after decimal = 1, initial rounding multiple = 1
+     * final rounding multiple = 1
+     */
     public void testCreateLoanScheduleWithDefaultCurrency() throws Exception {
-        String loanAmount = "3333.0";
-        String initialInstallmentPrincipal = "556.0";
-        String finalInstallmentPrincipal = "553.0";
-        String initialInstallmentInterest = "0.0";
-        String finalInstallmentInterest = "0.0";
-        int numInstallments = 6;
+        String loanAmount = "10000.0";
+        double interestRate = 100.0;
+        int numInstallments = 10;
+        // initial installments = 1384
+        String initialInstallmentPrincipal = "1000.4";
+        String initialInstallmentInterest = "383.6";
+        // final installment = 1380
+        String finalInstallmentPrincipal = "996.4";
+        String finalInstallmentInterest = "383.6";
 
         MifosCurrency currency = getCurrency();
         
-        DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency, 0.0, numInstallments);
+        DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency, interestRate, numInstallments);
         
         validateLoanForCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal, 
                 initialInstallmentInterest, finalInstallmentInterest, startDate, currency, numInstallments);
     }
 
-    // TODO: work in progress on story 2179
-    public void testCreateLoanScheduleWithNonDefaultCurrency() throws Exception {
+    public void testCreateLoanScheduleWithNonDefaultCurrencyAndZeroDigitsAfterDecimal() throws Exception {
         String loanAmount = "10000.0";
+        double interestRate = 100.0;
+        int numInstallments = 10;
+        // initial installments = 1400.0
+        String initialInstallmentPrincipal = "1016.0";
+        String initialInstallmentInterest = "384.0";
+        // final installment = 1240.0
+        String finalInstallmentPrincipal = "856.0";
+        String finalInstallmentInterest = "384.0";
+
+        String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix, "0");
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "100");
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "10");
+        configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
+        
+        try {
+            MifosCurrency currency = TestUtils.EURO;
+
+            DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency, interestRate, numInstallments);
+
+            validateLoanForCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal, 
+                    initialInstallmentInterest, finalInstallmentInterest, startDate, currency, numInstallments);
+        } finally {
+            configMgr.clearProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix);
+            configMgr.clearProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix);
+            configMgr.clearProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix);
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+        }
+        
+    }
+    
+    public void testCreateLoanScheduleWithNonDefaultCurrencyAndOneDigitAfterDecimal() throws Exception {
+        String loanAmount = "10000.0";
+        double interestRate = 100.0;
+        int numInstallments = 10;
         // initial installments = 1400.0
         String initialInstallmentPrincipal = "1016.4";
         String initialInstallmentInterest = "383.6";
         // final installment = 1240.0
         String finalInstallmentPrincipal = "852.4";
         String finalInstallmentInterest = "387.6";
-        int numInstallments = 10;
 
         String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -310,7 +350,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             MifosCurrency currency = TestUtils.EURO;
 
-            DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency, 100.0, numInstallments);
+            DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency, interestRate, numInstallments);
 
             validateLoanForCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal, 
                     initialInstallmentInterest, finalInstallmentInterest, startDate, currency, numInstallments);
