@@ -172,22 +172,17 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.closeSession();
 
         applyPayments();
+        StaticHibernateUtil.flushAndClearSession();
 
         accountBO = accountPersistence.getAccount(accountBO.getAccountId());
         List<LoanActivityView> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO
                 .getGlobalAccountNum());
-
         Assert.assertNotNull(loanAllActivityView);
         Assert.assertEquals(6, loanAllActivityView.size());
 
-        // JPW - I should run this by the devs
-        // hibernate is configured to retrieve in descending order. I didn't
-        // change that but I did change from set to bag to prevent reads when
-        // all that's wanted is additions
-        //
-        // I had to change this test to pick up the 6th item (which matches the first
-        // loan activity written).  Previously it was picking the first and I can't see how it was working.
-        LoanActivityView view = loanAllActivityView.get(0);
+        // get first loan activity created which is last in the list because
+        // hibernate is configured order-by "ID desc"
+        LoanActivityView view = loanAllActivityView.get(5);
         Assert.assertNotNull(view.getActivity());
         Assert.assertNotNull(view.getUserPrefferedDate());
         Assert.assertNotNull(view.getActionDate().getTime());

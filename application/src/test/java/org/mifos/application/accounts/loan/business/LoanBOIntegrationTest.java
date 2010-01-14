@@ -1932,9 +1932,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }
 
-        Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-        List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+        List<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+        LoanActivityEntity loanActivityEntity = loanActivityDetailsSet.get(0);
         Assert.assertEquals(LoanConstants.PENALTY_WAIVED, loanActivityEntity.getComments());
         Assert.assertEquals(new Money(getCurrency(), "100"), loanActivityEntity.getPenalty());
         Assert.assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity
@@ -1990,9 +1989,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertEquals(new Money(getCurrency()), accountActionDateEntity.getMiscPenalty());
         }
 
-        Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-        List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+        List<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+        LoanActivityEntity loanActivityEntity = loanActivityDetailsSet.get(0);
         Assert.assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity
                 .getTrxnCreatedDate());
         Assert.assertEquals(new Money(getCurrency(), "200"), loanActivityEntity.getPenalty());
@@ -2027,9 +2025,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }
 
-        Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-        List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+        List<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+        LoanActivityEntity loanActivityEntity = loanActivityDetailsSet.get(0);
         Assert.assertEquals(LoanConstants.FEE_WAIVED, loanActivityEntity.getComments());
         Assert.assertEquals(new Money(getCurrency(), "100"), loanActivityEntity.getFee());
         Assert.assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity
@@ -2085,9 +2082,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }
 
-        Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-        List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+        List<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+        LoanActivityEntity loanActivityEntity = loanActivityDetailsSet.get(0);
         Assert.assertEquals(new Money(getCurrency(), "200"), loanActivityEntity.getFee());
         Assert.assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity
                 .getTrxnCreatedDate());

@@ -160,7 +160,7 @@ public class LoanBO extends AccountBO {
     private RankOfDaysEntity monthRank;
 
     // associations
-    private Set<LoanActivityEntity> loanActivityDetails;
+    private List<LoanActivityEntity> loanActivityDetails;
 
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
@@ -183,7 +183,7 @@ public class LoanBO extends AccountBO {
     protected LoanBO() {
         this(null, null, null, null, null);
         this.loanPrdPersistence = null;
-        this.loanActivityDetails = new HashSet<LoanActivityEntity>();
+        this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.redone = false;
         parentAccount = null;
     }
@@ -270,7 +270,7 @@ public class LoanBO extends AccountBO {
         buildAccountFee(feeViews);
         this.disbursementDate = disbursementDate;
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
-        this.loanActivityDetails = new HashSet<LoanActivityEntity>();
+        this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         this.loanSummary = buildLoanSummary();
         this.maxMinLoanAmount = null;
@@ -590,7 +590,7 @@ public class LoanBO extends AccountBO {
         return performanceHistory;
     }
 
-    public Set<LoanActivityEntity> getLoanActivityDetails() {
+    public List<LoanActivityEntity> getLoanActivityDetails() {
         return loanActivityDetails;
     }
 

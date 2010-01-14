@@ -142,12 +142,12 @@
 				cascade="all" access="field" />
 
 
-			<set name="loanActivityDetails" cascade="all" inverse="true"
+			<bag name="loanActivityDetails" cascade="all" inverse="true"
 				access="field" table="LOAN_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
 				<key column="ACCOUNT_ID" />
 				<one-to-many
 					class="org.mifos.application.accounts.loan.business.LoanActivityEntity" />
-			</set>
+			</bag>
 			<set name="accountActionDates" cascade="all" inverse="true" lazy="true"
 				order-by="INSTALLMENT_ID asc" access="field">
 				<key column="ACCOUNT_ID" />

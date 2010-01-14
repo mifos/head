@@ -117,7 +117,7 @@ public class LoanBusinessService implements BusinessService {
     public List<LoanActivityView> getRecentActivityView(final String globalAccountNumber)
             throws ServiceException {
         LoanBO loanBO = findBySystemId(globalAccountNumber);
-        Set<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
         List<LoanActivityView> recentActivityView = new ArrayList<LoanActivityView>();
 
         int count = 0;
@@ -133,7 +133,7 @@ public class LoanBusinessService implements BusinessService {
     public List<LoanActivityView> getAllActivityView(final String globalAccountNumber)
             throws ServiceException {
         LoanBO loanBO = findBySystemId(globalAccountNumber);
-        Set<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();  
         List<LoanActivityView> loanActivityViewSet = new ArrayList<LoanActivityView>();
         for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
             loanActivityViewSet.add(getLoanActivityView(loanActivity));
