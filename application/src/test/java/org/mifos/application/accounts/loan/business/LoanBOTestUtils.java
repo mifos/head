@@ -412,10 +412,6 @@ public class LoanBOTestUtils {
 
         LoanScheduleEntity[] sortedList = new LoanScheduleEntity[actionDateCollection.size()];
 
-        // Don't know whether it will always be 6 for future tests, but
-        // right now it is...
-       Assert.assertEquals(6, actionDateCollection.size());
-
         for (AccountActionDateEntity actionDateEntity : actionDateCollection) {
             sortedList[actionDateEntity.getInstallmentId().intValue() - 1] = (LoanScheduleEntity) actionDateEntity;
         }

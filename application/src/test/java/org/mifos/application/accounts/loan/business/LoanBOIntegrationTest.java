@@ -277,19 +277,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         String loanAmount = "3333.0";
         String initialInstallmentPrincipal = "556.0";
         String finalInstallmentPrincipal = "553.0";
+        String initialInstallmentInterest = "0.0";
+        String finalInstallmentInterest = "0.0";
+        int numInstallments = 6;
 
         MifosCurrency currency = getCurrency();
         
-        DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency);
+        DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency, 0.0, numInstallments);
         
-        validateLoanForCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal, startDate, currency);
+        validateLoanForCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal, 
+                initialInstallmentInterest, finalInstallmentInterest, startDate, currency, numInstallments);
     }
 
     // TODO: work in progress on story 2179
     public void testCreateLoanScheduleWithNonDefaultCurrency() throws Exception {
-        String loanAmount = "3333.0";
-        String initialInstallmentPrincipal = "600.0";
-        String finalInstallmentPrincipal = "333.0";
+        String loanAmount = "10000.0";
+        // initial installments = 1400.0
+        String initialInstallmentPrincipal = "1016.4";
+        String initialInstallmentInterest = "383.6";
+        // final installment = 1240.0
+        String finalInstallmentPrincipal = "852.4";
+        String finalInstallmentInterest = "387.6";
+        int numInstallments = 10;
 
         String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -301,9 +310,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             MifosCurrency currency = TestUtils.EURO;
 
-            DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency);
+            DateMidnight startDate = setupLoanForCurrencyTests(loanAmount, currency, 100.0, numInstallments);
 
-//            validateLoanForCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal, startDate, currency);
+            validateLoanForCurrencyTests(loanAmount, initialInstallmentPrincipal, finalInstallmentPrincipal, 
+                    initialInstallmentInterest, finalInstallmentInterest, startDate, currency, numInstallments);
         } finally {
             configMgr.clearProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix);
             configMgr.clearProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix);
@@ -314,26 +324,31 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void validateLoanForCurrencyTests(String loanAmount, String initialInstallmentPrincipal,
-            String finalInstallmentPrincipal, DateMidnight startDate, MifosCurrency currency) {
-        Assert.assertEquals(6, accountBO.getAccountActionDates().size());
+            String finalInstallmentPrincipal, String initialInstallmentInterest,
+            String finalInstallmentInterest, DateMidnight startDate, MifosCurrency currency,
+            int numInstallments) {
+        Assert.assertEquals(numInstallments, accountBO.getAccountActionDates().size());
 
         Map<String, String> fees0 = new HashMap<String, String>();
 
         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
 
-        for (int installment = 1; installment < 6; ++installment) {
-            checkLoanScheduleEntity(startDate.plusDays(14 * installment).toDate(), initialInstallmentPrincipal, "0.0", fees0, paymentsArray[installment-1]);
+        for (int installment = 1; installment < numInstallments; ++installment) {
+            checkLoanScheduleEntity(startDate.plusDays(14 * installment).toDate(), initialInstallmentPrincipal, 
+                    initialInstallmentInterest, fees0, paymentsArray[installment-1]);
         }
 
-        checkLoanScheduleEntity(startDate.plusDays(14 * 6).toDate(), finalInstallmentPrincipal, "0.0", fees0, paymentsArray[5]);
+        checkLoanScheduleEntity(startDate.plusDays(14 * numInstallments).toDate(), finalInstallmentPrincipal, 
+                finalInstallmentInterest, fees0, paymentsArray[numInstallments - 1]);
 
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
 
         Assert.assertEquals(new Money(currency, loanAmount), loanSummaryEntity.getOriginalPrincipal());
     }
 
-    private DateMidnight setupLoanForCurrencyTests(String loanAmount, MifosCurrency currency) throws AccountException {
+    private DateMidnight setupLoanForCurrencyTests(String loanAmount, MifosCurrency currency, 
+            double interestRate, int numInstallments) throws AccountException {
         DateMidnight startDate = new DateMidnight();
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -348,8 +363,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         List<FeeView> feeViewList = new ArrayList<FeeView>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(currency, loanAmount), Short.valueOf("6"),
-                startDate.toDate(), false, 0.0, (short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(currency, loanAmount), (short)numInstallments,
+                startDate.toDate(), false, interestRate, (short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
                 SHORT_ZERO, SHORT_ZERO);
         new TestObjectPersistence().persist(accountBO);
         return startDate;

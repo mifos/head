@@ -132,7 +132,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>2.5.5</version>
+                <version>2.5.6</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -152,7 +152,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring</artifactId>
-                <version>2.5.5</version>
+                <version>2.5.6</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -162,7 +162,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>2.5.5</version>
+                <version>2.5.6</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
