@@ -8,6 +8,12 @@
     <name>Mifos - Acceptance Tests</name>
     <url>http://www.mifos.org</url>
 
+    <parent>
+        <groupId>org.mifos</groupId>
+        <artifactId>mifos-parent</artifactId>
+        <version>1.5-SNAPSHOT</version>
+    </parent>
+
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
