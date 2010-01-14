@@ -79,6 +79,8 @@ import org.mifos.application.office.business.OfficecFixture;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -151,6 +153,8 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     @Override
     protected void tearDown() throws Exception {
         try {
+            // if there is an additional currency code defined, then clear it
+            ConfigurationManager.getInstance().clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);            
             TestObjectFactory.cleanUp(clientSavingsAccount);
             TestObjectFactory.cleanUp(groupAccount);
             TestObjectFactory.cleanUp(clientAccount);
@@ -168,6 +172,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     public void testGetCenterPerformanceHistoryWithMultipleLoanCurrencies() throws Exception {
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
+
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

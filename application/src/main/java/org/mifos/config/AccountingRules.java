@@ -310,8 +310,8 @@ public class AccountingRules {
      * For example 2 digits after the decimal should map to 0.01, one digit to
      * 0.1
      */
-    public static BigDecimal getDigitsAfterDecimalMultiple() {
-        int digitsAfterDecimal = getDigitsAfterDecimal().intValue();
+    public static BigDecimal getDigitsAfterDecimalMultiple(MifosCurrency currency) {
+        int digitsAfterDecimal = getDigitsAfterDecimal(currency).intValue();
         if (digitsAfterDecimal >= 0) {
             BigDecimal divisor = new BigDecimal("10").pow(digitsAfterDecimal);
             return new BigDecimal("1").divide(divisor);

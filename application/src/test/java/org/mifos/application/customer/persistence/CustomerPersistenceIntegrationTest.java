@@ -77,6 +77,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -168,50 +170,72 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
      * When trying to sum amounts across loans with different currencies, we should get an exception
      */
     public void testGetTotalAmountForAllClientsOfGroupForMultipleCurrencies() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = createCenter("new_center");
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
 
-        AccountBO clientAccount1 = getLoanAccount(client, meeting, "fdbdhgsgh", "54hg", TestUtils.RUPEE);
-        AccountBO clientAccount2 = getLoanAccount(client, meeting, "fasdfdsfasdf", "1qwe", TestUtils.EURO);
+        AccountBO clientAccount1;
+        AccountBO clientAccount2;
         
         try {
-            customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
-               AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
-            fail("didn't get the expected CurrencyMismatchException");
-        } catch (CurrencyMismatchException e) {            
-            // if we got here then we got the exception we were expecting
-            assertNotNull(e);
-        } catch (Exception e) {
-            fail("didn't get the expected CurrencyMismatchException");            
+            MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+            center = createCenter("new_center");
+            group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+            client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+
+            clientAccount1 = getLoanAccount(client, meeting, "fdbdhgsgh", "54hg", TestUtils.RUPEE);
+            clientAccount2 = getLoanAccount(client, meeting, "fasdfdsfasdf", "1qwe", TestUtils.EURO);
+
+            try {
+                customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
+                        AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
+                fail("didn't get the expected CurrencyMismatchException");
+            } catch (CurrencyMismatchException e) {            
+                // if we got here then we got the exception we were expecting
+                assertNotNull(e);
+            } catch (Exception e) {
+                fail("didn't get the expected CurrencyMismatchException");            
+            }
+        } finally {
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);            
         }
                 
         TestObjectFactory.cleanUp(clientAccount1);
         TestObjectFactory.cleanUp(clientAccount2);
+        
     }
     
     /*
      * When trying to sum amounts across loans with different currencies, we should get an exception
      */
     public void testGetTotalAmountForGroupForMultipleCurrencies() throws Exception {
-        CustomerPersistence customerPersistence = new CustomerPersistence();
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
-        AccountBO account1 = getLoanAccount(group1, meeting, "adsfdsfsd", "3saf", TestUtils.RUPEE);
-        AccountBO account2 = getLoanAccount(group1, meeting, "adspp", "kkaf", TestUtils.EURO);
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
 
+        GroupBO group1;
+        AccountBO account1;
+        AccountBO account2;
+        
         try {
-            customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
-                    AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
-            fail("didn't get the expected CurrencyMismatchException");
-        } catch (CurrencyMismatchException e) {            
-            // if we got here then we got the exception we were expecting
-            assertNotNull(e);
-        } catch (Exception e) {
-            fail("didn't get the expected CurrencyMismatchException");            
+            CustomerPersistence customerPersistence = new CustomerPersistence();
+            meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                    CUSTOMER_MEETING));
+            center = TestObjectFactory.createCenter("Center", meeting);
+            group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+            account1 = getLoanAccount(group1, meeting, "adsfdsfsd", "3saf", TestUtils.RUPEE);
+            account2 = getLoanAccount(group1, meeting, "adspp", "kkaf", TestUtils.EURO);
+
+            try {
+                customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
+                        AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+                fail("didn't get the expected CurrencyMismatchException");
+            } catch (CurrencyMismatchException e) {            
+                // if we got here then we got the exception we were expecting
+                assertNotNull(e);
+            } catch (Exception e) {
+                fail("didn't get the expected CurrencyMismatchException");            
+            }
+        } finally {
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);            
         }
 
         TestObjectFactory.cleanUp(account1);

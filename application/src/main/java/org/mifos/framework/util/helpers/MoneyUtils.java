@@ -90,7 +90,7 @@ public class MoneyUtils {
      * @return {@link Money}
      */
     public static Money initialRound(Money money) {
-        BigDecimal initialRoundOffMutiple = AccountingRules.getInitialRoundOffMultiple();
+        BigDecimal initialRoundOffMutiple = AccountingRules.getInitialRoundOffMultiple(money.getCurrency());
         RoundingMode initialRoundingMode = AccountingRules.getInitialRoundingMode();
         return Money.round(money, initialRoundOffMutiple, initialRoundingMode);
     }
@@ -106,7 +106,7 @@ public class MoneyUtils {
      * @return {@link Money}
      */
     public static Money finalRound(Money money) {
-        BigDecimal finalRoundOffMutiple = AccountingRules.getFinalRoundOffMultiple();
+        BigDecimal finalRoundOffMutiple = AccountingRules.getFinalRoundOffMultiple(money.getCurrency());
         RoundingMode finalRoundingMode = AccountingRules.getFinalRoundingMode();
         return Money.round(money, finalRoundOffMutiple, finalRoundingMode);
     }
@@ -130,7 +130,7 @@ public class MoneyUtils {
      * @return {@link Money}
      */
     public static Money currencyRound(Money money) {
-        BigDecimal digitAfterDecimaMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
+        BigDecimal digitAfterDecimaMultiple = AccountingRules.getDigitsAfterDecimalMultiple(money.getCurrency());
         RoundingMode currencyRoundingMode = AccountingRules.getCurrencyRoundingMode();
         return Money.round(money, digitAfterDecimaMultiple, currencyRoundingMode);
     }

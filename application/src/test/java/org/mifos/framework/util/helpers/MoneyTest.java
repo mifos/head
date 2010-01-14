@@ -30,7 +30,10 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
+import org.mifos.framework.TestUtils;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
@@ -194,10 +197,24 @@ public class MoneyTest extends TestCase {
     }
 
     public void testIsRoundedAmount() {
-       Assert.assertTrue(MoneyUtils.isRoundedAmount(new Money(EURO, "1")));
-        Assert.assertFalse(MoneyUtils.isRoundedAmount(new Money(EURO, "1.1")));
-        Money.setDefaultCurrency(RUPEE);
-        Assert.assertFalse(MoneyUtils.isRoundedAmount(1.1));
+        String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix, "1");
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "1");
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "1");
+        configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
+
+        try {
+            Assert.assertTrue(MoneyUtils.isRoundedAmount(new Money(EURO, "1")));
+            Assert.assertFalse(MoneyUtils.isRoundedAmount(new Money(EURO, "1.1")));
+            Money.setDefaultCurrency(RUPEE);
+            Assert.assertFalse(MoneyUtils.isRoundedAmount(1.1));
+        } finally {
+            configMgr.clearProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix);
+            configMgr.clearProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix);
+            configMgr.clearProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix);
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+        }
     }
 
     public void testDivideMoneyRepeating() {

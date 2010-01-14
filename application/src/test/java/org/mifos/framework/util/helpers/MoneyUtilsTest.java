@@ -70,31 +70,31 @@ public class MoneyUtilsTest {
 
     @Test
     public void testCurrencyRound() {
-        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.545);
-        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.5"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.559);
-        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.6"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.551);
-        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.EURO, "454.6"));
+        Money m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.545);
+        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.RUPEE, "454.5"));
+        m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.559);
+        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.RUPEE, "454.6"));
+        m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.551);
+        Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.RUPEE, "454.6"));
     }
 
     @Test
     public void testInitialRound() {
-        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.49);
-        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "454.0"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.50);
-        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "455.0"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.51);
-        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.EURO, "455.0"));
+        Money m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.49);
+        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.RUPEE, "454.0"));
+        m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.50);
+        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.RUPEE, "455.0"));
+        m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.51);
+        Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.RUPEE, "455.0"));
     }
 
     @Test
     public void testFinalRound() {
-        Money m = MoneyUtils.createMoney(TestUtils.EURO, 454.49);
-        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "455.0"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.01);
-        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "455.0"));
-        m = MoneyUtils.createMoney(TestUtils.EURO, 454.00);
-        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.EURO, "454.0"));
+        Money m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.49);
+        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.RUPEE, "455.0"));
+        m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.01);
+        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.RUPEE, "455.0"));
+        m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.00);
+        Assert.assertEquals(MoneyUtils.finalRound(m), new Money(TestUtils.RUPEE, "454.0"));
     }
 }
