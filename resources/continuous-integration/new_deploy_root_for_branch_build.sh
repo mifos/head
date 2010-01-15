@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-# Create new deployment root for a Mifos Hudson build job
+# Create new deployment root for a branch build of the Mifos Hudson build job
 
 deployNickname=$1
 if [ -z "$deployNickname" ]
