@@ -87,6 +87,7 @@ public class TestCaseInitializer {
 
             MifosConfiguration.getInstance().init();
             AuditConfigurtion.init(Localization.getInstance().getMainLocale());
+            AccountingRules.init();
         }
     }
 }

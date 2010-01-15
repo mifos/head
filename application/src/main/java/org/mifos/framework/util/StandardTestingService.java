@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ConfigLocale;
 import org.mifos.config.ConfigurationManager;
@@ -178,6 +179,7 @@ public class StandardTestingService implements TestingService {
             try {
                 HierarchyManager.getInstance().init();
                 AuthorizationManager.getInstance().init();
+                AccountingRules.init();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

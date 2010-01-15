@@ -43,6 +43,23 @@ public class AccountingRules {
     private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
     private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
 
+    // FIXME: we should use a standard caching mechanism rather than ad hoc caches like 
+    // this.  Also, we need to consider if this should be thread safe since this initial
+    // implementation is not thread safe for initialization.  Re-initialization should 
+    // only happen for test cases, so that most likely is okay.  Adding some 
+    // synchronization could make it thread safe, but this will be accessed every time
+    // a non-default currency is read from the database, so care needs to be taken
+    // regarding performance.
+    private static final LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
+    
+    /*
+     * Allow for reloading the currencies if the configuration has been changed during testing.
+     */
+    public static void init() {
+        currencies.clear();
+        getCurrencies();
+    }
+    
     public static MifosCurrency getMifosCurrency(ConfigurationPersistence configurationPersistence) {
         return getMifosCurrency(getDefaultCurrencyCode(),configurationPersistence);
     }
@@ -67,11 +84,12 @@ public class AccountingRules {
      * @return List of currencies
      */
     public static  LinkedList<MifosCurrency> getCurrencies() {
-        LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
-        currencies.add(Money.getDefaultCurrency());
-        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-        for (String currencyCode: AccountingRules.getAdditionalCurrencyCodes()) {
-            currencies.add(getMifosCurrency(currencyCode, configurationPersistence));
+        if (currencies.size() == 0) {
+            currencies.add(Money.getDefaultCurrency());
+            ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+            for (String currencyCode: AccountingRules.getAdditionalCurrencyCodes()) {
+                currencies.add(getMifosCurrency(currencyCode, configurationPersistence));
+            }
         }
         return currencies;
     }

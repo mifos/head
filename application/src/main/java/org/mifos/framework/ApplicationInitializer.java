@@ -194,6 +194,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
+                    AccountingRules.init();
                 }
             }
         } catch (Exception e) {

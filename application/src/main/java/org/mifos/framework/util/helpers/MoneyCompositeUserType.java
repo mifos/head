@@ -34,6 +34,7 @@ import org.hibernate.engine.SessionImplementor;
 import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -102,8 +103,7 @@ public class MoneyCompositeUserType implements CompositeUserType {
         if (currencyId == null || currencyId.shortValue() == 0 || currencyId.equals(configCurrency.getCurrencyId())) {
             currency = configCurrency;
         } else {
-            Session session1 = StaticHibernateUtil.getSessionTL();
-            currency = (MifosCurrency) session1.get(MifosCurrency.class, currencyId);
+            currency = AccountingRules.getCurrencyByCurrencyId(currencyId);
         }
 
         BigDecimal value = resultSet.getBigDecimal(names[1]);
