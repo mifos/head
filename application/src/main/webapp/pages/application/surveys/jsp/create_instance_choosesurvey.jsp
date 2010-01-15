@@ -29,7 +29,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
-<!-- Tils definition for the header and menu -->
+
+<%-- Struts Tiles definition for the header and menu --%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="create_instance_choosesurvey" />

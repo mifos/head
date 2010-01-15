@@ -34,7 +34,7 @@ explanation of the license and how it is applied.
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 
-<!-- Tils definition for the header and menu -->
+<%-- Struts Tiles definition for the header and menu --%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	    <span id="page.id" title="CenterDetails" />
