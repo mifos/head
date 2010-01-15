@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.config.AccountingRulesConstants;
 import org.mifos.core.MifosException;
 import org.mifos.framework.business.LogUtils;
-import org.mifos.framework.util.AccountingRulesParameters;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
 import org.springframework.web.servlet.ModelAndView;
@@ -137,26 +136,20 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
     private void handleAccountingRules(HttpServletRequest request, HttpServletResponse response,
             List<String> errorMessages, Map<String, Object> model) {
-        String numberOfInterestDays = request.getParameter(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
-        String digitsAfterDecimal = request.getParameter(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
-        String digitsAfterDecimalForInterest = request.getParameter(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
-        String maxInterest = request.getParameter(AccountingRulesConstants.MAX_INTEREST);
-        String minInterest = request.getParameter(AccountingRulesConstants.MIN_INTEREST);
-        String backDatedTransactionsAllowed = request.getParameter(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
-        
-        if (StringUtils.isNotBlank(numberOfInterestDays) || StringUtils.isNotBlank(digitsAfterDecimal) || 
-            StringUtils.isNotBlank(digitsAfterDecimalForInterest) || StringUtils.isNotBlank(maxInterest) ||
-            StringUtils.isNotBlank(minInterest) || StringUtils.isNotBlank(backDatedTransactionsAllowed)) {
-            try {
-                AccountingRulesParameters accountingRulesParameters = new AccountingRulesParameters();
-                accountingRulesParameters.setParameters(numberOfInterestDays, digitsAfterDecimal, digitsAfterDecimalForInterest, maxInterest, minInterest, backDatedTransactionsAllowed);
-                testingService.setAccountingRules(accountingRulesParameters);
-                model.put("accountingRulesResult", accountingRulesParameters.toString());
-            } catch (MifosException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                errorMessages.add("Something was wrong with your Accounting Rules parameters: " + new LogUtils().getStackTrace(e) );
+        try {
+            Enumeration<?> paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String accountingRulesParamName = (String) paramNames.nextElement();
+                String accountingRulesParamValue = request.getParameter(accountingRulesParamName);
+                testingService.setAccountingRules(accountingRulesParamName, accountingRulesParamValue);
+                model.put("accountingRulesResult", accountingRulesParamName + ": " + accountingRulesParamValue);
             }
+        } catch (MifosException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            errorMessages.add("Something was wrong with your Accounting Rules parameters: "
+                    + new LogUtils().getStackTrace(e));
         }
+
     }
 
     private void handleLocalization(HttpServletRequest request, HttpServletResponse response,
