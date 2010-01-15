@@ -67,13 +67,13 @@
 			<one-to-many
 				class="org.mifos.application.accounts.business.AccountCustomFieldEntity" />
 		</set>
-		<set name="accountStatusChangeHistory" cascade="all" inverse="true"
+		<bag name="accountStatusChangeHistory" cascade="all" inverse="true"
 			table="ACCOUNT_STATUS_CHANGE_HISTORY" lazy="true"
 			order-by="ACCOUNT_STATUS_CHANGE_ID asc" access="field">
 			<key column="ACCOUNT_ID" />
 			<one-to-many
 				class="org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity" />
-		</set>
+		</bag>
 		<set name="accountFlags" cascade="all" lazy="true" access="field">
 			<key column="ACCOUNT_ID" not-null="true" />
 			<one-to-many

@@ -78,12 +78,6 @@ public class SaveCollectionSheetSessionCache {
                                 topCustomerId);
                     }
 
-                    if (worthCachingDisbursals) {
-                        //can probably be ditched like account_payment query
-                        prefetchObjectList = submitSavePreFetch("prefetchAccountStatusChangeHistory", branchId,
-                                searchId, topCustomerId);
-                    }
-
                 } catch (PersistenceException e1) {
                     e1.printStackTrace();
                 }

@@ -95,7 +95,7 @@ public class AccountBO extends BusinessObject {
 
     // associations
     protected Set<AccountNotesEntity> accountNotes;
-    protected Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
+    protected List<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
     private final Set<AccountFlagMapping> accountFlags;
     private final Set<AccountFeesEntity> accountFees;
     private final Set<AccountActionDateEntity> accountActionDates;
@@ -260,7 +260,7 @@ public class AccountBO extends BusinessObject {
         accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
         accountCustomFields = new HashSet<AccountCustomFieldEntity>();
         accountNotes = new HashSet<AccountNotesEntity>();
-        accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
+        accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
         accountFlags = new HashSet<AccountFlagMapping>();
         offsettingAllowable = new Integer(1);
     }
@@ -276,7 +276,7 @@ public class AccountBO extends BusinessObject {
         accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
         accountCustomFields = new HashSet<AccountCustomFieldEntity>();
         accountNotes = new HashSet<AccountNotesEntity>();
-        accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
+        accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
         accountFlags = new HashSet<AccountFlagMapping>();
         this.accountId = null;
         this.customer = customer;
@@ -319,7 +319,7 @@ public class AccountBO extends BusinessObject {
         return accountNotes;
     }
 
-    public Set<AccountStatusChangeHistoryEntity> getAccountStatusChangeHistory() {
+    public List<AccountStatusChangeHistoryEntity> getAccountStatusChangeHistory() {
         return accountStatusChangeHistory;
     }
 
@@ -1524,7 +1524,7 @@ public class AccountBO extends BusinessObject {
 
     public Date getAccountApprovalDate() {
         Date approvalDate = null;
-        Set<AccountStatusChangeHistoryEntity> statusChangeHistory = this.getAccountStatusChangeHistory();
+        List<AccountStatusChangeHistoryEntity> statusChangeHistory = this.getAccountStatusChangeHistory();
 
         for (AccountStatusChangeHistoryEntity status : statusChangeHistory) {
 
