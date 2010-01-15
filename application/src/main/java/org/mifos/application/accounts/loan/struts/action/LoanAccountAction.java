@@ -179,6 +179,76 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
+/**
+ * Creation and management of loan accounts.
+ * <p>
+ * The "repayment day" form fields provided by the frontend and manipulated in the form by this class are somewhat
+ * confusing. Here's an attempt to add some clarity.
+ * <p>
+ * <h3>required for both weekly and monthly recurrence</h3>
+ * <ul>
+ * <li>frequency
+ * <ul>
+ * <li>ie: "weekly", "monthly" (corresponds to values in {@link RecurrenceType} ).</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * 
+ * <h3>required for monthly recurrence</h3>
+ * <ul>
+ * <li>monthType=1 : "12th day of every 1 month"
+ * <ul>
+ * <li>monthDay
+ * <ul>
+ * <li>Xst/Xnd/Xth of every month</li>
+ * </ul>
+ * </li>
+ * <li>dayRecurMonth
+ * <ul>
+ * <li>of every X months</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * </li>
+ * <li>monthType=2 : "First Monday of every 1 month"
+ * <ul>
+ * <li>monthRank
+ * <ul>
+ * <li>First, Second, etc. (ordinal)</li>
+ * </ul>
+ * </li>
+ * <li>monthWeek
+ * <ul>
+ * <li><strong>day</strong>, ie, Monday, Tuesday, etc. of the week that repayments should be made. Really.</li>
+ * </ul>
+ * </li>
+ * <li>recurMonth
+ * <ul>
+ * <li>every X months</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * </li>
+ * </ul>
+ * 
+ * <h3>required for weekly recurrence</h3>
+ * <ul>
+ * <li>(only one kind of weekly schedule)
+ * <ul>
+ * <li>weekDay
+ * <ul>
+ * <li>day of the week repayments should be made</li>
+ * </ul>
+ * </li>
+ * <li>recurWeek
+ * <ul>
+ * <li>every X weeks</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * </li>
+ * </ul>
+ */
 public class LoanAccountAction extends AccountAppAction {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
@@ -198,8 +268,7 @@ public class LoanAccountAction extends AccountAppAction {
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
                 new FeeBusinessService(), new LoanPrdBusinessService(), new ClientBusinessService(),
-                new MasterDataService(), new ConfigurationPersistence(), null,
-                new AccountBusinessService());
+                new MasterDataService(), new ConfigurationPersistence(), null, new AccountBusinessService());
         setLoanService(new LoanProductService(this.loanPrdBusinessService, this.feeService));
     }
 
@@ -281,8 +350,8 @@ public class LoanAccountAction extends AccountAppAction {
 
         storeCollectionOnSessionForUseInJspPage(request, LoanConstants.LOANPRDOFFERINGS, loanOfferings);
         storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOANACCOUNTOWNER, customer);
-        storeObjectOnSessionForUseInJspPage(request, LoanConstants.PROPOSED_DISBURSAL_DATE, customer.getCustomerAccount()
-                .getNextMeetingDate());
+        storeObjectOnSessionForUseInJspPage(request, LoanConstants.PROPOSED_DISBURSAL_DATE, customer
+                .getCustomerAccount().getNextMeetingDate());
 
         storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
 
@@ -345,7 +414,7 @@ public class LoanAccountAction extends AccountAppAction {
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CUSTOM_FIELDS, request);
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-        
+
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
             if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
@@ -359,7 +428,8 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setCustomFields(customFields);
         // end of loadCreateCustomFields
 
-        MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails();
+        MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
+                .getMeetingDetails();
         RecurrenceType recurrenceType = loanOfferingMeetingDetail.getRecurrenceTypeEnum();
 
         SessionUtils.setAttribute(RECURRENCEID, recurrenceType.getValue(), request);
@@ -383,7 +453,7 @@ public class LoanAccountAction extends AccountAppAction {
         storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
-    
+
     private void setRepaymentDayFieldsOnForm(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail) {
         loanActionForm.setMonthDay("");
         loanActionForm.setMonthWeek("0");
@@ -699,7 +769,8 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(actionForward.toString());
     }
 
-    private void setMonthlySchedule(final LoanAccountActionForm loanActionForm, final MeetingDetailsEntity meetingDetails) {
+    private void setMonthlySchedule(final LoanAccountActionForm loanActionForm,
+            final MeetingDetailsEntity meetingDetails) {
         // 2 is signaled as the schedule is monthly on jsp page (Monthradio
         // button is clicked)
         loanActionForm.setFrequency("2");
@@ -806,8 +877,8 @@ public class LoanAccountAction extends AccountAppAction {
         LoanBO loan;
         if (isRedoOperation(request.getParameter(PERSPECTIVE))) {
             loan = LoanBO.redoLoan(getUserContext(request), loanOffering, customer,
-                    AccountState.LOAN_PARTIAL_APPLICATION, new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount()), 
-                            loanActionForm.getNoOfInstallmentsValue(), loanActionForm
+                    AccountState.LOAN_PARTIAL_APPLICATION, new Money(loanOffering.getCurrency(), loanActionForm
+                            .getLoanAmount()), loanActionForm.getNoOfInstallmentsValue(), loanActionForm
                             .getDisbursementDateValue(getUserContext(request).getPreferredLocale()), loanActionForm
                             .isInterestDedAtDisbValue(), loanActionForm.getInterestDoubleValue(), loanActionForm
                             .getGracePeriodDurationValue(),
@@ -819,8 +890,8 @@ public class LoanAccountAction extends AccountAppAction {
             logger.debug("Loan redo, External account ID = " + loan.getExternalId());
         } else {
             loan = LoanBO.createLoan(getUserContext(request), loanOffering, customer,
-                    AccountState.LOAN_PARTIAL_APPLICATION, new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount()), 
-                            loanActionForm.getNoOfInstallmentsValue(), loanActionForm
+                    AccountState.LOAN_PARTIAL_APPLICATION, new Money(loanOffering.getCurrency(), loanActionForm
+                            .getLoanAmount()), loanActionForm.getNoOfInstallmentsValue(), loanActionForm
                             .getDisbursementDateValue(getUserContext(request).getPreferredLocale()), loanActionForm
                             .isInterestDedAtDisbValue(), loanActionForm.getInterestDoubleValue(), loanActionForm
                             .getGracePeriodDurationValue(),
@@ -840,10 +911,8 @@ public class LoanAccountAction extends AccountAppAction {
     /**
      * Resolve repayment start date according to given disbursement date
      * 
-     * The resulting date equates to the disbursement date plus
-     * MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY: e.g. If disbursement
-     * date is 18 June 2008, and
-     * MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY is 1 then the
+     * The resulting date equates to the disbursement date plus MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY: e.g.
+     * If disbursement date is 18 June 2008, and MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY is 1 then the
      * repayment start date would be 19 June 2008
      * 
      * @return Date repaymentStartDate
@@ -915,8 +984,6 @@ public class LoanAccountAction extends AccountAppAction {
         }
     }
 
-
-
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
@@ -983,18 +1050,18 @@ public class LoanAccountAction extends AccountAppAction {
         if (isRedoOperation) {
             individualLoan = LoanBO.redoIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
                     getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
-                            .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()), loan
-                            .getNoOfInstallments(), loan.getDisbursementDate(), false,
-                    isRepaymentIndepOfMeetingEnabled, loan.getInterestRate(), loan.getGracePeriodDuration(), loan
-                            .getFund(), new ArrayList<FeeView>(), new ArrayList<CustomFieldView>());
+                            .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
+                    loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
+                    loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
+                    new ArrayList<CustomFieldView>());
 
         } else {
             individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
                     getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
-                            .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()), loan
-                            .getNoOfInstallments(), loan.getDisbursementDate(), false,
-                    isRepaymentIndepOfMeetingEnabled, loan.getInterestRate(), loan.getGracePeriodDuration(), loan
-                            .getFund(), new ArrayList<FeeView>(), new ArrayList<CustomFieldView>());
+                            .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
+                    loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
+                    loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
+                    new ArrayList<CustomFieldView>());
         }
 
         individualLoan.setParentAccount(loan);
@@ -1275,14 +1342,13 @@ public class LoanAccountAction extends AccountAppAction {
         }
 
         loanBO.setExternalId(loanAccountActionForm.getExternalId());
-        loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(), 
-                new Money(loanBO.getCurrency(), loanAccountActionForm.getLoanAmount()),
-                loanAccountActionForm.getInterestDoubleValue(), loanAccountActionForm.getNoOfInstallmentsValue(),
-                loanAccountActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()),
-                loanAccountActionForm.getGracePeriodDurationValue(),
-                loanAccountActionForm.getBusinessActivityIdValue(), loanAccountActionForm.getCollateralNote(),
-                loanAccountActionForm.getCollateralTypeIdValue(), loanAccountActionForm.getCustomFields(),
-                isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+        loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(), new Money(loanBO.getCurrency(),
+                loanAccountActionForm.getLoanAmount()), loanAccountActionForm.getInterestDoubleValue(),
+                loanAccountActionForm.getNoOfInstallmentsValue(), loanAccountActionForm
+                        .getDisbursementDateValue(getUserContext(request).getPreferredLocale()), loanAccountActionForm
+                        .getGracePeriodDurationValue(), loanAccountActionForm.getBusinessActivityIdValue(),
+                loanAccountActionForm.getCollateralNote(), loanAccountActionForm.getCollateralTypeIdValue(),
+                loanAccountActionForm.getCustomFields(), isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
 
         if (configService.isGlimEnabled() && customer.isGroup()) {
             List<LoanAccountDetailsViewHelper> loanAccountDetailsList = (List<LoanAccountDetailsViewHelper>) SessionUtils
@@ -1340,8 +1406,7 @@ public class LoanAccountAction extends AccountAppAction {
     /**
      * Create new meeting for the repayment day.
      * 
-     * Depending on the recurrence id (WEEKLY or MONTHLY) a MeetingBO will be
-     * created and returned
+     * Depending on the recurrence id (WEEKLY or MONTHLY) a MeetingBO will be created and returned
      * 
      * @throws InvalidDateException
      * 
@@ -1501,17 +1566,20 @@ public class LoanAccountAction extends AccountAppAction {
         loanAccountActionForm.setOriginalDisbursementDate(new java.sql.Date(loan.getDisbursementDate().getTime()));
     }
 
-    private ViewInstallmentDetails getUpcomingInstallmentDetails(final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
+    private ViewInstallmentDetails getUpcomingInstallmentDetails(
+            final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
         if (upcomingAccountActionDate != null) {
             LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
             return new ViewInstallmentDetails(upcomingInstallment.getPrincipalDue(), upcomingInstallment
                     .getInterestDue(), upcomingInstallment.getTotalFeeDueWithMiscFeeDue(), upcomingInstallment
                     .getPenaltyDue());
         }
-        return new ViewInstallmentDetails(new Money(currency), new Money(currency), new Money(currency), new Money(currency));
+        return new ViewInstallmentDetails(new Money(currency), new Money(currency), new Money(currency), new Money(
+                currency));
     }
 
-    private ViewInstallmentDetails getOverDueInstallmentDetails(final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
+    private ViewInstallmentDetails getOverDueInstallmentDetails(
+            final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
         Money principalDue = new Money(currency);
         Money interestDue = new Money(currency);
         Money feesDue = new Money(currency);
@@ -1700,8 +1768,8 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setClientDetails(clientDetails);
     }
 
-    private void storeGlimDataOnSessionForUseInJsp(final HttpServletRequest request, final LoanCreationGlimDto loanCreationGlimDto)
-            throws PageExpiredException {
+    private void storeGlimDataOnSessionForUseInJsp(final HttpServletRequest request,
+            final LoanCreationGlimDto loanCreationGlimDto) throws PageExpiredException {
         storeCollectionOnSessionForUseInJspPage(request, MasterConstants.BUSINESS_ACTIVITIES, loanCreationGlimDto
                 .getLoanPurposes());
         storeCollectionOnSessionForUseInJspPage(request, LoanConstants.CLIENT_LIST, loanCreationGlimDto
