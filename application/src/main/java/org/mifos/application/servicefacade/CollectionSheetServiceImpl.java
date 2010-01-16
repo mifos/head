@@ -205,7 +205,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         final Short branchId = customerHierarchy.get(0).getBranchId();
         final String searchId = customerHierarchy.get(0).getSearchId() + ".%";
-        
+
         final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerId, branchId,
                 searchId, transactionDate);
 

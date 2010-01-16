@@ -19,6 +19,7 @@
  */
 package org.mifos.application.servicefacade;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +44,9 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * Validates customer and account structure for SaveCollectionSheetDto.
+ * 
+ * Note: Accounts with only Zero amount(s) are ignored and not validated (or processed by the save collection sheet
+ * functionality)
  */
 public class SaveCollectionSheetStructureValidator {
 
@@ -212,8 +216,11 @@ public class SaveCollectionSheetStructureValidator {
             SaveCollectionSheetCustomerAccountDto saveCollectionSheetCustomerAccount) {
 
         if (null != saveCollectionSheetCustomerAccount) {
-            validateAccount(customerId, saveCollectionSheetCustomerAccount.getAccountId(),
-                    saveCollectionSheetCustomerAccount.getCurrencyId(), ValidationAccountTypes.CUSTOMER);
+            
+            if (saveCollectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee().compareTo(BigDecimal.ZERO) > 0) {
+                validateAccount(customerId, saveCollectionSheetCustomerAccount.getAccountId(),
+                        saveCollectionSheetCustomerAccount.getCurrencyId(), ValidationAccountTypes.CUSTOMER);
+            }
         }
     }
 
@@ -222,8 +229,12 @@ public class SaveCollectionSheetStructureValidator {
 
         if (null != saveCollectionSheetCustomerLoans && saveCollectionSheetCustomerLoans.size() > 0) {
             for (SaveCollectionSheetCustomerLoanDto saveCollectionSheetCustomerLoan : saveCollectionSheetCustomerLoans) {
-                validateAccount(customerId, saveCollectionSheetCustomerLoan.getAccountId(),
-                        saveCollectionSheetCustomerLoan.getCurrencyId(), ValidationAccountTypes.LOAN);
+
+                if ((saveCollectionSheetCustomerLoan.getTotalDisbursement().compareTo(BigDecimal.ZERO) > 0)
+                        || (saveCollectionSheetCustomerLoan.getTotalLoanPayment().compareTo(BigDecimal.ZERO) > 0)) {
+                    validateAccount(customerId, saveCollectionSheetCustomerLoan.getAccountId(),
+                            saveCollectionSheetCustomerLoan.getCurrencyId(), ValidationAccountTypes.LOAN);
+                }
             }
         }
     }
@@ -235,8 +246,11 @@ public class SaveCollectionSheetStructureValidator {
         if (null != saveCollectionSheetCustomerSavings && saveCollectionSheetCustomerSavings.size() > 0) {
             for (SaveCollectionSheetCustomerSavingDto saveCollectionSheetCustomerSaving : saveCollectionSheetCustomerSavings) {
 
-                validateAccount(customerId, saveCollectionSheetCustomerSaving.getAccountId(),
-                        saveCollectionSheetCustomerSaving.getCurrencyId(), accountType);
+                if ((saveCollectionSheetCustomerSaving.getTotalWithdrawal().compareTo(BigDecimal.ZERO) > 0)
+                        || (saveCollectionSheetCustomerSaving.getTotalDeposit().compareTo(BigDecimal.ZERO) > 0)) {
+                    validateAccount(customerId, saveCollectionSheetCustomerSaving.getAccountId(),
+                            saveCollectionSheetCustomerSaving.getCurrencyId(), accountType);
+                }
             }
         }
     }

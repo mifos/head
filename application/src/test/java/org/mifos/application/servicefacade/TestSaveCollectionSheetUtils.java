@@ -577,7 +577,7 @@ public class TestSaveCollectionSheetUtils {
 
         try {
             saveCollectionSheetCustomerLoan = new SaveCollectionSheetCustomerLoanDto(loanAccountId, currency
-                    .getCurrencyId(), BigDecimal.ZERO, BigDecimal.ZERO);
+                    .getCurrencyId(), BigDecimal.ZERO, new BigDecimal(1000.00));
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
@@ -590,7 +590,7 @@ public class TestSaveCollectionSheetUtils {
 
         try {
             savingsAccount = new SaveCollectionSheetCustomerSavingDto(accountId, currency.getCurrencyId(),
-                    BigDecimal.ZERO, BigDecimal.ZERO);
+                    BigDecimal.ZERO, new BigDecimal(1000.00));
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }

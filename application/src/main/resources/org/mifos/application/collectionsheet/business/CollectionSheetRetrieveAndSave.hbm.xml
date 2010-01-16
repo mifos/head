@@ -33,6 +33,7 @@
 				inner join a.customer c
 				where c.office.id = :BRANCH_ID 
 			    and c.customerStatus.id in (3,4,9,10,13)
+			    and a.id in (:ACCOUNT_IDS)
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>
 
@@ -43,6 +44,7 @@
 				inner join la.customer c
 				where c.office.id = :BRANCH_ID 
 			    and c.customerStatus.id in (3,4,9,10,13)
+			    and la.id in (:ACCOUNT_IDS)
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)
 			    and la.accountState.id in (3, 4, 5, 9)]]>
 	</query>
@@ -53,6 +55,7 @@
 				left outer join fetch aad.accountFeesActionDetails
 				inner join ca.customer c
 				where c.office.id = :BRANCH_ID 
+			    and ca.id in (:ACCOUNT_IDS)
 			    and c.customerStatus.id in (3,4,9,10,13)
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>
@@ -67,6 +70,7 @@
 				left outer join fetch md.meetingRecurrence
 				inner join a.customer c
 				where c.office.id = :BRANCH_ID 
+			    and a.id in (:ACCOUNT_IDS)
 			    and c.customerStatus.id in (3,4,9,10,13)
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>

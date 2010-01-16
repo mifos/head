@@ -19,22 +19,30 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.util.HashMap;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.config.GeneralConfig;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.core.MifosRuntimeException;
 
 /**
  * Loads Collection Sheet data into Hibernate session cache.
  * 
- * This minimises the number of read requests required to process the Collection
- * Sheet.
+ * This minimises the number of read requests required to process the Collection Sheet.
  */
 public class SaveCollectionSheetSessionCache {
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
+
+    // lists of non-zero accounts
+    private List<Integer> customerAccounts = new ArrayList<Integer>();
+    private List<Integer> loanAccounts = new ArrayList<Integer>();
+    private List<Integer> savingsAccounts = new ArrayList<Integer>();
+    private List<Integer> allAccounts = new ArrayList<Integer>();
 
     private Boolean worthCaching = false;
     private Boolean worthCachingRepayments = false;
@@ -57,29 +65,29 @@ public class SaveCollectionSheetSessionCache {
                 Long eTime;
                 Long sTime = System.currentTimeMillis();
 
-                try {
+                prefetchObjectList = submitSavePreFetch("prefetchCustomerHierarchy", branchId, searchId, topCustomerId,
+                        null);
 
-                    prefetchObjectList = submitSavePreFetch("prefetchCustomerHierarchy", branchId, searchId,
-                            topCustomerId);
-                    prefetchObjectList = submitSavePreFetch("prefetchAccountData", branchId, searchId, topCustomerId);
+                makeNonZeroAccountLists(saveCollectionSheet.getSaveCollectionSheetCustomers());
 
-                    if (worthCachingRepayments || worthCachingDisbursals) {
-                        prefetchObjectList = submitSavePreFetch("prefetchLoanSchedules", branchId, searchId,
-                                topCustomerId);
-                    }
+                if (allAccounts.size() > 0) {
+                    prefetchObjectList = submitSavePreFetch("prefetchAccountData", branchId, searchId, topCustomerId,
+                            allAccounts);
+                }
 
-                    if (worthCachingRepayments || worthCachingDisbursals || worthCachingACCollections) {
-                        prefetchObjectList = submitSavePreFetch("prefetchAccountFeeDetails", branchId, searchId,
-                                topCustomerId);
-                    }
+                if (worthCachingRepayments || worthCachingDisbursals) {
+                    prefetchObjectList = submitSavePreFetch("prefetchLoanSchedules", branchId, searchId, topCustomerId,
+                            loanAccounts);
+                }
 
-                    if (worthCachingACCollections) {
-                        prefetchObjectList = submitSavePreFetch("prefetchCustomerSchedules", branchId, searchId,
-                                topCustomerId);
-                    }
+                if (worthCachingRepayments || worthCachingDisbursals || worthCachingACCollections) {
+                    prefetchObjectList = submitSavePreFetch("prefetchAccountFeeDetails", branchId, searchId,
+                            topCustomerId, allAccounts);
+                }
 
-                } catch (PersistenceException e1) {
-                    e1.printStackTrace();
+                if (worthCachingACCollections) {
+                    prefetchObjectList = submitSavePreFetch("prefetchCustomerSchedules", branchId, searchId,
+                            topCustomerId, customerAccounts);
                 }
 
                 eTime = System.currentTimeMillis() - sTime;
@@ -97,16 +105,25 @@ public class SaveCollectionSheetSessionCache {
 
     @SuppressWarnings("unchecked")
     private List<Object> submitSavePreFetch(final String queryName, final Short branchId, final String searchId,
-            final Integer topCustomerId) throws PersistenceException {
+            final Integer topCustomerId, final List<Integer> accountIds) {
         Long eTime;
         Long sTime = System.currentTimeMillis();
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("BRANCH_ID", branchId);
-        params.put("SEARCH_ID", searchId);
-        params.put("SEARCH_ID2", searchId + ".%");
+        Session session = customerPersistence.getHibernateUtil().getSessionTL();
+        Query query = session.getNamedQuery(queryName);
+        query.setParameter("BRANCH_ID", branchId);
+        query.setParameter("SEARCH_ID", searchId);
+        query.setParameter("SEARCH_ID2", searchId + ".%");
+        if (accountIds != null) {
+            // query should fall over if empty list passed through
+            if (accountIds.size() == 0) {
+                throw new MifosRuntimeException("Empty Account Id List for Query: " + queryName);
+            }
+            query.setParameterList("ACCOUNT_IDS", accountIds);
+        }
 
-        List<Object> listObject = customerPersistence.executeNamedQuery(queryName, params);
+        List<Object> listObject = query.list();
+
         eTime = System.currentTimeMillis() - sTime;
         doLog("Id: " + topCustomerId + " - " + queryName + " took " + eTime + "ms  Count is: " + listObject.size());
         return listObject;
@@ -127,6 +144,52 @@ public class SaveCollectionSheetSessionCache {
                 worthCachingRepayments = true;
             }
         }
+    }
+
+    private void makeNonZeroAccountLists(List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers) {
+
+        if (saveCollectionSheetCustomers != null && saveCollectionSheetCustomers.size() > 0) {
+            for (SaveCollectionSheetCustomerDto saveCollectionSheetCustomer : saveCollectionSheetCustomers) {
+
+                SaveCollectionSheetCustomerAccountDto saveCollectionSheetCustomerAccount = saveCollectionSheetCustomer
+                        .getSaveCollectionSheetCustomerAccount();
+                if (null != saveCollectionSheetCustomerAccount) {
+                    if (saveCollectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee().compareTo(
+                            BigDecimal.ZERO) > 0) {
+                        customerAccounts.add(saveCollectionSheetCustomerAccount.getAccountId());
+                    }
+                }
+
+                List<SaveCollectionSheetCustomerLoanDto> saveCollectionSheetCustomerLoans = saveCollectionSheetCustomer
+                        .getSaveCollectionSheetCustomerLoans();
+                if (null != saveCollectionSheetCustomerLoans && saveCollectionSheetCustomerLoans.size() > 0) {
+                    for (SaveCollectionSheetCustomerLoanDto saveCollectionSheetCustomerLoan : saveCollectionSheetCustomerLoans) {
+
+                        if ((saveCollectionSheetCustomerLoan.getTotalDisbursement().compareTo(BigDecimal.ZERO) > 0)
+                                || (saveCollectionSheetCustomerLoan.getTotalLoanPayment().compareTo(BigDecimal.ZERO) > 0)) {
+                            loanAccounts.add(saveCollectionSheetCustomerLoan.getAccountId());
+                        }
+                    }
+                }
+
+                List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings = saveCollectionSheetCustomer
+                        .getSaveCollectionSheetCustomerSavings();
+                if (null != saveCollectionSheetCustomerSavings && saveCollectionSheetCustomerSavings.size() > 0) {
+                    for (SaveCollectionSheetCustomerSavingDto saveCollectionSheetCustomerSaving : saveCollectionSheetCustomerSavings) {
+
+                        if ((saveCollectionSheetCustomerSaving.getTotalWithdrawal().compareTo(BigDecimal.ZERO) > 0)
+                                || (saveCollectionSheetCustomerSaving.getTotalDeposit().compareTo(BigDecimal.ZERO) > 0)) {
+                            savingsAccounts.add(saveCollectionSheetCustomerSaving.getAccountId());
+                        }
+                    }
+                }
+
+            }
+        }
+
+        allAccounts.addAll(customerAccounts);
+        allAccounts.addAll(loanAccounts);
+        allAccounts.addAll(savingsAccounts);
     }
 
     private void doLog(String str) {

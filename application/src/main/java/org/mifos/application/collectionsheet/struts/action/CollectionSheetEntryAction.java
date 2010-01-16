@@ -111,9 +111,8 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     /**
-     * This method is called before the load page for center is called It sets
-     * this information in session and context.This should be removed after
-     * center was successfully created.
+     * This method is called before the load page for center is called It sets this information in session and
+     * context.This should be removed after center was successfully created.
      */
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -172,9 +171,8 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     /**
-     * This method retrieves the last meeting date for the chosen customer. This
-     * meeting date is put as the default date for the transaction date in the
-     * search criteria
+     * This method retrieves the last meeting date for the chosen customer. This meeting date is put as the default date
+     * for the transaction date in the search criteria
      * 
      */
     @TransactionDemarcate(joinToken = true)
@@ -197,12 +195,10 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     /**
-     * This method is called once the search criteria have been entered by the
-     * user to generate the bulk entry details for a particular customer It
-     * retrieves the loan officer office, and parent customer that was selected
-     * and sets them into the bulk entry business object. The list of attendance
-     * types and product list associated with the center, and its children are
-     * also retrieved
+     * This method is called once the search criteria have been entered by the user to generate the bulk entry details
+     * for a particular customer It retrieves the loan officer office, and parent customer that was selected and sets
+     * them into the bulk entry business object. The list of attendance types and product list associated with the
+     * center, and its children are also retrieved
      */
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -262,11 +258,6 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         logTrackingInfo("create", request, form);
 
-        //temporary performance testing
-        Long eTime;
-        Long sTime = System.currentTimeMillis();
-        
-        
         final BulkEntryActionForm collectionSheetActionForm = (BulkEntryActionForm) form;
 
         final CollectionSheetEntryGridDto previousCollectionSheetEntryDto = retrieveFromRequestCollectionSheetEntryDto(request);
@@ -290,14 +281,18 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         setErrorMessagesIfErrorsExist(request, collectionSheetErrors);
 
-//only in for temporary performance testing
-        eTime = System.currentTimeMillis() - sTime;
-        System.out.println("Id: " + previousCollectionSheetEntryDto.getBulkEntryParent().getCustomerDetail().getCustomerId() + " - Struts Create Action " + eTime + "ms");
         /*
-         * Visit CREATESUCCESS if user entered data that breaks business rules,
-         * such as withdrawing more than the total amount in a savings account.
-         * Is this intended? It seems like we wouldn't want to even call
+         * Visit CREATESUCCESS if user entered data that breaks business rules, such as withdrawing more than the total
+         * amount in a savings account. Is this intended? It seems like we wouldn't want to even call
          * saveCollectionSheet if business rules were violated in this manner.
+         * 
+         * JohnW: Yes it is intended. The collection sheet logic 'does what it can' in terms of updating accounts. It
+         * allows for accounts with no issues to be persisted while building up error lists (warning lists really) for
+         * accounts that have problems (including breaking business rules) preventing them being persisted.
+         * 
+         * So, in summary, what happens is, although "saveCollectionSheet" is called, part of the responsibility of the
+         * "saveCollectionSheet" process is to identify for each account if rules are broken. Only accounts that 'pass'
+         * are saved, the others are identified so that a warning message can be shown.
          */
         return mapping.findForward(CollectionSheetEntryConstants.CREATESUCCESS);
     }
@@ -349,11 +344,11 @@ public class CollectionSheetEntryAction extends BaseAction {
         final StringBuilder builder = new StringBuilder();
         final ActionErrors actionErrors = new ActionErrors();
         final boolean savingsOrCollectionsErrors = collectionSheetErrors.getSavingsDepNames().size() > 0
-        || collectionSheetErrors.getSavingsWithNames().size() > 0
-        || collectionSheetErrors.getLoanDisbursementAccountNumbers().size() > 0
-        || collectionSheetErrors.getLoanRepaymentAccountNumbers().size() > 0
-        || collectionSheetErrors.getCustomerAccountNumbers().size() > 0;
-        final boolean persistenceError =  collectionSheetErrors.isDatabaseError();
+                || collectionSheetErrors.getSavingsWithNames().size() > 0
+                || collectionSheetErrors.getLoanDisbursementAccountNumbers().size() > 0
+                || collectionSheetErrors.getLoanRepaymentAccountNumbers().size() > 0
+                || collectionSheetErrors.getCustomerAccountNumbers().size() > 0;
+        final boolean persistenceError = collectionSheetErrors.isDatabaseError();
         if (savingsOrCollectionsErrors) {
             getErrorString(builder, collectionSheetErrors.getSavingsDepNames(), savingsDeposit);
             getErrorString(builder, collectionSheetErrors.getSavingsWithNames(), savingsWithdrawal);
@@ -369,7 +364,7 @@ public class CollectionSheetEntryAction extends BaseAction {
             actionErrors.add(CollectionSheetEntryConstants.DATABASE_ERROR, new ActionMessage(
                     CollectionSheetEntryConstants.DATABASE_ERROR, collectionSheetErrors.getDatabaseError()));
         }
-        
+
         if (savingsOrCollectionsErrors || persistenceError) {
             request.setAttribute(Globals.ERROR_KEY, actionErrors);
         }
