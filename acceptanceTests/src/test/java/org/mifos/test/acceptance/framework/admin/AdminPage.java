@@ -30,6 +30,8 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage.SubmitMultiCurrencyFormParameters;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
@@ -104,6 +106,12 @@ public class AdminPage extends MifosPage {
         return new DefineNewLoanProductPage(selenium);
     }
     
+    public DefineNewDifferentCurrencyLoanProductPage navigateToDefineDifferentCurrencyLoanProduct() {
+        selenium.click("admin.link.defineNewLoanProduct");
+        waitForPageToLoad();
+        return new DefineNewDifferentCurrencyLoanProductPage(selenium);
+    }
+
     public UndoLoanDisbursalSearchPage navigateToUndoLoanDisbursal() {
         selenium.click("admin.link.reverseLoanDisbursal");
         waitForPageToLoad();
@@ -156,7 +164,18 @@ public class AdminPage extends MifosPage {
     public void defineLoanProduct(SubmitFormParameters formParameters) {
         DefineNewLoanProductPage newLoanPage = navigateToDefineLoanProduct();
         newLoanPage.verifyPage();
-        DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage(formParameters);
+        newLoanPage.fillLoanParameters(formParameters);
+        DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
+        previewPage.verifyPage();
+        DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
+        confirmationPage.verifyPage();    
+    }
+    
+    public void defineMultiCurrencyLoanProduct(SubmitMultiCurrencyFormParameters formParameters) {
+        DefineNewDifferentCurrencyLoanProductPage newLoanPage =  navigateToDefineDifferentCurrencyLoanProduct();
+        newLoanPage.verifyPage();
+        newLoanPage.fillLoanParameters(formParameters);
+        DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
         previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
         confirmationPage.verifyPage();    

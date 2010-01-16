@@ -206,6 +206,11 @@ public class StandardTestingService implements TestingService {
     @Override
     public void setAccountingRules(String accountingRulesParamName, String accountingRulesParamValue) throws MifosException {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        System.out.println(accountingRulesParamName +" = "+ accountingRulesParamValue);
+        if(accountingRulesParamValue == null || accountingRulesParamValue.equals("")) {
+            configMgr.clearProperty(accountingRulesParamName);
+            return;
+        }
         configMgr.setProperty(accountingRulesParamName, accountingRulesParamValue);
 
     }

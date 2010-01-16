@@ -140,16 +140,17 @@ public class CustomPropertiesUpdateController extends AbstractController {
             Enumeration<?> paramNames = request.getParameterNames();
             while (paramNames.hasMoreElements()) {
                 String accountingRulesParamName = (String) paramNames.nextElement();
-                String accountingRulesParamValue = request.getParameter(accountingRulesParamName);
-                testingService.setAccountingRules(accountingRulesParamName, accountingRulesParamValue);
-                model.put("accountingRulesResult", accountingRulesParamName + ": " + accountingRulesParamValue);
+                if (accountingRulesParamName.startsWith("AccountingRules")) {
+                    String accountingRulesParamValue = request.getParameter(accountingRulesParamName);
+                    testingService.setAccountingRules(accountingRulesParamName, accountingRulesParamValue);
+                    model.put("accountingRulesResult", accountingRulesParamName + ": " + accountingRulesParamValue);
+                }
             }
         } catch (MifosException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             errorMessages.add("Something was wrong with your Accounting Rules parameters: "
                     + new LogUtils().getStackTrace(e));
         }
-
     }
 
     private void handleLocalization(HttpServletRequest request, HttpServletResponse response,

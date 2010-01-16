@@ -139,7 +139,7 @@ public class DbUnitDataImportExport {
         options.addOption(sqlOption);
     }
     
-    public DbUnitDataImportExport() throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
+    public DbUnitDataImportExport() {
         defineOptions();
     }
 

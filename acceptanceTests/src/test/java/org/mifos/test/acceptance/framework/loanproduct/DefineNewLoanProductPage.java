@@ -236,8 +236,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         
     }
         
-    public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage(SubmitFormParameters parameters) {
-        
+    public void fillLoanParameters(SubmitFormParameters parameters) {
         selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
         selenium.type("createLoanProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
         selenium.type("createLoanProduct.input.description", parameters.getDescription());
@@ -256,6 +255,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
+    }
+    
+    public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
         selenium.click("createLoanProduct.button.preview");
         waitForPageToLoad();
         return new DefineNewLoanProductPreviewPage(selenium);

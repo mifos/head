@@ -85,4 +85,13 @@ public class CustomPropertiesHelper {
     public void setMaximumNumberOfFamilyMemebers(int maximumNumberOfFamilyMembers) {
         selenium.open(UPDATE_PAGE + "?ClientInformation.MaximumNumberOfFamilyMembers=" + maximumNumberOfFamilyMembers);
     }
+    
+    /**
+     * This is to set the additional currencies
+     * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
+     * @param additionalCurrencies additional currencies
+     */
+    public void setAdditionalCurrenciesCode(String additionalCurrencies) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.AdditionalCurrencyCodes=" + additionalCurrencies);
+    }
 }
