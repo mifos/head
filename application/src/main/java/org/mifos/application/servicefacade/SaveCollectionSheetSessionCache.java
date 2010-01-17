@@ -50,64 +50,78 @@ public class SaveCollectionSheetSessionCache {
     private Boolean worthCachingACCollections = false;
     private Boolean worthCachingSavings = false;
 
+    private Long prefetchTotalTime = null;
+
+    private Long prefetchCustomerHierarchyTotalTime = null;
+    private Integer prefetchCustomerHierarchyCount = null;
+    private Long prefetchAccountDataTotalTime = null;
+    private Integer prefetchAccountDataCount = null;
+    private Long prefetchLoanSchedulesTotalTime = null;
+    private Integer prefetchLoanSchedulesCount = null;
+    private Long prefetchAccountFeeDetailsTotalTime = null;
+    private Integer prefetchAccountFeeDetailsCount = null;
+    private Long prefetchCustomerSchedulesTotalTime = null;
+    private Integer prefetchCustomerSchedulesCount = null;
+    
     public void loadSessionCacheWithCollectionSheetData(final SaveCollectionSheetDto saveCollectionSheet,
             Short branchId, String searchId) {
 
+        Long prefetchTotalTimeStart = System.currentTimeMillis();
+        Long sTime;
         Boolean allowDataPrefetching = GeneralConfig.getAllowDataPrefetchingWhenSavingCollectionSheets();
 
         if (allowDataPrefetching) {
             List<Object> prefetchObjectList = null;
-            Integer topCustomerId = saveCollectionSheet.getSaveCollectionSheetCustomers().get(0).getCustomerId();
 
             analyseSaveCollectionSheet(saveCollectionSheet);
 
             if (worthCaching) {
-                Long eTime;
-                Long sTime = System.currentTimeMillis();
 
-                prefetchObjectList = submitSavePreFetch("prefetchCustomerHierarchy", branchId, searchId, topCustomerId,
-                        null);
+                sTime = System.currentTimeMillis();
+                prefetchObjectList = submitSavePreFetch("prefetchCustomerHierarchy", branchId, searchId, null);
+                prefetchCustomerHierarchyTotalTime = System.currentTimeMillis() - sTime;
+                prefetchCustomerHierarchyCount = prefetchObjectList.size();
 
                 makeNonZeroAccountLists(saveCollectionSheet.getSaveCollectionSheetCustomers());
 
                 if (allAccounts.size() > 0) {
-                    prefetchObjectList = submitSavePreFetch("prefetchAccountData", branchId, searchId, topCustomerId,
-                            allAccounts);
+                    sTime = System.currentTimeMillis();
+                    prefetchObjectList = submitSavePreFetch("prefetchAccountData", branchId, searchId, allAccounts);
+                    prefetchAccountDataTotalTime = System.currentTimeMillis() - sTime;
+                    prefetchAccountDataCount = prefetchObjectList.size();
                 }
 
                 if (worthCachingRepayments || worthCachingDisbursals) {
-                    prefetchObjectList = submitSavePreFetch("prefetchLoanSchedules", branchId, searchId, topCustomerId,
-                            loanAccounts);
+                    sTime = System.currentTimeMillis();
+                    prefetchObjectList = submitSavePreFetch("prefetchLoanSchedules", branchId, searchId, loanAccounts);
+                    prefetchLoanSchedulesTotalTime = System.currentTimeMillis() - sTime;
+                    prefetchLoanSchedulesCount = prefetchObjectList.size();
                 }
 
                 if (worthCachingRepayments || worthCachingDisbursals || worthCachingACCollections) {
+                    sTime = System.currentTimeMillis();
                     prefetchObjectList = submitSavePreFetch("prefetchAccountFeeDetails", branchId, searchId,
-                            topCustomerId, allAccounts);
+                            allAccounts);
+                    prefetchAccountFeeDetailsTotalTime = System.currentTimeMillis() - sTime;
+                    prefetchAccountFeeDetailsCount = prefetchObjectList.size();
                 }
 
                 if (worthCachingACCollections) {
+                    sTime = System.currentTimeMillis();
                     prefetchObjectList = submitSavePreFetch("prefetchCustomerSchedules", branchId, searchId,
-                            topCustomerId, customerAccounts);
+                            customerAccounts);
+                    prefetchCustomerSchedulesTotalTime = System.currentTimeMillis() - sTime;
+                    prefetchCustomerSchedulesCount = prefetchObjectList.size();
                 }
 
-                eTime = System.currentTimeMillis() - sTime;
-                doLog("Id: " + topCustomerId + " - prefetch took " + eTime + "ms" + "     Worth Caching: "
-                        + worthCaching.toString() + "     Worth Caching Repayments: "
-                        + worthCachingRepayments.toString() + "     Worth Caching Disbursals: "
-                        + worthCachingDisbursals.toString() + "     Worth Caching AC Collections: "
-                        + worthCachingACCollections.toString() + "     Worth Caching Savings: "
-                        + worthCachingSavings.toString());
-            } else {
-                doLog("Id: " + topCustomerId + " - Not worth caching");
+                prefetchTotalTime = System.currentTimeMillis() - prefetchTotalTimeStart;
             }
         }
     }
 
     @SuppressWarnings("unchecked")
     private List<Object> submitSavePreFetch(final String queryName, final Short branchId, final String searchId,
-            final Integer topCustomerId, final List<Integer> accountIds) {
-        Long eTime;
-        Long sTime = System.currentTimeMillis();
+            final List<Integer> accountIds) {
 
         Session session = customerPersistence.getHibernateUtil().getSessionTL();
         Query query = session.getNamedQuery(queryName);
@@ -122,11 +136,7 @@ public class SaveCollectionSheetSessionCache {
             query.setParameterList("ACCOUNT_IDS", accountIds);
         }
 
-        List<Object> listObject = query.list();
-
-        eTime = System.currentTimeMillis() - sTime;
-        doLog("Id: " + topCustomerId + " - " + queryName + " took " + eTime + "ms  Count is: " + listObject.size());
-        return listObject;
+        return query.list();
     }
 
     private void analyseSaveCollectionSheet(SaveCollectionSheetDto saveCollectionSheet) {
@@ -143,6 +153,7 @@ public class SaveCollectionSheetSessionCache {
             if (saveCollectionSheet.countLoanRepayments() > 2) {
                 worthCachingRepayments = true;
             }
+
         }
     }
 
@@ -192,7 +203,48 @@ public class SaveCollectionSheetSessionCache {
         allAccounts.addAll(savingsAccounts);
     }
 
-    private void doLog(String str) {
-        System.out.println(str);
+    public Long getPrefetchTotalTime() {
+        return this.prefetchTotalTime;
     }
+
+    public Long getPrefetchCustomerHierarchyTotalTime() {
+        return this.prefetchCustomerHierarchyTotalTime;
+    }
+
+    public Integer getPrefetchCustomerHierarchyCount() {
+        return this.prefetchCustomerHierarchyCount;
+    }
+
+    public Long getPrefetchAccountDataTotalTime() {
+        return this.prefetchAccountDataTotalTime;
+    }
+
+    public Integer getPrefetchAccountDataCount() {
+        return this.prefetchAccountDataCount;
+    }
+
+    public Long getPrefetchLoanSchedulesTotalTime() {
+        return this.prefetchLoanSchedulesTotalTime;
+    }
+
+    public Integer getPrefetchLoanSchedulesCount() {
+        return this.prefetchLoanSchedulesCount;
+    }
+
+    public Long getPrefetchAccountFeeDetailsTotalTime() {
+        return this.prefetchAccountFeeDetailsTotalTime;
+    }
+
+    public Integer getPrefetchAccountFeeDetailsCount() {
+        return this.prefetchAccountFeeDetailsCount;
+    }
+
+    public Long getPrefetchCustomerSchedulesTotalTime() {
+        return this.prefetchCustomerSchedulesTotalTime;
+    }
+
+    public Integer getPrefetchCustomerSchedulesCount() {
+        return this.prefetchCustomerSchedulesCount;
+    }
+
 }

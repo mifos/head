@@ -73,9 +73,11 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     public CollectionSheetErrorsView saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
             throws SaveCollectionSheetException {
 
-        Long eTime;
-        Long sTime = System.currentTimeMillis();
-        Long sTotalTime = System.currentTimeMillis();
+        Long totalTime;
+        Long totalTimeStart = System.currentTimeMillis();
+        Long readTime;
+        Long saveTime = null;
+        Long saveTimeStart;
 
         Integer topCustomerId = saveCollectionSheet.getSaveCollectionSheetCustomers().get(0).getCustomerId();
         CollectionSheetCustomerDto collectionSheetTopCustomer = new CustomerPersistence()
@@ -96,8 +98,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         // session caching: prefetch collection sheet data
         // done prior to structure validation because it loads
         // the customers and accounts to be validated into the session
-        new SaveCollectionSheetSessionCache().loadSessionCacheWithCollectionSheetData(saveCollectionSheet, branchId,
-                searchId);
+        SaveCollectionSheetSessionCache saveCollectionSheetSessionCache = new SaveCollectionSheetSessionCache();
+        saveCollectionSheetSessionCache
+                .loadSessionCacheWithCollectionSheetData(saveCollectionSheet, branchId, searchId);
 
         try {
             new SaveCollectionSheetStructureValidator().execute(saveCollectionSheet);
@@ -142,27 +145,69 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         boolean databaseErrorOccurred = false;
         Throwable databaseError = null;
-        eTime = System.currentTimeMillis() - sTime;
-        doLog("Id: " + topCustomerId + " - Building up collection sheet model took " + eTime + "ms");
+        readTime = System.currentTimeMillis() - totalTimeStart;
 
         try {
-            sTime = System.currentTimeMillis();
+            saveTimeStart = System.currentTimeMillis();
             persistCollectionSheet(clientAttendances, loanAccounts, customerAccounts, savingsAccounts);
-            eTime = System.currentTimeMillis() - sTime;
-            doLog("Id: " + topCustomerId + " - Committing Model took " + eTime + "ms");
-
+            saveTime = System.currentTimeMillis() - saveTimeStart;
         } catch (HibernateException e) {
             logger.error("database error saving collection sheet", e);
             databaseErrorOccurred = true;
             databaseError = e;
         }
 
-        eTime = System.currentTimeMillis() - sTotalTime;
-        doLog("Id: " + topCustomerId + " - CollectionSheetAPI Save took " + eTime + "ms");
+        totalTime = System.currentTimeMillis() - totalTimeStart;
+        printTiming(topCustomerId, totalTime, saveTime, readTime, saveCollectionSheetSessionCache);
 
         return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
                 failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers,
                 failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
+    }
+
+    private void printTiming(Integer topCustomerId, Long totalTime, Long saveTime, Long readTime,
+            SaveCollectionSheetSessionCache saveCollectionSheetSessionCache) {
+
+        final StringBuilder builder = new StringBuilder();
+        final String doubleQuote = "\"";
+        final String comma = "\", \"";
+
+        builder.append(doubleQuote);
+        builder.append("Collection Sheet Timing:");
+        builder.append(comma);
+        builder.append(topCustomerId);
+        builder.append(comma);
+        builder.append(totalTime);
+        builder.append(comma);
+        builder.append(saveTime);
+        builder.append(comma);
+        builder.append(readTime);
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchTotalTime());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchCustomerHierarchyTotalTime());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchCustomerHierarchyCount());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchAccountDataTotalTime());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchAccountDataCount());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchLoanSchedulesTotalTime());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchLoanSchedulesCount());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchAccountFeeDetailsTotalTime());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchAccountFeeDetailsCount());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchCustomerSchedulesTotalTime());
+        builder.append(comma);
+        builder.append(saveCollectionSheetSessionCache.getPrefetchCustomerSchedulesCount());
+        builder.append(doubleQuote);
+
+        doLog(builder.toString());
+
     }
 
     private void persistCollectionSheet(final List<ClientAttendanceBO> clientAttendances,

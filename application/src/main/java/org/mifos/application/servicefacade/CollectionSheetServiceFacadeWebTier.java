@@ -236,7 +236,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         // TODO - jpw - development/testing aid.
         // This to be taken out or changed to logger rather than sysprint before
         // release
-        saveCollectionSheet.print();
+        saveCollectionSheet.printSummary();
 
         CollectionSheetErrorsView collectionSheetErrorsView = null;
         try {
