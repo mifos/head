@@ -70,27 +70,57 @@ public class TestDatabase {
 
     /**
      * This method was added to work around integration test inter- and
-     * intradependencies. Once these dependencies are eliminated (hopefully
-     * Summer 2009), this method should be eliminated as well.
+     * intra-dependencies. Once these dependencies in main code are eliminated,
+     *  we should be able to use Spring managed testing environment (transaction)
+     *  this method should be eliminated as well.
      */
     public static void resetMySQLDatabase() throws Exception {
         StaticHibernateUtil.flushAndClearSession();
+        truncateMysqlDatabase();
+        insertTestData();
 
-        Connection connection = getJDBCConnection();
-        connection.setAutoCommit(false);
-        executeScript("truncate_tables.sql", connection);
-        executeScript("latest-data.sql", connection);
-        executeScript("custom_data.sql", connection);
-        executeScript("testdbinsertionscript.sql", connection);
-        connection.commit();
-        connection.close();
-
-        // If the database is ever blown away, we must repopulate chart of
+        // If the database is ever blown away, we must re-populate chart of
         // accounts data since some unit tests rely on its presence. It must
         // be created via this method since adding it via an sql script would
         // invalidate *other* unit tests that assume this method has been
         // called.
         FinancialInitializer.initialize();
+    }
+    
+    public static void reCreateMySQLDatabase() throws Exception {
+        dropMysqlDatabase();
+        createLatestSchema();
+        insertTestData();
+    }
+    
+    public static void createLatestSchema() throws Exception {
+        Connection connection = getJDBCConnection();
+        connection.setAutoCommit(false);
+        executeScript("latest-schema.sql", connection);
+        connection.commit();
+    }
+    
+    public static void insertTestData() throws Exception {
+        Connection connection = getJDBCConnection();
+        connection.setAutoCommit(false);
+        executeScript("latest-data.sql", connection);
+        executeScript("custom_data.sql", connection);
+        executeScript("testdbinsertionscript.sql", connection);
+        connection.commit();
+    }
+    
+    public static void dropMysqlDatabase() throws Exception {
+        Connection connection = getJDBCConnection();
+        connection.setAutoCommit(false);
+        executeScript("mifosdroptables.sql", connection);
+        connection.commit();
+    }
+    
+    public static void truncateMysqlDatabase() throws Exception {
+        Connection connection = getJDBCConnection();
+        connection.setAutoCommit(false);
+        executeScript("truncate_tables.sql", connection);
+        connection.commit();
     }
 
     /**
@@ -135,7 +165,7 @@ public class TestDatabase {
     /**
      * Foreign key disabled connection
      */
-    public static Connection getJDBCConnection() throws Exception {
+    private static Connection getJDBCConnection() throws Exception {
         final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
         final String noFkChecksUrl = databaseSettings.getProperty("hibernate.connection.url")
                 + "&sessionVariables=FOREIGN_KEY_CHECKS=0";

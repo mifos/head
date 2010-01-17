@@ -83,14 +83,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         // Cleaning the database using FK check disabled connection
         // If any one of the test fails or throws error it could lead to
         // multiple failures in other tests duing test build
-        Connection connection = TestDatabase.getJDBCConnection();
-        connection.setAutoCommit(false);
-        executeScript("mifosdroptables.sql", connection);
-        executeScript("latest-schema.sql", connection);
-        executeScript("latest-data.sql", connection);
-        executeScript("custom_data.sql", connection);
-        executeScript("testdbinsertionscript.sql", connection);
-        connection.commit();
+        TestDatabase.reCreateMySQLDatabase();
         FinancialInitializer.initialize();
         StaticHibernateUtil.flushAndCloseSession();
     }
@@ -225,13 +218,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void dropLatestDatabase() throws Exception {
-        // Drop tables using FK check disabled connection
-        // If any one of the test fails or throws error it could lead to
-        // multiple failures in other tests duing test build
-        Connection connection = TestDatabase.getJDBCConnection();
-        connection.setAutoCommit(false);
-        executeScript("mifosdroptables.sql", connection);
-        connection.commit();
+        TestDatabase.dropMysqlDatabase();
     }
 
     private void applyUpgrades() throws Exception {
