@@ -162,12 +162,4 @@
          </plugin>
       </plugins>
    </reporting>
-   <distributionManagement>
-      <repository>
-         <id>maven-repository.mifos.org</id>
-         <name>Mifos Maven Repository</name>
-         <url>file:///var/www/maven</url>
-         <uniqueVersion>false</uniqueVersion>
-      </repository>
-   </distributionManagement>
 </project>
