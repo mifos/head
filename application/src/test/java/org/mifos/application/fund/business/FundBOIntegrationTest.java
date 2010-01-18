@@ -26,14 +26,12 @@ import org.mifos.application.fund.exception.FundException;
 import org.mifos.application.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FundBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public FundBOIntegrationTest() throws SystemException, ApplicationException {
+    public FundBOIntegrationTest() throws Exception {
         super();
     }
 

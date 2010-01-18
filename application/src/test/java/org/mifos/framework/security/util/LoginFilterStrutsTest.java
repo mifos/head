@@ -31,8 +31,6 @@ import junit.framework.Assert;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 
 import servletunit.HttpServletRequestSimulator;
@@ -40,7 +38,7 @@ import servletunit.HttpServletResponseSimulator;
 
 public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
 
-    public LoginFilterStrutsTest() throws SystemException, ApplicationException {
+    public LoginFilterStrutsTest() throws Exception {
         super();
     }
 

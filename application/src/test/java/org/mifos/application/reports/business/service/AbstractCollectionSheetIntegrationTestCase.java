@@ -40,14 +40,12 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelFixture;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegrationTestCase {
 
-    public AbstractCollectionSheetIntegrationTestCase() throws SystemException, ApplicationException {
+    public AbstractCollectionSheetIntegrationTestCase() throws Exception {
         super();
     }
 

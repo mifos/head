@@ -39,8 +39,6 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -49,7 +47,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
-    public ClientTransferActionStrutsTest() throws SystemException, ApplicationException {
+    public ClientTransferActionStrutsTest() throws Exception {
         super();
     }
 

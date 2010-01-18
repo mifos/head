@@ -25,12 +25,10 @@ import junit.framework.Assert;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class CustomerLoanCycleFetchIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomerLoanCycleFetchIntegrationTest() throws SystemException, ApplicationException {
+    public CustomerLoanCycleFetchIntegrationTest() throws Exception {
         super();
     }
 

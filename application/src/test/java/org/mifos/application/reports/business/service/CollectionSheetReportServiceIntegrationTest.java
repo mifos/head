@@ -56,15 +56,12 @@ import org.mifos.application.productdefinition.business.service.SavingsPrdBusine
 import org.mifos.application.reports.business.dto.CollectionSheetReportDTO;
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class CollectionSheetReportServiceIntegrationTest extends AbstractCollectionSheetIntegrationTestCase {
 
-    public CollectionSheetReportServiceIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetReportServiceIntegrationTest() throws Exception {
         super();
     }
 

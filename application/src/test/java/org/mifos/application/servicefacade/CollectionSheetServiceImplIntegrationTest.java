@@ -31,8 +31,6 @@ import org.joda.time.LocalDate;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
@@ -40,7 +38,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetServiceImplIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetServiceImplIntegrationTest() throws Exception {
         super();
         collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
     }

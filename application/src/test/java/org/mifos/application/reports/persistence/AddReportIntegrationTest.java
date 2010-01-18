@@ -21,14 +21,13 @@
 package org.mifos.application.reports.persistence;
 
 import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.junit.Ignore;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
@@ -36,7 +35,7 @@ import org.mifos.framework.persistence.TestDatabase;
 @Ignore
 public class AddReportIntegrationTest extends MifosIntegrationTestCase {
     
-    public AddReportIntegrationTest() throws SystemException, ApplicationException {
+    public AddReportIntegrationTest() throws Exception {
         super();
     }
 

@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -99,7 +98,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  */
 public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanCalculationIntegrationTest() throws SystemException, ApplicationException {
+    public LoanCalculationIntegrationTest() throws Exception {
         super();
     }
 

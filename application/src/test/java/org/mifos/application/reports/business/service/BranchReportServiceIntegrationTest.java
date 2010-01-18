@@ -55,16 +55,14 @@ import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.application.reports.util.helpers.ReportUtils;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
-    public BranchReportServiceIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportServiceIntegrationTest() throws Exception {
         super();
     }
 

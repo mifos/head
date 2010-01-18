@@ -26,8 +26,6 @@ import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -35,7 +33,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 
 public class HolidayActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public HolidayActionStrutsTest() throws SystemException, ApplicationException {
+    public HolidayActionStrutsTest() throws Exception {
         super();
     }
 

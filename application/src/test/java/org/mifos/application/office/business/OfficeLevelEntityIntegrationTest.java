@@ -26,14 +26,12 @@ import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeLevelEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public OfficeLevelEntityIntegrationTest() throws SystemException, ApplicationException {
+    public OfficeLevelEntityIntegrationTest() throws Exception {
         super();
     }
 

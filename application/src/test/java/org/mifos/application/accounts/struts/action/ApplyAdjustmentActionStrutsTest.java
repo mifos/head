@@ -28,9 +28,9 @@ import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -44,8 +44,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -56,7 +54,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * This class tests methods of ApplyAdjustment action class.
  */
 public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
-    public ApplyAdjustmentActionStrutsTest() throws SystemException, ApplicationException {
+    public ApplyAdjustmentActionStrutsTest() throws Exception {
         super();
     }
 

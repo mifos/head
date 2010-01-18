@@ -33,12 +33,10 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
-    public AccountStateIntegrationTest() throws SystemException, ApplicationException {
+    public AccountStateIntegrationTest() throws Exception {
         super();
     }
 

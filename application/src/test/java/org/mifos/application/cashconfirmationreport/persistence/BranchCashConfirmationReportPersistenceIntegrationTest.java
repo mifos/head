@@ -36,20 +36,17 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbur
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationIssueBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
-import org.mifos.application.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.AssertionUtils;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
-    public BranchCashConfirmationReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public BranchCashConfirmationReportPersistenceIntegrationTest() throws Exception {
         super();
     }
 

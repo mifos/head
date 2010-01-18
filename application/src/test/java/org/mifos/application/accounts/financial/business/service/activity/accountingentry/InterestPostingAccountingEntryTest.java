@@ -40,7 +40,6 @@ import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.financial.business.COABO.GLCodeComparator;
 import org.mifos.application.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;

@@ -26,12 +26,10 @@ import junit.framework.Assert;
 
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanAccountPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public LoanAccountPersistenceIntegrationTest() throws Exception {
         super();
     }
 

@@ -35,16 +35,14 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 
 @Ignore
 public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public BirtAdminDocumentUploadActionStrutsTest() throws SystemException, ApplicationException {
+    public BirtAdminDocumentUploadActionStrutsTest() throws Exception {
         super();
     }
 

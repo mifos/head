@@ -36,16 +36,14 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public PersonnelBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public PersonnelBusinessServiceIntegrationTest() throws Exception {
         super();
     }
 

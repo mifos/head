@@ -52,9 +52,7 @@ import org.mifos.application.personnel.business.service.PersonnelBusinessService
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -62,7 +60,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
 
-    public BranchReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportPersistenceIntegrationTest() throws Exception {
         super();
     }
 

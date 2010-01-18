@@ -41,14 +41,12 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPe
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetServiceIntegrationTest extends AbstractCollectionSheetIntegrationTestCase {
-    public CollectionSheetServiceIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetServiceIntegrationTest() throws Exception {
         super();
     }
 

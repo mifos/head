@@ -51,14 +51,12 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetHelperIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetHelperIntegrationTest() throws Exception {
         super();
     }
 

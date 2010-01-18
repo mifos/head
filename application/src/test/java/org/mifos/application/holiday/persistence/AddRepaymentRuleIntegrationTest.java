@@ -25,13 +25,11 @@ import junit.framework.Assert;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 
 public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddRepaymentRuleIntegrationTest() throws SystemException, ApplicationException {
+    public AddRepaymentRuleIntegrationTest() throws Exception {
         super();
     }
     

@@ -32,14 +32,12 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public AuditBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public AuditBusinessServiceIntegrationTest() throws Exception {
         super();
     }
 

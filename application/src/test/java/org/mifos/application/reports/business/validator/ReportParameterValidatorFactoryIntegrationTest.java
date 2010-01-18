@@ -24,12 +24,10 @@ import junit.framework.Assert;
 
 import org.mifos.application.reports.business.ReportParameterForm;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class ReportParameterValidatorFactoryIntegrationTest extends MifosIntegrationTestCase {
 
-    public ReportParameterValidatorFactoryIntegrationTest() throws SystemException, ApplicationException {
+    public ReportParameterValidatorFactoryIntegrationTest() throws Exception {
         super();
     }
 

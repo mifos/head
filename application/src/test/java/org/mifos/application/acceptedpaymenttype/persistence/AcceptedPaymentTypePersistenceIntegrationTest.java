@@ -32,13 +32,11 @@ import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegrationTestCase {
 
-    public AcceptedPaymentTypePersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public AcceptedPaymentTypePersistenceIntegrationTest() throws Exception {
         super();
     }
 

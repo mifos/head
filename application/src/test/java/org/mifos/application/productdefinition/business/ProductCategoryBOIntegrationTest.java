@@ -40,7 +40,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductCategoryBOIntegrationTest() throws SystemException, ApplicationException {
+    public ProductCategoryBOIntegrationTest() throws Exception {
         super();
     }
 

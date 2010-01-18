@@ -48,15 +48,13 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrationTestCase {
-    public ApplyCustomerFeeChangesHelperIntegrationTest() throws SystemException, ApplicationException {
+    public ApplyCustomerFeeChangesHelperIntegrationTest() throws Exception {
         super();
     }
 

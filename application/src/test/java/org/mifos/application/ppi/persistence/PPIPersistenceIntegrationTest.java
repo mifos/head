@@ -50,8 +50,6 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -60,7 +58,7 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
 
-    public PPIPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public PPIPersistenceIntegrationTest() throws Exception {
         super();
     }
 

@@ -43,8 +43,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -55,7 +53,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
-    public PersonnelSettingsActionStrutsTest() throws SystemException, ApplicationException {
+    public PersonnelSettingsActionStrutsTest() throws Exception {
         super();
     }
 

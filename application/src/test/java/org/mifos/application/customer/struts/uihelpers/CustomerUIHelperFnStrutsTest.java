@@ -37,9 +37,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -48,7 +46,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustomerUIHelperFnStrutsTest() throws SystemException, ApplicationException {
+    public CustomerUIHelperFnStrutsTest() throws Exception {
         super();
     }
 

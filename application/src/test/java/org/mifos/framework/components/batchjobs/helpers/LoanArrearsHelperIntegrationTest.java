@@ -38,14 +38,12 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanArrearsHelperIntegrationTest() throws SystemException, ApplicationException {
+    public LoanArrearsHelperIntegrationTest() throws Exception {
         super();
     }
 

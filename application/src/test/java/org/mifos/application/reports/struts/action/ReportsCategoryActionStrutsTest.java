@@ -27,11 +27,9 @@ import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
-    public ReportsCategoryActionStrutsTest() throws SystemException, ApplicationException {
+    public ReportsCategoryActionStrutsTest() throws Exception {
         super();
     }
 

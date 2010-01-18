@@ -73,15 +73,13 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientIntegrationTest extends MifosIntegrationTestCase {
-    public ClientIntegrationTest() throws SystemException, ApplicationException {
+    public ClientIntegrationTest() throws Exception {
         super();
     }
 

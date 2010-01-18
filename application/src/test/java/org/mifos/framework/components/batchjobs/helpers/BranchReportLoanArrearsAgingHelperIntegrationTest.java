@@ -48,13 +48,11 @@ import org.mifos.application.reports.business.service.BranchReportIntegrationTes
 import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchReportIntegrationTestCase {
-    public BranchReportLoanArrearsAgingHelperIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportLoanArrearsAgingHelperIntegrationTest() throws Exception {
         super();
     }
 

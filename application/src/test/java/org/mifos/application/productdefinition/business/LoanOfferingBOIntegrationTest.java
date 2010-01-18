@@ -72,7 +72,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanOfferingBOIntegrationTest() throws SystemException, ApplicationException {
+    public LoanOfferingBOIntegrationTest() throws Exception {
         super();
     }
 

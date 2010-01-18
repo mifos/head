@@ -41,8 +41,8 @@ import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
@@ -97,7 +97,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public CustomerBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public CustomerBusinessServiceIntegrationTest() throws Exception {
         super();
     }
 

@@ -82,7 +82,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public RegenerateScheduleHelperIntegrationTest() throws SystemException, ApplicationException {
+    public RegenerateScheduleHelperIntegrationTest() throws Exception {
         super();
     }
 

@@ -40,9 +40,7 @@ import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPers
 import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
@@ -52,7 +50,7 @@ import org.mifos.framework.util.helpers.Constants;
 @Ignore
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public BirtReportsUploadActionStrutsTest() throws SystemException, ApplicationException {
+    public BirtReportsUploadActionStrutsTest() throws Exception {
         super();
     }
 

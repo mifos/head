@@ -31,9 +31,7 @@ import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -46,7 +44,7 @@ public class OffHierarchyActionStrutsTest extends MifosMockStrutsTestCase {
 
     private static final String CONFIGURED = "1";
 
-    public OffHierarchyActionStrutsTest() throws SystemException, ApplicationException {
+    public OffHierarchyActionStrutsTest() throws Exception {
         super();
     }
 

@@ -21,23 +21,13 @@ package org.mifos.application.servicefacade;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.customer.client.business.AttendanceType;
-import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.util.helpers.PaymentTypes;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**

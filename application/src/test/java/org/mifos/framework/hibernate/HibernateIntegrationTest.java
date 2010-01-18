@@ -24,15 +24,13 @@ import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HibernateIntegrationTest extends MifosIntegrationTestCase {
 
-    public HibernateIntegrationTest() throws SystemException, ApplicationException {
+    public HibernateIntegrationTest() throws Exception {
         super();
     }
 

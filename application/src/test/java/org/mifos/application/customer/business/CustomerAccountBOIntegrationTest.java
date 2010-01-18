@@ -34,18 +34,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
-import net.sf.cglib.core.Local;
-
-import org.apache.struts.actions.LocaleAction;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
@@ -66,7 +61,6 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -86,7 +80,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
-    public CustomerAccountBOIntegrationTest() throws SystemException, ApplicationException {
+    public CustomerAccountBOIntegrationTest() throws Exception {
         super();
     }
 

@@ -24,13 +24,11 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class RoleActivityEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public RoleActivityEntityIntegrationTest() throws SystemException, ApplicationException {
+    public RoleActivityEntityIntegrationTest() throws Exception {
         super();
     }
 

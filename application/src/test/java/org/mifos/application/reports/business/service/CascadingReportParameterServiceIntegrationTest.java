@@ -45,14 +45,12 @@ import org.mifos.application.personnel.business.service.PersonnelBusinessService
 import org.mifos.application.reports.ui.DateSelectionItem;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.application.reports.ui.SelectionItemFixture;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CascadingReportParameterServiceIntegrationTest extends AbstractCollectionSheetIntegrationTestCase {
-    public CascadingReportParameterServiceIntegrationTest() throws SystemException, ApplicationException {
+    public CascadingReportParameterServiceIntegrationTest() throws Exception {
         super();
     }
 

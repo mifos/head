@@ -24,7 +24,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.hibernate.Session;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.business.PPISurveyIntegrationTest;
 import org.mifos.application.ppi.helpers.Country;
@@ -35,10 +34,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -46,7 +41,7 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public PPIActionStrutsTest() throws SystemException, ApplicationException {
+    public PPIActionStrutsTest() throws Exception {
         super();
     }
 

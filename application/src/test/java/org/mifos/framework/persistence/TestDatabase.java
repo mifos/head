@@ -76,7 +76,7 @@ public class TestDatabase {
      */
     public static void resetMySQLDatabase() throws Exception {
         StaticHibernateUtil.flushAndClearSession();
-        truncateMysqlDatabase();
+        truncateMySQLDatabase();
         insertTestData();
 
         // If the database is ever blown away, we must re-populate chart of
@@ -87,8 +87,8 @@ public class TestDatabase {
         FinancialInitializer.initialize();
     }
     
-    public static void reCreateMySQLDatabase() throws Exception {
-        dropMysqlDatabase();
+    public static void createMySQLTestDatabase() throws Exception {
+        dropMySQLDatabase();
         createLatestSchema();
         insertTestData();
     }
@@ -98,6 +98,7 @@ public class TestDatabase {
         connection.setAutoCommit(false);
         executeScript("latest-schema.sql", connection);
         connection.commit();
+        connection.close();
     }
     
     public static void insertTestData() throws Exception {
@@ -107,20 +108,32 @@ public class TestDatabase {
         executeScript("custom_data.sql", connection);
         executeScript("testdbinsertionscript.sql", connection);
         connection.commit();
+        connection.close();
     }
     
-    public static void dropMysqlDatabase() throws Exception {
+    /*public static void createNotMappedTables() throws Exception {
+        Connection connection = getJDBCConnection();
+        String sql = "CREATE TABLE if not exists DATABASE_VERSION ( DATABASE_VERSION INTEGER ) ENGINE=InnoDB CHARACTER SET utf8";
+        connection.createStatement().execute(sql);
+        sql = "ALTER TABLE LOOKUP_ENTITY ADD COLUMN DESCRIPTION VARCHAR(200)";
+        connection.createStatement().execute(sql);
+        connection.close();
+    }*/
+    
+    public static void dropMySQLDatabase() throws Exception {
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
         executeScript("mifosdroptables.sql", connection);
         connection.commit();
+        connection.close();
     }
     
-    public static void truncateMysqlDatabase() throws Exception {
+    public static void truncateMySQLDatabase() throws Exception {
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
         executeScript("truncate_tables.sql", connection);
         connection.commit();
+        connection.close();
     }
 
     /**
@@ -167,10 +180,11 @@ public class TestDatabase {
      */
     private static Connection getJDBCConnection() throws Exception {
         final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
-        final String noFkChecksUrl = databaseSettings.getProperty("hibernate.connection.url")
-                + "&sessionVariables=FOREIGN_KEY_CHECKS=0";
-        return DriverManager.getConnection(noFkChecksUrl,
-                databaseSettings.getProperty("hibernate.connection.username"), databaseSettings
-                        .getProperty("hibernate.connection.password"));
+        final String url = databaseSettings.getProperty("hibernate.connection.url");
+        final String param = "&sessionVariables=FOREIGN_KEY_CHECKS=0";
+        final String user = databaseSettings.getProperty("hibernate.connection.username");
+        final String password = databaseSettings.getProperty("hibernate.connection.password");
+        
+        return DriverManager.getConnection(url + param, user, password);
     }
 }

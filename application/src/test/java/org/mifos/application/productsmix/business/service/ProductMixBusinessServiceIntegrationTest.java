@@ -43,10 +43,8 @@ import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -55,7 +53,7 @@ import org.testng.annotations.Test;
 @Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
 public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductMixBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public ProductMixBusinessServiceIntegrationTest() throws Exception {
         super();
     }
 

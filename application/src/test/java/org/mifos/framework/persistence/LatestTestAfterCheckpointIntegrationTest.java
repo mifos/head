@@ -83,7 +83,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         // Cleaning the database using FK check disabled connection
         // If any one of the test fails or throws error it could lead to
         // multiple failures in other tests duing test build
-        TestDatabase.reCreateMySQLDatabase();
+        TestDatabase.createMySQLTestDatabase();
         FinancialInitializer.initialize();
         StaticHibernateUtil.flushAndCloseSession();
     }
@@ -218,7 +218,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void dropLatestDatabase() throws Exception {
-        TestDatabase.dropMysqlDatabase();
+        TestDatabase.dropMySQLDatabase();
     }
 
     private void applyUpgrades() throws Exception {

@@ -31,12 +31,10 @@ import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
 
-    public ActivityTagIntegrationTest() throws SystemException, ApplicationException {
+    public ActivityTagIntegrationTest() throws Exception {
         super();
     }
 

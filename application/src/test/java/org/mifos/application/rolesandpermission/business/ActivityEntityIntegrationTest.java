@@ -23,13 +23,11 @@ package org.mifos.application.rolesandpermission.business;
 import junit.framework.Assert;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ActivityEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public ActivityEntityIntegrationTest() throws SystemException, ApplicationException {
+    public ActivityEntityIntegrationTest() throws Exception {
         super();
     }
 

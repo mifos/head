@@ -30,12 +30,10 @@ import org.mifos.application.configuration.persistence.ApplicationConfigurationP
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class ApplicationConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ApplicationConfigurationPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public ApplicationConfigurationPersistenceIntegrationTest() throws Exception {
         super();
     }
 

@@ -31,15 +31,13 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConfigServiceInitializationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 
 public class ReportProductOfferingServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ReportProductOfferingServiceIntegrationTest() throws SystemException, ApplicationException {
+    public ReportProductOfferingServiceIntegrationTest() throws Exception {
         super();
     }
 

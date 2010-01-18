@@ -29,12 +29,10 @@ import junit.framework.Assert;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class GroupPerformanceHistoryUpdaterIntegrationTest extends MifosIntegrationTestCase {
 
-    public GroupPerformanceHistoryUpdaterIntegrationTest() throws SystemException, ApplicationException {
+    public GroupPerformanceHistoryUpdaterIntegrationTest() throws Exception {
         super();
     }
 

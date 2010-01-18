@@ -30,13 +30,11 @@ import junit.framework.Assert;
 
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollectionSheetReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetReportPersistenceIntegrationTest() throws Exception {
         super();
     }
 

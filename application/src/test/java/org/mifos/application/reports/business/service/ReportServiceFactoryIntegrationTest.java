@@ -23,11 +23,9 @@ package org.mifos.application.reports.business.service;
 import junit.framework.Assert;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTestCase {
-    public ReportServiceFactoryIntegrationTest() throws SystemException, ApplicationException {
+    public ReportServiceFactoryIntegrationTest() throws Exception {
         super();
     }
 

@@ -26,9 +26,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.testng.annotations.Test;
@@ -36,7 +34,7 @@ import org.testng.annotations.Test;
 @Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
 public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public ProductMixBOIntegrationTest() throws SystemException, ApplicationException {
+    public ProductMixBOIntegrationTest() throws Exception {
         super();
     }
 

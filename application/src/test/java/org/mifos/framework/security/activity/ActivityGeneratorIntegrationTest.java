@@ -33,15 +33,13 @@ import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPers
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 
 public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
-    public ActivityGeneratorIntegrationTest() throws SystemException, ApplicationException {
+    public ActivityGeneratorIntegrationTest() throws Exception {
         super();
     }
 

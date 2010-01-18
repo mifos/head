@@ -51,7 +51,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public SavingsOfferingBOIntegrationTest() throws SystemException, ApplicationException {
+    public SavingsOfferingBOIntegrationTest() throws Exception {
         super();
     }
 

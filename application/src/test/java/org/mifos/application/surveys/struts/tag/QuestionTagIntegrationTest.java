@@ -20,7 +20,6 @@
 
 package org.mifos.application.surveys.struts.tag;
 
-import java.sql.Connection;
 import java.sql.Statement;
 
 import junit.framework.Assert;
@@ -30,14 +29,12 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
-    public QuestionTagIntegrationTest() throws SystemException, ApplicationException {
+    public QuestionTagIntegrationTest() throws Exception {
         super();
     }
 

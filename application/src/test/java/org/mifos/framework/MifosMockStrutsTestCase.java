@@ -33,9 +33,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
@@ -48,7 +46,7 @@ import servletunit.struts.MockStrutsTestCase;
 
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
-    protected MifosMockStrutsTestCase() throws SystemException, ApplicationException {
+    protected MifosMockStrutsTestCase() throws Exception {
         super();
         new TestCaseInitializer().initialize();
     }

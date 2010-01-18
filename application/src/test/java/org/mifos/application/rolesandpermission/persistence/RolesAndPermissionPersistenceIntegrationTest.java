@@ -28,12 +28,10 @@ import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public RolesAndPermissionPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public RolesAndPermissionPersistenceIntegrationTest() throws Exception {
         super();
     }
 

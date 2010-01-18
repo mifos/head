@@ -27,7 +27,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.configuration.Configuration;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "configTestSuite"})

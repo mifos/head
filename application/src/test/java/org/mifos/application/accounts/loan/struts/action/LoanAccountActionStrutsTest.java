@@ -101,9 +101,9 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.application.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -139,7 +139,7 @@ import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
-    public LoanAccountActionStrutsTest() throws SystemException, ApplicationException {
+    public LoanAccountActionStrutsTest() throws Exception {
         super();
     }
 

@@ -44,14 +44,12 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public PPIChoiceIntegrationTest() throws SystemException, ApplicationException {
+    public PPIChoiceIntegrationTest() throws Exception {
         super();
     }
 

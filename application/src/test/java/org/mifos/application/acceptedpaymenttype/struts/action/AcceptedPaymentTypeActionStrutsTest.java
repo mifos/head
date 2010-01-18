@@ -40,10 +40,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -53,7 +51,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public AcceptedPaymentTypeActionStrutsTest() throws SystemException, ApplicationException {
+    public AcceptedPaymentTypeActionStrutsTest() throws Exception {
         super();
     }
 

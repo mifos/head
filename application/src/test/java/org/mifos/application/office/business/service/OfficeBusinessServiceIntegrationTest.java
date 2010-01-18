@@ -30,14 +30,12 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelFixture;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public OfficeBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public OfficeBusinessServiceIntegrationTest() throws Exception {
         super();
     }
 

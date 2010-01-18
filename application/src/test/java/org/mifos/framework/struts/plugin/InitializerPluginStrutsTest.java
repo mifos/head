@@ -31,14 +31,12 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class InitializerPluginStrutsTest extends MifosMockStrutsTestCase {
 
-    public InitializerPluginStrutsTest() throws SystemException, ApplicationException {
+    public InitializerPluginStrutsTest() throws Exception {
         super();
     }
 

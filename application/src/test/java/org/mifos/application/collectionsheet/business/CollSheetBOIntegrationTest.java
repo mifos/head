@@ -42,7 +42,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -69,7 +68,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public CollSheetBOIntegrationTest() throws SystemException, ApplicationException {
+    public CollSheetBOIntegrationTest() throws Exception {
         super();
     }
 

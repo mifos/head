@@ -36,13 +36,11 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
-    public MeetingBOIntegrationTest() throws SystemException, ApplicationException {
+    public MeetingBOIntegrationTest() throws Exception {
         super();
     }
 

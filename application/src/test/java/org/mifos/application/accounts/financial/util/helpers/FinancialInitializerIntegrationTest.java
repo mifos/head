@@ -26,12 +26,10 @@ import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class FinancialInitializerIntegrationTest extends MifosIntegrationTestCase {
 
-    public FinancialInitializerIntegrationTest() throws SystemException, ApplicationException {
+    public FinancialInitializerIntegrationTest() throws Exception {
         super();
     }
 

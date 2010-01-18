@@ -31,14 +31,12 @@ import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 
 public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosIntegrationTestCase {
 
-    public SaveCollectionSheetStructureValidatorIntegrationTest() throws SystemException, ApplicationException {
+    public SaveCollectionSheetStructureValidatorIntegrationTest() throws Exception {
         super();
     }
 

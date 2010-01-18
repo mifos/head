@@ -26,17 +26,10 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
-import org.mifos.accounts.api.AccountPaymentParametersDto;
-import org.mifos.accounts.api.AccountReferenceDto;
-import org.mifos.accounts.api.InvalidPaymentReason;
-import org.mifos.accounts.api.PaymentTypeDto;
-import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -47,7 +40,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     private List<PaymentTypeDto> paymentTypeDtos;
     private PaymentTypeDto defaultPaymentType;
     
-    public StandardAccountServiceIntegrationTest() throws SystemException, ApplicationException {
+    public StandardAccountServiceIntegrationTest() throws Exception {
         super();
     }
     

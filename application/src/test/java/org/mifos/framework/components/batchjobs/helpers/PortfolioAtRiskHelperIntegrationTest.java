@@ -42,15 +42,13 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public PortfolioAtRiskHelperIntegrationTest() throws SystemException, ApplicationException {
+    public PortfolioAtRiskHelperIntegrationTest() throws Exception {
         super();
     }
 

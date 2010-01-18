@@ -37,8 +37,8 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.application.customer.client.business.ClientTestUtils;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.business.ClientTestUtils;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
@@ -78,8 +78,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -89,7 +87,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
-    public ClientCustActionStrutsTest() throws SystemException, ApplicationException {
+    public ClientCustActionStrutsTest() throws Exception {
         super();
     }
 

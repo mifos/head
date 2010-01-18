@@ -44,8 +44,6 @@ import org.mifos.application.productdefinition.business.SavingsProductBuilder;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 
 /**
@@ -57,7 +55,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
  */
 public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
-    public SavingsDaoHibernateIntegrationTest() throws SystemException, ApplicationException {
+    public SavingsDaoHibernateIntegrationTest() throws Exception {
         super();
     }
 

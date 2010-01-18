@@ -25,13 +25,11 @@ import junit.framework.Assert;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public ConfigurationPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public ConfigurationPersistenceIntegrationTest() throws Exception {
         super();
     }
 

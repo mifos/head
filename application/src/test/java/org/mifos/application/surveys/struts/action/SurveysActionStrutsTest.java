@@ -34,8 +34,6 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
@@ -44,7 +42,7 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public SurveysActionStrutsTest() throws SystemException, ApplicationException {
+    public SurveysActionStrutsTest() throws Exception {
         super();
     }
 

@@ -37,7 +37,6 @@ import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionC
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
@@ -50,7 +49,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddActivityIntegrationTest() throws SystemException, ApplicationException {
+    public AddActivityIntegrationTest() throws Exception {
         super();
     }
     

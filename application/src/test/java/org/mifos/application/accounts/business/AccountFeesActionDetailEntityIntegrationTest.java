@@ -37,15 +37,13 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public AccountFeesActionDetailEntityIntegrationTest() throws SystemException, ApplicationException {
+    public AccountFeesActionDetailEntityIntegrationTest() throws Exception {
         super();
     }
 

@@ -65,7 +65,7 @@ import org.testng.annotations.Test;
 @Test(groups = { "integration" }, dependsOnGroups = { "productMixTestSuite" })
 public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
-    public AccountBOIntegrationTest() throws SystemException, ApplicationException {
+    public AccountBOIntegrationTest() throws Exception {
         super();
     }
 

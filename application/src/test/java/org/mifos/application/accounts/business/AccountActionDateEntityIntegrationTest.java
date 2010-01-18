@@ -21,9 +21,7 @@
 package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -38,15 +36,13 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTestCase {
 
-    public AccountActionDateEntityIntegrationTest() throws SystemException, ApplicationException {
+    public AccountActionDateEntityIntegrationTest() throws Exception {
         super();
     }
 

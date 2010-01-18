@@ -45,8 +45,6 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -54,7 +52,7 @@ import org.springframework.core.io.ClassPathResource;
 
 public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
     
-    public PPISurveyIntegrationTest() throws SystemException, ApplicationException {
+    public PPISurveyIntegrationTest() throws Exception {
         super();
     }
 

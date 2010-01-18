@@ -31,13 +31,11 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCase {
 
-    public LoanScheduleEntityIntegrationTest() throws SystemException, ApplicationException {
+    public LoanScheduleEntityIntegrationTest() throws Exception {
         super();
     }
 

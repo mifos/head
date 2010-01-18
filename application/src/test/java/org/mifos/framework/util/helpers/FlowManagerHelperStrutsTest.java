@@ -24,14 +24,12 @@ import junit.framework.Assert;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 
 public class FlowManagerHelperStrutsTest extends MifosMockStrutsTestCase {
 
-    public FlowManagerHelperStrutsTest() throws SystemException, ApplicationException {
+    public FlowManagerHelperStrutsTest() throws Exception {
         super();
     }
 

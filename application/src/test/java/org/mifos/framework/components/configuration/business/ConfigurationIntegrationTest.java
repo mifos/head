@@ -30,8 +30,6 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -41,7 +39,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * deprecated and may be removed</a> (-Adam 22-JAN-2008).
  */
 public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
-    public ConfigurationIntegrationTest() throws SystemException, ApplicationException {
+    public ConfigurationIntegrationTest() throws Exception {
         super();
     }
 

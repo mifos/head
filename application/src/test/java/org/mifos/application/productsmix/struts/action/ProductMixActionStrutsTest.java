@@ -50,9 +50,7 @@ import org.mifos.application.productsmix.struts.actionforms.ProductMixActionForm
 import org.mifos.application.productsmix.util.ProductMixTestHelper;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
@@ -65,7 +63,7 @@ import org.testng.annotations.Test;
 @Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
 public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public ProductMixActionStrutsTest() throws SystemException, ApplicationException {
+    public ProductMixActionStrutsTest() throws Exception {
         super();
     }
 

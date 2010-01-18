@@ -24,7 +24,6 @@ import java.sql.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
@@ -35,17 +34,15 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
-import org.mifos.application.customer.business.CustomerBOTestUtils;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -54,7 +51,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
-    public CustomerApplyAdjustmentActionStrutsTest() throws SystemException, ApplicationException {
+    public CustomerApplyAdjustmentActionStrutsTest() throws Exception {
         super();
     }
 

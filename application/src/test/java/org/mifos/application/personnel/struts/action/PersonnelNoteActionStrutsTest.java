@@ -38,8 +38,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
@@ -50,7 +48,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public PersonnelNoteActionStrutsTest() throws SystemException, ApplicationException {
+    public PersonnelNoteActionStrutsTest() throws Exception {
         super();
     }
 

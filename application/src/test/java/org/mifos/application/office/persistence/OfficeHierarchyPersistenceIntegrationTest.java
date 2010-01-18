@@ -27,9 +27,7 @@ import junit.framework.Assert;
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -37,7 +35,7 @@ public class OfficeHierarchyPersistenceIntegrationTest extends MifosIntegrationT
 
     private static final int OFFICE_LEVELS = 5;
 
-    public OfficeHierarchyPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public OfficeHierarchyPersistenceIntegrationTest() throws Exception {
         super();
     }
 

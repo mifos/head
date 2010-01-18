@@ -26,15 +26,12 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 
 public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 
-    public SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest() throws SystemException,
-            ApplicationException {
+    public SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest() throws Exception {
         super();
     }
 

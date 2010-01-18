@@ -25,13 +25,11 @@ import junit.framework.Assert;
 
 import org.mifos.application.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public AdminDocAccStateMixPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public AdminDocAccStateMixPersistenceIntegrationTest() throws Exception {
         super();
     }
 

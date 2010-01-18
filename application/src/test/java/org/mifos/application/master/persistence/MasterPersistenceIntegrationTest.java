@@ -33,15 +33,13 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
-    public MasterPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public MasterPersistenceIntegrationTest() throws Exception {
         super();
     }
 

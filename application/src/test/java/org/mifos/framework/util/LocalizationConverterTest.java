@@ -31,8 +31,8 @@ import org.junit.Ignore;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.testng.annotations.Test;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })

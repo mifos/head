@@ -32,12 +32,11 @@ import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfig
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
 public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
 
-    public FieldConfigIntegrationTest() throws SystemException, ApplicationException {
+    public FieldConfigIntegrationTest() throws Exception {
         super();
     }
 

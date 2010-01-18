@@ -27,13 +27,11 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
 public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public FieldConfigurationHelperIntegrationTest() throws SystemException, ApplicationException {
+    public FieldConfigurationHelperIntegrationTest() throws Exception {
         super();
     }
 

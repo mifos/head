@@ -54,7 +54,6 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -138,7 +137,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
-    public LoanBOIntegrationTest() throws SystemException, ApplicationException {
+    public LoanBOIntegrationTest() throws Exception {
         super();
     }
 

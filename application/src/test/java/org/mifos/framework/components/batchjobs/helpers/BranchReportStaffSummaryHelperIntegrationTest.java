@@ -33,15 +33,13 @@ import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.springframework.core.io.Resource;
 
 public class BranchReportStaffSummaryHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    public BranchReportStaffSummaryHelperIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportStaffSummaryHelperIntegrationTest() throws Exception {
         super();
     }
 

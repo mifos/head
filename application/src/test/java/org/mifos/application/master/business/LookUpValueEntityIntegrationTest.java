@@ -27,14 +27,12 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.junit.Ignore;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 @Ignore
 public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
 
-    public LookUpValueEntityIntegrationTest() throws SystemException, ApplicationException {
+    public LookUpValueEntityIntegrationTest() throws Exception {
         super();
     }
 

@@ -20,7 +20,6 @@
 
 package org.mifos.application.collectionsheet.business;
 
-import org.mifos.application.master.business.MifosCurrency;
 
 public class CollectionSheetLoanDetailsEntityFixture {
 

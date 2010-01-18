@@ -29,11 +29,11 @@ import junit.framework.Assert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -56,9 +56,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -67,7 +65,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public SavingsPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public SavingsPersistenceIntegrationTest() throws Exception {
         super();
     }
 

@@ -48,7 +48,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public LookupOptionsActionStrutsTest() throws SystemException, ApplicationException {
+    public LookupOptionsActionStrutsTest() throws Exception {
         super();
     }
 

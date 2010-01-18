@@ -30,13 +30,11 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class SurveysPersistenceIntegrationTest extends MifosIntegrationTestCase {
     
-    public SurveysPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public SurveysPersistenceIntegrationTest() throws Exception {
         super();
     }
 

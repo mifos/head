@@ -24,15 +24,13 @@ import junit.framework.Assert;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 
 public class BranchReportConfigServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    public BranchReportConfigServiceIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportConfigServiceIntegrationTest() throws Exception {
         super();
     }
 

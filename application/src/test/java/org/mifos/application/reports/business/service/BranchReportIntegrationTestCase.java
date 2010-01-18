@@ -27,8 +27,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
@@ -42,7 +40,7 @@ public class BranchReportIntegrationTestCase extends MifosIntegrationTestCase {
     public static MifosCurrency DEFAULT_CURRENCY;
     protected static Short CURRENCY_ID;
 
-    public BranchReportIntegrationTestCase() throws SystemException, ApplicationException {
+    public BranchReportIntegrationTestCase() throws Exception {
         super();
     }
     

@@ -42,7 +42,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class ReportsDataServiceTest extends TestCase {
     private LoanPrdBusinessService loanPrdBusinessServiceMock;

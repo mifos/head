@@ -26,8 +26,6 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
@@ -35,7 +33,7 @@ import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddAccountStateFlagIntegrationTest() throws SystemException, ApplicationException {
+    public AddAccountStateFlagIntegrationTest() throws Exception {
         super();
     }
 

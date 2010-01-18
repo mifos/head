@@ -44,15 +44,13 @@ import org.mifos.application.reports.business.service.BranchReportIntegrationTes
 import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTestCase {
 
-    public BranchReportHelperIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportHelperIntegrationTest() throws Exception {
         super();
     }
 

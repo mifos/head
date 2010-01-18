@@ -93,7 +93,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    public CustomerPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public CustomerPersistenceIntegrationTest() throws Exception {
         super();
     }
 

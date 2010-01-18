@@ -28,13 +28,11 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
-    public AddReportUpgradeIntegrationTest() throws SystemException, ApplicationException {
+    public AddReportUpgradeIntegrationTest() throws Exception {
         super();
     }
 

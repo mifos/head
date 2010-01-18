@@ -28,10 +28,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -40,7 +38,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public HiddenMandatoryConfigurationActionStrutsTest() throws SystemException, ApplicationException {
+    public HiddenMandatoryConfigurationActionStrutsTest() throws Exception {
         super();
     }
 

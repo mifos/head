@@ -28,12 +28,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
-    public MeetingHelperIntegrationTest() throws SystemException, ApplicationException {
+    public MeetingHelperIntegrationTest() throws Exception {
         super();
     }
 

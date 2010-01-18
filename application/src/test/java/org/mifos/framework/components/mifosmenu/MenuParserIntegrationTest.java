@@ -23,12 +23,10 @@ package org.mifos.framework.components.mifosmenu;
 import junit.framework.Assert;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class MenuParserIntegrationTest extends MifosIntegrationTestCase {
 
-    public MenuParserIntegrationTest() throws SystemException, ApplicationException {
+    public MenuParserIntegrationTest() throws Exception {
         super();
     }
 
