@@ -60,6 +60,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.util.helpers.Methods;
@@ -117,7 +118,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         LoanOfferingBO loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP",
-                currentDate);
+                currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
 
         ProductDto loanOfferingDto = new ProductDto(loanOffering.getPrdOfferingId(), loanOffering
                 .getPrdOfferingShortName());
@@ -210,9 +211,9 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering1);
         clientAccount = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1, loanOffering2);
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
-        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate);
-        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate);
-        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate);
+        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
+        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
+        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
 
         centerSavingsAccount = TestObjectFactory.createSavingsAccount("43244334", center, Short.valueOf("16"),
                 startDate, savingsOffering1);

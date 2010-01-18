@@ -40,6 +40,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -408,7 +409,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     private SavingsOfferingBO createSavingsOffering() {
         Date currentDate = new Date(System.currentTimeMillis());
-        return TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate);
+        return TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
     }
 
     private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering,

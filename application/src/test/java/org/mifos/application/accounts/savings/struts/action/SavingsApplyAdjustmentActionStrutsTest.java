@@ -47,6 +47,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -286,7 +287,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
 
     private SavingsOfferingBO createSavingsOffering() {
         Date currentDate = new Date(System.currentTimeMillis());
-        return TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate);
+        return TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
     }
 
     private SavingsBO createSavingsAccountWithPayment(String globalAccountNum, SavingsOfferingBO savingsOffering,

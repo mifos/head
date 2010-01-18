@@ -102,14 +102,11 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     /*
-     * Setting this to true fixes the printing of stack traces to standard out,
-     * but seems to cause failures (MySQL threw a
-     * "Deadlock found when trying to get lock; try restarting transaction"
-     * exception) only if BulkEntryBusinessServiceIntegrationTest is run
-     * previously as part of the same suite.
+     * Setting this to true fixes the printing of stack traces to standard out, but seems to cause failures (MySQL threw
+     * a "Deadlock found when trying to get lock; try restarting transaction" exception) only if
+     * BulkEntryBusinessServiceIntegrationTest is run previously as part of the same suite.
      * 
-     * This is presumably a second problem which was always there but was masked
-     * by the first one.
+     * This is presumably a second problem which was always there but was masked by the first one.
      */
     private static final boolean SUPPLY_ENTERED_AMOUNT_PARAMETERS = false;
     private UserContext userContext;
@@ -367,7 +364,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     @SuppressWarnings("unchecked")
     public void testSuccessfulGet() throws Exception {
-        
+
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         Date startDate = new Date(System.currentTimeMillis());
@@ -376,9 +373,12 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         account = getLoanAccount(group, meeting);
         Date currentDate = new Date(System.currentTimeMillis());
-        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate);
-        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate);
-        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate);
+        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate,
+                RecommendedAmountUnit.COMPLETE_GROUP);
+        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate,
+                RecommendedAmountUnit.COMPLETE_GROUP);
+        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate,
+                RecommendedAmountUnit.COMPLETE_GROUP);
 
         centerSavingsAccount = TestObjectFactory.createSavingsAccount("43244334", center, Short.valueOf("16"),
                 startDate, savingsOffering1);
@@ -545,9 +545,31 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering1);
         clientAccount = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1, loanOffering2);
         Date currentDate = new Date(System.currentTimeMillis());
-        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate);
-        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate);
-        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate);
+        // 2010-01-18: JohnW - This use of TestObjectFactory.createSavingsProduct used to break a number of
+        // business rules.
+        // E.g all the savings products were set up as applicable for Groups and "per individual" which is wrong for
+        // centers and clients. In the case of the client being wrongly set up as "Per Individual" it now triggers save
+        // collection sheet validation (which checks that the account associated with the client marked "per individual"
+        // matches its parent group or center)
+        // Also, when creating the center savings accounts (which is effectively "per individual") and the group savings
+        // account which is "per individual" the saving_schedule entries for the client are not written (they are in the
+        // production code).
+        //
+        // Considered using/updating the savingsProductBuilder functionality but that doesn't deal with the
+        // "per individual" aspect either.
+        // Decided not to try and fix it up (good deal of effort involved) but rather change the
+        // TestObjectFactory.createSavingsProduct to accept a RecommendedAmountUnit parameter.
+        // Unfortunately it wouldn't allow a null parameter (which is valid for centers and clients) through so, where
+        // necessary, I picked a value that worked for the test but was wrong in a business rule sense (just as its
+        // always been).
+        // So the savings product test data doesn't adhere to business rules but all tests pass here and in others
+        // tests.
+        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate,
+                RecommendedAmountUnit.COMPLETE_GROUP);
+        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate,
+                RecommendedAmountUnit.COMPLETE_GROUP);
+        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate,
+                RecommendedAmountUnit.COMPLETE_GROUP);
 
         centerSavingsAccount = TestObjectFactory.createSavingsAccount("43244334", center, Short.valueOf("16"),
                 startDate, savingsOffering1);
@@ -782,7 +804,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     @SuppressWarnings("deprecation")
     private CustomerAccountView getCustomerAccountView(final CustomerBO customer) {
-        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(), getCurrency());
+        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(),
+                getCurrency());
 
         List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
         accountAction.add(customer.getCustomerAccount().getAccountActionDate(Short.valueOf("1")));

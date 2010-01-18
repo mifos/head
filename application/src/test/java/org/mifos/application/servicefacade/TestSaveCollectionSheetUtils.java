@@ -541,10 +541,14 @@ public class TestSaveCollectionSheetUtils {
             for (CollectionSheetCustomerSavingDto collectionSheetCustomerSaving : collectionSheetCustomerSavings) {
                 SaveCollectionSheetCustomerSavingDto saveCollectionSheetCustomerSaving = null;
 
+                Short savingsCurrencyId = collectionSheetCustomerSaving.getCurrencyId();
+                if (savingsCurrencyId == null) {
+                    savingsCurrencyId = currency.getCurrencyId();
+                }
                 try {
                     saveCollectionSheetCustomerSaving = new SaveCollectionSheetCustomerSavingDto(
                             collectionSheetCustomerSaving.getAccountId(),
-                            collectionSheetCustomerSaving.getCurrencyId(), collectionSheetCustomerSaving
+                            savingsCurrencyId, collectionSheetCustomerSaving
                                     .getDepositDue(), new BigDecimal(0.0));
                 } catch (SaveCollectionSheetException e) {
                     throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());

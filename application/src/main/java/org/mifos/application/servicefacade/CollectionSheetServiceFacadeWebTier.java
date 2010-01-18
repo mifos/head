@@ -189,7 +189,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
                 .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
-
+        
         try {
             final List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(
                     MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",
@@ -236,6 +236,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         // TODO - jpw - development/testing aid.
         // This to be taken out or changed to logger rather than sysprint before
         // release
+        saveCollectionSheet.print();
         saveCollectionSheet.printSummary();
 
         CollectionSheetErrorsView collectionSheetErrorsView = null;

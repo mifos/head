@@ -30,6 +30,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -46,11 +47,10 @@ public class SaveCollectionSheetFromLegacyAssembler {
 
         try {
             saveCollectionSheet = new SaveCollectionSheetDto(assembleCustomers(collectionSheetEntryViews),
-                    previousCollectionSheetEntryDto.getPaymentTypeId(), 
-                    DateUtils.getLocalDateFromDate(previousCollectionSheetEntryDto.getTransactionDate()), 
-                    previousCollectionSheetEntryDto.getReceiptId(),
-                    DateUtils.getLocalDateFromDate(previousCollectionSheetEntryDto.getReceiptDate()), 
-                    userId);
+                    previousCollectionSheetEntryDto.getPaymentTypeId(), DateUtils
+                            .getLocalDateFromDate(previousCollectionSheetEntryDto.getTransactionDate()),
+                    previousCollectionSheetEntryDto.getReceiptId(), DateUtils
+                            .getLocalDateFromDate(previousCollectionSheetEntryDto.getReceiptDate()), userId);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
@@ -83,10 +83,12 @@ public class SaveCollectionSheetFromLegacyAssembler {
                     collectionSheetEntryView.getLoanAccountDetails(), currencyId);
 
             final List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings = assembleCustomerSavings(
-                    collectionSheetEntryView.getSavingsAccountDetails(), currencyId, false);
+                    collectionSheetEntryView.getSavingsAccountDetails(), currencyId, false, collectionSheetEntryView
+                            .getCustomerDetail().getCustomerLevelId());
 
             final List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerIndividualSavings = assembleCustomerSavings(
-                    collectionSheetEntryView.getSavingsAccountDetails(), currencyId, true);
+                    collectionSheetEntryView.getSavingsAccountDetails(), currencyId, true, collectionSheetEntryView
+                            .getCustomerDetail().getCustomerLevelId());
 
             SaveCollectionSheetCustomerDto saveCollectionSheetCustomerDto = null;
 
@@ -106,22 +108,31 @@ public class SaveCollectionSheetFromLegacyAssembler {
     }
 
     private List<SaveCollectionSheetCustomerSavingDto> assembleCustomerSavings(
-            List<SavingsAccountView> savingsAccountDetails, Short currencyId, Boolean lookingForIndividualSavings) {
+            List<SavingsAccountView> savingsAccountDetails, Short currencyId, Boolean attemptingToPopulateClientIndividualSavingsList,
+            Short customerLevelId) {
 
         if ((null != savingsAccountDetails) && (savingsAccountDetails.size() > 0)) {
-
             List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
             for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
-                Short recommendedAmntUnitId = savingsAccountView.getRecommendedAmntUnitId();
+                
                 Boolean match = false;
-                if (lookingForIndividualSavings && (recommendedAmntUnitId == Short.valueOf("1"))) {
-                    match = true;
+                if (attemptingToPopulateClientIndividualSavingsList) {
+                    if (isClient(customerLevelId) && isIndividualSavingsAccount(savingsAccountView.getRecommendedAmntUnitId())) {
+                        match = true;
+                    }
                 }
-                if ((!lookingForIndividualSavings)
-                        && ((recommendedAmntUnitId == null) || (recommendedAmntUnitId != Short.valueOf("1")))) {
-                    match = true;
-                }
+                if (!attemptingToPopulateClientIndividualSavingsList) {
 
+                    if (isClient(customerLevelId)) {
+                       if (!isIndividualSavingsAccount(savingsAccountView.getRecommendedAmntUnitId())) {
+                           match = true;
+                       }
+                    }
+                    else {
+                        match = true;
+                    }
+                }
+                
                 if (match) {
 
                     BigDecimal depositEntered = setBigDecimalAmount(savingsAccountView.getDepositAmountEntered());
@@ -145,6 +156,21 @@ public class SaveCollectionSheetFromLegacyAssembler {
         }
         return null;
 
+    }
+
+    private boolean isIndividualSavingsAccount(Short recommendedAmntUnitId) {
+
+        if ((recommendedAmntUnitId != null) && (recommendedAmntUnitId.compareTo(Short.valueOf("1")) == 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isClient(Short customerLevelId) {
+        if (customerLevelId.compareTo(CustomerLevel.CLIENT.getValue()) ==0) {
+            return true;
+        }
+        return false;
     }
 
     private List<SaveCollectionSheetCustomerLoanDto> assembleCustomerLoans(

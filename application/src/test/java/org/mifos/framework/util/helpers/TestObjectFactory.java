@@ -180,26 +180,21 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 
 /**
- * This class assumes that you are connected to the model database, which has
- * master data in it and also you have some default objects in it, for this you
- * can run the master data script and then the test scripts, this script has
+ * This class assumes that you are connected to the model database, which has master data in it and also you have some
+ * default objects in it, for this you can run the master data script and then the test scripts, this script has
  * statements for creating some default objects.
  * 
- * The convention followed here is that any method that starts with "get" is
- * returning an object already existing in the database, this object is not
- * meant to be modified and the method that starts with "create" creates a new
- * object inserts it into the database and returns that hence these objects are
- * meant to be cleaned up by the user.
+ * The convention followed here is that any method that starts with "get" is returning an object already existing in the
+ * database, this object is not meant to be modified and the method that starts with "create" creates a new object
+ * inserts it into the database and returns that hence these objects are meant to be cleaned up by the user.
  */
 public class TestObjectFactory {
 
     private static TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
 
     /**
-     * Constants to make calls to
-     * {@link #getNewMeeting(RecurrenceType, short, MeetingType, WeekDay)} and
-     * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)} more
-     * readable.
+     * Constants to make calls to {@link #getNewMeeting(RecurrenceType, short, MeetingType, WeekDay)} and
+     * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)} more readable.
      */
     public static final short EVERY_WEEK = 1;
     public static final short EVERY_MONTH = 1;
@@ -208,8 +203,8 @@ public class TestObjectFactory {
     public static final short EVERY_SECOND_MONTH = 2;
 
     /**
-     * We supply this for the salutation in a lot of test data, but I'm not sure
-     * a value of 1 really has a well-defined meaning given our master data.
+     * We supply this for the salutation in a lot of test data, but I'm not sure a value of 1 really has a well-defined
+     * meaning given our master data.
      */
     public static final int SAMPLE_SALUTATION = 1;
 
@@ -236,9 +231,8 @@ public class TestObjectFactory {
     public static final Short SAMPLE_BRANCH_OFFICE = 3;
 
     /**
-     * @return - Returns the office created by test data scripts. If the row
-     *         does not already exist in the database it returns null. defaults
-     *         created are 1- Head Office , 2 - Area Office , 3 - BranchOffice.
+     * @return - Returns the office created by test data scripts. If the row does not already exist in the database it
+     *         returns null. defaults created are 1- Head Office , 2 - Area Office , 3 - BranchOffice.
      */
     public static OfficeBO getOffice(final Short officeId) {
         return (OfficeBO) addObject(testObjectPersistence.getOffice(officeId));
@@ -252,10 +246,8 @@ public class TestObjectFactory {
     }
 
     /**
-     * @return - Returns the personnel created by master data scripts. This
-     *         record does not have any custom fields or roles associated with
-     *         it. If the row does not already exist in the database it returns
-     *         null.
+     * @return - Returns the personnel created by master data scripts. This record does not have any custom fields or
+     *         roles associated with it. If the row does not already exist in the database it returns null.
      */
 
     public static PersonnelBO getPersonnel(final Session session, final Short personnelId) {
@@ -277,7 +269,8 @@ public class TestObjectFactory {
         return createCenterForTestGetLoanAccounts(customerName, meeting, getFees());
     }
 
-    public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final Short officeId, final Short personnelId) {
+    public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final Short officeId,
+            final Short personnelId) {
         return createCenter(customerName, meeting, officeId, personnelId, getFees());
     }
 
@@ -285,12 +278,13 @@ public class TestObjectFactory {
         return createCenter(customerName, meeting, SAMPLE_BRANCH_OFFICE, PersonnelConstants.SYSTEM_USER, fees);
     }
 
-    public static CenterBO createCenterForTestGetLoanAccounts(final String customerName, final MeetingBO meeting, final List<FeeView> fees) {
+    public static CenterBO createCenterForTestGetLoanAccounts(final String customerName, final MeetingBO meeting,
+            final List<FeeView> fees) {
         return createCenter(customerName, meeting, SAMPLE_BRANCH_OFFICE, PersonnelConstants.TEST_USER, fees);
     }
 
-    public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final Short officeId, final Short personnelId,
-            final List<FeeView> fees) {
+    public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final Short officeId,
+            final Short personnelId, final List<FeeView> fees) {
         CenterBO center;
         try {
             center = new CenterBO(TestUtils.makeUserWithLocales(), customerName, null, null, fees, null, null,
@@ -345,8 +339,7 @@ public class TestObjectFactory {
     }
 
     /**
-     * This is just a helper method which returns a address object , this is
-     * just a helper it does not persist any data.
+     * This is just a helper method which returns a address object , this is just a helper it does not persist any data.
      */
     public static Address getAddressHelper() {
         Address address = new Address();
@@ -370,9 +363,10 @@ public class TestObjectFactory {
                 getFees(), formedBy, parentCustomer);
     }
 
-    public static GroupBO createGroupUnderCenter(final String customerName, final CustomerStatus customerStatus, final String externalId,
-            final boolean trained, final Date trainedDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
-            final Short formedById, final CustomerBO parentCustomer) {
+    public static GroupBO createGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
+            final String externalId, final boolean trained, final Date trainedDate, final Address address,
+            final List<CustomFieldView> customFields, final List<FeeView> fees, final Short formedById,
+            final CustomerBO parentCustomer) {
         GroupBO group;
         try {
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
@@ -387,23 +381,25 @@ public class TestObjectFactory {
         return group;
     }
 
-    public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus, final Short officeId,
-            final MeetingBO meeting, final Short loanOfficerId) {
+    public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,
+            final Short officeId, final MeetingBO meeting, final Short loanOfficerId) {
         Short formedBy = PersonnelConstants.SYSTEM_USER;
         return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy,
                 officeId, meeting, loanOfficerId);
     }
 
-    public static GroupBO createGroupUnderBranchWithMakeUser(final String customerName, final CustomerStatus customerStatus,
-            final Short officeId, final MeetingBO meeting, final Short loanOfficerId) {
+    public static GroupBO createGroupUnderBranchWithMakeUser(final String customerName,
+            final CustomerStatus customerStatus, final Short officeId, final MeetingBO meeting,
+            final Short loanOfficerId) {
         Short formedBy = PersonnelConstants.SYSTEM_USER;
         return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, null,
                 getFeesWithMakeUser(), formedBy, officeId, meeting, loanOfficerId);
     }
 
-    public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus, final String externalId,
-            final boolean trained, final Date trainedDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
-            final Short formedById, final Short officeId, final MeetingBO meeting, final Short loanOfficerId) {
+    public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,
+            final String externalId, final boolean trained, final Date trainedDate, final Address address,
+            final List<CustomFieldView> customFields, final List<FeeView> fees, final Short formedById,
+            final Short officeId, final MeetingBO meeting, final Short loanOfficerId) {
         GroupBO group;
         PersonnelBO loanOfficer = null;
         try {
@@ -412,7 +408,8 @@ public class TestObjectFactory {
             }
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
                     trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
-                    new OfficePersistence().getOffice(officeId), meeting, loanOfficer, new GroupPersistence(), new OfficePersistence());
+                    new OfficePersistence().getOffice(officeId), meeting, loanOfficer, new GroupPersistence(),
+                    new OfficePersistence());
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -422,12 +419,13 @@ public class TestObjectFactory {
         return group;
     }
 
-    public static ClientBO createClient(final String customerName, final CustomerStatus status, final CustomerBO parentCustomer) {
+    public static ClientBO createClient(final String customerName, final CustomerStatus status,
+            final CustomerBO parentCustomer) {
         return createClient(customerName, status, parentCustomer, getFees(), (String) null, new Date(1222333444000L));
     }
 
-    public static ClientBO createClient(final String customerName, final CustomerStatus status, final CustomerBO parentCustomer,
-            final List<FeeView> fees, final String governmentId, final Date dateOfBirth) {
+    public static ClientBO createClient(final String customerName, final CustomerStatus status,
+            final CustomerBO parentCustomer, final List<FeeView> fees, final String governmentId, final Date dateOfBirth) {
         ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
         ClientNameDetailView clientNameDetailView = clientNameView(NameType.MAYBE_CLIENT, customerName);
@@ -478,8 +476,8 @@ public class TestObjectFactory {
         return client;
     }
 
-    public static ClientBO createClient(final String customerName, final CustomerStatus status, final CustomerBO parentCustomer,
-            final Date startDate) {
+    public static ClientBO createClient(final String customerName, final CustomerStatus status,
+            final CustomerBO parentCustomer, final Date startDate) {
         ClientBO client;
         Short personnel = PersonnelConstants.SYSTEM_USER;
         try {
@@ -535,61 +533,65 @@ public class TestObjectFactory {
         return client;
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final ApplicableTo applicableTo, final Date startDate,
-            final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final int defInstallments,
-            final InterestType interestType, final boolean intDedAtDisb, final boolean princDueLastInst, final MeetingBO meeting) {
+    public static LoanOfferingBO createLoanOffering(final String name, final ApplicableTo applicableTo,
+            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate,
+            final int defInstallments, final InterestType interestType, final boolean intDedAtDisb,
+            final boolean princDueLastInst, final MeetingBO meeting) {
         return createLoanOffering(name, name.substring(0, 1), applicableTo, startDate, offeringStatus, defLnAmnt,
                 defIntRate, defInstallments, interestType, intDedAtDisb, princDueLastInst, meeting);
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final ApplicableTo applicableTo, final Date startDate,
-            final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final int defInstallments,
-            final InterestType interestType, final MeetingBO meeting) {
+    public static LoanOfferingBO createLoanOffering(final String name, final ApplicableTo applicableTo,
+            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate,
+            final int defInstallments, final InterestType interestType, final MeetingBO meeting) {
         return createLoanOffering(name, name.substring(0, 1), applicableTo, startDate, offeringStatus, defLnAmnt,
                 defIntRate, defInstallments, interestType, false, false, meeting);
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final int defInstallments,
-            final InterestType interestType, final boolean intDedAtDisb, final boolean princDueLastInst, final MeetingBO meeting) {
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+            final Double defLnAmnt, final Double defIntRate, final int defInstallments,
+            final InterestType interestType, final boolean intDedAtDisb, final boolean princDueLastInst,
+            final MeetingBO meeting) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 (short) defInstallments, interestType, intDedAtDisb, princDueLastInst, meeting,
                 GraceType.GRACEONALLREPAYMENTS, "1", "1");
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final int defInstallments,
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+            final Double defLnAmnt, final Double defIntRate, final int defInstallments,
             final InterestType interestType, final MeetingBO meeting) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS, "1", "1");
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final int defInstallments,
-            final InterestType interestType, final MeetingBO meeting, final String loanAmtCalcType, final String calcInstallmentType,
-            final MifosCurrency currency) {
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+            final Double defLnAmnt, final Double defIntRate, final int defInstallments,
+            final InterestType interestType, final MeetingBO meeting, final String loanAmtCalcType,
+            final String calcInstallmentType, final MifosCurrency currency) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
                 loanAmtCalcType, calcInstallmentType, currency);
     }
 
-    
     public static LoanOfferingBO createLoanOffering(final Date currentTime, final MeetingBO meeting) {
         return TestObjectFactory.createLoanOffering("Loan", "L", currentTime, meeting);
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime, final MeetingBO meeting) {
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime,
+            final MeetingBO meeting) {
         return TestObjectFactory.createLoanOffering(name, shortName, ApplicableTo.GROUPS, currentTime,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting, "1", "1", TestUtils.getCurrency());
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime, final MeetingBO meeting, 
-            final MifosCurrency currency) {
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime,
+            final MeetingBO meeting, final MifosCurrency currency) {
         return TestObjectFactory.createLoanOffering(name, shortName, ApplicableTo.GROUPS, currentTime,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting, "1", "1", currency);
     }
 
-    
     /**
      * @param defLnAmnt
      *            - Loan Amount same would be set as min and max amounts
@@ -600,10 +602,11 @@ public class TestObjectFactory {
      * @param offeringStatusId
      *            See {@link PrdStatus}.
      */
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
-            final InterestType interestType, final boolean interestDeductedAtDisbursement, final boolean principalDueInLastInstallment,
-            final MeetingBO meeting, final GraceType graceType) {
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+            final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
+            final InterestType interestType, final boolean interestDeductedAtDisbursement,
+            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType) {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(applicableTo);
         ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(graceType);
@@ -632,20 +635,23 @@ public class TestObjectFactory {
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
-            final InterestType interestType, final boolean interestDeductedAtDisbursement, final boolean principalDueInLastInstallment,
-            final MeetingBO meeting, final GraceType graceType, final String loanAmountCalcType, final String noOfInstallCalcType) {
-        return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate, defInstallments,
-                interestType, interestDeductedAtDisbursement, principalDueInLastInstallment, meeting, graceType, 
-                loanAmountCalcType, noOfInstallCalcType, TestUtils.getCurrency());
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+            final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
+            final InterestType interestType, final boolean interestDeductedAtDisbursement,
+            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
+            final String loanAmountCalcType, final String noOfInstallCalcType) {
+        return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
+                defInstallments, interestType, interestDeductedAtDisbursement, principalDueInLastInstallment, meeting,
+                graceType, loanAmountCalcType, noOfInstallCalcType, TestUtils.getCurrency());
     }
-    
-    public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus offeringStatus, final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
-            final InterestType interestType, final boolean interestDeductedAtDisbursement, final boolean principalDueInLastInstallment,
-            final MeetingBO meeting, final GraceType graceType, final String loanAmountCalcType, final String noOfInstallCalcType,
-            final MifosCurrency currency) {
+
+    public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+            final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
+            final InterestType interestType, final boolean interestDeductedAtDisbursement,
+            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
+            final String loanAmountCalcType, final String noOfInstallCalcType, final MifosCurrency currency) {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(applicableTo);
         ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(graceType);
@@ -658,13 +664,12 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, 
-                    new Money(currency, defLnAmnt.toString()), new Money(currency, defLnAmnt.toString()), 
-                    new Money(currency, defLnAmnt.toString()), defIntRate, defIntRate, defIntRate, 
-                    defInstallments, defInstallments, defInstallments, true,
-                    interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
-                    new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest, loanAmountCalcType,
-                    noOfInstallCalcType);
+                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(currency, defLnAmnt
+                            .toString()), new Money(currency, defLnAmnt.toString()), new Money(currency, defLnAmnt
+                            .toString()), defIntRate, defIntRate, defIntRate, defInstallments, defInstallments,
+                    defInstallments, true, interestDeductedAtDisbursement, principalDueInLastInstallment,
+                    new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest,
+                    loanAmountCalcType, noOfInstallCalcType);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         }
@@ -677,9 +682,10 @@ public class TestObjectFactory {
     }
 
     public static LoanOfferingBO createLoanOfferingFromLastLoan(final String name, final String shortName,
-            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus, final Double defIntRate,
-            final InterestType interestType, final boolean interestDeductedAtDisbursement, final boolean principalDueInLastInstallment,
-            final MeetingBO meeting, final GraceType graceType, final LoanPrdActionForm loanPrdActionForm) {
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
+            final Double defIntRate, final InterestType interestType, final boolean interestDeductedAtDisbursement,
+            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
+            final LoanPrdActionForm loanPrdActionForm) {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(applicableTo);
         ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(graceType);
@@ -735,8 +741,8 @@ public class TestObjectFactory {
         return (ProductCategoryBO) addObject(testObjectPersistence.getLoanPrdCategory());
     }
 
-    public static LoanBO createLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state, final Date startDate,
-            final LoanOfferingBO offering) {
+    public static LoanBO createLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state,
+            final Date startDate, final LoanOfferingBO offering) {
         LoanBO loan = LoanBOTestUtils.createLoanAccount(globalNum, customer, state, startDate, offering);
         try {
             loan.save();
@@ -747,8 +753,8 @@ public class TestObjectFactory {
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
 
-    public static LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state, final Date startDate,
-            final LoanOfferingBO offering) {
+    public static LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state,
+            final Date startDate, final LoanOfferingBO offering) {
         LoanBO loan = LoanBOTestUtils.createBasicLoanAccount(customer, state, startDate, offering);
         try {
             loan.save();
@@ -759,10 +765,9 @@ public class TestObjectFactory {
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
 
-    public static LoanBO createIndividualLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state,
-            final Date startDate, final LoanOfferingBO offering) {
-        LoanBO loan = LoanBOTestUtils
-                .createIndividualLoanAccount(globalNum, customer, state, startDate, offering);
+    public static LoanBO createIndividualLoanAccount(final String globalNum, final CustomerBO customer,
+            final AccountState state, final Date startDate, final LoanOfferingBO offering) {
+        LoanBO loan = LoanBOTestUtils.createIndividualLoanAccount(globalNum, customer, state, startDate, offering);
         try {
             loan.save();
         } catch (AccountException e) {
@@ -772,29 +777,32 @@ public class TestObjectFactory {
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
 
-    public static SavingsOfferingBO createSavingsProduct(final String name, final ApplicableTo applicableTo, final Date startDate,
-            final PrdStatus status, final Double recommendedAmount, final RecommendedAmountUnit unit, final Double intRate,
-            final Double maxAmtWithdrawl, final Double minAmtForInt, final SavingsType savingsType, final InterestCalcType interestCalculation,
+    public static SavingsOfferingBO createSavingsProduct(final String name, final ApplicableTo applicableTo,
+            final Date startDate, final PrdStatus status, final Double recommendedAmount,
+            final RecommendedAmountUnit unit, final Double intRate, final Double maxAmtWithdrawl,
+            final Double minAmtForInt, final SavingsType savingsType, final InterestCalcType interestCalculation,
             final MeetingBO intCalcMeeting, final MeetingBO intPostMeeting) {
         return createSavingsProduct(name, name.substring(0, 1), applicableTo, startDate, status, recommendedAmount,
                 unit, intRate, maxAmtWithdrawl, minAmtForInt, savingsType, interestCalculation, intCalcMeeting,
                 intPostMeeting);
     }
 
-    public static SavingsOfferingBO createSavingsProduct(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus status, final Double recommendedAmount, final RecommendedAmountUnit unit, final Double intRate,
-            final Double maxAmtWithdrawl, final Double minAmtForInt, final SavingsType savingsType, final InterestCalcType interestCalculation,
-            final MeetingBO intCalcMeeting, final MeetingBO intPostMeeting) {
+    public static SavingsOfferingBO createSavingsProduct(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus status,
+            final Double recommendedAmount, final RecommendedAmountUnit unit, final Double intRate,
+            final Double maxAmtWithdrawl, final Double minAmtForInt, final SavingsType savingsType,
+            final InterestCalcType interestCalculation, final MeetingBO intCalcMeeting, final MeetingBO intPostMeeting) {
         return createSavingsProduct(name, shortName, applicableTo, startDate, status, recommendedAmount, unit, intRate,
                 maxAmtWithdrawl, minAmtForInt, savingsType, interestCalculation, intCalcMeeting, intPostMeeting,
                 TestGeneralLedgerCode.BANK_ACCOUNT_ONE, TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
     }
 
-    public static SavingsOfferingBO createSavingsProduct(final String name, final String shortName, final ApplicableTo applicableTo,
-            final Date startDate, final PrdStatus status, final Double recommendedAmount, final RecommendedAmountUnit recommendedAmountUnit,
-            final Double intRate, final Double maxAmtWithdrawl, final Double minAmtForInt, final SavingsType savingsType,
-            final InterestCalcType interestCalculationType, final MeetingBO intCalcMeeting, final MeetingBO intPostMeeting,
-            final Short depGLCode, final Short withGLCode) {
+    public static SavingsOfferingBO createSavingsProduct(final String name, final String shortName,
+            final ApplicableTo applicableTo, final Date startDate, final PrdStatus status,
+            final Double recommendedAmount, final RecommendedAmountUnit recommendedAmountUnit, final Double intRate,
+            final Double maxAmtWithdrawl, final Double minAmtForInt, final SavingsType savingsType,
+            final InterestCalcType interestCalculationType, final MeetingBO intCalcMeeting,
+            final MeetingBO intPostMeeting, final Short depGLCode, final Short withGLCode) {
         GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
                 depGLCode);
         GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
@@ -810,8 +818,9 @@ public class TestObjectFactory {
         try {
             product = new SavingsOfferingBO(TestUtils.makeUserWithLocales(), name, shortName, productCategory,
                     prdApplicableMaster, startDate, null, null, amountUnit, savingsTypeEntity, intCalType,
-                    intCalcMeeting, intPostMeeting, new Money(TestUtils.getCurrency(), recommendedAmount.toString()), new Money(TestUtils.getCurrency(), maxAmtWithdrawl
-                            .toString()), new Money(TestUtils.getCurrency(), minAmtForInt.toString()), intRate, depglCodeEntity, intglCodeEntity);
+                    intCalcMeeting, intPostMeeting, new Money(TestUtils.getCurrency(), recommendedAmount.toString()),
+                    new Money(TestUtils.getCurrency(), maxAmtWithdrawl.toString()), new Money(TestUtils.getCurrency(),
+                            minAmtForInt.toString()), intRate, depglCodeEntity, intglCodeEntity);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         } catch (SystemException e) {
@@ -832,8 +841,8 @@ public class TestObjectFactory {
                 InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
     }
 
-    public static SavingsBO createSavingsAccount(final String globalNum, final CustomerBO customer, final Short accountStateId,
-            final Date startDate, final SavingsOfferingBO savingsOffering) throws Exception {
+    public static SavingsBO createSavingsAccount(final String globalNum, final CustomerBO customer,
+            final Short accountStateId, final Date startDate, final SavingsOfferingBO savingsOffering) throws Exception {
         UserContext userContext = TestUtils.makeUserWithLocales();
         MifosCurrency currency = testObjectPersistence.getCurrency();
         MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting().getMeeting());
@@ -861,12 +870,12 @@ public class TestObjectFactory {
     }
 
     /**
-     * Also see
-     * {@link SavingsTestHelper#createSavingsAccount(SavingsOfferingBO, CustomerBO, AccountState, UserContext)}
+     * Also see {@link SavingsTestHelper#createSavingsAccount(SavingsOfferingBO, CustomerBO, AccountState, UserContext)}
      * which is less elaborate.
      */
-    public static SavingsBO createSavingsAccount(final String globalNum, final CustomerBO customer, final AccountState state,
-            final Date startDate, final SavingsOfferingBO savingsOffering, UserContext userContext) throws Exception {
+    public static SavingsBO createSavingsAccount(final String globalNum, final CustomerBO customer,
+            final AccountState state, final Date startDate, final SavingsOfferingBO savingsOffering,
+            UserContext userContext) throws Exception {
         userContext = TestUtils.makeUserWithLocales();
         SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, state, savingsOffering
                 .getRecommendedAmount(), getCustomFieldView());
@@ -933,13 +942,11 @@ public class TestObjectFactory {
     /**
      * createPeriodicAmountFee.
      * 
-     * Changing {@link TestObjectFactory#getUserContext()} to
-     * {@link TestUtils#makeUserWithLocales()} caused a failure in
-     * {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee} (and about
-     * 163 other tests).
+     * Changing {@link TestObjectFactory#getUserContext()} to {@link TestUtils#makeUserWithLocales()} caused a failure
+     * in {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee} (and about 163 other tests).
      */
-    public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory, final String feeAmnt,
-            final RecurrenceType meetingFrequency, final Short recurAfter) {
+    public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
+            final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter) {
         FeeBO fee;
         try {
             fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter,
@@ -950,8 +957,8 @@ public class TestObjectFactory {
         return fee;
     }
 
-    public static FeeBO createPeriodicAmountFeeWithMakeUser(final String feeName, final FeeCategory feeCategory, final String feeAmnt,
-            final RecurrenceType meetingFrequency, final Short recurAfter) {
+    public static FeeBO createPeriodicAmountFeeWithMakeUser(final String feeName, final FeeCategory feeCategory,
+            final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter) {
         FeeBO fee;
         try {
             fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter, TestUtils
@@ -962,8 +969,9 @@ public class TestObjectFactory {
         return fee;
     }
 
-    public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory, final String feeAmnt,
-            final RecurrenceType meetingFrequency, final Short recurAfter, final UserContext userContext) {
+    public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
+            final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter,
+            final UserContext userContext) {
         try {
             GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
             MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(), MeetingType.PERIODIC_FEE);
@@ -979,8 +987,9 @@ public class TestObjectFactory {
     /****************************
      * Begin creating a periodic rate fee
      ****************************/
-    public static RateFeeBO createPeriodicRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,
-            final FeeFormula feeFormula, final RecurrenceType meetingFrequency, final Short recurAfter) {
+    public static RateFeeBO createPeriodicRateFee(final String feeName, final FeeCategory feeCategory,
+            final Double rate, final FeeFormula feeFormula, final RecurrenceType meetingFrequency,
+            final Short recurAfter) {
 
         try {
             MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(), MeetingType.PERIODIC_FEE);
@@ -991,9 +1000,9 @@ public class TestObjectFactory {
         }
     }
 
-    public static RateFeeBO createPeriodicRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,
-            final FeeFormula feeFormula, final RecurrenceType meetingFrequency, final Short recurAfter, final UserContext userContext,
-            final MeetingBO meeting) {
+    public static RateFeeBO createPeriodicRateFee(final String feeName, final FeeCategory feeCategory,
+            final Double rate, final FeeFormula feeFormula, final RecurrenceType meetingFrequency,
+            final Short recurAfter, final UserContext userContext, final MeetingBO meeting) {
 
         try {
             MeetingBO newMeeting = new MeetingBO(meetingFrequency, recurAfter, new Date(), MeetingType.PERIODIC_FEE);
@@ -1024,13 +1033,11 @@ public class TestObjectFactory {
     /**
      * createOneTimeAmountFee.
      * 
-     * Changing {@link TestObjectFactory#getUserContext()} to
-     * {@link TestUtils#makeUserWithLocales()} caused a failure in
-     * {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee} (and other
-     * tests).
+     * Changing {@link TestObjectFactory#getUserContext()} to {@link TestUtils#makeUserWithLocales()} caused a failure
+     * in {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
-    public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory, final String feeAmnt,
-            final FeePayment feePayment) {
+    public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory,
+            final String feeAmnt, final FeePayment feePayment) {
         FeeBO fee;
         try {
             fee = createOneTimeAmountFee(feeName, feeCategory, feeAmnt, feePayment, getUserContext());
@@ -1040,8 +1047,8 @@ public class TestObjectFactory {
         return fee;
     }
 
-    public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory, final String feeAmnt,
-            final FeePayment feePayment, final UserContext userContext) {
+    public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory,
+            final String feeAmnt, final FeePayment feePayment, final UserContext userContext) {
         GLCodeEntity glCode = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
                 TestGeneralLedgerCode.FEES);
         try {
@@ -1057,9 +1064,8 @@ public class TestObjectFactory {
     /**
      * createOneTimeRateFee.
      * 
-     * Changing {@link TestObjectFactory#getUserContext()} to
-     * {@link TestUtils#makeUserWithLocales()} caused a failure in
-     * {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
+     * Changing {@link TestObjectFactory#getUserContext()} to {@link TestUtils#makeUserWithLocales()} caused a failure
+     * in {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
     public static FeeBO createOneTimeRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,
             final FeeFormula feeFormula, final FeePayment feePayment) {
@@ -1077,14 +1083,12 @@ public class TestObjectFactory {
     }
 
     /**
-     * Return a new meeting object with a meeting occurring on the day of the
-     * week that the test is run. Creating a new method to fix issues with
-     * meeting creation without breaking existing tests that may depend on it.
+     * Return a new meeting object with a meeting occurring on the day of the week that the test is run. Creating a new
+     * method to fix issues with meeting creation without breaking existing tests that may depend on it.
      * 
      * 
      * @param recurAfter
-     *            1 means every day/week/month, 2 means every second
-     *            day/week/month...
+     *            1 means every day/week/month, 2 means every second day/week/month...
      * 
      */
     public static MeetingBO getNewWeeklyMeeting(final short recurAfter) {
@@ -1106,15 +1110,14 @@ public class TestObjectFactory {
      * @param frequency
      *            DAILY, WEEKLY, MONTHLY
      * @param recurAfter
-     *            1 means every day/week/month, 2 means every second
-     *            day/week/month...
+     *            1 means every day/week/month, 2 means every second day/week/month...
      * @param meetingType
      *            most commonly a CUSTOMER_MEETING
      * @param weekday
      *            MONDAY, TUESDAY...
      */
-    public static MeetingBO getNewMeeting(final RecurrenceType frequency, final short recurAfter, final MeetingType meetingType,
-            final WeekDay weekday) {
+    public static MeetingBO getNewMeeting(final RecurrenceType frequency, final short recurAfter,
+            final MeetingType meetingType, final WeekDay weekday) {
         MeetingBO meeting;
         try {
             meeting = new MeetingBO(frequency, recurAfter, new Date(), meetingType);
@@ -1131,29 +1134,26 @@ public class TestObjectFactory {
     /**
      * Return a new meeting object which occurs on today's day of the week.
      * 
-     * Not recommended: New tests should call
-     * {@link #getNewMeeting(RecurrenceType, short, MeetingType, WeekDay)}
-     * instead to avoid bugs where the test will pass on one day but not
-     * another.
+     * Not recommended: New tests should call {@link #getNewMeeting(RecurrenceType, short, MeetingType, WeekDay)}
+     * instead to avoid bugs where the test will pass on one day but not another.
      * 
      * @param frequency
      *            DAILY, WEEKLY, MONTHLY
      * @param recurAfter
-     *            1 means every day/week/month, 2 means every second
-     *            day/week/month...
+     *            1 means every day/week/month, 2 means every second day/week/month...
      * @param meetingType
      *            most commonly a CUSTOMER_MEETING
      */
-    public static MeetingBO getNewMeetingForToday(final RecurrenceType frequency, final short recurAfter, final MeetingType meetingType) {
+    public static MeetingBO getNewMeetingForToday(final RecurrenceType frequency, final short recurAfter,
+            final MeetingType meetingType) {
         Calendar calendar = new GregorianCalendar();
         return getNewMeeting(frequency, recurAfter, meetingType, WeekDay.getWeekDay((short) calendar
                 .get(Calendar.DAY_OF_WEEK)));
     }
 
     /**
-     * Return a new meeting object that represents a weekly customer meeting
-     * occurring every Monday. This is the most commonly used meeting type in
-     * the unit tests.
+     * Return a new meeting object that represents a weekly customer meeting occurring every Monday. This is the most
+     * commonly used meeting type in the unit tests.
      */
     public static MeetingBO getTypicalMeeting() {
         return getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY);
@@ -1471,8 +1471,7 @@ public class TestObjectFactory {
     }
 
     /**
-     * Convenience method where the amount is in MFI currency, and is an
-     * integer.
+     * Convenience method where the amount is in MFI currency, and is an integer.
      */
     public static Money getMoneyForMFICurrency(final int amount) {
         return new Money(TestUtils.getCurrency(), String.valueOf(amount));
@@ -1535,8 +1534,7 @@ public class TestObjectFactory {
     }
 
     /**
-     * Also see {@link TestUtils#makeUser()} which should be faster (this method
-     * involves several database accesses).
+     * Also see {@link TestUtils#makeUser()} which should be faster (this method involves several database accesses).
      */
     private static UserContext getUserContext() throws SystemException, ApplicationException {
         byte[] password = EncryptionService.getInstance().createEncryptedPassword("mifos");
@@ -1637,8 +1635,8 @@ public class TestObjectFactory {
 
     }
 
-    public static HolidayBO createHoliday(final HolidayPK holidayPK, final Date holidayThruDate, final String holidayName,
-            final Short repaymentRuleId, final Short localeId) throws Exception {
+    public static HolidayBO createHoliday(final HolidayPK holidayPK, final Date holidayThruDate,
+            final String holidayName, final Short repaymentRuleId, final Short localeId) throws Exception {
 
         RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(repaymentRuleId);
         HolidayBO accountHoliday = new HolidayBO(holidayPK, holidayThruDate, holidayName, entity);
@@ -1701,18 +1699,18 @@ public class TestObjectFactory {
         transaction.commit();
     }
 
-    public static LoanBO createLoanAccountWithDisbursement(final String globalNum, final CustomerBO customer, final AccountState state,
-            final Date startDate, final LoanOfferingBO loanOfering, final int disbursalType) {
+    public static LoanBO createLoanAccountWithDisbursement(final String globalNum, final CustomerBO customer,
+            final AccountState state, final Date startDate, final LoanOfferingBO loanOfering, final int disbursalType) {
 
-        final LoanBO loan = LoanBOTestUtils.createLoanAccountWithDisbursement(customer, state, startDate,
-                loanOfering, disbursalType, Short.valueOf("6"));
-        
+        final LoanBO loan = LoanBOTestUtils.createLoanAccountWithDisbursement(customer, state, startDate, loanOfering,
+                disbursalType, Short.valueOf("6"));
+
         try {
             loan.save();
         } catch (AccountException e) {
             throw new RuntimeException(e);
         }
-        
+
         StaticHibernateUtil.commitTransaction();
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
@@ -1785,8 +1783,8 @@ public class TestObjectFactory {
     }
 
     public static PaymentData getCustomerAccountPaymentDataView(final List<AccountActionDateEntity> accountActions,
-            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String receiptNum, final Short paymentId,
-            final Date receiptDate, final Date transactionDate) {
+            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String receiptNum,
+            final Short paymentId, final Date receiptDate, final Date transactionDate) {
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
         paymentData.setCustomer(customer);
         paymentData.setReceiptDate(receiptDate);
@@ -1800,7 +1798,8 @@ public class TestObjectFactory {
     }
 
     public static CustomerAccountView getCustomerAccountView(final CustomerBO customer) throws Exception {
-        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(), getCurrency());
+        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(),
+                getCurrency());
         List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(customer.getCustomerAccount()
                 .getAccountId(), new java.sql.Date(System.currentTimeMillis()));
         customerAccountView.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
@@ -1884,8 +1883,8 @@ public class TestObjectFactory {
     }
 
     public static PaymentData getLoanAccountPaymentData(final List<AccountActionDateEntity> accountActions,
-            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String receiptNum, final Short paymentId,
-            final Date receiptDate, final Date transactionDate) {
+            final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String receiptNum,
+            final Short paymentId, final Date receiptDate, final Date transactionDate) {
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
         paymentData.setCustomer(customer);
         paymentData.setReceiptDate(receiptDate);
@@ -1979,8 +1978,8 @@ public class TestObjectFactory {
         return (CustomerNoteEntity) addObject(notes);
     }
 
-    public static OfficeBO createOffice(final OfficeLevel level, final OfficeBO parentOffice, final String officeName, final String shortName)
-            throws Exception {
+    public static OfficeBO createOffice(final OfficeLevel level, final OfficeBO parentOffice, final String officeName,
+            final String shortName) throws Exception {
         OfficeBO officeBO = new OfficeBO(TestUtils.makeUserWithLocales(), level, parentOffice, null, officeName,
                 shortName, null, OperationMode.REMOTE_SERVER);
         officeBO.save();
@@ -2019,9 +2018,10 @@ public class TestObjectFactory {
     }
 
     public static PersonnelBO createPersonnel(final PersonnelLevel level, final OfficeBO office, final Integer title,
-            final Short preferredLocale, final String password, final String userName, final String emailId, final List<RoleBO> personnelRoles,
-            final List<CustomFieldView> customFields, final Name name, final String governmentIdNumber, final Date dob, final Integer maritalStatus,
-            final Integer gender, final Date dateOfJoiningMFI, final Date dateOfJoiningBranch, final Address address) throws Exception {
+            final Short preferredLocale, final String password, final String userName, final String emailId,
+            final List<RoleBO> personnelRoles, final List<CustomFieldView> customFields, final Name name,
+            final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender,
+            final Date dateOfJoiningMFI, final Date dateOfJoiningBranch, final Address address) throws Exception {
         PersonnelBO personnelBO = new PersonnelBO(level, office, title, preferredLocale, password, userName, emailId,
                 personnelRoles, customFields, name, governmentIdNumber, dob, maritalStatus, gender, dateOfJoiningMFI,
                 dateOfJoiningBranch, address, Short.valueOf("1"));
@@ -2045,8 +2045,8 @@ public class TestObjectFactory {
         }
     }
 
-    public static RoleBO createRole(final UserContext context, final String roleName, final List<ActivityEntity> activities)
-            throws Exception {
+    public static RoleBO createRole(final UserContext context, final String roleName,
+            final List<ActivityEntity> activities) throws Exception {
         RoleBO roleBO = new RoleBO(context, roleName, activities);
         roleBO.save();
         StaticHibernateUtil.commitTransaction();
@@ -2070,8 +2070,9 @@ public class TestObjectFactory {
         return fundBO;
     }
 
-    public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus, final Short officeId,
-            final MeetingBO meeting, final Short loanOfficerId, final List<CustomFieldView> customFields) {
+    public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,
+            final Short officeId, final MeetingBO meeting, final Short loanOfficerId,
+            final List<CustomFieldView> customFields) {
         Short formedBy = new Short("1");
         return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, customFields, getFees(),
                 formedBy, officeId, meeting, loanOfficerId);
@@ -2117,8 +2118,8 @@ public class TestObjectFactory {
     }
 
     /**
-     * Return the int corresponding to the day of the week of the date
-     * parameter. Returns Calendar.SUNDAY (1), Calendar.MONDAY (2), etc.
+     * Return the int corresponding to the day of the week of the date parameter. Returns Calendar.SUNDAY (1),
+     * Calendar.MONDAY (2), etc.
      */
     public static int getDayForDate(final Date date) {
         Calendar dateConversionCalendar = new GregorianCalendar();
@@ -2130,8 +2131,8 @@ public class TestObjectFactory {
      * This method is not recommended because it calls
      * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}.
      */
-    public static SavingsOfferingBO createSavingsProduct(final String offeringName, final String shortName, final Short depGLCode,
-            final Short intGLCode, final RecommendedAmountUnit recommendedAmountUnit) {
+    public static SavingsOfferingBO createSavingsProduct(final String offeringName, final String shortName,
+            final Short depGLCode, final Short intGLCode, final RecommendedAmountUnit recommendedAmountUnit) {
         MeetingBO meetingIntCalc = createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         MeetingBO meetingIntPost = createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         return createSavingsProduct(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()),
@@ -2149,16 +2150,19 @@ public class TestObjectFactory {
                 TestGeneralLedgerCode.CASH_AND_BANK_BALANCES, recommendedAmountUnit);
     }
 
-    public static SavingsOfferingBO createSavingsProduct(final String productName, final String shortName, final Date currentDate) {
+    public static SavingsOfferingBO createSavingsProduct(final String productName, final String shortName,
+            final Date currentDate, RecommendedAmountUnit recommendedAmountUnit) {
         MeetingBO meetingIntCalc = createMeeting(getTypicalMeeting());
         MeetingBO meetingIntPost = createMeeting(getTypicalMeeting());
-        return createSavingsProduct(productName, shortName, currentDate, meetingIntCalc, meetingIntPost);
+        return createSavingsProduct(productName, shortName, currentDate, recommendedAmountUnit, meetingIntCalc,
+                meetingIntPost);
     }
 
-    public static SavingsOfferingBO createSavingsProduct(final String productName, final String shortName, final Date currentDate,
+    public static SavingsOfferingBO createSavingsProduct(final String productName, final String shortName,
+            final Date currentDate, RecommendedAmountUnit recommendedAmountUnit,
             final MeetingBO meetingIntCalc, final MeetingBO meetingIntPost) {
         return createSavingsProduct(productName, shortName, ApplicableTo.GROUPS, currentDate, PrdStatus.SAVINGS_ACTIVE,
-                300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 200.0, 200.0, SavingsType.VOLUNTARY,
+                300.0, recommendedAmountUnit, 1.2, 200.0, 200.0, SavingsType.VOLUNTARY,
                 InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
     }
 
@@ -2221,8 +2225,8 @@ public class TestObjectFactory {
 
     public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
 
-    public static GroupBO createInstanceForTest(final UserContext userContext, final GroupTemplate template, final CenterBO center,
-            final Date customerActivationDate) throws CustomerException, PersistenceException {
+    public static GroupBO createInstanceForTest(final UserContext userContext, final GroupTemplate template,
+            final CenterBO center, final Date customerActivationDate) throws CustomerException, PersistenceException {
 
         GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
                 .getExternalId(), template.isTrained(), template.getTrainedDate(), template.getAddress(), template

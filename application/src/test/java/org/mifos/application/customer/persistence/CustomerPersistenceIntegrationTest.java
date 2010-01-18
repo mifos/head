@@ -75,6 +75,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRulesConstants;
@@ -461,7 +462,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         CustomerPersistence customerPersistence = new CustomerPersistence();
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
-        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate);
+        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
         UserContext user = new UserContext();
         user.setId(PersonnelConstants.SYSTEM_USER);
         account = TestObjectFactory.createSavingsAccount("000100000000020", group, AccountState.SAVINGS_ACTIVE,
@@ -1193,7 +1194,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
             throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct(prdOfferingname, shortName,
-                startDate);
+                startDate, RecommendedAmountUnit.COMPLETE_GROUP);
         return TestObjectFactory.createSavingsAccount("432434", customer, Short.valueOf("16"), startDate,
                 savingsOffering);
     }
@@ -1214,9 +1215,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd12", "abc1", startDate,
-                meetingIntCalc, meetingIntPost);
+                RecommendedAmountUnit.COMPLETE_GROUP, meetingIntCalc, meetingIntPost);
         SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd11", "abc2", startDate,
-                meetingIntCalc, meetingIntPost);
+                RecommendedAmountUnit.COMPLETE_GROUP, meetingIntCalc, meetingIntPost);
         centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434", center, Short.valueOf("16"), startDate,
                 savingsOffering);
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434", client, Short.valueOf("16"), startDate,
