@@ -559,7 +559,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createAndSetCenterInSession() throws Exception {
         String name = "manage_center";
-        center = TestObjectFactory.createCenter(name, getMeeting());
+        center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
@@ -577,8 +577,8 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testGet() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         savingsBO = getSavingsAccount("fsaf6", "ads6", center);
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/centerCustAction.do");
@@ -714,7 +714,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testSearch() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("SearchCenter", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("SearchCenter", meeting);
         addActionAndMethod(Methods.search.toString());
         addRequestParameter("searchString", "Sear");
         addRequestParameter("input", "search");
@@ -785,7 +785,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private void createGroupAndClient() {
-        group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 }

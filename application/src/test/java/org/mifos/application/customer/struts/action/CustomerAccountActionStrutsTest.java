@@ -107,9 +107,9 @@ public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
     private void initialization(String customer) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
 
-        center = TestObjectFactory.createCenter("Center", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         if (!(customer == "Center"))
-            group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+            group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         if (!(customer == "Center" || customer == "Group"))
             client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         setPath();

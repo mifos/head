@@ -261,16 +261,15 @@ public class TestObjectFactory {
     /*
      * Create a center which includes a weekly maintenance fee of 100
      */
-    public static CenterBO createCenter(final String customerName, final MeetingBO meeting) {
+    public static CenterBO createWeeklyFeeCenter(final String customerName, final MeetingBO meeting) {
         return createCenter(customerName, meeting, getFees());
     }
 
-    public static CenterBO createCenterForTestGetLoanAccounts(final String customerName, final MeetingBO meeting) {
+    public static CenterBO createWeeklyFeeCenterForTestGetLoanAccounts(final String customerName, final MeetingBO meeting) {
         return createCenterForTestGetLoanAccounts(customerName, meeting, getFees());
     }
 
-    public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final Short officeId,
-            final Short personnelId) {
+    public static CenterBO createWeeklyFeeCenter(final String customerName, final MeetingBO meeting, final Short officeId, final Short personnelId) {
         return createCenter(customerName, meeting, officeId, personnelId, getFees());
     }
 
@@ -349,14 +348,22 @@ public class TestObjectFactory {
         return address;
     }
 
-    public static GroupBO createGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
+    public static GroupBO createWeeklyFeeGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
             final CustomerBO parentCustomer) {
         Short formedBy = PersonnelConstants.SYSTEM_USER;
         return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(),
                 getFees(), formedBy, parentCustomer);
     }
 
-    public static GroupBO createGroupUnderCenterForTestGetLoanAccountsInActiveBadStanding(final String customerName,
+    public static GroupBO createNoFeeGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
+            final CustomerBO parentCustomer) {
+        Short formedBy = PersonnelConstants.SYSTEM_USER;
+        return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(),
+                null, formedBy, parentCustomer);
+    }
+
+    
+    public static GroupBO createWeeklyFeeGroupUnderCenterForTestGetLoanAccountsInActiveBadStanding(final String customerName,
             final CustomerStatus customerStatus, final CustomerBO parentCustomer) {
         Short formedBy = PersonnelConstants.TEST_USER;
         return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(),

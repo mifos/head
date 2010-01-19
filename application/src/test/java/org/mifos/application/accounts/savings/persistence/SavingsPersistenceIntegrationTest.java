@@ -362,8 +362,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void testGetMissedDeposits() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         savingsOffering = helper.createSavingsOffering("SavingPrd1", "wsed", Short.valueOf("1"), Short.valueOf("1"));
         ;
         savings = TestObjectFactory.createSavingsAccount("43245434", group, Short.valueOf("16"), new Date(System
@@ -388,8 +388,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void testGetMissedDepositsPaidAfterDueDate() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         savingsOffering = helper.createSavingsOffering("SavingPrd1", "cvfg", Short.valueOf("1"), Short.valueOf("1"));
         ;
         savings = TestObjectFactory.createSavingsAccount("43245434", group, Short.valueOf("16"), new Date(System
@@ -426,8 +426,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
     }
 

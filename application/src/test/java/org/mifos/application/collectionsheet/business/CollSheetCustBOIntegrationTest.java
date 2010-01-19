@@ -71,7 +71,7 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
         CollSheetCustBO collSheetCustBO = new CollSheetCustBO(getCurrency());
         MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
         TestObjectFactory.createMeeting(meeting);
-        CustomerBO centerBO = TestObjectFactory.createCenter("ash", meeting);
+        CustomerBO centerBO = TestObjectFactory.createWeeklyFeeCenter("ash", meeting);
         CustomerBO groupBO = TestObjectFactory.createClient("ashGrp", CustomerStatus.CLIENT_PARTIAL, centerBO);
         collSheetCustBO.populateCustomerDetails(groupBO);
        Assert.assertEquals("1.1.1", collSheetCustBO.getSearchId());
@@ -163,8 +163,8 @@ public class CollSheetCustBOIntegrationTest extends MifosIntegrationTestCase {
     private AccountBO createLoanAccount() {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center1", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);

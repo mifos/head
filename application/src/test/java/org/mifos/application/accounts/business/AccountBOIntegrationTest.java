@@ -464,7 +464,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     public void testGetPastInstallments() {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        CenterBO centerBO = TestObjectFactory.createCenter("Center_Active", meeting);
+        CenterBO centerBO = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
         StaticHibernateUtil.closeSession();
         centerBO = TestObjectFactory.getCenter(centerBO.getCustomerId());
         for (AccountActionDateEntity actionDate : centerBO.getCustomerAccount().getAccountActionDates()) {
@@ -481,7 +481,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     public void testGetAllInstallments() {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        CenterBO centerBO = TestObjectFactory.createCenter("Center_Active", meeting);
+        CenterBO centerBO = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
         StaticHibernateUtil.closeSession();
         centerBO = TestObjectFactory.getCenter(centerBO.getCustomerId());
 

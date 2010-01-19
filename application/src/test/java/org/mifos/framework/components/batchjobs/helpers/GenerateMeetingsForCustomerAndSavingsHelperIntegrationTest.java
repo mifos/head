@@ -132,8 +132,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
     public void testExecuteForSavingsAccountForGroup() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
         SavingsTestHelper helper = new SavingsTestHelper();
         savingsOffering = createSavingsOffering("dfasdasd1", "sad1", InterestCalcType.MINIMUM_BALANCE,
                 SavingsType.VOLUNTARY, TestGeneralLedgerCode.ASSETS, TestGeneralLedgerCode.CASH_AND_BANK_BALANCES,
@@ -166,8 +166,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private SavingsBO getSavingsAccountForCenter() throws Exception {

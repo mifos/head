@@ -266,8 +266,8 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     private void createInitialObjects(final Short officeId, final Short personnelId) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
 
-        center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting, officeId, personnelId);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
@@ -299,8 +299,8 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     private void createCustomers(final CustomerStatus groupStatus, final CustomerStatus clientStatus) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("group", groupStatus, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", groupStatus, center);
         client = TestObjectFactory.createClient("client", clientStatus, group, new Date());
     }
 

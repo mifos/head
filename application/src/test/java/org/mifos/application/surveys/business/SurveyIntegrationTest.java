@@ -151,7 +151,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
         StaticHibernateUtil.commitTransaction();
 
-        CenterBO center = TestObjectFactory.createCenter("centerName", meeting);
+        CenterBO center = TestObjectFactory.createWeeklyFeeCenter("centerName", meeting);
         meeting.setMeetingPlace("somewhere");
         SurveyInstance instance3 = new SurveyInstance();
         instance3.setCustomer(center);

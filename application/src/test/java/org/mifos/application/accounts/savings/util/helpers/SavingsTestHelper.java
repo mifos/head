@@ -132,7 +132,7 @@ public class SavingsTestHelper {
         meeting.setMeetingStartDate(new Date());
         meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
         TestObjectFactory.createMeeting(meeting);
-        return TestObjectFactory.createCenter("Center_Active_test", meeting);
+        return TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
     }
 
     public SavingsOfferingBO createSavingsOffering(String offeringName, String shortName) {

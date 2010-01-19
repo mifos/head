@@ -230,7 +230,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testFailureCreate_DuplicateName() throws Exception {
         String name = "Center";
-        center = TestObjectFactory.createCenter(name, getMeeting());
+        center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
         StaticHibernateUtil.closeSession();
 
         String externalId = "12345";
@@ -249,7 +249,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testFailureDuplicateName() throws Exception {
         String name = "Center";
-        center = TestObjectFactory.createCenter(name, getMeeting());
+        center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
         StaticHibernateUtil.closeSession();
 
         String externalId = "12345";
@@ -485,8 +485,8 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     private void createCustomers() throws Exception {
         meeting = new MeetingBO(WeekDay.THURSDAY, TestObjectFactory.EVERY_WEEK, new Date(),
                 MeetingType.CUSTOMER_MEETING, "Delhi");
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
                 center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }

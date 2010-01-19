@@ -110,8 +110,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     private LoanBO setUpLoan(DateTime dateTime, AccountState accountState) {
         Date startDate = dateTime.toDate();
         meeting = getNewMeeting(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING, WeekDay.MONDAY, startDate);
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         LoanOfferingBO product = TestObjectFactory.createLoanOffering("LoanProduct", "LP", startDate, meeting);
         LoanBO loan = createBasicLoanAccount(group, accountState, product, ""+loanAmount, numInstallments, interestRate);

@@ -143,10 +143,10 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
     public void testExcuteWithCustomerAccounts() throws NumberFormatException, SystemException, ApplicationException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", meeting);
-        GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        CenterBO center1 = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test1", meeting);
+        GroupBO group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
         client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
         ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
@@ -407,8 +407,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         meeting.setMeetingStartDate(new java.util.Date());
         meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
         TestObjectFactory.createMeeting(meeting);
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -429,8 +429,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         Date startDate = new Date(System.currentTimeMillis());
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         loanOfferingBO = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOfferingBO);
@@ -455,8 +455,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         SavingsTestHelper helper = new SavingsTestHelper();
         SavingsOfferingBO nonIndividualSavingsOffering = helper.createSavingsOffering("Client Saving Product", "nisp");
 
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
                 CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
                 CustomerStatus.CLIENT_ACTIVE, group);

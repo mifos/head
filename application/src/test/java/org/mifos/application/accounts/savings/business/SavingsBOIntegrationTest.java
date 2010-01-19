@@ -720,8 +720,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private SavingsBO createSavingsAccountPayment() throws Exception {
@@ -1932,7 +1932,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testSuccessfulSaveInApprovedState() throws Exception {
         center = helper.createCenter();
-        group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_CLOSED, group);
         client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd2", "sad2",
@@ -2142,7 +2142,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
         center = helper.createCenter();
-        group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
                 RecommendedAmountUnit.PER_INDIVIDUAL);
 
@@ -2171,8 +2171,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void testSuccessfulWithdraw() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = TestObjectFactory.createSavingsAccount("43245434", client1, Short.valueOf("16"), new Date(System
@@ -2197,8 +2197,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void testSuccessfulApplyPayment() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = TestObjectFactory.createSavingsAccount("43245434", client1, AccountStates.SAVINGS_ACC_INACTIVE,
@@ -2229,8 +2229,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void testSuccessfulDepositForCenterAccount() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = TestObjectFactory.createSavingsAccount("43245434", center, AccountStates.SAVINGS_ACC_APPROVED,
@@ -2304,8 +2304,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void testMaxWithdrawAmount() throws AccountException, Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = TestObjectFactory.createSavingsAccount("43245434", client1, Short.valueOf("16"), new Date(System
@@ -3074,8 +3074,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 new Date(System.currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0,
                 RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 200.0, 200.0, SavingsType.MANDATORY,
                 InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         savings = TestObjectFactory.createSavingsAccount("43245434", client1, Short.valueOf("16"), new Date(System
                 .currentTimeMillis()), savingsOffering);
@@ -3096,8 +3096,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         SavingsOfferingBO savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         savings = TestObjectFactory.createSavingsAccount("43245434", client1, Short.valueOf("16"), new Date(System
                 .currentTimeMillis()), savingsOffering);
@@ -3429,8 +3429,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private void createCustomerObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
     }
@@ -3848,8 +3848,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsBO getSavingAccount() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -4029,8 +4029,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
 
-        center = TestObjectFactory.createCenter("center1", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("center1", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 
         SavingsTestHelper SavingsTestHelper = new SavingsTestHelper();
 

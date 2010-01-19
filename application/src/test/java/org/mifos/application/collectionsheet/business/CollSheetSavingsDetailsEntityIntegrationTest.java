@@ -194,8 +194,8 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.GROUPS,
                 startDate, PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 200.0, 200.0,
                 savingsType, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         return TestObjectFactory.createSavingsAccount("43245434", client1, (short) 16, startDate, savingsOffering);
 

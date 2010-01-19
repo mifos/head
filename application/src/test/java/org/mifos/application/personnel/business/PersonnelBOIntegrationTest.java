@@ -715,8 +715,8 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
     private void createInitialObjects(Short officeId, Short personnelId) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
 
-        center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting, officeId, personnelId);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 

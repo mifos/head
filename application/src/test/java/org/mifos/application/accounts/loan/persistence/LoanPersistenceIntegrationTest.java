@@ -80,8 +80,8 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         loanPersistence = new LoanPersistence();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenterForTestGetLoanAccounts("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenterForTestGetLoanAccounts("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 
         loanAccount = getLoanAccount(group, meeting);
         badAccount = getBadAccount();

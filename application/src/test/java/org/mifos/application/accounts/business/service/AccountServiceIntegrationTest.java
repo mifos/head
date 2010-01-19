@@ -348,8 +348,8 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
@@ -408,7 +408,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
     private CustomerAccountBO getCustomerAccountWithAllTypesOfFees() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         CustomerAccountBO customerAccountBO = center.getCustomerAccount();
 
         CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) customerAccountBO

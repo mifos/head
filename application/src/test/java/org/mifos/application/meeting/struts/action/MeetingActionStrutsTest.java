@@ -546,7 +546,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulUpdateMeetingForCenter() throws Exception {
         MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new Date());
         center = createCenter(meeting);
-        group = TestObjectFactory.createGroupUnderCenter("myGroup", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("myGroup", CustomerStatus.GROUP_ACTIVE, center);
         StaticHibernateUtil.closeSession();
         String meetingPlace = "Delhi";
 
@@ -823,7 +823,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private CenterBO createCenter(MeetingBO meeting) throws Exception {
-        return TestObjectFactory.createCenter("Center1", meeting, Short.valueOf("3"), Short.valueOf("1"));
+        return TestObjectFactory.createWeeklyFeeCenter("Center1", meeting, Short.valueOf("3"), Short.valueOf("1"));
     }
 
     private GroupBO createGroupUnderBranch(MeetingBO meeting) throws Exception {

@@ -89,8 +89,8 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
     private LoanBO createLoanAccount() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("OffsetCenter", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("OffsetGroup1", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("OffsetCenter", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("OffsetGroup1", CustomerStatus.GROUP_ACTIVE, center);
 
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("OffsetLoan1", ApplicableTo.GROUPS,
                 new Date(System.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT,

@@ -173,7 +173,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
     private CenterBO createCenter(String name) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        return TestObjectFactory.createCenter(name, meeting);
+        return TestObjectFactory.createWeeklyFeeCenter(name, meeting);
     }
 
     private void createSavingProduct() {

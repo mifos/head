@@ -91,8 +91,8 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         long numberOfTransactions = getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
         // TODO: numberOfTransactions needs to be 0
        Assert.assertTrue("numberOfTransactions=" + numberOfTransactions + " should be less than: " + 5,

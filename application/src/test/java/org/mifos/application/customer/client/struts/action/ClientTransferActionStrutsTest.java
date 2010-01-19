@@ -301,10 +301,10 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
     private void createObjectsForTransferringClientInGroup() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        center1 = TestObjectFactory.createCenter("Center1", meeting1);
-        group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting1);
+        group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
         client = TestObjectFactory.createClient("Client11", CustomerStatus.CLIENT_ACTIVE, group);
         StaticHibernateUtil.closeSession();
     }

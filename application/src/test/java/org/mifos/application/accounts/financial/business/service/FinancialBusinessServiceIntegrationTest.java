@@ -162,8 +162,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     private LoanBO getLoanAccount() {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + "","FL",startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
@@ -340,8 +340,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     private void createInitialObjectsForSavings() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
         SavingsTestHelper helper = new SavingsTestHelper();
         savingsOffering = helper.createSavingsOffering("sav 1234", "cvf1", (short) 31, (short) 7);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,

@@ -288,7 +288,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     public void testGetWithoutClients() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         LoanOfferingBO loanOffering1 = getLoanOffering("vcxvxc", "a123", ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "get");
@@ -486,8 +486,8 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
 
     private void createInitialCustomers() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 }

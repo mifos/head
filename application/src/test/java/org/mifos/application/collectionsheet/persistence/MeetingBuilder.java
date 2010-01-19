@@ -25,7 +25,9 @@ import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
@@ -54,7 +56,15 @@ public class MeetingBuilder {
         
         return meeting;
     }
+    
+    public MeetingBO buildMonthlyFor(RankType rank, WeekDay weekDay) throws MeetingException {
+        return new MeetingBO(weekDay, rank, recurAfter, startDate, meetingType, meetingLocation);        
+    }
 
+    public MeetingBO buildMonthlyForDayNumber(int dayNumber) throws MeetingException {
+        return new MeetingBO((short)dayNumber, recurAfter, startDate, meetingType, meetingLocation);        
+    }
+    
     public MeetingBuilder weekly() {
         this.recurrenceType = RecurrenceType.WEEKLY;
         return this;

@@ -171,11 +171,11 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     private CenterBO createCenter(String name) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        return TestObjectFactory.createCenter(name, meeting);
+        return TestObjectFactory.createWeeklyFeeCenter(name, meeting);
     }
 
     private GroupBO createGroup(String groupName) {
-        return TestObjectFactory.createGroupUnderCenter(groupName, CustomerStatus.GROUP_ACTIVE, center);
+        return TestObjectFactory.createWeeklyFeeGroupUnderCenter(groupName, CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private ClientBO createClient(String clientName) {

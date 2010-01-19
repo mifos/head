@@ -481,8 +481,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 
@@ -856,8 +856,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 
@@ -921,8 +921,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 
@@ -1546,8 +1546,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 

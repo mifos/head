@@ -298,7 +298,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     public void testLoadCustomers() throws PageExpiredException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center_Active", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
 
         setRequestPathInfo("/collectionsheetaction.do");
         addRequestParameter("method", "loadCustomerList");
@@ -323,7 +323,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     public void testGetLastMeetingDateForCustomer() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center_Active", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
         setRequestPathInfo("/collectionsheetaction.do");
         addRequestParameter("method", "getLastMeetingDateForCustomer");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -368,8 +368,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         Date startDate = new Date(System.currentTimeMillis());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         account = getLoanAccount(group, meeting);
         Date currentDate = new Date(System.currentTimeMillis());
@@ -535,8 +535,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         Date startDate = new Date(System.currentTimeMillis());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(startDate, meeting);
         LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", ApplicableTo.CLIENTS,
@@ -647,8 +647,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(startDate, meeting);
         LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", startDate, meeting);

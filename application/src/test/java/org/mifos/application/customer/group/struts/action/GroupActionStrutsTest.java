@@ -967,13 +967,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createGroupWithCenter() throws Exception {
         createParentCustomer();
-        group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
         StaticHibernateUtil.closeSession();
     }
 
     private void createParentCustomer() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
     }
 
     private void createCenterWithoutFee() throws Exception {
@@ -986,7 +986,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createCustomers() {
         createParentCustomer();
-        group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         StaticHibernateUtil.closeSession();
     }

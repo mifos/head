@@ -106,7 +106,7 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     public void testGetListOfActiveParentsUnderLoanOfficer() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        CustomerBO center = TestObjectFactory.createCenter("Center_Active", meeting);
+        CustomerBO center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
         List<CustomerView> customers = masterService.getListOfActiveParentsUnderLoanOfficer(Short.valueOf("1"),
                 CustomerLevel.CENTER.getValue(), Short.valueOf("3"));
        Assert.assertEquals(1, customers.size());
@@ -116,7 +116,7 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     public void testGetListOfActiveParentsUnderLoanOfficerForInvalidConnection() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        CustomerBO center = TestObjectFactory.createCenter("Center_Active", meeting);
+        CustomerBO center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
         TestObjectFactory.simulateInvalidConnection();
         try {
             masterService.getListOfActiveParentsUnderLoanOfficer(Short.valueOf("1"), CustomerLevel.CENTER.getValue(),

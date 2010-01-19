@@ -134,8 +134,8 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     public void testGetActiveClientsUnderGroup() throws ServiceException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        CenterBO center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
         ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
         ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderGroup(group.getCustomerId());
@@ -149,8 +149,8 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     public void testGetActiveClientsUnderParent() throws ServiceException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        CenterBO center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
         ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
         ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderParent(center.getSearchId(), center
@@ -165,8 +165,8 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     public void testGetActiveClientsUnderParentforInvalidConnection() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        CenterBO center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
         ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
         ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
         TestObjectFactory.simulateInvalidConnection();

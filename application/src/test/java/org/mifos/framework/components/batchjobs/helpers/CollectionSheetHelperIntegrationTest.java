@@ -166,8 +166,8 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
     private void createInitialObjects() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY,
                 TestObjectFactory.EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {

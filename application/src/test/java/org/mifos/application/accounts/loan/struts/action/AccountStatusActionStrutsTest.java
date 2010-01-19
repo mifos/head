@@ -191,13 +191,13 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createParentCustomer() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
 
     }
 
     private void createCustomers() {
         createParentCustomer();
-        group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         StaticHibernateUtil.closeSession();
     }

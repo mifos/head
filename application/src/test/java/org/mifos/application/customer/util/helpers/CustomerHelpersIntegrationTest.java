@@ -167,6 +167,6 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
 
     private void createCenter() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
     }
 }

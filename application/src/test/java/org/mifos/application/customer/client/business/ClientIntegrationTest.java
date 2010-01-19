@@ -796,8 +796,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         MeetingBO meeting = new MeetingBO(Short.valueOf("2"), Short.valueOf("1"), new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING, "Bangalore");
-        center1 = TestObjectFactory.createCenter("Center1", meeting);
-        group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
+        center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting);
+        group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         client.setUserContext(TestUtils.makeUser());
@@ -1193,8 +1193,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"), new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING, "Bangalore");
-        center1 = TestObjectFactory.createCenter("Center1", meeting);
-        group1 = TestObjectFactory.createGroupUnderCenter("Group2", groupStatus, center1);
+        center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting);
+        group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", groupStatus, center1);
         StaticHibernateUtil.closeSession();
     }
 
@@ -1204,9 +1204,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
         StaticHibernateUtil.closeSession();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center1 = TestObjectFactory.createCenter("Center1", meeting, office.getOfficeId(),
+        center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting, office.getOfficeId(),
                 PersonnelConstants.SYSTEM_USER);
-        group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
+        group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
         StaticHibernateUtil.closeSession();
     }
 
@@ -1245,8 +1245,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     private void createInitialObjects() throws Exception {
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING, "Delhi");
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = createClient(CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.closeSession();
     }
@@ -1257,8 +1257,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     private void createParentObjects(CustomerStatus groupStatus) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", groupStatus, center);
         StaticHibernateUtil.closeSession();
     }
 

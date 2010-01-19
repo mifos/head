@@ -229,10 +229,10 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 
         MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
         TestObjectFactory.createMeeting(meeting);
-        CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
+        CustomerBO center = TestObjectFactory.createWeeklyFeeCenter("ashCenter", meeting);
 
         // TODO: Is CLIENT_PARTIAL right or should this be GROUP_PARTIAL?
-        CustomerBO group = TestObjectFactory.createGroupUnderCenter("ashGrp", CustomerStatus.CLIENT_PARTIAL, center);
+        CustomerBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("ashGrp", CustomerStatus.CLIENT_PARTIAL, center);
 
         CustomerBO client = TestObjectFactory.createClient("ash", CustomerStatus.CLIENT_PARTIAL, group);
 
@@ -258,9 +258,9 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 
         MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
         TestObjectFactory.createMeeting(meeting);
-        CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
+        CustomerBO center = TestObjectFactory.createWeeklyFeeCenter("ashCenter", meeting);
 
-        CustomerBO group = TestObjectFactory.createGroupUnderCenter("ashGrp", CustomerStatus.GROUP_ACTIVE, center);
+        CustomerBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("ashGrp", CustomerStatus.GROUP_ACTIVE, center);
 
         CustomerBO client = TestObjectFactory.createClient("ash", CustomerStatus.CLIENT_ACTIVE, group);
 
@@ -273,7 +273,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 
     private List<AccountActionDateEntity> getCustomerAccntDetails() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center1", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting);
         AccountBO accountBO = center.getCustomerAccount();
 
         List<AccountActionDateEntity> accntActionDates = getAccountActionDates(accountBO, (short) 1);
@@ -343,8 +343,8 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
     private AccountBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
@@ -391,8 +391,8 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.GROUPS,
                 startDate, PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 200.0, 200.0,
                 savingsType, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         return TestObjectFactory.createSavingsAccount("43245434", client, (short) 16, startDate, savingsOffering);
     }

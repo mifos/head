@@ -202,8 +202,8 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private void setUpClients() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + "_Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + "_Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + "_Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + "_Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient(this.getClass().getSimpleName() + "_Client", CustomerStatus.CLIENT_ACTIVE, group);
         client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + "_Client Two", CustomerStatus.CLIENT_ACTIVE, group);
     }

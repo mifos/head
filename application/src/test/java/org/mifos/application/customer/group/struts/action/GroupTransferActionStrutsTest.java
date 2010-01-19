@@ -379,7 +379,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 
     private CenterBO createCenter(String name, Short officeId) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        return TestObjectFactory.createCenter(name, meeting, officeId, personnelId);
+        return TestObjectFactory.createWeeklyFeeCenter(name, meeting, officeId, personnelId);
     }
 
     private OfficeBO createOffice() throws Exception {
@@ -388,7 +388,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private GroupBO createGroup(String name, CenterBO center) {
-        return TestObjectFactory.createGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
+        return TestObjectFactory.createWeeklyFeeGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
     }
 
 }

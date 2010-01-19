@@ -98,8 +98,8 @@ public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
@@ -108,8 +108,8 @@ public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     private LoanBO getLoanAccountInGoodStanding(AccountState state, Date startDate, int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center2 = TestObjectFactory.createCenter("Center2", meeting);
-        group2 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center2);
+        center2 = TestObjectFactory.createWeeklyFeeCenter("Center2", meeting);
+        group2 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center2);
 
         return TestObjectFactory.createLoanAccountWithDisbursement("888888", group2, state, startDate, loanBO
                 .getLoanOffering(), disbursalType);

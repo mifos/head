@@ -68,8 +68,8 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
         TestDatabase.resetMySQLDatabase();
         loanArrearTask = new LoanArrearsTask();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         loanAccount = getLoanAccount(group, meeting);
     }
 

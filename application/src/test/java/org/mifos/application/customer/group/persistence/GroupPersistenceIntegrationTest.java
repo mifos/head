@@ -153,19 +153,19 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private CenterBO createCenter(String name) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        return TestObjectFactory.createCenter(name, meeting);
+        return TestObjectFactory.createWeeklyFeeCenter(name, meeting);
     }
 
     private void createGroup() {
         center = createCenter();
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
         StaticHibernateUtil.closeSession();
 
     }
 
     private void createGroup_ON_HOLD_STATUS() {
         center = createCenter();
-        group = TestObjectFactory.createGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD, center);
         StaticHibernateUtil.closeSession();
 
     }

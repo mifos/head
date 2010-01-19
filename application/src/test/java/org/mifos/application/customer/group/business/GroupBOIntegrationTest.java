@@ -662,8 +662,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetActiveOnHoldChildrenOfGroup() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         client1 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_HOLD, group);
         client2 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group);
@@ -1197,7 +1197,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
 
     private void createCenter() {
         meeting = getMeeting();
-        center = TestObjectFactory.createCenter("Center", meeting);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
     }
 
     private CenterBO createCenter(String name) throws Exception {
@@ -1206,11 +1206,11 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
 
     private CenterBO createCenter(String name, Short officeId, WeekDay weekDay) throws Exception {
         meeting = new MeetingBO(weekDay, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-        return TestObjectFactory.createCenter(name, meeting, officeId, personnelId);
+        return TestObjectFactory.createWeeklyFeeCenter(name, meeting, officeId, personnelId);
     }
 
     private void createGroup(String name) {
-        group = TestObjectFactory.createGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private GroupBO createGroupUnderBranch(String name, CustomerStatus customerStatus) {
@@ -1301,7 +1301,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private GroupBO createGroup(String name, CenterBO center) {
-        return TestObjectFactory.createGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
+        return TestObjectFactory.createWeeklyFeeGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private OfficeBO createOffice() throws Exception {
@@ -1325,8 +1325,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loandsdasd", "fsad", startDate, meeting);
         account1 = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
@@ -1351,7 +1351,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private CenterBO createCenter(String name, MeetingBO meeting) {
-        return TestObjectFactory.createCenter(name, meeting, officeId3, personnelId);
+        return TestObjectFactory.createWeeklyFeeCenter(name, meeting, officeId3, personnelId);
     }
 
     private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate)
