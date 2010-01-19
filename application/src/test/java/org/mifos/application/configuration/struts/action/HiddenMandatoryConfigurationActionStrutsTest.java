@@ -166,6 +166,43 @@ public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrut
 
     }
 
+    public void testCityField() throws HibernateProcessException, PersistenceException {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideSystemCity", "0");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+
+        Assert.assertFalse(fieldConfig.isFieldHidden("Client.City"));
+        Assert.assertFalse(fieldConfig.isFieldHidden("Group.City"));
+        Assert.assertFalse(fieldConfig.isFieldHidden("Office.City"));
+        Assert.assertFalse(fieldConfig.isFieldHidden("Center.City"));
+
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideSystemCity", "1");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+
+        Assert.assertTrue(fieldConfig.isFieldHidden("Client.City"));
+        Assert.assertTrue(fieldConfig.isFieldHidden("Group.City"));
+        Assert.assertTrue(fieldConfig.isFieldHidden("Office.City"));
+        Assert.assertTrue(fieldConfig.isFieldHidden("Center.City"));
+    }
+
     public void testUpdate() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
