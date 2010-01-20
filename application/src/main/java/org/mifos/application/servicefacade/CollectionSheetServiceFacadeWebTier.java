@@ -233,12 +233,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         final SaveCollectionSheetDto saveCollectionSheet = new SaveCollectionSheetFromLegacyAssembler()
                 .fromWebTierLegacyStructuretoSaveCollectionSheetDto(previousCollectionSheetEntryDto, userId);
 
-        // TODO - jpw - development/testing aid.
-        // This to be taken out or changed to logger rather than sysprint before
-        // release
-        saveCollectionSheet.print();
-        saveCollectionSheet.printSummary();
-
         CollectionSheetErrorsView collectionSheetErrorsView = null;
         try {
             collectionSheetErrorsView = collectionSheetService.saveCollectionSheet(saveCollectionSheet);

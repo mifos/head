@@ -73,6 +73,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     public CollectionSheetErrorsView saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
             throws SaveCollectionSheetException {
 
+        saveCollectionSheet.printSummary();
         Long totalTime;
         Long totalTimeStart = System.currentTimeMillis();
         Long readTime;
