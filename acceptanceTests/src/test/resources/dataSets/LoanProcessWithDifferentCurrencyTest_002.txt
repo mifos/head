@@ -1,0 +1,8 @@
+Description:
+LoanProcessWithDifferentCurrencyTest_001.xml.zip 
+
+Added 
+Loan Accounts (Loan with Different Currency Product)
+ > Client-1-USD - 000100000000010 (Loan) - pending approval
+ > Client-2-USD - 000100000000011 (Loan) - pending approval
+ > Client-3-USD - 000100000000012 (Loan) - pending approval

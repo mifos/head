@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage.SubmitMultiCurrencyFormParameters;
@@ -50,7 +52,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
 
     private LoanTestHelper loanTestHelper;
-    
+
     private CustomPropertiesHelper propertiesHelper;
 
     @Autowired
@@ -67,20 +69,22 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
-        
+
         propertiesHelper = new CustomPropertiesHelper(selenium);
         propertiesHelper.setAdditionalCurrenciesCode("USD");
-        
-        String testDataSet = "acceptance_small_001_dbunit.xml.zip";
+
+        String testDataSet = "LoanProcessWithDifferentCurrencyTest_001.xml.zip";
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, testDataSet, dataSource, selenium);
-        
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009, 7, 11, 13, 0, 0, 0);
+
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
+                selenium);
+        DateTime targetTime = new DateTime(2010, 2, 15, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     @AfterMethod
     public void logOut() {
+        // clean additional currencies
         propertiesHelper.setAdditionalCurrenciesCode("");
         initRemote.reinitializeApplication(selenium);
         (new MifosPage(selenium)).logout();
@@ -90,10 +94,23 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void loanProcessWithDifferentCurrency() throws Exception {
         createWeeklyLoanProduct();
-        newWeeklyClientLoanAccount();
+        createLoanAccountOfDifferentCurrency("Client-1-USD");
+        createLoanAccountOfDifferentCurrency("Client-2-USD");
+        createLoanAccountOfDifferentCurrency("Client-3-USD");
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
+                "LoanProcessWithDifferentCurrencyTest_002.xml.zip", dataSource, selenium);
+
+        pendingApprovalToApplicationApproved("000100000000010");
+        pendingApprovalToApplicationApproved("000100000000011");
+        pendingApprovalToApplicationApproved("000100000000012");
+
+        disburseLoan("000100000000010");
+        disburseLoan("000100000000011");
+        disburseLoan("000100000000012");
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     private void createWeeklyLoanProduct() throws Exception {
         SubmitMultiCurrencyFormParameters formParameters = getWeeklyLoanProductParameters();
@@ -103,18 +120,43 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
     }
 
-    @SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "unused" })
+     @SuppressWarnings({ "PMD.SignatureDeclareThrowsException" })
     // one of the dependent methods throws Exception
-    private void newWeeklyClientLoanAccount() throws Exception {
+    private void createLoanAccountOfDifferentCurrency(String clientName) throws Exception {
         loanTestHelper = new LoanTestHelper(selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Veronica Abisya");
+        searchParameters.setSearchString(clientName);
         searchParameters.setLoanProduct("Loan With Different Currency");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+    }
+
+     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private void pendingApprovalToApplicationApproved(String loanAccountId) throws Exception {
+
+        EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
+        statusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        statusParameters.setNote("Loan With Different Currency Approved (Test)");
+
+        loanTestHelper.changeLoanAccountStatus(loanAccountId, statusParameters);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private void disburseLoan(String loanAccountId) throws Exception {
+
+        // account w/ id 000100000000029 has an approved but not disbursed loan.
+
+        DisburseLoanParameters params = new DisburseLoanParameters();
+
+        params.setDisbursalDateDD("11");
+        params.setDisbursalDateMM("02");
+        params.setDisbursalDateYYYY("2010");
+        params.setPaymentType(DisburseLoanParameters.CASH);
+
+        loanTestHelper.disburseLoan(loanAccountId, params);
     }
 
     private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
@@ -137,7 +179,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         formParameters.setMaxInterestRate("10");
         formParameters.setMinInterestRate("6");
         formParameters.setDefaultInterestRate("9");
-        formParameters.setFreqOfInstallments(SubmitFormParameters.WEEKS); 
+        formParameters.setFreqOfInstallments(SubmitFormParameters.WEEKS);
         formParameters.setMaxInstallments("10");
         formParameters.setDefInstallments("5");
         formParameters.setGracePeriodType(SubmitFormParameters.NONE);

@@ -1,0 +1,11 @@
+Description:
+Contains Two Center With different currencies
+Center-USD (all accounts of USD only)
+ - Group-1-USD
+   - Client-1-USD
+   - Client-2-USD
+ - Group-2-USD
+   - Client-3-USD
+Center-INR (all accounts of INR only)
+ - Group1
+  - Client-INR-1
