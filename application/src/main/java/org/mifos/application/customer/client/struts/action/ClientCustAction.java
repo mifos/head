@@ -83,6 +83,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -100,6 +101,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -662,8 +664,16 @@ public class ClientCustAction extends CustAction {
         clientBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         for (CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags())
             custFlag.getStatusFlag().setLocaleId(getUserContext(request).getLocaleId());
+        
+        // we would like to move away from sending business objects to the jsp page
+        // instead, load data into a data transfer object
+        ClientCustomerDto clientCustomerDto = loadClientCustomerDto(clientBO);
+        SessionUtils.removeAttribute("clientDetailsDto", request);
+        SessionUtils.setAttribute("clientDetailsDto", clientCustomerDto, request);
+        
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
+        
         request.getSession().setAttribute(Constants.BUSINESS_KEY, clientBO);
         request.removeAttribute(ClientConstants.AGE);
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(), request);
@@ -694,6 +704,17 @@ public class ClientCustAction extends CustAction {
                     SpouseFatherLookupEntity.class, getUserContext(request).getLocaleId()), request);
         }
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private ClientCustomerDto loadClientCustomerDto(ClientBO clientBO) {
+        ClientCustomerDto clientCustomerDto = new ClientCustomerDto();
+        try {
+            Money delinquentPortfolioAmount = clientBO.getClientPerformanceHistory().getDelinquentPortfolioAmount();
+            clientCustomerDto.setDelinquentPortfolioAmount(delinquentPortfolioAmount.toString());
+        } catch(CurrencyMismatchException e) {
+            clientCustomerDto.setDelinquentPortfolioAmount("Multiple Currencies");
+        }
+        return clientCustomerDto;
     }
 
     private void setPicture(ClientCustActionForm actionForm, ClientBO clientBO, HttpServletRequest request)

@@ -45,6 +45,9 @@ explanation of the license and how it is applied.
 </script>
 
 		<html-el:form action="clientCustAction.do">
+		<!-- The new way to send data is using a data transfer object -->
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientDetailsDto')}"
+			   var="clientDetailsDto" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerPerformance')}"
@@ -763,7 +766,7 @@ explanation of the license and how it is applied.
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
 								name="client.DeliquentPortfolio" bundle="ClientUIResources" />
 							<c:out
-								value="${BusinessKey.performanceHistory.delinquentPortfolioAmount}" /></span></td>
+								value="${clientDetailsDto.delinquentPortfolioAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message

@@ -39,6 +39,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
+import java.math.BigDecimal;
 
 public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
@@ -185,18 +186,30 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public Money getDelinquentPortfolioAmount() {
-        Money amountOverDue = new Money(getCurrency());
-        Money totalOutStandingAmount = new Money(getCurrency());
+        // we don't know what currency to use when we start totaling these
+        // so don't initialize them with a currency
+        Money amountOverDue = null;
+        Money totalOutStandingAmount = null;
         for (AccountBO accountBO : client.getAccounts()) {
             if (accountBO.isLoanAccount() && ((LoanBO) accountBO).isAccountActive()) {
-                amountOverDue = amountOverDue.add(((LoanBO) accountBO).getTotalPrincipalAmountInArrears());
-                totalOutStandingAmount = totalOutStandingAmount.add(((LoanBO) accountBO).getLoanSummary()
-                        .getOriginalPrincipal());
+                Money totalPrincipalAmountInArrears = ((LoanBO) accountBO).getTotalPrincipalAmountInArrears();
+                if (amountOverDue == null) {
+                    amountOverDue = totalPrincipalAmountInArrears; 
+                } else {
+                    amountOverDue = amountOverDue.add(totalPrincipalAmountInArrears);
+                }
+                Money originalPrincipal = ((LoanBO) accountBO).getLoanSummary().getOriginalPrincipal();
+                if (totalOutStandingAmount == null) {
+                    totalOutStandingAmount = originalPrincipal;
+                } else {
+                    totalOutStandingAmount = totalOutStandingAmount.add(originalPrincipal);
+                }
             }
         }
-        if (totalOutStandingAmount.getAmountDoubleValue() != 0.0)
-            return new Money(getCurrency(), String.valueOf(amountOverDue.getAmountDoubleValue()
-                    / totalOutStandingAmount.getAmountDoubleValue()));
+        // FIXME: this seems like it should just be returning a BigDecimal rather than a Money object
+        if (totalOutStandingAmount != null && !totalOutStandingAmount.getAmount().equals(BigDecimal.ZERO)) {
+            return new Money(amountOverDue.getCurrency(), amountOverDue.divide(totalOutStandingAmount));
+        }
         return new Money(getCurrency());
     }
 
