@@ -74,17 +74,21 @@ public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(22, entityMandatoryMap.size());
 
         List<FieldConfigurationEntity> listOfMandatoryFields = entityMandatoryMap.get(Short.valueOf("22"));
-       Assert.assertEquals(1, listOfMandatoryFields.size());
+       Assert.assertEquals(2, listOfMandatoryFields.size());
 
         List<FieldConfigurationEntity> listOfFields = fieldConfig.getEntityFieldMap().get(Short.valueOf("22"));
-       Assert.assertEquals(5, listOfFields.size());
+       Assert.assertEquals(6, listOfFields.size());
 
         for (FieldConfigurationEntity fieldConfigurationEntity : listOfMandatoryFields) {
-           Assert.assertEquals(fieldConfigurationEntity.getFieldName(), "PurposeOfLoan");
+            Assert.assertTrue("PurposeOfLoan".equals(fieldConfigurationEntity.getFieldName()) ||
+                    "SourceOfFund".equals(fieldConfigurationEntity.getFieldName()));
         }
 
-       Assert.assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"), false);
-       Assert.assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"), true);
+        Assert.assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"), false);
+        Assert.assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"), true);
+
+        Assert.assertEquals(fieldConfig.isFieldHidden("Loan.SourceOfFund"), false);
+        Assert.assertEquals(fieldConfig.isFieldManadatory("Loan.SourceOfFund"), true);
 
         fieldConfig.getEntityFieldMap().clear();
         fieldConfig.getEntityMandatoryFieldMap().clear();

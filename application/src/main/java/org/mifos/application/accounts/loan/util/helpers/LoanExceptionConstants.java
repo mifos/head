@@ -49,5 +49,6 @@ public interface LoanExceptionConstants {
     public final String SUM_OF_INDIVIDUAL_AMOUNTS_IS_NOT_IN_THE_RANGE_OF_ALLOWED_AMOUNTS = "errors.sumofindividualamountsisnotintherangeofallowedamounts";
     public final String CUSTOMER_LOAN_AMOUNT_FIELD = "errors.individualamountfield";
     public final String CUSTOMER_PURPOSE_OF_LOAN_FIELD = "errors.individualpurposeofloanfield";
+    public final String CUSTOMER_SOURCE_OF_FUND_FIELD = "errors.individualsourceoffundfield";
     public final String REPAYMENTDAYISREQUIRED = "errors.repaymentDayIsRequired";
 }

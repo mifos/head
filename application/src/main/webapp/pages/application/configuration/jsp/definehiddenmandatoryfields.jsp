@@ -411,6 +411,19 @@ explanation of the license and how it is applied.
 									<html-el:checkbox property="mandatoryLoanAccountPurpose" value="1"/>
 								</td>
 							</tr>
+
+                            <tr>
+								<td class="drawtablerow">
+									<mifos:mifoslabel name="configuration.source_fund" />
+								</td>
+								<td class="drawtablerow">
+									&nbsp;
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="mandatoryLoanSourceOfFund" value="1"/>
+								</td>
+							</tr>
+
 							<tr>
 								<td class="drawtablerow">
 									&nbsp;

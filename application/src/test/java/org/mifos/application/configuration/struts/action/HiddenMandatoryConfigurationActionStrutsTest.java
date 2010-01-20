@@ -337,4 +337,34 @@ public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrut
         verifyForward(ActionForwards.update_failure.toString());
     }
 
+    public void testSourceOfFundField() throws HibernateProcessException, PersistenceException {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("mandatoryLoanSourceOfFund", "0");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Loan.SourceOfFund"));
+
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("mandatoryLoanSourceOfFund", "1");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Loan.SourceOfFund"));
+    }
 }

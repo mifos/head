@@ -46,7 +46,7 @@ public class FieldConfigurationPersistenceIntegrationTest extends MifosIntegrati
     public void testGetListOfFields() throws NumberFormatException, PersistenceException {
         List<FieldConfigurationEntity> fieldList = fieldConfigurationPersistence.getListOfFields(EntityType.LOAN
                 .getValue());
-       Assert.assertEquals(5, fieldList.size());
+       Assert.assertEquals(6, fieldList.size());
     }
 
 }

@@ -475,10 +475,10 @@ explanation of the license and how it is applied.
 										name="loan.inst" /></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right" class="fontnormal"><span
-										class="mandatorytext"></span> <mifos:mifoslabel
-										name="loan.source_fund" isColonRequired="yes"/></td>
-									<td valign="top"><mifos:select property="loanOfferingFund">
+									<td align="right" class="fontnormal"><mifos:mifoslabel
+											keyhm="Loan.SourceOfFund"
+											name="loan.source_fund" isColonRequired="yes"/></td>
+									<td valign="top"><mifos:select keyhm="Loan.SourceOfFund" property="loanOfferingFund">
 										<c:forEach var="loanfund"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanfunds')}">
 											<html-el:option value="${loanfund.fundId}">${loanfund.fundName}</html-el:option>

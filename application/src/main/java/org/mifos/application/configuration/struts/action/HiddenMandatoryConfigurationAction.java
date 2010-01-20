@@ -190,9 +190,10 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             // TODO: move to a new method with other loan account field updates
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryLoanAccountPurpose()), fieldConfiguration
                     .getHiddenFlag());
-        }
-
-        else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.COLLATERAL_TYPE)
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.SOURCE_OF_FUND)) {
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryLoanSourceOfFund()), fieldConfiguration
+                    .getHiddenFlag());
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.COLLATERAL_TYPE)
                 || fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.COLLATERAL_NOTES)) {
             fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(), getShortValue(actionForm
                     .getHideSystemCollateralTypeNotes()));
@@ -439,9 +440,9 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             actionForm.setHideSystemReceiptIdDate(getStringValue(fieldConfiguration.getHiddenFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.PURPOSE_OF_LOAN)) {
             actionForm.setMandatoryLoanAccountPurpose(getStringValue(fieldConfiguration.getMandatoryFlag()));
-        }
-
-        else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.COLLATERAL_TYPE)) {
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.SOURCE_OF_FUND)) {
+            actionForm.setMandatoryLoanSourceOfFund(getStringValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.COLLATERAL_TYPE)) {
             actionForm.setHideSystemCollateralTypeNotes(getStringValue(fieldConfiguration.getHiddenFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
             actionForm.setMandatorySystemAddress1(getStringValue(fieldConfiguration.getMandatoryFlag()));

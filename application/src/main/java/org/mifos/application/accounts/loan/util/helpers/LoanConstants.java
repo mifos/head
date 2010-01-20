@@ -195,6 +195,7 @@ public interface LoanConstants {
 
     // Configurable mandatory fields
     public final String PURPOSE_OF_LOAN = "PurposeOfLoan";
+    public final String SOURCE_OF_FUND = "SourceOfFund";
     public final String DISPLAY_DAY_NUMBER = "displayDayNumber";
     public final String LOANACCOUNT = "loanBO";
     public static final String LOAN_ACCOUNT_OWNER_IS_GROUP_YES = "yes";

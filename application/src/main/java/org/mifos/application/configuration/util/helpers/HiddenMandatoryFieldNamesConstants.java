@@ -42,6 +42,8 @@ public interface HiddenMandatoryFieldNamesConstants {
 
     public static final String PURPOSE_OF_LOAN = "PurposeOfLoan";
 
+    public static final String SOURCE_OF_FUND = "SourceOfFund";
+
     public static final String COLLATERAL_NOTES = "CollateralNotes";
 
     public static final String ASSIGN_CLIENTS = "AssignClients";

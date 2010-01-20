@@ -183,6 +183,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         schedulePreviewPageParams.put("disbursementDate", disbursementDate);
         schedulePreviewPageParams.put("gracePeriodDuration", "1");
         schedulePreviewPageParams.put("businessActivityId", "1");
+        schedulePreviewPageParams.put("loanOfferingFund", "1");
     }
 
     private void createPayment(LoanBO loan, Money amountPaid) throws Exception {
@@ -472,6 +473,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getAttribute("UserContext")).getPreferredLocale()));
         addRequestParameter("gracePeriodDuration", "1");
         addRequestParameter("businessActivityId", "1");
+        addRequestParameter("loanOfferingFund", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(LoanConstants.CUSTOM_FIELDS, request);
@@ -896,6 +898,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getAttribute("UserContext")).getPreferredLocale()));
         addRequestParameter("gracePeriodDuration", "1");
         addRequestParameter("businessActivityId", "1");
+        addRequestParameter("loanOfferingFund", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(LoanConstants.CUSTOM_FIELDS, request);
@@ -921,10 +924,12 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         schedulePreviewPageParams.put("noOfInstallments", "");
         schedulePreviewPageParams.put("gracePeriodDuration", "");
         schedulePreviewPageParams.put("disbursementDate", "");
+        schedulePreviewPageParams.put("loanOfferingFund", "");
         jumpToSchedulePreview();
         actionPerform();
         verifyActionErrors(new String[] { "errors.defMinMax", "errors.defMinMax", "errors.defMinMax",
-                "errors.validandmandatory", "errors.graceper", "errors.generic", "errors.generic" });
+                "errors.validandmandatory", "errors.graceper", "errors.generic", "errors.generic",
+                "errors.individualsourceoffundfield" });
         verifyInputForward();
     }
 
@@ -1458,6 +1463,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getAttribute("UserContext")).getPreferredLocale()));
         schedulePreviewPageParams.put("gracePeriodDuration", "1");
         schedulePreviewPageParams.put("businessActivityId", "1");
+        schedulePreviewPageParams.put("loanOfferingFund", "1");
 
     }
 

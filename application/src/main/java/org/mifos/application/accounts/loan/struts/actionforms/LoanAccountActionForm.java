@@ -711,6 +711,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         performGlimSpecificValidations(errors, request);
         validateRepaymentDayRequired(errors);
         validatePurposeOfLoanFields(errors, getMandatoryFields(request));
+        validateSourceOfFundFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale);
         validateInterest(errors, locale);
         validateDefaultFee(errors, locale);
@@ -804,9 +805,19 @@ public class LoanAccountActionForm extends BaseActionForm {
         addError(errors, LoanExceptionConstants.CUSTOMER_PURPOSE_OF_LOAN_FIELD);
     }
 
+    private void addErrorInvalidSource(ActionErrors errors) {
+        addError(errors, LoanExceptionConstants.CUSTOMER_SOURCE_OF_FUND_FIELD);
+    }
+
     private void validatePurposeOfLoanFields(ActionErrors errors, List<FieldConfigurationEntity> mandatoryFields) {
         if (isPurposeOfLoanMandatory(mandatoryFields) && StringUtils.isBlank(getBusinessActivityId())) {
             addErrorInvalidPurpose(errors);
+        }
+    }
+
+    private void validateSourceOfFundFields(ActionErrors errors, List<FieldConfigurationEntity> mandatoryFields) {
+        if (isSourceOfFundMandatory(mandatoryFields) && StringUtils.isBlank(getLoanOfferingFund())) {
+            addErrorInvalidSource(errors);
         }
     }
 
@@ -1105,6 +1116,19 @@ public class LoanAccountActionForm extends BaseActionForm {
         for (FieldConfigurationEntity entity : mandatoryfieldList) {
 
             if (entity.getFieldName().equalsIgnoreCase(LoanConstants.PURPOSE_OF_LOAN)) {
+                isMandatory = true;
+                break;
+            }
+        }
+        return isMandatory;
+    }
+
+    private boolean isSourceOfFundMandatory(List<FieldConfigurationEntity> mandatoryfieldList) {
+        boolean isMandatory = false;
+
+        for (FieldConfigurationEntity entity : mandatoryfieldList) {
+
+            if (entity.getFieldName().equalsIgnoreCase(LoanConstants.SOURCE_OF_FUND)) {
                 isMandatory = true;
                 break;
             }

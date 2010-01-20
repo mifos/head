@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(229);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(230);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3419,6 +3419,8 @@ INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_F
 VALUES(78,'Address1',17,0,0);
 INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)
 VALUES(79,'City',15,0,0);
+INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)
+VALUES(80,'SourceOfFund',22,0,0);
 
 
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
