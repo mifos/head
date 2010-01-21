@@ -1098,14 +1098,6 @@
 					<var-value>((*this* != null) or ((input!="getPrdOfferings") and (input!="preview")))</var-value>
 				</var>
 			</field>
-			<field property="recommendedAmntDoubleValue" depends="decimalFormat">
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="SavingsUIResources" />
-				<arg key="Savings.recommendedAmntDoubleValue" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-			</field>
 		</form>
 
 		<!-- Repay Loan -->
