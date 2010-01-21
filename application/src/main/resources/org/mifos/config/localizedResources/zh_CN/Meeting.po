@@ -5,14 +5,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-07 10:59+1100\n"
+"POT-Creation-Date: 2010-01-20 20:33-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.5.1\n"
+"X-Generator: Translate Toolkit 1.2.1\n"
 "X-Accelerator-Marker: &\n"
 
 #: error.activity.not.allowed
@@ -136,11 +136,11 @@ msgid "of every"
 msgstr ""
 
 #: meeting.labelPlaceOfMeeting
-msgid "Location of meeting:"
+msgid "Location of meeting\\:"
 msgstr ""
 
 #: meeting.labelRecurDays
-msgid "If days, specify the recurrence:"
+msgid "If days, specify the recurrence\\:"
 msgstr ""
 
 #: meeting.labelRecurEvery
@@ -148,15 +148,15 @@ msgid "Recur every"
 msgstr ""
 
 #: meeting.labelRecurMonths
-msgid "If months, select between the following:"
+msgid "If months, select between the following\\:"
 msgstr ""
 
 #: meeting.labelRecurWeeks
-msgid "If weeks, specify the following:"
+msgid "If weeks, specify the following\\:"
 msgstr ""
 
 #: meeting.labelRepaymentDay
-msgid "Repayment day:"
+msgid "Repayment day\\:"
 msgstr ""
 
 #: meeting.labelThe
@@ -168,7 +168,7 @@ msgid "week(s) on"
 msgstr ""
 
 #: meeting.labelmeetingschedule&groupMembership
-msgid "Meeting schedule & Group Membership:"
+msgid "Meeting schedule & Group Membership\\:"
 msgstr ""
 
 #: meeting.monthDay.number

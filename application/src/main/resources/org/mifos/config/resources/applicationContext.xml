@@ -16,6 +16,7 @@
                 <value>org/mifos/config/localizedResources/LookupValueMessages</value>
                 <value>org/mifos/config/localizedResources/MessageLookupMessages</value>
                 <value>org/mifos/config/localizedResources/reporterrors</value>
+                <value>org/mifos/config/localizedResources/SharedMessages</value>
             </list>
         </property>
     </bean>

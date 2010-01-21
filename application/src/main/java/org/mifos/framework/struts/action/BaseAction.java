@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -393,4 +394,9 @@ public abstract class BaseAction extends DispatchAction {
         return mapping.findForward(ActionForwards.welcome.toString());
     }
 
+    protected String localizedMessageLookup(String key) {
+        return MessageLookup.getInstance().lookup(key);
+    }
+    
+    
 }

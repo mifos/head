@@ -632,7 +632,12 @@ public abstract class CustomerBO extends BusinessObject {
         if (accounts != null) {
             for (AccountBO account : getAccounts()) {
                 if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
-                    amount = amount.add(((LoanBO) account).getRemainingPrincipalAmount());
+                    Money remainingPrincipalAmount = ((LoanBO) account).getRemainingPrincipalAmount();
+                    if (amount.getAmount().equals(BigDecimal.ZERO)) {
+                        amount = remainingPrincipalAmount;
+                    } else {
+                        amount = amount.add(remainingPrincipalAmount);
+                    }
                 }
             }
         }

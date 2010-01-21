@@ -667,9 +667,9 @@ public class ClientCustAction extends CustAction {
         
         // we would like to move away from sending business objects to the jsp page
         // instead, load data into a data transfer object
-        ClientCustomerDto clientCustomerDto = loadClientCustomerDto(clientBO);
+        ClientInformationDto clientInformationDto = loadClientInformationDto(clientBO);
         SessionUtils.removeAttribute("clientDetailsDto", request);
-        SessionUtils.setAttribute("clientDetailsDto", clientCustomerDto, request);
+        SessionUtils.setAttribute("clientDetailsDto", clientInformationDto, request);
         
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
@@ -706,15 +706,15 @@ public class ClientCustAction extends CustAction {
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
-    private ClientCustomerDto loadClientCustomerDto(ClientBO clientBO) {
-        ClientCustomerDto clientCustomerDto = new ClientCustomerDto();
+    private ClientInformationDto loadClientInformationDto(ClientBO clientBO) {
+        ClientInformationDto clientInformationDto = new ClientInformationDto();
         try {
             Money delinquentPortfolioAmount = clientBO.getClientPerformanceHistory().getDelinquentPortfolioAmount();
-            clientCustomerDto.setDelinquentPortfolioAmount(delinquentPortfolioAmount.toString());
+            clientInformationDto.setDelinquentPortfolioAmount(delinquentPortfolioAmount.toString());
         } catch(CurrencyMismatchException e) {
-            clientCustomerDto.setDelinquentPortfolioAmount("Multiple Currencies");
+            clientInformationDto.setDelinquentPortfolioAmount(localizedMessageLookup("errors.multipleCurrencies"));
         }
-        return clientCustomerDto;
+        return clientInformationDto;
     }
 
     private void setPicture(ClientCustActionForm actionForm, ClientBO clientBO, HttpServletRequest request)

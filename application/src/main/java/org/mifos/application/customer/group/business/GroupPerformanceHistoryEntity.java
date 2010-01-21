@@ -25,6 +25,7 @@ import static org.mifos.framework.util.CollectionUtils.find;
 import static org.mifos.framework.util.CollectionUtils.select;
 import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -212,13 +213,18 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amountForActiveAccount = amountForActiveAccount.add(client.getOutstandingLoanAmount(getCurrency()));
+                Money outstandingLoanAmount = client.getOutstandingLoanAmount(getCurrency());
+                if (amountForActiveAccount.getAmount().equals(BigDecimal.ZERO)) {
+                    amountForActiveAccount = outstandingLoanAmount;
+                } else {
+                    amountForActiveAccount = amountForActiveAccount.add(outstandingLoanAmount);
+                }
                 countOfActiveLoans += client.getActiveLoanCounts();
             }
         }
-        if (countOfActiveLoans.intValue() > 0)
-            return new Money(getCurrency(), String.valueOf(amountForActiveAccount.getAmountDoubleValue()
-                    / countOfActiveLoans.intValue()));
+        if (countOfActiveLoans.intValue() > 0) {
+            return amountForActiveAccount.divide(countOfActiveLoans);
+        }
         return new Money(getCurrency());
     }
 
@@ -232,18 +238,17 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     public Money getTotalOutStandingLoanAmount() throws CustomerException {
         Money amount = group.getOutstandingLoanAmount(getCurrency());
-        // System.out.println("group outstanding amount: " + amount.toString());
-        Money clientAmount = new Money(getCurrency());
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amount = amount.add(client.getOutstandingLoanAmount(getCurrency()));
-                clientAmount = clientAmount.add(client.getOutstandingLoanAmount(getCurrency()));
+                Money outstandingLoanAmount = client.getOutstandingLoanAmount(getCurrency());
+                if (amount.getAmount().equals(BigDecimal.ZERO)) {
+                    amount = outstandingLoanAmount;
+                } else {
+                    amount = amount.add(outstandingLoanAmount);
+                }
             }
         }
-        // System.out.println("client outstanding amount: " +
-        // clientAmount.toString());
-
         return amount;
     }
 
@@ -252,7 +257,12 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amount = amount.add(client.getSavingsBalance(getCurrency()));
+                Money savingsBalance = client.getSavingsBalance(getCurrency());
+                if (amount.getAmount().equals(BigDecimal.ZERO)) {
+                    amount = savingsBalance;
+                } else {
+                    amount = amount.add(savingsBalance);                    
+                }
             }
         }
         return amount;
@@ -269,7 +279,12 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
                 LoanBO loan = (LoanBO) account;
                 if (loan.hasPortfolioAtRisk()) {
-                    amount = amount.add(loan.getRemainingPrincipalAmount());
+                    Money remainingPrincipal = loan.getRemainingPrincipalAmount();
+                    if (amount.getAmount().equals(BigDecimal.ZERO)) {
+                        amount = remainingPrincipal;
+                    } else {
+                        amount = amount.add(remainingPrincipal);
+                    }
                 }
             }
         }
@@ -283,12 +298,18 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
         List<CustomerBO> clients = getChildren();
         if (clients != null) {
             for (CustomerBO client : clients) {
-                amount = amount.add(getBalanceForAccountsAtRisk(client));
+                Money balanceAtRisk = getBalanceForAccountsAtRisk(client);
+                if (amount.getAmount().equals(BigDecimal.ZERO)) {
+                    amount = balanceAtRisk;                    
+                } else {                    
+                    amount = amount.add(balanceAtRisk);
+                }
             }
         }
-        double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
-        if (totalOutstandingLoanAmount != 0.0)
-            setPortfolioAtRisk(new Money(getCurrency(), String.valueOf(amount.getAmountDoubleValue() / totalOutstandingLoanAmount)));
+        Money totalOutstandingLoanAmount = getTotalOutStandingLoanAmount();
+        if (!totalOutstandingLoanAmount.getAmount().equals(BigDecimal.ZERO)) {
+            setPortfolioAtRisk(new Money(amount.getCurrency(), amount.divide(totalOutstandingLoanAmount)));
+        }
     }
 
     private List<CustomerBO> getChildren() throws CustomerException {

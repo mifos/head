@@ -27,7 +27,7 @@ import org.mifos.framework.business.service.DataTransferObject;
  * on the viewClientDetails page.
  *
  */
-public class ClientCustomerDto implements DataTransferObject {
+public class ClientInformationDto implements DataTransferObject {
     private String delinquentPortfolioAmount;
 
     public String getDelinquentPortfolioAmount() {

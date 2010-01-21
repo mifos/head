@@ -39,6 +39,9 @@ explanation of the license and how it is applied.
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
+			<c:set 
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupInformationDto')}"
+			   	var="groupInformationDto" />			
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><customtags:headerLink
@@ -668,7 +671,7 @@ explanation of the license and how it is applied.
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>   
 								<c:out
-								value="${BusinessKey.performanceHistory.avgLoanAmountForMember}" /></span></td>
+								value="${groupInformationDto.avgLoanAmountForMember}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> 
@@ -677,19 +680,19 @@ explanation of the license and how it is applied.
 					</fmt:message>    
 								
 								<c:out
-								value="${BusinessKey.performanceHistory.totalOutStandingLoanAmount}" /></span></td>
+								value="${groupInformationDto.totalOutStandingLoanAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.PortfolioAtRisk" bundle="GroupUIResources" /> <c:out
-								value="${BusinessKey.performanceHistory.portfolioAtRisk}" /></span></td>
+								value="${groupInformationDto.portfolioAtRisk}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
 							<c:out
-								value="${BusinessKey.performanceHistory.totalSavingsAmount}" /></span></td>
+								value="${groupInformationDto.totalSavingsAmount}" /></span></td>
 						</tr>
 						<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
 							<tr>
