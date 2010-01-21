@@ -223,49 +223,7 @@
 				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
 				<arg0 key="product.applfor" />
 			</field>
-			<!--<field property="minLoanAmount" depends="required,double,decimalFormat">
-				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
-				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
-				<arg key="product.minloanamt" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-			</field>
-			<field property="maxLoanAmount" depends="required,double,decimalFormat">
-				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
-				<msg name="validwhen" key="errors.maxMin" bundle="ProductDefUIResources" />
-				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
-				<arg0 key="product.maxloanamt" />
-				<arg1 key="product.minloanamt" />
-				<var>
-					<var-name>test</var-name>
-					<var-value>(*this* >=minLoanAmount)</var-value>
-				</var>
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-			</field>
-			<field property="defaultLoanAmount" depends="double,decimalFormat">
-				<msg name="validwhen" key="errors.defMinMax" bundle="ProductDefUIResources" />
-				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
-				<arg0 key="product.defamt" />
-				<arg1 key="product.minloanamt" />
-				<arg2 key="product.maxloanamt" />
-				<var>
-					<var-name>test</var-name>
-					<var-value>((*this* ==null) or ((*this* >= minLoanAmount) and (maxLoanAmount >=*this* )))</var-value>
-				</var>
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-			</field>
-			--><field property="freqOfInstallments" depends="required">
+			<field property="freqOfInstallments" depends="required">
 				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
 				<arg key="product.freqofinst" />
 			</field>
@@ -278,55 +236,7 @@
 					<var-value>(*this* > 0)</var-value>
 				</var>
 			</field>
-			<!--<field property="maxNoInstallments" depends="required,validwhen,integer,decimalFormat">
-				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
-				<msg name="validwhen" key="errors.maxMin" bundle="ProductDefUIResources" />
-				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
-				<arg0 key="product.maxinst" />
-				<arg1 key="product.mininst" />
-				<var>
-					<var-name>test</var-name>
-					<var-value>(*this* >=minNoInstallments)</var-value>
-				</var>
-				<var>
-					<var-name>format</var-name>
-					<var-value>(4,0)</var-value>
-				</var>
-			</field>
-			<field property="minNoInstallments" depends="required,validwhen,integer,decimalFormat">
-				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
-				<msg name="validwhen" key="errors.greaterthanzero" bundle="ProductDefUIResources" />
-				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
-				<arg key="product.mininst" />
-				<var>
-					<var-name>test</var-name>
-					<var-value>(*this* > 0)</var-value>
-				</var>
-				<var>
-					<var-name>format</var-name>
-					<var-value>(4,0)</var-value>
-				</var>
-			</field>
-			<field property="defNoInstallments" depends="required,validwhen,integer,decimalFormat">
-				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
-				<msg name="validwhen" key="errors.defMinMax" bundle="ProductDefUIResources" />
-				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
-				<arg0 key="product.definst" />
-				<arg1 key="product.mininst" />
-				<arg2 key="product.maxinst" />
-				<var>
-					<var-name>test</var-name>
-					<var-value>((*this* >= minNoInstallments) and (maxNoInstallments >=*this* ))</var-value>
-				</var>
-				<var>
-					<var-name>format</var-name>
-					<var-value>(4,0)</var-value>
-				</var>
-			</field>
-			--><field property="gracePeriodDuration" depends="validwhen,integer">
+			<field property="gracePeriodDuration" depends="validwhen,integer">
 				<msg name="validwhen" key="errors.graceperioddur" bundle="ProductDefUIResources" />
 				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
 				<arg0 key="product.graceperdur" />
