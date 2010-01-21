@@ -973,6 +973,23 @@
             </plugin>
             <plugin>
                 <groupId>org.mifos.maven</groupId>
+                <artifactId>mifos-pseudoloc-gen</artifactId>
+                <version>0.0.1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>pseudolocalize</goal>
+                        </goals>
+                        <configuration>
+                            <inputDirectory>src/main/resources/org/mifos/config/localizedResources</inputDirectory>
+                            <outputDirectory>target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-settings-sanitizer</artifactId>
                 <version>0.0.1</version>
                 <executions>
