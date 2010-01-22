@@ -30,14 +30,14 @@ public class CenterPerformanceHistory implements Serializable {
 
     private final Integer numberOfClients;
 
-    private final Money totalOutstandingPortfolio;
+    private final String totalOutstandingPortfolio;
 
-    private final Money totalSavings;
+    private final String totalSavings;
 
-    private final Money portfolioAtRisk;
+    private final String portfolioAtRisk;
 
-    public CenterPerformanceHistory(Integer numberOfGroups, Integer numberOfClients, Money totalOutstandingPortfolio,
-            Money totalSavings, Money portfolioAtRisk) {
+    public CenterPerformanceHistory(Integer numberOfGroups, Integer numberOfClients, String totalOutstandingPortfolio,
+            String totalSavings, String portfolioAtRisk) {
         this.numberOfGroups = numberOfGroups;
         this.numberOfClients = numberOfClients;
         this.totalOutstandingPortfolio = totalOutstandingPortfolio;
@@ -53,15 +53,15 @@ public class CenterPerformanceHistory implements Serializable {
         return numberOfGroups;
     }
 
-    public Money getTotalOutstandingPortfolio() {
+    public String getTotalOutstandingPortfolio() {
         return totalOutstandingPortfolio;
     }
 
-    public Money getTotalSavings() {
+    public String getTotalSavings() {
         return totalSavings;
     }
 
-    public Money getPortfolioAtRisk() {
+    public String getPortfolioAtRisk() {
         return portfolioAtRisk;
     }
 }

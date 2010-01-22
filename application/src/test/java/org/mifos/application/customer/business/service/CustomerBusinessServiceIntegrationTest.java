@@ -212,14 +212,8 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         TestObjectFactory.updateObject(client3);
         client3 = TestObjectFactory.getClient(client3.getCustomerId());
 
-        try {
-            service.getCenterPerformanceHistory(center.getSearchId(), center.getOffice().getOfficeId());
-            fail("CurrencyMismatchException should have been thrown.");
-        } catch (CurrencyMismatchException e) {
-            assertNotNull(e);
-        } catch (Exception e) {
-            fail("CurrencyMismatchException should have been thrown.");
-        }
+        CenterPerformanceHistory centerPerformanceHistory = service.getCenterPerformanceHistory(center.getSearchId(), center.getOffice().getOfficeId());
+        assertEquals("<Multiple Currencies>", centerPerformanceHistory.getTotalOutstandingPortfolio());
 
         account1 = (AccountBO) (StaticHibernateUtil.getSessionTL().get(AccountBO.class, Integer.valueOf(account1
                 .getAccountId())));
@@ -532,9 +526,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     public void testGetCenterPerformanceHistory() throws Exception {
-        Money totalLoan = new Money(getCurrency());
-        Money totalSavings = new Money(getCurrency());
-        Money totalPortfolioAtRisk = new Money(getCurrency());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -572,9 +563,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
 
         CenterPerformanceHistory centerPerformanceHistory = service.getCenterPerformanceHistory(center.getSearchId(),
                 center.getOffice().getOfficeId());
-        totalLoan = centerPerformanceHistory.getTotalOutstandingPortfolio();
-        totalSavings = centerPerformanceHistory.getTotalSavings();
-        totalPortfolioAtRisk = centerPerformanceHistory.getPortfolioAtRisk();
+        String totalLoan = centerPerformanceHistory.getTotalOutstandingPortfolio();
+        String totalSavings = centerPerformanceHistory.getTotalSavings();
+        String totalPortfolioAtRisk = centerPerformanceHistory.getPortfolioAtRisk();
         Assert.assertEquals(1, centerPerformanceHistory.getNumberOfGroups().intValue());
         Assert.assertEquals(1, centerPerformanceHistory.getNumberOfClients().intValue());
 
@@ -630,9 +621,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         TestObjectFactory.cleanUp(account7);
 
         // temporarily(?) moved so assertion failure doesn't preclude cleanup
-        Assert.assertEquals(new Money(getCurrency(), "1200.0"), totalLoan);
-        Assert.assertEquals(new Money(getCurrency(), "400.0"), totalSavings);
-        Assert.assertEquals(new Money(getCurrency(), "0.25"), totalPortfolioAtRisk);
+        Assert.assertEquals("1200.0", totalLoan);
+        Assert.assertEquals("400.0", totalSavings);
+        Assert.assertEquals("0.2", totalPortfolioAtRisk);
     }
 
     public void testGetCustomerChecklist() throws Exception {

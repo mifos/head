@@ -46,11 +46,13 @@ import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -203,6 +205,9 @@ public class CustomerBusinessService implements BusinessService {
 
     }
 
+    protected String localizedMessageLookup(String key) {
+        return MessageLookup.getInstance().lookup(key);
+    }    
     /**
      * FIXME: THIS METHOD DOES NOT WORK. Specifically, the portfolioAtRisk
      * calculation. Please see issue 2204.
@@ -211,20 +216,34 @@ public class CustomerBusinessService implements BusinessService {
     throws ServiceException {
         Integer activeAndOnHoldGroupCount;
         Integer activeAndOnHoldClientCount;
-        Money totalSavings;
-        Money totalLoan;
+        String totalSavings;
+        String totalLoan;
 
         try {
             activeAndOnHoldGroupCount = customerPersistence.getActiveAndOnHoldChildrenCount(searchId, officeId,
                     CustomerLevel.GROUP);
             activeAndOnHoldClientCount = customerPersistence.getActiveAndOnHoldChildrenCount(searchId, officeId,
                     CustomerLevel.CLIENT);
-
-            totalSavings = customerPersistence.retrieveTotalSavings(searchId, officeId);
-            totalLoan = customerPersistence.retrieveTotalLoan(searchId, officeId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
+
+        try {
+            totalSavings = customerPersistence.retrieveTotalSavings(searchId, officeId).toString();
+        } catch (CurrencyMismatchException e) {
+            totalSavings = localizedMessageLookup("errors.multipleCurrencies");
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        } 
+        
+        try {
+            totalLoan = customerPersistence.retrieveTotalLoan(searchId, officeId).toString();
+        } catch (CurrencyMismatchException e) {
+            totalLoan = localizedMessageLookup("errors.multipleCurrencies");
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        } 
+
         // ------------------------------------------------
         // FIXME - John W - Portfolio at Risk calculation commented out as its
         // not used.
@@ -247,7 +266,7 @@ public class CustomerBusinessService implements BusinessService {
         // / amountAtRiskMoney.getAmountDoubleValue()));
         // }
 
-        Money portfolioAtRisk = new Money(totalLoan.getCurrency(), "0.25");
+        String portfolioAtRisk = "0.2";
         return new CenterPerformanceHistory(activeAndOnHoldGroupCount, activeAndOnHoldClientCount, totalLoan,
                 totalSavings, portfolioAtRisk);
     }
