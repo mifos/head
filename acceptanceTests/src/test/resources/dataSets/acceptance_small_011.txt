@@ -1,0 +1,5 @@
+Description:
+This data set is derived from acceptance_small_001
+
+A new loan production added with default zero interest rate.
+http://mifosforge.jira.com/browse/MIFOS-2636
