@@ -846,6 +846,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         performGlimSpecificValidations(errors, request);
         validateCustomFields(request, errors);
         validateRepaymentDayRequired(errors);
+        validateSourceOfFundFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale);
         validateInterest(errors, locale);
     }

@@ -496,7 +496,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
-                config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
+                config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
 
         return loan;
@@ -871,7 +871,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
-                config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
+                config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
 
         PaymentData paymentData = null;
@@ -937,7 +937,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
-                config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
+                config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
 
         PaymentData paymentData = null;
@@ -1561,7 +1561,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         AccountBO accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
-                config.getGracePeriod(), new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
+                config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
                 SHORT_ZERO);
 
         new TestObjectPersistence().persist(accountBO);

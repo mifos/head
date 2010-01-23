@@ -358,6 +358,17 @@ explanation of the license and how it is applied.
 							<td valign="top">
 								<mifos:mifosnumbertext styleId="editLoanAccount.input.gracePeriod" property="gracePeriod"  disabled="${loanfn:isDisabledWhileEditingGlim('gracePeriod',accountState)}" onchange="setGracePeriodDurationValue();"/></td>
 						</tr>
+						<tr class="fontnormal">
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								keyhm="Loan.SourceOfFund"
+								name="loan.source_fund" isColonRequired="yes"/></td>
+							<td valign="top"><mifos:select keyhm="Loan.SourceOfFund" property="loanOfferingFund">
+								<c:forEach var="loanfund"
+									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanfunds')}">
+									<html-el:option value="${loanfund.fundId}">${loanfund.fundName}</html-el:option>
+								</c:forEach>
+								</mifos:select></td>
+						</tr>
 						<html-el:hidden property="inheritedGracePeriodDuration"
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
 							<html-el:hidden property="gracePeriodDuration"/>

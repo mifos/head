@@ -1273,7 +1273,7 @@ public class LoanBO extends AccountBO {
             final Double interestRate, final Short noOfInstallments, final Date disbursementDate,
             final Short gracePeriodDuration, final Integer businessActivityId, final String collateralNote,
             final Integer collateralTypeId, final List<CustomFieldView> customFields,
-            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
+            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay, FundBO fund)
             throws AccountException {
         if (interestDeductedAtDisbursment) {
             try {
@@ -1296,6 +1296,7 @@ public class LoanBO extends AccountBO {
         setBusinessActivityId(businessActivityId);
         setCollateralNote(collateralNote);
         setCollateralTypeId(collateralTypeId);
+        setFund(fund);
         if (getAccountState().getId().equals(AccountState.LOAN_APPROVED.getValue())
                 || getAccountState().getId().equals(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue())
                 || getAccountState().getId().equals(AccountState.LOAN_PARTIAL_APPLICATION.getValue())

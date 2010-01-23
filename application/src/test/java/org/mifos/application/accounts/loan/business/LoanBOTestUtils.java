@@ -104,7 +104,7 @@ public class LoanBOTestUtils {
 
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(currency, "300.0"),
-                    Short.valueOf("6"), meetingDates.get(0), false, 0.0, (short) 0, new FundBO(),
+                    Short.valueOf("6"), meetingDates.get(0), false, 0.0, (short) 0, null,
                     new ArrayList<FeeView>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
                             .getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false, null);
         } catch (ApplicationException e) {
@@ -151,7 +151,7 @@ public class LoanBOTestUtils {
         MifosCurrency currency = TestObjectFactory.getCurrency();
         try {
             loan = LoanBO.createIndividualLoan(TestUtils.makeUser(), loanOfering, customer, state, new Money(currency,
-                    "300.0"), Short.valueOf("6"), meetingDates.get(0), false, false, 0.0, (short) 0, new FundBO(),
+                    "300.0"), Short.valueOf("6"), meetingDates.get(0), false, false, 0.0, (short) 0, null,
                     new ArrayList<FeeView>(), null);
         } catch (ApplicationException e) {
             throw new RuntimeException(e);
@@ -205,7 +205,7 @@ public class LoanBOTestUtils {
 
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(currency, "300.0"),
-                    noOfInstallments, meetingDates.get(0), false, 10.0, (short) 0, new FundBO(),
+                    noOfInstallments, meetingDates.get(0), false, 10.0, (short) 0, null,
                     new ArrayList<FeeView>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
                             .getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false, null);
         } catch (ApplicationException e) {
@@ -344,7 +344,7 @@ public class LoanBOTestUtils {
 
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(loanOffering.getCurrency(),"300.0"),
-                    (short) 6, meetingDates.get(0), false, 0.0, (short) 0, new FundBO(), feeViewList, null,
+                    (short) 6, meetingDates.get(0), false, 0.0, (short) 0, null, feeViewList, null,
                     DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                     eligibleInstallmentRange.getMinNoOfInstall(), false, null);
         } catch (ApplicationException e) {

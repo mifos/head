@@ -68,7 +68,7 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
         LoanBO loanBO = ((LoanBO) accountBO);
         ((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO.getInterestRate(), loanBO
                 .getNoOfInstallments(), newDate, (short) 2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, "Added note",
-                null, null, false, null);
+                null, null, false, null, null);
 
         StaticHibernateUtil.commitTransaction();
         group = TestObjectFactory.getCustomer(group.getCustomerId());

@@ -174,7 +174,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         Short numberOfInstallments = Short.valueOf("6");
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numberOfInstallments);
         loanBO = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
-                currency, "300.0"), numberOfInstallments, meetingDates.get(0), false, 1.2, (short) 0, new FundBO(),
+                currency, "300.0"), numberOfInstallments, meetingDates.get(0), false, 1.2, (short) 0, null,
                 feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false, null);
         ((LoanBO) loanBO).save();
         new TestObjectPersistence().persist(loanBO);

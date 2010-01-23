@@ -532,7 +532,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         fees.add(fee);
         fees.add(fee1);
         List<FundBO> funds = new ArrayList<FundBO>();
-        funds.add(new FundBO());
+        funds.add(null);
         LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, endDate, null, gracePeriodType, (short) 2,
                 interestTypes, new Money(getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20,
@@ -916,7 +916,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         fees.add(fee);
         fees.add(fee1);
         List<FundBO> funds = new ArrayList<FundBO>();
-        funds.add(new FundBO());
+        funds.add(null);
         product = createLoanOfferingBO("Loan Product", "LOAP");
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, gracePeriodType, interestTypes, (short) 0, new Money(

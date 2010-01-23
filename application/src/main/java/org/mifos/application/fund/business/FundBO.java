@@ -50,7 +50,10 @@ public class FundBO extends BusinessObject {
         logger.debug("Fund build :" + getFundName());
     }
 
-    public FundBO() {
+    /**
+     * Required by Hibernate.
+     */
+    protected FundBO() {
         this.fundId = null;
         this.fundCode = null;
     }

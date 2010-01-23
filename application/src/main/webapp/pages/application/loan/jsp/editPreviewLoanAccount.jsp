@@ -140,6 +140,15 @@ explanation of the license and how it is applied.
 								</c:otherwise>
 							</c:choose> </span></td>
 						</tr>
+
+						<tr id="Loan.SourceOfFund">
+							<td class="fontnormal"><mifos:mifoslabel
+								name="loan.source_fund" keyhm="Loan.SourceOfFund"
+								isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
+							<span class="fontnormal"> <c:out value="${requestScope['sourceOfFunds']}" />
+								</span></td>
+						</tr>
+
 						<c:if test="${loanIndividualMonitoringIsEnabled != '1'}">
 							<tr id="Loan.PurposeOfLoan">
 								<td class="fontnormal"><mifos:mifoslabel

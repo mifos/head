@@ -114,6 +114,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.fund.persistence.FundPersistence;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
@@ -1098,6 +1099,9 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
         loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
         loanActionForm.setExternalId(loanBO.getExternalId());
+        if (null != loanBO.getFund()) {
+            loanActionForm.setLoanOfferingFund(loanBO.getFund().getFundId().toString());
+        }
         if (configService.isRepaymentIndepOfMeetingEnabled()) {
             setRepaymentDayFieldsOnForm(loanActionForm, loanBO.getLoanMeeting().getMeetingDetails());
         }
@@ -1108,6 +1112,7 @@ public class LoanAccountAction extends AccountAppAction {
                 .getValue(), request);
         SessionUtils.setAttribute(RECURRENCENAME, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType()
                 .getRecurrenceName(), request);
+        SessionUtils.setCollectionAttribute(LOANFUNDS, getFunds(loanOffering), request);
         setRequestAttributesForEditPage(request, loanBO);
 
         setFormAttributes(loanBO, form, request);
@@ -1234,9 +1239,22 @@ public class LoanAccountAction extends AccountAppAction {
         if (isGlimEnabled()) {
             performGlimSpecificOnManagePreview(request, loanAccountForm, localeId);
         }
+        if (null !=  getFund(loanAccountForm)) {
+            request.setAttribute("sourceOfFunds", getFund(loanAccountForm).getFundName());
+        }
 
         resetBusinessActivity(request, localeId, (LoanAccountActionForm) form);
         return mapping.findForward(ActionForwards.managepreview_success.toString());
+    }
+
+    private FundBO getFund(LoanAccountActionForm loanAccountActionForm) throws PersistenceException {
+        FundBO fund = null;
+        if (!StringUtils.isBlank(loanAccountActionForm.getLoanOfferingFund())) {
+            Short fundId = loanAccountActionForm.getLoanOfferingFundValue();
+            if (fundId != 0)
+                fund = new FundPersistence().getFund(fundId);
+        }
+        return fund;
     }
 
     private void performGlimSpecificOnManagePreview(final HttpServletRequest request,
@@ -1348,7 +1366,8 @@ public class LoanAccountAction extends AccountAppAction {
                         .getDisbursementDateValue(getUserContext(request).getPreferredLocale()), loanAccountActionForm
                         .getGracePeriodDurationValue(), loanAccountActionForm.getBusinessActivityIdValue(),
                 loanAccountActionForm.getCollateralNote(), loanAccountActionForm.getCollateralTypeIdValue(),
-                loanAccountActionForm.getCustomFields(), isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+                loanAccountActionForm.getCustomFields(), isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay,
+                getFund(loanAccountActionForm));
 
         if (configService.isGlimEnabled() && customer.isGroup()) {
             List<LoanAccountDetailsViewHelper> loanAccountDetailsList = (List<LoanAccountDetailsViewHelper>) SessionUtils
