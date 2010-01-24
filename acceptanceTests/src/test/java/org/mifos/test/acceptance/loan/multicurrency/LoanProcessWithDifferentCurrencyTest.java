@@ -92,19 +92,22 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    public void createLoanProductThenAccount() throws Exception {
+    public void loanProcessWithDifferentCurrency() throws Exception {
         createWeeklyLoanProduct();
         createLoanAccountOfDifferentCurrency("Client-1-USD");
-    }
-    
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
-    public void approveThenDisburseAndApplyPayment() throws Exception {
+        createLoanAccountOfDifferentCurrency("Client-2-USD");
+        createLoanAccountOfDifferentCurrency("Client-3-USD");
+
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
                 "LoanProcessWithDifferentCurrencyTest_002.xml.zip", dataSource, selenium);
 
         pendingApprovalToApplicationApproved("000100000000010");
+        pendingApprovalToApplicationApproved("000100000000011");
+        pendingApprovalToApplicationApproved("000100000000012");
+
         disburseLoan("000100000000010");
+        disburseLoan("000100000000011");
+        disburseLoan("000100000000012");
     }
 
      @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -114,6 +117,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineMultiCurrencyLoanProduct(formParameters);
+
     }
 
      @SuppressWarnings({ "PMD.SignatureDeclareThrowsException" })

@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="mifos-gazelle">
+  <test verbose="2" name="org.mifos.test.acceptance.loan.multicurrency.LoanProcessWithDifferentCurrencyTest" annotations="JDK">
+    <classes>
+      <class name="org.mifos.test.acceptance.loan.multicurrency.LoanProcessWithDifferentCurrencyTest"/>
+    </classes>
+  </test>
+</suite>
