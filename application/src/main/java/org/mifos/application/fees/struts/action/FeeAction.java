@@ -48,6 +48,7 @@ import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -270,7 +271,7 @@ public class FeeAction extends BaseAction {
         } else {
            fee = createPeriodicFee(actionForm, request, feeCategory, feeFrequencyType, glCode);
         }
-        Short currencyId = ((FeeActionForm) actionForm).getCurrencyId();
+        Short currencyId = actionForm.getCurrencyId();
         fee.setCurrency(AccountingRules.getCurrencyByCurrencyId(currencyId));
         return fee;
 
@@ -288,9 +289,15 @@ public class FeeAction extends BaseAction {
             return new RateFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feePayment);
         }
-        return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
-                new Money(AccountingRules.getCurrencyByCurrencyId(actionForm.getCurrencyId()), actionForm.getAmount()), 
-                actionForm.isCustomerDefaultFee(), feePayment);
+        MifosCurrency feeCurrency;
+        if (actionForm.getCurrencyId() == null) {
+            // Currency is passed from Form only for Loan Fees in multi-currency settings
+            feeCurrency = Money.getDefaultCurrency();
+        } else {
+            feeCurrency = AccountingRules.getCurrencyByCurrencyId(actionForm.getCurrencyId());
+        }
+        return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode, new Money(
+                feeCurrency, actionForm.getAmount()), actionForm.isCustomerDefaultFee(), feePayment);
     }
 
     private FeeBO createPeriodicFee(FeeActionForm actionForm, HttpServletRequest request,
