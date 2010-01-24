@@ -34,6 +34,7 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollect
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.core.MifosRuntimeException;
@@ -41,7 +42,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
-
 
 /**
  *
@@ -55,7 +55,8 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
     }
 
     @SuppressWarnings("unchecked")
-    public List<CollectionSheetCustomerDto> findCustomerHierarchy(final Integer customerId, final LocalDate transactionDate) {
+    public List<CollectionSheetCustomerDto> findCustomerHierarchy(final Integer customerId,
+            final LocalDate transactionDate) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
@@ -82,7 +83,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         return collectionSheetCutomerList;
     }
-    
+
     /*
      * 
      */
@@ -97,23 +98,21 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         topOfHierarchyParameters.put("BRANCH_ID", branchId);
         topOfHierarchyParameters.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
         topOfHierarchyParameters.put("TRANSACTION_DATE", transactionDate.toString());
-        
+
         final CollectionSheetCustomerLoanDto loanRepaymentsForCustomerAtTopOfHierarchy = (CollectionSheetCustomerLoanDto) execUniqueResultNamedQueryWithResultTransformer(
-                "findLoanRepaymentsforCustomerAtTopOfHierarchyAsDto",
-                topOfHierarchyParameters, CollectionSheetCustomerLoanDto.class);
-        
+                "findLoanRepaymentsforCustomerAtTopOfHierarchyAsDto", topOfHierarchyParameters,
+                CollectionSheetCustomerLoanDto.class);
+
         if (loanRepaymentsForCustomerAtTopOfHierarchy != null) {
-            allLoanRepaymentsGroupedByCustomerId.put(customerAtTopOfHierarchyId,
-                    Arrays
+            allLoanRepaymentsGroupedByCustomerId.put(customerAtTopOfHierarchyId, Arrays
                     .asList(loanRepaymentsForCustomerAtTopOfHierarchy));
         }
-        
+
         final Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("BRANCH_ID", branchId);
         queryParameters.put("SEARCH_ID", searchId);
         queryParameters.put("TRANSACTION_DATE", transactionDate.toString());
 
-        
         final List<CollectionSheetCustomerLoanDto> loanRepayments = executeNamedQueryWithResultTransformer(
                 "findLoanRepaymentsforCustomerHierarchyAsDto", queryParameters, CollectionSheetCustomerLoanDto.class);
 
@@ -134,7 +133,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         return allLoanRepaymentsGroupedByCustomerId;
     }
-    
+
     @SuppressWarnings("unchecked")
     public Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> findOutstandingFeesForLoansOnCustomerHierarchy(
             final Short branchId, final String searchId, final LocalDate transactionDate,
@@ -146,7 +145,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         topOfHierarchyQueryParams.put("BRANCH_ID", branchId);
         topOfHierarchyQueryParams.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
         topOfHierarchyQueryParams.put("TRANSACTION_DATE", transactionDate.toString());
-        
+
         final List<CollectionSheetLoanFeeDto> outstandingLoanFeesForTopCustomer = executeNamedQueryWithResultTransformer(
                 "findOutstandingFeesForLoansOnCustomerAtTopOfHierarchyAsDto", topOfHierarchyQueryParams,
                 CollectionSheetLoanFeeDto.class);
@@ -221,7 +220,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         return accountCollectionsOnCustomerAccountGroupedByCustomerId;
     }
-    
+
     @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> findOutstandingFeesForCustomerAccountOnCustomerHierarchy(
             final Short branchId, final String searchId, final LocalDate transactionDate,
@@ -250,7 +249,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         final List<CollectionSheetCustomerAccountCollectionDto> customerAccountFees = executeNamedQueryWithResultTransformer(
                 "findOutstandingFeesForCustomerAccountOnCustomerHierarchyAsDto", withinHierarchyQueryParameters,
                 CollectionSheetCustomerAccountCollectionDto.class);
-        
+
         if (customerAccountFees == null) {
             return accountCollectionsOnCustomerAccountGroupedByCustomerId;
         }
@@ -273,23 +272,23 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         return accountCollectionsOnCustomerAccountGroupedByCustomerId;
     }
-    
+
     @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerLoanDto>> findLoanDisbursementsForCustomerHierarchy(
             final Short branchId, final String searchId, final LocalDate transactionDate,
             final Integer customerAtTopOfHierarchyId) {
-        
+
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> loanDisbursementsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerLoanDto>>();
 
         final Map<String, Object> topOfHierarchyQueryParameters = new HashMap<String, Object>();
         topOfHierarchyQueryParameters.put("BRANCH_ID", branchId);
         topOfHierarchyQueryParameters.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
         topOfHierarchyQueryParameters.put("TRANSACTION_DATE", transactionDate.toString());
-        
+
         final List<CollectionSheetCustomerLoanDto> allLoanDisbursementsForTopCustomer = executeNamedQueryWithResultTransformer(
                 "findLoanDisbursementsforCustomerAtTopOfHierarchyAsDto", topOfHierarchyQueryParameters,
                 CollectionSheetCustomerLoanDto.class);
-        
+
         if (allLoanDisbursementsForTopCustomer != null) {
             populateLoanDisbursement(loanDisbursementsGroupedByCustomerId, allLoanDisbursementsForTopCustomer);
         }
@@ -302,7 +301,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         final List<CollectionSheetCustomerLoanDto> allLoanDisbursements = executeNamedQueryWithResultTransformer(
                 "findLoanDisbursementsforCustomerHierarchyAsDto", withinHierarchyQueryParameters,
                 CollectionSheetCustomerLoanDto.class);
-        
+
         if (allLoanDisbursements != null) {
             populateLoanDisbursement(loanDisbursementsGroupedByCustomerId, allLoanDisbursements);
         }
@@ -315,27 +314,27 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         final List<CollectionSheetCustomerSavingDto> mandatorySavingAccount = savingsDao
                 .findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
-        
+
         final List<CollectionSheetCustomerSavingDto> voluntarySavingAccount = savingsDao
                 .findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
-        
+
         final List<CollectionSheetCustomerSavingDto> centerOrGroupSavingsAccountsToBePaidByClient = savingsDao
                 .findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
-        
+
         final List<CollectionSheetCustomerSavingDto> allSavingsAccounts = new ArrayList<CollectionSheetCustomerSavingDto>();
         allSavingsAccounts.addAll(mandatorySavingAccount);
         allSavingsAccounts.addAll(voluntarySavingAccount);
         allSavingsAccounts.addAll(centerOrGroupSavingsAccountsToBePaidByClient);
-        
+
         return convertListToMapGroupedByCustomerId(allSavingsAccounts);
     }
-    
+
     public Map<Integer, List<CollectionSheetCustomerSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
 
         final List<CollectionSheetCustomerSavingDto> mandatorySavings = savingsDao
                 .findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
-        
+
         final List<CollectionSheetCustomerSavingDto> voluntarySavings = savingsDao
                 .findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
@@ -345,10 +344,10 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         return convertListToMapGroupedByCustomerId(allIndividualSavings);
     }
-    
+
     private Map<Integer, List<CollectionSheetCustomerSavingDto>> convertListToMapGroupedByCustomerId(
             final List<CollectionSheetCustomerSavingDto> allSavingsAccounts) {
-        
+
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> savingsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
 
         for (CollectionSheetCustomerSavingDto savingsAccountDto : allSavingsAccounts) {
@@ -361,7 +360,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
                 savingsGroupedByCustomerId.put(customerId, savingsDtoList);
             }
         }
-        
+
         return savingsGroupedByCustomerId;
     }
 
@@ -376,7 +375,8 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             if (Constants.YES == loanDisbursementAccount.getPayInterestAtDisbursement()) {
                 amountDueAtDisbursement = findAmountDueWhenInterestIsDueAtDibursementTime(accountId);
             } else {
-                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId, Money.getDefaultCurrency()).getAmountDoubleValue();
+                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId,
+                        Money.getDefaultCurrency()).getAmountDoubleValue();
             }
 
             loanDisbursementAccount.setAmountDueAtDisbursement(amountDueAtDisbursement);
@@ -395,7 +395,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             }
         }
     }
-    
+
     private void populateLoanFeesMap(
             final Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> outstandingLoanFeesGroupedByCustomerId,
             final List<CollectionSheetLoanFeeDto> outstandingLoanFees) {
@@ -429,7 +429,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
             }
         }
     }
-    
+
     private Double findAmountDueWhenInterestIsDueAtDibursementTime(final Integer accountId) {
 
         final Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -468,7 +468,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         return feeAmountDue.doubleValue() - feeAmountPaid.doubleValue();
     }
-    
+
     private Double calculateAmountDueFromLoanScheduleFields(final Object[] loanScheduleData) {
 
         if (loanScheduleData == null) {
@@ -493,5 +493,10 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
                 + miscPenaltyDue.doubleValue()
                 - (principalPaid.doubleValue() + interestPaid.doubleValue() + penaltyPaid.doubleValue()
                         + miscFeesPaid.doubleValue() + miscPenaltyPaid.doubleValue());
+    }
+
+    public List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
+            CustomerHierarchyParams customerHierarchyParams) {
+        return savingsDao.findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams);
     }
 }

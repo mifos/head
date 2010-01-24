@@ -41,6 +41,7 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -64,20 +65,20 @@ public class CollectionSheetServiceImplTest {
     private SavingsPersistence savingsPersistence;
     @Mock
     private CollectionSheetDao collectionSheetDao;
-    
+
     @Before
     public void setupAndInjectDependencies() {
 
         collectionSheetService = new CollectionSheetServiceImpl(clientAttendanceDao, loanPersistence,
                 accountPersistence, savingsPersistence, collectionSheetDao);
     }
-    
+
     @Test
     public void shouldRetrieveCollectionSheetDataCustomersCorrespondingToCustomerHierarchy() {
 
         // setup
         final LocalDate transactionDate = new LocalDate();
-        
+
         final Integer customerId = Integer.valueOf(3);
         final String name = "center";
         final Short level = Short.valueOf("3");
@@ -122,7 +123,7 @@ public class CollectionSheetServiceImplTest {
 
         final CollectionSheetCustomerDto center = new CollectionSheetCustomerDto(centerId, name, level, searchId,
                 attendance, branchId);
-        
+
         final List<CollectionSheetCustomerDto> customerHierarchyList = new ArrayList<CollectionSheetCustomerDto>();
         customerHierarchyList.add(center);
 
@@ -132,7 +133,7 @@ public class CollectionSheetServiceImplTest {
 
         final List<CollectionSheetCustomerLoanDto> centerLoanAccounts = new ArrayList<CollectionSheetCustomerLoanDto>();
         centerLoanAccounts.add(firstLoanAccount);
-        
+
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> loanRepaymentsDue = new HashMap<Integer, List<CollectionSheetCustomerLoanDto>>();
         loanRepaymentsDue.put(centerId, centerLoanAccounts);
 
@@ -140,22 +141,21 @@ public class CollectionSheetServiceImplTest {
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
         when(
                 collectionSheetDao.findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId + ".%",
-                        transactionDate, centerId))
-                .thenReturn(loanRepaymentsDue);
+                        transactionDate, centerId)).thenReturn(loanRepaymentsDue);
 
         // exercise test
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(centerId,
                 transactionDate);
-        
+
         // verifications
         assertThat(collectionSheet.getCollectionSheetCustomer().size(), is(1));
-        
+
         final CollectionSheetCustomerDto hierarchyRoot = collectionSheet.getCollectionSheetCustomer().get(0);
         assertThat(hierarchyRoot.getCollectionSheetCustomerLoan().size(), is(1));
         final CollectionSheetCustomerLoanDto returnedLoan = hierarchyRoot.getCollectionSheetCustomerLoan().get(0);
         assertThat(returnedLoan.getTotalRepaymentDue(), is(Double.valueOf("25.2")));
     }
-    
+
     @Test
     public void shouldRetrieveCollectionSheetDataContainingAllLoanRepaymentsDueWithCorrespondingAccountCollectionFeesForLoansForCustomerHierarchy() {
 
@@ -191,12 +191,12 @@ public class CollectionSheetServiceImplTest {
         final CollectionSheetLoanFeeDto outstandingLoanFee = new CollectionSheetLoanFeeDto();
         outstandingLoanFee.setFeeAmountDue(BigDecimal.valueOf(Double.valueOf("13.1")));
         outstandingLoanFee.setAccountId(loanAccountId);
-        
+
         final List<CollectionSheetLoanFeeDto> loanFeeList = Arrays.asList(outstandingLoanFee);
 
         final Map<Integer, List<CollectionSheetLoanFeeDto>> feesForLoanAccount = new HashMap<Integer, List<CollectionSheetLoanFeeDto>>();
         feesForLoanAccount.put(loanAccountId, loanFeeList);
-        
+
         final Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> outstandingFeesOnLoans = new HashMap<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>>();
         outstandingFeesOnLoans.put(centerId, feesForLoanAccount);
 
@@ -204,8 +204,7 @@ public class CollectionSheetServiceImplTest {
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
         when(
                 collectionSheetDao.findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId + ".%",
-                        transactionDate, centerId))
-                .thenReturn(loanRepaymentsDue);
+                        transactionDate, centerId)).thenReturn(loanRepaymentsDue);
         when(
                 collectionSheetDao.findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId + ".%",
                         transactionDate, centerId)).thenReturn(outstandingFeesOnLoans);
@@ -222,7 +221,7 @@ public class CollectionSheetServiceImplTest {
         final CollectionSheetCustomerLoanDto returnedLoan = hierarchyRoot.getCollectionSheetCustomerLoan().get(0);
         assertThat(returnedLoan.getTotalRepaymentDue(), is(Double.valueOf("38.3")));
     }
-    
+
     @Test
     public void shouldRetrieveCollectionSheetDataContainingAllAccountCollectionForCustomerHierarchy() {
 
@@ -251,7 +250,7 @@ public class CollectionSheetServiceImplTest {
         customerAccountCollection.setMiscFeesDue(BigDecimal.valueOf(Double.valueOf("2.2")));
         final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollectionList = Arrays
                 .asList(customerAccountCollection);
-        
+
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> accountCollectionsDue = new HashMap<Integer, List<CollectionSheetCustomerAccountCollectionDto>>();
         accountCollectionsDue.put(centerId, customerAccountCollectionList);
 
@@ -273,7 +272,7 @@ public class CollectionSheetServiceImplTest {
                 .getCollectionSheetCustomerAccount();
         assertThat(returnedCustomerAccount.getTotalCustomerAccountCollectionFee(), is(Double.valueOf("2.2")));
     }
-    
+
     @Test
     public void shouldRetrieveCollectionSheetDataContainingAllAccountCollectionAndCorrespondingCollectionFeesForCustomerHierarchy() {
 
@@ -305,13 +304,13 @@ public class CollectionSheetServiceImplTest {
 
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> accountCollectionsDue = new HashMap<Integer, List<CollectionSheetCustomerAccountCollectionDto>>();
         accountCollectionsDue.put(centerId, customerAccountCollectionList);
-        
+
         // account collection fees
         final CollectionSheetCustomerAccountCollectionDto customerAccountCollectionFees = new CollectionSheetCustomerAccountCollectionDto();
         customerAccountCollectionFees.setAccountId(customerAccountId);
         customerAccountCollectionFees.setCurrencyId(customerAccountCurrencyId);
         customerAccountCollectionFees.setFeeAmountDue(BigDecimal.valueOf(Double.valueOf("16.8")));
-        
+
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> accountCollectionFeesDue = new HashMap<Integer, List<CollectionSheetCustomerAccountCollectionDto>>();
         accountCollectionFeesDue.put(centerId, Arrays.asList(customerAccountCollectionFees));
 
@@ -336,7 +335,7 @@ public class CollectionSheetServiceImplTest {
                 .getCollectionSheetCustomerAccount();
         assertThat(returnedCustomerAccount.getTotalCustomerAccountCollectionFee(), is(Double.valueOf("19.0")));
     }
-    
+
     @Test
     public void shouldRetrieveCollectionSheetDataContainingAllSavingAccountsForCustomerHierarchy() {
 
@@ -360,38 +359,56 @@ public class CollectionSheetServiceImplTest {
         // savings
         final Integer savingAccountId = Integer.valueOf(24);
         final CollectionSheetCustomerSavingDto savingAccount = new CollectionSheetCustomerSavingDto();
+        savingAccount.setCustomerId(centerId);
         savingAccount.setAccountId(savingAccountId);
         savingAccount.setDepositDue(BigDecimal.valueOf(Double.valueOf("25.0")));
-        
+
         final CollectionSheetCustomerSavingDto savingAccount2 = new CollectionSheetCustomerSavingDto();
+        savingAccount2.setCustomerId(centerId);
         savingAccount2.setAccountId(savingAccountId);
         savingAccount2.setDepositDue(BigDecimal.valueOf(Double.valueOf("25.0")));
-        
-        
+
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> savingAccounts = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
         savingAccounts.put(centerId, Arrays.asList(savingAccount));
         savingAccounts.put(centerId, Arrays.asList(savingAccount2));
         
+        List<CollectionSheetCustomerSavingsAccountDto> allSavingsAccounts = new ArrayList<CollectionSheetCustomerSavingsAccountDto>();
+        CollectionSheetCustomerSavingsAccountDto collectionSheetCustomerSavingsAccount = new CollectionSheetCustomerSavingsAccountDto();
+        collectionSheetCustomerSavingsAccount.setCustomerId(centerId);
+        collectionSheetCustomerSavingsAccount.setAccountId(savingAccountId + 5);
+        collectionSheetCustomerSavingsAccount.setCustomerLevelId(CustomerLevel.CENTER.getValue());
+        collectionSheetCustomerSavingsAccount.setRecommendedAmountUnitId(null);
+        allSavingsAccounts.add(collectionSheetCustomerSavingsAccount);
+
+        collectionSheetCustomerSavingsAccount = new CollectionSheetCustomerSavingsAccountDto();
+        collectionSheetCustomerSavingsAccount.setCustomerId(center.getCustomerId());
+        collectionSheetCustomerSavingsAccount.setAccountId(savingAccountId + 10);
+        collectionSheetCustomerSavingsAccount.setCustomerLevelId(CustomerLevel.CENTER.getValue());
+        collectionSheetCustomerSavingsAccount.setRecommendedAmountUnitId(null);
+        allSavingsAccounts.add(collectionSheetCustomerSavingsAccount);
+        
+
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
-        when(
-                collectionSheetDao.findSavingsDepositsforCustomerHierarchy(customerHierarchyParams))
-                .thenReturn(savingAccounts);
-
+        when(collectionSheetDao.findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams)).thenReturn(
+                savingAccounts);
+        when(collectionSheetDao.findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams)).thenReturn(allSavingsAccounts);
+        
         // exercise test
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(centerId,
                 transactionDate);
+        collectionSheet.print();
 
         // verifications
         assertThat(collectionSheet.getCollectionSheetCustomer().size(), is(1));
 
         final CollectionSheetCustomerDto hierarchyRoot = collectionSheet.getCollectionSheetCustomer().get(0);
-        assertThat(hierarchyRoot.getCollectionSheetCustomerSaving().size(), is(1));
+        assertThat(hierarchyRoot.getIndividualSavingAccounts().size(), is(3));
         final CollectionSheetCustomerSavingDto returnedSavingsAccount = hierarchyRoot
-                .getCollectionSheetCustomerSaving().get(0);
+                .getIndividualSavingAccounts().get(0);
         assertThat(returnedSavingsAccount.getTotalDepositAmount(), is(Double.valueOf("25.0")));
     }
-    
+
     @Test
     public void shouldRetrieveCollectionSheetDataContainingAllLoanDisbursementsForCustomerHierarchy() {
 
@@ -422,8 +439,7 @@ public class CollectionSheetServiceImplTest {
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
         when(
                 collectionSheetDao.findLoanDisbursementsForCustomerHierarchy(branchId, searchId + ".%",
-                        transactionDate, centerId))
-                .thenReturn(loanDisbursements);
+                        transactionDate, centerId)).thenReturn(loanDisbursements);
 
         // exercise test
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(centerId,
@@ -438,7 +454,7 @@ public class CollectionSheetServiceImplTest {
                 0);
         assertThat(returnedDisbursement.getTotalDisbursement(), is(Double.valueOf("19.2")));
     }
-    
+
     @Test
     public void shouldRetrieveCollectionSheetDataContainingAllLoanDisbursementsAndCorrespondingDisbursementFeesForCustomerHierarchy() {
 
@@ -466,13 +482,12 @@ public class CollectionSheetServiceImplTest {
 
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> loanDisbursements = new HashMap<Integer, List<CollectionSheetCustomerLoanDto>>();
         loanDisbursements.put(centerId, Arrays.asList(loanDisbursement));
-        
+
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
         when(
                 collectionSheetDao.findLoanDisbursementsForCustomerHierarchy(branchId, searchId + ".%",
-                        transactionDate, centerId))
-                .thenReturn(loanDisbursements);
+                        transactionDate, centerId)).thenReturn(loanDisbursements);
 
         // exercise test
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(centerId,

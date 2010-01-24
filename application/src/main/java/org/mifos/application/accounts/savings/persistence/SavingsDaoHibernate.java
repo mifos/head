@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 
 /**
@@ -184,5 +185,19 @@ public class SavingsDaoHibernate implements SavingsDao {
 
         nullSafeSavings.addAll(nullSafeRest);
         return nullSafeSavings;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
+            CustomerHierarchyParams customerHierarchyParams) {
+        final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
+        topOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
+        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
+        topOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
+        topOfHierarchyParameters.put("SEARCH_ID2", customerHierarchyParams.getSearchId() + ".%");
+
+        return (List<CollectionSheetCustomerSavingsAccountDto>) baseDao.executeNamedQueryWithResultTransformer(
+                "findAllSavingAccountsForCustomerHierarchy", topOfHierarchyParameters,
+                CollectionSheetCustomerSavingsAccountDto.class);
     }
 }

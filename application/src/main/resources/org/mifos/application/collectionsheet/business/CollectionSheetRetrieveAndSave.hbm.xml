@@ -814,4 +814,33 @@
 		]]>
 	</sql-query>
 	
+	<sql-query name="findAllSavingAccountsForCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="accountId" type="integer" />
+		<return-scalar column="productId" type="short" />
+		<return-scalar column="productShortName" type="string" />
+		<return-scalar column="currencyId" type="short" />
+		<return-scalar column="customerLevelId" type="short" />
+		<return-scalar column="recommendedAmountUnitId" type="short" />
+		<![CDATA[
+		    select c.customer_id as customerId, 
+		    sa.account_id as accountId,
+         	po.prd_offering_id as productId, 
+		    po.prd_offering_short_name as productShortName,
+		    sa.savings_balance_currency_id as currencyId,
+		    c.customer_level_id as customerLevelId,
+		    so.recommended_amnt_unit_id as recommendedAmountUnitId
+			from customer c
+			join account a on a.customer_id = c.customer_id
+			join savings_account sa on sa.account_id = a.account_id
+			join prd_offering po on po.prd_offering_id = sa.prd_offering_id
+			join savings_offering so on so.prd_offering_id = po.prd_offering_id
+			where c.branch_id = :BRANCH_ID
+			and (c.search_id = :SEARCH_ID or c.search_id like :SEARCH_ID2)
+			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
+			and sa.activation_date <= date(:TRANSACTION_DATE)
+      		order by c.customer_id, po.prd_offering_short_name
+		]]>
+	</sql-query>
 </hibernate-mapping>

@@ -22,6 +22,7 @@ package org.mifos.application.accounts.savings.persistence;
 import java.util.List;
 
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 
 /**
@@ -42,6 +43,9 @@ public interface SavingsDao {
             CustomerHierarchyParams customerHierarchyParams);
 
     List<CollectionSheetCustomerSavingDto> findAllVoluntarySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
+            CustomerHierarchyParams customerHierarchyParams);
+    
+    List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
 
 }

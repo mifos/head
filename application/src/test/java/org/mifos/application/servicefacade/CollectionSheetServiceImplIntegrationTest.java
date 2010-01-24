@@ -29,6 +29,7 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -79,7 +80,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         } catch (IllegalArgumentException e) {
             illegalArgumentExceptionThrown = true;
         }
-        
+
         assertTrue("IllegalArgumentException should have been thrown for a null customer Id",
                 illegalArgumentExceptionThrown);
     }
@@ -93,11 +94,11 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         } catch (IllegalArgumentException e) {
             illegalArgumentExceptionThrown = true;
         }
-        
+
         assertTrue("IllegalArgumentException should have been thrown for an invalid transaction date",
                 illegalArgumentExceptionThrown);
     }
-    
+
     public void testIllegalArgumentExceptionIsThrownForAnInvalidTopCustomer() {
 
         Integer invalidTopCustomer = 500000;
@@ -107,7 +108,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         } catch (IllegalArgumentException e) {
             illegalArgumentExceptionThrown = true;
         }
-        
+
         assertTrue("IllegalArgumentException should have been thrown for an invalid top customer",
                 illegalArgumentExceptionThrown);
     }
@@ -127,17 +128,17 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         // over-repay loan
         Date repaymentDate = incrementCurrentDate(14);
         DateTime dateTime = initializeToFixedDateTime(repaymentDate);
-        
+
         saveCollectionSheetUtils.setOverpayLoan();
         saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils
                 .getLocalDateFromDate(repaymentDate));
-        
+
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
-        
+
         if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
             assertThat("There should have been one loan account repayment error", errors
                     .getLoanRepaymentAccountNumbers().size(), is(1));
@@ -242,18 +243,18 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         // make a small repayment on loan without it being disbursed
         Date repaymentDate = incrementCurrentDate(14);
         DateTime dateTime = initializeToFixedDateTime(repaymentDate);
-        
+
         saveCollectionSheetUtils.setNormalLoanRepayment();
         saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils
                 .getLocalDateFromDate(repaymentDate));
-        
+
         CollectionSheetErrorsView errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
-        
+
         if (errors != null && errors.getLoanRepaymentAccountNumbers() != null) {
             assertThat("There should have been one loan account repayment error", errors
                     .getLoanRepaymentAccountNumbers().size(), is(1));
@@ -262,14 +263,59 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
     }
 
+    public void testSavingsAccountsEntriesReturnedWhenNoOutstandingInstallmentExists() throws Exception {
+
+        saveCollectionSheetUtils.setCreateSavingsAccounts();
+        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
+        saveCollectionSheet.print();
+
+        // 1. Save this completed collection sheet which will leave no outstanding installment amounts
+        CollectionSheetErrorsView errors = null;
+        try {
+            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
+        } catch (SaveCollectionSheetException e) {
+            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
+        }
+        assertNotNull("'errors' should not be null", errors);
+        assertThat(errors.getSavingsDepNames().size(), is(0));
+        assertThat(errors.getSavingsWithNames().size(), is(0));
+        assertThat(errors.getLoanDisbursementAccountNumbers().size(), is(0));
+        assertThat(errors.getLoanRepaymentAccountNumbers().size(), is(0));
+        assertThat(errors.getCustomerAccountNumbers().size(), is(0));
+        assertNull("There shouldn't have been a database error", errors.getDatabaseError());
+
+        // 2. Retrieve the collection sheet for the same date (current date)
+        CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(saveCollectionSheetUtils
+                .getCenter().getCustomerId(), new LocalDate());
+        collectionSheet.print();
+
+        // 3. Check that first client has an entry for a saving account.
+        // If it has, it means that the mifos web UI (as well as any other collection sheet user interface) should allow
+        // deposits and withdrawals against it.
+        Boolean foundFirstClient = false;
+        for (CollectionSheetCustomerDto customer : collectionSheet.getCollectionSheetCustomer()) {
+            if (customer.getLevelId().compareTo(CustomerLevel.CLIENT.getValue()) == 0) {
+                foundFirstClient = true;
+                assertNotNull("Customer Saving list should be initialised", customer.getCollectionSheetCustomerSaving());
+                assertThat("Customer Saving list should have one entry", customer.getCollectionSheetCustomerSaving()
+                        .size(), is(1));
+                break;
+            }
+        }
+
+        assertTrue("There should have been a first client", foundFirstClient);
+
+    }
+
     private DateTime initializeToFixedDateTime(Date date) {
         LocalDate localDate = DateUtils.getLocalDateFromDate(date).plusDays(3);
-        DateTime dateTime = new DateTime(localDate.getYear(),localDate.getMonthOfYear(),localDate.getDayOfMonth(),0,0,0,0);
+        DateTime dateTime = new DateTime(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth(), 0,
+                0, 0, 0);
         DateTimeService dateTimeService = new DateTimeService();
         dateTimeService.setCurrentDateTimeFixed(dateTime);
         return dateTime;
     }
-    
+
     private Date incrementCurrentDate(final int noOfDays) {
         return new java.sql.Date(new DateTime().plusDays(noOfDays).toDate().getTime());
     }

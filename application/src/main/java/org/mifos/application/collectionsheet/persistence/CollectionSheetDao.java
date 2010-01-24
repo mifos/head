@@ -28,6 +28,7 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollect
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 
@@ -58,5 +59,7 @@ public interface CollectionSheetDao {
 
     Map<Integer, List<CollectionSheetCustomerSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
+    
+    List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(CustomerHierarchyParams customerHierarchyParams);
 
 }

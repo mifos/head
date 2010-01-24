@@ -32,6 +32,7 @@ import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -50,14 +51,15 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -68,8 +70,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
- * Class contains utility methods for setting up, processing and configuring a
- * sample collection sheet hierarchy for testing.
+ * Class contains utility methods for setting up, processing and configuring a sample collection sheet hierarchy for
+ * testing.
  */
 public class TestSaveCollectionSheetUtils {
 
@@ -80,12 +82,10 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /*
-     * Below are variables that can be configured to create invalid entries for
-     * testing. They are injected during the assembling of the dto's. This is a
-     * very ugly way to inject invalid values. Set methods would be far tidier
-     * and more normal. But I (JW) preferred to keep all the save collection
-     * sheet dto's as create-only and non-updatable and pay the coding price for
-     * testing.
+     * Below are variables that can be configured to create invalid entries for testing. They are injected during the
+     * assembling of the dto's. This is a very ugly way to inject invalid values. Set methods would be far tidier and
+     * more normal. But I (JW) preferred to keep all the save collection sheet dto's as create-only and non-updatable
+     * and pay the coding price for testing.
      */
     private final Integer nonExistingId = 500000;
     private Boolean firstClientExists = true;
@@ -111,6 +111,7 @@ public class TestSaveCollectionSheetUtils {
     private Boolean invalidDisbursalAmountFirstClient = false;
     private Boolean invalidTransactionDate = false;
     private Boolean normalLoanRepayment = false;
+    private Boolean createSavingsAccounts = false;
 
     /*
      * 
@@ -119,6 +120,7 @@ public class TestSaveCollectionSheetUtils {
     private GroupBO group;
     private ClientBO client;
     private LoanBO loan;
+    private SavingsBO clientSavingsAccount = null;
     private CenterBO anotherCenter;
     private GroupBO anotherGroup;
     private ClientBO anotherClient;
@@ -128,11 +130,11 @@ public class TestSaveCollectionSheetUtils {
     private MifosCurrency currency;
 
     /**
-     * Write a sample center hierarchy, retrieve the collection sheet
-     * information and put it into a saveCollectionSheetDto.
+     * Write a sample center hierarchy, retrieve the collection sheet information and put it into a
+     * saveCollectionSheetDto.
      * 
-     * Sample hierarchy contains one center, one group and one client with a
-     * loan to be disbursed and 1 weekly account collection fee
+     * Sample hierarchy contains one center, one group and one client with a loan to be disbursed and 1 weekly account
+     * collection fee
      * 
      * Finally, change client and loan status if configured to do so.
      */
@@ -166,8 +168,7 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /**
-     * Retrieve collection sheet information and put it into a
-     * saveCollectionSheetDto
+     * Retrieve collection sheet information and put it into a saveCollectionSheetDto
      */
     public SaveCollectionSheetDto assembleSaveCollectionSheetFromCreatedCenterHierarchy(LocalDate transactionDate) {
 
@@ -178,9 +179,8 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /**
-     * By default generates 1 center, 1 group and 1 client with 1 loan to be
-     * disbursed and 1 weekly account collection fee. Can be configured to add
-     * in other invalid entries.
+     * By default generates 1 center, 1 group and 1 client with 1 savings account and 1 loan to be disbursed and 1
+     * weekly account collection fee. Can be configured to add in other invalid entries.
      */
     public void createSampleCenterHierarchy(Date date) throws Exception {
 
@@ -216,14 +216,23 @@ public class TestSaveCollectionSheetUtils {
         loan = null;
         try {
             loan = LoanBO.createIndividualLoan(userContext, loanOffering, client, AccountState.LOAN_APPROVED,
-                    new Money(currency, "1200.0"), Short.valueOf("12"), date, false, false, 10.0, (short) 0,
-                    null, new ArrayList<FeeView>(), null);
+                    new Money(currency, "1200.0"), Short.valueOf("12"), date, false, false, 10.0, (short) 0, null,
+                    new ArrayList<FeeView>(), null);
 
         } catch (AccountException e) {
             throw new Exception(e);
         }
 
         loan.save();
+        if (createSavingsAccounts) {
+            SavingsOfferingBO clientSavingsOffering = TestObjectFactory.createSavingsProduct("Client Saving Product",
+                    "clsv", date, RecommendedAmountUnit.COMPLETE_GROUP); // using COMPLETE_GROUP because can't use null
+            // at the time of writing... TestObjectFactory.createSavingsAccount creates a voluntary savings account with
+            // a recommended amount of 300.00
+            clientSavingsAccount = TestObjectFactory.createSavingsAccount("40000001", client, Short.valueOf("16"), date,
+                    clientSavingsOffering);
+        }
+        
         StaticHibernateUtil.commitTransaction();
     }
 
@@ -238,6 +247,10 @@ public class TestSaveCollectionSheetUtils {
 
         if (loan != null) {
             loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, loan.getAccountId());
+        }
+        if (clientSavingsAccount != null) {
+            clientSavingsAccount = (SavingsBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
+                    clientSavingsAccount.getAccountId());
         }
         if (client != null) {
             client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
@@ -261,6 +274,7 @@ public class TestSaveCollectionSheetUtils {
                     anotherCenter.getCustomerId());
         }
         TestObjectFactory.cleanUp(loan);
+        TestObjectFactory.cleanUp(clientSavingsAccount);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
@@ -294,9 +308,8 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /*
-     * Return a SaveCollectionSheetDto that matches the input CollectionSheetDto
-     * Handy if doing performance tests that want to read and save
-     * collection sheets without altering the values
+     * Return a SaveCollectionSheetDto that matches the input CollectionSheetDto Handy if doing performance tests that
+     * want to read and save collection sheets without altering the values
      */
     public SaveCollectionSheetDto assembleSaveCollectionSheetDto(CollectionSheetDto collectionSheet,
             LocalDate transactionDate) {
@@ -547,9 +560,8 @@ public class TestSaveCollectionSheetUtils {
                 }
                 try {
                     saveCollectionSheetCustomerSaving = new SaveCollectionSheetCustomerSavingDto(
-                            collectionSheetCustomerSaving.getAccountId(),
-                            savingsCurrencyId, collectionSheetCustomerSaving
-                                    .getDepositDue(), new BigDecimal(0.0));
+                            collectionSheetCustomerSaving.getAccountId(), savingsCurrencyId,
+                            collectionSheetCustomerSaving.getDepositDue(), new BigDecimal(0.0));
                 } catch (SaveCollectionSheetException e) {
                     throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
                 }
@@ -607,64 +619,58 @@ public class TestSaveCollectionSheetUtils {
      * methods to configure invalid entries below
      */
     /**
-     * The first client in this sample collection sheet hierarchy will be given
-     * an id that doesn't exist
+     * The first client in this sample collection sheet hierarchy will be given an id that doesn't exist
      */
     public void setFirstClientDoesntExist() {
         this.firstClientExists = false;
     }
 
     /**
-     * The first client in this sample collection sheet hierarchy will be given
-     * an AttendanceType as specified
+     * The first client in this sample collection sheet hierarchy will be given an AttendanceType as specified
      */
     public void setFirstClientAttendanceType(Short attendanceType) {
         this.firstClientAttendanceType = attendanceType;
     }
 
     /**
-     * The first group in this sample collection sheet hierarchy will be given
-     * an AttendanceType as specified
+     * The first group in this sample collection sheet hierarchy will be given an AttendanceType as specified
      */
     public void setFirstGroupAttendanceType(short attendanceType) {
         this.firstGroupAttendanceType = attendanceType;
     }
 
     /**
-     * The first client in this sample collection sheet hierarchy will have its
-     * status set to closed
+     * The first client in this sample collection sheet hierarchy will have its status set to closed
      */
     public void setFirstClientClosed() {
         this.firstClientClosed = true;
     }
 
     /**
-     * The first group in this sample collection sheet hierarchy will have an
-     * individual savings account added to it
+     * The first group in this sample collection sheet hierarchy will have an individual savings account added to it
      */
     public void setIndividualSavingsAccountUnderFirstGroup() {
         this.individualSavingsAccountUnderFirstGroup = true;
     }
 
     /**
-     * The first client in this sample collection sheet hierarchy will have its
-     * parent's id set to a non-existing value
+     * The first client in this sample collection sheet hierarchy will have its parent's id set to a non-existing value
      */
     public void setFirstClientParentIdInvalid() {
         this.firstClientParentIdInvalid = true;
     }
 
     /**
-     * Another collection sheet hierarchy will be created and a client from it
-     * will be added to this sample collection sheet hierarchy
+     * Another collection sheet hierarchy will be created and a client from it will be added to this sample collection
+     * sheet hierarchy
      */
     public void addAnotherClientFromADifferentCenter() throws Exception {
         nonCenterClient = getAnotherClientFromAnotherCenter();
     }
 
     /**
-     * The loan account attached to the first client in this sample collection
-     * sheet hierarchy will have its currencyId set to an invalid value
+     * The loan account attached to the first client in this sample collection sheet hierarchy will have its currencyId
+     * set to an invalid value
      */
     public void setLoanAccountInvalidCurrency() {
         Integer defaultCurrencyId = Integer.valueOf(currency.getCurrencyId().toString()) + 1;
@@ -672,58 +678,55 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /**
-     * The loan account attached to the first client in this sample collection
-     * sheet hierarchy will have its id set to an non-existing value
+     * The loan account attached to the first client in this sample collection sheet hierarchy will have its id set to
+     * an non-existing value
      */
     public void setLoanAccountIdInvalid() {
         this.loanAccountIdInvalid = true;
     }
 
     /**
-     * The loan account attached to the first client in this sample collection
-     * sheet hierarchy will have its status set to cancelled
+     * The loan account attached to the first client in this sample collection sheet hierarchy will have its status set
+     * to cancelled
      */
     public void setLoanAccountCancelled() {
         this.loanAccountCancelled = true;
     }
 
     /**
-     * The first group in this sample collection sheet hierarchy will have a
-     * loan account added to it with an account id equal to the loan account
-     * belonging to the first client in this sample collection sheet hierarchy
+     * The first group in this sample collection sheet hierarchy will have a loan account added to it with an account id
+     * equal to the loan account belonging to the first client in this sample collection sheet hierarchy
      */
     public void setLoanAccountUnderFirstGroupWithFirstClientLoanId() {
         this.loanAccountUnderFirstGroupWithFirstClientLoanId = true;
     }
 
     /**
-     * The first client in this sample collection sheet hierarchy will have its
-     * customer account id set to equal its loan account id
+     * The first client in this sample collection sheet hierarchy will have its customer account id set to equal its
+     * loan account id
      */
     public void setCustomerAccountIdtoLoanAccountIdForFirstClient() {
         this.customerAccountIdtoLoanAccountIdForFirstClient = true;
     }
 
     /**
-     * The first client in this sample collection sheet hierarchy will have its
-     * loan account id set to equal its customer account id
+     * The first client in this sample collection sheet hierarchy will have its loan account id set to equal its
+     * customer account id
      */
     public void setLoanAccountIdtoCustomerAccountIdForFirstClient() {
         this.loanAccountIdtoCustomerAccountIdForFirstClient = true;
     }
 
     /**
-     * The first client in this sample collection sheet hierarchy will have a
-     * savings account added with the savings account id set to equal its loan
-     * account id
+     * The first client in this sample collection sheet hierarchy will have a savings account added with the savings
+     * account id set to equal its loan account id
      */
     public void setSavingsAccountIdtoLoanAccountIdForFirstClient() {
         this.savingsAccountIdtoLoanAccountIdForFirstClient = true;
     }
 
     /**
-     * The first client's loan account will have a repayment set that is greater
-     * than the outstanding loan amount
+     * The first client's loan account will have a repayment set that is greater than the outstanding loan amount
      */
     public void setOverpayLoan() {
         this.overpayLoan = true;
@@ -761,6 +764,10 @@ public class TestSaveCollectionSheetUtils {
 
     public void setNormalLoanRepayment() {
         this.normalLoanRepayment = true;
+    }
+
+    public void setCreateSavingsAccounts() {
+        this.createSavingsAccounts = true;
     }
 
 }

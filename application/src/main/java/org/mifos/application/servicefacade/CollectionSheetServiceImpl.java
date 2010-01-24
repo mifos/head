@@ -19,10 +19,13 @@
  */
 package org.mifos.application.servicefacade;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.hibernate.HibernateException;
 import org.joda.time.LocalDate;
@@ -37,10 +40,13 @@ import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * implementation of CollectionSheetService
@@ -271,12 +277,24 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
                 .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
 
-        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = collectionSheetDao
-                .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
+        // Retrieve Savings Account information, if any
+        final List<CollectionSheetCustomerSavingsAccountDto> savingsAccounts = collectionSheetDao
+                .findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams);
+        Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
+        Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
+        if (savingsAccounts != null && savingsAccounts.size() > 0) {
+            if (containsNonIndividualAccount(savingsAccounts)) {
+                allSavingsDepositsGroupedByCustomerId = collectionSheetDao
+                        .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
+            }
 
-        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = collectionSheetDao
-                .findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams);
+            if (containsIndividualAccount(savingsAccounts)) {
+                allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = collectionSheetDao
+                        .findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams);
+            }
+        }
 
+        //
         final List<CollectionSheetCustomerDto> populatedCollectionSheetCustomer = new ArrayList<CollectionSheetCustomerDto>();
         for (CollectionSheetCustomerDto collectionSheetCustomer : customerHierarchy) {
 
@@ -290,12 +308,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             final List<CollectionSheetCustomerLoanDto> associatedLoanDisbursements = allLoanDisbursements
                     .get(customerInHierarchyId);
 
-            final List<CollectionSheetCustomerSavingDto> associatedSavingAccount = allSavingsDepositsGroupedByCustomerId
-                    .get(customerInHierarchyId);
-
-            final List<CollectionSheetCustomerSavingDto> associatedIndividualSavingsAccounts = allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId
-                    .get(customerInHierarchyId);
-
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollections = allAccountCollectionsByCustomerId
                     .get(customerInHierarchyId);
             final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollectionFees = feesAssociatedWithAccountCollectionsByCustomerId
@@ -304,12 +316,137 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             final CollectionSheetCustomerAccountDto customerAccount = sumAssociatedCustomerAccountCollectionFees(
                     customerAccountCollections, customerAccountCollectionFees);
 
+            // process savings accounts
+            List<CollectionSheetCustomerSavingDto> associatedSavingAccounts = ensureAllSavingsAccountsRepresented(
+                    allSavingsDepositsGroupedByCustomerId.get(customerInHierarchyId), savingsAccounts,
+                    customerInHierarchyId, false);
+            List<CollectionSheetCustomerSavingDto> associatedIndividualSavingsAccounts = ensureAllSavingsAccountsRepresented(
+                    allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId.get(customerInHierarchyId),
+                    savingsAccounts, customerInHierarchyId, true);
+
+            //
             populatedCollectionSheetCustomer.add(createNullSafeCollectionSheetCustomer(collectionSheetCustomer,
                     associatedLoanRepayments, outstandingFeesOnLoanRepayments, associatedLoanDisbursements,
-                    associatedSavingAccount, associatedIndividualSavingsAccounts, customerAccount));
+                    associatedSavingAccounts, associatedIndividualSavingsAccounts, customerAccount));
+
         }
 
         return new CollectionSheetDto(populatedCollectionSheetCustomer);
+    }
+
+    /*
+     * Each savings account should be represented in the collection sheet. The previous retrievals only bring back
+     * savings accounts that have unpaid installments. The following code adds a zero entry for any savings accounts not
+     * there. This because it is possible to deposit or withdraw without an outstanding unpaid installment
+     */
+    private List<CollectionSheetCustomerSavingDto> ensureAllSavingsAccountsRepresented(
+            List<CollectionSheetCustomerSavingDto> associatedSavingAccountsWithUnpaidInstallments,
+            final List<CollectionSheetCustomerSavingsAccountDto> savingsAccounts, final Integer customerId,
+            final boolean appliesToIndividualSavingsAccounts) {
+
+        if (savingsAccounts == null || savingsAccounts.size() == 0) {
+            return associatedSavingAccountsWithUnpaidInstallments;
+        }
+
+        List<CollectionSheetCustomerSavingDto> savingAccountsList = null;
+        if (associatedSavingAccountsWithUnpaidInstallments != null) {
+            savingAccountsList = new ArrayList<CollectionSheetCustomerSavingDto>();
+            savingAccountsList.addAll(associatedSavingAccountsWithUnpaidInstallments);
+        }
+
+        for (CollectionSheetCustomerSavingsAccountDto savingsAccount : savingsAccounts) {
+
+            if ((savingsAccount.getCustomerId().compareTo(customerId) == 0)
+                    && (isIndividualSavingsAccount(savingsAccount.getCustomerLevelId(), savingsAccount
+                            .getRecommendedAmountUnitId()) == appliesToIndividualSavingsAccounts)) {
+                // matches on customer and type of savings account
+                // now check if account already in list
+
+                Integer insertionPoint = whereInSavingsAccountsListToInsertZeroValueSavingsAccount(savingAccountsList,
+                        savingsAccount.getAccountId());
+
+                if (insertionPoint != null) {
+                    if (savingAccountsList == null) {
+                        savingAccountsList = new ArrayList<CollectionSheetCustomerSavingDto>();
+                    }
+
+                    CollectionSheetCustomerSavingDto zeroValueSavingsAccount = new CollectionSheetCustomerSavingDto();
+                    zeroValueSavingsAccount.setCustomerId(savingsAccount.getCustomerId());
+                    zeroValueSavingsAccount.setAccountId(savingsAccount.getAccountId());
+                    zeroValueSavingsAccount.setProductId(savingsAccount.getProductId());
+                    zeroValueSavingsAccount.setProductShortName(savingsAccount.getProductShortName());
+                    zeroValueSavingsAccount.setRecommendedAmountUnitId(savingsAccount.getRecommendedAmountUnitId());
+                    zeroValueSavingsAccount.setCurrencyId(savingsAccount.getCurrencyId());
+                    zeroValueSavingsAccount.setDepositDue(BigDecimal.ZERO);
+                    zeroValueSavingsAccount.setDepositPaid(BigDecimal.ZERO);
+                    
+                    if (savingAccountsList.size() > insertionPoint) {
+                        savingAccountsList.add(insertionPoint, zeroValueSavingsAccount);
+                    } else {
+                        savingAccountsList.add(zeroValueSavingsAccount);
+                    }
+                }
+            }
+        }
+
+        return savingAccountsList;
+    }
+
+    /*
+     * Method returns null accountId parameter already in savings account list
+     */
+    private Integer whereInSavingsAccountsListToInsertZeroValueSavingsAccount(
+            List<CollectionSheetCustomerSavingDto> savingsAccountsList, Integer accountId) {
+
+        if (savingsAccountsList == null) {
+            return 0;
+        }
+
+        // list is in accountId order
+        for (Integer i = 0; i < savingsAccountsList.size(); i++) {
+            if (savingsAccountsList.get(i).getAccountId().compareTo(accountId) == 0) {
+                return null;
+            }
+            if (savingsAccountsList.get(i).getAccountId().compareTo(accountId) > 0) {
+                return i;
+            }
+        }
+        return savingsAccountsList.size();
+    }
+
+    private boolean containsNonIndividualAccount(List<CollectionSheetCustomerSavingsAccountDto> savingsAccounts) {
+
+        for (CollectionSheetCustomerSavingsAccountDto savingsAccount : savingsAccounts) {
+
+            if (!isIndividualSavingsAccount(savingsAccount.getCustomerLevelId(), savingsAccount
+                    .getRecommendedAmountUnitId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean containsIndividualAccount(List<CollectionSheetCustomerSavingsAccountDto> savingsAccounts) {
+
+        for (CollectionSheetCustomerSavingsAccountDto savingsAccount : savingsAccounts) {
+
+            if (isIndividualSavingsAccount(savingsAccount.getCustomerLevelId(), savingsAccount
+                    .getRecommendedAmountUnitId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean isIndividualSavingsAccount(Short customerLevelId, Short recommendedAmountUnitId) {
+        if (customerLevelId.compareTo(CustomerLevel.CENTER.getValue()) == 0) {
+            return true;
+        }
+        if ((customerLevelId.compareTo(CustomerLevel.GROUP.getValue()) == 0) && (recommendedAmountUnitId != null)
+                && (recommendedAmountUnitId.compareTo(Short.valueOf("1")) == 0)) {
+            return true;
+        }
+        return false;
     }
 
     private CollectionSheetCustomerAccountDto sumAssociatedCustomerAccountCollectionFees(
