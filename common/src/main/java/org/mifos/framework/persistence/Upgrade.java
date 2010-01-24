@@ -272,16 +272,16 @@ public abstract class Upgrade {
             statement.close();
         }
         return numFields;
-
     }
     
     @SuppressWarnings("PMD.CloseResource") 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.") 
     protected int addLookupEntity(Connection connection, String name, String description)  throws SQLException { 
        int newId = -1; 
-       PreparedStatement statement = connection 
-                .prepareStatement("INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION) VALUES(NULL,?,?)"); 
-       statement.setString(1, name); 
+       PreparedStatement statement = connection.prepareStatement(
+               "INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION) VALUES(NULL,?,?)",
+                PreparedStatement.RETURN_GENERATED_KEYS);
+       statement.setString(1, name);
        statement.setString(2, description); 
        statement.executeUpdate(); 
        ResultSet keys = statement.getGeneratedKeys(); 
