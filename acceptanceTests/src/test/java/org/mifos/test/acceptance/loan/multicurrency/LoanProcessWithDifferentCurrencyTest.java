@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameter
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage.SubmitMultiCurrencyFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
@@ -92,22 +93,20 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    public void loanProcessWithDifferentCurrency() throws Exception {
+    public void createLoanProductThenAccount() throws Exception {
         createWeeklyLoanProduct();
         createLoanAccountOfDifferentCurrency("Client-1-USD");
-        createLoanAccountOfDifferentCurrency("Client-2-USD");
-        createLoanAccountOfDifferentCurrency("Client-3-USD");
-
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void approveThenDisburseAndApplyPayment() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
                 "LoanProcessWithDifferentCurrencyTest_002.xml.zip", dataSource, selenium);
 
         pendingApprovalToApplicationApproved("000100000000010");
-        pendingApprovalToApplicationApproved("000100000000011");
-        pendingApprovalToApplicationApproved("000100000000012");
-
         disburseLoan("000100000000010");
-        disburseLoan("000100000000011");
-        disburseLoan("000100000000012");
+        applyPayment("000100000000010");
     }
 
      @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -117,7 +116,6 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineMultiCurrencyLoanProduct(formParameters);
-
     }
 
      @SuppressWarnings({ "PMD.SignatureDeclareThrowsException" })
@@ -187,6 +185,17 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         formParameters.setPrincipalGLCode("1506");
         formParameters.setCurrencyId(Short.valueOf("1"));
         return formParameters;
+    }
+    
+    private void applyPayment(String loanAccountId) {
+        PaymentParameters paymentParameters = new PaymentParameters();
+        paymentParameters.setAmount("1018"); // interest + principal
+        paymentParameters.setTransactionDateDD("12");
+        paymentParameters.setTransactionDateMM("02");
+        paymentParameters.setTransactionDateYYYY("2010");
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
+        
+        loanTestHelper.applyPayment(loanAccountId, paymentParameters);
     }
 
     private AdminPage loginAndNavigateToAdminPage() {
