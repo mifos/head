@@ -706,6 +706,8 @@ public class ClientCustAction extends CustAction {
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
+    // FIXME: this method should be moved to a service which will return
+    // the DTO to the action class
     private ClientInformationDto loadClientInformationDto(ClientBO clientBO) {
         ClientInformationDto clientInformationDto = new ClientInformationDto();
         try {

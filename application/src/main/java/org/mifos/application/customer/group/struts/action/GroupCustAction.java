@@ -239,6 +239,8 @@ public class GroupCustAction extends CustAction {
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
+    // FIXME: this method should be moved to a service which will return
+    // the DTO to the action class    
     private GroupInformationDto loadGroupInformationDto(GroupBO groupBO) throws CustomerException {
         GroupPerformanceHistoryEntity performancHistory = groupBO.getGroupPerformanceHistory();
 

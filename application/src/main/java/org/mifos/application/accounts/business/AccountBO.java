@@ -854,8 +854,12 @@ public class AccountBO extends BusinessObject {
         return totalAmt;
     }
 
+    /*
+     * By default, an account will use the system defined default currency.
+     * Derived classes like LoanBO can override this to get the currency from
+     * the associated product (PrdOfferingBO)
+     */
     public MifosCurrency getCurrency() {
-        // TODO: will be replaced by a way to get currency from the loan product
         return Money.getDefaultCurrency();
     }
 

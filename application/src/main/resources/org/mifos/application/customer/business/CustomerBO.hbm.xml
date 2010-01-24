@@ -1206,7 +1206,6 @@
 			and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
 		]]>		
 	</sql-query>
-	<!-- work in progress on 2182 -->
 	<sql-query name="Customer.getLoanSummaryCurrenciesForAllClientsOfGroup">
 		<![CDATA[
 			select distinct(loanSummary.orig_principal_currency_id)  
