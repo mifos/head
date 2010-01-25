@@ -146,4 +146,11 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new AttachSurveyPage(selenium);
     }
+
+    public ViewRepaymentSchedulePage navigateToViewRepaymentSchedule() {
+        selenium.click("id=loanaccountdetail.link.viewRepaymentSchedule");
+        waitForPageToLoad();
+        return new ViewRepaymentSchedulePage(selenium);
+    }
+    
 }

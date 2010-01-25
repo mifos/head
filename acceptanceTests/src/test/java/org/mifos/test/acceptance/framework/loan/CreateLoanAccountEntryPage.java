@@ -36,6 +36,24 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
    
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters) {
         selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
+        if (formParameters.getLsimFrequencyWeeks() != null)  
+        {
+            selenium.click("loancreationdetails.input.frequencyWeeks");
+            selenium.type("loancreationdetails.input.weekFrequency",formParameters.getLsimWeekFrequency());
+            selenium.select("weekDay", "label=Friday");
+        }
+        if (formParameters.getLsimMonthTypeDayOfMonth() != null)  
+        {
+            selenium.click("loancreationdetails.input.monthType1");
+            selenium.type("loancreationdetails.input.dayOfMonth", formParameters.getLsimDayOfMonth());
+        }
+        if (formParameters.getLsimMonthTypeNthWeekdayOfMonth() != null)  
+        {
+            selenium.click("loancreationdetails.input.monthType2");
+            selenium.select("monthRank", formParameters.getLsimMonthRank());
+            selenium.select("monthWeek", formParameters.getLsimWeekDay());           
+        }
+
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
         selenium.click("schedulePreview.button.preview");

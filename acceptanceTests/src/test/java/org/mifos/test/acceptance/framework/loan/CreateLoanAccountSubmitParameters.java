@@ -22,12 +22,84 @@ package org.mifos.test.acceptance.framework.loan;
 
 public class CreateLoanAccountSubmitParameters {
     private String amount;
+    private String lsimFrequencyWeeks;
+    private String lsimFrequencyMonths;
+    private String lsimWeekFrequency;
+    private String lsimWeekDay;
+    private String lsimDayOfMonth;
+    private String lsimMonthTypeDayOfMonth;
+    private String lsimMonthTypeNthWeekdayOfMonth;
+    private String lsimMonthRank;
 
+    
     public String getAmount() {
         return this.amount;
     }
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+    public String getLsimFrequencyWeeks() {
+        return this.lsimFrequencyWeeks;
+    }
+
+    public void setLsimFrequencyWeeks(String lsimFrequencyWeeks) {
+        this.lsimFrequencyWeeks = lsimFrequencyWeeks;
+    }
+
+    public String getLsimFrequencyMonths() {
+        return this.lsimFrequencyMonths;
+    }
+
+    public void setLsimFrequencyMonths(String lsimFrequencyMonths) {
+        this.lsimFrequencyMonths = lsimFrequencyMonths;
+    }
+
+    public String getLsimWeekFrequency() {
+        return this.lsimWeekFrequency;
+    }
+
+    public void setLsimWeekFrequency(String lsimWeekFrequency) {
+        this.lsimWeekFrequency = lsimWeekFrequency;
+    }
+
+    public String getLsimWeekDay() {
+        return this.lsimWeekDay;
+    }
+
+    public void setLsimWeekDay(String lsimWeekDay) {
+        this.lsimWeekDay = lsimWeekDay;
+    }
+
+    public String getLsimDayOfMonth() {
+        return this.lsimDayOfMonth;
+    }
+
+    public void setLsimDayOfMonth(String lsimDayOfMonth) {
+        this.lsimDayOfMonth = lsimDayOfMonth;
+    }
+
+    public String getLsimMonthTypeDayOfMonth() {
+        return this.lsimMonthTypeDayOfMonth;
+    }
+
+    public void setLsimMonthTypeDayOfMonth(String lsimMonthTypeDayOfMonth) {
+        this.lsimMonthTypeDayOfMonth = lsimMonthTypeDayOfMonth;
+    }
+
+    public String getLsimMonthTypeNthWeekdayOfMonth() {
+        return this.lsimMonthTypeNthWeekdayOfMonth;
+    }
+
+    public void setLsimMonthTypeNthWeekdayOfMonth(String lsimMonthTypeNthWeekdayOfMonth) {
+        this.lsimMonthTypeNthWeekdayOfMonth = lsimMonthTypeNthWeekdayOfMonth;
+    }
+
+    public String getLsimMonthRank() {
+        return this.lsimMonthRank;
+    }
+
+    public void setLsimMonthRank(String lsimMonthRank) {
+        this.lsimMonthRank = lsimMonthRank;
     }
 }
