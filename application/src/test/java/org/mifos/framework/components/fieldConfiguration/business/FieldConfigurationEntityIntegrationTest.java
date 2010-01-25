@@ -33,7 +33,7 @@ public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTes
 
     public void testGetFieldConfigurationEntity() {
         FieldConfigurationEntity fieldConfigurationEntity = (FieldConfigurationEntity) StaticHibernateUtil
-                .getSessionTL().get(FieldConfigurationEntity.class, Integer.valueOf("1"));
+                .getSessionTL().get(FieldConfigurationEntity.class, Integer.valueOf("3"));
        Assert.assertEquals(fieldConfigurationEntity.getFieldName(), "SecondLastName");
     }
 }

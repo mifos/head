@@ -76,7 +76,7 @@ public class FieldConfig {
                         .getParentFieldConfig();
                 if ((fieldConfigurationEntity.getHiddenFlag().equals(FieldConfigurationConstant.YES) || (parentfieldConfigurationEntity != null && parentfieldConfigurationEntity
                         .getHiddenFlag().equals(FieldConfigurationConstant.YES)))
-                        && fieldConfigurationEntity.getFieldName().endsWith(fieldName)) {
+                        && fieldConfigurationEntity.getFieldName().equals(fieldName)) {
                     return true;
                 }
             }
@@ -97,16 +97,16 @@ public class FieldConfig {
                 if (parentfieldConfigurationEntity == null) {
                     if (fieldConfigurationEntity.getMandatoryFlag().equals(FieldConfigurationConstant.YES)
                             && fieldConfigurationEntity.getHiddenFlag().equals(FieldConfigurationConstant.NO)
-                            && fieldConfigurationEntity.getFieldName().endsWith(fieldName)) {
+                            && fieldConfigurationEntity.getFieldName().equals(fieldName)) {
                         return true;
                     }
                 } else if ((parentfieldConfigurationEntity.getMandatoryFlag().equals(FieldConfigurationConstant.YES)
                         && parentfieldConfigurationEntity.getHiddenFlag().equals(FieldConfigurationConstant.NO)
-                        && fieldConfigurationEntity.getFieldName().endsWith(fieldName) && fieldConfigurationEntity
+                        && fieldConfigurationEntity.getFieldName().equals(fieldName) && fieldConfigurationEntity
                         .getHiddenFlag().equals(FieldConfigurationConstant.NO))
                         || ((parentfieldConfigurationEntity.getMandatoryFlag().equals(FieldConfigurationConstant.NO)
                                 && parentfieldConfigurationEntity.getHiddenFlag().equals(FieldConfigurationConstant.NO)
-                                && fieldConfigurationEntity.getFieldName().endsWith(fieldName)
+                                && fieldConfigurationEntity.getFieldName().equals(fieldName)
                                 && fieldConfigurationEntity.getHiddenFlag().equals(FieldConfigurationConstant.NO) && fieldConfigurationEntity
                                 .getMandatoryFlag().equals(FieldConfigurationConstant.YES)))) {
                     return true;

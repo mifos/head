@@ -367,4 +367,45 @@ public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrut
 
         Assert.assertTrue(fieldConfig.isFieldManadatory("Loan.SourceOfFund"));
     }
+
+    public void testSpouseFatherNameFields() throws HibernateProcessException, PersistenceException {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideClientSpouseFatherMiddleName", "1");
+        addRequestParameter("mandatoryClientSpouseFatherSecondLastName", "1");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+
+        Assert.assertTrue(fieldConfig.isFieldHidden("Client.SpouseFatherMiddleName"));
+        Assert.assertFalse(fieldConfig.isFieldHidden("Client.MiddleName"));
+
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.SpouseFatherSecondLastName"));
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.SecondLastName"));
+
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideClientSpouseFatherMiddleName", "0");
+        addRequestParameter("mandatoryClientSpouseFatherSecondLastName", "0");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+
+        Assert.assertFalse(fieldConfig.isFieldHidden("Client.SpouseFatherMiddleName"));
+        Assert.assertFalse(fieldConfig.isFieldHidden("Client.MiddleName"));
+
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.SpouseFatherSecondLastName"));
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.SecondLastName"));
+    }
 }
