@@ -1,6 +1,6 @@
 [#ftl]
 [#import "spring.ftl" as spring]
-[#assign security=JspTaglibs["/WEB-INF/tld/security.tld"]]
+[#assign security=JspTaglibs["http://www.springframework.org/security/tags"]]
 
 [#-- To use macros defined here add the following directive at the top of an ftl file --]
 [#-- [#import "macros.ftl" as mifos] --]
