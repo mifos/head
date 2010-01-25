@@ -53,7 +53,7 @@ public class SavingsProductBuilder {
     private String globalProductNumber = "XXXXX-1111";
     private final Date startDate = new DateTime().minusDays(14).toDate();
     private String name = "testProduct";
-    private final String shortName = "VS2";
+    private String shortName = "VS2";
     private final Date createdDate = new DateTime().minusDays(14).toDate();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final GLCodeEntity depositGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
@@ -100,6 +100,11 @@ public class SavingsProductBuilder {
         return this;
     }
 
+    public SavingsProductBuilder withShortName(final String withShortName) {
+        this.shortName = withShortName;
+        return this;
+    }
+
     public SavingsProductBuilder appliesToCentersOnly() {
         this.applicableToCustomer = ApplicableTo.CENTERS;
         return this;
@@ -109,12 +114,12 @@ public class SavingsProductBuilder {
         this.applicableToCustomer = ApplicableTo.GROUPS;
         return this;
     }
-    
+
     public SavingsProductBuilder appliesToClientsOnly() {
         this.applicableToCustomer = ApplicableTo.CLIENTS;
         return this;
     }
-
+    
     public SavingsProductBuilder mandatory() {
         this.savingsType = SavingsType.MANDATORY;
         return this;

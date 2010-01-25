@@ -338,8 +338,8 @@ public class CollectionSheetServiceImplTest {
 
     @Test
     public void shouldRetrieveCollectionSheetDataContainingAllSavingAccountsForCustomerHierarchy() {
-
-        // setup
+//need to add a group etc. center wont get picked up.
+        // setup parameters used for collection sheet retrieve
         final LocalDate transactionDate = new LocalDate();
         final Integer centerId = Integer.valueOf(3);
         final String searchId = "1.1";
@@ -347,6 +347,7 @@ public class CollectionSheetServiceImplTest {
         final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(centerId, branchId,
                 searchId + ".%", transactionDate);
 
+        // setup one center
         final String name = "center";
         final Short level = Short.valueOf("3");
         final Short attendance = AttendanceType.ABSENT.getValue();
@@ -356,44 +357,46 @@ public class CollectionSheetServiceImplTest {
         final List<CollectionSheetCustomerDto> customerHierarchyList = new ArrayList<CollectionSheetCustomerDto>();
         customerHierarchyList.add(center);
 
-        // savings
+        // setup one savings account for the center
         final Integer savingAccountId = Integer.valueOf(24);
-        final CollectionSheetCustomerSavingDto savingAccount = new CollectionSheetCustomerSavingDto();
-        savingAccount.setCustomerId(centerId);
-        savingAccount.setAccountId(savingAccountId);
-        savingAccount.setDepositDue(BigDecimal.valueOf(Double.valueOf("25.0")));
+        final CollectionSheetCustomerSavingDto savingsAccount = new CollectionSheetCustomerSavingDto();
+        savingsAccount.setCustomerId(centerId);
+        savingsAccount.setAccountId(savingAccountId);
+        savingsAccount.setDepositDue(BigDecimal.valueOf(Double.valueOf("25.0")));
 
-        final CollectionSheetCustomerSavingDto savingAccount2 = new CollectionSheetCustomerSavingDto();
-        savingAccount2.setCustomerId(centerId);
-        savingAccount2.setAccountId(savingAccountId);
-        savingAccount2.setDepositDue(BigDecimal.valueOf(Double.valueOf("25.0")));
-
+        // following setup mimics one center savings account with an unpaid installment
         final Map<Integer, List<CollectionSheetCustomerSavingDto>> savingAccounts = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
-        savingAccounts.put(centerId, Arrays.asList(savingAccount));
-        savingAccounts.put(centerId, Arrays.asList(savingAccount2));
-        
+        savingAccounts.put(centerId, Arrays.asList(savingsAccount));
+
+        // follow setup mimics that there are in total three savings accounts for the center. The one setup above and
+        // two others.
         List<CollectionSheetCustomerSavingsAccountDto> allSavingsAccounts = new ArrayList<CollectionSheetCustomerSavingsAccountDto>();
         CollectionSheetCustomerSavingsAccountDto collectionSheetCustomerSavingsAccount = new CollectionSheetCustomerSavingsAccountDto();
+        collectionSheetCustomerSavingsAccount.setCustomerId(centerId);
+        collectionSheetCustomerSavingsAccount.setAccountId(savingAccountId);
+        collectionSheetCustomerSavingsAccount.setCustomerLevelId(CustomerLevel.CENTER.getValue());
+        collectionSheetCustomerSavingsAccount.setRecommendedAmountUnitId(null);
+        allSavingsAccounts.add(collectionSheetCustomerSavingsAccount);
+        collectionSheetCustomerSavingsAccount = new CollectionSheetCustomerSavingsAccountDto();
         collectionSheetCustomerSavingsAccount.setCustomerId(centerId);
         collectionSheetCustomerSavingsAccount.setAccountId(savingAccountId + 5);
         collectionSheetCustomerSavingsAccount.setCustomerLevelId(CustomerLevel.CENTER.getValue());
         collectionSheetCustomerSavingsAccount.setRecommendedAmountUnitId(null);
         allSavingsAccounts.add(collectionSheetCustomerSavingsAccount);
-
         collectionSheetCustomerSavingsAccount = new CollectionSheetCustomerSavingsAccountDto();
-        collectionSheetCustomerSavingsAccount.setCustomerId(center.getCustomerId());
+        collectionSheetCustomerSavingsAccount.setCustomerId(centerId);
         collectionSheetCustomerSavingsAccount.setAccountId(savingAccountId + 10);
         collectionSheetCustomerSavingsAccount.setCustomerLevelId(CustomerLevel.CENTER.getValue());
         collectionSheetCustomerSavingsAccount.setRecommendedAmountUnitId(null);
         allSavingsAccounts.add(collectionSheetCustomerSavingsAccount);
-        
 
         // stubbing
         when(collectionSheetDao.findCustomerHierarchy(centerId, transactionDate)).thenReturn(customerHierarchyList);
-        when(collectionSheetDao.findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams)).thenReturn(
+        when(collectionSheetDao.findSavingsDepositsforCustomerHierarchy(customerHierarchyParams)).thenReturn(
                 savingAccounts);
-        when(collectionSheetDao.findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams)).thenReturn(allSavingsAccounts);
-        
+        when(collectionSheetDao.findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams)).thenReturn(
+                allSavingsAccounts);
+
         // exercise test
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(centerId,
                 transactionDate);
@@ -403,9 +406,9 @@ public class CollectionSheetServiceImplTest {
         assertThat(collectionSheet.getCollectionSheetCustomer().size(), is(1));
 
         final CollectionSheetCustomerDto hierarchyRoot = collectionSheet.getCollectionSheetCustomer().get(0);
-        assertThat(hierarchyRoot.getIndividualSavingAccounts().size(), is(3));
-        final CollectionSheetCustomerSavingDto returnedSavingsAccount = hierarchyRoot
-                .getIndividualSavingAccounts().get(0);
+        assertThat(hierarchyRoot.getCollectionSheetCustomerSaving().size(), is(3));
+        final CollectionSheetCustomerSavingDto returnedSavingsAccount = hierarchyRoot.getCollectionSheetCustomerSaving()
+                .get(0);
         assertThat(returnedSavingsAccount.getTotalDepositAmount(), is(Double.valueOf("25.0")));
     }
 

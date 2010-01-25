@@ -29,7 +29,6 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -261,50 +260,6 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         } else {
             assertTrue("There should have been one loan account repayment error", false);
         }
-    }
-
-    public void testSavingsAccountsEntriesReturnedWhenNoOutstandingInstallmentExists() throws Exception {
-
-        saveCollectionSheetUtils.setCreateSavingsAccounts();
-        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
-        saveCollectionSheet.print();
-
-        // 1. Save this completed collection sheet which will leave no outstanding installment amounts
-        CollectionSheetErrorsView errors = null;
-        try {
-            errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
-        } catch (SaveCollectionSheetException e) {
-            throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
-        }
-        assertNotNull("'errors' should not be null", errors);
-        assertThat(errors.getSavingsDepNames().size(), is(0));
-        assertThat(errors.getSavingsWithNames().size(), is(0));
-        assertThat(errors.getLoanDisbursementAccountNumbers().size(), is(0));
-        assertThat(errors.getLoanRepaymentAccountNumbers().size(), is(0));
-        assertThat(errors.getCustomerAccountNumbers().size(), is(0));
-        assertNull("There shouldn't have been a database error", errors.getDatabaseError());
-
-        // 2. Retrieve the collection sheet for the same date (current date)
-        CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(saveCollectionSheetUtils
-                .getCenter().getCustomerId(), new LocalDate());
-        collectionSheet.print();
-
-        // 3. Check that first client has an entry for a saving account.
-        // If it has, it means that the mifos web UI (as well as any other collection sheet user interface) should allow
-        // deposits and withdrawals against it.
-        Boolean foundFirstClient = false;
-        for (CollectionSheetCustomerDto customer : collectionSheet.getCollectionSheetCustomer()) {
-            if (customer.getLevelId().compareTo(CustomerLevel.CLIENT.getValue()) == 0) {
-                foundFirstClient = true;
-                assertNotNull("Customer Saving list should be initialised", customer.getCollectionSheetCustomerSaving());
-                assertThat("Customer Saving list should have one entry", customer.getCollectionSheetCustomerSaving()
-                        .size(), is(1));
-                break;
-            }
-        }
-
-        assertTrue("There should have been a first client", foundFirstClient);
-
     }
 
     private DateTime initializeToFixedDateTime(Date date) {

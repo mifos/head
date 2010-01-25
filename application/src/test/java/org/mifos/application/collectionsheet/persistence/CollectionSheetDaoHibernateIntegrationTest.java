@@ -54,6 +54,7 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollect
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
+import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -378,14 +379,11 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
                 branchId, searchId, transactionDate);
 
         // exercise test
-        final Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDeposits = collectionSheetDao
-                .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
+        final List<CollectionSheetCustomerSavingsAccountDto> allSavingsDeposits = collectionSheetDao
+                .findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams);
 
         // verification
-        final List<CollectionSheetCustomerSavingDto> savingsDeposit = allSavingsDeposits
-                .get(center
-                .getCustomerId());
-        assertThat(savingsDeposit.size(), is(2));
+        assertThat(allSavingsDeposits.size(), is(2));
     }
     
 }

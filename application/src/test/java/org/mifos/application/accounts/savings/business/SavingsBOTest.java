@@ -303,7 +303,7 @@ public class SavingsBOTest {
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
         final Money zero = new Money(defaultCurrency);
-        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().withPayments(
+        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().completeGroup().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
         final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
@@ -397,7 +397,7 @@ public class SavingsBOTest {
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
         final Money zero = new Money(defaultCurrency);
-        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().withPayments(
+        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().completeGroup().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
         final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");

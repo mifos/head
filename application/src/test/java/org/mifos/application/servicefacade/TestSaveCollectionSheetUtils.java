@@ -32,7 +32,6 @@ import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -55,11 +54,9 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -111,7 +108,6 @@ public class TestSaveCollectionSheetUtils {
     private Boolean invalidDisbursalAmountFirstClient = false;
     private Boolean invalidTransactionDate = false;
     private Boolean normalLoanRepayment = false;
-    private Boolean createSavingsAccounts = false;
 
     /*
      * 
@@ -120,7 +116,6 @@ public class TestSaveCollectionSheetUtils {
     private GroupBO group;
     private ClientBO client;
     private LoanBO loan;
-    private SavingsBO clientSavingsAccount = null;
     private CenterBO anotherCenter;
     private GroupBO anotherGroup;
     private ClientBO anotherClient;
@@ -224,15 +219,7 @@ public class TestSaveCollectionSheetUtils {
         }
 
         loan.save();
-        if (createSavingsAccounts) {
-            SavingsOfferingBO clientSavingsOffering = TestObjectFactory.createSavingsProduct("Client Saving Product",
-                    "clsv", date, RecommendedAmountUnit.COMPLETE_GROUP); // using COMPLETE_GROUP because can't use null
-            // at the time of writing... TestObjectFactory.createSavingsAccount creates a voluntary savings account with
-            // a recommended amount of 300.00
-            clientSavingsAccount = TestObjectFactory.createSavingsAccount("40000001", client, Short.valueOf("16"), date,
-                    clientSavingsOffering);
-        }
-        
+
         StaticHibernateUtil.commitTransaction();
     }
 
@@ -247,10 +234,6 @@ public class TestSaveCollectionSheetUtils {
 
         if (loan != null) {
             loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, loan.getAccountId());
-        }
-        if (clientSavingsAccount != null) {
-            clientSavingsAccount = (SavingsBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
-                    clientSavingsAccount.getAccountId());
         }
         if (client != null) {
             client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
@@ -274,7 +257,6 @@ public class TestSaveCollectionSheetUtils {
                     anotherCenter.getCustomerId());
         }
         TestObjectFactory.cleanUp(loan);
-        TestObjectFactory.cleanUp(clientSavingsAccount);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
@@ -764,10 +746,6 @@ public class TestSaveCollectionSheetUtils {
 
     public void setNormalLoanRepayment() {
         this.normalLoanRepayment = true;
-    }
-
-    public void setCreateSavingsAccounts() {
-        this.createSavingsAccounts = true;
     }
 
 }

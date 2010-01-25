@@ -178,7 +178,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
         // setup
         savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().voluntary().withSavingsProduct(savingsProduct).withCustomer(group)
+        savingsAccount = new SavingsAccountBuilder().voluntary().completeGroup().withSavingsProduct(savingsProduct).withCustomer(group)
                 .build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
@@ -194,69 +194,13 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
         // setup
         savingsProduct = new SavingsProductBuilder().voluntary().appliesToClientsOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().voluntary().withSavingsProduct(savingsProduct).withCustomer(group)
+        savingsAccount = new SavingsAccountBuilder().voluntary().completeGroup().withSavingsProduct(savingsProduct).withCustomer(group)
                 .build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         // exercise test
         List<CollectionSheetCustomerSavingDto> mandatorySavingAccounts = savingsDao
                 .findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
-
-        // verification
-        assertThat(mandatorySavingAccounts.size(), is(1));
-    }
-
-    public void testShouldReturnEmptyListWhenNoSavingsAccountsForCentersOrGroupsWithPerIndividualStatusExist() {
-
-        // exercise test
-        List<CollectionSheetCustomerSavingDto> mandatorySavingAccounts = savingsDao
-                .findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
-
-        // verification
-        assertTrue(mandatorySavingAccounts.isEmpty());
-    }
-
-    public void testShouldFindExistingVoluntaryAndMandatorySavingsAccountsForCentersWhenCenterIsTopOfCustomerHierarchy() {
-
-        // setup
-        savingsProduct = new SavingsProductBuilder().voluntary().appliesToCentersOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().voluntary().withSavingsProduct(savingsProduct)
-                .withCustomer(center).build();
-        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
-
-        secondSavingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly()
-                .withName("testSavingPrd2").buildForIntegrationTests();
-        secondSavingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(secondSavingsProduct)
-                .withCustomer(center).build();
-        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(secondSavingsProduct,
-                secondSavingsAccount);
-
-        // exercise test
-        List<CollectionSheetCustomerSavingDto> mandatorySavingAccounts = savingsDao
-                .findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
-
-        // verification
-        assertThat(mandatorySavingAccounts.size(), is(2));
-    }
-
-    public void testShouldFindExistingVoluntaryAndMandatorySavingsAccountsForGroupsWithPerIndividualStatusWhenCenterIsTopOfCustomerHierarchy() {
-
-        // setup
-        savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().perIndividualVoluntary().withSavingsProduct(savingsProduct)
-                .withCustomer(group).build();
-        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
-
-        secondSavingsProduct = new SavingsProductBuilder().mandatory().appliesToGroupsOnly().withName("testSavingPrd2")
-                .buildForIntegrationTests();
-        secondSavingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(secondSavingsProduct)
-                .withCustomer(group).build();
-        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(secondSavingsProduct,
-                secondSavingsAccount);
-
-        // exercise test
-        List<CollectionSheetCustomerSavingDto> mandatorySavingAccounts = savingsDao
-                .findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
 
         // verification
         assertThat(mandatorySavingAccounts.size(), is(1));
@@ -276,7 +220,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
         // setup
         savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().perIndividualVoluntary().withSavingsProduct(savingsProduct)
+        savingsAccount = new SavingsAccountBuilder().voluntary().completeGroup().perIndividual().withSavingsProduct(savingsProduct)
                 .withCustomer(group).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
@@ -309,7 +253,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
         // setup
         savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().perIndividualVoluntary().withSavingsProduct(savingsProduct)
+        savingsAccount = new SavingsAccountBuilder().voluntary().completeGroup().perIndividual().withSavingsProduct(savingsProduct)
                 .withCustomer(group).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 

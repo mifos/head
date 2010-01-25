@@ -22,12 +22,14 @@ package org.mifos.application.collectionsheet.persistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
@@ -41,7 +43,7 @@ public class ClientBuilder {
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxxx-112").build();
     private PersonnelBO loanOfficer;
-    private String searchId;
+    private String searchId = null;
     private final Short updatedFlag = Constants.NO;
     private CustomerStatus customerStatus = CustomerStatus.CLIENT_ACTIVE;
     private CustomerBO parentCustomer; 
@@ -50,7 +52,9 @@ public class ClientBuilder {
     public ClientBO buildForIntegrationTests() {
         
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        setSearchId();
+        if (searchId == null) {
+            setSearchId();
+        }
         
         final ClientBO client = new ClientBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting,
                 searchId, parentCustomer); 
@@ -106,6 +110,11 @@ public class ClientBuilder {
 
     public ClientBuilder inActive() {
         this.customerStatus = CustomerStatus.CENTER_INACTIVE;
+        return this;
+    }
+
+    public ClientBuilder withSearchId(String withSearchId) {
+        this.searchId = withSearchId;
         return this;
     }
 

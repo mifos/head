@@ -67,7 +67,7 @@ public class SavingsAccountBuilder {
 
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
-    private final Money recommendedAmount = new Money(TestUtils.getCurrency(), "13.0");
+    private Money recommendedAmount = new Money(TestUtils.getCurrency(), "13.0");
     private CustomerPersistence customerDao;
     private Money savingsBalanceAmount = new Money(TestUtils.getCurrency(), "0.0");
     private SavingsTransactionActivityHelper savingsTransactionActivityHelper = new SavingsTransactionActivityHelperImpl();
@@ -105,12 +105,15 @@ public class SavingsAccountBuilder {
 
     public SavingsAccountBuilder voluntary() {
         this.savingsType = SavingsType.VOLUNTARY;
+        return this;
+    }
+
+    public SavingsAccountBuilder completeGroup() {
         this.recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
         return this;
     }
 
-    public SavingsAccountBuilder perIndividualVoluntary() {
-        this.savingsType = SavingsType.VOLUNTARY;
+    public SavingsAccountBuilder perIndividual() {
         this.recommendedAmountUnit = RecommendedAmountUnit.PER_INDIVIDUAL;
         return this;
     }
@@ -148,6 +151,11 @@ public class SavingsAccountBuilder {
 
     public SavingsAccountBuilder withSavingsOfficer(final PersonnelBO withSavingsOfficer) {
         this.savingsOfficer = withSavingsOfficer;
+        return this;
+    }
+
+    public SavingsAccountBuilder withRecommendedAmount(final Money withRecommendedAmount) {
+        this.recommendedAmount = withRecommendedAmount;
         return this;
     }
 }

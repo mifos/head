@@ -42,7 +42,7 @@ public class GroupBuilder {
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
     private PersonnelBO loanOfficer;
-    private String searchId;
+    private String searchId = null;
     private final Short updatedFlag = Constants.NO;
     private final CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
     private CustomerBO parentCustomer;
@@ -50,7 +50,9 @@ public class GroupBuilder {
     public GroupBO build() {
 
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        setSearchId();
+        if (searchId == null) {
+            setSearchId();
+        }
 
         group = new GroupBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, searchId,
                 parentCustomer);
@@ -89,6 +91,11 @@ public class GroupBuilder {
 
     public GroupBuilder withParentCustomer(final CustomerBO withParentCustomer) {
         this.parentCustomer = withParentCustomer;
+        return this;
+    }
+
+    public GroupBuilder withSearchId(String withSearchId) {
+        this.searchId = withSearchId;
         return this;
     }
 

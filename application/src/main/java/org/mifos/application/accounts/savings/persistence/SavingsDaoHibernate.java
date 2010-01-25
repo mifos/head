@@ -93,33 +93,6 @@ public class SavingsDaoHibernate implements SavingsDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CollectionSheetCustomerSavingDto> findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
-            final CustomerHierarchyParams customerHierarchyParams) {
-
-        final Map<String, Object> topOfHierarchyParameters = new HashMap<String, Object>();
-        topOfHierarchyParameters.put("CUSTOMER_ID", customerHierarchyParams.getCustomerAtTopOfHierarchyId());
-        topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
-
-        final List<CollectionSheetCustomerSavingDto> centerOrPerIndividualGroupSavingsOnRootCustomer = (List<CollectionSheetCustomerSavingDto>) baseDao
-                .executeNamedQueryWithResultTransformer(
-                        "findAllSavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy",
-                        topOfHierarchyParameters, CollectionSheetCustomerSavingDto.class);
-
-        final Map<String, Object> restOfHierarchyParameters = new HashMap<String, Object>();
-        restOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
-        restOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
-        restOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
-
-        final List<CollectionSheetCustomerSavingDto> perIndividualGroupSavingsOnRestOfHierarchy = (List<CollectionSheetCustomerSavingDto>) baseDao
-                .executeNamedQueryWithResultTransformer(
-                        "findAllSavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy",
-                        restOfHierarchyParameters, CollectionSheetCustomerSavingDto.class);
-
-        return nullSafeSavingsHierarchy(centerOrPerIndividualGroupSavingsOnRootCustomer,
-                perIndividualGroupSavingsOnRestOfHierarchy);
-    }
-
-    @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
 
@@ -194,7 +167,8 @@ public class SavingsDaoHibernate implements SavingsDao {
         topOfHierarchyParameters.put("BRANCH_ID", customerHierarchyParams.getBranchId());
         topOfHierarchyParameters.put("TRANSACTION_DATE", customerHierarchyParams.getTransactionDate().toString());
         topOfHierarchyParameters.put("SEARCH_ID", customerHierarchyParams.getSearchId());
-        topOfHierarchyParameters.put("SEARCH_ID2", customerHierarchyParams.getSearchId() + ".%");
+        //snip the '.%' from SEARCH_ID
+        topOfHierarchyParameters.put("SEARCH_ID_NO_PERCENTAGE", customerHierarchyParams.getSearchId().substring(0, customerHierarchyParams.getSearchId().length() - 2));
 
         return (List<CollectionSheetCustomerSavingsAccountDto>) baseDao.executeNamedQueryWithResultTransformer(
                 "findAllSavingAccountsForCustomerHierarchy", topOfHierarchyParameters,

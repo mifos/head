@@ -318,13 +318,9 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         final List<CollectionSheetCustomerSavingDto> voluntarySavingAccount = savingsDao
                 .findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(customerHierarchyParams);
 
-        final List<CollectionSheetCustomerSavingDto> centerOrGroupSavingsAccountsToBePaidByClient = savingsDao
-                .findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(customerHierarchyParams);
-
         final List<CollectionSheetCustomerSavingDto> allSavingsAccounts = new ArrayList<CollectionSheetCustomerSavingDto>();
         allSavingsAccounts.addAll(mandatorySavingAccount);
         allSavingsAccounts.addAll(voluntarySavingAccount);
-        allSavingsAccounts.addAll(centerOrGroupSavingsAccountsToBePaidByClient);
 
         return convertListToMapGroupedByCustomerId(allSavingsAccounts);
     }

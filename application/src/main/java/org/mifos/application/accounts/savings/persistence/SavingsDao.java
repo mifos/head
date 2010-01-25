@@ -36,9 +36,6 @@ public interface SavingsDao {
     List<CollectionSheetCustomerSavingDto> findAllVoluntarySavingAccountsForClientsAndGroupsWithCompleteGroupStatusForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
 
-    List<CollectionSheetCustomerSavingDto> findAllSavingAccountsForCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
-            CustomerHierarchyParams customerHierarchyParams);
-
     List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForIndividualChildrenOfCentersOrGroupsWithPerIndividualStatusForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
 

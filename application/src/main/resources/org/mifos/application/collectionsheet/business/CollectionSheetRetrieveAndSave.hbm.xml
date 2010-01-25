@@ -624,74 +624,6 @@
 		]]>
 	</sql-query>
 	
-	<sql-query name="findAllSavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="accountId" type="integer" />
-		<return-scalar column="productId" type="short" />
-		<return-scalar column="productShortName" type="string" />
-		<return-scalar column="recommendedAmountUnitId" type="short" />
-		<return-scalar column="currencyId" type="short" />
-		<return-scalar column="depositDue" type="big_decimal" />
-		<return-scalar column="depositPaid" type="big_decimal" />
-		<![CDATA[
-		   	  select c.customer_id as customerId,
-		   			a.account_id as accountId,
-		   			po.prd_offering_id as productId,
-		   			po.prd_offering_short_name as productShortName,
-		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
-             	    sse.deposit_currency_id as currencyId,
-					0 as depositDue,
-					0 as depositPaid
-			from saving_schedule as sse
-			join savings_account s on sse.account_id = s.account_id
-			join account a on s.account_id = a.account_id
-			join customer c on a.customer_id = c.customer_id
-			join prd_offering po on s.prd_offering_id = po.prd_offering_id
-			where sse.action_date <= date(:TRANSACTION_DATE)
-			and sse.payment_status= 0
-			and c.customer_id = :CUSTOMER_ID
-			and c.status_id in (3,4,9,10,13)
-      		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
-			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
-			order by c.customer_id, a.account_id, po.prd_offering_name
-		]]>
-	</sql-query>
-	
-	<sql-query name="findAllSavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="accountId" type="integer" />
-		<return-scalar column="productId" type="short" />
-		<return-scalar column="productShortName" type="string" />
-		<return-scalar column="recommendedAmountUnitId" type="short" />
-		<return-scalar column="currencyId" type="short" />
-		<return-scalar column="depositDue" type="big_decimal" />
-		<return-scalar column="depositPaid" type="big_decimal" />
-		<![CDATA[
-		   select c.customer_id as customerId,
-		   			a.account_id as accountId,
-		   			po.prd_offering_id as productId, 
-		   			po.prd_offering_short_name as productShortName,
-		   			s.recommended_amnt_unit_id as recommendedAmountUnitId,
-                    sse.deposit_currency_id as currencyId,
-					0 as depositDue,
-					0 as depositPaid
-			from saving_schedule as sse
-			join savings_account s on sse.account_id = s.account_id
-			join account a on s.account_id = a.account_id
-			join customer c on a.customer_id = c.customer_id
-			join prd_offering po on s.prd_offering_id = po.prd_offering_id
-			where sse.action_date <= date(:TRANSACTION_DATE)
-			and sse.payment_status= 0
-			and c.branch_id = :BRANCH_ID
-			and c.search_id like :SEARCH_ID
-			and c.status_id in (3,4,9,10,13)
-      		and c.customer_level_id = 2 
-      		and s.recommended_amnt_unit_id=1
-			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
-			order by c.customer_id, a.account_id, po.prd_offering_name
-		]]>
-	</sql-query>
-	
     <sql-query name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
         <return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
@@ -829,14 +761,14 @@
 		    po.prd_offering_short_name as productShortName,
 		    sa.savings_balance_currency_id as currencyId,
 		    c.customer_level_id as customerLevelId,
-		    so.recommended_amnt_unit_id as recommendedAmountUnitId
+		    sa.recommended_amnt_unit_id as recommendedAmountUnitId
 			from customer c
 			join account a on a.customer_id = c.customer_id
 			join savings_account sa on sa.account_id = a.account_id
 			join prd_offering po on po.prd_offering_id = sa.prd_offering_id
 			join savings_offering so on so.prd_offering_id = po.prd_offering_id
 			where c.branch_id = :BRANCH_ID
-			and (c.search_id = :SEARCH_ID or c.search_id like :SEARCH_ID2)
+			and (c.search_id = :SEARCH_ID_NO_PERCENTAGE or c.search_id like :SEARCH_ID)
 			and c.status_id in (3,4,9,10,13)
 			and a.account_state_id in (16, 18)
 			and sa.activation_date <= date(:TRANSACTION_DATE)

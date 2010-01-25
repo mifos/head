@@ -79,6 +79,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
+import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -367,25 +368,21 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        Date startDate = new Date(System.currentTimeMillis());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
         account = getLoanAccount(group, meeting);
-        Date currentDate = new Date(System.currentTimeMillis());
-        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
 
-        centerSavingsAccount = TestObjectFactory.createSavingsAccount("43244334", center, Short.valueOf("16"),
-                startDate, savingsOffering1);
-        groupSavingsAccount = TestObjectFactory.createSavingsAccount("43234434", group, Short.valueOf("16"), startDate,
-                savingsOffering2);
-        clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
-                startDate, savingsOffering3);
+        // Using utility method that uses builder pattern to create savings accounts - TestObjectFactory was creating
+        // installments for all savings accounts (which is wrong)
+        TestCollectionSheetRetrieveSavingsAccountsUtils collectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();
+        centerSavingsAccount = collectionSheetRetrieveSavingsAccountsUtils.createSavingsAccount(center, "cemi",
+                "120.00", false, false);
+        groupSavingsAccount = collectionSheetRetrieveSavingsAccountsUtils.createSavingsAccount(group, "gvcg", "180.00",
+                true, false);
+        clientSavingsAccount = collectionSheetRetrieveSavingsAccountsUtils.createSavingsAccount(client, "clm",
+                "222.00", false, false);
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         CustomerView customerView = new CustomerView();
         customerView.setCustomerId(center.getCustomerId());
@@ -556,7 +553,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         // production code).
         //
         // Considered using/updating the savingsProductBuilder functionality but that doesn't deal with the
-        // "per individual" aspect either.
+        // "per individual" aspect either (update: it does, but still problem with builder creating installments).
         // Decided not to try and fix it up (good deal of effort involved) but rather change the
         // TestObjectFactory.createSavingsProduct to accept a RecommendedAmountUnit parameter.
         // Unfortunately it wouldn't allow a null parameter (which is valid for centers and clients) through so, where
