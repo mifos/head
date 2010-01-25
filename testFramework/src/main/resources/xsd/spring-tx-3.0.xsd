@@ -8,8 +8,8 @@
 		elementFormDefault="qualified"
 		attributeFormDefault="unqualified">
 
-	<xsd:import namespace="http://www.springframework.org/schema/beans"/>
-	<xsd:import namespace="http://www.springframework.org/schema/tool"/>
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"/>
+	<xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd"/>
 
 	<xsd:annotation>
 		<xsd:documentation><![CDATA[
@@ -67,13 +67,15 @@
 		<xsd:complexType>
 			<xsd:annotation>
 				<xsd:documentation source="java:org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"><![CDATA[
-	Indicates that transaction configuration is defined by Java5
+	Indicates that transaction configuration is defined by Java 5
 	annotations on bean classes, and that proxies are automatically
 	to be created for the relevant annotated beans.
-	
-	Transaction semantics such as propagation settings, the isolation
-	level, the rollback rules, etc are all defined in the annotation
-	metadata.
+
+	The default annotations supported are Spring's @Transactional
+	and EJB3's @TransactionAttribute (if available).
+
+	Transaction semantics such as propagation settings, the isolation level,
+	the rollback rules, etc are all defined in the annotation metadata.
 				]]></xsd:documentation>
 			</xsd:annotation>
 			<xsd:attribute name="transaction-manager" type="xsd:string" default="transactionManager">
@@ -94,16 +96,20 @@
 				</xsd:annotation>
 			</xsd:attribute>
 			<xsd:attribute name="mode" default="proxy">
-				<xsd:simpleType>
-					<xsd:annotation>
-						<xsd:documentation><![CDATA[
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
 	Should annotated beans be proxied using Spring's AOP framework,
 	or should they rather be weaved with an AspectJ transaction aspect?
 
 	AspectJ weaving requires spring-aspects.jar on the classpath,
 	as well as load-time weaving (or compile-time weaving) enabled.
-						]]></xsd:documentation>
-					</xsd:annotation>
+
+	Note: The weaving-based aspect requires the @Transactional annotation to be
+	defined on the concrete class. Annotations in interfaces will not work
+	in that case (they will rather only work with interface-based proxies)!
+					]]></xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
 					<xsd:restriction base="xsd:string">
 						<xsd:enumeration value="proxy"/>
 						<xsd:enumeration value="aspectj"/>
@@ -115,6 +121,10 @@
 					<xsd:documentation><![CDATA[
 	Are class-based (CGLIB) proxies to be created? By default, standard
 	Java interface-based proxies are created.
+
+	Note: Class-based proxies require the @Transactional annotation to be
+	defined on the concrete class. Annotations in interfaces will not work
+	in that case (they will rather only work with interface-based proxies)!
 					]]></xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
@@ -134,7 +144,7 @@
 			<xsd:documentation><![CDATA[
 	Creates a default JtaTransactionManager bean with name "transactionManager",
 	matching the default bean name expected by the "annotation-driven" tag.
-	Automatically detects WebLogic, WebSphere an OC4J, creating a WebLogicJtaTransactionManager,
+	Automatically detects WebLogic, WebSphere and OC4J: creating a WebLogicJtaTransactionManager,
 	WebSphereUowTransactionManager or OC4JJtaTransactionManager, respectively.
 
 	For customization needs, consider defining a JtaTransactionManager bean as a regular
@@ -163,12 +173,12 @@
 						</xsd:annotation>
 					</xsd:attribute>
 					<xsd:attribute name="propagation" default="REQUIRED">
-						<xsd:simpleType>
-							<xsd:annotation>
-								<xsd:documentation source="java:org.springframework.transaction.annotation.Propagation"><![CDATA[
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.transaction.annotation.Propagation"><![CDATA[
 	The transaction propagation behavior.
-								]]></xsd:documentation>
-							</xsd:annotation>
+							]]></xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
 							<xsd:restriction base="xsd:string">
 								<xsd:enumeration value="REQUIRED"/>
 								<xsd:enumeration value="SUPPORTS"/>
@@ -181,12 +191,12 @@
 						</xsd:simpleType>
 					</xsd:attribute>
 					<xsd:attribute name="isolation" default="DEFAULT">
-						<xsd:simpleType>
-							<xsd:annotation>
-								<xsd:documentation source="java:org.springframework.transaction.annotation.Isolation"><![CDATA[
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.transaction.annotation.Isolation"><![CDATA[
 	The transaction isolation level.
-								]]></xsd:documentation>
-							</xsd:annotation>
+							]]></xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
 							<xsd:restriction base="xsd:string">
 								<xsd:enumeration value="DEFAULT"/>
 								<xsd:enumeration value="READ_UNCOMMITTED"/>

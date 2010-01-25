@@ -3,14 +3,13 @@
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-   classpath:xsd/spring-beans-2.5.xsd">
+   classpath:xsd/spring-beans-3.0.xsd">
 
     <!-- This MessageSource will load localized text from external
          resource bundle files  -->
     <bean id="messageSource"
         class="org.springframework.context.support.ResourceBundleMessageSource"
-        abstract="false" lazy-init="default" autowire="default"
-        dependency-check="default">
+        abstract="false" lazy-init="default" autowire="default">
         <property name="basenames">
             <list>
                 <value>org/mifos/config/localizedResources/LookupValueMessages</value>
@@ -26,7 +25,6 @@
     <bean id="messageLookup"
         class="org.mifos.application.master.MessageLookup"
         abstract="false" lazy-init="default" autowire="default"
-        dependency-check="default"
         factory-method="getInstance">        
     </bean>
 

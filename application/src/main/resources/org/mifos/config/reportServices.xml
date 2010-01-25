@@ -1,8 +1,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:ehcache="http://www.springmodules.org/schema/ehcache"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-	http://www.springmodules.org/schema/ehcache http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	classpath:xsd/spring-beans-3.0.xsd 
+	http://www.springmodules.org/schema/ehcache 
+	http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd">
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 		<property name="configLocation">
 			<value>classpath:org/mifos/config/resources/ehcache.xml</value>
