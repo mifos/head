@@ -28,6 +28,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 
 public class PrincipalAccountingEntry extends BaseAccountingEntry {
@@ -41,7 +42,8 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
         Money amountToPost = null;
 
         if (((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId()))
-            amountToPost = Money.round(loanTrxn.getPrincipalAmount());
+            amountToPost = Money.round(loanTrxn.getPrincipalAmount(), loanTrxn.getPrincipalAmount().getCurrency().getRoundingAmountBigDecimal(),
+                    AccountingRules.getCurrencyRoundingMode());
         else
             amountToPost = principalAmountNotRounded;
 

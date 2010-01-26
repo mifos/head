@@ -20,8 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import java.math.RoundingMode;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -30,41 +28,19 @@ import org.testng.annotations.Test;
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MifosCurrencyTest extends TestCase {
 
-    public void testRoundingModeUp() throws Exception {
-        MifosCurrency currency = new MifosCurrency();
-        currency.setRoundingMode((short) 1);
-       Assert.assertEquals(RoundingMode.CEILING, currency.getRoundingModeEnum());
-    }
-
-    public void testRoundingModeDown() throws Exception {
-        MifosCurrency currency = new MifosCurrency();
-        currency.setRoundingMode((short) 2);
-       Assert.assertEquals(RoundingMode.FLOOR, currency.getRoundingModeEnum());
-    }
-
-    public void testRoundingModeInvalid() throws Exception {
-        MifosCurrency currency = new MifosCurrency();
-        currency.setRoundingMode((short) 0);
-        try {
-            currency.getRoundingModeEnum();
-            Assert.fail();
-        } catch (IllegalStateException e) {
-           Assert.assertEquals("bad rounding mode 0", e.getMessage());
-        }
-    }
     
     public void testEqualsOnCurrencyId() {
-        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", Short.valueOf("1"), Float
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", Float
                 .valueOf("1"), Short.valueOf("3"), "USD");
-        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1"), "Dollar", Short.valueOf("1"), Float
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1"), "Dollar", Float
                 .valueOf("1"), Short.valueOf("3"), "USD");
        Assert.assertTrue(currency1.equals(currency2));
     }
 
     public void testEqualsFailureOnCurrencyId() {
-        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", Short.valueOf("1"), Float
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", Float
                 .valueOf("1"), Short.valueOf("3"), "USD");
-        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("2"), "Rupees", Short.valueOf("1"), Float
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("2"), "Rupees", Float
                 .valueOf("1"), Short.valueOf("3"), "USD");
         Assert.assertFalse(currency1.equals(currency2));
     }

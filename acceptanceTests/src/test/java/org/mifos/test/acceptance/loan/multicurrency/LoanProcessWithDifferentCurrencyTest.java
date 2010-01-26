@@ -92,13 +92,13 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void createLoanProductThenAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
-                "LoanProcessWithDifferentCurrencyTest_001.xml.zip", dataSource, selenium);
+                "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml.zip", dataSource, selenium);
         
         createWeeklyLoanProduct();
         createLoanAccountOfDifferentCurrency("Client-1-USD");
         
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
-                "LoanProcessWithDifferentCurrencyTest_002.xml.zip", dataSource, selenium);
+                "LoanProcessWithDifferentCurrencyTest_002_dbunit.xml.zip", dataSource, selenium);
 
         pendingApprovalToApplicationApproved("000100000000010");
         disburseLoan("000100000000010");

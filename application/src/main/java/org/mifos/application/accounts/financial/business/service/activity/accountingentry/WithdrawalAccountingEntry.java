@@ -29,6 +29,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 
 public class WithdrawalAccountingEntry extends BaseAccountingEntry {
@@ -57,7 +58,8 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 
     private void handleRoundingForWithdrawal(SavingsBO savings, SavingsTrxnDetailEntity savingsTrxn)
             throws FinancialException {
-        Money roundedAmount = Money.round(savingsTrxn.getWithdrawlAmount());
+        Money roundedAmount = Money.round(savingsTrxn.getWithdrawlAmount(), 
+                savingsTrxn.getWithdrawlAmount().getCurrency().getRoundingAmountBigDecimal(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(savingsTrxn.getWithdrawlAmount())) {
             FinancialActionBO finActionRounding = FinancialActionCache
                     .getFinancialAction(FinancialActionConstants.ROUNDING);

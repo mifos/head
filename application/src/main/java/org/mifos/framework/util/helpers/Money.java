@@ -177,18 +177,6 @@ public final class Money implements Serializable {
     }
 
     /**
-     * Does rounding using {@link Money#round(Money, BigDecimal, RoundingMode)}
-     * with <br /> {@link MifosCurrency#getRoundingAmount()} <br />
-     * (can be override with AccountingRules.AmountToBeRoundedTo) <br />
-     * {@link MifosCurrency#getRoundingModeEnum()}
-     */
-    public static Money round(Money money) {
-        BigDecimal roundingAmount = new BigDecimal(money.getCurrency().getRoundingAmount().doubleValue());
-        RoundingMode roundingMode = money.getCurrency().getRoundingModeEnum();
-        return round(money, roundingAmount, roundingMode);
-    }
-
-    /**
      * This method returns a new Money object with currency same as current
      * currency and amount calculated after rounding based on rounding mode and
      * roundingAmount where in both are obtained from MifosCurrency object. <br />

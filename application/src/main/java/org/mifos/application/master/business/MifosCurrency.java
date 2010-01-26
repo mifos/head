@@ -20,6 +20,7 @@
 
 package org.mifos.application.master.business;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.mifos.framework.business.PersistentObject;
 
@@ -41,9 +42,6 @@ public final class MifosCurrency extends PersistentObject {
     /** English multiple-word descriptive name. */
     private String currencyName;
 
-    /** One of {@link #CEILING_MODE}, {@link #FLOOR_MODE}, {@link#HALF_UP_MODE}. */
-    private Short roundingMode;
-
     private Float roundingAmount;
 
     private Short defaultDigitsAfterDecimal;
@@ -51,11 +49,10 @@ public final class MifosCurrency extends PersistentObject {
     /** ISO 4217 currency code. */
     private String currencyCode;
 
-    public MifosCurrency(Short currencyId, String currencyName, Short roundingMode, Float roundingAmount,
+    public MifosCurrency(Short currencyId, String currencyName, Float roundingAmount,
             Short defaultDigitsAfterDecimal, String currencyCode) {
         this.currencyId = currencyId;
         this.currencyName = currencyName;
-        this.roundingMode = roundingMode;
         this.roundingAmount = roundingAmount;
         this.defaultDigitsAfterDecimal = defaultDigitsAfterDecimal;
         this.currencyCode = currencyCode;
@@ -82,28 +79,6 @@ public final class MifosCurrency extends PersistentObject {
     // See .hbm.xml file
     private void setCurrencyName(String currencyName) {
         this.currencyName = currencyName;
-    }
-
-    public RoundingMode getRoundingModeEnum() {
-
-        if (roundingMode == CEILING_MODE) {
-            return RoundingMode.CEILING;
-        } else if (roundingMode == FLOOR_MODE) {
-            return RoundingMode.FLOOR;
-        } else if (roundingMode == HALF_UP_MODE) {
-            return RoundingMode.HALF_UP;
-        } else {
-            throw new IllegalStateException("bad rounding mode " + roundingMode);
-        }
-
-    }
-
-    public Short getRoundingMode() {
-        return roundingMode;
-    }
-
-    void setRoundingMode(Short roundingMode) {
-        this.roundingMode = roundingMode;
     }
 
     public String getCurrencyCode() {
@@ -136,6 +111,10 @@ public final class MifosCurrency extends PersistentObject {
 
     public Float getRoundingAmount() {
         return roundingAmount;
+    }
+    
+    public BigDecimal getRoundingAmountBigDecimal() {
+        return new BigDecimal(roundingAmount);
     }
 
     @SuppressWarnings("unused")

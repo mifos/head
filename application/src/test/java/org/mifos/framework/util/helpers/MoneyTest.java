@@ -152,19 +152,19 @@ public class MoneyTest extends TestCase {
 
     public void testRoundUp() {
         Money money = new Money(RUPEE, "142.34");
-       Assert.assertEquals(new Money(RUPEE, "143.00"), Money.round(money));
+       Assert.assertEquals(new Money(RUPEE, "143.00"), Money.round(money, money.getCurrency().getRoundingAmountBigDecimal(), RoundingMode.CEILING));
     }
 
     public void testRoundDown() {
         Money money = new Money(EURO, "142.34");
-       Assert.assertEquals(new Money(EURO, "142.00"), Money.round(money));
+       Assert.assertEquals(new Money(EURO, "142.00"), Money.round(money, money.getCurrency().getRoundingAmountBigDecimal(), RoundingMode.FLOOR));
     }
 
     public void testRoundRepeating() {
-        MifosCurrency currency = new MifosCurrency((short) 1, "test", MifosCurrency.CEILING_MODE, (float) 3.0, (short) 1,
+        MifosCurrency currency = new MifosCurrency((short) 1, "test", (float) 3.0, (short) 1,
                 "USD");
         Money money = new Money(currency, "1");
-       Assert.assertEquals(new Money(currency, "3"), Money.round(money));
+       Assert.assertEquals(new Money(currency, "3"), Money.round(money, currency.getRoundingAmountBigDecimal(), RoundingMode.CEILING));
     }
     
     public void testRoundWhenRoundingOffMultipleIsHundred() {

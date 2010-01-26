@@ -71,8 +71,7 @@ public class AccountingRules {
                     + currencyCode);
         Short digitsAfterDecimal = getDigitsAfterDecimal(currency);
         Float amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
-        Short roundingMode = getRoundingMode(currency.getRoundingMode());
-        return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(), roundingMode,
+        return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(),
                 amountToBeRoundedTo, digitsAfterDecimal, currencyCode);
     }
     
