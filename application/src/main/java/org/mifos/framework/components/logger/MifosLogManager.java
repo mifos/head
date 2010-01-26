@@ -23,7 +23,6 @@ package org.mifos.framework.components.logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -80,8 +79,6 @@ public class MifosLogManager {
             Logger.getRootLogger().addAppender(new NullAppender());
         } catch (ResourceBundleNotFoundException e) {
             throw new LoggerConfigurationException(e);
-        } catch (URISyntaxException e) {
-            throw new LoggerConfigurationException(e);
         } catch (MalformedURLException e) {
             throw new LoggerConfigurationException(e);
         } catch (IOException e) {
@@ -132,6 +129,9 @@ public class MifosLogManager {
     public static MifosLogger getLoggerHelper(String name, String resourceBundleName) {
 
         MifosLogger logger;
+        //initialize loggerRepositor if not initialized
+        configureLogging();
+        
         // checks to see if the logger repository already contains an instance
         // of the logger.
         // If it does that instance is returned
@@ -182,8 +182,7 @@ public class MifosLogManager {
      * instance is also created and the resource bundle for the locale of the
      * MFI is associated with the logger
      */
-    private static void readConfiguration(String loggerConfigurationAbsolutePath) throws MalformedURLException,
-            URISyntaxException {
+    private static void readConfiguration(String loggerConfigurationAbsolutePath) {
         File configFile = new File(loggerConfigurationAbsolutePath);
 
         MifosDOMConfigurator.configureAndWatch(configFile.getAbsolutePath(), LoggerConstants.DELAY);
@@ -198,7 +197,7 @@ public class MifosLogManager {
      * Set up log4j (this is required for hibernate, as well as perhaps other
      * parts of MIFOS).
      */
-    public static void configureLogging() {
+    private static void configureLogging() {
         if (!isConfigured()) {
             configure(FilePaths.LOG_CONFIGURATION_FILE);
         }

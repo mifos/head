@@ -37,7 +37,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -95,11 +94,6 @@ public class StandardAccountServiceTest {
     private AccountBO someAccountBo;
     
     private LoanBO accountBO;
-
-    @BeforeClass
-    public static void classSetup() {
-        MifosLogManager.configureLogging();
-    }
         
     @Before
     public void setup() {

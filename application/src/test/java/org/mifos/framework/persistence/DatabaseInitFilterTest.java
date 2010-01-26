@@ -29,7 +29,6 @@ import junitx.framework.StringAssert;
 
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.DatabaseErrorCode;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
@@ -37,7 +36,6 @@ public class DatabaseInitFilterTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        MifosLogManager.configureLogging();
         ApplicationInitializer.setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "test death message",
                 new SQLException("bletch ick sputter die"));
     }

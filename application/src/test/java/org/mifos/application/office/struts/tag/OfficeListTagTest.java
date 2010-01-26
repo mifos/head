@@ -38,7 +38,6 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -68,7 +67,6 @@ public class OfficeListTagTest extends TestCase {
     }
 
     private void initialize() {
-        MifosLogManager.configureLogging();
         SpringUtil.initializeSpring();
     }
 

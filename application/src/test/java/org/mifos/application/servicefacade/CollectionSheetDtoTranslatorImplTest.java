@@ -42,7 +42,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.personnel.business.PersonnelView;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
@@ -73,8 +72,7 @@ public class CollectionSheetDtoTranslatorImplTest {
     private CollectionSheetCustomerLoanDto collectionSheetLoan;
 
     @BeforeClass
-    public static void setupMifosLoggerDueToUseOfStaticClientRules() {
-        MifosLogManager.configureLogging();
+    public static void setupStaticClientRules() {
         defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null, null);
         Money.setDefaultCurrency(defaultCurrency);
     }

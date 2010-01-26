@@ -32,7 +32,6 @@ import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionError;
@@ -43,7 +42,6 @@ public class BaseActionFormTest extends TestCase {
 
     public BaseActionFormTest() {
         super();
-        MifosLogManager.configureLogging();
     }
 
     public void testGetDateFromString() throws Exception {

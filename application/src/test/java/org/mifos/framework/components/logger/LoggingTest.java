@@ -28,17 +28,6 @@ import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 
 public class LoggingTest extends TestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        MifosLogManager.configureLogging();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     public void testLogging() throws Exception {
         MifosLogger logger = MifosLogManager.getLogger("org.mifos.logger");
         logger.debug("test debug log", false, null);

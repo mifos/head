@@ -27,7 +27,6 @@ import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -62,7 +61,6 @@ public class TestCaseInitializer {
             new StandardTestingService().setTestMode(TestMode.INTEGRATION);
 
             TestDatabase.createMySQLTestDatabase();
-            MifosLogManager.configureLogging();
             DatabaseSetup.initializeHibernate();
             // add this because it is added to Application Initializer
             Localization.getInstance().init();

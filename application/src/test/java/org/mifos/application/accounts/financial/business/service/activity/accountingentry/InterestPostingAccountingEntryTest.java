@@ -31,7 +31,6 @@ import java.util.List;
 
 import org.joda.time.DateMidnight;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.accounts.financial.business.COABO;
@@ -49,7 +48,6 @@ import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -90,11 +88,6 @@ public class InterestPostingAccountingEntryTest {
 
     @Mock
     private FinancialActionBO financialAction;
-    
-    @BeforeClass
-    public static void classSetup() {
-        MifosLogManager.configureLogging();
-    }
         
     @Before
     public void setupAndInjectMocks() {

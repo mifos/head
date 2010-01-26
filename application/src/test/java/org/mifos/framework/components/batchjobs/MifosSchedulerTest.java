@@ -30,17 +30,10 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.core.io.ClassPathResource;
 
 public class MifosSchedulerTest extends TestCase {
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        MifosLogManager.configureLogging();
-    }
 
     @Override
     protected void tearDown() throws Exception {

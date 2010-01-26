@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.DateTimeService;
 
 /**
@@ -39,7 +38,6 @@ public class ClientBoTest extends TestCase {
     
     @Override
     public void setUp() throws Exception {
-        MifosLogManager.configureLogging();
         client = new ClientBuilder().buildForUnitTests();
     }
 

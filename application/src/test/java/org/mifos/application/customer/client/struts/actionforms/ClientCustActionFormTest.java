@@ -31,15 +31,10 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.testng.annotations.Test;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class ClientCustActionFormTest extends TestCase {
-
-    public ClientCustActionFormTest() {
-        MifosLogManager.configureLogging();
-    }
 
     private ClientCustActionForm form;
     private ActionErrors errors;

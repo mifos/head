@@ -43,7 +43,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -54,7 +53,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
 
-    private static final Short defaultCurrencyId = Short.valueOf("2");
     private static MifosCurrency defaultCurrency;
 
     // class under test
@@ -78,7 +76,6 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
-        MifosLogManager.configureLogging();
         defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
     }

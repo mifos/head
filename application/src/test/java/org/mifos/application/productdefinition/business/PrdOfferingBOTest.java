@@ -23,15 +23,10 @@ package org.mifos.application.productdefinition.business;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class PrdOfferingBOTest extends TestCase {
-    
-   public void setUp(){
-       MifosLogManager.configureLogging();
-   }
 
     public void testReturnTrueForEqualsIfPrdOfferingIdIsSame() {
         LoanOfferingBO loanOfferingBO = LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"));

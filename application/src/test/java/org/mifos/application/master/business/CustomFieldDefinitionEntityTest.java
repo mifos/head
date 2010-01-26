@@ -26,12 +26,11 @@ import junit.framework.TestCase;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.logger.MifosLogManager;
 
 public class CustomFieldDefinitionEntityTest extends TestCase {
 
+    @Override
     public void setUp() throws Exception {
-        MifosLogManager.configureLogging();
         TestUtils.initializeSpring();
     }
 

@@ -41,7 +41,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -67,7 +66,6 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        MifosLogManager.configureLogging();
         StaticHibernateUtil.initialize();
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);

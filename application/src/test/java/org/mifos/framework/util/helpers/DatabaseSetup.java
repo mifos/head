@@ -27,7 +27,6 @@ import java.sql.SQLException;
 
 import org.hibernate.cfg.Configuration;
 import org.mifos.core.ClasspathResource;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
@@ -38,8 +37,6 @@ import org.mifos.framework.persistence.SqlResource;
 public class DatabaseSetup {
 
     public static void initializeHibernate() {
-        MifosLogManager.configureLogging();
-
         if (HibernateSessionFactory.isConfigured()) {
             return;
         }
@@ -51,8 +48,6 @@ public class DatabaseSetup {
     }
 
     public static Configuration getHibernateConfiguration() {
-        MifosLogManager.configureLogging();
-
         Configuration configuration = new Configuration();
         try {
             configuration.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());

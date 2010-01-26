@@ -40,7 +40,6 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsProductBuilder;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,7 +50,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class SavingsWithdrawalTest {
 
-    private static final Short defaultCurrencyId = Short.valueOf("2");
     private static MifosCurrency defaultCurrency;
 
     // class under test
@@ -87,7 +85,6 @@ public class SavingsWithdrawalTest {
 
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
-        MifosLogManager.configureLogging();
         defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
     }

@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -42,7 +41,6 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.persistence.LoanProductDao;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -73,11 +71,6 @@ public class LoanServiceFacadeWebTierTest {
     private LoanOfferingBO activeLoanProduct;
 
     private MeetingBO meeting;
-
-    @BeforeClass
-    public static void configureLogging() {
-        MifosLogManager.configureLogging();
-    }
 
     @Before
     public void setupAndInjectDependencies() {

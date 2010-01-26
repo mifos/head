@@ -49,7 +49,6 @@ import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -126,7 +125,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void init() {
         try {
             synchronized (ApplicationInitializer.class) {
-                initializeLogger();
                 initializeHibernate();
 
                 /*
@@ -321,21 +319,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         } catch (HibernateStartUpException e) {
             throw new AppNotConfiguredException(e);
         }
-    }
-
-    /**
-     * Initializes the logger using loggerconfiguration.xml
-     * 
-     * @throws AppNotConfiguredException
-     *             - IF there is any exception while configuring the logger
-     */
-    private void initializeLogger() throws AppNotConfiguredException {
-        try {
-            MifosLogManager.configureLogging();
-        } catch (LoggerConfigurationException lce) {
-            throw new AppNotConfiguredException(lce);
-        }
-
     }
 
     /**

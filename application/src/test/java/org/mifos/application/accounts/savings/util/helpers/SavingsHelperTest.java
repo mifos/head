@@ -40,15 +40,10 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.business.SystemConfiguration;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mockito.Mockito;
 
 public class SavingsHelperTest extends TestCase {
-    public SavingsHelperTest() {
-        super();
-        MifosLogManager.configureLogging();
-    }
 
     private static final short EVERY_FOUR_MONTHS = 4;
     SavingsHelper helper = new SavingsHelper();

@@ -51,7 +51,6 @@ import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.LoanProductService;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
@@ -62,21 +61,8 @@ import org.mifos.framework.util.helpers.Money;
  * which uses the "old style" of testing which hits the database.
  */
 public class LoanAccountActionEasyMockTest extends TestCase {
-    public LoanAccountActionEasyMockTest() {
-        super();
-        before();
-    }
-
-    public LoanAccountActionEasyMockTest(final String name) {
-        super(name);
-        before();
-    }
 
     static Short shortOne = Short.valueOf((short) 1);
-
-    public static void before() {
-        MifosLogManager.configureLogging();
-    }
 
     public void testGetDefaultAndAdditionalFees() throws Exception {
         ConfigurationBusinessService mockConfigurationBusinessService = createMock(ConfigurationBusinessService.class);

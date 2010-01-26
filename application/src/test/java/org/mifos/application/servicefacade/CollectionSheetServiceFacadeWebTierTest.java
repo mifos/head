@@ -49,7 +49,6 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -94,7 +93,6 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
-        MifosLogManager.configureLogging();
         defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null, null);
         Money.setDefaultCurrency(defaultCurrency);
     }

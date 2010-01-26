@@ -37,7 +37,6 @@ import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -50,7 +49,6 @@ public class AccountingRulesTest {
 
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
-        MifosLogManager.configureLogging();
         Money.setDefaultCurrency(TestUtils.RUPEE);
     }
 

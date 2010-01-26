@@ -36,7 +36,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FiscalCalendarRulesTest {
@@ -46,7 +45,6 @@ public class FiscalCalendarRulesTest {
 
     @BeforeClass
     public static void init() {
-        MifosLogManager.configureLogging();
         configMgr = ConfigurationManager.getInstance();
     }
     

@@ -55,7 +55,6 @@ import org.mifos.application.productdefinition.business.service.LoanPrdBusinessS
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.reports.business.dto.CollectionSheetReportDTO;
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -318,7 +317,6 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
         meetingDate = DateUtils.getDate(2000, Calendar.JANUARY, 1);
         meetingDateStr = "01/01/2000";
         sqlMeetingDate = DateUtils.convertToSqlDate(meetingDate);
-        MifosLogManager.configureLogging();
         collectionSheetServiceMock = createMock(CollectionSheetService.class);
         officeBusinessServiceMock = createMock(OfficeBusinessService.class);
         personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);

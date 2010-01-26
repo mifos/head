@@ -26,7 +26,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.Configuration;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "configTestSuite"})
@@ -34,21 +33,12 @@ public class ConfigurationManagerTest extends TestCase {
 
     public ConfigurationManagerTest() throws Exception {
         super();
-        init();
-    }
-
-    public ConfigurationManagerTest(String name) throws Exception {
-        super(name);
-        init();
     }
 
     Configuration configuration;
     private static final String badKey = "Bad Key";
 
-    public static void init() throws Exception {
-        MifosLogManager.configureLogging();
-    }
-
+    @Override
     public void setUp() {
         configuration = ConfigurationManager.getInstance().getConfiguration();
     }

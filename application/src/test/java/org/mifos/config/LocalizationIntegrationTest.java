@@ -26,10 +26,8 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -51,11 +49,6 @@ public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
     protected void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         super.tearDown();
-    }
-
-    @BeforeClass
-    public static void init() throws Exception {
-        MifosLogManager.configureLogging();
     }
 
     private void restoreConfigSetup(Localization localization, ConfigLocale savedConfigLocale) {

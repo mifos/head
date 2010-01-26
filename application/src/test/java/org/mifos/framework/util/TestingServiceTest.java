@@ -26,7 +26,6 @@ import java.util.Properties;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.service.test.TestMode;
 import org.testng.annotations.Test;
 
@@ -37,7 +36,6 @@ public class TestingServiceTest extends TestCase {
 
     @Override
     public void setUp() {
-        MifosLogManager.configureLogging();
         standardTestingService = new StandardTestingService();
         savedTestMode = standardTestingService.getTestMode();
         standardTestingService.setTestMode(TestMode.ACCEPTANCE);
