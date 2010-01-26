@@ -289,15 +289,8 @@ public class FeeAction extends BaseAction {
             return new RateFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feePayment);
         }
-        MifosCurrency feeCurrency;
-        if (actionForm.getCurrencyId() == null) {
-            // Currency is passed from Form only for Loan Fees in multi-currency settings
-            feeCurrency = Money.getDefaultCurrency();
-        } else {
-            feeCurrency = AccountingRules.getCurrencyByCurrencyId(actionForm.getCurrencyId());
-        }
         return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode, new Money(
-                feeCurrency, actionForm.getAmount()), actionForm.isCustomerDefaultFee(), feePayment);
+                getCurrency(actionForm.getCurrencyId()), actionForm.getAmount()), actionForm.isCustomerDefaultFee(), feePayment);
     }
 
     private FeeBO createPeriodicFee(FeeActionForm actionForm, HttpServletRequest request,
@@ -316,8 +309,19 @@ public class FeeAction extends BaseAction {
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feeFrequency);
         }
         return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
-                new Money(AccountingRules.getCurrencyByCurrencyId(actionForm.getCurrencyId()), actionForm.getAmount()), 
+                new Money(getCurrency(actionForm.getCurrencyId()), actionForm.getAmount()), 
                 actionForm.isCustomerDefaultFee(), feeFrequency);
+    }
+    
+    private MifosCurrency getCurrency(Short currencyId) {
+        MifosCurrency feeCurrency;
+        if (currencyId == null) {
+            // Currency is passed from Form only for Loan Fees in multi-currency settings
+            feeCurrency = Money.getDefaultCurrency();
+        } else {
+            feeCurrency = AccountingRules.getCurrencyByCurrencyId(currencyId);
+        }
+        return feeCurrency;
     }
 
     private List<GLCodeEntity> getGLCodes() throws SystemException, ApplicationException {
