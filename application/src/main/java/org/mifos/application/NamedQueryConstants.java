@@ -425,6 +425,7 @@ public interface NamedQueryConstants {
     public String GET_ENTITIES = "entities";
     public String GET_LOOKUPVALUES = "lookupvalues";
     public String SUPPORTED_LOCALE_LIST = "supportedlocales";
+    public String AVAILABLE_LANGUAGES = "availableLanguages";
     public String GET_CURRENCY = "getCurrency";
 
     // BulkEntry

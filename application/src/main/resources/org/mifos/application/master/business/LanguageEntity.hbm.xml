@@ -13,5 +13,8 @@
     <many-to-one name="lookUpValue" column="LOOKUP_ID"
 			class="org.mifos.application.master.business.LookUpValueEntity"
 			cascade="none" update="false" unique="true" />
-  </class> 
+  </class>
+    <query name="availableLanguages">
+	  <![CDATA[from  org.mifos.application.master.business.LanguageEntity languages]]>
+  </query>
 </hibernate-mapping>  

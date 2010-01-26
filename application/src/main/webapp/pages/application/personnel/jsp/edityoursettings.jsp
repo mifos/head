@@ -190,7 +190,6 @@ explanation of the license and how it is applied.
 											var="languageList">
 											<html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
 											</c:forEach>
-
 									</mifos:select>
 									</td>
 								</tr>

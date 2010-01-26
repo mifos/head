@@ -244,6 +244,10 @@ public class PersonnelPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST, null);
     }
 
+    public List getAvailableLanguages() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.AVAILABLE_LANGUAGES, null);
+    }
+
     public PersonnelBO createPersonnel(UserContext userContext, PersonnelTemplate template)
             throws PersistenceException, ValidationException, PersonnelException {
         OfficeBO office = new OfficePersistence().getOffice(template.getOfficeId());

@@ -37,12 +37,12 @@ public class CreateUserParameters {
     public static final int NOT_POOR = 43;
     
     // locale
-    public static final int ENGLISH = 1;
-    public static final int ICELANDIC = 2;
-    public static final int SPANISH = 3;
-    public static final int FRENCH = 4;
-    public static final int CHINESE = 5;
-    public static final int SWAHILI = 6;
+    public static final int ENGLISH = 189;
+    public static final int ICELANDIC = 599;
+    public static final int SPANISH = 600;
+    public static final int FRENCH = 601;
+    public static final int CHINESE = 663;
+    public static final int SWAHILI = 664;
     
     // user level
     public static final int LOAN_OFFICER = 1;

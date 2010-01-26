@@ -167,8 +167,8 @@ explanation of the license and how it is applied.
       	<mifos:mifoslabel name="Personnel.LanguagePreferred"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
 	<span class="fontnormal">
 		<c:forEach	items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"	var="item">
-			<c:if test="${personActionForm.preferredLocale == item.localeId}">
-				<c:out value="${item.language.name}"/>
+			<c:if test="${personActionForm.preferredLocale == item.id}">
+				<c:out value="${item.name}"/>
 			</c:if>
 		</c:forEach> 
 	</span> <br>

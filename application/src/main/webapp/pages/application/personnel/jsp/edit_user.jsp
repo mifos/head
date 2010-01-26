@@ -191,9 +191,10 @@ explanation of the license and how it is applied.
               <tr class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Personnel.LanguagePreferred"  bundle="PersonnelUIResources"></mifos:mifoslabel></td>
                 <td>
-               	 <mifos:select name="personActionForm" property="preferredLocale">
-					<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}" 	var="languagelist">
-						<html-el:option value="${languagelist.localeId}">${languagelist.language.name}</html-el:option>
+                 <mifos:select name="personActionForm" property="preferredLocale">
+					<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
+					var="languageList">
+					<html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
 					</c:forEach>
 				 </mifos:select>
                 </td>

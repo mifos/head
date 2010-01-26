@@ -82,8 +82,8 @@ public class PersonnelSettingsAction extends BaseAction {
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
         setDetailsData(request, getUserContext(request).getLocaleId(), personnel.getPersonnelDetails().getGender(),
-                personnel.getPersonnelDetails().getMaritalStatus(), Integer.valueOf(personnel.getPreferredLocale()
-                        .getLocaleId().intValue()));
+                personnel.getPersonnelDetails().getMaritalStatus(),
+                personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId());
         loadMasterData(request, getUserContext(request).getLocaleId());
         setPersonnelAge(request, (Date) personnel.getPersonnelDetails().getDob());
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -103,7 +103,7 @@ public class PersonnelSettingsAction extends BaseAction {
         PersonnelSettingsActionForm personnelactionForm = (PersonnelSettingsActionForm) form;
         Integer prefeeredLocaleId = null;
         if (personnelactionForm.getPreferredLocaleValue() != null)
-            prefeeredLocaleId = Integer.valueOf(personnelactionForm.getPreferredLocaleValue().intValue());
+            prefeeredLocaleId = personnelactionForm.getPreferredLocaleValue().intValue();
         setDetailsData(request, getUserContext(request).getLocaleId(), personnelactionForm.getGenderValue(),
                 personnelactionForm.getMaritalStatusValue(), prefeeredLocaleId);
         return mapping.findForward(ActionForwards.preview_success.toString());
@@ -190,7 +190,7 @@ public class PersonnelSettingsAction extends BaseAction {
         form.setGovernmentIdNumber(personnelBO.getPersonnelDetails().getGovernmentIdNumber());
         form.setAddress(personnelBO.getPersonnelDetails().getAddress());
         form.setDob(personnelBO.getPersonnelDetails().getDob().toString());
-        form.setPreferredLocale(getStringValue(personnelBO.getPreferredLocale().getLocaleId()));
+        form.setPreferredLocale(getStringValue(personnelBO.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId()));
         form.setMaritalStatus(getStringValue(personnelBO.getPersonnelDetails().getMaritalStatus()));
     }
 
@@ -217,12 +217,13 @@ public class PersonnelSettingsAction extends BaseAction {
     }
 
     private Short getLocaleId(Short lookUpId) throws ServiceException {
-        if (lookUpId != null)
+        if (lookUpId != null) {
             for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService()).getAllLocales()) {
-                if (locale.getLanguage().getLookUpValue().getLookUpId().intValue() == lookUpId.intValue())
+                if (locale.getLanguage().getLookUpValue().getLookUpId() == lookUpId.intValue()) {
                     return locale.getLocaleId();
-                break;
+                }
             }
+        }
 
         return Localization.getInstance().getLocaleId();
     }

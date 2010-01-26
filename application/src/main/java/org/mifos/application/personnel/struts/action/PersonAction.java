@@ -79,6 +79,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.Localization;
 
 public class PersonAction extends SearchAction {
 
@@ -170,7 +171,7 @@ public class PersonAction extends SearchAction {
         PersonnelLevel level = PersonnelLevel.fromInt(getShortValue(personActionForm.getLevel()));
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(PersonnelConstants.OFFICE, request);
         Integer title = getIntegerValue(personActionForm.getTitle());
-        Short perefferedLocale = getPerefferedLocale(personActionForm, userContext);
+        Short perefferedLocale = getLocaleId(getPerefferedLocale(personActionForm, userContext));
         Date dob = null;
         if (personActionForm.getDob() != null && !personActionForm.getDob().equals("")) {
             dob = DateUtils.getDate(personActionForm.getDob());
@@ -242,7 +243,7 @@ public class PersonAction extends SearchAction {
                 BusinessServiceName.Office);
         OfficeBO office = officeService.getOffice(getShortValue(actionForm.getOfficeId()));
         Integer title = getIntegerValue(actionForm.getTitle());
-        Short perefferedLocale = getPerefferedLocale(actionForm, userContext);
+        Short perefferedLocale = getLocaleId(getPerefferedLocale(actionForm, userContext));
 
         PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
@@ -359,7 +360,10 @@ public class PersonAction extends SearchAction {
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, masterPersistence
                 .retrieveMasterEntities(MasterConstants.MARITAL_STATUS, userContext.getLocaleId()), request);
-        loadLanguageList(request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, masterPersistence.retrieveMasterEntities(
+                MasterConstants.LANGUAGE, userContext.getLocaleId()), request);
+        
         SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST, ((PersonnelBusinessService) getService())
                 .getRoles(), request);
 
@@ -369,13 +373,6 @@ public class PersonAction extends SearchAction {
         List<CustomFieldDefinitionEntity> customFieldDefs = masterPersistence
                 .retrieveCustomFieldsDefinition(EntityType.PERSONNEL);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
-    }
-
-    private void loadLanguageList(HttpServletRequest request) throws Exception {
-
-        List<SupportedLocalesEntity> locales = getPersonnelBusinessService().getSupportedLocales();
-
-        SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, locales, request);
     }
 
     private void updatePersonnelLevelList(HttpServletRequest request) throws PageExpiredException {
@@ -464,7 +461,7 @@ public class PersonAction extends SearchAction {
         }
         actionForm.setEmailId(personnel.getEmailId());
         if (personnel.getPreferredLocale() != null)
-            actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLocaleId()));
+            actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId()));
         List<RoleBO> selectList = new ArrayList<RoleBO>();
         for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
             selectList.add(personnelRole.getRole());
@@ -552,4 +549,15 @@ public class PersonAction extends SearchAction {
         return locale;
     }
 
+    private Short getLocaleId(Short lookUpId) throws ServiceException {
+        if (lookUpId != null) {
+            for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService()).getAllLocales()) {
+                if (locale.getLanguage().getLookUpValue().getLookUpId() == lookUpId.intValue()) {
+                    return locale.getLocaleId();
+                }
+            }
+        }
+
+        return Localization.getInstance().getLocaleId();
+    }
 }
