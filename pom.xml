@@ -98,11 +98,6 @@
                 <version>3.0.0.RELEASE</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-taglibs</artifactId>
-                <version>3.0.1.RELEASE</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>3.0.0.RELEASE</version>
@@ -224,7 +219,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate</artifactId>
-                <version>3.2.6.ga</version>
+                <version>3.2.5.ga</version>
                 <exclusions>
                     <exclusion>
                         <groupId>net.sf.ehcache</groupId>
