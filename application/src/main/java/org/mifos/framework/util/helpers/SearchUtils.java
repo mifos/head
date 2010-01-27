@@ -27,15 +27,10 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang.WordUtils;
 import org.mifos.framework.util.DateTimeService;
 
-/**
- * This class has got utility functions for string which would be required
- * through out the project.
- * 
- */
-public class StringUtils {
+public class SearchUtils {
     private static final short LookUpNameLength = 100;
 
-    public StringUtils() {
+    public SearchUtils() {
     }
 
     public static String getMessageWithSubstitution(String bundleName, Locale userLocale, String key, Object[] args) {

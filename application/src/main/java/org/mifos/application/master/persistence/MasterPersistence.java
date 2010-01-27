@@ -47,7 +47,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
-import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.SearchUtils;
 
 /**
  * This class is mostly used to look up instances of (a subclass of)
@@ -254,9 +254,9 @@ public class MasterPersistence extends Persistence {
     public LookUpValueEntity addValueListElementForLocale(final DynamicLookUpValueCreationTypes type, final Short lookupEnityId,
             final String newElementText) throws PersistenceException {
 
-        // String lookUpName = StringUtils.camelCase(newElementText + "." +
+        // String lookUpName = SearchUtils.camelCase(newElementText + "." +
         // System.currentTimeMillis());
-        String lookUpName = StringUtils.generateLookupName(type.name(), newElementText);
+        String lookUpName = SearchUtils.generateLookupName(type.name(), newElementText);
         return addValueListElementForLocale(lookupEnityId, newElementText, lookUpName);
     }
 

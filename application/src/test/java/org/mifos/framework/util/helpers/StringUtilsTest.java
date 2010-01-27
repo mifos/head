@@ -30,18 +30,18 @@ import org.testng.annotations.Test;
 public class StringUtilsTest extends TestCase {
 
     public void testCamelCase() {
-       Assert.assertEquals("AbcDef_ghIjKL", StringUtils.camelCase("aBc dEF_gh-iJ  k.l"));
+       Assert.assertEquals("AbcDef_ghIjKL", SearchUtils.camelCase("aBc dEF_gh-iJ  k.l"));
     }
 
     public void testGenerateLookupName() {
         String newElementText = "OfficeLevels";
-        String lookupName = StringUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(),
+        String lookupName = SearchUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(),
                 newElementText);
        Assert.assertEquals(0, lookupName.indexOf("DBUpgrade"));
         String tooLong = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
                 + "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
                 + "0";
-        lookupName = StringUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(), tooLong);
+        lookupName = SearchUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(), tooLong);
        Assert.assertEquals(100, lookupName.length());
 
     }

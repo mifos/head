@@ -99,7 +99,7 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      * lookupValue.getLookUpValueLocales(); // for (LookUpValueLocaleEntity
      * locale : localeValues) { // if (locale.getLocaleId() == 1) { // String
      * name =
-     * StringUtils.deleteWhitespace(WordUtils.capitalize(locale.getLookUpValue
+     * SearchUtils.deleteWhitespace(WordUtils.capitalize(locale.getLookUpValue
      * ().toLowerCase().replaceAll("\\W"," "))); //
      * //System.out.println(entity.getEntityType() + "." + index++ + "." + name
      * + " = " + locale.getLookUpValue()); //

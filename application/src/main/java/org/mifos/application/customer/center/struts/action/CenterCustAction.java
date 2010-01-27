@@ -396,7 +396,7 @@ public class CenterCustAction extends CustAction {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
-        searchString = org.mifos.framework.util.helpers.StringUtils.normalizeSearchString(searchString);
+        searchString = org.mifos.framework.util.helpers.SearchUtils.normalizeSearchString(searchString);
         if (searchString.equals(""))
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new CenterBusinessService().search(searchString,

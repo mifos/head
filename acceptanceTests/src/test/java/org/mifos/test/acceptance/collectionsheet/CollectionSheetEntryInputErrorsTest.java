@@ -100,7 +100,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
         // Not able to bring in internationalized string yet - jpw
         // Locale defaultLocale = Locale.getDefault();
         // String errorsUpdate =
-        // StringUtils.getMessageWithSubstitution(FilePaths.BULKENTRY_RESOURCE,
+        // SearchUtils.getMessageWithSubstitution(FilePaths.BULKENTRY_RESOURCE,
         // defaultLocale,
         // CollectionSheetEntryConstants.ERRORSUPDATE, null);
         //

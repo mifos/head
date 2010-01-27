@@ -326,7 +326,7 @@ public class PersonAction extends SearchAction {
         String searchString = ((PersonActionForm) form).getSearchString();
         addSeachValues(searchString, personnel.getOffice().getOfficeId().toString(), personnel.getOffice()
                 .getOfficeName(), request);
-        searchString = org.mifos.framework.util.helpers.StringUtils.normalizeSearchString(searchString);
+        searchString = org.mifos.framework.util.helpers.SearchUtils.normalizeSearchString(searchString);
         actionForward = super.search(mapping, form, request, response);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new PersonnelPersistence().search(searchString,
                 userContext.getId()), request);

@@ -40,7 +40,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
-import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.SearchUtils;
 
 public class ActivityGenerator {
 
@@ -102,7 +102,7 @@ public class ActivityGenerator {
         MasterPersistence mp = new MasterPersistence();
         MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) mp.getPersistentObject(MifosLookUpEntity.class, Short
                 .valueOf((short) MifosLookUpEntity.ACTIVITY));
-        String lookupName = StringUtils.generateLookupName(type.name(), lookUpDescription);
+        String lookupName = SearchUtils.generateLookupName(type.name(), lookUpDescription);
         anLookUp.setLookUpName(lookupName);
         anLookUp.setLookUpEntity(lookUpEntity);
         mp.createOrUpdate(anLookUp);

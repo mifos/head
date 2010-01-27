@@ -86,7 +86,7 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class GroupCustAction extends CustAction {
@@ -339,7 +339,7 @@ public class GroupCustAction extends CustAction {
             checkSearchString(actionForm, request);
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
-        searchString = StringUtils.normalizeSearchString(searchString);
+        searchString = SearchUtils.normalizeSearchString(searchString);
         if (searchString.equals(""))
             checkSearchString(actionForm, request);
 

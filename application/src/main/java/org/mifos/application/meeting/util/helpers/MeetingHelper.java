@@ -26,7 +26,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.SearchUtils;
 
 public class MeetingHelper {
 
@@ -76,7 +76,7 @@ public class MeetingHelper {
             args[1] = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getName();
             args[2] = meeting.getMeetingDetails().getRecurAfter();
         }
-        return StringUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
+        return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
                 key, args);
     }
 
@@ -89,7 +89,7 @@ public class MeetingHelper {
             key = MeetingConstants.MONTH_FREQUENCY;
         args[0] = meeting.getMeetingDetails().getRecurAfter();
 
-        return StringUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
+        return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
                 key, args);
     }
 
@@ -102,7 +102,7 @@ public class MeetingHelper {
             key = MeetingConstants.MONTH_SCHEDULE_SHORT;
         args[0] = meeting.getMeetingDetails().getRecurAfter();
 
-        return StringUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
+        return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
                 key, args);
     }
 

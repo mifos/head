@@ -76,7 +76,7 @@ public class Upgrade183 extends Upgrade {
                         lookUpName = unusedLookupName7;
                     else {
                         newElementText = entityName + counter;
-                        lookUpName = org.mifos.framework.util.helpers.StringUtils.generateLookupName(
+                        lookUpName = org.mifos.framework.util.helpers.SearchUtils.generateLookupName(
                                 DynamicLookUpValueCreationTypes.DBUpgrade.name(), newElementText);
                         counter++;
                     }

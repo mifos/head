@@ -58,7 +58,7 @@ import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustSearchAction extends SearchAction {
@@ -216,7 +216,7 @@ public class CustSearchAction extends SearchAction {
         else
             addSeachValues(searchString, officeId.toString(), new OfficeBusinessService().getOffice(
                     userContext.getBranchId()).getOfficeName(), request);
-        searchString = StringUtils.normalizeSearchString(searchString);
+        searchString = SearchUtils.normalizeSearchString(searchString);
         if (searchString.equals(""))
             throw new CustomerException(CustomerSearchConstants.NAMEMANDATORYEXCEPTION);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getCustomerBusinessService().search(
@@ -300,7 +300,7 @@ public class CustSearchAction extends SearchAction {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
-        searchString = StringUtils.normalizeSearchString(searchString);
+        searchString = SearchUtils.normalizeSearchString(searchString);
         if (searchString.equals(""))
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         if (actionForm.getInput() != null && actionForm.getInput().equals("loan"))
