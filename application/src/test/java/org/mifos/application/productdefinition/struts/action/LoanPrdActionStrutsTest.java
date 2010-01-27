@@ -88,6 +88,12 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
     private FeeBO fee;
 
+    @Override 
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
+    }
+
     @Override
     protected void tearDown() throws Exception {
         TestObjectFactory.removeObject(loanOffering);

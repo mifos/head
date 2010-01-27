@@ -46,6 +46,12 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         super();
     }
 
+    @Override 
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/admindocument-struts-config.xml");
+    }
+
     @Override
     protected void setUp() throws Exception {
 

@@ -33,6 +33,12 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         super();
     }
 
+    @Override 
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
+    }
+
     public void testShouldForwardToDefineNewCategoryPage() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "loadDefineNewCategoryPage");
