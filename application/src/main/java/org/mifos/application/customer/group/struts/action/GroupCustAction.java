@@ -44,6 +44,8 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
+import org.mifos.application.customer.group.business.service.GroupInformationDto;
+import org.mifos.application.customer.group.business.service.WebTierGroupDetailsServiceFacade;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
@@ -213,15 +215,20 @@ public class GroupCustAction extends CustAction {
         logger.debug("In GroupCustAction get method ");
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         GroupBO groupBO;
-        groupBO = getGroupBusinessService().findBySystemId(actionForm.getGlobalCustNum());
+        String globalCustNum = actionForm.getGlobalCustNum();
+        
+        groupBO = getGroupBusinessService().findBySystemId(globalCustNum);
         groupBO.setUserContext(getUserContext(request));
         groupBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         loadMasterDataForDetailsPage(request, groupBO, getUserContext(request).getLocaleId());
         setLocaleForMasterEntities(groupBO, getUserContext(request).getLocaleId());
         
-        // we would like to move away from sending business objects to the jsp page
-        // instead, load data into a data transfer object
-        GroupInformationDto groupInformationDto = loadGroupInformationDto(groupBO);
+        // We would like to move away from sending business objects to the jsp page
+        // instead, load data into a data transfer object.
+        // Whatever is needed on the jsp page and is coming from the clientBO 
+        // should be moved over to the Dto so that we can stop passing a business
+        // object like clientBo to the jsp page.
+        GroupInformationDto groupInformationDto = new WebTierGroupDetailsServiceFacade().getGroupInformationDto(globalCustNum);
         SessionUtils.removeAttribute("groupInformationDto", request);
         SessionUtils.setAttribute("groupInformationDto", groupInformationDto, request);
         
@@ -237,43 +244,6 @@ public class GroupCustAction extends CustAction {
         request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
         request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
         return mapping.findForward(ActionForwards.get_success.toString());
-    }
-
-    // FIXME: this method should be moved to a service which will return
-    // the DTO to the action class    
-    private GroupInformationDto loadGroupInformationDto(GroupBO groupBO) throws CustomerException {
-        GroupPerformanceHistoryEntity performancHistory = groupBO.getGroupPerformanceHistory();
-
-        String avgLoanAmountForMember;
-        String totalOutStandingLoanAmount;
-        String portfolioAtRisk;
-        String totalSavingsAmount;
-        try {
-            avgLoanAmountForMember = performancHistory.getAvgLoanAmountForMember().toString();
-        } catch(CurrencyMismatchException e) {
-            avgLoanAmountForMember = localizedMessageLookup("errors.multipleCurrencies");
-        }
-        try {
-            totalOutStandingLoanAmount = performancHistory.getTotalOutStandingLoanAmount().toString();
-        } catch(CurrencyMismatchException e) {
-            totalOutStandingLoanAmount = localizedMessageLookup("errors.multipleCurrencies");
-        }
-        try {
-            if (performancHistory.getPortfolioAtRisk() == null) {
-                portfolioAtRisk = "0";
-            } else {
-                portfolioAtRisk = performancHistory.getPortfolioAtRisk().toString();
-            }
-        } catch(CurrencyMismatchException e) {
-            portfolioAtRisk = localizedMessageLookup("errors.multipleCurrencies");
-        }
-        try {
-            totalSavingsAmount = performancHistory.getTotalSavingsAmount().toString();
-        } catch(CurrencyMismatchException e) {
-            totalSavingsAmount = localizedMessageLookup("errors.multipleCurrencies");
-        }
-
-        return new GroupInformationDto(avgLoanAmountForMember, totalOutStandingLoanAmount, portfolioAtRisk, totalSavingsAmount); 
     }
 
     @TransactionDemarcate(joinToken = true)

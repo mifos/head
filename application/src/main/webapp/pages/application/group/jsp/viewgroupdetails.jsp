@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="73%" class="headingorange"><c:out
-								value="${BusinessKey.displayName}" /> <br>
+								value="${groupInformationDto.displayName}" /> <br>
 							</td>
 							<td width="27%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if

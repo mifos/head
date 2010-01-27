@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.customer.group.struts.action;
+package org.mifos.application.customer.group.business.service;
 
 import org.mifos.framework.business.service.DataTransferObject;
 
@@ -31,9 +31,11 @@ public class GroupInformationDto implements DataTransferObject {
     private final String totalOutStandingLoanAmount;
     private final String portfolioAtRisk;
     private final String totalSavingsAmount;       
+    private final String displayName;
     
     public GroupInformationDto(String avgLoanAmountForMember, String totalOutStandingLoanAmount,
-            String portfolioAtRisk, String totalSavingsAmount) {
+            String portfolioAtRisk, String totalSavingsAmount, String displayName) {
+        this.displayName = displayName;
         this.avgLoanAmountForMember = avgLoanAmountForMember;
         this.totalOutStandingLoanAmount = totalOutStandingLoanAmount;
         this.portfolioAtRisk = portfolioAtRisk;
@@ -54,6 +56,10 @@ public class GroupInformationDto implements DataTransferObject {
 
     public String getTotalSavingsAmount() {
         return this.totalSavingsAmount;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }    
     
 }
