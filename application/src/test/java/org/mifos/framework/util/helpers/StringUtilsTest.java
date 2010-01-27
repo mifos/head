@@ -20,8 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.util.ArrayList;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -30,10 +28,6 @@ import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class StringUtilsTest extends TestCase {
-
-    public void testLpad() {
-       Assert.assertEquals("___blah", StringUtils.lpad("blah", '_', 7));
-    }
 
     public void testCamelCase() {
        Assert.assertEquals("AbcDef_ghIjKL", StringUtils.camelCase("aBc dEF_gh-iJ  k.l"));
@@ -52,23 +46,4 @@ public class StringUtilsTest extends TestCase {
 
     }
 
-    public void testCreateCsv() throws Exception {
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        String csv = StringUtils.createCsv(list);
-       Assert.assertEquals("1,2,3", csv);
-    }
-
-    // public void testTemp() throws Exception {
-    // String csv = StringUtils.createCsv(new
-    // RolesPermissionsPersistence().getRoles(),
-    // new Transformer() {
-    // public Object transform(Object input) {
-    // return ((RoleBO) input).getId();
-    // }
-    // });
-    //Assert.assertEquals("1,2", csv);
-    // }
 }

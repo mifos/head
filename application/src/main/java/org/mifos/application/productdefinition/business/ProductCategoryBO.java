@@ -20,6 +20,7 @@
 
 package org.mifos.application.productdefinition.business;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
@@ -32,7 +33,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ProductCategoryBO extends BusinessObject {
 
@@ -143,8 +143,8 @@ public class ProductCategoryBO extends BusinessObject {
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
-        globalPrdOfferingNum.append(StringUtils.lpad(String.valueOf(maxPrdID != null ? maxPrdID + 1
-                : ProductDefinitionConstants.DEFAULTMAX), '0', 3));
+        globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1
+                : ProductDefinitionConstants.DEFAULTMAX), 3, '0'));
         prdLoanLogger.debug("Generation of new product category global number done");
         return globalPrdOfferingNum.toString();
     }

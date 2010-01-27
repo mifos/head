@@ -23,6 +23,7 @@ package org.mifos.application.productdefinition.business;
 import java.util.Date;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -41,7 +42,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * A product is a set of rules (interest rate, number of installments, maximum
@@ -308,8 +308,8 @@ public abstract class PrdOfferingBO extends BusinessObject {
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
-        globalPrdOfferingNum.append(StringUtils.lpad(String.valueOf(maxPrdID != null ? maxPrdID + 1
-                : ProductDefinitionConstants.DEFAULTMAX + 1), '0', 3));
+        globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1
+                : ProductDefinitionConstants.DEFAULTMAX + 1), 3, '0'));
         prdLogger.debug("Generation of new product Offering global number done" + globalPrdOfferingNum);
         return globalPrdOfferingNum.toString();
     }
