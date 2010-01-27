@@ -5579,7 +5579,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
 
             if (expected.get(accountFeesActionDetailEntity.getFee().getFeeName()) != null) {
-                Assert.assertEquals(new Money(accountFeesActionDetailEntity.getFee().getCurrency(), 
+                Assert.assertEquals(new Money(TestUtils.getCurrency(), 
                         expected.get(accountFeesActionDetailEntity.getFee().getFeeName())), 
                         checkPaid ? accountFeesActionDetailEntity.getFeeAmountPaid()
                         : accountFeesActionDetailEntity.getFeeAmount());

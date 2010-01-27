@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(231);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(232);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.

@@ -210,10 +210,9 @@ public class FeeAction extends BaseAction {
         FeeChangeType feeChangeType;
         if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
             AmountFeeBO amountFee = ((AmountFeeBO) fee);
-            feeChangeType = amountFee.calculateNewFeeChangeType(
-                    new Money(fee.getCurrency(), feeActionForm.getAmount()), new FeeStatusEntity(
-                    feeActionForm.getFeeStatusValue()));
-            amountFee.setFeeAmount(new Money(fee.getCurrency(), feeActionForm.getAmount()));
+            feeChangeType = amountFee.calculateNewFeeChangeType(new Money(getCurrency(feeActionForm.getCurrencyId()),
+                    feeActionForm.getAmount()), new FeeStatusEntity(feeActionForm.getFeeStatusValue()));
+            amountFee.setFeeAmount(new Money(getCurrency(feeActionForm.getCurrencyId()), feeActionForm.getAmount()));
         } else {
             RateFeeBO rateFee = ((RateFeeBO) fee);
             feeChangeType = rateFee.calculateNewFeeChangeType(feeActionForm.getRateValue(), new FeeStatusEntity(
@@ -271,8 +270,6 @@ public class FeeAction extends BaseAction {
         } else {
            fee = createPeriodicFee(actionForm, request, feeCategory, feeFrequencyType, glCode);
         }
-        Short currencyId = actionForm.getCurrencyId();
-        fee.setCurrency(AccountingRules.getCurrencyByCurrencyId(currencyId));
         return fee;
 
     }
@@ -316,7 +313,7 @@ public class FeeAction extends BaseAction {
     private MifosCurrency getCurrency(Short currencyId) {
         MifosCurrency feeCurrency;
         if (currencyId == null) {
-            // Currency is passed from Form only for Loan Fees in multi-currency settings
+            // Currency is passed from Form only for Loan (Amount) Fees in multi-currency settings
             feeCurrency = Money.getDefaultCurrency();
         } else {
             feeCurrency = AccountingRules.getCurrencyByCurrencyId(currencyId);

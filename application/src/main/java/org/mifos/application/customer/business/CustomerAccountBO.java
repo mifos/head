@@ -533,7 +533,9 @@ public class CustomerAccountBO extends AccountBO {
             }
             addFeeToAccountFee(feeId, charge);
             FeeBO fee = getFeePersistence().getFee(feeId);
-            updateCustomerActivity(feeId, new Money(fee.getCurrency(), charge.toString()), fee.getFeeName() + AccountConstants.APPLIED);
+            updateCustomerActivity(feeId,
+                    new Money(((AmountFeeBO) fee).getFeeAmount().getCurrency(), charge.toString()), fee.getFeeName()
+                            + AccountConstants.APPLIED);
         } else {
             Money chargeAmount = new Money(getCurrency(), String.valueOf(charge));
             List<AccountActionDateEntity> dueInstallments = null;
