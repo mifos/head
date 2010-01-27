@@ -49,8 +49,8 @@ explanation of the license and how it is applied.
 		<html-el:form action="centerCustAction.do">
   		   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				   var="BusinessKey" />
-  		   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'performanceHistory')}"
-				   var="performanceHistory" />
+  		   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'centerDetailsDto')}"
+				   var="centerDetailsDto" />
 			<html-el:hidden property="input" value="CenterDetails}" />
 			<!-- Hidden properties set for customer id, version, system id and version number -->
 			<html-el:hidden property="customerId"
@@ -79,7 +79,7 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span id="viewCenterDetails.text.displayName"><c:out
-								value="${BusinessKey.displayName}" /></span></td>
+								value="${centerDetailsDto.displayName}" /></span></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <a id="viewCenterDetails.link.edit"
 								href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=center&currentFlowKey=${requestScope.currentFlowKey}">
@@ -148,7 +148,7 @@ explanation of the license and how it is applied.
 								</c:when>
 								<c:otherwise>
                                                                 <%-- FIXME: JSP tags inside HTML comments?? --%>
-									<!-- <c:if test="${performanceHistory.numberOfGroups==0}">-->
+									<!-- <c:if test="${centerDetailsDto.numberOfGroups==0}">-->
 									<mifos:mifoslabel name="Center.No" bundle="CenterUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
 									<mifos:mifoslabel name="Center.Available"
@@ -516,14 +516,14 @@ explanation of the license and how it is applied.
 								<fmt:message key="Center.hashof">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 								</fmt:message>:
-							<c:out value="${performanceHistory.numberOfClients}" /></span></td>
+							<c:out value="${centerDetailsDto.numberOfClients}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> 
 								<fmt:message key="Center.hashof">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 								</fmt:message>:
-							<c:out value="${performanceHistory.numberOfGroups}" /></span></td>
+							<c:out value="${centerDetailsDto.numberOfGroups}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
@@ -531,13 +531,13 @@ explanation of the license and how it is applied.
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="Center.portfolio" bundle="CenterUIResources"
 								isColonRequired="yes" /> <c:out
-								value="${performanceHistory.totalOutstandingPortfolio}" /></span></td>
+								value="${centerDetailsDto.totalOutstandingPortfolio}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Center.Total" bundle="CenterUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
-							<c:out value="${performanceHistory.totalSavings}" /></span></td>
+							<c:out value="${centerDetailsDto.totalSavings}" /></span></td>
 						</tr>
 
 					</table>

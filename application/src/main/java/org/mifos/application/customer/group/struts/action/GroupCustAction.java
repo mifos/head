@@ -227,7 +227,7 @@ public class GroupCustAction extends CustAction {
         // instead, load data into a data transfer object.
         // Whatever is needed on the jsp page and is coming from the clientBO 
         // should be moved over to the Dto so that we can stop passing a business
-        // object like clientBo to the jsp page.
+        // object like groupBo to the jsp page.
         GroupInformationDto groupInformationDto = new WebTierGroupDetailsServiceFacade().getGroupInformationDto(globalCustNum);
         SessionUtils.removeAttribute("groupInformationDto", request);
         SessionUtils.setAttribute("groupInformationDto", groupInformationDto, request);

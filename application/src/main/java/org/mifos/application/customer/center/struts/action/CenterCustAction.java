@@ -41,9 +41,13 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
+import org.mifos.application.customer.center.business.service.CenterInformationDto;
+import org.mifos.application.customer.center.business.service.WebTierCenterDetailsServiceFacade;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.client.business.service.ClientInformationDto;
+import org.mifos.application.customer.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -318,16 +322,24 @@ public class CenterCustAction extends CustAction {
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory.getInstance()
                 .getBusinessService(BusinessServiceName.Customer));
-        CenterBO centerBO = (CenterBO) customerBusinessService.findBySystemId(actionForm.getGlobalCustNum(),
+        
+        String globalCustNum = actionForm.getGlobalCustNum();
+        CenterBO centerBO = (CenterBO) customerBusinessService.findBySystemId(globalCustNum,
                 CustomerLevel.CENTER.getValue());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerBO, request);
         centerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         SessionUtils.setCollectionAttribute(CenterConstants.GROUP_LIST, centerBO.getChildren(CustomerLevel.GROUP,
                 ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED), request);
 
-        CenterPerformanceHistory centerPerformanceHistory = customerBusinessService.getCenterPerformanceHistory(
-                centerBO.getSearchId(), centerBO.getOffice().getOfficeId());
-        SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY, centerPerformanceHistory, request);
+        // We would like to move away from sending business objects to the jsp page
+        // instead, load data into a data transfer object.
+        // Whatever is needed on the jsp page and is coming from the clientBO 
+        // should be moved over to the Dto so that we can stop passing a business
+        // object like centerBo to the jsp page.
+        CenterInformationDto centerInformationDto = new WebTierCenterDetailsServiceFacade().getCenterInformationDto(globalCustNum, CustomerLevel.CENTER.getValue());
+        
+        SessionUtils.removeAttribute("centerDetailsDto", request);
+        SessionUtils.setAttribute("centerDetailsDto", centerInformationDto, request);               
 
         // set localeId in center saving accounts
 
