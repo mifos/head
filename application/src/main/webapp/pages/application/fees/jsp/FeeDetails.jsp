@@ -116,11 +116,13 @@ explanation of the license and how it is applied.
 											</c:if>
 										</c:otherwise>
 									</c:choose>
-                                    <c:if test='${sessionScope.isMultiCurrencyEnabled && BusinessKey.categoryType.id==FeeCategory.LOAN.value}'>
+                                    <c:if test='${sessionScope.isMultiCurrencyEnabled 
+                                    && BusinessKey.categoryType.id == FeeCategory.LOAN.value 
+                                    && BusinessKey.feeType.value == RateAmountFlag.AMOUNT.value}'>
 									<br>
                                       <span class="fontnormal"> 
                                       <mifos:mifoslabel name="Fees.currency" bundle="FeesUIResources" isColonRequired="yes" />
-                                      <c:out value="${BusinessKey.currency.currencyCode}" />
+                                      <c:out value="${BusinessKey.feeAmount.currency.currencyCode}" />
                                       </span>
                                     </c:if>
                                     <br>
