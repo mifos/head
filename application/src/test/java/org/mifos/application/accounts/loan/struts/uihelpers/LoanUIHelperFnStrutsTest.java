@@ -55,6 +55,12 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
     private UserContext userContext;
 
+    @Override 
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
+    }
+        
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();

@@ -68,6 +68,12 @@ public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     private String flowKey;
 
+    @Override 
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
+    }
+        
     @Override
     protected void setUp() throws Exception {
 

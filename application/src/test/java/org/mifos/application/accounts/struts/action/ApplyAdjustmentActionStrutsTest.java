@@ -64,6 +64,12 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
     private UserContext userContext;
     private String flowKey;
 
+    @Override 
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
+    }
+        
     /**
      * This sets the web.xml,struts-config.xml and prepares the userContext and
      * activityContext and sets them in the session.

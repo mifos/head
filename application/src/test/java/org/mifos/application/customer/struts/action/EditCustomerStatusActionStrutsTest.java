@@ -78,6 +78,12 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
 
     private OfficeBO office;
 
+    @Override 
+    protected void setStrutsConfig() {
+        super.setStrutsConfig();
+        setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
+    }
+        
     @Override
     protected void setUp() throws Exception {
         super.setUp();

@@ -53,7 +53,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
     private boolean strutsConfigSet = false;
 
-    private void setStrutsConfig() {
+    protected void setStrutsConfig() {
         /*
          * Add a pointer to the context directory so that the web.xml file can
          * be located when running test cases using the junit plugin inside
@@ -62,11 +62,9 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         setContextDirectory(new File("application/target/test-classes"));
 
         String className = this.getClass().getName();
-        if (className.startsWith("org.mifos.application.customer")) {
-            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
-        } else if (className.startsWith("org.mifos.application.accounts")) {
-            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
-        } else if (className.startsWith("org.mifos.application.reports")) {
+
+
+        if (className.startsWith("org.mifos.application.reports")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
         } else if (className.startsWith("org.mifos.application.productdefinition")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
