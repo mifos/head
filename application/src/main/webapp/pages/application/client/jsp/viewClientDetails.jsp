@@ -66,7 +66,7 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span id="viewClientDetails.heading"><c:out
-								value="${BusinessKey.displayName}" /></span></td>
+								value="${clientDetailsDto.displayName}" /></span></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
 								test="${BusinessKey.customerStatus.id != 6}">

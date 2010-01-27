@@ -53,6 +53,8 @@ import org.mifos.application.customer.client.business.ClientNameDetailEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.FamilyDetailDTO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.application.customer.client.business.service.ClientInformationDto;
+import org.mifos.application.customer.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -658,16 +660,20 @@ public class ClientCustAction extends CustAction {
             SessionUtils.setAttribute(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
                     loanIndividualMonitoringIsEnabled.intValue(), request);
 
-        ClientBO clientBO = (ClientBO) getCustomerBusinessService().findBySystemId(actionForm.getGlobalCustNum(),
+        String globalCustNum = actionForm.getGlobalCustNum();
+        // We would like to move away from sending business objects to the jsp page
+        // instead, load data into a data transfer object.
+        // Whatever is needed on the jsp page and is coming from the clientBO 
+        // should be moved over to the Dto so that we can stop passing a business
+        // object like clientBo to the jsp page.
+        ClientInformationDto clientInformationDto = new WebTierClientDetailsServiceFacade().getClientInformationDto(globalCustNum, CustomerLevel.CLIENT.getValue());
+        ClientBO clientBO = (ClientBO) getCustomerBusinessService().findBySystemId(globalCustNum,
                 CustomerLevel.CLIENT.getValue());
         clientBO.setUserContext(getUserContext(request));
         clientBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         for (CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags())
             custFlag.getStatusFlag().setLocaleId(getUserContext(request).getLocaleId());
         
-        // we would like to move away from sending business objects to the jsp page
-        // instead, load data into a data transfer object
-        ClientInformationDto clientInformationDto = loadClientInformationDto(clientBO);
         SessionUtils.removeAttribute("clientDetailsDto", request);
         SessionUtils.setAttribute("clientDetailsDto", clientInformationDto, request);
         
@@ -704,19 +710,6 @@ public class ClientCustAction extends CustAction {
                     SpouseFatherLookupEntity.class, getUserContext(request).getLocaleId()), request);
         }
         return mapping.findForward(ActionForwards.get_success.toString());
-    }
-
-    // FIXME: this method should be moved to a service which will return
-    // the DTO to the action class
-    private ClientInformationDto loadClientInformationDto(ClientBO clientBO) {
-        ClientInformationDto clientInformationDto = new ClientInformationDto();
-        try {
-            Money delinquentPortfolioAmount = clientBO.getClientPerformanceHistory().getDelinquentPortfolioAmount();
-            clientInformationDto.setDelinquentPortfolioAmount(delinquentPortfolioAmount.toString());
-        } catch(CurrencyMismatchException e) {
-            clientInformationDto.setDelinquentPortfolioAmount(localizedMessageLookup("errors.multipleCurrencies"));
-        }
-        return clientInformationDto;
     }
 
     private void setPicture(ClientCustActionForm actionForm, ClientBO clientBO, HttpServletRequest request)

@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.customer.client.struts.action;
+package org.mifos.application.customer.client.business.service;
 
 import org.mifos.framework.business.service.DataTransferObject;
 
@@ -28,14 +28,21 @@ import org.mifos.framework.business.service.DataTransferObject;
  *
  */
 public class ClientInformationDto implements DataTransferObject {
-    private String delinquentPortfolioAmount;
+    private final String delinquentPortfolioAmount;
+    private final String displayName;
+
+    
+    public ClientInformationDto(String delinquentPortfolioAmount, String displayName) {
+        this.delinquentPortfolioAmount = delinquentPortfolioAmount;
+        this.displayName = displayName;
+    }
 
     public String getDelinquentPortfolioAmount() {
         return this.delinquentPortfolioAmount;
     }
 
-    public void setDelinquentPortfolioAmount(String delinquentPortfolioAmount) {
-        this.delinquentPortfolioAmount = delinquentPortfolioAmount;
-    }
+    public String getDisplayName() {
+        return this.displayName;
+    }        
         
 }
