@@ -234,44 +234,42 @@ explanation of the license and how it is applied.
 												</div>                                                               
 											</td>
 										</tr>
-                                        <tr class="fontnormal">
-                                        <td align="right">
-                                        <div id="currencyDivHeading">
-                                        <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
-                                           <mifos:mifoslabel mandatory="yes" name="Fees.currency" bundle="FeesUIResources" 
-                                            isColonRequired="yes"/>
-                                          </c:if> 
-                                          </div>
-                                        </td>
-                                        <td>
-                                        <div id="currencyDiv">
-                                        <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
-                                               <html-el:select property="currencyId">
-                                                 <c:forEach items="${sessionScope.currencies}" var="currency">
-                                                     <html-el:option value="${currency.currencyId}">${currency.currencyCode}</html-el:option>
-                                                 </c:forEach>
-                                               </html-el:select>
-                                          </c:if>
-                                          </div>
-                                        </td>
-                                        </tr>
-										<tr class="fontnormal">
-											<td colspan="2" valign="top" class="fontnormalbold">
-												<mifos:mifoslabel name="Fees.feecalculation" />
-												<br>
-												<br>
-											</td>
-										</tr>
-										<tr class="fontnormal">
-											<td align="right">
-												<mifos:mifoslabel name="Fees.enteramount" mandatory="yes" />
-											</td>
-											<td valign="top">
-												<html-el:text property="amount"/>
-											</td>
-										</tr>
-										<tr class="fontnormal">
-											<td align="right" valign="middle" style="padding-top:25px;">
+                                <tr class="fontnormal">
+                                    <td valign="top" colspan="4" class="fontnormalbold">
+                                    <mifos:mifoslabel name="Fees.feecalculation" /> 
+                                    <br>
+                                    <br>
+                                    </td>
+                                </tr>
+                                <tr class="fontnormal">
+                                    <td align="right">
+                                      <mifos:mifoslabel name="Fees.enteramount" mandatory="yes" />
+                                    </td>
+                                  <td align="left">
+                                    <table><tr>
+                                    <td>
+                                    <html-el:text property="amount" /> 
+                                    </td>
+                                    <c:if  test='${sessionScope.isMultiCurrencyEnabled}'>
+                                    <td class="fontnormal">
+                                     <div id="currencyDivHeading">
+                                        <mifos:mifoslabel  mandatory="yes" name="Fees.currency" bundle="FeesUIResources"  isColonRequired="yes" />
+                                     </div>
+                                    </td>
+                                    <td>
+                                      <div id="currencyDiv">
+                                      <html-el:select property="currencyId">
+                                            <c:forEach items="${sessionScope.currencies}" var="currency">
+                                                <html-el:option value="${currency.currencyId}">${currency.currencyCode}</html-el:option>
+                                            </c:forEach>
+                                       </html-el:select>
+                                       </div>
+                                    </td></c:if>
+                                    </tr></table>
+                                  </td>
+                                </tr>
+                                <tr class="fontnormal">
+									<td  align="right" valign="middle" style="padding-top:25px;">
 												<div id="rateDivHeading">
 													<table border="0" cellspacing="0" cellpadding="0">
 														<tr class="fontnormal">
