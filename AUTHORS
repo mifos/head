@@ -9,6 +9,8 @@ If you are a contributor and would like to be added to the list, please contact
 a committer. Provide reference to a contribution you have made. There is no
 minimal contribution size.
 
+This file is UTF-8 Unicode English text.
+
 * fields are separated by a colon
 * field 1: comma-separated list of usernames used for commits. May be null.
 * field 2: given name(s) and surname. May be null.
@@ -33,6 +35,7 @@ aditi_yashol,yashol:
 :Aditya Shah
 aliyaw:Aliya Walji
 :Alv Gullbrand Lia
+:Anshal
 arunkanabar:
 ashish:
 :Biren Patnaik
@@ -48,6 +51,7 @@ jdailey:James Dailey
 jkingdon:Jim Kingdon
 johanhil:Johan Hilding
 johnwoodlock:John Woodlock
+jslawins:Jakub Sławiński
 :Kay Chau
 keithpierce:Keith Pierce
 randall77:Keith Randall
