@@ -56,6 +56,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -194,9 +195,24 @@ public class AccountBusinessService implements BusinessService {
             filterBasedOnRecurranceType(feeList, accountMeetingRecurrance);
             filterDisbursmentFee(feeList, loanBO);
             filterTimeOfFirstRepaymentFee(feeList, loanBO);
+            if(AccountingRules.isMultiCurrencyEnabled()){
+                filterBasedOnCurrencyOfLoan(feeList, loanBO);
+            }
             populaleApplicableCharge(applicableChargeList, feeList, userContext);
         }
         return applicableChargeList;
+    }
+
+    private void filterBasedOnCurrencyOfLoan(List<FeeBO> feeList, LoanBO loanBO) {
+        // remove fees where the currency of fee doesn't match the currency of loan.
+        for (Iterator<FeeBO> iter = feeList.iterator(); iter.hasNext();) {
+            FeeBO fee = iter.next();
+            if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+                if (!((AmountFeeBO) fee).getFeeAmount().getCurrency().equals(loanBO.getCurrency())) {
+                    iter.remove();
+                }
+            }
+        }
     }
 
     private void populaleApplicableCharge(List<ApplicableCharge> applicableChargeList, List<FeeBO> feeList,

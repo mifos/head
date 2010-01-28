@@ -28,7 +28,6 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.View;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FeeView extends View {
@@ -37,6 +36,8 @@ public class FeeView extends View {
     private String feeName;
 
     private String amount;
+    
+    private Short currencyId;
 
     private boolean periodic;
 
@@ -60,6 +61,7 @@ public class FeeView extends View {
         this.feeName = fee.getFeeName();
         if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
             this.amount = ((AmountFeeBO) fee).getFeeAmount().toString();
+            this.setCurrencyId(((AmountFeeBO) fee).getFeeAmount().getCurrency().getCurrencyId());
             this.feeFormula = "";
         } else {
             this.amount = ((RateFeeBO) fee).getRate().toString();
@@ -98,6 +100,14 @@ public class FeeView extends View {
 
     public boolean isPeriodic() {
         return periodic;
+    }
+
+    public void setCurrencyId(Short currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    public Short getCurrencyId() {
+        return currencyId;
     }
 
     public String getFeeId() {
@@ -142,6 +152,12 @@ public class FeeView extends View {
 
     public void setFrequencyType(RecurrenceType frequencyType) {
         this.frequencyType = frequencyType;
+    }
+    
+    public boolean isValidForCurrency(Short currencyId){
+     //  Rate fees do not have currency hence the currencyId will be null for them, 
+     //  when fee has a currency  then it should match loan account currency id
+       return (getCurrencyId()== null || getCurrencyId().equals(currencyId));
     }
 
 }

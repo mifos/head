@@ -82,6 +82,14 @@ public class PluginManager {
         File dependencyDirectory = new File(libDir);
         File[] files = dependencyDirectory.listFiles();
         ArrayList<URL> urls = new ArrayList<URL>();
+        if (files != null) {
+            urls.addAll(getPluginURLs(files));
+        }
+        return new URLClassLoader(urls.toArray(new URL[urls.size()]), Thread.currentThread().getContextClassLoader());
+    }
+
+    private ArrayList<URL> getPluginURLs(File[] files) {
+        ArrayList<URL> urls = new ArrayList<URL>();
         for (int i = 0; i < files.length; i++) {
             if (files[i].getName().endsWith(".jar")) {
                 try {
@@ -91,7 +99,7 @@ public class PluginManager {
                 }
             }
         }
-        return new URLClassLoader(urls.toArray(new URL[urls.size()]), Thread.currentThread().getContextClassLoader());
+        return urls;
     }
 
     public List<String> getImportPluginNames() {

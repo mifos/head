@@ -33,8 +33,10 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -42,6 +44,7 @@ import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.AccountingRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -1893,8 +1896,10 @@ public class LoanPrdActionForm extends BaseActionForm {
                     FeeBO fee = getFeeFromList(fees, selectedFee);
                     if (fee != null) {
                         isFrequencyMatchingOfferingFrequency(fee, errors);
+                        if (AccountingRules.isMultiCurrencyEnabled()) {
+                            isValidForCurrency(fee, errors);
+                        }
                         feeViews.add(new FeeView(getUserContext(request), fee));
-
                     }
                 }
             }
@@ -1919,6 +1924,14 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
         logger.debug("setSelectedFeesAndFundsAndValidateForFrequency method "
                 + "of Loan Product Action form method called :");
+    }
+
+    private void isValidForCurrency(FeeBO fee, ActionErrors errors) {
+        if(fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+         if(!((AmountFeeBO)fee).getFeeAmount().getCurrency().getCurrencyId().equals(getCurrencyId())){
+             addError(errors, "Fee", ProductDefinitionConstants.ERROR_FEE_CURRENCY_MATCH, fee.getFeeName());
+         }
+        }
     }
 
     private FeeBO getFeeFromList(List<FeeBO> fees, String feeSelected) {

@@ -152,6 +152,7 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
@@ -392,13 +393,16 @@ public class LoanAccountAction extends AccountAppAction {
         List<FeeView> defaultFees = new ArrayList<FeeView>();
         getDefaultAndAdditionalFees(loanActionForm.getPrdOfferingIdValue(), getUserContext(request), defaultFees,
                 additionalFees);
-        loanActionForm.setDefaultFees(defaultFees);
+        
         SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST, additionalFees, request);
-        // end of load fee
-
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), getUserContext(request)
                 .getLocaleId());
-
+        if (AccountingRules.isMultiCurrencyEnabled()) {
+            defaultFees = getFilteredDefaultFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
+        }
+        loanActionForm.setDefaultFees(defaultFees);
+        // end of load fee
+        
         // setDateIntoForm
         updateForm(loanOffering, loanActionForm);
         loanActionForm.setInterestRate(getStringValue(loanOffering.getDefInterestRate()));
@@ -455,6 +459,16 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
+    private List<FeeView> getFilteredDefaultFeesByCurrency(List<FeeView> defaultFees, Short loanCurrencyId) {
+        List<FeeView> filteredFees = new ArrayList<FeeView>();
+        for(FeeView feeView:defaultFees) {
+            if(feeView.isValidForCurrency(loanCurrencyId)) {
+                filteredFees.add(feeView);
+            }
+        }
+        return filteredFees;
+    }
+    
     private void setRepaymentDayFieldsOnForm(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail) {
         loanActionForm.setMonthDay("");
         loanActionForm.setMonthWeek("0");
