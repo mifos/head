@@ -64,7 +64,14 @@ public class CreateCenterEnterDataPage extends MifosPage {
             this.meeting = meeting;
         }        
     }
-    
+
+    public CreateMeetingPage navigateToCreateMeetingPage(){
+        selenium.click("createnewcenter.link.meetingSchedule");
+        CreateMeetingPage meetingPage = new CreateMeetingPage(selenium);
+        waitForPageToLoad();
+        meetingPage.verifyPage("createmeeting");
+        return meetingPage;
+    }
     public CreateCenterPreviewDataPage submitAndGotoCreateCenterPreviewDataPage(SubmitFormParameters parameters) {
         typeTextIfNotEmpty("createnewcenter.input.name", parameters.getCenterName());
         selectIfNotEmpty("loanOfficerId", parameters.getLoanOfficer());

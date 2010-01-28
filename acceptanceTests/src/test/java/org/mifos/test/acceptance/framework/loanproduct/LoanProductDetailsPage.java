@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 public class LoanProductDetailsPage  extends MifosPage {
@@ -40,6 +41,12 @@ public class LoanProductDetailsPage  extends MifosPage {
       
         }
 
-
+        public void verifyInterestAmount(String amount) {
+            Assert.assertTrue(selenium.isTextPresent(amount));        
+        }
+        
+        public void verifyDefaultLoanAmount(String amount) {
+            Assert.assertTrue(selenium.isTextPresent(amount));        
+        }
     
 }

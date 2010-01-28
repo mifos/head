@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.center;
 
 import com.thoughtworks.selenium.Selenium;
 
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 
@@ -52,5 +53,15 @@ public class CreateMeetingPage extends MifosPage {
         selenium.click("createmeeting.button.save");
         waitForPageToLoad();
         return new CreateClientEnterMfiDataPage(selenium);
-    }        
+    }
+    
+    public void verifyWorkingDays(String workingDays)
+    {
+        String workingDaysInWeekFromPage[] =  selenium.getSelectOptions("createmeeting.input.dayOfWeek");
+        String workingDaysInWeek[] = new String[workingDaysInWeekFromPage.length-1];
+        //remove the first item in drop down --Select--
+        System.arraycopy(workingDaysInWeekFromPage, 1, workingDaysInWeek, 0, workingDaysInWeekFromPage.length-1);
+        String workingDaysArray[] = workingDays.split(",");
+        Assert.assertArrayEquals(workingDaysInWeek, workingDaysArray);
+    }
 }

@@ -87,6 +87,38 @@ public class CustomPropertiesHelper {
     }
     
     /**
+     * Sets the number of digits after the decimal for interest sign to <tt>digits</tt>.
+     * @param digits Number of digits after the decimal.
+     */
+    public void setDigitsAfterDecimalForInterest(int digits) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.DigitsAfterDecimalForInterest=" + digits);
+    }
+    
+    /**
+     * Sets maximum allowed interest rate <tt>digits</tt>.
+     * @param interest maximum interest rate.
+     */
+    public void setMaxInterest(int interest) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.MaxInterest=" + interest);
+    }
+    
+    /**
+     * Sets minimum allowed interest rate <tt>digits</tt>.
+     * @param interest minimum interest rate.
+     */
+    public void setMinInterest(int interest) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.MinInterest=" + interest);
+    }
+    
+    /**
+     * Sets Working days of the week.
+     * @param interest minimum interest rate.
+     */
+    public void setWorkingDays(String workingDays) {
+        selenium.open(UPDATE_PAGE + "?FiscalCalendarRules.WorkingDays=" + workingDays);
+    }
+    
+    /**
      * This is to set the additional currencies
      * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
      * @param additionalCurrencies additional currencies

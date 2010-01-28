@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.util.StringUtil;
 
 import com.thoughtworks.selenium.Selenium;
@@ -97,20 +98,8 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
         ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
         CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
-        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
-        formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
-        formParameters.setFirstName("test");
-        formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
-        formParameters.setDateOfBirthDD("22");
-        formParameters.setDateOfBirthMM("05");
-        formParameters.setDateOfBirthYYYY("1987");
-        formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
-        formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
-        formParameters.setHandicapped("Yes");
-        formParameters.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
-        formParameters.setSpouseFirstName("father");
-        formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
-       
+        
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
         CreateClientEnterMfiDataPage clientMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
 
@@ -250,5 +239,4 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         
         return clientDetailsPage4;
     }
-
 }

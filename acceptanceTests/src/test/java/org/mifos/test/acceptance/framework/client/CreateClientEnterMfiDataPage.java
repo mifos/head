@@ -64,14 +64,16 @@ public class CreateClientEnterMfiDataPage extends MifosPage {
  
     public CreateClientPreviewDataPage submitAndGotoCreateClientPreviewDataPage(SubmitFormParameters parameters) {
         selectIfNotEmpty("loanOfficerId", parameters.getLoanOfficerId());
-
-        selenium.click("create_ClientMfiInfo.link.meetingSchedule");
-        waitForPageToLoad();
-        CreateMeetingPage meetingPage = new CreateMeetingPage(selenium);
-        meetingPage.submitAndGotoCreateClientEnterMfiDataPage(parameters.getMeeting());
-        
+        navigateToCreateMeetingPage().submitAndGotoCreateClientEnterMfiDataPage(parameters.getMeeting());
         selenium.click("create_ClientMfiInfo.button.preview");
         waitForPageToLoad();
         return new CreateClientPreviewDataPage(selenium);
-    }    
+    }
+    
+    public CreateMeetingPage navigateToCreateMeetingPage()
+    {
+        selenium.click("create_ClientMfiInfo.link.meetingSchedule");
+        waitForPageToLoad();
+        return new CreateMeetingPage(selenium);
+    }
 }

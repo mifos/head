@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loanproduct;
 
 
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -44,5 +45,9 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
         waitForPageToLoad();
         return new DefineNewLoanProductConfirmationPage(selenium);
      }
-
+    
+    public void verifyErrorInForm(String error)
+    {
+        Assert.assertTrue(selenium.isTextPresent(error));
+    }
 }

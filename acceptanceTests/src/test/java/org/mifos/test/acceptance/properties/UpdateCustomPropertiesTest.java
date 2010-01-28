@@ -24,8 +24,15 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
+import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +55,10 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-
+    
+    String errorInterestExceedsLimit = "The max interest is invalid because it is not in between";
+    String errorInterestDigitsAfterDecimal ="The max interest is invalid because the number of digits after the decimal separator";
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -86,5 +96,68 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         
         propertiesHelper.setDigitsAfterDecimal(1);
         
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void changeMinInterestRateToTwelve() throws Exception {
+        propertiesHelper.setMinInterest(12);
+        SubmitFormParameters  submitFormParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        submitFormParameters.setMaxInterestRate("8");//invalid value
+        submitFormParameters.setMinInterestRate("1");
+        submitFormParameters.setDefaultInterestRate("3");
+        verifyInvalidInterestInLoanProduct(submitFormParameters,true);
+        propertiesHelper.setMinInterest(0);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void changeMaxInterestRateToFive() throws Exception {
+        propertiesHelper.setMaxInterest(5);
+        SubmitFormParameters  submitFormParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        submitFormParameters.setMaxInterestRate("12");//invalid value
+        submitFormParameters.setMinInterestRate("1");
+        submitFormParameters.setDefaultInterestRate("3");
+        verifyInvalidInterestInLoanProduct(submitFormParameters,true);
+        propertiesHelper.setMaxInterest(999);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void changeDigitsAfterDecimalForInterestToThree() throws Exception {
+        propertiesHelper.setDigitsAfterDecimalForInterest(3);
+        SubmitFormParameters  submitFormParameters =FormParametersHelper.getWeeklyLoanProductParameters();
+        submitFormParameters.setMaxInterestRate("6.33333");//invalid value
+        submitFormParameters.setMinInterestRate("1");
+        submitFormParameters.setDefaultInterestRate("3");
+        verifyInvalidInterestInLoanProduct(submitFormParameters,false);
+        propertiesHelper.setDigitsAfterDecimalForInterest(5);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void removeThursdayFromWorkingDays() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        String workingDays ="Monday,Tuesday,Wednesday,Friday,Saturday";  
+        propertiesHelper.setWorkingDays(workingDays);
+        CreateCenterEnterDataPage createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("Test Branch Office");
+        CreateMeetingPage createMeetingPage = createCenterEnterDataPage.navigateToCreateMeetingPage();
+        createMeetingPage.verifyWorkingDays(workingDays);
+        
+        CreateClientEnterMfiDataPage createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("Test Branch Office");
+        createMeetingPage = createClientEnterMfiDataPage.navigateToCreateMeetingPage();
+        createMeetingPage.verifyWorkingDays(workingDays);
+        propertiesHelper.setWorkingDays("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday");
+    }
+    
+    private void verifyInvalidInterestInLoanProduct(SubmitFormParameters formParameters,boolean checkInterestExceedsLimit)
+    {
+        DefineNewLoanProductPage newLoanPage = navigationHelper.navigateToDefineNewLoanProductPage();
+        newLoanPage.fillLoanParameters(formParameters);
+        DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
+        if(checkInterestExceedsLimit)
+        {    
+            previewPage.verifyErrorInForm(errorInterestExceedsLimit);
+        }
+        else
+        {
+            previewPage.verifyErrorInForm(errorInterestDigitsAfterDecimal);
+        }
     }
 }

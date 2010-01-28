@@ -25,9 +25,17 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
+import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
+import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
@@ -97,6 +105,15 @@ public class NavigationHelper {
         return centerDetailsPage;
     }
     
+    public LoanProductDetailsPage navigateToLoanProductDetailsPage(String loanProduct)
+    {
+        ViewLoanProductsPage loanProductsPage = navigateToLoanProductsPage();
+        LoanProductDetailsPage loanProductDetailsPage = loanProductsPage.viewLoanProductDetails(loanProduct);
+        loanProductDetailsPage.verifyPage();
+        
+        return loanProductDetailsPage;
+    }
+    
     public GroupViewDetailsPage navigateToGroupViewDetailsPage(String groupName) {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(groupName);
@@ -122,4 +139,35 @@ public class NavigationHelper {
         
         return createUserPage;
     }
+    
+    public ViewLoanProductsPage navigateToLoanProductsPage() {
+        AdminPage adminPage = navigateToAdminPage();
+        ViewLoanProductsPage loanProductsPage = adminPage.navigateToViewLoanProducts();
+        loanProductsPage.verifyPage();
+        return loanProductsPage;
+    }
+    
+    public DefineNewLoanProductPage navigateToDefineNewLoanProductPage() {
+        AdminPage adminPage = navigateToAdminPage();
+        DefineNewLoanProductPage newLoanPage = adminPage.navigateToDefineLoanProduct();
+        newLoanPage.verifyPage();
+        return newLoanPage;
+    }
+    
+    public CreateCenterEnterDataPage navigateToCreateCenterEnterDataPage(String officeName){
+        ClientsAndAccountsHomepage clientsAccountsPage = navigateToClientsAndAccountsPage();
+        CreateCenterChooseOfficePage chooseOfficePage = clientsAccountsPage.navigateToCreateNewCenterPage();
+        return chooseOfficePage.selectOffice(officeName);
+    }
+    
+    public CreateClientEnterMfiDataPage navigateToCreateClientEnterMfiDataPage(String officeName) {
+        ClientsAndAccountsHomepage clientsAccountsPage = navigateToClientsAndAccountsPage();
+        GroupSearchPage groupSearchPage = clientsAccountsPage.navigateToCreateNewClientPage();
+        org.mifos.test.acceptance.framework.client.ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
+        clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
+        return clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+    }    
+    
 }
