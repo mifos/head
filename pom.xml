@@ -202,11 +202,6 @@
                 <version>2.4</version>
             </dependency>
             <dependency>
-                <groupId>org.springmodules</groupId>
-                <artifactId>spring-modules-validation</artifactId>
-                <version>0.8</version>
-            </dependency>
-            <dependency>
                 <groupId>net.sf.dozer</groupId>
                 <artifactId>dozer</artifactId>
                 <version>4.2.1</version>
