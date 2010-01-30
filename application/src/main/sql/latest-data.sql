@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(232);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(233);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -2402,7 +2402,7 @@ INSERT INTO OFFICE( PARENT_OFFICE_ID, GLOBAL_OFFICE_NUM, STATUS_ID,
   MAX_CHILD_COUNT,LOCAL_REMOTE_FLAG, DISPLAY_NAME,
   CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, VERSION_NO)
 VALUES(NULL,'0001',1,
-  NULL,1,'1.1','MIF1',
+  NULL,1,'1.1.','MIF1',
   2,1,'Mifos HO ',
   NULL,NULL,NULL,NULL,1);
 

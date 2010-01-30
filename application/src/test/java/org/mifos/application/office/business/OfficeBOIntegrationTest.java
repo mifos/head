@@ -101,7 +101,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.flushAndCloseSession();
         officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
-        Assert.assertEquals("1.1.2", officeBO.getSearchId());
+        Assert.assertEquals("1.1.2.", officeBO.getSearchId());
         Assert.assertEquals("abcd", officeBO.getOfficeName());
         Assert.assertEquals("abcd", officeBO.getShortName());
         Assert.assertEquals(OperationMode.REMOTE_SERVER, officeBO.getMode());
@@ -500,12 +500,12 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         regionalOffice = TestObjectFactory.getOffice(regionalOffice.getOfficeId());
         areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
         branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
-        if (areaOffice.getSearchId().equalsIgnoreCase("1.1.2")) {
-            Assert.assertEquals("1.1.2.1", branchOffice.getSearchId());
-        } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1")) {
-            Assert.assertEquals("1.1.1.1", branchOffice.getSearchId());
-        } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.3")) {
-            Assert.assertEquals("1.1.3.1", branchOffice.getSearchId());
+        if (areaOffice.getSearchId().equalsIgnoreCase("1.1.2.")) {
+            Assert.assertEquals("1.1.2.1.", branchOffice.getSearchId());
+        } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1.")) {
+            Assert.assertEquals("1.1.1.1.", branchOffice.getSearchId());
+        } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.3.")) {
+            Assert.assertEquals("1.1.3.1.", branchOffice.getSearchId());
         } else {
             Assert.assertEquals(true, false);
         }
@@ -562,10 +562,10 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
 
         Assert.assertEquals(areaOffice.getOfficeId(), branchOffice.getParentOffice().getOfficeId());
-        if (areaOffice.getSearchId().equalsIgnoreCase("1.1.2.1")) {
-            Assert.assertEquals("1.1.2.1.1", branchOffice.getSearchId());
-        } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1.1")) {
-            Assert.assertEquals("1.1.1.1.1", branchOffice.getSearchId());
+        if (areaOffice.getSearchId().equalsIgnoreCase("1.1.2.1.")) {
+            Assert.assertEquals("1.1.2.1.1.", branchOffice.getSearchId());
+        } else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1.1.")) {
+            Assert.assertEquals("1.1.1.1.1.", branchOffice.getSearchId());
 
         } else {
             assertEquals(true, false);
@@ -589,8 +589,8 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
                 null);
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
-        if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1")) {
-            if ("1.1.1.1".equals(branchOffice.getSearchId()) || "1.1.1.2".equals(branchOffice.getSearchId())) {
+        if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1.")) {
+            if ("1.1.1.1".equals(branchOffice.getSearchId()) || "1.1.1.2.".equals(branchOffice.getSearchId())) {
                 Assert.assertEquals(true, true);
             }
 
@@ -612,7 +612,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-        if ("1.1.1".equals(branchOffice.getSearchId()) || "1.1.2".equals(branchOffice.getSearchId())) {
+        if ("1.1.1.".equals(branchOffice.getSearchId()) || "1.1.2.".equals(branchOffice.getSearchId())) {
             Assert.assertEquals(true, true);
         } else {
             Assert.assertEquals(true, false);
@@ -663,7 +663,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO areaOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 
         areaOffice.setParentOffice(ho);
-        areaOffice.setSearchId("1.1.1");
+        areaOffice.setSearchId("1.1.1.");
         StaticHibernateUtil.getSessionTL().saveOrUpdate(areaOffice);
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
@@ -671,7 +671,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO areaOffice1 = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
         OfficeBO branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         branchOffice.setParentOffice(areaOffice1);
-        branchOffice.setSearchId("1.1.1.1");
+        branchOffice.setSearchId("1.1.1.1.");
         branchOffice.setUserContext(userContext);
         branchOffice.update(branchOffice.getOfficeName(), branchOffice.getShortName(), branchOffice.getOfficeStatus(),
                 branchOffice.getOfficeLevel(), areaOffice1, branchOffice.getAddress().getAddress(), null);

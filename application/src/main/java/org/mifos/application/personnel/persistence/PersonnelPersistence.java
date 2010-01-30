@@ -306,8 +306,7 @@ public class PersonnelPersistence extends Persistence {
     
     private List<Param> getParamList(PersonnelBO personnel) {
         List<Param> paramList = new ArrayList<Param>();
-        paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
-        paramList.add(typeNameValue("String", "SEARCH_ALL", personnel.getOffice().getSearchId() + ".%"));
+        paramList.add(typeNameValue("String", "SEARCH_ALL", personnel.getOffice().getSearchId() + "%"));
         paramList.add(typeNameValue("Short", "USERID", personnel.getPersonnelId()));
         paramList.add(typeNameValue("Short", "LOID", PersonnelLevel.LOAN_OFFICER.getValue()));
         paramList.add(typeNameValue("Short", "USERLEVEL_ID", personnel.getLevelEnum().getValue()));

@@ -69,7 +69,7 @@ public class OfficePersistence extends Persistence {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", OfficeConstants.BRANCHOFFICE);
         queryParameters.put("OFFICESEARCHID", searchId);
-        queryParameters.put("OFFICE_LIKE_SEARCHID", searchId + ".%");
+        queryParameters.put("OFFICE_LIKE_SEARCHID", searchId + "%.");
         queryParameters.put("statusId", OfficeConstants.ACTIVE);
         List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.MASTERDATA_ACTIVE_BRANCHES,
                 queryParameters);

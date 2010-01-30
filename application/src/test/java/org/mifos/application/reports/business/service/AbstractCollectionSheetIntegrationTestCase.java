@@ -128,7 +128,7 @@ public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegration
         centers = new ArrayList<CustomerBO>();
         centerSelectionItems = new ArrayList<SelectionItem>();
         for (int i = 0; i < MAX_COUNT; i++) {
-            OfficeBO office = OfficecFixture.createOffice(String.valueOf(i));
+            OfficeBO office = OfficecFixture.createOffice(String.valueOf(i) + ".");
             branchOffices.add(office);
             branchOfficesSelectionItems.add(new SelectionItem(convertShortToInteger(office.getOfficeId()), office
                     .getOfficeName()));

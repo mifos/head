@@ -46,7 +46,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        officeSearchId = "1.1";
+        officeSearchId = "1.1.";
         personnel = PersonnelFixture.createPersonnel(officeSearchId);
     }
 

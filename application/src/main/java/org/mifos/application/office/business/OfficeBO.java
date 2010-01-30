@@ -375,8 +375,8 @@ public class OfficeBO extends BusinessObject {
             throw new OfficeException(e);
         }
         String parentSearchId = HierarchyManager.getInstance().getSearchId(parentOffice.getOfficeId());
-        parentSearchId += ".";
         parentSearchId += ++noOfChildern;
+        parentSearchId += ".";
         return parentSearchId;
     }
 
@@ -528,7 +528,7 @@ public class OfficeBO extends BusinessObject {
             Iterator<OfficeBO> iter = this.getChildren().iterator();
             while (iter.hasNext()) {
                 OfficeBO element = iter.next();
-                element.updateSearchId(this.getSearchId() + "." + i);
+                element.updateSearchId(this.getSearchId() + i + ".");
                 i++;
 
             }

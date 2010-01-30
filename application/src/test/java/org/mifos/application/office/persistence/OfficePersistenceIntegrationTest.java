@@ -191,7 +191,7 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetSearchId() throws Exception {
-       Assert.assertEquals("1.1", getOfficePersistence().getSearchId(Short.valueOf("1")));
+       Assert.assertEquals("1.1.", getOfficePersistence().getSearchId(Short.valueOf("1")));
     }
 
     public void testIsBranchInactive() throws Exception {

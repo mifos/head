@@ -25,6 +25,8 @@ import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -56,6 +58,8 @@ public class OfficeListTagTest extends TestCase {
 
     private OfficeBO branch;
 
+    private OfficeBO branch2;
+
     public OfficeListTagTest() {
         super();
         initialize();
@@ -84,13 +88,14 @@ public class OfficeListTagTest extends TestCase {
 
     public void testBranches() throws Exception {
         createSomeOffices();
-       Assert.assertEquals(1, regional.getBranchOnlyChildren().size());
+       Assert.assertEquals(2, regional.getBranchOnlyChildren().size());
         List<OfficeBO> officeList = new ArrayList<OfficeBO>();
         officeList.add(regional);
         new OfficeListTag().getBranchOffices(result, officeList, userContext, branch, "Branch");
         String html = result.toString();
         assertWellFormedFragment(html);
         StringAssert.assertContains("Trinidad&amp;Tobago", html);
+        StringAssert.assertNotContains("TheGambia", html);
     }
 
     public void testNothingAboveBranches() throws Exception {
@@ -144,6 +149,7 @@ public class OfficeListTagTest extends TestCase {
         StringAssert.assertNotContains("East&amp;West Indies", html);
         StringAssert.assertContains("West Indies Only", html); // is this right?
         StringAssert.assertContains("Trinidad&amp;Tobago", html);
+        StringAssert.assertNotContains("TheGambia", html);
     }
 
     public void testGetOfficeListAllOffices() throws Exception {
@@ -155,6 +161,7 @@ public class OfficeListTagTest extends TestCase {
         StringAssert.assertContains("East&amp;West Indies", html);
         StringAssert.assertContains("West Indies Only", html);
         StringAssert.assertContains("Trinidad&amp;Tobago", html);
+        StringAssert.assertNotContains("TheGambia", html);
     }
 
     private List<OfficeView> headRegionalBranch() {
@@ -176,9 +183,14 @@ public class OfficeListTagTest extends TestCase {
         head = makeOffice("East&West Indies", OfficeLevel.HEADOFFICE);
         regional = makeOffice("West Indies Only", OfficeLevel.REGIONALOFFICE, head);
         head.setChildren(Collections.singleton(regional));
-        branch = OfficeBO.makeForTest(userContext, OfficeLevel.BRANCHOFFICE, regional, "1.1.1.1", null,
+        branch = OfficeBO.makeForTest(userContext, OfficeLevel.BRANCHOFFICE, regional, "1.1.1.1.", null,
                 "Trinidad&Tobago", "Trin", null, OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
-        regional.setChildren(Collections.singleton(branch));
+        branch2 = OfficeBO.makeForTest(userContext, OfficeLevel.BRANCHOFFICE, regional, "1.1.1.10.", null,
+                "TheGambia", "Gambia", null, OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
+        Set<OfficeBO> regionalChildren = new HashSet<OfficeBO>();
+        regionalChildren.add(branch);
+        regionalChildren.add(branch2);
+        regional.setChildren(regionalChildren);
     }
 
     private OfficeBO makeOffice(String name, OfficeLevel level) throws OfficeException {
