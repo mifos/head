@@ -174,7 +174,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
-                .getOffice().getOfficeId(), group.getOffice().getSearchId());
+                .getOffice().getOfficeId(), group.getSearchId() + ".%");
        Assert.assertEquals(1.0, portfolioAtRisk, DELTA);
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -207,7 +207,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         TestObjectFactory.flushandCloseSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
-                .getOffice().getOfficeId(), group.getOffice().getSearchId());
+                .getOffice().getOfficeId(), group.getSearchId() + ".%");
        Assert.assertEquals(0.5, portfolioAtRisk, DELTA);
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
