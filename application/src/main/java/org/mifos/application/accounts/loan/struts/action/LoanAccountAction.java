@@ -389,6 +389,7 @@ public class LoanAccountAction extends AccountAppAction {
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 
         // loan fees
+        loanActionForm.setAdditionalFees(new ArrayList<FeeView>()); // clear cached additional fees (MIFOS-2547)
         List<FeeView> additionalFees = new ArrayList<FeeView>();
         List<FeeView> defaultFees = new ArrayList<FeeView>();
         getDefaultAndAdditionalFees(loanActionForm.getPrdOfferingIdValue(), getUserContext(request), defaultFees,

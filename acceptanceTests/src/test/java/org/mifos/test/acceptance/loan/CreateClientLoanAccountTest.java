@@ -23,9 +23,11 @@ package org.mifos.test.acceptance.loan;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +117,26 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml.zip", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void tryClientLoanAccountWithAdditionalFees() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Tesa Mendez");
+        searchParameters.setLoanProduct("MIFOS-2636-GKEmergencyLoanWithZeroInterest");
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml.zip", dataSource, selenium);
+
+        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+
+        loanAccountEntryPage.selectAdditionalFees();
+        loanAccountEntryPage.clickContinue();
+
+        HomePage homePage = loanAccountEntryPage.navigateToHomePage();
+        homePage.verifyPage();
+        loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPageWithoutLogout(homePage, searchParameters);
+        loanAccountEntryPage.verifyAdditionalFeesAreEmpty();
     }
 
     private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,

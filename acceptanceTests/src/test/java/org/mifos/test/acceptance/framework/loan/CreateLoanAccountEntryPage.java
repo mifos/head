@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -28,6 +30,17 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public void verifyPage() {
         this.verifyPage("LoanCreationDetail");
+    }
+
+    public void verifyAdditionalFeesAreEmpty() {
+        Assert.assertEquals(selenium.getSelectedValue("selectedFee[0].feeId"), "");
+        Assert.assertEquals(selenium.getValue("selectedFee[0].amount"), "");
+
+        Assert.assertEquals(selenium.getSelectedValue("selectedFee[1].feeId"), "");
+        Assert.assertEquals(selenium.getValue("selectedFee[1].amount"), "");
+
+        Assert.assertEquals(selenium.getSelectedValue("selectedFee[2].feeId"), "");
+        Assert.assertEquals(selenium.getValue("selectedFee[2].amount"), "");
     }
 
     public CreateLoanAccountEntryPage(Selenium selenium) {
@@ -64,5 +77,23 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         return new CreateLoanAccountConfirmationPage(selenium);
          
     }
-    
+
+    public HomePage navigateToHomePage(){
+        selenium.click("id=clientsAndAccountsHeader.link.home");
+        waitForPageToLoad();
+        return new HomePage(selenium);
+    }
+
+    public void selectAdditionalFees() {
+        selenium.select("selectedFee[0].feeId", "label=One Time Upfront Fee");
+        selenium.type("loancreationdetails.input.feeAmount", "6.6");
+
+        selenium.select("selectedFee[1].feeId", "label=One Time Upfront Fee");
+        selenium.type("selectedFee[1].amount", "3.3");
+    }
+
+    public void clickContinue(){
+        selenium.click("loancreationdetails.button.continue");
+        waitForPageToLoad();
+    }
 }

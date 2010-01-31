@@ -259,4 +259,24 @@ public class LoanTestHelper {
         clientsAndAccountsPage.verifyPage();
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
     }
+
+    public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPage(CreateLoanAccountSearchParameters searchParameters) {
+        CreateLoanAccountSearchPage createLoanAccountSearchPage = navigateToCreateLoanAccountSearchPage();
+        createLoanAccountSearchPage.verifyPage();
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
+        .searchAndNavigateToCreateLoanAccountPage(searchParameters);
+        createLoanAccountEntryPage.verifyPage();
+        return createLoanAccountEntryPage;
+    }
+
+    public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(HomePage homePage, CreateLoanAccountSearchParameters searchParameters) {
+        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        clientsAndAccountsPage.verifyPage();
+        CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
+        createLoanAccountSearchPage.verifyPage();
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
+        .searchAndNavigateToCreateLoanAccountPage(searchParameters);
+        createLoanAccountEntryPage.verifyPage();
+        return createLoanAccountEntryPage;
+    }
 }
