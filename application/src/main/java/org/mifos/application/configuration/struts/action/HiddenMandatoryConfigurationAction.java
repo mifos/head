@@ -272,6 +272,10 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientGovtId()), getShortValue(actionForm
                     .getHideClientGovtId()));
         } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.POVERTY_STATUS)) {
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientPovertyStatus()),
+                    getShortValue(actionForm.getHideClientPovertyStatus()));
+        } else if (fieldConfiguration.getFieldName().equals(
                 HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_MIDDLE_NAME)) {
             fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(), getShortValue(actionForm
                     .getHideClientSpouseFatherMiddleName()));
@@ -365,6 +369,9 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.GOVERNMENT_ID)) {
             actionForm.setHideClientGovtId(getStringValue(fieldConfiguration.getHiddenFlag()));
             actionForm.setMandatoryClientGovtId(getStringValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.POVERTY_STATUS)) {
+            actionForm.setHideClientPovertyStatus(getStringValue(fieldConfiguration.getHiddenFlag()));
+            actionForm.setMandatoryClientPovertyStatus(getStringValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(
                 HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_MIDDLE_NAME)) {
             actionForm.setHideClientSpouseFatherMiddleName(getStringValue(fieldConfiguration.getHiddenFlag()));

@@ -293,6 +293,17 @@ explanation of the license and how it is applied.
 									<html-el:checkbox property="mandatoryClientGovtId" value="1"/>
 								</td>
 							</tr>
+                            <tr>
+								<td class="drawtablerow">
+									<mifos:mifoslabel name="configuration.povertystatus" />
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="hideClientPovertyStatus" value="1"/>
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="mandatoryClientPovertyStatus" value="1"/>
+								</td>
+							</tr>
 							<tr>
 								<td class="drawtablerow">
 									<mifos:mifoslabel name="configuration.spousefathermiddlename" />

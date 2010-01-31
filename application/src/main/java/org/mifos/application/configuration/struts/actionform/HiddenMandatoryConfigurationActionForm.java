@@ -88,6 +88,10 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
     private String mandatoryClientGovtId;
 
+    private String hideClientPovertyStatus;
+
+    private String mandatoryClientPovertyStatus;
+
     private String hideClientSpouseFatherMiddleName;
 
     private String hideClientSpouseFatherSecondLastName;
@@ -471,6 +475,8 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
         this.mandatoryClientSecondLastName = "0";
         this.hideClientGovtId = "0";
         this.mandatoryClientGovtId = "0";
+        this.hideClientPovertyStatus = "0";
+        this.mandatoryClientPovertyStatus = "0";
         this.hideClientSpouseFatherMiddleName = "0";
         this.hideClientSpouseFatherSecondLastName = "0";
         this.mandatoryClientSpouseFatherSecondLastName = "0";
@@ -491,4 +497,19 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
         this.hideSystemAddress2 = hideSystemAddress2;
     }
 
+    public String getHideClientPovertyStatus() {
+        return hideClientPovertyStatus;
+    }
+
+    public void setHideClientPovertyStatus(String hideClientPovertyStatus) {
+        this.hideClientPovertyStatus = hideClientPovertyStatus;
+    }
+
+    public String getMandatoryClientPovertyStatus() {
+        return mandatoryClientPovertyStatus;
+    }
+
+    public void setMandatoryClientPovertyStatus(String mandatoryClientPovertyStatus) {
+        this.mandatoryClientPovertyStatus = mandatoryClientPovertyStatus;
+    }
 }

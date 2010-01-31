@@ -408,4 +408,39 @@ public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrut
         Assert.assertFalse(fieldConfig.isFieldManadatory("Client.SpouseFatherSecondLastName"));
         Assert.assertFalse(fieldConfig.isFieldManadatory("Client.SecondLastName"));
     }
+
+    public void testPovertyStatusField() throws HibernateProcessException, PersistenceException {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideClientPovertyStatus", "1");
+        addRequestParameter("mandatoryClientPovertyStatus", "0");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+
+        Assert.assertTrue(fieldConfig.isFieldHidden("Client.PovertyStatus"));
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.PovertyStatus"));
+
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideClientPovertyStatus", "0");
+        addRequestParameter("mandatoryClientPovertyStatus", "1");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+
+        Assert.assertFalse(fieldConfig.isFieldHidden("Client.PovertyStatus"));
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.PovertyStatus"));
+    }
 }
