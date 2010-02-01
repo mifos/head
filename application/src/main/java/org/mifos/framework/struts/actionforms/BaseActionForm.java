@@ -124,6 +124,14 @@ public class BaseActionForm extends ValidatorActionForm {
         // return value != null ? String.valueOf(value) : null;
         return value != null ? new LocalizationConverter().getDoubleValueString(value) : null;
     }
+    
+    protected String getDoubleStringForMoney(Double dNumber) {
+        return dNumber != null ? new LocalizationConverter().getDoubleStringForMoney(dNumber): null;
+    }
+
+    protected String getDoubleStringForInterest(Double dNumber) {
+        return dNumber != null ? new LocalizationConverter().getDoubleStringForInterest(dNumber): null;
+    }
 
     protected String getStringValue(Short value) {
         return value != null ? String.valueOf(value) : null;

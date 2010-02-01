@@ -105,14 +105,21 @@ public class LocalizationConverter {
         return find;
     }
 
-    private DecimalFormat buildDecimalFormat(Short digitsBefore, Short digitsAfter, DecimalFormat decimalFormat) {
+    private DecimalFormat buildDecimalFormat(Short digitsBefore, Short digitsAfter, DecimalFormat decimalFormat,
+            Boolean allowTrailingZero) {
         StringBuilder pattern = new StringBuilder();
-        for (short i = 0; i < digitsBefore; i++)
+        for (short i = 0; i < digitsBefore; i++) {
             pattern.append('#');
+        }
         pattern.append(decimalFormat.getDecimalFormatSymbols().getDecimalSeparator());
-        for (short i = 0; i < digitsAfter; i++)
+        for (short i = 0; i < digitsAfter; i++) {
             pattern.append('#');
+        }
         decimalFormat.applyLocalizedPattern(pattern.toString());
+        decimalFormat.setDecimalSeparatorAlwaysShown(false);
+        if (allowTrailingZero) {
+            decimalFormat.setMinimumFractionDigits(digitsAfter);
+        }
         return decimalFormat;
     }
 
@@ -129,10 +136,10 @@ public class LocalizationConverter {
         if (format instanceof DecimalFormat) {
             currentDecimalFormat = (DecimalFormat) format;
             currentDecimalFormatForMoney = buildDecimalFormat(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
-                    (DecimalFormat) currentDecimalFormat.clone());
+                    (DecimalFormat) currentDecimalFormat.clone(), Boolean.TRUE);
             //
             currentDecimalFormatForInterest = buildDecimalFormat(digitsBeforeDecimalForInterest,
-                    digitsAfterDecimalForInterest, (DecimalFormat) currentDecimalFormat.clone());
+                    digitsAfterDecimalForInterest, (DecimalFormat) currentDecimalFormat.clone(), Boolean.FALSE);
             decimalFormatSymbol = currentDecimalFormat.getDecimalFormatSymbols().getDecimalSeparator();
         }
     }

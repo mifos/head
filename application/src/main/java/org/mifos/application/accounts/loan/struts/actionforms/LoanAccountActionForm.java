@@ -54,6 +54,7 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -81,7 +82,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class LoanAccountActionForm extends BaseActionForm {
@@ -657,12 +657,24 @@ public class LoanAccountActionForm extends BaseActionForm {
     
     protected void validateDefaultFee(ActionErrors errors, Locale locale) {
         for (FeeView defaultFee : defaultFees) {
-            DoubleConversionResult conversionResult = validateAmount(defaultFee.getAmount(),
-                    LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
-            if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-                addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                        lookupLocalizedPropertyValue(LoanConstants.LOAN_DEFAULT_FEE_KEY, locale,
-                                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            if (defaultFee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+                DoubleConversionResult conversionResult = validateAmount(defaultFee.getAmount(),
+                        LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                    addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY,
+                            LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                            lookupLocalizedPropertyValue(LoanConstants.LOAN_DEFAULT_FEE_KEY, locale,
+                                    FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                }
+            } else { 
+                DoubleConversionResult conversionResult = validateInterest(defaultFee.getAmount(),
+                        LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                    addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY,
+                            LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                            lookupLocalizedPropertyValue(LoanConstants.LOAN_DEFAULT_FEE_KEY, locale,
+                                    FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                }
             }
         }
     }
@@ -1282,7 +1294,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     public String getMinLoanAmount() {
-        return getMinLoanAmountValue().toString();
+        return getDoubleStringForMoney(getMinLoanAmountValue());
     }
 
     public Double getMinLoanAmountValue() {
@@ -1290,7 +1302,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     public String getMaxLoanAmount() {
-        return getMaxLoanAmountValue().toString();
+        return getDoubleStringForMoney(getMaxLoanAmountValue());
     }
 
     public Double getMaxLoanAmountValue() {
