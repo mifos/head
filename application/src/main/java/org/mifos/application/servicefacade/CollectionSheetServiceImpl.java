@@ -77,7 +77,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     public CollectionSheetErrorsView saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
             throws SaveCollectionSheetException {
 
-        saveCollectionSheet.printSummary();
         Long totalTime;
         Long totalTimeStart = System.currentTimeMillis();
         Long readTime;
@@ -163,30 +162,30 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
 
         totalTime = System.currentTimeMillis() - totalTimeStart;
-        printTiming(topCustomerId, totalTime, saveTime, readTime, saveCollectionSheetSessionCache);
+        printTiming(saveCollectionSheet.printSummary(), totalTime, saveTime, readTime, saveCollectionSheetSessionCache);
 
         return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
                 failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers,
                 failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
     }
 
-    private void printTiming(Integer topCustomerId, Long totalTime, Long saveTime, Long readTime,
+    private void printTiming(String printSummary, Long totalTime, Long saveTime, Long readTime,
             SaveCollectionSheetSessionCache saveCollectionSheetSessionCache) {
 
         final StringBuilder builder = new StringBuilder();
-        final String doubleQuote = "\"";
-        final String comma = "\", \"";
+        final String comma = ", ";
 
-        builder.append(doubleQuote);
-        builder.append("Collection Sheet Timing:");
+        builder.append(printSummary);
         builder.append(comma);
-        builder.append(topCustomerId);
+        builder.append("Collection Sheet Timing:");
         builder.append(comma);
         builder.append(totalTime);
         builder.append(comma);
         builder.append(saveTime);
         builder.append(comma);
         builder.append(readTime);
+        builder.append(comma);
+        builder.append("Cache Use Timing:");
         builder.append(comma);
         builder.append(saveCollectionSheetSessionCache.getPrefetchTotalTime());
         builder.append(comma);
@@ -209,7 +208,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         builder.append(saveCollectionSheetSessionCache.getPrefetchCustomerSchedulesTotalTime());
         builder.append(comma);
         builder.append(saveCollectionSheetSessionCache.getPrefetchCustomerSchedulesCount());
-        builder.append(doubleQuote);
 
         doLog(builder.toString());
 
@@ -608,6 +606,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     private void doLog(String str) {
-        System.out.println(str);
+        //System.out.println(str);
+        logger.error(str);
     }
 }

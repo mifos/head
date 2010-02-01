@@ -368,13 +368,11 @@ public class SaveCollectionSheetDto {
 
     }
     
-    public void printSummary() {
+    public String printSummary() {
 
         final StringBuilder builder = new StringBuilder();
-        final String doubleQuote = "\"";
-        final String comma = "\", \"";
+        final String comma = ", ";
 
-        builder.append(doubleQuote);
         builder.append("Collection Sheet Summary:");
         builder.append(comma);
         builder.append(this.getSaveCollectionSheetCustomers().get(0).getCustomerId());
@@ -396,9 +394,8 @@ public class SaveCollectionSheetDto {
         builder.append(countIndividualSavingsDeposits);
         builder.append(comma);
         builder.append(countIndividualSavingsWithdrawals);
-        builder.append(doubleQuote);
-                        
-        doLog(builder.toString());
+        
+        return builder.toString();
     }
     
     
