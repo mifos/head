@@ -40,6 +40,14 @@ public enum WeekDay implements LocalizedTextLookup {
         return value;
     }
 
+    /*
+     * In Joda time MONDAY=1 and SUNDAY=7, so shift these
+     * to SUNDAY=1, SATURDAY=7 to match this class 
+     */
+    public static WeekDay getJodaWeekDay(int value) {
+        return getWeekDay((value%7)+1);
+    }
+    
     public static WeekDay getWeekDay(int value) {
         for (WeekDay weekday : WeekDay.values()) {
             if (weekday.value == value) {

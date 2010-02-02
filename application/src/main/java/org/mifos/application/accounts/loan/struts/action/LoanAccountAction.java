@@ -450,7 +450,8 @@ public class LoanAccountAction extends AccountAppAction {
 
         }
         if (configService.isRepaymentIndepOfMeetingEnabled()) {
-            setRepaymentDayFieldsOnForm(loanActionForm, loanOfferingMeetingDetail);
+            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanOfferingMeetingDetail, 
+                    customerBO.getCustomerMeeting().getMeeting().getMeetingDetails());
         }
 
         SessionUtils.removeAttribute(LOANOFFERING, request);
@@ -460,6 +461,19 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
+    private void setRepaymentDayFieldsOnFormForLoad(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail, 
+            MeetingDetailsEntity customerMeetingDetail) {
+        loanActionForm.setMonthDay("");
+        loanActionForm.setMonthWeek("0");
+        loanActionForm.setMonthRank("0");
+
+        if (meetingDetail.getRecurrenceTypeEnum() == RecurrenceType.MONTHLY) {
+            setMonthlySchedule(loanActionForm, meetingDetail);
+        } else {
+            setWeeklySchedule(loanActionForm, customerMeetingDetail);
+        }
+    }
+    
     private List<FeeView> getFilteredDefaultFeesByCurrency(List<FeeView> defaultFees, Short loanCurrencyId) {
         List<FeeView> filteredFees = new ArrayList<FeeView>();
         for(FeeView feeView:defaultFees) {
@@ -469,7 +483,7 @@ public class LoanAccountAction extends AccountAppAction {
         }
         return filteredFees;
     }
-    
+        
     private void setRepaymentDayFieldsOnForm(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail) {
         loanActionForm.setMonthDay("");
         loanActionForm.setMonthWeek("0");

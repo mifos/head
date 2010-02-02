@@ -35,6 +35,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -178,6 +179,7 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 
 /**
  * This class assumes that you are connected to the model database, which has master data in it and also you have some
@@ -1153,9 +1155,8 @@ public class TestObjectFactory {
      */
     public static MeetingBO getNewMeetingForToday(final RecurrenceType frequency, final short recurAfter,
             final MeetingType meetingType) {
-        Calendar calendar = new GregorianCalendar();
-        return getNewMeeting(frequency, recurAfter, meetingType, WeekDay.getWeekDay((short) calendar
-                .get(Calendar.DAY_OF_WEEK)));
+        LocalDate today = new LocalDate(); 
+        return getNewMeeting(frequency, recurAfter, meetingType, WeekDay.getJodaWeekDay(today.getDayOfWeek()));
     }
 
     /**

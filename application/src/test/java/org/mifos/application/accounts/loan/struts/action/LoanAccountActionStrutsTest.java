@@ -50,6 +50,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.Assert;
 
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -95,6 +97,7 @@ import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.MeetingTemplateImpl;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -119,6 +122,8 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -130,6 +135,8 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.plugin.helper.EntityMasterData;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -332,6 +339,38 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         goToSchedulePreviewPageForLoanRedo();
     }
 
+    // repaymentSchedulesIndependentOfMeetingIsEnabled
+    public void testLoadWithFeeForToday() throws Exception {
+        // get rid of default objects
+        tearDown();
+
+        new DateTimeService().setCurrentDateTime(new DateMidnight(2010,1,6).toDateTime());
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 1);
+        LoanAccountActionForm loanActionForm = null;
+        try {
+            // setup again after setting date and config parameters
+            setUp();
+
+            goToPrdOfferingPage();
+            actionPerform();
+            setRequestPathInfo("/loanAccountAction.do");
+            addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+            addRequestParameter("method", "load");
+            addRequestParameter("customerId", group.getCustomerId().toString());
+            addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
+            performNoErrors();
+            verifyForward(ActionForwards.load_success.toString());
+            loanActionForm = (LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm");
+        } finally {
+            new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 0);
+            new DateTimeService().resetToCurrentSystemDateTime();
+        }
+        Assert.assertNotNull(loanActionForm);
+        Assert.assertEquals(WeekDay.WEDNESDAY.getValue().toString(), loanActionForm.getWeekDay());
+
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+    }
+        
     public void testRedoLoanThenApplyPayment() throws Exception {
         createInitialObjectsForLoanRedo();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -852,6 +891,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
+
     public void testLoadWithFeeForLoanOffering() throws Exception {
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
         loanOffering.addPrdOfferingFee(new LoanOfferingFeesEntity(loanOffering, fees.get(0)));
@@ -925,6 +965,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     }
 
     public void testSchedulePreviewWithoutData() throws Exception {
+        // make sure that everything needed to resolve hidden/mandatory fields is loaded
+        EntityMasterData.getInstance().init();        
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+        getActionServlet().getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,
+                fieldConfig.getEntityMandatoryFieldMap());
+        
         schedulePreviewPageParams.put("loanAmount", "");
         schedulePreviewPageParams.put("interestRate", "");
         schedulePreviewPageParams.put("noOfInstallments", "");

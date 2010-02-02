@@ -234,7 +234,7 @@ public final class Money implements Serializable {
         // MoneyUtil class
         // only string representation of BigDecimal should be returned here
         double doubleValue = amount.doubleValue();
-        String format = "%." + AccountingRules.getDigitsAfterDecimal().toString() + "f";
+        String format = "%." + AccountingRules.getDigitsAfterDecimal(getCurrency()).toString() + "f";
         String formatStr = String.format(Locale.ENGLISH, format, 0.0);
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
         DecimalFormat decimalFormat = null;

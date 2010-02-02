@@ -105,7 +105,7 @@
             <properties>
                 <container.name>tomcat6x</container.name>
                 <container.url>${tomcat.container.url}</container.url>
-                <tomcat.version>6.0.18</tomcat.version>
+                <tomcat.version>6.0.24</tomcat.version>
                 <war.target>${tomcat.home.directory}/webapps</war.target>
             </properties>
             <build>
