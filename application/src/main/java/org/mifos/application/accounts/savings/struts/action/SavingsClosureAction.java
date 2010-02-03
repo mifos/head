@@ -133,7 +133,7 @@ public class SavingsClosureAction extends BaseAction {
             SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null, request);
 
         Money interestAmount = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
-        logger.debug("In SavingsClosureAction::load(), Interest calculated:  " + interestAmount.getAmountDoubleValue());
+        logger.debug("In SavingsClosureAction::load(), Interest calculated:  " + interestAmount);
         AccountPaymentEntity payment = new AccountPaymentEntity(savings, savings.getSavingsBalance()
                 .add(interestAmount), null, null, null, new DateTimeService().getCurrentJavaDateTime());
         SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);

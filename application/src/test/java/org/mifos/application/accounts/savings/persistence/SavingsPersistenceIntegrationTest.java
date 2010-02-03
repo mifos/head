@@ -158,8 +158,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                 RecommendedAmountUnit.COMPLETE_GROUP);
         savings = createSavingsAccount("FFFF", savingsOffering);
         SavingsBO savings1 = savingsPersistence.findById(savings.getAccountId());
-        Assert.assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings1
-                .getRecommendedAmount().getAmountDoubleValue());
+        Assert.assertEquals(savingsOffering.getRecommendedAmount(), savings1.getRecommendedAmount());
     }
 
     public void testGetAccountStatus() throws Exception {
@@ -200,8 +199,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savings = createSavingsAccount("kkk", savingsOffering);
         SavingsBO savings1 = savingsPersistence.findBySystemId(savings.getGlobalAccountNum());
         Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
-        Assert.assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savings1
-                .getRecommendedAmount().getAmountDoubleValue());
+        Assert.assertEquals(savingsOffering.getRecommendedAmount(), savings1.getRecommendedAmount());
     }
 
     public void testRetrieveLastTransaction() throws Exception {
@@ -268,7 +266,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
             savings.setUserContext(userContext);
             SavingsTrxnDetailEntity trxn = savingsPersistence.retrieveLastTransaction(savings.getAccountId(), helper
                     .getDate("12/03/2006"));
-            Assert.assertEquals(Double.valueOf("500"), trxn.getAmount().getAmountDoubleValue());
+            Assert.assertEquals(TestUtils.makeMoney("500"), trxn.getAmount());
             group = savings.getCustomer();
             center = group.getParentCustomer();
         } catch (Exception e) {

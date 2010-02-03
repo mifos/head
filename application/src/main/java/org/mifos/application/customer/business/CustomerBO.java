@@ -667,7 +667,7 @@ public abstract class CustomerBO extends BusinessObject {
                 totalOutStandingAmount = totalOutStandingAmount.add(((LoanBO) accountBO).getLoanSummary().getOriginalPrincipal());
             }
         }
-        if (totalOutStandingAmount.getAmountDoubleValue() != 0.0) {
+        if (totalOutStandingAmount.isNonZero()) {
             return amountOverDue.divide(totalOutStandingAmount);
         }
         return BigDecimal.ZERO;

@@ -39,6 +39,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -109,8 +110,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 .valueOf("1"), currentDate, currentDate);
         try {
             account.applyPaymentWithPersist(paymentData);
-           Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid().getAmountDoubleValue(), Double
-                    .valueOf("100.0"));
+           Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.makeMoney("100.0"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,7 +140,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
 
         account.applyPaymentWithPersist(paymentData);
         StaticHibernateUtil.commitTransaction();
-       Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid().getAmountDoubleValue(), Double.valueOf("100.0"));
+       Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.makeMoney("100.0"));
     }
 
     public void testFailureApplyPayment() throws Exception {

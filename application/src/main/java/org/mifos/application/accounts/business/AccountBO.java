@@ -650,7 +650,7 @@ public class AccountBO extends BusinessObject {
     }
 
     protected Money removeSign(final Money amount) {
-        if (amount != null && amount.getAmountDoubleValue() < 0) {
+        if (amount != null && amount.isLessThanZero()) {
             return amount.negate();
         } else {
             return amount;
@@ -688,7 +688,7 @@ public class AccountBO extends BusinessObject {
             if (i == accountPayments.size()) {
                 break;
             }
-            if (accntPayment.getAmount().getAmountDoubleValue() != 0) {
+            if (accntPayment.getAmount().isNonZero()) {
                 accntPmnt = accntPayment;
                 break;
             }

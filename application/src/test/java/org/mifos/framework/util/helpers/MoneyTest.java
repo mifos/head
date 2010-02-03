@@ -30,6 +30,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
@@ -38,7 +39,6 @@ import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MoneyTest extends TestCase {
-    private static final double DELTA = 0.00000001;
 
     public void testAdd() {
         Money money = new Money(RUPEE, "100.0");
@@ -238,23 +238,48 @@ public class MoneyTest extends TestCase {
         }
     }
 
-    public void testSetScaleNewMoney() {
-       Assert.assertEquals(142.344, new Money(RUPEE, "142.344").getAmountDoubleValue(), DELTA);
-       Assert.assertEquals(142.356, new Money(RUPEE, "142.356").getAmountDoubleValue(), DELTA);
-    }
-
     public void testToString() {
         Money money = new Money(RUPEE, "4456456456.6");
        Assert.assertEquals("The toString of money returns : ", "4456456456.6", money.toString());
     }
-
+    
     public void testIsGreaterThan() {
         Money large = new Money(RUPEE, "10.0");
         Money small = new Money(RUPEE, "1.0");
+        Money same = new Money(RUPEE, "10.0");
 
        Assert.assertTrue("large should be greater than small", large.isGreaterThan(small));
         Assert.assertFalse("large should not be greater than itself", large.isGreaterThan(large));
         Assert.assertFalse("small should not be greater than large", small.isGreaterThan(large));
+        Assert.assertFalse("large should not be equal to same", large.isGreaterThan(same));
+    }
+    
+    public void testIsGreaterThanOrEqual() {
+        Money large = new Money(RUPEE, "10.0");
+        Money small = new Money(RUPEE, "1.0");
+        
+        Assert.assertTrue(large.isGreaterThanOrEqual(small));
+        Assert.assertTrue(large.isGreaterThanOrEqual(large));
+        Assert.assertFalse(small.isGreaterThanOrEqual(large));
+        
+    }
+    
+    public void testIsGreaterThanZero() {
+        Money nonZero = new Money(RUPEE, "10.0");
+        Money zero = new Money(RUPEE, "0.0");
+        Money lessThanZero = new Money(RUPEE, "-2.0");
+        Assert.assertTrue(nonZero.isGreaterThanZero());
+        Assert.assertFalse(lessThanZero.isGreaterThanZero());
+        Assert.assertFalse(zero.isGreaterThanZero());
+    }
+    
+    public void testIsGreaterThanOrEqualZero() {
+        Money nonZero = new Money(RUPEE, "10.0");
+        Money zero = new Money(RUPEE, "0.0");
+        Money lessThanZero = new Money(RUPEE, "-2.0");
+        Assert.assertTrue(nonZero.isGreaterThanZero());
+        Assert.assertFalse(lessThanZero.isGreaterThanOrEqualZero());
+        Assert.assertTrue(zero.isGreaterThanOrEqualZero());
     }
 
     public void testIsLessThan() {
@@ -264,6 +289,54 @@ public class MoneyTest extends TestCase {
        Assert.assertTrue("small should be less than large", small.isLessThan(large));
         Assert.assertFalse("small should not be less than itself", small.isLessThan(small));
         Assert.assertFalse("large should not be less than small", large.isLessThan(small));
+    }
+    
+    public void testIsLessThanOrEqual() {
+        Money large = new Money(RUPEE, "10.0");
+        Money small = new Money(RUPEE, "1.0");
+        Money same = new Money(RUPEE, "10.0");
+        
+        Assert.assertFalse(large.isLessThanOrEqual(small));
+        Assert.assertTrue(small.isLessThanOrEqual(large));
+        Assert.assertTrue(small.isLessThanOrEqual(large));
+        Assert.assertTrue(large.isLessThanOrEqual(same));
+        
+    }
+    
+    public void testIsLessThanZero() {
+        Money nonZero = new Money(RUPEE, "10.0");
+        Money zero = new Money(RUPEE);
+        Money lessThanZero = new Money(RUPEE, "-2.0");
+        Assert.assertFalse(nonZero.isLessThanZero());
+        Assert.assertTrue(lessThanZero.isLessThanZero());
+        Assert.assertFalse(zero.isLessThanZero());
+    }
+    
+    public void testIsLessThanOrEqualZero() {
+        Money nonZero = new Money(RUPEE, "10.0");
+        Money zero = new Money(RUPEE);
+        Money lessThanZero = new Money(RUPEE, "-2.0");
+        Assert.assertFalse(nonZero.isLessThanOrEqualZero());
+        Assert.assertTrue(lessThanZero.isLessThanOrEqualZero());
+        Assert.assertTrue(zero.isLessThanOrEqualZero());
+    }
+    
+    public void testIsZero() {
+        Money nonZero = new Money(RUPEE, "10.0");
+        Money zero = new Money(RUPEE);
+        Money lessThanZero = new Money(RUPEE, "-2.0");
+        Assert.assertFalse(nonZero.isZero());
+        Assert.assertFalse(lessThanZero.isZero());
+        Assert.assertTrue(zero.isZero());
+    }
+    
+    public void testIsNonZero() {
+        Money nonZero = new Money(RUPEE, "10.0");
+        Money zero = new Money(RUPEE);
+        Money lessThanZero = new Money(RUPEE, "-2.0");
+        Assert.assertTrue(nonZero.isNonZero());
+        Assert.assertTrue(lessThanZero.isNonZero());
+        Assert.assertFalse(zero.isNonZero());
     }
 
     public void testIsLessThanForDifferentCurrencies() {

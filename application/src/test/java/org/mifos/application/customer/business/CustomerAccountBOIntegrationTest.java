@@ -229,9 +229,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
             CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) customerAccountBO
                     .getAccountActionDate(custTrxn.getInstallmentId());
-            Assert.assertEquals("Misc Fee Adjusted", accntActionDate.getMiscFeePaid().getAmountDoubleValue(), 0.0, 0.0);
-            Assert.assertEquals("Misc Penalty Adjusted", accntActionDate.getMiscPenaltyPaid().getAmountDoubleValue(),
-                    0.0, 0.0);
+            Assert.assertEquals("Misc Fee Adjusted", accntActionDate.getMiscFeePaid(), TestUtils.makeMoney());
+            Assert.assertEquals("Misc Penalty Adjusted", accntActionDate.getMiscPenaltyPaid(),TestUtils.makeMoney());
         }
         for (CustomerActivityEntity customerActivityEntity : customerAccountBO.getCustomerActivitDetails()) {
             Assert.assertEquals("Amnt Adjusted", customerActivityEntity.getDescription());
@@ -708,8 +707,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
                         .getAccountFeesActionDetails()) {
                     if (accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee")) {
-                        Assert.assertEquals(new Double("200"), accountFeesActionDetailEntity.getFeeAmount()
-                                .getAmountDoubleValue(), 0.0);
+                        Assert.assertEquals(TestUtils.makeMoney("200"), accountFeesActionDetailEntity.getFeeAmount());
                     }
                 }
             }

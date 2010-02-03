@@ -527,7 +527,7 @@ public class SavingsAction extends AccountAppAction {
     }
 
     private String removeSign(Money amount) {
-        if (amount.getAmountDoubleValue() < 0)
+        if (amount.isLessThanZero())
             return amount.negate().toString();
         else
             return amount.toString();

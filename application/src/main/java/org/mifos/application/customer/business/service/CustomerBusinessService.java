@@ -567,7 +567,7 @@ public class CustomerBusinessService implements BusinessService {
         customerRecentActivityView.setActivityDate(customerActivityEntity.getCreatedDate());
         customerRecentActivityView.setDescription(customerActivityEntity.getDescription());
         Money amount = removeSign(customerActivityEntity.getAmount());
-        if (amount.getAmountDoubleValue() == 0)
+        if (amount.isZero())
             customerRecentActivityView.setAmount("-");
         else
             customerRecentActivityView.setAmount(amount.toString());
@@ -577,7 +577,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     private Money removeSign(Money amount) {
-        if (amount != null && amount.getAmountDoubleValue() < 0)
+        if (amount != null && amount.isLessThanZero())
             return amount.negate();
         return amount;
     }

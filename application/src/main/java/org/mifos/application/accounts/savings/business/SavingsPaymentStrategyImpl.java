@@ -65,8 +65,7 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
             }
             
             if (lastExpectedPayment != null) {
-                if (amountRemaining.getAmountDoubleValue() >= lastExpectedPayment.getTotalDepositDue()
-                        .getAmountDoubleValue()) {
+                if (amountRemaining.isGreaterThanOrEqual(lastExpectedPayment.getTotalDepositDue())) {
                     depositAmount = lastExpectedPayment.getTotalDepositDue();
                     amountRemaining = amountRemaining.subtract(lastExpectedPayment.getTotalDepositDue());
                 } else {
@@ -88,7 +87,7 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
             // mandatory savings - pay off mandatory amounts as much as possible
             for (SavingsScheduleEntity accountAction : scheduledDeposits) {
                 paymentStatus = PaymentStatus.UNPAID;
-                if (amountRemaining.getAmountDoubleValue() >= accountAction.getTotalDepositDue().getAmountDoubleValue()) {
+                if (amountRemaining.isGreaterThanOrEqual(accountAction.getTotalDepositDue())) {
                     depositAmount = accountAction.getTotalDepositDue();
                     amountRemaining = amountRemaining.subtract(accountAction.getTotalDepositDue());
                     paymentStatus = PaymentStatus.PAID;
@@ -106,7 +105,7 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
                                 runningBalance);
                 payment.addAccountTrxn(mandatoryScheduledPaymentTrxn);
 
-                if (amountRemaining.getAmountDoubleValue() <= 0.0) {
+                if (amountRemaining.isLessThanOrEqualZero()) {
                     return amountRemaining;
                 }
             }

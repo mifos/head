@@ -160,7 +160,7 @@ public class AccountPaymentEntity extends PersistentObject {
     List<AccountTrxnEntity> reversalAdjustment(final PersonnelBO personnel, final String adjustmentComment) throws AccountException {
         List<AccountTrxnEntity> newlyAddedTrxns = null;
         this.setAmount(getAmount().subtract(getAmount()));
-        logger.debug("The amount in account payment is " + getAmount().getAmountDoubleValue());
+        logger.debug("The amount in account payment is " + getAmount());
 
         if (null != getAccountTrxns() && getAccountTrxns().size() > 0) {
             newlyAddedTrxns = new ArrayList<AccountTrxnEntity>();
@@ -186,7 +186,7 @@ public class AccountPaymentEntity extends PersistentObject {
             logger.debug("Generating reverse transactions for transaction id " + accntTrxn.getAccountTrxnId());
             AccountTrxnEntity reverseAccntTrxn = accntTrxn.generateReverseTrxn(personnel, adjustmentComment);
             logger.debug("Amount associated with reverse transaction is "
-                    + reverseAccntTrxn.getAmount().getAmountDoubleValue());
+                    + reverseAccntTrxn.getAmount());
             reverseAccntTrxns.add(reverseAccntTrxn);
             logger.debug("After succesfully adding the reverse transaction");
         }

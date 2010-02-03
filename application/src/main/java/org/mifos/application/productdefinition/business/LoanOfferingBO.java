@@ -665,10 +665,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 || meeting == null
                 || principalGLcode == null
                 || interestGLcode == null
-                || minLoanAmount.getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue()
+                || minLoanAmount.isGreaterThan(maxLoanAmount)
                 || defaultLoanAmount != null
-                && (defaultLoanAmount.getAmountDoubleValue() < minLoanAmount.getAmountDoubleValue() || defaultLoanAmount
-                        .getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue())
+                && (defaultLoanAmount.isLessThan(minLoanAmount) || defaultLoanAmount.isGreaterThan(maxLoanAmount))
                 || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
                 || defInterestRate > maxInterestRate || minNoInstallments > maxNoInstallments
                 || defNoInstallments < minNoInstallments || defNoInstallments > maxNoInstallments
@@ -754,10 +753,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 || minNoInstallments == null
                 || defNoInstallments == null
                 || recurAfter == null
-                || minLoanAmount.getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue()
+                || minLoanAmount.isGreaterThan(maxLoanAmount)
                 || defaultLoanAmount != null
-                && (defaultLoanAmount.getAmountDoubleValue() < minLoanAmount.getAmountDoubleValue() || defaultLoanAmount
-                        .getAmountDoubleValue() > maxLoanAmount.getAmountDoubleValue())
+                && (defaultLoanAmount.isLessThan(minLoanAmount) || defaultLoanAmount.isGreaterThan(maxLoanAmount))
                 || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
                 || defInterestRate > maxInterestRate || minNoInstallments > maxNoInstallments
                 || defNoInstallments < minNoInstallments || defNoInstallments > maxNoInstallments

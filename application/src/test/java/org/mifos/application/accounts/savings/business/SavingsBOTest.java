@@ -148,8 +148,7 @@ public class SavingsBOTest {
         savingsAccount.deposit(accountPayment, payingCustomer);
 
         // verification
-        assertThat(savingsAccount.getSavingsBalance().getAmountDoubleValue(),
-                is(amountToDeposit.getAmountDoubleValue()));
+        assertThat(savingsAccount.getSavingsBalance(),is(amountToDeposit));
     }
 
     @Test
@@ -169,8 +168,7 @@ public class SavingsBOTest {
         savingsAccount.deposit(accountPayment, payingCustomer);
 
         // verification
-        assertThat(savingsAccount.getSavingsPerformance().getTotalDeposits().getAmountDoubleValue(), is(amountToDeposit
-                .getAmountDoubleValue()));
+        assertThat(savingsAccount.getSavingsPerformance().getTotalDeposits(), is(amountToDeposit));
     }
 
     @Test

@@ -1616,14 +1616,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountTrxnEntity transaction : accountTrxns) {
 
                 if (transaction.getAccountAction() == AccountActionTypes.FEE_REPAYMENT) {
-                    Assert.assertEquals(30.0, transaction.getAmount().getAmountDoubleValue(), DELTA);
+                    Assert.assertEquals(TestUtils.makeMoney(30.0), transaction.getAmount());
                     // it should have two feetrxn's
                     Set<FeesTrxnDetailEntity> feesTrxnDetails = ((LoanTrxnDetailEntity) transaction)
                             .getFeesTrxnDetails();
                     Assert.assertEquals(2, feesTrxnDetails.size());
                 }
                 if (transaction.getAccountAction() == AccountActionTypes.DISBURSAL) {
-                    Assert.assertEquals(300.0, transaction.getAmount().getAmountDoubleValue(), DELTA);
+                    Assert.assertEquals(TestUtils.makeMoney(300.0), transaction.getAmount());
                 }
 
                 Assert.assertEquals(accountBO.getAccountId(), transaction.getAccount().getAccountId());
@@ -1632,7 +1632,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             // check loan summary fee paid should be updated
             LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
-            Assert.assertEquals(30.0, loanSummaryEntity.getFeesPaid().getAmountDoubleValue(), DELTA);
+            Assert.assertEquals(TestUtils.makeMoney(30.0), loanSummaryEntity.getFeesPaid());
             // check the loan object for the disbursal date
             Assert.assertEquals(startDate, ((LoanBO) accountBO).getDisbursementDate());
             // check new account state
@@ -1673,7 +1673,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertEquals(1, accountTrxns.size());
             AccountTrxnEntity accountTrxn = accountTrxns.iterator().next();
             Assert.assertEquals(AccountActionTypes.DISBURSAL, accountTrxn.getAccountAction());
-            Assert.assertEquals(300.0, accountTrxn.getAmount().getAmountDoubleValue(), DELTA);
+            Assert.assertEquals(TestUtils.makeMoney(300.0), accountTrxn.getAmount());
             Assert.assertEquals(accountBO.getAccountId(), accountTrxn.getAccount().getAccountId());
         }
     }
@@ -1705,7 +1705,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * transaction.getFinancialTransactions().size(); AccountActionTypes
      * accountAction = transaction.getAccountAction(); if (accountAction ==
      * AccountActionTypes.FEE_REPAYMENT) {Assert.assertEquals(40.0,
-     * transaction.getAmount() .getAmountDoubleValue(), DELTA); // it should
+     * transaction.getAmount() ); // it should
      * have two feetrxn's Set<FeesTrxnDetailEntity> feesTrxnDetails =
      * ((LoanTrxnDetailEntity) transaction) .getFeesTrxnDetails();
      * Assert.assertEquals(2, feesTrxnDetails.size());
@@ -1713,9 +1713,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * "Is it a copy-paste from a test which doesn't apply here?"); } else if
      * (accountAction == AccountActionTypes.DISBURSAL)
      * {Assert.assertEquals(300.0, transaction.getAmount()
-     * .getAmountDoubleValue(), DELTA); } else if (accountAction ==
+     * ); } else if (accountAction ==
      * AccountActionTypes.LOAN_REPAYMENT) {Assert.assertEquals(52.0,
-     * transaction.getAmount() .getAmountDoubleValue(), DELTA); } else {
+     * transaction.getAmount() ); } else {
      * Assert.fail("unexpected account action " + accountAction.name()); }
      * 
      * Assert.assertEquals(accountBO.getAccountId(), transaction.getAccount()
@@ -1724,7 +1724,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * 
      * LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
      * .getLoanSummary();Assert.assertEquals(40.0,
-     * loanSummaryEntity.getFeesPaid() .getAmountDoubleValue(), DELTA);
+     * loanSummaryEntity.getFeesPaid() );
      * 
      * // check new account state
      * Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, ((LoanBO)
@@ -1796,7 +1796,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetTotalAmountDueForCurrentDateMeeting() {
         accountBO = getLoanAccount();
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue(), TestUtils.makeMoney(212.0));
     }
 
     public void testGetTotalAmountDueForSingleInstallment() throws Exception {
@@ -1806,7 +1806,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         ((LoanScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 424.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue(), TestUtils.makeMoney(424.0));
     }
 
     public void testGetTotalAmountDueWithPayment() throws Exception {
@@ -1819,7 +1819,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountActionDateEntity.setPenaltyPaid(new Money(getCurrency(), "5.0"));
         accountActionDateEntity.setActionDate(offSetCurrentDate(1));
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 389.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue(), TestUtils.makeMoney(389.0));
     }
 
     public void testGetTotalAmountDueWithPaymentDone() throws Exception {
@@ -1831,7 +1831,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
 
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue(), TestUtils.makeMoney(212.0));
     }
 
     public void testGetTotalAmountDueForTwoInstallments() throws Exception {
@@ -1844,12 +1844,12 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
 
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 636.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue(), TestUtils.makeMoney(636.0));
     }
 
     public void testGetOustandingBalance() {
         accountBO = getLoanAccount();
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOustandingBalance().getAmountDoubleValue(), 336.0);
+        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOustandingBalance(), TestUtils.makeMoney(336.0));
     }
 
     public void testGetOustandingBalancewithPayment() throws Exception {
@@ -1861,7 +1861,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
 
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOustandingBalance().getAmountDoubleValue(), 306.0);
+        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOustandingBalance(), TestUtils.makeMoney(306.0));
     }
 
     public void testGetNextMeetingDateAsCurrentDate() throws Exception {
@@ -1911,7 +1911,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetTotalAmountInArrearsForCurrentDateMeeting() {
         accountBO = getLoanAccount();
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears(), TestUtils.makeMoney());
     }
 
     public void testGetTotalAmountInArrearsForSingleInstallmentDue() throws Exception {
@@ -1919,7 +1919,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         AccountActionDateEntity accountActionDateEntity = accountBO.getAccountActionDate((short) 1);
         ((LoanScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears().getAmountDoubleValue(), 212.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears(), TestUtils.makeMoney(212.0));
     }
 
     public void testGetTotalAmountInArrearsWithPayment() throws Exception {
@@ -1932,7 +1932,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears().getAmountDoubleValue(), 177.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears(), TestUtils.makeMoney(177.0));
     }
 
     public void testGetTotalAmountInArrearsWithPaymentDone() throws Exception {
@@ -1942,7 +1942,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         ((LoanScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
         ((LoanScheduleEntity) accountActionDateEntity).setPaymentStatus(PaymentStatus.PAID);
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears().getAmountDoubleValue(), 0.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears(), TestUtils.makeMoney());
     }
 
     public void testGetTotalAmountDueForTwoInstallmentsDue() throws Exception {
@@ -1955,7 +1955,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
 
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears().getAmountDoubleValue(), 424.0);
+        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountInArrears(), TestUtils.makeMoney(424.0));
     }
 
     public void testChangedStatusForLastInstallmentPaid() throws Exception {
@@ -2402,7 +2402,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertEquals(1, accountTrxns.size());
             AccountTrxnEntity transaction = accountTrxns.iterator().next();
             Assert.assertEquals(AccountActionTypes.DISBURSAL, transaction.getAccountAction());
-            Assert.assertEquals(300.0, transaction.getAmount().getAmountDoubleValue(), DELTA);
+            Assert.assertEquals(TestUtils.makeMoney(300.0), transaction.getAmount());
             Assert.assertEquals(accountBO.getAccountId(), transaction.getAccount().getAccountId());
         }
         Assert.assertTrue(((LoanBO) accountBO).isAccountActive());

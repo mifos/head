@@ -70,8 +70,6 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         super();
     }
 
-    private static final double DELTA = 0.00000001;
-
     protected LoanBO loan = null;
 
     protected SavingsBO savings;
@@ -124,10 +122,10 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
         int countNegativeFinTrxn = 0;
         for (FinancialTransactionBO finTrxn : accountTrxnEntity.getFinancialTransactions()) {
-            if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0)
+            if (finTrxn.getPostedAmount().isLessThanZero())
                 countNegativeFinTrxn++;
             else
-               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount().getAmountDoubleValue(), 200.0);
+               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount(), TestUtils.makeMoney(200.0));
         }
        Assert.assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 9);
        Assert.assertEquals("Positive finTrxn values count", accountTrxnEntity.getFinancialTransactions().size()
@@ -214,9 +212,9 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
                 int countNegativeFinTrxn = 0;
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
-                    if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
+                    if (finTrxn.getPostedAmount().isLessThanZero()) {
                         countNegativeFinTrxn++;
-                       Assert.assertEquals(1000.0, finTrxn.getPostedAmount().negate().getAmountDoubleValue(), DELTA);
+                       Assert.assertEquals(TestUtils.makeMoney(1000.0), finTrxn.getPostedAmount().negate());
                     } else
                        Assert.assertTrue(false);
                 }
@@ -274,10 +272,10 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
                 int countNegativeFinTrxn = 0;
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
-                    if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
+                    if (finTrxn.getPostedAmount().isLessThanZero()) {
                         countNegativeFinTrxn++;
                     } else
-                       Assert.assertEquals(1000.0, finTrxn.getPostedAmount().getAmountDoubleValue(), DELTA);
+                       Assert.assertEquals(TestUtils.makeMoney(1000.0), finTrxn.getPostedAmount());
                    Assert.assertEquals("correction entry", finTrxn.getNotes());
                 }
 
@@ -372,12 +370,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
        Assert.assertEquals(finTrxnSet.size(), 2);
         int countNegativeFinTrxn = 0;
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
-            if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
-               Assert.assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate().getAmountDoubleValue(),
-                        100.0);
+            if (finTrxn.getPostedAmount().isLessThanZero()) {
+               Assert.assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate(), TestUtils.makeMoney(100.0));
                 countNegativeFinTrxn++;
             } else
-               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount().getAmountDoubleValue(), 100.0);
+               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount(), TestUtils.makeMoney(100.0));
         }
        Assert.assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
        Assert.assertEquals("Positive finTrxn values count", finTrxnSet.size() - countNegativeFinTrxn, 1);
@@ -407,12 +404,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
        Assert.assertEquals(finTrxnSet.size(), 2);
         int countNegativeFinTrxn = 0;
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
-            if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
-               Assert.assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate().getAmountDoubleValue(),
-                        100.0);
+            if (finTrxn.getPostedAmount().isLessThanZero()) {
+               Assert.assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate(), TestUtils.makeMoney(100.0));
                 countNegativeFinTrxn++;
             } else
-               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount().getAmountDoubleValue(), 100.0);
+               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount(), TestUtils.makeMoney(100.0));
         }
        Assert.assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
        Assert.assertEquals("Positive finTrxn values count", finTrxnSet.size() - countNegativeFinTrxn, 1);

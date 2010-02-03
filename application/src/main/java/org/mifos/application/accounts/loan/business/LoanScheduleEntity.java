@@ -344,13 +344,13 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
             if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)
                     && (accountFeesActionDetailEntity.getFeeAmountPaid() == null || accountFeesActionDetailEntity
-                            .getFeeAmountPaid().getAmountDoubleValue() == 0.0)) {
+                            .getFeeAmountPaid().isZero())) {
                 objectToRemove = accountFeesActionDetailEntity;
                 feeAmount = objectToRemove.getFeeAmount();
                 break;
             } else if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)
                     && accountFeesActionDetailEntity.getFeeAmountPaid() != null
-                    && accountFeesActionDetailEntity.getFeeAmountPaid().getAmountDoubleValue() > 0.0) {
+                    && accountFeesActionDetailEntity.getFeeAmountPaid().isGreaterThanZero()) {
                 feeAmount = accountFeesActionDetailEntity.getFeeAmount().subtract(
                         accountFeesActionDetailEntity.getFeeAmountPaid());
                 ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).setFeeAmount(accountFeesActionDetailEntity
@@ -403,7 +403,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public boolean isPrincipalZero() {
-        return principal.getAmountDoubleValue() == 0.0;
+        return principal.isZero();
     }
 
     public boolean isFeeAlreadyAttatched(Short feeId) {

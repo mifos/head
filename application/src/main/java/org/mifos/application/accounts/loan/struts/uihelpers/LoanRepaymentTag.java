@@ -112,8 +112,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     XmlBuilder html1 = new XmlBuilder();
                     XmlBuilder html2 = new XmlBuilder();
                     XmlBuilder htmlHeader2 = new XmlBuilder();
-                    if (firstInstallment.getTotalDueWithFees().getAmountDoubleValue() != firstInstallment
-                            .getTotalScheduleAmountWithFees().getAmountDoubleValue()) {
+                    if (!firstInstallment.getTotalDueWithFees()
+                            .equals(firstInstallment.getTotalScheduleAmountWithFees())) {
                         twoTables = true;
                         // installments paid and running balance table is
                         // required
@@ -165,10 +165,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     int index = 0;
                     boolean toContinue = true;
                     LoanScheduleEntity installment = (LoanScheduleEntity) list.get(index);
-                    while (index <= list.size() - 1
-                            && toContinue
-                            && installment.getTotalDueWithFees().getAmountDoubleValue() != installment
-                                    .getTotalScheduleAmountWithFees().getAmountDoubleValue()) {
+                    while (index <= list.size() - 1 && toContinue
+                            && !installment.getTotalDueWithFees().equals(installment.getTotalScheduleAmountWithFees())) {
 
                         html1.append(createInstallmentRow(installment, true));
                         html2.append(createRunningBalanceRow(installment, totalPrincipal, totalInterest, totalFees));

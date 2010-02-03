@@ -58,7 +58,7 @@ public abstract class BaseAccountingEntry {
 
     protected void addAccountEntryDetails(final Money postedMoney, final FinancialActionBO financialAction, final GLCodeEntity glcode,
             final FinancialConstants debitCredit) throws FinancialException {
-        if (postedMoney.getAmountDoubleValue() != 0) {
+        if (postedMoney.isNonZero()) {
             Money amountToPost = getAmountToPost(postedMoney, glcode, debitCredit);
             FinancialTransactionBO financialTransaction = new FinancialTransactionBO(
                     financialActivity.getAccountTrxn(), null, financialAction, glcode, financialActivity
@@ -105,7 +105,7 @@ public abstract class BaseAccountingEntry {
     }
 
     protected Money removeSign(final Money amount) {
-        if (amount != null && amount.getAmountDoubleValue() < 0) {
+        if (amount != null && amount.isLessThanZero()) {
             return amount.negate();
         }
         return amount;

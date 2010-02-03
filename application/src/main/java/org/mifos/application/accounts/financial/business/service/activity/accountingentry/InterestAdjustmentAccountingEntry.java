@@ -89,7 +89,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
         if (!isLastPayment) {
             return;
         }
-        boolean interestWasCharged = loanTrxn.getInterestAmount().getAmountDoubleValue() < 0;
+        boolean interestWasCharged = loanTrxn.getInterestAmount().isLessThanZero();
         // 999 account may not be logged when the last payment is made so there
         // is no need to
         // log the reversed 999 account
@@ -107,12 +107,12 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
                 .getFinancialAction(FinancialActionConstants.ROUNDING);
         GLCodeEntity codeToDebit = null;
         GLCodeEntity codeToCredit = null;
-        if (account999.getAmountDoubleValue() > 0) {
+        if (account999.isGreaterThanZero()) {
             // this code is defined as below in chart of account
             // <GLAccount code="31401" name="Income from 999 Account" />
             codeToDebit = getGLcode(finActionRounding.getApplicableCreditCharts());
             codeToCredit = glcodeCredit;
-        } else if (account999.getAmountDoubleValue() < 0) {
+        } else if (account999.isLessThanZero()) {
             codeToDebit = glcodeCredit;
             codeToCredit = getGLcode(finActionRounding.getApplicableDebitCharts());
             account999 = account999.negate();

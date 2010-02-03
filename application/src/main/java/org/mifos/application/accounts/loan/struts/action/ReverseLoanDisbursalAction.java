@@ -195,7 +195,7 @@ public class ReverseLoanDisbursalAction extends BaseAction {
         int i = accountPayments.size() - 1;
         if (accountPayments != null && accountPayments.size() > 0) {
             for (AccountPaymentEntity accountPayment : accountPayments) {
-                if (accountPayment.getAmount().getAmountDoubleValue() > 0.0) {
+                if (accountPayment.getAmount().isGreaterThanZero()) {
                     Money amount = new Money(accountPayment.getAmount().getCurrency());
                     if (i == 0) {
                         for (AccountTrxnEntity accountTrxn : accountPayment.getAccountTrxns()) {
@@ -210,7 +210,7 @@ public class ReverseLoanDisbursalAction extends BaseAction {
                     } else {
                         amount = accountPayment.getAmount();
                     }
-                    if (amount.getAmountDoubleValue() > 0.0) {
+                    if (amount.isGreaterThanZero()) {
                         LoanActivityView loanActivityView = new LoanActivityView(amount.getCurrency());
                         loanActivityView.setActionDate(accountPayment.getPaymentDate());
                         loanActivityView.setTotal(amount);

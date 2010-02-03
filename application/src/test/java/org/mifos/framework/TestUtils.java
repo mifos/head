@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -42,6 +43,7 @@ import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionC
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestUtils {
@@ -118,6 +120,18 @@ public class TestUtils {
     public static void assertWellFormedDocument(String xmlDocument) throws DocumentException {
         SAXReader reader = new SAXReader();
         reader.read(new StringReader(xmlDocument));
+    }
+    
+    public static Money makeMoney(String value) {
+        return new Money(RUPEE, value);
+    }
+    
+    public static Money makeMoney(Double value) {
+        return MoneyUtils.createMoney(RUPEE, value);
+    }
+    
+    public static Money makeMoney() {
+        return new Money(RUPEE);
     }
 
     /*

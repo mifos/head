@@ -80,7 +80,7 @@ public class LoanPaymentData extends AccountPaymentData {
         if (accountFeesActionDetails != null && accountFeesActionDetails.size() > 0) {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                 if (accountFeesActionDetailEntity.getFeeAmount() != null
-                        && accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue() != 0)
+                        && accountFeesActionDetailEntity.getFeeAmount().isNonZero())
                     feesPaid.put(accountFeesActionDetailEntity.getFee().getFeeId(), accountFeesActionDetailEntity
                             .getFeeDue());
             }
@@ -92,7 +92,7 @@ public class LoanPaymentData extends AccountPaymentData {
     public LoanPaymentData(AccountActionDateEntity accountActionDate, Money totalPayment) {
         super(accountActionDate);
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-        if (totalPayment.getAmountDoubleValue() >= loanScheduleEntity.getTotalDueWithFees().getAmountDoubleValue())
+        if (totalPayment.isGreaterThanOrEqual(loanScheduleEntity.getTotalDueWithFees()))
             setPaymentStatus(PaymentStatus.PAID.getValue());
         else
             setPaymentStatus(PaymentStatus.UNPAID.getValue());
@@ -142,7 +142,7 @@ public class LoanPaymentData extends AccountPaymentData {
     }
 
     private Money getLowest(Money money1, Money money2) {
-        if (money1.getAmountDoubleValue() > money2.getAmountDoubleValue()) {
+        if (money1.isGreaterThan(money2)) {
             return money2;
         }
         return money1;

@@ -146,6 +146,10 @@ public final class Money implements Serializable {
     public Money multiply(BigDecimal factor) {
         return new Money(currency, amount.multiply(factor).setScale(internalPrecision, internalRoundingMode));
     }
+    
+    public Money multiply(int intValue) {
+        return multiply(new BigDecimal(intValue));
+    }
 
     /**
      * Dividing by Money gives a fractional value <br>
@@ -161,6 +165,10 @@ public final class Money implements Serializable {
     public Money divide(BigDecimal factor) {
         return new Money(currency, amount.divide(factor.setScale(internalPrecision, internalRoundingMode),
                 internalPrecision, internalRoundingMode));
+    }
+    
+    public Money divide(Double value) {
+        return divide(new BigDecimal(value));
     }
 
     public Money divide(Short shortVal) {
@@ -249,9 +257,41 @@ public final class Money implements Serializable {
     public boolean isGreaterThan(Money money) {
         return Money.DEFAULT_COMPARATOR.compare(this, money) > 0;
     }
+    
+    public boolean isGreaterThanOrEqual(Money money) {
+        return Money.DEFAULT_COMPARATOR.compare(this, money) >= 0;
+    }
+    
+    public boolean isGreaterThanZero() {
+        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) > 0;
+    }
+    
+    public boolean isGreaterThanOrEqualZero() {
+        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) >= 0;
+    }
 
     public boolean isLessThan(Money money) {
         return Money.DEFAULT_COMPARATOR.compare(this, money) < 0;
+    }
+    
+    public boolean isLessThanOrEqual(Money money) {
+        return Money.DEFAULT_COMPARATOR.compare(this, money) <= 0;
+    }
+    
+    public boolean isLessThanZero() {
+        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) < 0;
+    }
+    
+    public boolean isLessThanOrEqualZero() {
+        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) <= 0;
+    }
+    
+    public boolean isZero() {
+        return this.getAmount().compareTo(BigDecimal.ZERO) == 0;
+    }
+    
+    public boolean isNonZero() {
+        return this.getAmount().compareTo(BigDecimal.ZERO) != 0;
     }
 
     private void checkCurrencyNotNull(MifosCurrency currency) {

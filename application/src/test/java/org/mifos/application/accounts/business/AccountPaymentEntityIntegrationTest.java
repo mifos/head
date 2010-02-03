@@ -128,10 +128,8 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
             CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) customerAccountBO
                     .getAccountActionDate(custTrxn.getInstallmentId());
-           Assert.assertEquals(custTrxn.getMiscFeeAmount().getAmountDoubleValue(), accntActionDate.getMiscFeePaid().negate()
-                    .getAmountDoubleValue());
-           Assert.assertEquals(custTrxn.getMiscPenaltyAmount().getAmountDoubleValue(), accntActionDate.getMiscPenaltyPaid()
-                    .negate().getAmountDoubleValue());
+           Assert.assertEquals(custTrxn.getMiscFeeAmount(), accntActionDate.getMiscFeePaid().negate());
+           Assert.assertEquals(custTrxn.getMiscPenaltyAmount(), accntActionDate.getMiscPenaltyPaid().negate());
            Assert.assertEquals(loggedInUser.getPersonnelId(), custTrxn.getPersonnel().getPersonnelId());
         }
 

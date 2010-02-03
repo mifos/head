@@ -68,8 +68,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         super();
     }
 
-    private static final double DELTA = 0.00000001;
-
     private UserContext userContext;
 
     private CustomerBO group;
@@ -223,7 +221,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         savingsOffering = null;
         savings = new SavingsPersistence().findById(savings.getAccountId());
         Assert.assertNotNull(savings);
-       Assert.assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(TestUtils.makeMoney(600.0), savings.getRecommendedAmount());
        Assert.assertEquals(1, savings.getAccountCustomFields().size());
 
     }
@@ -384,7 +382,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(globalAccountNum);
         savings = new SavingsPersistence().findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
-       Assert.assertEquals(1000.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(TestUtils.makeMoney(1000.0), savings.getRecommendedAmount());
        Assert.assertEquals(AccountState.SAVINGS_PARTIAL_APPLICATION.getValue(), savings.getAccountState().getId());
 
     }
@@ -404,7 +402,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(globalAccountNum);
         savings = new SavingsPersistence().findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
-       Assert.assertEquals(1000.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(TestUtils.makeMoney(1000.0), savings.getRecommendedAmount());
        Assert.assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
 
     }
@@ -419,8 +417,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("get_success");
         SavingsBO savingsObj = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
        Assert.assertEquals(savings.getGlobalAccountNum(), savingsObj.getGlobalAccountNum());
-       Assert.assertEquals(savingsOffering.getRecommendedAmount().getAmountDoubleValue(), savingsObj.getRecommendedAmount()
-                .getAmountDoubleValue());
+       Assert.assertEquals(savingsOffering.getRecommendedAmount(), savingsObj.getRecommendedAmount());
         savingsOffering = null;
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.SAVINGS_TYPE, request));
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, request));
@@ -476,7 +473,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
-       Assert.assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(TestUtils.makeMoney(600.0), savings.getRecommendedAmount());
         verifyNoActionErrors();
         verifyNoActionMessages();
     }
@@ -496,7 +493,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
-       Assert.assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(TestUtils.makeMoney(600.0), savings.getRecommendedAmount());
         verifyNoActionErrors();
         verifyNoActionMessages();
 
@@ -694,7 +691,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.closeSession();
         savings = new SavingsPersistence().findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
-       Assert.assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
+       Assert.assertEquals(TestUtils.makeMoney(600.0), savings.getRecommendedAmount());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.SAVINGS, savings.getAccountId());
        Assert.assertEquals(1, auditLogList.size());

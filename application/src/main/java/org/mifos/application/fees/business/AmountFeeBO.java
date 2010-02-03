@@ -111,7 +111,7 @@ public class AmountFeeBO extends FeeBO {
     }
 
     private void validateFeeAmount(final Money amount) throws FeeException {
-        if (amount == null || amount.getAmountDoubleValue() <= 0.0) {
+        if (amount == null || amount.isLessThanOrEqualZero()) {
             throw new FeeException(FeeConstants.INVALID_FEE_AMOUNT);
         }
     }

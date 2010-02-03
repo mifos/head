@@ -631,7 +631,7 @@ public class BulkEntryDisplayHelper {
             }
 
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
-            if (totalAmount.doubleValue() != customerAccountView.getTotalAmountDue().getAmountDoubleValue()) {
+            if (! totalAmount.equals(customerAccountView.getTotalAmountDue())) {
                 builder.append("<font color=\"#FF0000\">" + amount + "</font>");
             } else {
                 builder.append(amount);

@@ -50,7 +50,7 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
             boolean isLastPayment = ((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
             // if the final payment is made early there will be no interest
             // charged so no 999 account
-            boolean interestIsCharged = loanTrxn.getInterestAmount().getAmountDoubleValue() > 0;
+            boolean interestIsCharged = loanTrxn.getInterestAmount().isGreaterThanZero();
             if (isLastPayment && interestIsCharged) {
                 log999Account(loanTrxn, isLastPayment, glcodeCredit);
             }
@@ -72,13 +72,13 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
                 .getFinancialAction(FinancialActionConstants.ROUNDING);
         GLCodeEntity codeToDebit = null;
         GLCodeEntity codeToCredit = null;
-        if (account999.getAmountDoubleValue() > 0) {
+        if (account999.isGreaterThanZero()) {
             // this code is defined as below in chart of account
             // <GLAccount code="31401" name="Income from 999 Account" />
             codeToDebit = glcodeCredit;
             codeToCredit = getGLcode(finActionRounding.getApplicableCreditCharts());
 
-        } else if (account999.getAmountDoubleValue() < 0) {
+        } else if (account999.isLessThanZero()) {
             codeToDebit = getGLcode(finActionRounding.getApplicableDebitCharts());
             codeToCredit = glcodeCredit;
             account999 = account999.negate();

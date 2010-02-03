@@ -162,7 +162,7 @@ public class LoanBusinessService implements BusinessService {
     }
 
     private Money removeSign(final Money amount) {
-        if (amount != null && amount.getAmountDoubleValue() < 0) {
+        if (amount != null && amount.isLessThanZero()) {
             return amount.negate();
         }
 

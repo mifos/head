@@ -40,6 +40,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -105,15 +106,15 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
                 new Money(getCurrency(), "100.0"));
         repaymentScheduleInstallment.setLocale(new Locale("1"));
 
-        double m = new Money(getCurrency(), "100").getAmountDoubleValue();
+        Money m = new Money(getCurrency(), "100");
        Assert.assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDate());
-       Assert.assertEquals("fees", m, repaymentScheduleInstallment.getFees().getAmountDoubleValue());
-       Assert.assertEquals("Installment", "10", repaymentScheduleInstallment.getInstallment().toString());
-       Assert.assertEquals("Interest", m, repaymentScheduleInstallment.getFees().getAmountDoubleValue());
+       Assert.assertEquals("fees", m, repaymentScheduleInstallment.getFees());
+       Assert.assertEquals("Installment","10", repaymentScheduleInstallment.getInstallment().toString());
+       Assert.assertEquals("Interest", m, repaymentScheduleInstallment.getFees());
        Assert.assertEquals("Locale", "1", repaymentScheduleInstallment.getLocale().toString());
-       Assert.assertEquals("Misc fees", m, repaymentScheduleInstallment.getMiscFees().getAmountDoubleValue());
-       Assert.assertEquals("Misc penalty", m, repaymentScheduleInstallment.getMiscPenalty().getAmountDoubleValue());
-       Assert.assertEquals("principal", m, repaymentScheduleInstallment.getPrincipal().getAmountDoubleValue());
+       Assert.assertEquals("Misc fees", m, repaymentScheduleInstallment.getMiscFees());
+       Assert.assertEquals("Misc penalty", m, repaymentScheduleInstallment.getMiscPenalty());
+       Assert.assertEquals("principal", m, repaymentScheduleInstallment.getPrincipal());
     }
 
     public void testShouldDisableEditAmountForGlimAccountInDifferentAccountStates() throws Exception {

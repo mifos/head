@@ -577,9 +577,9 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
        Assert.assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
         LoanAmountOption eligibleLoanAmount = product.eligibleLoanAmount(null, null);
-       Assert.assertEquals(new Money(getCurrency(), "1000").getAmountDoubleValue(), eligibleLoanAmount.getMinLoanAmount());
-       Assert.assertEquals(new Money(getCurrency(), "3000").getAmountDoubleValue(), eligibleLoanAmount.getMaxLoanAmount());
-       Assert.assertEquals(new Money(getCurrency(), "2000").getAmountDoubleValue(), eligibleLoanAmount.getDefaultLoanAmount());
+       Assert.assertEquals(1000.0, eligibleLoanAmount.getMinLoanAmount(), DELTA);
+       Assert.assertEquals(3000.0, eligibleLoanAmount.getMaxLoanAmount(), DELTA);
+       Assert.assertEquals(2000, eligibleLoanAmount.getDefaultLoanAmount(), DELTA);
        Assert.assertEquals(2.0, product.getMinInterestRate(), DELTA);
        Assert.assertEquals(12.0, product.getMaxInterestRate(), DELTA);
        Assert.assertEquals(3.0, product.getDefInterestRate(), DELTA);

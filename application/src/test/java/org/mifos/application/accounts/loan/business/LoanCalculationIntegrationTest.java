@@ -240,7 +240,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                             debitOrCredit = "Debit";
                         if (isAllConsoleOutputEnabled()) {
                             System.out.println("Posted amount: "
-                                    + financialTransaction.getPostedAmount().getAmountDoubleValue() + " Debit/Credit: "
+                                    + financialTransaction.getPostedAmount() + " Debit/Credit: "
                                     + debitOrCredit + " GLCode: " + financialTransaction.getGlcode().getGlcode()
                                     + " Transaction Id: " + financialTransaction.getTrxnId());
                         }
@@ -284,7 +284,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                             debitOrCredit = "Debit";
                         if (isAllConsoleOutputEnabled()) {
                             System.out.println("Posted amount: "
-                                    + financialTransaction.getPostedAmount().getAmountDoubleValue() + " Debit/Credit: "
+                                    + financialTransaction.getPostedAmount() + " Debit/Credit: "
                                     + debitOrCredit + " GLCode: " + financialTransaction.getGlcode().getGlcode()
                                     + " Transaction Id: " + financialTransaction.getTrxnId());
                         }
@@ -998,7 +998,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     Money postedAmount = financialTransaction.getPostedAmount();
                     Money expected999Account = testCaseData.getExpectedResult().getAccount999();
                    Assert.assertEquals(postedAmount, expected999Account);
-                    if (expected999Account.getAmountDoubleValue() > 0) {
+                    if (expected999Account.isGreaterThanZero()) {
                        Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.CREDIT);
                     } else {
@@ -1046,11 +1046,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     Money expected999Account = testCaseData.getExpectedResult().getAccount999();
                     if (!postedAmount.equals(expected999Account)) {
                         System.out.println("File name: " + fileName + " posted amount: "
-                                + postedAmount.getAmountDoubleValue() + " expected amount: "
-                                + expected999Account.getAmountDoubleValue());
+                                + postedAmount + " expected amount: "
+                                + expected999Account);
                     }
                    Assert.assertEquals(postedAmount, expected999Account);
-                    if (expected999Account.getAmountDoubleValue() > 0) {
+                    if (expected999Account.isGreaterThanZero()) {
                        Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.CREDIT);
                     } else {
@@ -1079,11 +1079,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         for (int i = 0; i < loanSchedules.length; i++) {
             System.out.println("Loan Schedule #: " + (i + 1));
-            System.out.println("Principal:   " + loanSchedules[i].getPrincipal().getAmountDoubleValue());
-            System.out.println("Principal Paid:   " + loanSchedules[i].getPrincipalPaid().getAmountDoubleValue());
-            System.out.println("Interest Paid:   " + loanSchedules[i].getInterestPaid().getAmountDoubleValue());
-            System.out.println("Interest:   " + loanSchedules[i].getInterest().getAmountDoubleValue());
-            System.out.println("Total Due:   " + loanSchedules[i].getTotalDue().getAmountDoubleValue());
+            System.out.println("Principal:   " + loanSchedules[i].getPrincipal());
+            System.out.println("Principal Paid:   " + loanSchedules[i].getPrincipalPaid());
+            System.out.println("Interest Paid:   " + loanSchedules[i].getInterestPaid());
+            System.out.println("Interest:   " + loanSchedules[i].getInterest());
+            System.out.println("Total Due:   " + loanSchedules[i].getTotalDue());
             if (loanSchedules[i].getPaymentDate() != null) {
                 System.out.println("Payment Date:   " + loanSchedules[i].getPaymentDate().toString());
             } else {

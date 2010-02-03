@@ -184,9 +184,8 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
                 SavingsType.VOLUNTARY, balanceBeforeDeposit);
 
         // verification
-        assertThat(unpaidSaving1.getDepositPaid().getAmountDoubleValue(), is(Double.valueOf("0.0")));
-        assertThat(unpaidSaving2.getDepositPaid().getAmountDoubleValue(), is(recommendedDepositDue
-                .getAmountDoubleValue()));
+        assertThat(unpaidSaving1.getDepositPaid(), is(TestUtils.makeMoney()));
+        assertThat(unpaidSaving2.getDepositPaid(), is(recommendedDepositDue));
     }
 
     @Test
@@ -214,8 +213,7 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
                 unpaidDepositsForPayingCustomer, payingCustomer, SavingsType.VOLUNTARY, balanceBeforeDeposit);
 
         // verification
-        assertThat(remainingAmount.getAmountDoubleValue(), is(fullDepositAmount.subtract(recommendedDepositDue)
-                .getAmountDoubleValue()));
+        assertThat(remainingAmount, is(fullDepositAmount.subtract(recommendedDepositDue)));
     }
 
     @Test

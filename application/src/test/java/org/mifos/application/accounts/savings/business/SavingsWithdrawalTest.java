@@ -183,8 +183,7 @@ public class SavingsWithdrawalTest {
         savingsAccount.withdraw(accountPayment, payingCustomer);
 
         // verification
-        assertThat(savingsAccount.getSavingsPerformance().getTotalWithdrawals().getAmountDoubleValue(),
-                is(amountToWithdraw.getAmountDoubleValue()));
+        assertThat(savingsAccount.getSavingsPerformance().getTotalWithdrawals(),is(amountToWithdraw));
     }
     
     @Test

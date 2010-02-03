@@ -315,7 +315,7 @@ public class CustomerAccountBO extends AccountBO {
     public void waiveAmountDue(@SuppressWarnings("unused") final WaiveEnum chargeType) throws AccountException {
         AccountActionDateEntity accountActionDateEntity = getUpcomingInstallment();
         Money chargeWaived = ((CustomerScheduleEntity) accountActionDateEntity).waiveCharges();
-        if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+        if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             addCustomerActivity(buildCustomerActivity(chargeWaived, AccountConstants.AMNT_WAIVED, userContext.getId()));
         }
         try {
@@ -333,7 +333,7 @@ public class CustomerAccountBO extends AccountBO {
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
             chargeWaived = chargeWaived.add(((CustomerScheduleEntity) accountActionDateEntity).waiveCharges());
         }
-        if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+        if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             addCustomerActivity(buildCustomerActivity(chargeWaived, AccountConstants.AMNT_WAIVED, userContext.getId()));
         }
         try {

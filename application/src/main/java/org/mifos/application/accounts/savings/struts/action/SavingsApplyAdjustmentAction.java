@@ -99,7 +99,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         AccountPaymentEntity lastPayment = savings.getLastPmnt();
         if (null != lastPayment
-                && lastPayment.getAmount().getAmountDoubleValue() != 0
+                && lastPayment.getAmount().isNonZero()
                 && (new SavingsHelper().getPaymentActionType(lastPayment).equals(
                         AccountActionTypes.SAVINGS_DEPOSIT.getValue()) || new SavingsHelper().getPaymentActionType(
                         lastPayment).equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()))) {
