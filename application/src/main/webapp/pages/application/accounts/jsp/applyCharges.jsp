@@ -34,10 +34,6 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyCharges" />
-
-		<script src="pages/framework/js/conversion.js"></script>
-		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<script>
 				function fun_cancel(form)
 				{

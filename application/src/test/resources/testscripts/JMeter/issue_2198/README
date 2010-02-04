@@ -6,3 +6,6 @@ create_loan_only.jmx
 load.jmx
     (incomplete) Bootstraps itself by adding fixture data necessary to run load
     tests.
+
+NOTE: the create_loan_only.jmx script references conversion.js that has now been
+removed (Feb 4, 2010) so it may not work now.

@@ -39,9 +39,6 @@ explanation of the license and how it is applied.
 		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
 		<script type="text/javascript" src="pages/application/loan/js/loan.js"></script>
 		<script type="text/javascript" src="pages/application/meeting/js/meeting.js"></script>
-		<script type="text/javascript" src="pages/framework/js/conversion.js"></script>
-		<script type="text/javascript" src="pages/framework/js/con_en.js"></script>
-		<script type="text/javascript" src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		
         <c:if test="${requestScope.perspective == 'redoLoan'}">
             <SCRIPT>

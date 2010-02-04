@@ -39,7 +39,6 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="CreateClientFamilyInfo" />	
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
-		<script language="javascript" SRC="pages/framework/js/conversion.js"></script>
 		<script language="javascript" src="pages/application/client/js/client.js"></script>
 		<script language="javascript">
 
