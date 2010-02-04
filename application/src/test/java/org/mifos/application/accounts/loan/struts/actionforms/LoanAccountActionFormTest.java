@@ -33,11 +33,11 @@ import static org.mifos.application.accounts.loan.util.helpers.LoanAccountAction
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY;
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL;
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE;
-import static org.mifos.framework.util.helpers.MoneyUtils.zero;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,11 +48,20 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeFormulaEntity;
+import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.business.RateFeeBO;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.productdefinition.business.AmountRange;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
+import org.mifos.config.AccountingRules;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.InvalidDateException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 
 public class LoanAccountActionFormTest extends TestCase {
@@ -102,7 +111,7 @@ public class LoanAccountActionFormTest extends TestCase {
         super.setUp();
         form = new LoanAccountActionForm();
         paymentMock = createMock(PaymentDataTemplate.class);
-        expect(paymentMock.getTotalAmount()).andReturn(zero());
+        expect(paymentMock.getTotalAmount()).andReturn(new Money(TestUtils.RUPEE));
         actionErrors = new ActionErrors();
 
     }
@@ -267,5 +276,56 @@ public class LoanAccountActionFormTest extends TestCase {
         form.setClients(Arrays.asList("1", "2", "3", "4"));
         form.setClientsNotPresentInInputToEmptyString(Arrays.asList("1", "2", "3"));
        Assert.assertEquals(Arrays.asList("1", "2", "3", ""), form.getClients());
+    }
+
+    public void testValidateLoanAmount()  {
+        form.setLoanAmount("5000.0");
+        ActionErrors errors = new ActionErrors();
+        form.validateLoanAmount(errors, Locale.ENGLISH);
+        Assert.assertEquals("No Error was expected",0, errors.size());
+    }
+
+    public void testValidateDefaultFees()  {
+        Short saveDigitAfterDecimal = AccountingRules.getDigitsAfterDecimal();
+        AccountingRules.setDigitsAfterDecimal(Short.valueOf("0"));
+        form.setDefaultFees(createDefaultFees());
+        ActionErrors errors = new ActionErrors();
+        form.validateDefaultFee(errors, Locale.ENGLISH);
+        Assert.assertEquals("No Error was expected",0, errors.size());
+        AccountingRules.setDigitsAfterDecimal(saveDigitAfterDecimal);
+    }
+    
+    private ArrayList <FeeView> createDefaultFees() {
+        AmountFeeBO amountFee = createMock(AmountFeeBO.class);
+        expect(amountFee.getFeeId()).andReturn(Short.valueOf("1"));
+        expect(amountFee.getFeeType()).andReturn(RateAmountFlag.AMOUNT).times(2);
+        expect(amountFee.getFeeName()).andReturn("TestAmountFee");
+        expect(amountFee.getFeeAmount()).andReturn(new Money(TestUtils.RUPEE,"5000.0")).times(2);
+        expect(amountFee.isPeriodic()).andReturn(false).times(2);
+        replay(amountFee);
+        
+        RateFeeBO rateFee = createMock(RateFeeBO.class);
+        expect(rateFee.getFeeId()).andReturn(Short.valueOf("1"));
+        expect(rateFee.getFeeType()).andReturn(RateAmountFlag.RATE).times(2);
+        expect(rateFee.getFeeName()).andReturn("TestRateFee");
+        expect(rateFee.getRate()).andReturn(2.12345);
+        expect(rateFee.getFeeFormula()).andReturn(createFeeFormulaEntityMock());
+        expect(rateFee.isPeriodic()).andReturn(false).times(2);
+        replay(rateFee);
+        
+        UserContext userContext = createMock(UserContext.class);
+        expect(userContext.getLocaleId()).andReturn(Short.valueOf("1")).times(2);
+        replay(userContext);
+        ArrayList <FeeView> defaultFees = new ArrayList<FeeView>();
+        defaultFees.add(new FeeView(userContext, amountFee));
+        defaultFees.add(new FeeView(userContext, rateFee));
+        return defaultFees;
+    }
+    
+    private FeeFormulaEntity createFeeFormulaEntityMock() {
+        FeeFormulaEntity feeFormulaEntity = createMock(FeeFormulaEntity.class);
+        expect(feeFormulaEntity.getFormulaString()).andReturn("FormulaString");
+        replay(feeFormulaEntity);
+        return feeFormulaEntity;
     }
 }
