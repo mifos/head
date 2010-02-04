@@ -179,13 +179,13 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
             }
         }
         if(getLoanAmount()!=null && !getLoanAmount().equals("") ){
-        validateLoanAmount(errors, locale);
+            validateLoanAmount(errors, locale);
         } 
-        
+
         if(getInterestPaid()!=null && !getInterestPaid().equals("") ){
-        validateInterestPaid(errors, locale);
+            validateInterestPaid(errors, locale);
         }
-        
+
         if(getTotalAmountPaid()!=null && !getTotalAmountPaid().equals("") ){
             validateTotalAmountPaid(errors, locale);
         }

@@ -310,31 +310,6 @@
                   msg=""
            jsFunction="org.apache.commons.validator.javascript.validateUtilities"/>
      
-     <!--This is a custom validator used to validate decimal fields to be within the specified range-->
-     <validator name="decimalFormat"
-            classname="org.mifos.framework.struts.validators.DecimalFormatValidator"
-               method="validateDecimalFormat"
-         methodParams="java.lang.Object,
-                       org.apache.commons.validator.ValidatorAction,
-                       org.apache.commons.validator.Field,
-                       org.apache.struts.action.ActionMessages,
-                       org.apache.commons.validator.Validator,
-                       javax.servlet.http.HttpServletRequest"
-              depends=""
-                  msg="errors.decimalFormat"/>      
-      
-      <!--This is a custom validator used to validate decimal fields to be within the specified range-->
-     <validator name="decimalFormatCollection"
-            classname="org.mifos.framework.struts.validators.DecimalFormatValidatorCollection"
-               method="validateDecimalFormatCollection"
-         methodParams="java.lang.Object,
-                       org.apache.commons.validator.ValidatorAction,
-                       org.apache.commons.validator.Field,
-                       org.apache.struts.action.ActionMessages,
-                       org.apache.commons.validator.Validator,
-                       javax.servlet.http.HttpServletRequest"
-              depends=""
-                  msg="errors.decimalFormat"/>            
 
    </global>
 

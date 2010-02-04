@@ -316,37 +316,6 @@
 			</field>
 		</form>
 
-		<!--  Center Action form -->
-		<form name="/centerAction">
-
-			<!-- For admin fee amounts-->
-			<field property="AdminFeeList" depends="decimalFormatCollection">
-				<msg name="decimalFormatCollection" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="Customer.adminFeeAmount" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-				<var>
-					<var-name>fieldName</var-name>
-					<var-value>RateOrAmountDoubleValue</var-value>
-				</var>
-			</field>
-			<!-- For additional fees amounts-->
-			<field property="SelectedFeeList" depends="decimalFormatCollection">
-				<msg name="decimalFormatCollection" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="Customer.additionalFeeAmount" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-				<var>
-					<var-name>fieldName</var-name>
-					<var-value>RateOrAmountDoubleValue</var-value>
-				</var>
-			</field>
-		</form>
-		<!--  Center Action form -->
 		<form name="/clientStatusAction">
 
 			<!-- Display Name -->
@@ -429,21 +398,14 @@
 				<msg name="required" key="errors.mandatory" bundle="accountsUIResources" />
 				<arg0 key="account.chargetype" />
 			</field>
-			<field property="charge" depends="required,validwhen,decimalFormat">
+			<field property="charge" depends="required,validwhen">
 				<msg name="required" key="errors.mandatory" bundle="accountsUIResources" />
 				<arg0 key="account.amount" />
 				<msg name="validwhen" key="account.amount_zero" bundle="accountsUIResources" />
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="accountsUIResources" />
 				<var>
 					<var-name>test</var-name>
 					<var-value>(*this* > 0)</var-value>
 				</var>
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-
-
 			</field>
 
 		</form>
@@ -489,38 +451,7 @@
 					<var-name>maxlength</var-name>
 					<var-value>100</var-value>
 				</var>
-
 			</field>
-
-
-			<!-- For admin fee amounts-->
-			<field property="AdminFeeList" depends="decimalFormatCollection">
-				<msg name="decimalFormatCollection" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="Customer.adminFeeAmount" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-				<var>
-					<var-name>fieldName</var-name>
-					<var-value>RateOrAmountDoubleValue</var-value>
-				</var>
-			</field>
-			<!-- For additional fees amounts-->
-			<field property="SelectedFeeList" depends="decimalFormatCollection">
-				<msg name="decimalFormatCollection" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="Customer.additionalFeeAmount" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-				<var>
-					<var-name>fieldName</var-name>
-					<var-value>RateOrAmountDoubleValue</var-value>
-				</var>
-			</field>
-
-
 		</form>
 		<!-- Group Action Ends-->
 
@@ -550,32 +481,6 @@
 				<var>
 					<var-name>maxlength</var-name>
 					<var-value>100</var-value>
-				</var>
-			</field>
-			<field property="loanAmountDoubleValue" depends="decimalFormat">
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="label.amountofloanLabel" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-
-			</field>
-			<field property="totalAmountPaidDoubleValue" depends="decimalFormat">
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="label.totalamountpaidLabel" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-
-			</field>
-			<field property="interestPaidDoubleValue" depends="decimalFormat">
-				<msg name="decimalFormat" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="label.interestpaidLabel" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
 				</var>
 			</field>
 			<field property="notes" depends="maxlength">
@@ -933,32 +838,6 @@
 			<field property="customerNameDetail[1].lastName" depends="required">
 				<msg name="required" key="errors.required" bundle="ClientUIResources" />
 				<arg key="client.SpouseLastNameValue" />
-			</field>
-			<!-- For admin fee amounts-->
-			<field property="AdminFeeList" depends="decimalFormatCollection">
-				<msg name="decimalFormatCollection" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="Customer.adminFeeAmount" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-				<var>
-					<var-name>fieldName</var-name>
-					<var-value>RateOrAmountDoubleValue</var-value>
-				</var>
-			</field>
-			<!-- For additional fees amounts-->
-			<field property="SelectedFeeList" depends="decimalFormatCollection">
-				<msg name="decimalFormatCollection" key="errors.decimalFormat" bundle="CustomerUIResources" />
-				<arg0 key="Customer.additionalFeeAmount" />
-				<var>
-					<var-name>format</var-name>
-					<var-value>(10,3)</var-value>
-				</var>
-				<var>
-					<var-name>fieldName</var-name>
-					<var-value>RateOrAmountDoubleValue</var-value>
-				</var>
 			</field>
 		</form>
 
