@@ -286,13 +286,13 @@ public class LoanAccountActionFormTest extends TestCase {
     }
 
     public void testValidateDefaultFees()  {
-        Short saveDigitAfterDecimal = AccountingRules.getDigitsAfterDecimal();
+        Short saveDigitsAfterDecimal = AccountingRules.getDigitsAfterDecimal();
         AccountingRules.setDigitsAfterDecimal(Short.valueOf("0"));
         form.setDefaultFees(createDefaultFees());
         ActionErrors errors = new ActionErrors();
         form.validateDefaultFee(errors, Locale.ENGLISH);
         Assert.assertEquals("No Error was expected",0, errors.size());
-        AccountingRules.setDigitsAfterDecimal(saveDigitAfterDecimal);
+        AccountingRules.setDigitsAfterDecimal(saveDigitsAfterDecimal);
     }
     
     private ArrayList <FeeView> createDefaultFees() {
