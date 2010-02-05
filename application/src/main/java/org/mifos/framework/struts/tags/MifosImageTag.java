@@ -60,7 +60,7 @@ public class MifosImageTag extends TagSupport {
         return this.id;
     }
 
-    /** Used to set the moduleName given in the JSP file */
+    /** Used to set the fully qualified moduleName given in the JSP file */
 
     public void setModuleName(final String name) {
         this.moduleName = name;
@@ -70,14 +70,8 @@ public class MifosImageTag extends TagSupport {
         return this.moduleName;
     }
 
-    /** Used to get the corresponding properties fileName using moduleName */
-
-    public String getPropertiesFileName() {
-        String moduleName = getModuleName();
-        if (moduleName.contains(".")) {
-            moduleName = moduleName.substring(moduleName.indexOf(".") + 1, moduleName.length());
-        }
-        return moduleName + "Images";
+    private ResourceBundle getResourceBundle(Locale locale) {
+        return ResourceBundle.getBundle(getModuleName(), locale);        
     }
 
     /**
@@ -90,8 +84,7 @@ public class MifosImageTag extends TagSupport {
         JspWriter out = pageContext.getOut();
         UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
         Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application." + getModuleName()
-                + ".util.resources." + getPropertiesFileName(), locale);
+        ResourceBundle resource = getResourceBundle(locale);
         path = resource.getString(getId());
         try {
             out.println(render());
@@ -106,8 +99,7 @@ public class MifosImageTag extends TagSupport {
 
     public String render() {
         Locale locale = Localization.getInstance().getMainLocale();
-        ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application." + getModuleName()
-                + ".util.resources." + getPropertiesFileName(), locale);
+        ResourceBundle resource = getResourceBundle(locale);
         path = resource.getString(getId());
         XmlBuilder html = new XmlBuilder();
         html.startTag("html");

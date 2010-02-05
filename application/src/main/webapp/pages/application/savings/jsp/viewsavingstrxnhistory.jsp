@@ -59,7 +59,7 @@ explanation of the license and how it is applied.
             </table>
             <br>
     <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'trxnhistoryList')}" var="trxnhistoryList" scope="session" />
-            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session" xmlFileName="SavingsTrxnHistory.xml" moduleName="accounts/savings" passLocale="true"/>
+            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session" xmlFileName="SavingsTrxnHistory.xml" moduleName="org/mifos/application/accounts/savings/util/resources" passLocale="true"/>
             <br>
             
             <table width="95%" border="0" cellpadding="0" cellspacing="0">

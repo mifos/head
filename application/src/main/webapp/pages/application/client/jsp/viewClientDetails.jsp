@@ -85,12 +85,12 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage
-								id="${BusinessKey.customerStatus.id}" moduleName="customer" /> <span id="viewClientDetails.text.status"><c:out
+								id="${BusinessKey.customerStatus.id}" moduleName="org.mifos.application.customer.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
 								value="${BusinessKey.customerStatus.name}" /></span> <c:forEach
 								var="flagSet" items="${BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
 									test="${BusinessKey.blackListed}">
-									<mifos:MifosImage id="blackListed" moduleName="customer.client" />
+									<mifos:MifosImage id="blackListed" moduleName="org.mifos.application.customer.client.util.resources.clientImages" />
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> </span><br>
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
@@ -171,7 +171,7 @@ explanation of the license and how it is applied.
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
-														id="${loan.accountState.id}" moduleName="accounts.loan" />
+														id="${loan.accountState.id}" moduleName="org.mifos.application.accounts.loan.util.resources.loanImages" />
 													<c:out value="${loan.accountState.name}" /> </span></td>
 												</tr>
 											</table>
@@ -231,7 +231,7 @@ explanation of the license and how it is applied.
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
 														id="${savings.accountState.id}"
-														moduleName="accounts.savings" /> <c:out
+														moduleName="org.mifos.application.accounts.savings.util.resources.savingsImages" /> <c:out
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>

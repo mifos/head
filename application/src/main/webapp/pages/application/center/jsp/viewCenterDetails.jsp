@@ -210,7 +210,7 @@ explanation of the license and how it is applied.
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
 														id="${savings.accountState.id}"
-														moduleName="accounts.savings" /> <c:out
+														moduleName="org.mifos.application.accounts.savings.util.resources.savingsImages" /> <c:out
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>

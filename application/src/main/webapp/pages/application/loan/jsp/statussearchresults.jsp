@@ -135,7 +135,7 @@ explanation of the license and how it is applied.
 									</td>
 
 									<td width="15%" valign="top" class="drawtablerow">
-										<mifoscustom:MifosImage id="${loan.accountState.id}" moduleName="accounts.loan" />
+										<mifoscustom:MifosImage id="${loan.accountState.id}" moduleName="org.mifos.application.accounts.loan.util.resources.loanImages" />
 										<c:out value="${loan.accountState.name}" />
 									</td>
 

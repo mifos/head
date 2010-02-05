@@ -58,6 +58,7 @@ public class TableTag extends BodyTagSupport {
 
     private String passLocale = null;
 
+    // FIXME: now unused and should be able to be deleted
     private String rootName;
 
     public String getRootName() {
@@ -112,15 +113,10 @@ public class TableTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         try {
 
-            if (rootName == null)
-                table = TableTagParser.getInstance().parser(
-                        ClasspathResource.getURI(
-                                "org/mifos/application/" + moduleName + "/util/resources/" + xmlFileName).toString());
-            else
-                table = TableTagParser.getInstance().parser(
-                        ClasspathResource.getURI(
-                                "org/mifos/" + rootName + "/" + moduleName + "/util/resources/" + xmlFileName)
-                                .toString());
+            table = TableTagParser.getInstance().parser(
+                    ClasspathResource.getURI(
+                            moduleName + "/" + xmlFileName)
+                            .toString());
 
             tableInfo = new StringBuilder();
             if (source == null || scope == null) {

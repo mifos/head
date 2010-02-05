@@ -74,12 +74,12 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"> <mifoscustom:MifosImage
-								id="${BusinessKey.customerStatus.id}" moduleName="customer" />
+								id="${BusinessKey.customerStatus.id}" moduleName="org.mifos.application.customer.util.resources.customerImages" />
 							<c:out value="${BusinessKey.customerStatus.name}" /> <c:forEach
 								var="flagSet" items="${BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
 									test="${BusinessKey.blackListed}">
-									<mifoscustom:MifosImage id="blackListed" moduleName="customer" />
+									<mifoscustom:MifosImage id="blackListed" moduleName="org.mifos.application.customer.util.resources.customerImages" />
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> <span class="fontnormal"><br>
 							<mifos:mifoslabel name="Group.systemId" bundle="GroupUIResources" />
@@ -214,7 +214,7 @@ explanation of the license and how it is applied.
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
-														id="${loan.accountState.id}" moduleName="accounts.loan" />
+														id="${loan.accountState.id}" moduleName="org.mifos.application.accounts.loan.util.resources.loanImages" />
 													<c:out value="${loan.accountState.name}" /> </span></td>
 												</tr>
 											</table>
@@ -271,7 +271,7 @@ explanation of the license and how it is applied.
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
 														id="${savings.accountState.id}"
-														moduleName="accounts.savings" /> <c:out
+														moduleName="org.mifos.application.accounts.savings.util.resources.savingsImages" /> <c:out
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>

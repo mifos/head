@@ -100,7 +100,7 @@ explanation of the license and how it is applied.
 							 <c:if test="${loanaccountownerisagroup == 'yes'}">
 					    <tr>
 							<td valign="top">
-	                          	  <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session" xmlFileName="LoanAccountDetails.xml" moduleName="accounts/loan" passLocale="true" />	                       
+	                          	  <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session" xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/application/accounts/loan/util/resources" passLocale="true" />	                       
 							</td>
 						</tr>
 						<br>						<br>

@@ -61,7 +61,7 @@ explanation of the license and how it is applied.
 					</table>
 					<br>
 					<customtable:mifostabletag source="statusHistory" scope="session"
-						xmlFileName="LoanStatusChangeHistory.xml" moduleName="accounts/loan"
+						xmlFileName="LoanStatusChangeHistory.xml" moduleName="org/mifos/application/accounts/loan/util/resources"
 						passLocale="true" /> <br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>

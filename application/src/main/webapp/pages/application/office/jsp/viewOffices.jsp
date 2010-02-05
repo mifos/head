@@ -140,7 +140,7 @@ explanation of the license and how it is applied.
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
-													<mifos:MifosImage id="inactive" moduleName="office" />
+													<mifos:MifosImage id="inactive" moduleName="org.mifos.application.office.util.resources.officeImages" />
 													<c:out value="${office.status.name}" />
 												</c:if></td>
 											</tr>
@@ -202,7 +202,7 @@ explanation of the license and how it is applied.
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
-													<mifos:MifosImage id="inactive" moduleName="office" />
+													<mifos:MifosImage id="inactive" moduleName="org.mifos.application.office.util.resources.officeImages" />
 													<c:out value="${office.status.name}" />
 												</c:if></td>
 											</tr>
@@ -260,7 +260,7 @@ explanation of the license and how it is applied.
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
-													<mifos:MifosImage id="inactive" moduleName="office" />
+													<mifos:MifosImage id="inactive" moduleName="org.mifos.application.office.util.resources.officeImages" />
 													<c:out value="${office.status.name}" />
 												</c:if></td>
 											</tr>
@@ -331,7 +331,7 @@ explanation of the license and how it is applied.
 													<c:out value="${office.officeName}" />
 												</html-el:link> &nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
-													<mifos:MifosImage id="inactive" moduleName="office" />
+													<mifos:MifosImage id="inactive" moduleName="org.mifos.application.office.util.resources.officeImages" />
 													<c:out value="${office.status.name}" />
 												</c:if></td>
 											</tr>

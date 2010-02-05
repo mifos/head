@@ -95,7 +95,7 @@ explanation of the license and how it is applied.
             </table>
             <br>
 
-            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session_flow" xmlFileName="TrxnHistory.xml" moduleName="accounts" passLocale="true"/>
+            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session_flow" xmlFileName="TrxnHistory.xml" moduleName="org/mifos/application/accounts/util/resources" passLocale="true"/>
             <br>
 
             <table width="95%" border="0" cellpadding="0" cellspacing="0">

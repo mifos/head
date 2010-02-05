@@ -104,7 +104,7 @@ explanation of the license and how it is applied.
 	            </table>
 	            <br>
 	            </c:if>
- 			<mifoscustom:mifostabletag moduleName="customer" scope="session" source="customerAccountActivityList" xmlFileName="CustomerRecentActivity.xml" passLocale="true"/>
+ 			<mifoscustom:mifostabletag moduleName="org/mifos/application/customer/util/resources" scope="session" source="customerAccountActivityList" xmlFileName="CustomerRecentActivity.xml" passLocale="true"/>
             <br>
              <table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

@@ -66,7 +66,7 @@ explanation of the license and how it is applied.
 								name="Customer.NewStatus"></mifos:mifoslabel>:
 							</span> <span class="fontnormal"> <mifoscustom:MifosImage
 								id="${sessionScope.editCustomerStatusActionForm.newStatusId}"
-								moduleName="customer" /><c:out
+								moduleName="org.mifos.application.customer.util.resources.customerImages" /><c:out
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'newStatusName')}" /> <c:if
 								test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}">
                      	- <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}" />

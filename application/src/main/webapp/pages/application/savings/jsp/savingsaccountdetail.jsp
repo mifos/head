@@ -73,12 +73,12 @@ explanation of the license and how it is applied.
 							<tr>
 								<td class="fontnormalbold">
 									<span class="fontnormal">
-										<mifoscustom:MifosImage	id="${BusinessKey.accountState.id}" moduleName="accounts" />
+										<mifoscustom:MifosImage	id="${BusinessKey.accountState.id}" moduleName="org.mifos.application.accounts.util.resources.accountsImages" />
 										<c:out value="${BusinessKey.accountState.name}" />&nbsp; 
 										<c:forEach var="flagSet" items="${BusinessKey.accountFlags}">
 											<span class="fontnormal">
 												<c:if test="${flagSet.flag.id == 6}">
-													<mifos:MifosImage id="blackflag" moduleName="accounts" />
+													<mifos:MifosImage id="blackflag" moduleName="org.mifos.application.accounts.util.resources.accountsImages" />
 												</c:if>
 												<c:out value="${flagSet.flag.name}" />
 											</span>
@@ -150,7 +150,7 @@ explanation of the license and how it is applied.
 						</table>
 						<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivityForDetailPage')}" var="recentActivityForDetailPage" scope="session" />
 
-						<mifoscustom:mifostabletag source="recentActivityForDetailPage" scope="session" xmlFileName="SavingsAccountRecentActivity.xml" moduleName="accounts/savings" passLocale="true" />
+						<mifoscustom:mifostabletag source="recentActivityForDetailPage" scope="session" xmlFileName="SavingsAccountRecentActivity.xml" moduleName="org/mifos/application/accounts/savings/util/resources" passLocale="true" />
 						<br>
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>

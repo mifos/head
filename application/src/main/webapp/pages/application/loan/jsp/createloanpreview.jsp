@@ -241,7 +241,7 @@ explanation of the license and how it is applied.
 									    <tr>
 											<td valign="top">
 	                                            
-                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session" xmlFileName="LoanAccountDetails.xml" moduleName="accounts/loan" passLocale="true" />
+                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session" xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/application/accounts/loan/util/resources" passLocale="true" />
 
 											</td>
 										</tr>
@@ -434,7 +434,7 @@ explanation of the license and how it is applied.
                                                                     <loanfn:getLoanRepaymentTable />
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <mifoscustom:mifostabletag source="repaymentScheduleInstallments" scope="session" xmlFileName="ProposedRepaymentSchedule.xml" moduleName="accounts/loan" passLocale="true" />
+                                                                    <mifoscustom:mifostabletag source="repaymentScheduleInstallments" scope="session" xmlFileName="ProposedRepaymentSchedule.xml" moduleName="org/mifos/application/accounts/loan/util/resources" passLocale="true" />
                                                                 </c:otherwise>
                                                             </c:choose>
 														</td>

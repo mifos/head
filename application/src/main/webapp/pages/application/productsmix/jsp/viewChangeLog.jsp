@@ -89,7 +89,7 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<br>
-					<mifoscustom:mifostabletag rootName="framework" moduleName="components/audit" scope="session" source="auditLogRecords" xmlFileName="AuditLog.xml" passLocale="true"/>
+					<mifoscustom:mifostabletag moduleName="org/mifos/framework/components/audit/util/resources" scope="session" source="auditLogRecords" xmlFileName="AuditLog.xml" passLocale="true"/>
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
