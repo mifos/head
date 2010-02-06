@@ -1798,8 +1798,8 @@ public class LoanAccountAction extends AccountAppAction {
         storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
                 LoanConstants.GLIM_ENABLED_VALUE);
         if (customer.isGroup()) {
-            storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES,
-                    LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP);
+            storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP,
+                    LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
         }
     }
 

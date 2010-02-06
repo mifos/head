@@ -1096,7 +1096,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     private void validateIndividualLoanFieldsForGlim(ActionErrors errors, Locale locale) {
         int errorsBeforeLoanAmountsValidation = errors.size();
         for (LoanAccountDetailsViewHelper listDetail : clientDetails) {
-            DoubleConversionResult conversionResult = validateAmount(listDetail.getLoanAmount().toString(),
+            DoubleConversionResult conversionResult = validateAmount(listDetail.getLoanAmount(),
                     LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
             if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                 addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
