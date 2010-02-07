@@ -20,7 +20,7 @@
 
 package org.mifos.application.customer.business;
 
-import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.math.BigDecimal;

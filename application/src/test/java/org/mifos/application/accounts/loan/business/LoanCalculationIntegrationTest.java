@@ -21,8 +21,8 @@
 package org.mifos.application.accounts.loan.business;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.framework.util.helpers.NumberUtils.DOUBLE_ZERO;
-import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 
 import java.io.BufferedReader;

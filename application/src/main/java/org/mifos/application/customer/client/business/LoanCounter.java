@@ -20,7 +20,7 @@
 
 package org.mifos.application.customer.client.business;
 
-import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;

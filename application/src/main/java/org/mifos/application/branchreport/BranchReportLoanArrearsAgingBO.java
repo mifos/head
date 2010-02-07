@@ -24,11 +24,11 @@ import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
-import org.mifos.framework.util.helpers.NumberUtils;
 
 public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 
@@ -58,7 +58,7 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
     }
 
     public BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod loanArrearsAgingPeriod) {
-        this(loanArrearsAgingPeriod, NumberUtils.ZERO, NumberUtils.ZERO, zero(), zero(), zero());
+        this(loanArrearsAgingPeriod, NumberUtils.INTEGER_ZERO, NumberUtils.INTEGER_ZERO, zero(), zero(), zero());
     }
 
     public String getPeriodDescription() {

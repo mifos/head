@@ -23,7 +23,7 @@ package org.mifos.application.customer.group.business;
 import static org.mifos.application.customer.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
 import static org.mifos.framework.util.CollectionUtils.find;
 import static org.mifos.framework.util.CollectionUtils.select;
-import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 
 import java.math.BigDecimal;
 import java.util.Collection;

@@ -21,7 +21,8 @@
 package org.mifos.application.accounts.loan.util.helpers;
 
 import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
-import static org.mifos.framework.util.helpers.NumberUtils.*;
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.customer.client.business.ClientBO;

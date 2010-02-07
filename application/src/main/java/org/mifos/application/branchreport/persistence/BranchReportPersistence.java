@@ -57,7 +57,7 @@ import static org.mifos.application.customer.util.helpers.QueryParamConstants.TO
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.TOTAL_STAFF_ROLE_NAME_PARAM;
 import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
-import static org.mifos.framework.util.helpers.NumberUtils.ZERO;
+import static org.apache.commons.lang.math.NumberUtils.INTEGER_ZERO;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class BranchReportPersistence extends Persistence {
         params.put(CUSTOMER_LEVEL_ID, CLIENT.getValue());
         List queryResult = executeNamedQuery(EXTRACT_BRANCH_REPORT_LOAN_ARREARS_IN_PERIOD, params);
         if (queryResult.isEmpty())
-            return new BranchReportLoanArrearsAgingBO(period, ZERO, ZERO, zero(currency), zero(currency),
+            return new BranchReportLoanArrearsAgingBO(period, INTEGER_ZERO, INTEGER_ZERO, zero(currency), zero(currency),
                     zero(currency));
         Object[] resultSet = (Object[]) queryResult.get(0);
         return new BranchReportLoanArrearsAgingBO(period, (Integer) resultSet[0], (Integer) resultSet[1], createMoney(
@@ -337,7 +337,7 @@ public class BranchReportPersistence extends Persistence {
 
     private BranchReportStaffSummaryBO createStaffSummaryFromResultset(Object[] resultSet, MifosCurrency currency) {
         return new BranchReportStaffSummaryBO((Short) resultSet[0], (String) resultSet[1], (Date) resultSet[2],
-                (Integer) resultSet[3], (Integer) resultSet[4], NumberUtils.ZERO, NumberUtils.ZERO, zero(currency),
+                (Integer) resultSet[3], (Integer) resultSet[4], INTEGER_ZERO, INTEGER_ZERO, zero(currency),
                 zero(currency), BigDecimal.ZERO, Integer.valueOf(0), Integer.valueOf(0), zero(currency));
     }
 
@@ -386,7 +386,7 @@ public class BranchReportPersistence extends Persistence {
         }
 
         public LoanArrearsProfileForBranch(MifosCurrency currency) {
-            this(new Object[] { ZERO, ZERO, BigDecimal.ZERO, BigDecimal.ZERO }, currency);
+            this(new Object[] { INTEGER_ZERO, INTEGER_ZERO, BigDecimal.ZERO, BigDecimal.ZERO }, currency);
         }
     }
 
@@ -396,7 +396,7 @@ public class BranchReportPersistence extends Persistence {
         private Money overdueAmountAtRisk;
 
         public LoanArrearsProfileForLoansAtRisk(MifosCurrency currency) {
-            this(new Object[] { ZERO, BigDecimal.ZERO, BigDecimal.ZERO }, currency);
+            this(new Object[] { INTEGER_ZERO, BigDecimal.ZERO, BigDecimal.ZERO }, currency);
         }
 
         public LoanArrearsProfileForLoansAtRisk(Object[] resultSet, MifosCurrency currency) {
