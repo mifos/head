@@ -254,11 +254,11 @@ public final class Money implements Serializable, Comparable<Money> {
     }
     
     public boolean isGreaterThanZero() {
-        return this.compareTo(new Money(getCurrency(),"0")) > 0;
+        return this.getAmount().compareTo(BigDecimal.ZERO) > 0;
     }
     
     public boolean isGreaterThanOrEqualZero() {
-        return this.compareTo(new Money(getCurrency(),"0")) >= 0;
+        return this.getAmount().compareTo(BigDecimal.ZERO) >= 0;
     }
 
     public boolean isLessThan(Money money) {
