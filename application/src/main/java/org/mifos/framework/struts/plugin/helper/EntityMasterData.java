@@ -27,6 +27,7 @@ import java.util.Map;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -59,7 +60,7 @@ public final class EntityMasterData {
         try {
             session = StaticHibernateUtil.openSession();
             session.beginTransaction();
-            Query query = session.getNamedQuery("getEntityMaster");
+            Query query = session.getNamedQuery(NamedQueryConstants.GET_ENTITY_MASTER);
 
             List<EntityMaster> entityMasterData = query.list();
 
