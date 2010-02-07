@@ -21,17 +21,12 @@
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FormUtils {
 
     public static Double getDoubleValue(String str) {
-        return org.apache.commons.lang.StringUtils.isNotBlank(str) ? new LocalizationConverter()
+        return StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;
-    }
-
-    public static Money getMoney(MifosCurrency currency, String str) {
-        return (StringUtils.isNotBlank(str) && !str.trim().equals(".")) ? new Money(currency, str) : new Money(currency);
     }
 }
