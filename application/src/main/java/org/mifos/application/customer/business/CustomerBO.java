@@ -1319,7 +1319,7 @@ public abstract class CustomerBO extends BusinessObject {
         if (loanAmounts.isEmpty()) {
             loanAmounts.add(zero());
         }
-        return Collections.max(loanAmounts, Money.DEFAULT_COMPARATOR);
+        return Collections.max(loanAmounts);
     }
 
     public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering) {

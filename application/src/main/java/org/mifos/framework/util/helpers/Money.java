@@ -26,7 +26,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Comparator;
 import java.util.Locale;
 
 import org.mifos.application.master.business.MifosCurrency;
@@ -37,19 +36,11 @@ import org.mifos.core.CurrencyMismatchException;
  * This class represents Money objects in the system, it should be used for all
  * financial operations like addition,subtraction etc of money. As of now it
  * deals with only one currency but later it can be extended to handle currency
- * conversions while performing operations.This is an immutable class as the
+ * conversions while performing operations. This is an immutable class as the
  * money object is not supposed to be modified .
  * 
- * 
  */
-public final class Money implements Serializable {
-
-    public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
-        public int compare(Money m1, Money m2) {
-            checkCurrenciesDifferent(m1, m2);
-            return m1.amount.compareTo(m2.amount);
-        }
-    };
+public final class Money implements Serializable, Comparable<Money> {
 
     /**
      * The precision used for internal calculations
@@ -228,12 +219,12 @@ public final class Money implements Serializable {
             return true;
         }
         Money money = (Money) obj;
-        return this.currency.equals(money.getCurrency()) && (this.amount.compareTo(money.getAmount()) == 0);
+        return this.currency.equals(money.getCurrency()) && (this.getAmount().compareTo(money.getAmount()) == 0);
     }
 
     @Override
     public int hashCode() {
-        return this.currency.getCurrencyId() * 100 + this.amount.intValue();
+        return this.currency.getCurrencyId() * 100 + this.getAmount().intValue();
     }
 
     @Override
@@ -255,35 +246,35 @@ public final class Money implements Serializable {
     }
 
     public boolean isGreaterThan(Money money) {
-        return Money.DEFAULT_COMPARATOR.compare(this, money) > 0;
+        return this.compareTo(money) > 0;
     }
     
     public boolean isGreaterThanOrEqual(Money money) {
-        return Money.DEFAULT_COMPARATOR.compare(this, money) >= 0;
+        return this.compareTo(money) >= 0;
     }
     
     public boolean isGreaterThanZero() {
-        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) > 0;
+        return this.compareTo(new Money(getCurrency(),"0")) > 0;
     }
     
     public boolean isGreaterThanOrEqualZero() {
-        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) >= 0;
+        return this.compareTo(new Money(getCurrency(),"0")) >= 0;
     }
 
     public boolean isLessThan(Money money) {
-        return Money.DEFAULT_COMPARATOR.compare(this, money) < 0;
+        return this.compareTo(money) < 0;
     }
     
     public boolean isLessThanOrEqual(Money money) {
-        return Money.DEFAULT_COMPARATOR.compare(this, money) <= 0;
+        return this.compareTo(money) <= 0;
     }
     
     public boolean isLessThanZero() {
-        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) < 0;
+        return this.getAmount().compareTo(BigDecimal.ZERO) < 0;
     }
     
     public boolean isLessThanOrEqualZero() {
-        return Money.DEFAULT_COMPARATOR.compare(this, new Money(getCurrency(),"0")) <= 0;
+        return this.getAmount().compareTo(BigDecimal.ZERO) <= 0;
     }
     
     public boolean isZero() {
@@ -310,5 +301,11 @@ public final class Money implements Serializable {
         if (!m1.getCurrency().equals(m2.getCurrency())) {
             throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
+    }
+
+    @Override
+    public int compareTo(Money money) {
+        checkCurrenciesDifferent(this, money);
+        return this.getAmount().compareTo(money.amount);
     }
 }
