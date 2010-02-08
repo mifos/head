@@ -18,7 +18,6 @@ See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
@@ -68,19 +67,20 @@ explanation of the license and how it is applied.
 					<td valign="top" class="drawtablerow">
 					    <c:choose>
 					        <c:when test="${loanfn:isDisabledWhileEditingGlim('clientDetails.clientId',accountState)}">
-    							<html:checkbox styleId="glimLoanForm.input.select"
-								property="clients[${indice}]"
-								value="${client.customerId}"
-								onclick="return false;"/>
+    							<html:checkbox styleId="glimLoanForm.input.select"	
+                                property="clients[${indice}]" 	
+                                value="${client.customerId}" 
+                                onclick="return false;"/>
 					        </c:when>
 					        <c:otherwise>
 								<html:checkbox styleId="glimLoanForm.input.select"
 									property="clients[${indice}]"
 									value="${client.customerId}"
 									onclick="iselectAllCheck(this)" 						
-									onchange="CalculateTotalLoanAmount(CLIENTS_COUNT);" /></td>
+									onchange="CalculateTotalLoanAmount(CLIENTS_COUNT);" />
 						    </c:otherwise>
 						</c:choose>
+                        </td>
 					<td width="29%" valign="top" class="drawtablerow"><span
 						class="fontnormalbold"><mifos:mifoslabel
 						name="${ConfigurationConstants.CLIENT}"
