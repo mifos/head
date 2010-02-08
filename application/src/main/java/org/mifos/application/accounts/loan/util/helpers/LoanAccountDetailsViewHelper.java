@@ -137,7 +137,7 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
     }
 
     public boolean isEmpty() {
-        return loanAmount == null && StringUtils.isBlank(businessActivity);
+        return StringUtils.isBlank(loanAmount) && StringUtils.isBlank(businessActivity);
     }
 
     public boolean isAmountZeroOrNull() {
