@@ -79,8 +79,8 @@ public class ConstPlugin implements PlugIn {
      * org.mifos.application.master.util.helpers.MasterConstants,
      * org.mifos.application.customer.util.helpers.CustomerConstants,
      * org.mifos.application.configuration.util.helpers.ConfigurationConstants,
-     * org.mifos.application.accounts.util.helpers.AccountStates,
-     * org.mifos.application.accounts.savings.util.helpers.SavingsConstants,
+     * org.mifos.accounts.util.helpers.AccountStates,
+     * org.mifos.accounts.savings.util.helpers.SavingsConstants,
      * org.mifos.application.fees.util.helpers.FeeConstants"/> </plug-in>
      */
     private List<String> getConstantFileNames() {

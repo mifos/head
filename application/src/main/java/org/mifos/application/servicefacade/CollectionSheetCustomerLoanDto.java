@@ -21,7 +21,7 @@ package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
 
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.framework.util.helpers.Constants;
 
 /**

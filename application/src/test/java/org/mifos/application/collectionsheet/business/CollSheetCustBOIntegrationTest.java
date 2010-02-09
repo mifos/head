@@ -24,13 +24,13 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanBOTestUtils;
+import org.mifos.accounts.loan.business.LoanFeeScheduleEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;

@@ -30,7 +30,7 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;

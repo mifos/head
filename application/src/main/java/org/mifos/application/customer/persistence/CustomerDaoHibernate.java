@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 

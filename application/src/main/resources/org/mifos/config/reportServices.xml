@@ -22,7 +22,7 @@
 	<bean id="customerBusinessService"
 		class="org.mifos.application.customer.business.service.CustomerBusinessService" />
 	<bean id="accountBusinessService"
-		class="org.mifos.application.accounts.business.service.AccountBusinessService" />
+		class="org.mifos.accounts.business.service.AccountBusinessService" />
 	<bean id="savingsPrdBusinessService"
 		class="org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService" />
 	<bean id="loanPrdBusinessService"

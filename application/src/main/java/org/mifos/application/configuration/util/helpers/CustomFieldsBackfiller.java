@@ -23,11 +23,11 @@ package org.mifos.application.configuration.util.helpers;
 import java.util.Iterator;
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountCustomFieldEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeCustomFieldEntity;

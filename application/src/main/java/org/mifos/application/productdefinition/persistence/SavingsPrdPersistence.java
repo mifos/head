@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;

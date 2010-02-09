@@ -26,9 +26,9 @@ import java.util.Random;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldType;

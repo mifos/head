@@ -22,7 +22,7 @@ package org.mifos.application.productsmix.business;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.framework.MifosIntegrationTestCase;

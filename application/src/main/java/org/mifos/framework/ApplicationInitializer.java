@@ -32,7 +32,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;

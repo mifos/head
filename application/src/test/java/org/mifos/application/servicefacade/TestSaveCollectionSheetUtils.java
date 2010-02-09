@@ -29,11 +29,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;

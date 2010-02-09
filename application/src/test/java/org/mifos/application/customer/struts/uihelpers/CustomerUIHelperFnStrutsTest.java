@@ -24,8 +24,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;

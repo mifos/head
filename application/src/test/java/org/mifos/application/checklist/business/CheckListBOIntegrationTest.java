@@ -25,8 +25,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.checklist.exceptions.CheckListException;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.checklist.util.helpers.CheckListType;

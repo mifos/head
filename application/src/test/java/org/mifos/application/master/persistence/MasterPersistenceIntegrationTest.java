@@ -129,7 +129,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testRetrieveMasterDataEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<MasterDataEntity> masterDataList = masterPersistence
-                .retrieveMasterDataEntity("org.mifos.application.accounts.business.AccountStateEntity");
+                .retrieveMasterDataEntity("org.mifos.accounts.business.AccountStateEntity");
        Assert.assertEquals(18, masterDataList.size());
         for (MasterDataEntity masterDataEntity : masterDataList) {
             for (LookUpValueLocaleEntity lookUpValueLocaleEntity : masterDataEntity.getLookUpValue()
@@ -143,7 +143,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         MasterPersistence masterPersistence = new MasterPersistence();
         TestObjectFactory.simulateInvalidConnection();
         try {
-            masterPersistence.retrieveMasterDataEntity("org.mifos.application.accounts.business.AccountStateEntity");
+            masterPersistence.retrieveMasterDataEntity("org.mifos.accounts.business.AccountStateEntity");
             Assert.fail();
         } catch (Exception e) {
            Assert.assertTrue(true);

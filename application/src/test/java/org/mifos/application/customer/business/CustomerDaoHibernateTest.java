@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.customer.persistence.CustomerDao;
 import org.mifos.application.customer.persistence.CustomerDaoHibernate;
 import org.mockito.Mock;

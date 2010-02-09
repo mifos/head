@@ -20,7 +20,7 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.AccountPersistence;
 
 public class TestGeneralLedgerCode {
     static AccountPersistence accountPersistence = new AccountPersistence();

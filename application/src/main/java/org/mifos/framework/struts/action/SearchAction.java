@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.util.helpers.ActionForwards;

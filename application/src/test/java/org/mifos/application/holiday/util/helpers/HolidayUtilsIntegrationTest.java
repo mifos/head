@@ -32,13 +32,13 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBOTestUtils;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;

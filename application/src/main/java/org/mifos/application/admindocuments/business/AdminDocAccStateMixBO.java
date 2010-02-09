@@ -20,7 +20,7 @@
 
 package org.mifos.application.admindocuments.business;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.security.util.UserContext;
 

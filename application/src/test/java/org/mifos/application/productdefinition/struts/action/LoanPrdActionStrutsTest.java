@@ -37,7 +37,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;

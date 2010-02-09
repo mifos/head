@@ -26,7 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.mifos.application.accounts.financial.business.GLCategoryType;
+import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;

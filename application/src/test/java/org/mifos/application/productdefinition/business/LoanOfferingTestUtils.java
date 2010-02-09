@@ -23,7 +23,7 @@ package org.mifos.application.productdefinition.business;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.InterestTypesEntity;

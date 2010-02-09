@@ -32,7 +32,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.core.ClasspathResource;
 import org.w3c.dom.Document;

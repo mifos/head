@@ -27,8 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;

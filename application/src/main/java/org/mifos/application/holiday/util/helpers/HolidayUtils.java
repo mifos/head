@@ -30,12 +30,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;

@@ -34,7 +34,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;

@@ -20,7 +20,7 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.framework.util.helpers.Money;
 

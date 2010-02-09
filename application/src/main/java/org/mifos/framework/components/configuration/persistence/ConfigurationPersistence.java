@@ -20,7 +20,7 @@
 
 package org.mifos.framework.components.configuration.persistence;
 
-import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;

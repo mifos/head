@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;

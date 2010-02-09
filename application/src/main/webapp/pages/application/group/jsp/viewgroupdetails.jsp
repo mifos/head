@@ -214,7 +214,7 @@ explanation of the license and how it is applied.
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
-														id="${loan.accountState.id}" moduleName="org.mifos.application.accounts.loan.util.resources.loanImages" />
+														id="${loan.accountState.id}" moduleName="org.mifos.accounts.loan.util.resources.loanImages" />
 													<c:out value="${loan.accountState.name}" /> </span></td>
 												</tr>
 											</table>
@@ -271,7 +271,7 @@ explanation of the license and how it is applied.
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
 														id="${savings.accountState.id}"
-														moduleName="org.mifos.application.accounts.savings.util.resources.savingsImages" /> <c:out
+														moduleName="org.mifos.accounts.savings.util.resources.savingsImages" /> <c:out
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>

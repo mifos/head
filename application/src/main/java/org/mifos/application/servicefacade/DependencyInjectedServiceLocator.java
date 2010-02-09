@@ -19,15 +19,15 @@
  */
 package org.mifos.application.servicefacade;
 
-import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
-import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.persistence.GenericDao;
-import org.mifos.application.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.application.accounts.savings.persistence.SavingsDao;
-import org.mifos.application.accounts.savings.persistence.SavingsDaoHibernate;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.customer.client.persistence.ClientPersistence;

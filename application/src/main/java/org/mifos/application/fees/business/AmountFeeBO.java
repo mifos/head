@@ -22,7 +22,7 @@ package org.mifos.application.fees.business;
 
 import java.util.Date;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;

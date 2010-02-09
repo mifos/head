@@ -20,7 +20,7 @@
 
 package org.mifos.application.customer.business;
 
-import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.YesNoFlag;

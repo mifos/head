@@ -20,10 +20,10 @@
 
 package org.mifos.application.collectionsheet.business;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;

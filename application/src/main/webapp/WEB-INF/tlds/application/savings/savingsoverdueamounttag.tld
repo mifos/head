@@ -8,7 +8,7 @@
 <uri>/mifos/savingsoverdue</uri>
 <tag>
 <name>savingsoverdueamount</name>
-<tagclass>org.mifos.application.accounts.savings.struts.tag.SavingsOverDueDepositsTag</tagclass>
+<tagclass>org.mifos.accounts.savings.struts.tag.SavingsOverDueDepositsTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>property</name>

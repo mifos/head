@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;

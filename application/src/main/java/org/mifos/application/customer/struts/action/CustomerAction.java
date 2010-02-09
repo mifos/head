@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.struts.action.AccountAppAction;
+import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;

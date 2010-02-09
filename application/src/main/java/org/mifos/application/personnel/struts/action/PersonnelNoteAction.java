@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelNotesEntity;

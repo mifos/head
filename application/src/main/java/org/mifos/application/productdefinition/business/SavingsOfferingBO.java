@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;

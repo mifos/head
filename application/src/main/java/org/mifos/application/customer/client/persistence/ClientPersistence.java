@@ -31,7 +31,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.ClientTemplate;
 import org.mifos.application.customer.client.business.ClientBO;

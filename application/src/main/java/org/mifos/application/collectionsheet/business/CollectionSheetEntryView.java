@@ -23,10 +23,10 @@ package org.mifos.application.collectionsheet.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;

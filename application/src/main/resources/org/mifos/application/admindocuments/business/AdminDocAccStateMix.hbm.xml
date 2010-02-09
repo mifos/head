@@ -27,7 +27,7 @@
     		
       	<many-to-one name="accountStateID" 
     		column="ACCOUNT_STATE_ID" 
-    		class="org.mifos.application.accounts.business.AccountStateEntity" 
+    		class="org.mifos.accounts.business.AccountStateEntity" 
     		/>   
  	
     </class>

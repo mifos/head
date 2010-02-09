@@ -37,8 +37,8 @@ import java.util.Map;
 
 import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.application.servicefacade.CollectionSheetService;

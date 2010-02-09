@@ -71,7 +71,7 @@ explanation of the license and how it is applied.
 								name="savings.NewStatus" bundle="SavingsUIResources" isColonRequired="yes"></mifos:mifoslabel>
 							</span> <span class="fontnormal"> <mifoscustom:MifosImage
 								id="${sessionScope.editSavingsStatusActionForm.newStatusId}"
-								moduleName="org.mifos.application.accounts.savings.util.resources.savingsImages" /><c:out
+								moduleName="org.mifos.accounts.savings.util.resources.savingsImages" /><c:out
 								value="${sessionScope.newStatusName}" /> <c:if
 								test="${!empty sessionScope.flagName}">
                      	- <c:out value="${sessionScope.flagName}" />

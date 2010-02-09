@@ -25,12 +25,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanBOTestUtils;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;

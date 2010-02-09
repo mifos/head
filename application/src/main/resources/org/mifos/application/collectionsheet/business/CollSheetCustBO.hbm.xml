@@ -109,7 +109,7 @@
 	
 	<!--This query would get accounts which have disbursal date same as that of meeting date passed.-->
 	<query name="CollectionSheetCustomer.customersWithSpecifiedDisbursalDate">
-		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanBO loan
+		<![CDATA[ from org.mifos.accounts.loan.business.LoanBO loan
 					where loan.customer.customerStatus.id in (3,4,9,10,13)
 					and (loan.disbursementDate = date(:meeting_date) and loan.accountState.id in (3,4))
 		]]>

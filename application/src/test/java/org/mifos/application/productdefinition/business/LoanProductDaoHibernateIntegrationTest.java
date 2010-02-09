@@ -25,8 +25,8 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.List;
 
-import org.mifos.application.accounts.savings.persistence.GenericDao;
-import org.mifos.application.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.ValueListElement;

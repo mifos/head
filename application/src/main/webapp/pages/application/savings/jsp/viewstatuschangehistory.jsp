@@ -60,7 +60,7 @@ explanation of the license and how it is applied.
 					</table>
 					<br>
 					 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusChangeHistoryList')}" var="statusChangeHistoryList" scope="session" />
-					<customtable:mifostabletag  source="statusChangeHistoryList" scope="session"  xmlFileName="SavingsStatusChangeHistory.xml" moduleName="org/mifos/application/accounts/savings/util/resources" passLocale="true"/> 
+					<customtable:mifostabletag  source="statusChangeHistoryList" scope="session"  xmlFileName="SavingsStatusChangeHistory.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true"/> 
 					
 
 					<br>

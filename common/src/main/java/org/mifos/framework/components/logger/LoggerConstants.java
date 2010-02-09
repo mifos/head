@@ -57,7 +57,7 @@ public interface LoggerConstants {
     /**
      * Accounts logger name This logger will be used for all types of accounts
      */
-    String ACCOUNTSLOGGER = "org.mifos.application.accounts";
+    String ACCOUNTSLOGGER = "org.mifos.accounts";
 
     String CONFIGURATION_LOGGER = "org.mifos.framework.components.configuration";
 

@@ -22,7 +22,7 @@ package org.mifos.application.productdefinition.business;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;

@@ -31,17 +31,17 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountTestUtils;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountStateFlag;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;

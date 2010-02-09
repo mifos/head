@@ -16,7 +16,7 @@
      This takes a collection of Fund and returns the , separated names as aString
     </description>
     <name>getSourcesOfFund</name>
-    <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+    <function-class>org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
     <function-signature>java.lang.String getSourcesOfFund(java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getSourcesOfFund(object)}">
@@ -28,7 +28,7 @@
      This takes a Double and gives it correct value
     </description>
     <name>getDoubleValue</name>
-    <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+    <function-class>org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
     <function-signature>java.lang.String getDoubleValue(java.lang.Double)</function-signature>
     <example>
       &lt;c:out value="${fn:getDoubleValue(java.lang.Double)}">
@@ -40,7 +40,7 @@
      To get the current date is user format
     </description>
     <name>getCurrrentDate</name>
-    <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+    <function-class>org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
     <function-signature>java.lang.String getCurrrentDate(java.util.Locale)</function-signature>
     <example>
       &lt;c:out value="${fn:getCurrrentDate(Locale)}">
@@ -52,7 +52,7 @@
      This returns the string representing meeting frequency
     </description>
     <name>getMeetingRecurrence</name>
-  <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+  <function-class>org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
     <function-signature>java.lang.String getMeetingRecurrence(java.lang.Object,java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getMeetingRecurrence(object,object)}">
@@ -64,15 +64,15 @@
     This returns a boolean telling whether to disable the element
     </description>
     <name>isDisabledWhileEditingGlim</name>
-  <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
-    <function-signature>java.lang.String isDisabledWhileEditingGlim(java.lang.String, org.mifos.application.accounts.util.helpers.AccountState)</function-signature>
+  <function-class>org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+    <function-signature>java.lang.String isDisabledWhileEditingGlim(java.lang.String, org.mifos.accounts.util.helpers.AccountState)</function-signature>
     <example>
       &lt;c:out value="${fn:isDisabledWhileEditingGlim(object,object)}">
     </example>
   </function>
   	<tag>
 		<name>getLoanRepaymentTable</name>
-		<tagclass>org.mifos.application.accounts.loan.struts.uihelpers.LoanRepaymentTag</tagclass>
+		<tagclass>org.mifos.accounts.loan.struts.uihelpers.LoanRepaymentTag</tagclass>
 		<bodycontent>JSP</bodycontent>
 	</tag>
   </taglib>

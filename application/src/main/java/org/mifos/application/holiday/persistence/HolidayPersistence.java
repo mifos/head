@@ -29,8 +29,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;

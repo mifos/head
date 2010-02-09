@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;

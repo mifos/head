@@ -26,10 +26,10 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountTestUtils;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;

@@ -31,14 +31,14 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountTestUtils;
-import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.MifosCurrency;

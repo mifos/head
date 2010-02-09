@@ -27,9 +27,9 @@ import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.application.accounts.AccountIntegrationTestCase;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.AccountIntegrationTestCase;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

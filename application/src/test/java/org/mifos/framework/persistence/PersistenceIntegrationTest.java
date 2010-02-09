@@ -26,8 +26,8 @@ import junit.framework.Assert;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 

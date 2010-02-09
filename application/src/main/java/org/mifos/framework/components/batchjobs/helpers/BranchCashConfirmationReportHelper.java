@@ -26,7 +26,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
 import org.mifos.application.reports.business.service.HOCashConfirmationConfigService;
 import org.mifos.application.reports.business.service.IBranchCashConfirmationReportService;

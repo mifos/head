@@ -3,7 +3,7 @@
 
 	<!-- Commas in displayKey attribues lead to concatenated strings in the
 	changelog. See AuditConfigurtion.getKeys(String). -->
-	<entityType name="Loan" classPath="org.mifos.application.accounts.loan.business.LoanBO">
+	<entityType name="Loan" classPath="org.mifos.accounts.loan.business.LoanBO">
 		<entitiesToLog>
 			<entity name="accountState"/>
 			<!-- <entity name="accountNotes"/>-->
@@ -13,12 +13,12 @@
 		</entitiesToLog>
 		<propertyName name="accountState" displayKey="Loan.accountState" doNotLog="No" lookUp="yes">
 			<entityName name="AccountStates">
-				<classPath  path="org.mifos.application.accounts.business.AccountStateEntity"/>
+				<classPath  path="org.mifos.accounts.business.AccountStateEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="flag" parentName="accountFlags" displayKey="Loan.flag" doNotLog="No" lookUp="yes">
 			<entityName name="AccountFlags">
-				<classPath  path="org.mifos.application.accounts.business.AccountStateFlagEntity"/>
+				<classPath  path="org.mifos.accounts.business.AccountStateFlagEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="businessActivityId" displayKey="Loan.Purposeof,Loan"  doNotLog="No" lookUp="yes">
@@ -529,7 +529,7 @@
 
 	 </entityType>
 
-	<entityType name="Savings" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
+	<entityType name="Savings" classPath="org.mifos.accounts.savings.business.SavingsBO">
 
 		<entitiesToLog>
 			<entity name="accountState"/>
@@ -540,12 +540,12 @@
 		</entitiesToLog>
 		<propertyName name="accountState" displayKey="Loan.accountState" doNotLog="No" lookUp="yes">
 			<entityName name="AccountStates">
-				<classPath  path="org.mifos.application.accounts.business.AccountStateEntity"/>
+				<classPath  path="org.mifos.accounts.business.AccountStateEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="flag" parentName="accountFlags" displayKey="Loan.flag" doNotLog="No" lookUp="yes">
 			<entityName name="AccountFlags">
-				<classPath  path="org.mifos.application.accounts.business.AccountStateFlagEntity"/>
+				<classPath  path="org.mifos.accounts.business.AccountStateFlagEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="recommendedAmount" displayKey="Saving.RecommendedAmount" />

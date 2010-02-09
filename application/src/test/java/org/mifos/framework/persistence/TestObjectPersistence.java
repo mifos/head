@@ -21,7 +21,7 @@
 package org.mifos.framework.persistence;
 
 import org.hibernate.Session;
-import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;

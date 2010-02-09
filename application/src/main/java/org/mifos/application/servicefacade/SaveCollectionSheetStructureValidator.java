@@ -25,11 +25,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.AttendanceType;

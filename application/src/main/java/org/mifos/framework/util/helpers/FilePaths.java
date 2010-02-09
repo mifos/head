@@ -95,11 +95,11 @@ public interface FilePaths {
     public static String FEE_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "FeesUIResources";
     // org.mifos.config.localizedResources.
     public static String LOAN_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "LoanUIResources";
-    // org.mifos.application.accounts.savings.util.resources.SavingsUIResources
+    // org.mifos.accounts.savings.util.resources.SavingsUIResources
     public static String SAVING_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "SavingsUIResources";
-    // org.mifos.application.accounts.savings.util.resources.CustomerUIResources
+    // org.mifos.accounts.savings.util.resources.CustomerUIResources
     public static String CUSTOMER_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "CustomerUIResources";
-    // "org.mifos.application.accounts.util.resources.accountsUIResources"
+    // "org.mifos.accounts.util.resources.accountsUIResources"
     public static String ACCOUNTS_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "accountsUIResources";
     // org.mifos.application.configuration.util.resources.ConfigurationUIResources
     public static String CONFIGURATION_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "ConfigurationUIResources";

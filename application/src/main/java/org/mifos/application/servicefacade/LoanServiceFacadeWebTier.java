@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.CustomerDao;

@@ -22,9 +22,9 @@ package org.mifos.application.customer.struts.action;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;

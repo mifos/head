@@ -20,7 +20,7 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.persistence.ClientPersistence;

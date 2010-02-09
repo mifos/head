@@ -32,7 +32,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 

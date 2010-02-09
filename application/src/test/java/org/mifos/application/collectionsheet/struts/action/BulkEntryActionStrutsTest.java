@@ -38,14 +38,14 @@ import javax.servlet.http.HttpSession;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;

@@ -31,12 +31,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.accounts.business.AddAccountAction;
-import org.mifos.application.accounts.business.AddAccountStateFlag;
-import org.mifos.application.accounts.business.AddFinancialAction;
-import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
-import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.accounts.business.AddAccountAction;
+import org.mifos.accounts.business.AddAccountStateFlag;
+import org.mifos.accounts.business.AddFinancialAction;
+import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
 import org.mifos.application.master.persistence.Upgrade155;
 import org.mifos.application.master.persistence.Upgrade167;

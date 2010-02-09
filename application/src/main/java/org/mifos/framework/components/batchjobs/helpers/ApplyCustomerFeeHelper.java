@@ -23,7 +23,7 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;

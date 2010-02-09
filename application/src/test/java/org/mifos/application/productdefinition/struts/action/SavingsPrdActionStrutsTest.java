@@ -30,8 +30,8 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;

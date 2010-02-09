@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;

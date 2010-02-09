@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;

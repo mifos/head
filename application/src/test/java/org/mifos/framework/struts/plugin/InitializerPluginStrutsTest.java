@@ -24,7 +24,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.savings.struts.action.SavingsAction;
+import org.mifos.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;

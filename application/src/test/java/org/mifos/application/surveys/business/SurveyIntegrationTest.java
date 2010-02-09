@@ -28,7 +28,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;

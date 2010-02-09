@@ -31,8 +31,8 @@ import java.util.Map;
 
 import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.PersistenceException;

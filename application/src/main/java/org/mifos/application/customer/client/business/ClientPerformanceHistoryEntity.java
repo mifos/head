@@ -30,8 +30,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;

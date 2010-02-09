@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 import java.io.Serializable;
 import java.util.List;
 
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 

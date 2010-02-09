@@ -20,7 +20,7 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;

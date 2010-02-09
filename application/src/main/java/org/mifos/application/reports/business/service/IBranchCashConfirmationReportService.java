@@ -23,7 +23,7 @@ package org.mifos.application.reports.business.service;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;

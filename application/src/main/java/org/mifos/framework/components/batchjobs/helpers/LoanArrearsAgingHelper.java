@@ -23,8 +23,8 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;

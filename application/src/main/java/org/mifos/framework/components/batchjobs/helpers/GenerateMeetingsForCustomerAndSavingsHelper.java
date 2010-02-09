@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;

@@ -24,14 +24,14 @@ import java.sql.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountTestUtils;
-import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;

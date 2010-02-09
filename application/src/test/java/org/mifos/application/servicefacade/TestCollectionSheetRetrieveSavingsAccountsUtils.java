@@ -24,8 +24,8 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampl
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;

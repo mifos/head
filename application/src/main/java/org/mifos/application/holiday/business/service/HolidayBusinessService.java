@@ -22,8 +22,8 @@ package org.mifos.application.holiday.business.service;
 
 import java.util.List;
 
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;

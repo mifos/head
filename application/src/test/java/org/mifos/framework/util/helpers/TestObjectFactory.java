@@ -36,34 +36,34 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.LocalDate;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountTestUtils;
-import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.application.accounts.savings.business.SavingBOTestUtils;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.financial.business.FinancialTransactionBO;
+import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.accounts.loan.business.LoanBOTestUtils;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
+import org.mifos.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.CustomerAccountPaymentData;
+import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
@@ -1246,7 +1246,7 @@ public class TestObjectFactory {
         AccountTypes accountType = account.getType();
         for (AccountActionDateEntity actionDates : account.getAccountActionDates()) {
             // TODO: this will never be true. Do we want to fix it or nuke it?
-            if (accountType.getValue().equals(org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT)) {
+            if (accountType.getValue().equals(org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT)) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
                 for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity.getAccountFeesActionDetails()) {
                     session.delete(actionFees);
@@ -1254,7 +1254,7 @@ public class TestObjectFactory {
             }
             // TODO: this will never be true. Do we want to fix it or nuke it?
             if (accountType.getValue()
-                    .equals(org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
+                    .equals(org.mifos.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
                 CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
                 for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity.getAccountFeesActionDetails()) {
                     session.delete(actionFees);
@@ -1739,14 +1739,14 @@ public class TestObjectFactory {
         }
         for (AccountActionDateEntity actionDates : account.getAccountActionDates()) {
             if (account.getAccountType().getAccountTypeId().equals(
-                    org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT)) {
+                    org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT)) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
                 for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity.getAccountFeesActionDetails()) {
                     session.delete(actionFees);
                 }
             }
             if (account.getAccountType().getAccountTypeId().equals(
-                    org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
+                    org.mifos.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
                 CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
                 for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity.getAccountFeesActionDetails()) {
                     session.delete(actionFees);

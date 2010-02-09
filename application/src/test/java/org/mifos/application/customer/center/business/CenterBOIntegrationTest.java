@@ -27,7 +27,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.util.helpers.CenterSearchResults;
 import org.mifos.application.customer.client.business.ClientBO;

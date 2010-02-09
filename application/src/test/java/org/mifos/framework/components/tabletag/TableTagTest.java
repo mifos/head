@@ -32,7 +32,7 @@ import javax.servlet.jsp.JspException;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.config.Localization;

@@ -20,11 +20,11 @@
 
 package org.mifos.application.collectionsheet.business;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.util.helpers.OverDueAmounts;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.PersistentObject;

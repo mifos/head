@@ -8,7 +8,7 @@
     into several files vastly improves performance of MockStrutsTests cases.
 
     WHERE should you add configuration?  Configuration files are organized by package, so 'accounts'
-    pertains to org.mifos.application.accounts and any child packages (org.mifos.application.accounts.*.*...).
+    pertains to org.mifos.accounts and any child packages (org.mifos.accounts.*.*...).
     In addition, there is one 'common' configuration file, 'struts-config.xml' that is always loaded.  As
     a general rule, you should store all package-specific configuration in the package-specific config
     file.  If you don't see one for the package you're working on, look for its parent package config, if
@@ -35,7 +35,7 @@
                    type="org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm"/>
         <!-- savings accounts form beans -->
         <form-bean name="savingsActionForm"
-                   type="org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm"/>
+                   type="org.mifos.accounts.savings.struts.actionforms.SavingsActionForm"/>
     </form-beans>
 
     <global-exceptions>
@@ -244,7 +244,7 @@
         </action>
 
         <!-- Savings Accounts action -->
-        <action path="/savingsAction" type="org.mifos.application.accounts.savings.struts.action.SavingsAction"
+        <action path="/savingsAction" type="org.mifos.accounts.savings.struts.action.SavingsAction"
                 name="savingsActionForm" parameter="method" validate="true" input="/savingsAction.do?method=validate"
                 scope="session">
             <forward name="getPrdOfferings_success" path="/pages/application/savings/jsp/createsavingsaccount.jsp"/>
@@ -303,8 +303,8 @@
 		org.mifos.application.master.util.helpers.MasterConstants,
 		org.mifos.application.customer.util.helpers.CustomerConstants,
 		org.mifos.application.configuration.util.helpers.ConfigurationConstants,
-		org.mifos.application.accounts.util.helpers.AccountStates,
-		org.mifos.application.accounts.savings.util.helpers.SavingsConstants,
+		org.mifos.accounts.util.helpers.AccountStates,
+		org.mifos.accounts.savings.util.helpers.SavingsConstants,
 		org.mifos.application.fees.util.helpers.FeeConstants"/>
     </plug-in>
     <plug-in className="org.mifos.framework.struts.plugin.EnumPlugin">
@@ -318,13 +318,13 @@
 		org.mifos.application.fees.util.helpers.RateAmountFlag,
 		org.mifos.application.meeting.util.helpers.RecurrenceType,
 		org.mifos.application.meeting.util.helpers.MeetingType,
-		org.mifos.application.accounts.util.helpers.AccountTypes,
+		org.mifos.accounts.util.helpers.AccountTypes,
 		org.mifos.application.office.util.helpers.OfficeStatus,
 		org.mifos.application.office.util.helpers.OfficeLevel,
 		org.mifos.application.customer.util.helpers.CustomerStatus,
 		org.mifos.application.customer.util.helpers.CustomerLevel,
 		org.mifos.application.productdefinition.util.helpers.PrdStatus,
-		org.mifos.application.accounts.util.helpers.AccountState,
+		org.mifos.accounts.util.helpers.AccountState,
 		org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit"/>
     </plug-in>
     <!-- Jan 16, 2008 the Spring app context is no longer initialized here

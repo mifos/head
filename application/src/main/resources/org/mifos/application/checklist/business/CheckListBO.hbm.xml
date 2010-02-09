@@ -34,7 +34,7 @@
 		<joined-subclass name="org.mifos.application.checklist.business.AccountCheckListBO" table="PRD_CHECKLIST">
 			<key column="CHECKLIST_ID" />
 			<many-to-one name="productTypeEntity" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" insert="true" update="true" unique="true" not-null="true" />
-			<many-to-one name="accountStateEntity" column="ACCOUNT_STATUS" class="org.mifos.application.accounts.business.AccountStateEntity" not-null="true" />
+			<many-to-one name="accountStateEntity" column="ACCOUNT_STATUS" class="org.mifos.accounts.business.AccountStateEntity" not-null="true" />
 		</joined-subclass>
 
 	</class>
@@ -75,7 +75,7 @@
 		<![CDATA[from org.mifos.application.customer.business.CustomerStatusEntity customerState where customerState.customerLevel.id=:LEVEL_ID and customerState.id not in (1,7)]]>
 	</query>
 	<query name="checklist.getStatusForAccount">
-		<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity 
+		<![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
     	where  accountStateEntity.prdType.productTypeID = :prdTypeId and accountStateEntity.id not in (1,5,6,9,11,12,13,17)]]>
 	</query>
 

@@ -69,7 +69,7 @@ import java.util.Map;
 import org.apache.commons.collections.Closure;
 import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportClientSummaryBO;
 import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;

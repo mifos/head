@@ -44,7 +44,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;

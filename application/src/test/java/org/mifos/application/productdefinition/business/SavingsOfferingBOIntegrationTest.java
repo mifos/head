@@ -28,7 +28,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;

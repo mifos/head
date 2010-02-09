@@ -26,8 +26,8 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 
 import java.util.List;
 
-import org.mifos.application.accounts.savings.persistence.GenericDao;
-import org.mifos.application.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;

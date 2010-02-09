@@ -31,12 +31,12 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanArrearsAgingEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;

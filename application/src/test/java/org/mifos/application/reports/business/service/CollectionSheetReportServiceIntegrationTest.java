@@ -33,9 +33,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;

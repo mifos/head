@@ -22,9 +22,9 @@ package org.mifos.config;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;

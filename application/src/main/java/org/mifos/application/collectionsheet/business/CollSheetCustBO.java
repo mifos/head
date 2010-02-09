@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.master.business.MifosCurrency;

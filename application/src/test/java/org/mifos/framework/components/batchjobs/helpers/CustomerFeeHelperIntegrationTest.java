@@ -38,10 +38,10 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.Query;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerAccountBOTestUtils;
 import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;

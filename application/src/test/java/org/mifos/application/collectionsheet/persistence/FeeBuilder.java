@@ -22,7 +22,7 @@ package org.mifos.application.collectionsheet.persistence;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;

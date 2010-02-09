@@ -28,7 +28,7 @@ import junit.framework.Assert;
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.application.acceptedpaymenttype.persistence.helper.TransactionAcceptedPaymentTypes;
-import org.mifos.application.accounts.AccountIntegrationTestCase;
+import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;

@@ -39,8 +39,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.InterestTypesEntity;

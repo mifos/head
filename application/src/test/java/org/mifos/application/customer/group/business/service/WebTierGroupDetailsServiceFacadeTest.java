@@ -31,7 +31,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;

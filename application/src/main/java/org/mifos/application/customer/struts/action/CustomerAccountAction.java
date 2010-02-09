@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.struts.action.AccountAppAction;
+import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;

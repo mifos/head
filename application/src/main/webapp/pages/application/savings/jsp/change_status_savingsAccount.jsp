@@ -75,7 +75,7 @@ explanation of the license and how it is applied.
 							<td class="headingorange"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="savings.currentstatus" bundle="SavingsUIResources" isColonRequired="yes"/><mifoscustom:MifosImage
 								id="${sessionScope.editSavingsStatusActionForm.currentStatusId}"
-								moduleName="org.mifos.application.accounts.savings.util.resources.savingsImages" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.accountState.name}" />
+								moduleName="org.mifos.accounts.savings.util.resources.savingsImages" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.accountState.name}" />
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>

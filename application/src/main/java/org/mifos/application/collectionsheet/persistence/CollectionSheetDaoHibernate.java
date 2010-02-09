@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;

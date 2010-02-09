@@ -23,8 +23,8 @@ package org.mifos.framework.components.taggenerator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -56,11 +56,11 @@ public class TagGeneratorFactory {
                 "org.mifos.framework.components.taggenerator.CustomerTagGenerator");
         generatorNames.put("org.mifos.application.office.business.OfficeBO",
                 "org.mifos.framework.components.taggenerator.OfficeTagGenerator");
-        generatorNames.put("org.mifos.application.accounts.savings.business.SavingsBO",
+        generatorNames.put("org.mifos.accounts.savings.business.SavingsBO",
                 "org.mifos.framework.components.taggenerator.AccountTagGenerator");
-        generatorNames.put("org.mifos.application.accounts.loan.business.LoanBO",
+        generatorNames.put("org.mifos.accounts.loan.business.LoanBO",
                 "org.mifos.framework.components.taggenerator.AccountTagGenerator");
-        generatorNames.put("org.mifos.application.accounts.business.CustomerAccountBO",
+        generatorNames.put("org.mifos.accounts.business.CustomerAccountBO",
                 "org.mifos.framework.components.taggenerator.AccountTagGenerator");
         generatorNames.put("org.mifos.application.personnel.business.PersonnelBO",
                 "org.mifos.framework.components.taggenerator.PersonnelTagGenerator");
@@ -94,11 +94,11 @@ public class TagGeneratorFactory {
         if (bo instanceof ClientBO)
             return "org.mifos.application.customer.client.business.ClientBO";
         if (bo instanceof SavingsBO)
-            return "org.mifos.application.accounts.savings.business.SavingsBO";
+            return "org.mifos.accounts.savings.business.SavingsBO";
         if (bo instanceof LoanBO)
-            return "org.mifos.application.accounts.loan.business.LoanBO";
+            return "org.mifos.accounts.loan.business.LoanBO";
         if (bo instanceof CustomerAccountBO)
-            return "org.mifos.application.accounts.business.CustomerAccountBO";
+            return "org.mifos.accounts.business.CustomerAccountBO";
         if (bo instanceof OfficeBO)
             return "org.mifos.application.office.business.OfficeBO";
         if (bo instanceof PersonnelBO)

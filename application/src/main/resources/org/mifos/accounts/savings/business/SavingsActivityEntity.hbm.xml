@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.accounts.savings.business.SavingsActivityEntity" table="SAVINGS_ACTIVITY_DETAILS">
+		<id name="id" column="ID" type="integer" access="field">
+			<generator class="native" />
+		</id>
+		<property name="trxnCreatedDate" column="CREATED_DATE" access="field"/>
+		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="AMOUNT_CURRENCY_ID" />
+			<column name="AMOUNT" />
+		</property>
+		<property name="balanceAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="BALANCE_AMOUNT_CURRENCY_ID" />
+			<column name="BALANCE_AMOUNT" />
+		</property>
+		<many-to-one name="trxnCreatedBy" column="CREATED_BY" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
+		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
+		<many-to-one name="activity" column="ACCOUNT_ACTION_ID" class="org.mifos.accounts.business.AccountActionEntity" cascade="none" update="false" insert="true" access="field"/>
+	</class>
+
+</hibernate-mapping>

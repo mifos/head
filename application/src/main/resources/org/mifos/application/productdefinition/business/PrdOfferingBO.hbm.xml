@@ -91,11 +91,11 @@
 				not-null="true" />
 			<many-to-one name="principalGLcode"
 				column="PRINCIPAL_GLCODE_ID"
-				class="org.mifos.application.accounts.financial.business.GLCodeEntity"
+				class="org.mifos.accounts.financial.business.GLCodeEntity"
 				insert="true" update="false" access="field" />
 			<many-to-one name="interestGLcode"
 				column="INTEREST_GLCODE_ID"
-				class="org.mifos.application.accounts.financial.business.GLCodeEntity"
+				class="org.mifos.accounts.financial.business.GLCodeEntity"
 				insert="true" update="false" access="field" />
 
 			<!--Mapping of loan offering to its associated funds-->
@@ -199,11 +199,11 @@
 				not-null="true" />
 
 			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID"
-				class="org.mifos.application.accounts.financial.business.GLCodeEntity"
+				class="org.mifos.accounts.financial.business.GLCodeEntity"
 				insert="true" update="false" access="field" />
 			<many-to-one name="interestGLCode"
 				column="INTEREST_GLCODE_ID"
-				class="org.mifos.application.accounts.financial.business.GLCodeEntity"
+				class="org.mifos.accounts.financial.business.GLCodeEntity"
 				insert="true" update="false" access="field" />
 
 			<set name="savingsOfferingMeetings"

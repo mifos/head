@@ -20,7 +20,7 @@
 
 package org.mifos.application.customer.business;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerAccountBOTestUtils {

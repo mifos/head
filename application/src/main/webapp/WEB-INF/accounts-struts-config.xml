@@ -5,53 +5,53 @@
     <form-beans>
         <!-- Disburse loan-->
         <form-bean name="loanDisbursmentActionForm"
-                   type="org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm"/>
+                   type="org.mifos.accounts.loan.struts.actionforms.LoanDisbursmentActionForm"/>
         <!-- Repay Loan -->
         <form-bean name="repayLoanActionForm"
-                   type="org.mifos.application.accounts.loan.struts.actionforms.RepayLoanActionForm"/>
+                   type="org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm"/>
         <!-- Notes form bean -->
-        <form-bean name="notesActionForm" type="org.mifos.application.accounts.struts.actionforms.NotesActionForm"/>
+        <form-bean name="notesActionForm" type="org.mifos.accounts.struts.actionforms.NotesActionForm"/>
         <!-- New Account Action form -->
         <form-bean name="accountAppActionForm"
-                   type="org.mifos.application.accounts.struts.actionforms.AccountAppActionForm"/>
+                   type="org.mifos.accounts.struts.actionforms.AccountAppActionForm"/>
         <form-bean name="savingsClosureForm"
-                   type="org.mifos.application.accounts.savings.struts.actionforms.SavingsClosureActionForm"/>
+                   type="org.mifos.accounts.savings.struts.actionforms.SavingsClosureActionForm"/>
         <!-- Apply Adjustment action form  -->
         <form-bean name="applyAdjustmentActionForm"
-                   type="org.mifos.application.accounts.struts.actionforms.ApplyAdjustmentActionForm"/>
+                   type="org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm"/>
         <!-- LoanActivity action form  -->
         <form-bean name="loanActivityActionForm"
-                   type="org.mifos.application.accounts.loan.struts.actionforms.LoanActivityActionForm"/>
+                   type="org.mifos.accounts.loan.struts.actionforms.LoanActivityActionForm"/>
         <!-- Savings Apply Adjustment action form  -->
         <form-bean name="savingsApplyAdjustmentActionForm"
-                   type="org.mifos.application.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm"/>
+                   type="org.mifos.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm"/>
         <!-- Apply Payment Action Form for account -->
         <form-bean name="applyPaymentActionForm"
-                   type="org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm"/>
+                   type="org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm"/>
         <!-- Action Form deposit and withdrawal in savings account -->
         <form-bean name="savingsDepositWithdrawalForm"
-                   type="org.mifos.application.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm"/>
+                   type="org.mifos.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm"/>
         <!-- Edit status for accounts-->
         <form-bean name="editStatusActionForm"
-                   type="org.mifos.application.accounts.struts.actionforms.EditStatusActionForm"/>
+                   type="org.mifos.accounts.struts.actionforms.EditStatusActionForm"/>
         <!-- loan account action form-->
         <form-bean name="loanAccountActionForm"
-                   type="org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm"/>
+                   type="org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm"/>
         <!-- apply charge action form-->
         <form-bean name="ApplyChargeActionForm"
-                   type="org.mifos.application.accounts.struts.actionforms.ApplyChargeActionForm"/>
+                   type="org.mifos.accounts.struts.actionforms.ApplyChargeActionForm"/>
         <!-- Change Account Status-->
         <form-bean name="accountStatusActionForm"
-                   type="org.mifos.application.accounts.loan.struts.actionforms.AccountStatusActionForm"/>
+                   type="org.mifos.accounts.loan.struts.actionforms.AccountStatusActionForm"/>
         <form-bean name="multipleloansactionform"
-                   type="org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"/>
+                   type="org.mifos.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"/>
         <form-bean name="reverseloandisbactionform"
-                   type="org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"/>
+                   type="org.mifos.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"/>
     </form-beans>
 
     <action-mappings>
         <action path="/ChangeAccountStatus"
-                type="org.mifos.application.accounts.loan.struts.action.AccountStatusAction"
+                type="org.mifos.accounts.loan.struts.action.AccountStatusAction"
                 name="accountStatusActionForm"
                 parameter="method"
                 validate="true"
@@ -65,22 +65,22 @@
             <forward name="noresultfound" path="/pages/application/loan/jsp/nosearchresult.jsp"/>
         </action>
         <!-- Notes action -->
-        <action path="/notesAction" type="org.mifos.application.accounts.struts.action.NotesAction"
+        <action path="/notesAction" type="org.mifos.accounts.struts.action.NotesAction"
                 name="notesActionForm" parameter="method" validate="true" input="/notesAction.do?method=validate"
                 scope="session">
-            <forward name="load_success" path="/pages/application/accounts/jsp/account_addnotes.jsp"/>
-            <forward name="search_success" path="/pages/application/accounts/jsp/account_notes.jsp"/>
-            <forward name="preview_success" path="/pages/application/accounts/jsp/account_previewnotes.jsp"/>
-            <forward name="previous_success" path="/pages/application/accounts/jsp/account_addnotes.jsp"/>
+            <forward name="load_success" path="/pages/accounts/jsp/account_addnotes.jsp"/>
+            <forward name="search_success" path="/pages/accounts/jsp/account_notes.jsp"/>
+            <forward name="preview_success" path="/pages/accounts/jsp/account_previewnotes.jsp"/>
+            <forward name="previous_success" path="/pages/accounts/jsp/account_addnotes.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
             <forward name="savings_details_page" path="/savingsAction.do?method=get"/>
-            <forward name="preview_failure" path="/pages/application/accounts/jsp/account_addnotes.jsp"/>
-            <forward name="create_failure" path="/pages/application/accounts/jsp/account_previewnotes.jsp"/>
+            <forward name="preview_failure" path="/pages/accounts/jsp/account_addnotes.jsp"/>
+            <forward name="create_failure" path="/pages/accounts/jsp/account_previewnotes.jsp"/>
         </action>
         <!-- Ends-->
         <!-- Loan Disbursment-->
         <action path="/loanDisbursmentAction"
-                type="org.mifos.application.accounts.loan.struts.action.LoanDisbursmentAction" parameter="method"
+                type="org.mifos.accounts.loan.struts.action.LoanDisbursmentAction" parameter="method"
                 scope="session" name="loanDisbursmentActionForm" validate="true"
                 input="/loanDisbursmentAction.do?method=validate">
             <forward name="load_success" path="/pages/application/loan/jsp/DisburseLoan.jsp"/>
@@ -93,7 +93,7 @@
         </action>
         <!-- End -->
         <!-- Repay Loan-->
-        <action path="/repayLoanAction" type="org.mifos.application.accounts.loan.struts.action.RepayLoanAction"
+        <action path="/repayLoanAction" type="org.mifos.accounts.loan.struts.action.RepayLoanAction"
                 parameter="method" scope="session" name="repayLoanActionForm" validate="true"
                 input="/repayLoanAction.do?method=validate">
             <forward name="load_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
@@ -105,7 +105,7 @@
         </action>
         <!-- Ends-->
         <!-- New Account Action  -->
-        <action path="/accountAppAction" type="org.mifos.application.accounts.struts.action.AccountAppAction"
+        <action path="/accountAppAction" type="org.mifos.accounts.struts.action.AccountAppAction"
                 parameter="method" scope="session" name="accountAppActionForm" validate="true"
                 input="/accountAppAction.do?method=validate">
             <forward name="remove_group_charges" path="/customerAccountAction.do?method=load"/>
@@ -118,27 +118,27 @@
             <forward name="removeFees_Center_failure"
                      path="/pages/application/center/jsp/view_centerchargesdetail.jsp"/>
             <forward name="removeFees_Loan_failure" path="/pages/application/loan/jsp/loanaccountdetail.jsp"/>
-            <forward name="getTransactionHistory_success" path="/pages/application/accounts/jsp/viewtrxnhistory.jsp"/>
+            <forward name="getTransactionHistory_success" path="/pages/accounts/jsp/viewtrxnhistory.jsp"/>
         </action>
         <!-- End -->
 
         <!-- Apply Adjustment action -->
-        <action path="/applyAdjustment" type="org.mifos.application.accounts.struts.action.ApplyAdjustment"
+        <action path="/applyAdjustment" type="org.mifos.accounts.struts.action.ApplyAdjustment"
                 name="applyAdjustmentActionForm" parameter="method" validate="true"
-                input="/pages/application/accounts/jsp/applyadjustment.jsp" scope="session">
-            <forward name="loadadjustment_success" path="/pages/application/accounts/jsp/applyadjustment.jsp"/>
-            <forward name="loadAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp"/>
-            <forward name="previewadj_success" path="/pages/application/accounts/jsp/applyadjustment.jsp"/>
+                input="/pages/accounts/jsp/applyadjustment.jsp" scope="session">
+            <forward name="loadadjustment_success" path="/pages/accounts/jsp/applyadjustment.jsp"/>
+            <forward name="loadAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
+            <forward name="previewadj_success" path="/pages/accounts/jsp/applyadjustment.jsp"/>
             <forward name="canceladj_success" path="/loanAccountAction.do?method=get"/>
             <forward name="applyadj_success" path="/loanAccountAction.do?method=get"/>
-            <forward name="previewAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp"/>
-            <forward name="cancelAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp"/>
-            <forward name="applyAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp"/>
+            <forward name="previewAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
+            <forward name="cancelAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
+            <forward name="applyAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
         </action>
         <!-- Apply Adjustment action end -->
         <!-- Savings Closure  action -->
         <action path="/savingsClosureAction"
-                type="org.mifos.application.accounts.savings.struts.action.SavingsClosureAction"
+                type="org.mifos.accounts.savings.struts.action.SavingsClosureAction"
                 name="savingsClosureForm" parameter="method" validate="true"
                 input="/savingsClosureAction.do?method=validate" scope="session">
             <forward name="load_success" path="/pages/application/savings/jsp/closesavingsaccount.jsp"/>
@@ -149,7 +149,7 @@
             <forward name="preview_faliure" path="/pages/application/savings/jsp/closesavingsaccount.jsp"/>
         </action>
         <!-- LoanActivity Action -->
-        <action path="/loanActivityAction" type="org.mifos.application.accounts.loan.struts.action.LoanActivityAction"
+        <action path="/loanActivityAction" type="org.mifos.accounts.loan.struts.action.LoanActivityAction"
                 name="loanActivityActionForm" parameter="method" validate="true"
                 input="/loanActivityAction.do?method=validate" scope="session">
             <forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp"/>
@@ -157,7 +157,7 @@
         <!-- end LoanActivity Action -->
         <!-- Savings Apply Adjustment  action -->
         <action path="/savingsApplyAdjustmentAction"
-                type="org.mifos.application.accounts.savings.struts.action.SavingsApplyAdjustmentAction"
+                type="org.mifos.accounts.savings.struts.action.SavingsApplyAdjustmentAction"
                 name="savingsApplyAdjustmentActionForm" parameter="method" validate="true"
                 input="/savingsApplyAdjustmentAction.do?method=validate" scope="session">
             <forward name="load_success" path="/pages/application/savings/jsp/applyadjustment.jsp"/>
@@ -169,19 +169,19 @@
                      path="/pages/application/savings/jsp/applyadjustmentpreview.jsp"/>
         </action>
         <!-- Savings Apply Adjustment action end -->
-        <action path="/applyPaymentAction" type="org.mifos.application.accounts.struts.action.AccountApplyPaymentAction"
+        <action path="/applyPaymentAction" type="org.mifos.accounts.struts.action.AccountApplyPaymentAction"
                 name="applyPaymentActionForm" parameter="method"
                 input="/applyPaymentAction.do?method=validate" scope="session" validate="true">
-            <forward name="load_success" path="/pages/application/accounts/jsp/applypayment.jsp"/>
-            <forward name="preview_success" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
-            <forward name="preview_failure" path="/pages/application/accounts/jsp/applypayment.jsp"/>
-            <forward name="previous_success" path="/pages/application/accounts/jsp/applypayment.jsp"/>
+            <forward name="load_success" path="/pages/accounts/jsp/applypayment.jsp"/>
+            <forward name="preview_success" path="/pages/accounts/jsp/reviewapplypayment.jsp"/>
+            <forward name="preview_failure" path="/pages/accounts/jsp/applypayment.jsp"/>
+            <forward name="previous_success" path="/pages/accounts/jsp/applypayment.jsp"/>
             <forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
-            <forward name="applyPayment_failure" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
+            <forward name="applyPayment_failure" path="/pages/accounts/jsp/reviewapplypayment.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
         </action>
         <!--  redo loan -->
-        <action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction"
+        <action path="/loanAccountAction" type="org.mifos.accounts.loan.struts.action.LoanAccountAction"
                 name="loanAccountActionForm" parameter="method"
                 input="/loanAccountAction.do?method=validate" scope="session" validate="true" >
             <forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"/>
@@ -225,7 +225,7 @@
 
         </action>
         <action path="/savingsDepositWithdrawalAction"
-                type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction"
+                type="org.mifos.accounts.savings.struts.action.SavingsDepositWithdrawalAction"
                 name="savingsDepositWithdrawalForm" parameter="method"
                 input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">
             <forward name="load_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp"/>
@@ -237,26 +237,26 @@
         </action>
         <!-- Edit Status Action -->
         <action path="/editStatusAction"
-                type="org.mifos.application.accounts.struts.action.EditStatusAction"
+                type="org.mifos.accounts.struts.action.EditStatusAction"
                 name="editStatusActionForm" parameter="method"
                 input="/editStatusAction.do?method=validate" validate="true"
                 scope="session">
-            <forward name="load_success" path="/pages/application/accounts/jsp/change_status.jsp"/>
+            <forward name="load_success" path="/pages/accounts/jsp/change_status.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
             <forward name="savings_details_page" path="/savingsAction.do?method=get"/>
-            <forward name="preview_success" path="/pages/application/accounts/jsp/change_status_preview.jsp"/>
-            <forward name="previous_success" path="/pages/application/accounts/jsp/change_status.jsp"/>
-            <forward name="update_failure" path="/pages/application/accounts/jsp/change_status_preview.jsp"/>
-            <forward name="preview_failure" path="/pages/application/accounts/jsp/change_status.jsp"/>
+            <forward name="preview_success" path="/pages/accounts/jsp/change_status_preview.jsp"/>
+            <forward name="previous_success" path="/pages/accounts/jsp/change_status.jsp"/>
+            <forward name="update_failure" path="/pages/accounts/jsp/change_status_preview.jsp"/>
+            <forward name="preview_failure" path="/pages/accounts/jsp/change_status.jsp"/>
         </action>
 
-        <action path="/applyChargeAction" type="org.mifos.application.accounts.struts.action.ApplyChargeAction"
+        <action path="/applyChargeAction" type="org.mifos.accounts.struts.action.ApplyChargeAction"
                 parameter="method" name="ApplyChargeActionForm" input="/applyChargeAction.do?method=validate"
                 validate="true" scope="session">
-            <forward name="load_success" path="/pages/application/accounts/jsp/applyCharges.jsp"/>
+            <forward name="load_success" path="/pages/accounts/jsp/applyCharges.jsp"/>
             <forward name="load_ViewClientCharges_failure"
                      path="/pages/application/client/jsp/view_clientchargesdetail.jsp"/>
-            <forward name="update_failure" path="/pages/application/accounts/jsp/applyCharges.jsp"/>
+            <forward name="update_failure" path="/pages/accounts/jsp/applyCharges.jsp"/>
             <forward name="loanDetails_success" path="/loanAccountAction.do?method=get"/>
             <forward name="clientDetails_success" path="/customerAccountAction.do?method=load"/>
             <forward name="groupDetails_success" path="/customerAccountAction.do?method=load"/>
@@ -265,7 +265,7 @@
         </action>
 
         <action path="/multipleloansaction"
-                type="org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction"
+                type="org.mifos.accounts.loan.struts.action.MultipleLoanAccountsCreationAction"
                 name="multipleloansactionform" parameter="method" input="/multipleloansaction.do?method=validate"
                 validate="true" scope="session">
             <forward name="load_success" path="/pages/application/loan/jsp/CreateMultipleLoanAccounts.jsp"/>
@@ -280,7 +280,7 @@
         </action>
 
         <action path="/reverseloandisbaction"
-                type="org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalAction"
+                type="org.mifos.accounts.loan.struts.action.ReverseLoanDisbursalAction"
                 name="reverseloandisbactionform" parameter="method" input="/reverseloandisbaction.do?method=validate"
                 validate="true" scope="session">
             <forward name="search_success" path="/pages/application/loan/jsp/undoloandisbursalsearch.jsp"/>

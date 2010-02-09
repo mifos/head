@@ -20,10 +20,10 @@
 
 package org.mifos.framework.components.taggenerator;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.business.BusinessObject;
 
 public class AccountTagGenerator extends TagGenerator {

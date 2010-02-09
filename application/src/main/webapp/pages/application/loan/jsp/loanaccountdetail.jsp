@@ -20,7 +20,7 @@ explanation of the license and how it is applied.
 <%@ page
 	import="org.mifos.framework.components.configuration.persistence.ConfigurationPersistence"%>
 <%@ page
-	import="org.mifos.application.accounts.loan.util.helpers.LoanConstants"%>
+	import="org.mifos.accounts.loan.util.helpers.LoanConstants"%>
 
 <%@taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
@@ -103,7 +103,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage id="${BusinessKey.accountState.id}"
-								moduleName="org.mifos.application.accounts.util.resources.accountsImages" /> <c:out
+								moduleName="org.mifos.accounts.util.resources.accountsImages" /> <c:out
 								value="${BusinessKey.accountState.name}" />&nbsp; 
 								<c:forEach
 								var="flagSet" items="${BusinessKey.accountFlags}">
@@ -280,7 +280,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									 || BusinessKey.accountState.id == 6 || BusinessKey.accountState.id == 7 || BusinessKey.accountState.id == 8 || BusinessKey.accountState.id == 9}">
 						<mifoscustom:mifostabletag source="recentAccountActivities"
 							scope="session" xmlFileName="RecentAccountActivity.xml"
-							moduleName="org/mifos/application/accounts/loan/util/resources" passLocale="true" />
+							moduleName="org/mifos/accounts/loan/util/resources" passLocale="true" />
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="3">&nbsp;</td>
@@ -376,7 +376,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<td valign="top"><mifoscustom:mifostabletag
 										source="loanAccountDetailsView" scope="session"
 										xmlFileName="LoanAccountDetails.xml"
-										moduleName="org/mifos/application/accounts/loan/util/resources" passLocale="true" /></td>
+										moduleName="org/mifos/accounts/loan/util/resources" passLocale="true" /></td>
 								</tr>
 							</table>
 						</c:if>

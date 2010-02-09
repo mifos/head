@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+	<class
+		name="org.mifos.accounts.loan.business.MaxMinLoanAmount"
+		table="MAX_MIN_LOAN_AMOUNT">
+		<id name="accountId" column="ACCOUNT_ID" type="integer"
+			access="field">
+			<generator class="foreign">
+				<param name="property">loan</param>
+			</generator>
+		</id>
+		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" />
+		<property name="maxLoanAmount" column="MAX_LOAN_AMOUNT" />
+		<one-to-one name="loan"
+			class="org.mifos.accounts.loan.business.LoanBO"
+			access="field" />
+	</class>
+</hibernate-mapping>

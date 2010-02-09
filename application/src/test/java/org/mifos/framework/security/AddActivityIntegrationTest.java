@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
-import org.mifos.application.accounts.business.AddAccountAction;
+import org.mifos.accounts.business.AddAccountAction;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;

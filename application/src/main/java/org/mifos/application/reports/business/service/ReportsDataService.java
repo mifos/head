@@ -24,8 +24,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.PersonnelBO;

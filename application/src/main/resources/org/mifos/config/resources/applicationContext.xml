@@ -38,7 +38,7 @@
          element should be copied over. Mapping customizations can then be
          introduced. --> 
     <bean id = "financialRules"
-        class="org.mifos.application.accounts.financial.util.helpers.FinancialRules"
+        class="org.mifos.accounts.financial.util.helpers.FinancialRules"
         abstract="false" factory-method="getInstance">        
         <property name="actionToDebitAccount">
             <map>

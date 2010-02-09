@@ -20,7 +20,7 @@
 	</query>
 
 	<query name="prefetchAccountData">
-		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
+		<![CDATA[from org.mifos.accounts.business.AccountBO as a	
 				left outer join fetch a.loanSummary
 				left outer join fetch a.performanceHistory
 				left outer join fetch a.loanArrearsAgingEntity
@@ -38,7 +38,7 @@
 	</query>
 
 	<query name="prefetchLoanSchedules">
-		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO as la	
+		<![CDATA[from org.mifos.accounts.loan.business.LoanBO as la	
 				inner join fetch la.accountActionDates aad
 				left outer join fetch aad.accountFeesActionDetails
 				inner join la.customer c
@@ -61,7 +61,7 @@
 	</query>
 	
 	<query name="prefetchAccountFeeDetails">
-		<![CDATA[from org.mifos.application.accounts.business.AccountBO as a	
+		<![CDATA[from org.mifos.accounts.business.AccountBO as a	
 				inner join fetch a.accountFees af
 				inner join fetch af.fees f
 				inner join fetch f.feeFrequency ff

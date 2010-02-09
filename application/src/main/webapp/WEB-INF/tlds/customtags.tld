@@ -27,7 +27,7 @@
 	<tag>
 		<name>allActivity</name>
 		<tagclass>
-			org.mifos.application.accounts.loan.struts.uihelpers.LoanActivityTag
+			org.mifos.accounts.loan.struts.uihelpers.LoanActivityTag
 		</tagclass>
 		<bodycontent>JSP</bodycontent>
 	</tag>

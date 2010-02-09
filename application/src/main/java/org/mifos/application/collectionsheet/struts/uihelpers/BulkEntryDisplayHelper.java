@@ -25,8 +25,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;

@@ -22,7 +22,7 @@ package org.mifos.application.configuration.struts.action;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
+import org.mifos.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.application.configuration.struts.actionform.HiddenMandatoryConfigurationActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;

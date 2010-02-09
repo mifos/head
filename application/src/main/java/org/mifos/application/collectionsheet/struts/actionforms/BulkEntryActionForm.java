@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.framework.components.logger.LoggerConstants;

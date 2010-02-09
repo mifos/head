@@ -28,7 +28,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.financial.business.GLCategoryType;
+import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.testng.annotations.Test;

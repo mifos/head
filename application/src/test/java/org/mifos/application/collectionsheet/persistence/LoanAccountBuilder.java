@@ -22,9 +22,9 @@ package org.mifos.application.collectionsheet.persistence;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanProductBuilder;

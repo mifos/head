@@ -29,8 +29,8 @@ import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.util.Arrays;
 
-import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;

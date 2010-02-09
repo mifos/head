@@ -237,7 +237,7 @@ explanation of the license and how it is applied.
                                                     <td valign="top" align="center">
                                                         <mifoscustom:mifostabletag source="repaymentScheduleInstallments"
                                                                 scope="session" xmlFileName="ProposedRepaymentSchedule.xml"
-                                                                moduleName="org/mifos/application/accounts/loan/util/resources" passLocale="true"/>
+                                                                moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"/>
                                                     </td>
                                                     </c:if>
                                                     <c:if test="${requestScope.perspective == 'redoLoan'}">

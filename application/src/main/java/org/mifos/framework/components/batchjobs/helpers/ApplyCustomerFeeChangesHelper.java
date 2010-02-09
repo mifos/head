@@ -23,7 +23,7 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;

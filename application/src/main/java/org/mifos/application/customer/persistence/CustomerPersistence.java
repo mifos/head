@@ -38,14 +38,14 @@ import org.apache.commons.collections.Predicate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
@@ -275,7 +275,7 @@ public class CustomerPersistence extends Persistence {
 
         String[] aliasNames = { "clientName", "clientId", "groupName", "centerName", "officeName", "globelNo" };
         queryInputs.setQueryStrings(namedQuery);
-        queryInputs.setPath("org.mifos.application.accounts.util.helpers.AccountSearchResults");
+        queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResults");
         queryInputs.setAliasNames(aliasNames);
         queryInputs.setParamList(paramList);
         try {
@@ -307,7 +307,7 @@ public class CustomerPersistence extends Persistence {
 
         String[] aliasNames = { "clientName", "clientId", "groupName", "centerName", "officeName", "globelNo" };
         queryInputs.setQueryStrings(namedQuery);
-        queryInputs.setPath("org.mifos.application.accounts.util.helpers.AccountSearchResults");
+        queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResults");
         queryInputs.setAliasNames(aliasNames);
         queryInputs.setParamList(paramList);
         try {

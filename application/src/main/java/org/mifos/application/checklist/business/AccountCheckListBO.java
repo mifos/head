@@ -22,7 +22,7 @@ package org.mifos.application.checklist.business;
 
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.application.checklist.exceptions.CheckListException;
 import org.mifos.application.checklist.persistence.CheckListPersistence;
 import org.mifos.application.checklist.util.helpers.CheckListType;

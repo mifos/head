@@ -26,8 +26,8 @@ import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class GroupPerformanceHistoryUpdaterIntegrationTest extends MifosIntegrationTestCase {

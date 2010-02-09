@@ -29,7 +29,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;

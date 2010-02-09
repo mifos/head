@@ -22,7 +22,7 @@ package org.mifos.framework.components.configuration.persistence;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

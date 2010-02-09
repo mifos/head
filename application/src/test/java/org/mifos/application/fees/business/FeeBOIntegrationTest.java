@@ -25,7 +25,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;

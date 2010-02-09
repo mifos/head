@@ -20,10 +20,10 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountCustomFieldEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.center.business.CenterBO;

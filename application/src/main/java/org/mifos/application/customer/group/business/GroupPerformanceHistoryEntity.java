@@ -33,11 +33,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;

@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.business.CustomerBO;

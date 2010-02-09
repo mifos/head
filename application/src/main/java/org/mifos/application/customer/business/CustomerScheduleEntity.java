@@ -24,13 +24,13 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.CustomerAccountPaymentData;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerScheduleEntity extends AccountActionDateEntity {

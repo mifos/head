@@ -20,7 +20,7 @@
 
 package org.mifos.config;
 
-import org.mifos.application.accounts.financial.business.GLCategoryType;
+import org.mifos.accounts.financial.business.GLCategoryType;
 
 /**
  * Lightweight value type for general ledger accounts. Top-level general ledger

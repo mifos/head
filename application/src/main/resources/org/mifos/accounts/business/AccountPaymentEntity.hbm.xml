@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class
+		name="org.mifos.accounts.business.AccountPaymentEntity"
+		table="ACCOUNT_PAYMENT" >
+		<id name="paymentId" column="PAYMENT_ID" type="integer" access="field">
+			<generator class="native" />
+		</id>
+
+		<!-- <property name="amount" column="AMOUNT" type="double" />-->
+		<property name="receiptNumber" column="RECEIPT_NUMBER"
+			type="string" access="field"/>
+		<property name="voucherNumber" column="VOUCHER_NUMBER"
+			type="string" access="field"/>
+		<property name="checkNumber" column="CHECK_NUMBER"
+			type="string" access="field"/>
+		<property name="bankName" column="BANK_NAME" type="string" access="field"/>
+		<property name="paymentDate" column="PAYMENT_DATE" type="date" access="field"/>
+		<property name="receiptDate" column="RECEIPT_DATE" type="date" access="field"/>
+		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="CURRENCY_ID" /> 
+		 <column name="AMOUNT" />
+		</property>
+		<property name="comment" column="COMMENT" type="string" access="field"/>
+		<many-to-one name="paymentType" column="PAYMENT_TYPE_ID"
+			class="org.mifos.application.master.business.PaymentTypeEntity"
+			cascade="none" update="false" insert="true" access="field"/>
+		<many-to-one name="account" column="ACCOUNT_ID"
+			class="org.mifos.accounts.business.AccountBO" access="field"/>
+
+		<set name="accountTrxns" cascade="all" inverse="true"
+			table="ACCOUNT_TRXN" order-by="ACCOUNT_TRXN_ID desc">
+			<key column="PAYMENT_ID" />
+			<one-to-many
+				class="org.mifos.accounts.business.AccountTrxnEntity" />
+		</set>
+
+	</class>
+	<query name="accountPayment.maxAccPayment">
+		<![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment
+				where accpayment.paymentId = (select max(accountPayment.paymentId) 
+				from org.mifos.accounts.business.AccountPaymentEntity accountPayment 
+				where accountPayment.account.accountId = :accountId)
+				]]>
+	  </query>
+	  <query name="accountPayment.allAccPayment">
+		<![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment
+				where accpayment.account.accountId = :accountId order by accpayment.paymentId desc
+				]]>
+	  </query>
+</hibernate-mapping>

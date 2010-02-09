@@ -42,7 +42,7 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
             dtoBuilder.setInputs(queryInputs);
 
             Query query1 = session.createQuery("select account.globalAccountNum "
-                    + "from org.mifos.application.accounts.business.AccountBO account "
+                    + "from org.mifos.accounts.business.AccountBO account "
                     + "where account.customer.customerId=:customerId"
                     + " and account.accountType.accountTypeId=:accountTypeId"
                     + " and account.accountState.id not in (6,7,10,15,17,18) ");
