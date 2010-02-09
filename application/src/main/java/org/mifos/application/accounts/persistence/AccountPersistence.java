@@ -33,6 +33,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.joda.time.LocalDate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -136,8 +137,17 @@ public class AccountPersistence extends Persistence {
         return notesResult;
     }
 
-    public List<Integer> getActiveCustomerAndSavingsAccounts() throws PersistenceException {
-        return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS, null);
+    @SuppressWarnings("unchecked")
+    public List<Integer> getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask() throws PersistenceException {
+
+        LocalDate date = new LocalDate();
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("DATE", date.toString());
+        List<Integer> customerIds = executeNamedQuery("getActiveCustomerAccountIdsForGenerateMeetingsTask", queryParameters);
+        List<Integer> savingsIds = executeNamedQuery("getActiveSavingsAccountIdsForGenerateMeetingsTask", queryParameters);
+        
+        customerIds.addAll(savingsIds);
+        return customerIds;
     }
 
     public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws PersistenceException {

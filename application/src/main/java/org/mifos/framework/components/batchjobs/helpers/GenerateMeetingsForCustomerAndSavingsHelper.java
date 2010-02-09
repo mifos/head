@@ -49,13 +49,14 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
     public void execute(long timeInMillis) throws BatchJobException {
         long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
         AccountPersistence accountPersistence = new AccountPersistence();
-        List<Integer> customerAccountIds;
+        List<Integer> customerAndSavingsAccountIds;
         int accountCount = 0;
 
         try {
             long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-            customerAccountIds = accountPersistence.getActiveCustomerAndSavingsAccounts();
-            accountCount = customerAccountIds.size();
+            customerAndSavingsAccountIds = accountPersistence
+                    .getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+            accountCount = customerAndSavingsAccountIds.size();
             long duration = new DateTimeService().getCurrentDateTime().getMillis() - time1;
             getLogger().info("Time to execute the query " + duration + " . Got " + accountCount + " accounts.");
             if (accountCount == 0) {
@@ -69,7 +70,9 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         int currentRecordNumber = 0;
         int outputIntervalForBatchJobs = GeneralConfig.getOutputIntervalForBatchJobs();
         int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
-        int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
+        // int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
+        // jpw - hardcoded recordCommittingSize to 100 because now only accounts that need more schedules are returned
+        int recordCommittingSize = 100;
         getLogger().info(
                 "Using parameters:" + "\n  OutputIntervalForBatchJobs: " + outputIntervalForBatchJobs
                         + "\n  BatchSizeForBatchJobs: " + batchSize + "\n  RecordCommittingSizeForBatchJobs: "
@@ -84,19 +87,19 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         try {
             StaticHibernateUtil.getSessionTL();
             StaticHibernateUtil.startTransaction();
-            for (Integer accountId : customerAccountIds) {
+            for (Integer accountId : customerAndSavingsAccountIds) {
                 currentRecordNumber++;
                 currentAccountId = accountId;
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
-                if (isScheduleToBeGenerated(accountBO.getLastInstallmentId(), accountBO.getDetailsOfNextInstallment())) {
-                    if (accountBO instanceof CustomerAccountBO) {
-                        ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates();
-                        updatedRecordCount++;
-                    } else if (accountBO instanceof SavingsBO) {
-                        ((SavingsBO) accountBO).generateNextSetOfMeetingDates();
-                        updatedRecordCount++;
-                    }
+                
+                if (accountBO instanceof CustomerAccountBO) {
+                    ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates();
+                    updatedRecordCount++;
+                } else if (accountBO instanceof SavingsBO) {
+                    ((SavingsBO) accountBO).generateNextSetOfMeetingDates();
+                    updatedRecordCount++;
                 }
+                
                 if (currentRecordNumber % batchSize == 0) {
                     StaticHibernateUtil.flushAndClearSession();
                     getLogger().info("completed HibernateUtil.flushAndClearSession()");
@@ -139,20 +142,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 "GenerateMeetingsForCustomerAndSavings ran in "
                         + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime));
 
-    }
-
-    private boolean isScheduleToBeGenerated(int installmentSize, AccountActionDateEntity nextInstallment) {
-        Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        short nextInstallmentId = (short) installmentSize;
-        if (nextInstallment != null) {
-            if (nextInstallment.getActionDate().compareTo(currentDate) == 0) {
-                nextInstallmentId = (short) (nextInstallment.getInstallmentId().intValue() + 1);
-            } else {
-                nextInstallmentId = (short) (nextInstallment.getInstallmentId().intValue());
-            }
-        }
-        int totalInstallmentDatesToBeChanged = installmentSize - nextInstallmentId + 1;
-        return totalInstallmentDatesToBeChanged <= 5;
     }
 
     @Override

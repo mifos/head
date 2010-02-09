@@ -30,6 +30,7 @@ import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -104,7 +105,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         System.out.println(center.getCustomerAccount().getAccountActionDates().size());
-       Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
+        Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
     }
 
     public void testExecuteForSavingsAccount() throws Exception {
@@ -116,14 +117,65 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
             // force output for every account
             configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, outputInterval);
 
-            savings=getSavingsAccountForCenter();
-            int noOfInstallments=savings.getAccountActionDates().size();
+            savings = getSavingsAccountForCenter();
+            int noOfInstallments = savings.getAccountActionDates().size();
+
             AccountTestUtils.changeInstallmentDatesToPreviousDate(savings);
             TestObjectFactory.flushandCloseSession();
-            savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+            savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
             new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
-            savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
-           Assert.assertEquals(noOfInstallments+20,savings.getAccountActionDates().size());
+            savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+            Assert.assertEquals(noOfInstallments + 20, savings.getAccountActionDates().size());
+        } finally {
+            // restore original output interval value
+            configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, configuredValue);
+        }
+    }
+
+    public void testExecuteForCustomerAndSavingsAccount() throws Exception {
+        // jpw - this test is similar to testExecuteForSavingsAccount
+        // Re-using much of it to test that customer and savings accounts are processed as have made separate queries to
+        // return the two different types of accounts.
+        
+        int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        int outputInterval = 1;
+
+        try {
+            // force output for every account
+            configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, outputInterval);
+
+            savings = getSavingsAccountForCenter();
+            int noOfInstallments = savings.getAccountActionDates().size();
+            AccountTestUtils.changeInstallmentDatesToPreviousDate(savings);
+            
+            CustomerAccountBO centerCustomerAccount = center.getCustomerAccount();
+            Integer centerCustomerAccountInstallments = centerCustomerAccount.getAccountActionDates().size();
+            AccountTestUtils.changeInstallmentDatesToPreviousDate(centerCustomerAccount);
+            CustomerAccountBO groupCustomerAccount = group.getCustomerAccount();
+            Integer groupCustomerAccountInstallments = groupCustomerAccount.getAccountActionDates().size();
+            AccountTestUtils.changeInstallmentDatesToPreviousDate(groupCustomerAccount);
+            CustomerAccountBO client1CustomerAccount = client1.getCustomerAccount();
+            Integer client1CustomerAccountInstallments = client1CustomerAccount.getAccountActionDates().size();
+            AccountTestUtils.changeInstallmentDatesToPreviousDate(client1CustomerAccount);
+            CustomerAccountBO client2CustomerAccount = client2.getCustomerAccount();
+            Integer client2CustomerAccountInstallments = client2CustomerAccount.getAccountActionDates().size();
+            AccountTestUtils.changeInstallmentDatesToPreviousDate(client2CustomerAccount);
+            
+            TestObjectFactory.flushandCloseSession();
+            savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+            new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
+            savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+            centerCustomerAccount = TestObjectFactory.getObject(CustomerAccountBO.class, centerCustomerAccount.getAccountId());
+            groupCustomerAccount = TestObjectFactory.getObject(CustomerAccountBO.class, groupCustomerAccount.getAccountId());
+            client1CustomerAccount = TestObjectFactory.getObject(CustomerAccountBO.class, client1CustomerAccount.getAccountId());
+            client2CustomerAccount = TestObjectFactory.getObject(CustomerAccountBO.class, client2CustomerAccount.getAccountId());
+            
+            Assert.assertEquals(noOfInstallments + 20, savings.getAccountActionDates().size());
+            Assert.assertEquals(centerCustomerAccountInstallments + 10, centerCustomerAccount.getAccountActionDates().size());
+            Assert.assertEquals(groupCustomerAccountInstallments + 10, groupCustomerAccount.getAccountActionDates().size());
+            Assert.assertEquals(client1CustomerAccountInstallments + 10, client1CustomerAccount.getAccountActionDates().size());
+            Assert.assertEquals(client2CustomerAccountInstallments + 10, client2CustomerAccount.getAccountActionDates().size());
         } finally {
             // restore original output interval value
             configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, configuredValue);
@@ -133,7 +185,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
     public void testExecuteForSavingsAccountForGroup() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,
+                center);
         SavingsTestHelper helper = new SavingsTestHelper();
         savingsOffering = createSavingsOffering("dfasdasd1", "sad1", InterestCalcType.MINIMUM_BALANCE,
                 SavingsType.VOLUNTARY, TestGeneralLedgerCode.ASSETS, TestGeneralLedgerCode.CASH_AND_BANK_BALANCES,
@@ -141,7 +194,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         savings = helper.createSavingsAccount(savingsOffering, group, AccountState.SAVINGS_ACTIVE, userContext);
         Date meetingStartDate = savings.getCustomer().getCustomerMeeting().getMeeting().getStartDate();
         int noOfInstallments = savings.getAccountActionDates().size();
-        AccountTestUtils.changeInstallmentDatesToPreviousDateExceptLastInstallment(savings, 6);
+        AccountTestUtils.changeInstallmentDatesToPreviousDateExceptLastInstallment(savings, 7);
         TestObjectFactory.flushandCloseSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
@@ -149,8 +202,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
-       Assert.assertEquals(noOfInstallments + 10, savings.getAccountActionDates().size());
-       Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(meetingStartDate.getTime()).getTime())
+        Assert.assertEquals(noOfInstallments + 10, savings.getAccountActionDates().size());
+        Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(meetingStartDate.getTime()).getTime())
                 .toString(), group.getCustomerMeeting().getMeeting().getStartDate().toString());
     }
 
@@ -167,7 +220,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,
+                center);
     }
 
     private SavingsBO getSavingsAccountForCenter() throws Exception {

@@ -35,10 +35,12 @@ import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountTestUtils;
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -80,7 +82,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
             COABO coa2 = accountPersistence.addGeneralLedgerAccount(name2, glCode, parentGlCode, null);
             Assert.fail();
         } catch (Exception e) {
-           Assert.assertTrue(e.getMessage().contains("An account already exists with glcode"));
+            Assert.assertTrue(e.getMessage().contains("An account already exists with glcode"));
         } finally {
             StaticHibernateUtil.rollbackTransaction();
             StaticHibernateUtil.closeSession();
@@ -95,7 +97,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
         try {
             COABO coa = accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
-           Assert.assertEquals(coa.getAccountId(), accountPersistence.getAccountIdFromGlCode(glCode));
+            Assert.assertEquals(coa.getAccountId(), accountPersistence.getAccountIdFromGlCode(glCode));
         } finally {
             StaticHibernateUtil.rollbackTransaction();
             StaticHibernateUtil.closeSession();
@@ -104,30 +106,28 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     }
 
     /**
-     * The Chart of Accounts hierarchy is created when TestCaseInitializer is
-     * instantiated in parent class static initializer. Verify it worked as
-     * planned.
+     * The Chart of Accounts hierarchy is created when TestCaseInitializer is instantiated in parent class static
+     * initializer. Verify it worked as planned.
      */
     public void testAddCoaHierarchy() {
         short id = TestGeneralLedgerCode.COST_OF_FUNDS;
         COAHierarchyEntity h = (COAHierarchyEntity) StaticHibernateUtil.getSessionTL().load(COAHierarchyEntity.class,
                 id);
-       Assert.assertEquals(DIRECT_EXPENDITURE_GL_ACCOUNT_CODE, h.getParentAccount().getCoa().getAssociatedGlcode()
+        Assert.assertEquals(DIRECT_EXPENDITURE_GL_ACCOUNT_CODE, h.getParentAccount().getCoa().getAssociatedGlcode()
                 .getGlcode());
     }
 
     /**
-     * The top-level "ASSETS" general ledger account should always be the first
-     * one inserted. This will hopefully be reliable enough for testing
-     * purposes.
+     * The top-level "ASSETS" general ledger account should always be the first one inserted. This will hopefully be
+     * reliable enough for testing purposes.
      */
     public void testGetAccountIdForGLCode() {
-       Assert.assertEquals(new Short((short) 1), TestGeneralLedgerCode.ASSETS);
+        Assert.assertEquals(new Short((short) 1), TestGeneralLedgerCode.ASSETS);
     }
 
     public void testTopLevelAccountPersisted() throws Exception {
         COABO incomeCategory = accountPersistence.getCategory(GLCategoryType.INCOME);
-       Assert.assertEquals(GLCategoryType.INCOME, incomeCategory.getCategoryType());
+        Assert.assertEquals(GLCategoryType.INCOME, incomeCategory.getCategoryType());
     }
 
     public void testDumpChartOfAccounts() throws Exception {
@@ -207,12 +207,12 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     public void testSuccessGetNextInstallmentList() {
         List<AccountActionDateEntity> installmentIdList = accountBO.getApplicableIdsForFutureInstallments();
-       Assert.assertEquals(5, installmentIdList.size());
+        Assert.assertEquals(5, installmentIdList.size());
     }
 
     public void testSuccessLoadBusinessObject() throws Exception {
         AccountBO readAccount = accountPersistence.getAccount(accountBO.getAccountId());
-       Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, readAccount.getState());
+        Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, readAccount.getState());
     }
 
     public void testFailureLoadBusinessObject() {
@@ -230,23 +230,15 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     }
 
     public void testOptionalAccountStates() throws Exception {
-       Assert.assertEquals(1, accountPersistence.getAccountStates(Short.valueOf("0")).size());
+        Assert.assertEquals(1, accountPersistence.getAccountStates(Short.valueOf("0")).size());
     }
 
     public void testAccountStatesInUse() throws Exception {
-       Assert.assertEquals(17, accountPersistence.getAccountStates(Short.valueOf("1")).size());
+        Assert.assertEquals(17, accountPersistence.getAccountStates(Short.valueOf("1")).size());
     }
 
     public void testGetAccountsWithYesterdaysInstallment() throws PersistenceException {
-       Assert.assertEquals(0, accountPersistence.getAccountsWithYesterdaysInstallment().size());
-    }
-
-    public void testGetActiveCustomerAndSavingsAccounts() throws Exception {
-        SavingsBO savingsBO = TestObjectFactory.createSavingsAccount("12345678910", group, AccountState.SAVINGS_ACTIVE,
-                new Date(), createSavingsOffering("qqqqq"), TestUtils.makeUser());
-        List<Integer> customerAccounts = accountPersistence.getActiveCustomerAndSavingsAccounts();
-       Assert.assertEquals(3, customerAccounts.size());
-        TestObjectFactory.cleanUp(savingsBO);
+        Assert.assertEquals(0, accountPersistence.getAccountsWithYesterdaysInstallment().size());
     }
 
     public void testSearchAccount() throws Exception {
@@ -256,8 +248,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
         queryResult = accountPersistence.search(savingsBO.getGlobalAccountNum(), (short) 3);
         Assert.assertNotNull(queryResult);
-       Assert.assertEquals(1, queryResult.getSize());
-       Assert.assertEquals(1, queryResult.get(0, 10).size());
+        Assert.assertEquals(1, queryResult.getSize());
+        Assert.assertEquals(1, queryResult.get(0, 10).size());
         TestObjectFactory.cleanUp(savingsBO);
     }
 
@@ -271,7 +263,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         List<CustomFieldDefinitionEntity> customFields = accountPersistence
                 .retrieveCustomFieldsDefinition(EntityType.LOAN.getValue());
         Assert.assertNotNull(customFields);
-       Assert.assertEquals(TestConstants.LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
+        Assert.assertEquals(TestConstants.LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     private SavingsBO createSavingsAccount() throws Exception {

@@ -503,8 +503,6 @@ public interface NamedQueryConstants {
     // Seems not to be used by anything
     public String GET_FEE_UPDATETYPE = "getFeeUpdateType";
 
-    public String GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS = "getActiveCustomerAndSavingsAccounts";
-
     public String GET_LASTINSTALLMENT = "getLastInstallment";
 
     public String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE = "retrieveCustomerFeesByCategoryType";

@@ -442,11 +442,41 @@
 			where account.accountId=:accountId]]>
 	</query>
 
-	<query name="getActiveCustomerAndSavingsAccounts">
-		<![CDATA[ select ca.accountId from org.mifos.application.accounts.business.AccountBO ca 
-			where  ca.accountState in (11,16) and ca.accountType.accountTypeId in (2,3)
-			and ca.customer.customerStatus in (3,9,13)]]>
-	</query>
+	<sql-query name="getActiveCustomerAccountIdsForGenerateMeetingsTask">
+		<return-scalar column="accountId" type="integer" />
+	    <![CDATA[select a.account_id as accountId
+				from account a
+				join customer_account ca on ca.account_id = a.account_id
+				join customer c on c.customer_id = a.customer_id
+				where c.status_id in (3,9,13)
+				and a.account_state_id = 11
+				and (select max(cs.installment_id) from customer_schedule cs
+					where cs.account_id = a.account_id
+					and cs.action_date <= date(:DATE)) + 4 >
+
+					(select max(cs2.installment_id) from customer_schedule cs2
+					where cs2.account_id = a.account_id)
+				group by a.account_id
+			]]>
+	</sql-query>
+	
+	<sql-query name="getActiveSavingsAccountIdsForGenerateMeetingsTask">
+		<return-scalar column="accountId" type="integer" />
+	    <![CDATA[select a.account_id as accountId
+				from account a
+				join savings_account sa on sa.account_id = a.account_id
+				join customer c on c.customer_id = a.customer_id
+				where c.status_id in (3,9,13)
+				and a.account_state_id = 16
+				and (select max(ss.installment_id) from saving_schedule ss
+					where ss.account_id = a.account_id
+					and ss.action_date <= date(:DATE)) + 4 >
+
+					(select max(ss2.installment_id) from saving_schedule ss2
+					where ss2.account_id = a.account_id)
+				group by a.account_id
+			]]>
+	</sql-query>
 
 	<query name="accounts.getFeeAmountAtDisbursement">
 		<![CDATA[  from org.mifos.application.accounts.business.AccountFeesEntity afe 
