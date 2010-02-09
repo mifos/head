@@ -12,5 +12,6 @@ targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
 $controlScript stop
 rm -f $deployRoot/tomcat6/logs/*
 rm -rf $deployRoot/tomcat6/webapps/mifos
+rm -rf $deployRoot/tomcat6/work
 cp $lastStableWAR $targetWARlocation
 $controlScript start
