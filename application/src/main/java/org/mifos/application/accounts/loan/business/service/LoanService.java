@@ -102,7 +102,7 @@ public class LoanService implements Service {
                 defaultNumberOfInstallments, center.getCustomerAccount().getNextMeetingDate(), loanOffering
                         .isIntDedDisbursement(), loanOffering.getDefInterestRate(), loanOffering
                         .getGracePeriodDuration(), NO_FUND, defaultFees, null, maxLoanAmount, minLoanAmount,
-                maxInstallments, minInstallments);
+                maxInstallments, minInstallments, false);
         loan.setBusinessActivityId(businessActivityId);
         loan.save();
 

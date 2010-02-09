@@ -273,6 +273,47 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
     }
 
+    public void testCreateLoanAccountWithDecliningInterestGraceAllRepaymentsWithLsimOn() throws Exception {
+           short graceDuration = (short) 2;
+            MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
+                    EVERY_SECOND_WEEK, CUSTOMER_MEETING));
+            center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+            group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                    CustomerStatus.GROUP_ACTIVE, center);
+            LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, new Date(System
+                    .currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, center
+                    .getCustomerMeeting().getMeeting());
+            List<FeeView> feeViewList = new ArrayList<FeeView>();
+
+            boolean loanScheduleIndependentOfMeeting = true;
+            accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+                    AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
+                    new Date(System.currentTimeMillis()), false, // 6 installments
+                    12.0, graceDuration, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, 
+                    loanScheduleIndependentOfMeeting);
+            new TestObjectPersistence().persist(accountBO);
+            Assert.assertEquals(6, accountBO.getAccountActionDates().size());
+            Map<String, String> fees0 = new HashMap<String, String>();
+
+            Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
+            LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
+
+            checkLoanScheduleEntity(incrementCurrentDate(14 * (0 + graceDuration)), "49.6", "1.4", fees0, paymentsArray[0]);
+
+            checkLoanScheduleEntity(incrementCurrentDate(14 * (1 + graceDuration)), "49.8", "1.2", fees0, paymentsArray[1]);
+
+            checkLoanScheduleEntity(incrementCurrentDate(14 * (2 + graceDuration)), "50.0", "1.0", fees0, paymentsArray[2]);
+
+            checkLoanScheduleEntity(incrementCurrentDate(14 * (3 + graceDuration)), "50.3", "0.7", fees0, paymentsArray[3]);
+
+            checkLoanScheduleEntity(incrementCurrentDate(14 * (4 + graceDuration)), "50.5", "0.5", fees0, paymentsArray[4]);
+
+            checkLoanScheduleEntity(incrementCurrentDate(14 * (5 + graceDuration)), "49.8", "0.2", fees0, paymentsArray[5]);
+
+            LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
+            Assert.assertEquals(new Money(getCurrency(), "300.0"), loanSummaryEntity.getOriginalPrincipal());
+    }
+    
     // set up a loan similar to those required by Al Majmoua
     public void testCreateLoanScheduleLikeAlMajmoua() throws Exception {
         String loanAmount = "950000.0";
@@ -472,7 +513,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(currency, loanAmount), (short)numInstallments,
                 startDate.toDate(), false, interestRate, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
-                SHORT_ZERO, SHORT_ZERO);
+                SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
     }
     
@@ -494,7 +535,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(currency, loanAmount), (short)numInstallments,
                 startDate.toDate(), false, interestRate, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
-                SHORT_ZERO, SHORT_ZERO);
+                SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         return startDate;
     }    
@@ -2656,7 +2697,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             loanDao.createLoan(TestUtils.makeUser(), null, group, AccountState.LOAN_APPROVED, new Money(getCurrency(),
                     "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0, (short) 0,
                     null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO, DOUBLE_ZERO,
-                    SHORT_ZERO, SHORT_ZERO);
+                    SHORT_ZERO, SHORT_ZERO, false);
             Assert.assertFalse("The Loan object is created for null loan offering", true);
         } catch (AccountException ae) {
             Assert.assertTrue("The Loan object is not created for null loan offering", true);
@@ -2710,7 +2751,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             loanDao.createLoan(TestUtils.makeUser(), loanOffering, null, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
                     (short) 0, null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO,
-                    DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                    DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
             Assert.assertFalse("The Loan object is created for inactive customer", true);
         } catch (AccountException ae) {
             Assert.assertTrue("The Loan object is not created for inactive customer", true);
@@ -3618,7 +3659,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
-                SHORT_ZERO, SHORT_ZERO);
+                SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
 
         Map<String, String> fees0 = new HashMap<String, String>();
@@ -3686,7 +3727,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 new Date(System.currentTimeMillis()), false, 1.2, (short) 1, null, feeViewList, null,
-                DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
 
         Map<String, String> fees0 = new HashMap<String, String>();
@@ -3783,7 +3824,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 disbursementDate.getTime(), false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO,
-                DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
 
         Map<String, String> fees1 = new HashMap<String, String>();
@@ -3875,7 +3916,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 disbursementDate.getTime(), false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO,
-                DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
 
         disbursementDate = new GregorianCalendar();
@@ -4157,7 +4198,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
-                SHORT_ZERO, SHORT_ZERO);
+                SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
         StaticHibernateUtil.closeSession();
@@ -4227,7 +4268,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
-                SHORT_ZERO, SHORT_ZERO);
+                SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
         StaticHibernateUtil.closeSession();
@@ -4520,7 +4561,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         LoanBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED,
                 new Money(getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false,
-                10.0, (short) 0, null, feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                10.0, (short) 0, null, feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         TestObjectFactory.simulateInvalidConnection();
         try {
             loan.save();
@@ -4575,7 +4616,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, // 6
                 // installments
-                12.0, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                12.0, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -4645,7 +4686,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, // 6
-                12.0, (short) 0, null, feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                12.0, (short) 0, null, feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -4718,7 +4759,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, 0.0, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
-                SHORT_ZERO, SHORT_ZERO);
+                SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -4761,7 +4802,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, 0.0, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
-                SHORT_ZERO, SHORT_ZERO);
+                SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -4804,7 +4845,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 new Date(System.currentTimeMillis()), false, // 6 installments
-                12.0, graceDuration, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
+                12.0, graceDuration, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
         Map<String, String> fees0 = new HashMap<String, String>();
@@ -4855,7 +4896,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     new Date(System.currentTimeMillis()),
                     false, // 6 installments
                     12.0, graceDuration, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
-                    SHORT_ZERO);
+                    SHORT_ZERO, false);
             new TestObjectPersistence().persist(accountBO);
             Assert.assertEquals(6, accountBO.getAccountActionDates().size());
 

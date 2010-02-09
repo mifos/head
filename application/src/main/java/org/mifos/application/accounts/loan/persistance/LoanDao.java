@@ -55,7 +55,7 @@ public class LoanDao implements DataAccessObject {
             AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
             boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
             List<FeeView> feeViews, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
-            Short maxNoOfInstall, Short minNoOfInstall) throws AccountException {
+            Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
 
         if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate))
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
@@ -79,7 +79,8 @@ public class LoanDao implements DataAccessObject {
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
-                customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall, false, null);
+                customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall, 
+                isRepaymentIndepOfMeetingEnabled, null);
     }
 
     private boolean isAnyLoanParamsNull(Object... args) {

@@ -497,7 +497,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
-                SHORT_ZERO);
+                SHORT_ZERO, false);
 
         return loan;
 
@@ -872,7 +872,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
-                SHORT_ZERO);
+                SHORT_ZERO, false);
 
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
@@ -938,7 +938,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
-                SHORT_ZERO);
+                SHORT_ZERO, false);
 
         PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
@@ -1562,7 +1562,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
                         .getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO,
-                SHORT_ZERO);
+                SHORT_ZERO, false);
 
         new TestObjectPersistence().persist(accountBO);
         return accountBO;
