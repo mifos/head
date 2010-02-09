@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,4 +107,32 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPage();
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void tryCreateGroupLoanWithoutMandatoryPurposeOfLoan() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml.zip", dataSource, selenium);
+
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("MyGroup1233266297718");
+        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+
+        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+
+        loanAccountEntryPage.selectTwoClientsForGlim();
+        loanAccountEntryPage.clickContinue();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void tryCreateGroupLoanWithMandatoryPurposeOfLoan() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_012_dbunit.xml.zip", dataSource, selenium);
+
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("MyGroup1233266297718");
+        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+
+        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+
+        loanAccountEntryPage.selectTwoClientsForGlim();
+        loanAccountEntryPage.selectPurposeForGlim();
+        loanAccountEntryPage.clickContinue();
+    }
 }

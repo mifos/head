@@ -92,8 +92,23 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         selenium.type("selectedFee[1].amount", "3.3");
     }
 
+    public void selectTwoClientsForGlim() {
+        selenium.click("glimLoanForm.input.select");
+        selenium.type("glimLoanForm.input.loanAmount", "1234");
+
+        selenium.click("clients[1]");
+        selenium.type("clientDetails[1].loanAmount", "4321");
+    }
+
+    public void selectPurposeForGlim() {
+        selenium.select("clientDetails[0].businessActivity", "label=0003-Goat Purchase");
+
+        selenium.select("clientDetails[1].businessActivity", "label=0010-Camel");
+    }
+
     public void clickContinue(){
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
+        selenium.isVisible("schedulePreview.button.preview");
     }
 }

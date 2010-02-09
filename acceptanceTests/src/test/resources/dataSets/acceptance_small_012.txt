@@ -1,0 +1,5 @@
+Description:
+This data set is derived from acceptance_small_011
+
+Purpose of Loan was set to be mandatory.
+http://mifosforge.jira.com/browse/MIFOS-2634

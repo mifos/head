@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,6 +48,7 @@ import junit.framework.TestCase;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeFormulaEntity;
@@ -58,6 +60,7 @@ import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoan
 import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -230,25 +233,52 @@ public class LoanAccountActionFormTest extends TestCase {
     }
 
     public void testShouldAddErrorIfPurposeOfLoanIsNull() throws Exception {
+        FieldConfigurationEntity fieldConfigMock = createMock(FieldConfigurationEntity.class);
+        expect(fieldConfigMock.getFieldName()).andReturn(LoanConstants.PURPOSE_OF_LOAN);
+        replay(fieldConfigMock);
         form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL));
         form.setClients(Arrays.asList("1"));
-        form.validatePurposeOfLoanForGlim(actionErrors);
-       Assert.assertEquals(1, actionErrors.size());
+        form.validatePurposeOfLoanForGlim(actionErrors, Arrays.asList(fieldConfigMock));
+        Assert.assertEquals(1, actionErrors.size());
+        verify(fieldConfigMock);
+    }
+
+    public void testShouldntAddErrorIfPurposeOfLoanIsNull() throws Exception {
+        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL));
+        form.setClients(Arrays.asList("1"));
+        form.validatePurposeOfLoanForGlim(actionErrors, Collections.<FieldConfigurationEntity>emptyList());
+        Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldAddErrorIfPurposeOfLoanIsEmpty() throws Exception {
+        FieldConfigurationEntity fieldConfigMock = createMock(FieldConfigurationEntity.class);
+        expect(fieldConfigMock.getFieldName()).andReturn(LoanConstants.PURPOSE_OF_LOAN);
+        replay(fieldConfigMock);
         form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
                 LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY));
         form.setClients(Arrays.asList("1"));
-        form.validatePurposeOfLoanForGlim(actionErrors);
-       Assert.assertEquals(1, actionErrors.size());
+        form.validatePurposeOfLoanForGlim(actionErrors, Arrays.asList(fieldConfigMock));
+        Assert.assertEquals(1, actionErrors.size());
+        verify(fieldConfigMock);
+    }
+
+    public void testShouldntAddErrorIfPurposeOfLoanIsEmpty() throws Exception {
+        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
+                LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY));
+        form.setClients(Arrays.asList("1"));
+        form.validatePurposeOfLoanForGlim(actionErrors, Collections.<FieldConfigurationEntity>emptyList());
+        Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldValidateIfPurposeOfLoanIsValid() throws Exception {
+        FieldConfigurationEntity fieldConfigMock = createMock(FieldConfigurationEntity.class);
+        expect(fieldConfigMock.getFieldName()).andReturn(LoanConstants.PURPOSE_OF_LOAN);
+        replay(fieldConfigMock);
         form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE));
         form.setClients(Arrays.asList("1"));
-        form.validatePurposeOfLoanForGlim(actionErrors);
-       Assert.assertEquals(0, actionErrors.size());
+        form.validatePurposeOfLoanForGlim(actionErrors, Arrays.asList(fieldConfigMock));
+        Assert.assertEquals(0, actionErrors.size());
+        verify(fieldConfigMock);
     }
 
     public void testShouldRemoveClientDetailsIfNoMatchingEntryFoundInClients() throws Exception {

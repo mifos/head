@@ -52,8 +52,8 @@ explanation of the license and how it is applied.
                 <td width="31%" class="drawtablerowboldnolinebg"><font color="#FF0000">*</font>&nbsp;<mifos:mifoslabel
                     name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
                     name="loan.amt" /></td>
-                <td width="35%" class="drawtablerowboldnolinebg"><font color="#FF0000">*</font>&nbsp;<mifos:mifoslabel
-                    name="loan.business_work_act" /> <mifos:mifoslabel
+                <td width="35%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
+                    name="loan.business_work_act" keyhm="Loan.PurposeOfLoan" /> <mifos:mifoslabel
                     name="${ConfigurationConstants.LOAN}" /></td>
             </tr>
             <script type="text/javascript">var CLIENTS_COUNT = 0;</script>

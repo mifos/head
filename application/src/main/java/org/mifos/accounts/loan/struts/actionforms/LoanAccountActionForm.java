@@ -722,7 +722,9 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateCustomFields(request, errors);
         performGlimSpecificValidations(errors, request);
         validateRepaymentDayRequired(errors);
-        validatePurposeOfLoanFields(errors, getMandatoryFields(request));
+        if (!configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
+            validatePurposeOfLoanFields(errors, getMandatoryFields(request));
+        }
         validateSourceOfFundFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale);
         validateInterest(errors, locale);
@@ -746,7 +748,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             removeClientsNotCheckedInForm(request);
             validateIndividualLoanFieldsForGlim(errors, locale);
             validateSelectedClients(errors);
-            validatePurposeOfLoanForGlim(errors);
+            validatePurposeOfLoanForGlim(errors, getMandatoryFields(request));
         }
     }
 
@@ -799,7 +801,10 @@ public class LoanAccountActionForm extends BaseActionForm {
         return params;
     }
 
-    void validatePurposeOfLoanForGlim(ActionErrors errors) {
+    void validatePurposeOfLoanForGlim(ActionErrors errors, List<FieldConfigurationEntity> mandatoryFields) {
+        if (!isPurposeOfLoanMandatory(mandatoryFields)) {
+            return;
+        }
         List<String> ids_clients_selected = getClients();
         List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
 
