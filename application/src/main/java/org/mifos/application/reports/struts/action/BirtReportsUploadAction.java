@@ -67,6 +67,7 @@ import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.config.ConfigurationManager;
 
 public class BirtReportsUploadAction extends BaseAction {
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER);
@@ -172,13 +173,21 @@ public class BirtReportsUploadAction extends BaseAction {
     private static String getServletRoot(ActionServlet servlet) {
         return servlet.getServletContext().getRealPath("/");
     }
+
+    public static String getUploadStorageDirectory() {
+        return ConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
+                "$HOME/.mifos/uploads").replaceFirst("\\$HOME", System.getProperty("user.home"));
+    }
     
-    public static String getCustomReportStorageDirectory(ActionServlet servlet) {
-        return getServletRoot(servlet) + "report";
+    public static String getCustomReportStorageDirectory() {
+        return getUploadStorageDirectory().endsWith("/") ?
+                getUploadStorageDirectory() + "report" : getUploadStorageDirectory() + "/report";
     }
 
     private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
-        File file = new File(getCustomReportStorageDirectory(getServlet()), formFile.getFileName());
+        File dir = new File(getCustomReportStorageDirectory());
+        dir.mkdirs();
+        File file = new File(dir, formFile.getFileName());
         InputStream is = formFile.getInputStream();
         OutputStream os;
         /*

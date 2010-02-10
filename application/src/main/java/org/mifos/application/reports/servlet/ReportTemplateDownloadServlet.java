@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
+import org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploadAction;
 import org.mifos.application.reports.business.ReportsBO;
 
 public class ReportTemplateDownloadServlet extends HttpServlet {
@@ -46,7 +47,7 @@ public class ReportTemplateDownloadServlet extends HttpServlet {
         else
             isReportAnAdminDocument = true;
 
-        File dir = new File(getServletContext().getRealPath("/") + realPath);
+        File dir = new File(BirtAdminDocumentUploadAction.getUploadStorageDirectory(), realPath);
         String reportFileName = "";
         if (isReportAnAdminDocument)
             reportFileName = ((AdminDocumentBO) request.getSession().getAttribute("reportsBO"))
@@ -56,6 +57,10 @@ public class ReportTemplateDownloadServlet extends HttpServlet {
                     .getReportJasper();
 
         File file = new File(dir, reportFileName);
+
+        if (!file.exists()) {
+            file = new File(new File(getServletContext().getRealPath("/") + realPath), reportFileName);
+        }
 
         BufferedInputStream is = new BufferedInputStream(new FileInputStream(file));
         response.setContentType("application/x-msdownload;charset=UTF-8");

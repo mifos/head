@@ -22,6 +22,7 @@ package org.mifos.application.reports.struts.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploadAction;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParamsMap;
@@ -141,6 +143,14 @@ public class ReportsUserParamsAction extends BaseAction {
                 .getAdminDocumentName();
         String filename = new AdminDocumentPersistence().getAdminDocumentById((short) reportId)
                 .getAdminDocumentIdentifier();
+        File file = new File(BirtAdminDocumentUploadAction.getAdminDocumentStorageDirectory(), filename);
+
+        if (file.exists()) {
+            filename = file.getAbsolutePath();
+        }
+        else {
+            filename = "adminReport/" + filename; 
+        }
         if (filename.endsWith(".rptdesign")) {
             request.setAttribute("reportFile", filename);
             request.setAttribute("reportName", reportName);
@@ -173,6 +183,14 @@ public class ReportsUserParamsAction extends BaseAction {
         if (reports.size() > 0) {
             ReportsJasperMap reportFile = reports.get(0);
             String filename = reportFile.getReportJasper();
+            File file = new File(BirtReportsUploadAction.getCustomReportStorageDirectory(), filename);
+
+            if (file.exists()) {
+                filename = file.getAbsolutePath();
+            }
+            else {
+                filename = "report/" + filename;
+            }
             if (filename.endsWith(".rptdesign")) {
                 request.setAttribute("reportFile", filename);
                 request.setAttribute("reportName", reportName);

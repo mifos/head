@@ -50,7 +50,7 @@ public class SystemInfoAction extends BaseAction {
             DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
             ServletContext context = request.getSession().getServletContext();
             SystemInfo systemInfo = new SystemInfo(metaData, context, Localization.getInstance().getMainLocale(), true);
-            systemInfo.setCustomReportsDir(BirtReportsUploadAction.getCustomReportStorageDirectory(getServlet()));
+            systemInfo.setCustomReportsDir(BirtReportsUploadAction.getCustomReportStorageDirectory());
             SessionUtils.setAttribute("systemInfo", systemInfo, request.getSession());
             return mapping.findForward(ActionForwards.load_success.toString());
         } finally {

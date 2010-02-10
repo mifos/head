@@ -70,6 +70,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.ConfigurationManager;
 
 public class BirtAdminDocumentUploadAction extends BaseAction {
 
@@ -222,12 +223,20 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         return servlet.getServletContext().getRealPath("/");
     }
     
-    public static String getAdminDocumentStorageDirectory(ActionServlet servlet) {
-        return getServletRoot(servlet) + "adminReport";
+    public static String getUploadStorageDirectory() {
+        return ConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
+                "$HOME/.mifos/uploads").replaceFirst("\\$HOME", System.getProperty("user.home"));
+    }
+
+    public static String getAdminDocumentStorageDirectory() {
+        return getUploadStorageDirectory().endsWith("/") ?
+                getUploadStorageDirectory() + "adminReport" : getUploadStorageDirectory() + "/adminReport";
     }
 
     private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
-        File file = new File(getAdminDocumentStorageDirectory(getServlet()), formFile.getFileName());
+        File dir = new File(getAdminDocumentStorageDirectory());
+        dir.mkdirs();
+        File file = new File(dir, formFile.getFileName());
         InputStream is = formFile.getInputStream();
         OutputStream os;
         /*
