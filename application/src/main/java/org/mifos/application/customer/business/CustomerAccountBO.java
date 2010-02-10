@@ -180,9 +180,8 @@ public class CustomerAccountBO extends AccountBO {
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
 
         Money totalPaid = paymentData.getTotalAmount();
-        final Money zeroBalance = new Money(totalPaid.getCurrency(), "0.0");
 
-        if (totalPaid.equals(zeroBalance)) {
+        if (totalPaid.isZero()) {
             throw new AccountException("errors.update",
                     new String[] { "Attempting to pay a customer account balance of zero for customer: "
                             + paymentData.getCustomer().getGlobalCustNum() });

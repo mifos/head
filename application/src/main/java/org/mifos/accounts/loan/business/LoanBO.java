@@ -2485,7 +2485,7 @@ public class LoanBO extends AccountBO {
     @Override
     public boolean paymentAmountIsValid(final Money amount) {
         Money totalRepayableAmount = getTotalRepayableAmount();
-        return (null != amount) && (!amount.isLessThan(new Money(getCurrency(), "0.0")))
+        return (null != amount) && (!amount.isLessThanZero())
                 && (amount.isLessThan(totalRepayableAmount) || amount.equals(totalRepayableAmount));
     }
 
@@ -2510,7 +2510,7 @@ public class LoanBO extends AccountBO {
                 totalAmount = totalAmount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
             }
         }
-        if (totalAmount.isGreaterThan(new Money(totalAmount.getCurrency(), "0"))) {
+        if (totalAmount.isGreaterThanZero()) {
             addAccountPaymentToNextInstallmentIfNecessary(paymentData, totalAmount);
         }
     }
