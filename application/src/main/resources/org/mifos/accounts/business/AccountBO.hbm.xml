@@ -111,7 +111,7 @@
 			</property>
 
 			<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
-				class="org.mifos.application.productdefinition.business.LoanOfferingBO"
+				class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 				unique="true" cascade="none" insert="true" update="false" access="field" />
 			<many-to-one name="fund" column="FUND_ID"
 				class="org.mifos.application.fund.business.FundBO" cascade="all"
@@ -120,7 +120,7 @@
 				access="field" class="org.mifos.application.meeting.business.MeetingBO"
 				unique="true" insert="true" cascade="all" />
 			<many-to-one name="gracePeriodType" column="GRACE_PERIOD_TYPE_ID"
-				class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity"
+				class="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"
 				unique="true" cascade="none" insert="true" update="true" />
 			<many-to-one name="interestType" column="INTEREST_TYPE_ID"
 				class="org.mifos.application.master.business.InterestTypesEntity"
@@ -210,15 +210,15 @@
 				class="org.mifos.application.meeting.business.MeetingBO" cascade="all"
 				insert="true" update="true" unique="true" />
 			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID"
-				class="org.mifos.application.productdefinition.business.InterestCalcTypeEntity" />
+				class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" />
 			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID"
-				class="org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity"
+				class="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"
 				insert="true" update="false" cascade="none" />
 			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID"
-				class="org.mifos.application.productdefinition.business.SavingsTypeEntity"
+				class="org.mifos.accounts.productdefinition.business.SavingsTypeEntity"
 				insert="true" update="false" cascade="none" />
 			<many-to-one name="savingsOffering" column="PRD_OFFERING_ID"
-				class="org.mifos.application.productdefinition.business.SavingsOfferingBO"
+				class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO"
 				unique="true" cascade="none" insert="true" update="false" />
 			<one-to-one name="savingsPerformance"
 				class="org.mifos.accounts.savings.business.SavingsPerformanceEntity"
@@ -266,9 +266,9 @@
 	</query>
 
 	<query name="accounts.getApplicableSavingsProductOfferings">
-		<![CDATA[select new org.mifos.application.productdefinition.util.helpers.PrdOfferingView(
+		<![CDATA[select new org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView(
 			prdOffering.prdOfferingId,prdOffering.prdOfferingName,prdOffering.globalPrdOfferingNum) 
-			from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering
+			from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
 			where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus.offeringStatusId = :prdStatus
 			and prdOffering.prdApplicableMaster.id = :prdApplicableMaster 
 			order by prdOffering.prdOfferingName

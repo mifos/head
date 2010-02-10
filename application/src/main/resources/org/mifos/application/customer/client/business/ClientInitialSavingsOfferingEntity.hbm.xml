@@ -14,7 +14,7 @@
             class="org.mifos.application.customer.client.business.ClientBO" 
             insert="true" update="true" access="field"/>
         <many-to-one name="savingsOffering" column="PRD_OFFERING_ID" 
-            class="org.mifos.application.productdefinition.business.SavingsOfferingBO" 
+            class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO" 
             insert="true" update="true" access="field"/>
     </class>    
 </hibernate-mapping>

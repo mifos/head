@@ -33,7 +33,7 @@ import org.mifos.application.fund.business.service.FundBusinessService;
 import org.mifos.application.fund.struts.actionforms.FundActionForm;
 import org.mifos.application.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;

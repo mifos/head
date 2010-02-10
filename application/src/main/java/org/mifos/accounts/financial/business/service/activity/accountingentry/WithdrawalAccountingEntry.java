@@ -28,7 +28,7 @@ import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 

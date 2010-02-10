@@ -31,7 +31,7 @@ public interface LoggerConstants {
     String LOGINLOGGER = "org.mifos.application.login";
 
     /** Product Definition logger name */
-    String PRDDEFINITIONLOGGER = "org.mifos.application.productdefinition";
+    String PRDDEFINITIONLOGGER = "org.mifos.accounts.productdefinition";
 
     String CUSTOMERSEARCHLOGGER = "org.mifos.application.customersearch";
 

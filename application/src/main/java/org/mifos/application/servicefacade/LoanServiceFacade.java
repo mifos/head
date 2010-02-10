@@ -24,7 +24,7 @@ import java.util.List;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 
 /**
  * service facade for {@link LoanBO} functionality.

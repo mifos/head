@@ -48,10 +48,10 @@ import org.mifos.application.admindocuments.persistence.AdminDocAccStateMixPersi
 import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.application.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.application.admindocuments.util.helpers.AdminDocumentsContants;
-import org.mifos.application.productdefinition.business.ProductTypeEntity;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
-import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 
 import org.mifos.application.reports.business.service.ReportsBusinessService;
 

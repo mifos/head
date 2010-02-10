@@ -26,9 +26,9 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;

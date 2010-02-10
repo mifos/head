@@ -20,7 +20,7 @@
 
 package org.mifos.application.customer.client.business;
 
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class ClientInitialSavingsOfferingEntity extends PersistentObject {

@@ -75,12 +75,12 @@
     <data-sources>
         <script-data-source name="Scripted Data Source" id="4">
             <method name="open"><![CDATA[var logger = Packages.java.util.logging.Logger.getLogger("");
-Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();
+Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();
 var userId = reportContext.getParameterValue("userId");
 reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
 reportsDataService.initialize(userId);]]></method>
             <method name="close"><![CDATA[reportsDataService = null;
-Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
+Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
         </script-data-source>
     </data-sources>
     <data-sets>

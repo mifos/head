@@ -57,7 +57,7 @@ public interface AuditConstants {
     public static final String CANCEL = "cancel";
     public String PERSONNELSTATUSPATH = "org.mifos.application.personnel.business.PersonnelStatusEntity";
     public String PERSONNELLEVELPATH = "org.mifos.application.personnel.business.PersonnelLevelEntity";
-    public String PRDSTATUSPATH = "org.mifos.application.productdefinition.business.PrdStatusEntity";
+    public String PRDSTATUSPATH = "org.mifos.accounts.productdefinition.business.PrdStatusEntity";
     public static final String HIDDEN_PASSWORD = "********";
     public static final String Audit_PASSWORD = "encryptedPassword";
 

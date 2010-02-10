@@ -26,7 +26,7 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.application.checklist.exceptions.CheckListException;
 import org.mifos.application.checklist.persistence.CheckListPersistence;
 import org.mifos.application.checklist.util.helpers.CheckListType;
-import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class AccountCheckListBO extends CheckListBO {

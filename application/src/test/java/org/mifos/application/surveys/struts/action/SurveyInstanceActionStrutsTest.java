@@ -56,7 +56,7 @@ import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.business.PPISurveyInstance;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.ppi.persistence.PPIPersistence;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;

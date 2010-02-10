@@ -26,9 +26,9 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.LoanProductBuilder;
-import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.framework.TestUtils;
 
 /**

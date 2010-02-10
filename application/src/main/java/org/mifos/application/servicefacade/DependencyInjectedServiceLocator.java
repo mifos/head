@@ -37,8 +37,8 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.productdefinition.business.LoanProductDaoHibernate;
-import org.mifos.application.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.business.LoanProductDaoHibernate;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 
 /**
  * I contain static factory methods for locating/creating application services.

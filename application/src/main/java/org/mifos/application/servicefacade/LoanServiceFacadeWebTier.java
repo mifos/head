@@ -28,8 +28,8 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.CustomerDao;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 
 /**
  * Implementation of {@link LoanServiceFacade} for web application usage.

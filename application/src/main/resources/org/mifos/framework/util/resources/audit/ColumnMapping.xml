@@ -566,7 +566,7 @@
 
 	</entityType>
 
-	<entityType name="LoanProduct" classPath="org.mifos.application.productdefinition.business.LoanOfferingBO">
+	<entityType name="LoanProduct" classPath="org.mifos.accounts.productdefinition.business.LoanOfferingBO">
 
 		<entitiesToLog>
 			<entity name="prdCategory"/>
@@ -589,13 +589,13 @@
 
 		<propertyName name="gracePeriodType" displayKey="LoanProduct.gracePeriodType.gracePeriodTypeId" doNotLog="No" lookUp="yes">
 			<entityName name="GracePeriodTypes">
-				<classPath  path="org.mifos.application.productdefinition.business.GracePeriodTypeEntity"/>
+				<classPath  path="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"/>
 			</entityName>
 		</propertyName>
 
 		<propertyName name="prdApplicableMaster" displayKey="LoanProduct.prdApplicableMaster.prdApplicableMasterId" doNotLog="No" lookUp="yes">
 			<entityName name="PrdApplicableMaster">
-				<classPath  path="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity"/>
+				<classPath  path="org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity"/>
 			</entityName>
 		</propertyName>
 
@@ -682,7 +682,7 @@
 
 	</entityType>
 
-	<entityType name="SavingsProduct" classPath="org.mifos.application.productdefinition.business.SavingsOfferingBO">
+	<entityType name="SavingsProduct" classPath="org.mifos.accounts.productdefinition.business.SavingsOfferingBO">
 
 		<entitiesToLog>
 			<entity name="prdCategory"/>
@@ -703,25 +703,25 @@
 
 		<propertyName name="prdApplicableMaster" displayKey="LoanProduct.prdApplicableMaster.prdApplicableMasterId" doNotLog="No" lookUp="yes">
 			<entityName name="PrdApplicableMaster">
-				<classPath  path="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity"/>
+				<classPath  path="org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity"/>
 			</entityName>
 		</propertyName>
 
 		<propertyName name="savingsType" displayKey="SavingsProduct.savingsType.savingsTypeId" doNotLog="No" lookUp="yes">
 			<entityName name="SavingsType">
-				<classPath  path="org.mifos.application.productdefinition.business.SavingsTypeEntity"/>
+				<classPath  path="org.mifos.accounts.productdefinition.business.SavingsTypeEntity"/>
 			</entityName>
 		</propertyName>
 
 		<propertyName name="recommendedAmntUnit" displayKey="SavingsProduct.recommendedAmntUnit.recommendedAmntUnitId" doNotLog="No" lookUp="yes">
 			<entityName name="RecommendedAmtUnit">
-				<classPath  path="org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity"/>
+				<classPath  path="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"/>
 			</entityName>
 		</propertyName>
 
 		<propertyName name="interestCalcType" displayKey="SavingsProduct.BalanceusedforInterestratecalculation" doNotLog="No" lookUp="yes">
 			<entityName name="InterestCalcRule">
-				<classPath  path="org.mifos.application.productdefinition.business.InterestCalcTypeEntity"/>
+				<classPath  path="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity"/>
 			</entityName>
 		</propertyName>
 

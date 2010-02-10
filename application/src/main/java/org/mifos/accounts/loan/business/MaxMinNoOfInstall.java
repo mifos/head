@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.mifos.application.productdefinition.business.InstallmentRange;
+import org.mifos.accounts.productdefinition.business.InstallmentRange;
 
 /**
  * this class is used for saving max min no of installmment with the loan

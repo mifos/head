@@ -33,7 +33,7 @@
 
 		<joined-subclass name="org.mifos.application.checklist.business.AccountCheckListBO" table="PRD_CHECKLIST">
 			<key column="CHECKLIST_ID" />
-			<many-to-one name="productTypeEntity" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" insert="true" update="true" unique="true" not-null="true" />
+			<many-to-one name="productTypeEntity" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" insert="true" update="true" unique="true" not-null="true" />
 			<many-to-one name="accountStateEntity" column="ACCOUNT_STATUS" class="org.mifos.accounts.business.AccountStateEntity" not-null="true" />
 		</joined-subclass>
 
@@ -55,7 +55,7 @@
 		<![CDATA[select new org.mifos.application.checklist.util.helpers.CheckListMasterView(cl.id,le.entityType) from org.mifos.application.customer.business.CustomerLevelEntity as cl,org.mifos.application.master.business.LookUpEntity as le where cl.lookUpValue.lookUpId=le.entityId ]]>
 	</query>
 	<query name="masterdata.product_checklist">
-		<![CDATA[select new org.mifos.application.checklist.util.helpers.CheckListMasterView(pt.productTypeID,lv.lookUpName) from org.mifos.application.productdefinition.business.ProductTypeEntity as pt,org.mifos.application.master.business.LookUpValueEntity as lv where pt.lookUpValue.lookUpId=lv.lookUpId ]]>
+		<![CDATA[select new org.mifos.application.checklist.util.helpers.CheckListMasterView(pt.productTypeID,lv.lookUpName) from org.mifos.accounts.productdefinition.business.ProductTypeEntity as pt,org.mifos.application.master.business.LookUpValueEntity as lv where pt.lookUpValue.lookUpId=lv.lookUpId ]]>
 	</query>
     <query name="customer.validateState">
     	<![CDATA[select count(*) from org.mifos.application.checklist.business.CustomerCheckListBO as ccl where ccl.customerLevel.id=:levelId and ccl.customerStatus.id=:stateId ]]>

@@ -28,7 +28,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;

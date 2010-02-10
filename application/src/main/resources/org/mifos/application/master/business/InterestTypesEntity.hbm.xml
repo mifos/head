@@ -11,7 +11,7 @@
             <generator class="native"/>
         </id>
         <property name="descripton" column="DESCRIPTON" type="string" />
-        <many-to-one name="productType" column="CATEGORY_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity"  not-null="true" />
+        <many-to-one name="productType" column="CATEGORY_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity"  not-null="true" />
         <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" insert="true" update="false"/>
     </class>
 </hibernate-mapping>

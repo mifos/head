@@ -23,7 +23,7 @@ package org.mifos.framework.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 
 public class MifosSelectHelper {
 
@@ -31,7 +31,7 @@ public class MifosSelectHelper {
 
     private MifosSelectHelper() {
         map.put(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, new String[] {
-                "org.mifos.application.productdefinition.business.PrdStatusEntity",
+                "org.mifos.accounts.productdefinition.business.PrdStatusEntity",
                 ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID });
     }
 

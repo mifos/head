@@ -17,9 +17,9 @@
 		<mapping resource="org/mifos/framework/security/util/officeSearch.hbm.xml" />
 		<mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />
 		<!-- Product Definition -->
-		<mapping resource="org/mifos/application/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
 		<!-- Product Mix -->
-		<mapping resource="org/mifos/application/productsmix/business/ProductMixBO.hbm.xml" />	
+		<mapping resource="org/mifos/accounts/productsmix/business/ProductMixBO.hbm.xml" />	
 
 		<!-- Audit Log -->
 		<mapping resource="org/mifos/framework/components/fieldConfiguration/business/EntityMaster.hbm.xml" />
@@ -82,26 +82,26 @@
 
 		<!-- M2 style objects for Product offering-->
 
-		<mapping resource="org/mifos/application/productdefinition/business/GracePeriodTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/LoanOfferingFundEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/PrdOfferingBO.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/LoanOfferingFeesEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/PrdOfferingMeetingEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/PrdPmntTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/PrdStateEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/PrdStatusEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/ProductCategoryBO.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/ProductTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/SavingsTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/InterestCalcTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/RecommendedAmntUnitEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/PrdApplicableMasterEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/LoanAmountFromLastLoanAmountBO.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/NoOfInstallFromLastLoanAmountBO.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/LoanAmountFromLoanCycleBO.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/NoOfInstallFromLoanCycleBO.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/LoanAmountSameForAllLoanBO.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/business/NoOfInstallSameForAllLoanBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/GracePeriodTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/LoanOfferingFundEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/PrdOfferingBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/LoanOfferingFeesEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/PrdOfferingMeetingEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/PrdPmntTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/PrdStateEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/PrdStatusEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/ProductCategoryBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/ProductTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/SavingsTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/InterestCalcTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/RecommendedAmntUnitEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/PrdApplicableMasterEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/LoanAmountFromLastLoanAmountBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/NoOfInstallFromLastLoanAmountBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/LoanAmountFromLoanCycleBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/NoOfInstallFromLoanCycleBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/LoanAmountSameForAllLoanBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/productdefinition/business/NoOfInstallSameForAllLoanBO.hbm.xml" />
 			
 		<!--M2 style object for GLCODE-->
 		<mapping resource="org/mifos/accounts/financial/business/GLCodeEntity.hbm.xml" />

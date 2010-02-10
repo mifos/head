@@ -32,7 +32,7 @@ import org.mifos.application.checklist.util.helpers.CheckListMasterView;
 import org.mifos.application.checklist.util.helpers.CheckListStatesView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;

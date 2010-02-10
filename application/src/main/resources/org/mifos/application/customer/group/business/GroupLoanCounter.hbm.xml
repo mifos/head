@@ -9,6 +9,6 @@
 		</id>
         <property name="loanCycleCounter" column="LOAN_CYCLE_COUNTER" access="field"/>   
 		<many-to-one name="groupPeformanceHistory" column="GROUP_PERF_ID" class="org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity" access="field" />
-		<many-to-one name="loanOffering" column="LOAN_OFFERING_ID" class="org.mifos.application.productdefinition.business.LoanOfferingBO" access="field" cascade="none"/>		
+		<many-to-one name="loanOffering" column="LOAN_OFFERING_ID" class="org.mifos.accounts.productdefinition.business.LoanOfferingBO" access="field" cascade="none"/>		
     </class>    
 </hibernate-mapping>

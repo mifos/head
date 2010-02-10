@@ -31,7 +31,7 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 

@@ -75,9 +75,9 @@
 var userId = reportContext.getParameterValue("userId");
 reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
 reportsDataService.initialize(userId);
-Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();]]></method>
+Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();]]></method>
             <method name="close"><![CDATA[reportsDataService = null;
-Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
+Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
         </script-data-source>
     </data-sources>
     <data-sets>

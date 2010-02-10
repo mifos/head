@@ -37,7 +37,7 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationIssueBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

@@ -22,8 +22,8 @@ package org.mifos.application.customer.group.business;
 
 import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.Transformer;
 

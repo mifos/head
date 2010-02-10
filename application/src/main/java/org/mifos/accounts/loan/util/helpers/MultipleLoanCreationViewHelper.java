@@ -26,8 +26,8 @@ import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.productdefinition.business.LoanAmountOption;
-import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.LoanAmountOption;
+import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 
 public class MultipleLoanCreationViewHelper {
 

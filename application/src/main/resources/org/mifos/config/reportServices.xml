@@ -24,11 +24,11 @@
 	<bean id="accountBusinessService"
 		class="org.mifos.accounts.business.service.AccountBusinessService" />
 	<bean id="savingsPrdBusinessService"
-		class="org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService" />
+		class="org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService" />
 	<bean id="loanPrdBusinessService"
-		class="org.mifos.application.productdefinition.business.service.LoanPrdBusinessService" />
+		class="org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService" />
 	<bean id="prdOfferingPersistence"
-		class="org.mifos.application.productdefinition.persistence.PrdOfferingPersistence" />
+		class="org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence" />
 	<bean id="branchReportPersistence"
 		class="org.mifos.application.branchreport.persistence.BranchReportPersistence" />
 	<bean id="branchCashConfirmationReportPersistence"

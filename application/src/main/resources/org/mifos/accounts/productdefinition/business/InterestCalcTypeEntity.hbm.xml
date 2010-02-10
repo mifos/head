@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" table="INTEREST_CALCULATION_TYPES">
+		<id name="id" column="INTEREST_CALCULATION_TYPE_ID">
+			<generator class="native" />
+		</id>
+
+		<many-to-one name="lookUpValue" column="INTEREST_CALCULATION_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+	</class>
+</hibernate-mapping>

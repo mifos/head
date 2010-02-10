@@ -12,7 +12,7 @@
 		</id>
 		<property name="optional" column="CURRENTLY_IN_USE" type="short" />
 		<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
-		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" cascade="none" update="false" unique="true" access="field"/>
+		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" cascade="none" update="false" unique="true" access="field"/>
 
 		<set name="flagSet" table="ACCOUNT_STATE_FLAG">
 			<key column="STATUS_ID" />

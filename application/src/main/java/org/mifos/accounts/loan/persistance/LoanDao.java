@@ -34,7 +34,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.persistence.DataAccessObject;

@@ -26,10 +26,10 @@ import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import junit.framework.Assert;
 
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ConfigServiceInitializationException;
 import org.mifos.framework.util.helpers.FilePaths;

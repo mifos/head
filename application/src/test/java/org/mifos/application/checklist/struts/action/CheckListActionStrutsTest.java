@@ -34,7 +34,7 @@ import org.mifos.application.checklist.util.helpers.CheckListStatesView;
 import org.mifos.application.checklist.util.helpers.CheckListType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;

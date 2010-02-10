@@ -29,7 +29,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 
 public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
     @Override

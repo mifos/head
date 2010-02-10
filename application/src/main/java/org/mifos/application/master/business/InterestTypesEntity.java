@@ -20,8 +20,8 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.application.productdefinition.business.ProductTypeEntity;
-import org.mifos.application.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 
 public class InterestTypesEntity extends MasterDataEntity {
     private java.lang.String descripton;

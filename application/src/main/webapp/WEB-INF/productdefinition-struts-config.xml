@@ -5,22 +5,22 @@
     <form-beans>
         <!-- Product Configuration -->
         <form-bean name="prdconfactionform"
-                   type="org.mifos.application.productdefinition.struts.actionforms.PrdConfActionForm"/>
+                   type="org.mifos.accounts.productdefinition.struts.actionforms.PrdConfActionForm"/>
         <!-- Loan Product -->
         <form-bean name="loanproductactionform"
-                   type="org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm"/>
+                   type="org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm"/>
         <!-- Savings Product -->
         <form-bean name="savingsproductactionform"
-                   type="org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm"/>
+                   type="org.mifos.accounts.productdefinition.struts.actionforms.SavingsPrdActionForm"/>
         <!-- M2 Product Category -->
         <form-bean name="productCategoryActionForm"
-                   type="org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm"/>
+                   type="org.mifos.accounts.productdefinition.struts.actionforms.PrdCategoryActionForm"/>
     </form-beans>
 
     <action-mappings>
         <!-- Product Configuration -->
         <action path="/prdconfaction" name="prdconfactionform"
-                type="org.mifos.application.productdefinition.struts.action.PrdConfAction"
+                type="org.mifos.accounts.productdefinition.struts.action.PrdConfAction"
                 input="/prdconfaction.do?method=validate" parameter="method" validate="true">
             <forward name="update_success" path="/AdminAction.do?method=load"/>
             <forward name="load_success" path="/pages/application/productdefinition/jsp/editLatenessDormancy.jsp"/>
@@ -30,7 +30,7 @@
 
         <!-- Loan Product -->
         <action path="/loanproductaction" name="loanproductactionform"
-                type="org.mifos.application.productdefinition.struts.action.LoanPrdAction"
+                type="org.mifos.accounts.productdefinition.struts.action.LoanPrdAction"
                 input="/loanproductaction.do?method=validate" parameter="method" validate="true" scope="session">
             <forward name="load_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"/>
             <forward name="preview_success"
@@ -69,7 +69,7 @@
         </action>
         <!-- Savings Product -->
         <action path="/savingsproductaction" name="savingsproductactionform"
-                type="org.mifos.application.productdefinition.struts.action.SavingsPrdAction"
+                type="org.mifos.accounts.productdefinition.struts.action.SavingsPrdAction"
                 input="/savingsproductaction.do?method=validate" parameter="method" validate="true" scope="session">
             <forward name="load_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"/>
             <forward name="load_failure" path="/pages/framework/jsp/error.jsp"/>
@@ -104,7 +104,7 @@
         </action>
 
         <!-- M2 Product Category -->
-		<action path="/productCategoryAction" name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.action.PrdCategoryAction" input="/productCategoryAction.do?method=validate" parameter="method" validate="true" scope="session">
+		<action path="/productCategoryAction" name="productCategoryActionForm" type="org.mifos.accounts.productdefinition.struts.action.PrdCategoryAction" input="/productCategoryAction.do?method=validate" parameter="method" validate="true" scope="session">
 
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
 			<forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>

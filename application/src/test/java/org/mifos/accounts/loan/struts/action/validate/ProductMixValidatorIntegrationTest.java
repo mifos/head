@@ -34,8 +34,8 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 

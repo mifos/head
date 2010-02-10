@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.util.helpers.Money;
 
 /**

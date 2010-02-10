@@ -51,7 +51,7 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 

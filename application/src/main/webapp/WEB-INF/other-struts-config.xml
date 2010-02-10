@@ -56,7 +56,7 @@
 
         <!-- Products mix -->
         <form-bean name="productMixActionForm"
-                   type="org.mifos.application.productsmix.struts.actionforms.ProductMixActionForm"/>
+                   type="org.mifos.accounts.productsmix.struts.actionforms.ProductMixActionForm"/>
         <!-- End Products mix -->
         <!--  Accepted Payment Type Form -->
         <form-bean name="acceptedpaymenttypeactionform"
@@ -71,7 +71,7 @@
     <action-mappings>
         <!-- Products mix -->
         <action path="/productMixAction"
-                type="org.mifos.application.productsmix.struts.action.ProductMixAction"
+                type="org.mifos.accounts.productsmix.struts.action.ProductMixAction"
                 name="productMixActionForm"
                 parameter="method"
                 scope="session"

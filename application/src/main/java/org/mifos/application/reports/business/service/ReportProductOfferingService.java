@@ -20,10 +20,10 @@
 
 package org.mifos.application.reports.business.service;
 
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.framework.business.service.ConfigService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.core.io.Resource;

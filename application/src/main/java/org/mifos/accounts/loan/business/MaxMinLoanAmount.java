@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.mifos.application.productdefinition.business.AmountRange;
+import org.mifos.accounts.productdefinition.business.AmountRange;
 
 /**
  * this class is used for persisting the max min loan amount with account
