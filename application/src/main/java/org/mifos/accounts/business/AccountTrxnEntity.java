@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -69,8 +68,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
     private final AccountTrxnEntity relatedTrxn;
 
     protected AccountTrxnEntity() {
-        createdDate = new DateTimeService().getCurrentJavaDateTime();
-        trxnCreatedDate = new Timestamp(createdDate.getTime());
+        trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentJavaDateTime().getTime());
         financialTransactions = new HashSet<FinancialTransactionBO>();
         accountActionEntity = null;
         installmentId = null;
@@ -98,7 +96,6 @@ public abstract class AccountTrxnEntity extends PersistentObject {
             final Short installmentId, final Date dueDate, final PersonnelBO personnel, final CustomerBO customer, final Date actionDate,
             final Money amount, final String comments, final AccountTrxnEntity relatedTrxn, final Persistence persistence,
             final Date transactionCreatedDate) {
-        createdDate = new DateTimeService().getCurrentJavaDateTime();
         trxnCreatedDate = new Timestamp(transactionCreatedDate.getTime());
         financialTransactions = new HashSet<FinancialTransactionBO>();
         this.account = accountPayment.getAccount();

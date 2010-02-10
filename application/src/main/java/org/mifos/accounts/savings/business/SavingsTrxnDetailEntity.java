@@ -69,9 +69,9 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 
     public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
             AccountActionTypes accountActionType, Money amount, Money balance, PersonnelBO createdBy,
-            java.util.Date dueDate, java.util.Date transactionDate, Short installmentId, String comment,
+            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment,
             Persistence persistence, java.util.Date postingDate) {
-        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, transactionDate,
+        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate,
                 amount, comment, null, persistence, postingDate);
         this.balance = balance;
         MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();

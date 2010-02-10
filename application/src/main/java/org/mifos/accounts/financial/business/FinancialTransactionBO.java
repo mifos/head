@@ -26,7 +26,6 @@ import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class FinancialTransactionBO extends BusinessObject {
@@ -71,13 +70,6 @@ public class FinancialTransactionBO extends BusinessObject {
         this.balanceAmount = null;
         this.notes = null;
         this.debitCreditFlag = null;
-    }
-
-    public FinancialTransactionBO(AccountTrxnEntity accountTrxn, FinancialTransactionBO relatedFinancialTrxn,
-    FinancialActionBO financialAction, GLCodeEntity glcode, Date actionDate, PersonnelBO postedBy,
-    Short accountingUpdated, Money postedAmount, String notes, Short debitCreditFlag) {
-        this(accountTrxn, relatedFinancialTrxn, financialAction, glcode, actionDate, postedBy,
-                accountingUpdated, postedAmount, notes, debitCreditFlag, new DateTimeService().getCurrentJavaDateTime());
     }
 
     public FinancialTransactionBO(AccountTrxnEntity accountTrxn, FinancialTransactionBO relatedFinancialTrxn,
