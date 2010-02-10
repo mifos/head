@@ -419,13 +419,12 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetail : getAccountFeesActionDetails()) {
             feesPaid = feesPaid.add(accountFeesActionDetail.getFeeAmountPaid());
         }
-        return !feesPaid.equals(new Money(getCurrency(),"0.0"));
+        return feesPaid.isNonZero();
     }
 
     public boolean isPaymentApplied() {
-        Money zero = new Money(getCurrency(),"0.0");
-        return !getPrincipalPaid().equals(zero) || !getInterestPaid().equals(zero) || !getMiscFeePaid().equals(zero)
-                || !getMiscPenaltyPaid().equals(zero) || isPaymentAppliedToAccountFees();
+        return getPrincipalPaid().isNonZero() || getInterestPaid().isNonZero() || getMiscFeePaid().isNonZero()
+                || getMiscPenaltyPaid().isNonZero() || isPaymentAppliedToAccountFees();
     }
 
 }

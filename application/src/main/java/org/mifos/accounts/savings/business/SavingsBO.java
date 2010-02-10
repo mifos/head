@@ -762,9 +762,9 @@ public class SavingsBO extends AccountBO {
                         continue;
                     } else if (actionType.equals(AccountActionTypes.SAVINGS_ADJUSTMENT)) {
                         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) currentTrxn;
-                        if (!savingsTrxn.getDepositAmount().equals(new Money(getCurrency(), "0"))) {
+                        if (savingsTrxn.getDepositAmount().isNonZero()) {
                             minBal = minBal.add(currentTrxn.getAmount());
-                        } else if (!savingsTrxn.getWithdrawlAmount().equals(new Money(getCurrency(), "0"))) {
+                        } else if (savingsTrxn.getWithdrawlAmount().isNonZero()) {
                             minBal = minBal.subtract(currentTrxn.getAmount());
                         }
                         continue;
