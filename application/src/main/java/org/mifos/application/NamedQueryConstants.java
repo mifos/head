@@ -489,7 +489,6 @@ public interface NamedQueryConstants {
     public String GET_ENTITY_MASTER = "getEntityMaster";
 
     public String GET_PAYMENT_TYPES = "getPaymentTypes";
-    public String GET_YESTERDAYS_INSTALLMENT_FOR_ACTIVE_CUSTOMERS = "getYesterdaysInstallmentForActiveCustomers";
     public String CUSTOMER_SCHEDULE_GET_SCHEDULE_FOR_IDS = "customerScheduleEntity.getScheduleForIds";
     public String GET_UPDATED_CUSTOMER_MEETINGS = "getUpdatedMeetings";
     public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE = "accounts.countOfMissedDepositsPaidAfterDueDate";

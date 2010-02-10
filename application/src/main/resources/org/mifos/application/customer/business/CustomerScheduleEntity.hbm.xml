@@ -46,13 +46,18 @@
 
 	</class>
 	
-	<query name="getYesterdaysInstallmentForActiveCustomers">
+	<query name="getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate">
 		<![CDATA[
-		select accountActionDateEntity.account.accountId
-		  from org.mifos.application.customer.business.CustomerScheduleEntity accountActionDateEntity
-		 where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID
-		   and accountActionDateEntity.customer.customerStatus.id in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE)
-		   and accountActionDateEntity.actionDate=date(:CURRENT_DATE)
+		select customerAccount.accountId
+		from org.mifos.application.customer.business.CustomerAccountBO as customerAccount
+		inner join customerAccount.accountFees accountFees
+		inner join accountFees.fees fees
+		inner join fees.feeFrequency feeFrequency
+		inner join customerAccount.accountActionDates accountActionDates
+		inner join customerAccount.customer customer
+		 where customer.customerStatus.id in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE)
+		   and accountActionDates.actionDate=date(:CURRENT_DATE)
+		   and feeFrequency.feeFrequencyType.id = 1
 		]]>
 	</query>
 	

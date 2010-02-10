@@ -105,6 +105,7 @@ public class AccountPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.GET_ACCOUNT_STATES, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Integer> getAccountsWithYesterdaysInstallment() throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         Calendar currentDateCalendar = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
@@ -112,14 +113,13 @@ public class AccountPersistence extends Persistence {
         int month = currentDateCalendar.get(Calendar.MONTH);
         int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
         currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-        queryParameters.put("CUSTOMER_TYPE_ID", CustomerConstants.CUSTOMER_TYPE_ID);
         queryParameters.put("ACTIVE_CENTER_STATE", CustomerStatus.CENTER_ACTIVE.getValue());
         queryParameters.put("ACTIVE_GROUP_STATE", CustomerConstants.GROUP_ACTIVE_STATE);
         queryParameters.put("ACTIVE_CLIENT_STATE", CustomerConstants.CLIENT_APPROVED);
         queryParameters.put("ONHOLD_CLIENT_STATE", CustomerConstants.CLIENT_ONHOLD);
         queryParameters.put("ONHOLD_GROUP_STATE", GroupConstants.HOLD);
         queryParameters.put("CURRENT_DATE", currentDateCalendar.getTime());
-        return executeNamedQuery(NamedQueryConstants.GET_YESTERDAYS_INSTALLMENT_FOR_ACTIVE_CUSTOMERS, queryParameters);
+        return executeNamedQuery("getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate", queryParameters);
     }
 
     public QueryResult getAllAccountNotes(Integer accountId) throws PersistenceException {
