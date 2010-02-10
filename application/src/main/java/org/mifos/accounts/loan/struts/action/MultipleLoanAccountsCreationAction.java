@@ -245,7 +245,11 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
             for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
                 LoanDto loanDto = loanService.createLoan(userContext, centerId, loanProductId, clientDetail
                         .getClientId(), accountState, clientDetail.getLoanAmount(), clientDetail
-                        .getDefaultNoOfInstall(), clientDetail.getMaxLoanAmount(), clientDetail.getMinLoanAmount(),
+                        //FIXME: Loan are created using double, the better way to do this would be to 
+                        // make those double argument as Money or BigDecimal. this workaround is added 
+                        // to fix MIFOS-2698
+                        .getDefaultNoOfInstall(), clientDetail.getMaxLoanAmount().getAmountDoubleValue()
+                        , clientDetail.getMinLoanAmount().getAmountDoubleValue(),
                         clientDetail.getMaxNoOfInstall(), clientDetail.getMinNoOfInstall(),
                         getIntegerValue(clientDetail.getBusinessActivity()));
                 accountNumbers.add(loanDto.getGlobalAccountNumber());
@@ -308,7 +312,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
                         return new MultipleLoanCreationViewHelper(client, loanOffering.eligibleLoanAmount(client
                                 .getMaxLoanAmount(loanOffering), client.getMaxLoanCycleForProduct(loanOffering)),
                                 loanOffering.eligibleNoOfInstall(client.getMaxLoanAmount(loanOffering), client
-                                        .getMaxLoanCycleForProduct(loanOffering)));
+                                        .getMaxLoanCycleForProduct(loanOffering)), loanOffering.getCurrency());
                     }
                 });
     }
