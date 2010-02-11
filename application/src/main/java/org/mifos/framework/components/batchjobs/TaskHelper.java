@@ -105,13 +105,12 @@ public abstract class TaskHelper {
     }
 
     /**
-     * This method is called by run method of Mifostask. This calls
-     * registerStartUP,istaksAllowedToRun, execute and registerCompletion in the
-     * order. The class also ensures that no exception is thrown up.
+     * This method is called by {@link MifosTask#run()}.
      */
     public final void executeTask() {
         if (!isTaskAllowedToRun()) {
             while ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis) / (1000 * 60 * 60 * 24) != 1) {
+                getLogger().info(mifosTask.name + " will run catch-up execution for " + new java.util.Date(timeInMillis));
                 perform(timeInMillis + (1000 * 60 * 60 * 24));
                 timeInMillis += (1000 * 60 * 60 * 24);
             }
@@ -119,9 +118,7 @@ public abstract class TaskHelper {
             if (timeInMillis == 0) {
                 timeInMillis = new DateTimeService().getCurrentDateTime().getMillis();
             }
-            getLogger().info(mifosTask.name + " started");
             perform(timeInMillis);
-            getLogger().info(mifosTask.name + " finished");
         }
     }
 
@@ -131,14 +128,13 @@ public abstract class TaskHelper {
     public abstract void execute(long timeInMillis) throws BatchJobException;
 
     /**
-     * This method determines if the task is allowed to run the nextday.if the
-     * previous day's task has failed, the default mplementation suspends the
+     * This method determines if catch-up should be performed. If the
+     * previous day's task has failed, the default implementation suspends the
      * current day's task and runs the previous days task.
-     * 
+     * <p>
      * Override this method and return true, if it is not mandatory that task
      * should run daily i.e. In case yesterday's task has failed, you want it to
      * continue running current days task.
-     * 
      */
     public boolean isTaskAllowedToRun() {
         try {
@@ -150,7 +146,7 @@ public abstract class TaskHelper {
             query.setString("taskName", mifosTask.name);
             query.setString("finishedSuccessfully", SchedulerConstants.FINISHED_SUCCESSFULLY);
             if (query.uniqueResult() == null) {
-                // When schedular starts for the first time
+                // When scheduler starts for the first time
                 timeInMillis = new DateTimeService().getCurrentDateTime().getMillis();
                 return true;
             } else {
@@ -163,6 +159,7 @@ public abstract class TaskHelper {
             }
             return false;
         } catch (Exception e) {
+            getLogger().error("ignored exception", e);
             return true;
         }
     }
@@ -196,7 +193,9 @@ public abstract class TaskHelper {
                     }
                 }
             }
+            getLogger().info(mifosTask.name + " starting");
             execute(timeInMillis);
+            getLogger().info(mifosTask.name + " finished");
             registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
         } catch (BatchJobException e) {
             getLogger().error(mifosTask.name + " failed", e);
