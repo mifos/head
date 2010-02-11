@@ -21,14 +21,13 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.config.GeneralConfig;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -36,8 +35,6 @@ import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.config.GeneralConfig;
 
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
