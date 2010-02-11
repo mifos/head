@@ -39,6 +39,8 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -1897,7 +1899,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                     if (fee != null) {
                         isFrequencyMatchingOfferingFrequency(fee, errors);
                         if (AccountingRules.isMultiCurrencyEnabled()) {
-                            isValidForCurrency(fee, errors);
+                            isValidForCurrency(fee, errors, request);
                         }
                         feeViews.add(new FeeView(getUserContext(request), fee));
                     }
@@ -1926,11 +1928,20 @@ public class LoanPrdActionForm extends BaseActionForm {
                 + "of Loan Product Action form method called :");
     }
 
-    private void isValidForCurrency(FeeBO fee, ActionErrors errors) {
-        if(fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
-         if(!((AmountFeeBO)fee).getFeeAmount().getCurrency().getCurrencyId().equals(getCurrencyId())){
-             addError(errors, "Fee", ProductDefinitionConstants.ERROR_FEE_CURRENCY_MATCH, fee.getFeeName());
-         }
+    private void isValidForCurrency(FeeBO fee, ActionErrors errors, HttpServletRequest request)
+            throws PageExpiredException {
+        if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+            boolean isLoanCurrencyAndFeeCurrencySame = ((AmountFeeBO) fee).getFeeAmount().getCurrency().getCurrencyId()
+                    .equals(getCurrencyId());
+            if (getCurrencyId() == null) {
+                LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
+                        request);
+                isLoanCurrencyAndFeeCurrencySame = loanOffering.getCurrency().equals(
+                        ((AmountFeeBO) fee).getFeeAmount().getCurrency());
+            }
+            if (!isLoanCurrencyAndFeeCurrencySame) {
+                addError(errors, "Fee", ProductDefinitionConstants.ERROR_FEE_CURRENCY_MATCH, fee.getFeeName());
+            }
         }
     }
 
