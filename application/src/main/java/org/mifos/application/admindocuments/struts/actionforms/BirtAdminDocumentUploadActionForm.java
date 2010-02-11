@@ -102,8 +102,8 @@ public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
 
             }
             if (methodFromRequest.equals(Methods.editpreview.toString())) {
-                if (file == null || StringUtils.isEmpty(file.getFileName())
-                        || !file.getFileName().endsWith(".rptdesign")) {
+                if (file != null && !StringUtils.isEmpty(file.getFileName())
+                        && !file.getFileName().endsWith(".rptdesign")) {
                     errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
                 }
             }

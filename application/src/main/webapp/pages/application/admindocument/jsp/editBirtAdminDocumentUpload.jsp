@@ -181,7 +181,7 @@ explanation of the license and how it is applied.
 							<tr class="fontnormal">
 								    <td align="right">
 									   <mifos:mifoslabel
-										name="reports.labelAdministrativeDocument" mandatory="yes" isColonRequired="Yes"/></td>
+										name="reports.labelAdministrativeDocument" isColonRequired="Yes"/></td>
 								    <td>
                                         <input type="file" value="" name="file"/>
                                     </td>

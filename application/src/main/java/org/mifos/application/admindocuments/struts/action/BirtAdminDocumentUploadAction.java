@@ -323,16 +323,23 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         List<AccountStateEntity> masterList = (List<AccountStateEntity>) SessionUtils.getAttribute("SelectedStatus",
                 request);
         FormFile formFile = uploadForm.getFile();
+        boolean newFile = false;
 
-        if (StringUtils.isEmpty(formFile.getFileName()))
+        if (StringUtils.isEmpty(formFile.getFileName())) {
             formFile.destroy();
-        uploadFile(formFile);
+        }
+        else {
+            uploadFile(formFile);
+            newFile = true;
+        }
 
         AdminDocumentBO admindoc = new AdminDocumentPersistence().getAdminDocumentById(Short.valueOf(SessionUtils
                 .getAttribute("admindocId", request).toString()));
         admindoc.setAdminDocumentName(uploadForm.getAdminiDocumentTitle());
         admindoc.setIsActive(Short.valueOf("1"));
-        admindoc.setAdminDocumentIdentifier(formFile.getFileName());
+        if (newFile) {
+            admindoc.setAdminDocumentIdentifier(formFile.getFileName());
+        }
         new AdminDocumentPersistence().createOrUpdate(admindoc);
         List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(Short
                 .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
