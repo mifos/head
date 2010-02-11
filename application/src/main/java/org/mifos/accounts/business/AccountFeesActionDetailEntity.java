@@ -45,10 +45,13 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
             AccountFeesEntity accountFee, Money feeAmount) {
         this.accountFeesActionDetailId = null;
         this.accountActionDate = accountActionDate;
-        if (accountActionDate != null)
+        if (accountActionDate != null) {
             this.installmentId = accountActionDate.getInstallmentId();
-        else
+            this.feeAmountPaid = new Money(accountActionDate.getAccount().getCurrency());
+        }
+        else {
             this.installmentId = null;
+        }
         this.fee = fee;
         this.accountFee = accountFee;
         this.feeAmount = feeAmount;

@@ -4348,7 +4348,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
                         .getAccountFeesActionDetails()) {
                     LoanFeeScheduleEntity loanFeeScheduleEntity = (LoanFeeScheduleEntity) accountFeesActionDetailEntity;
-                    Assert.assertNull(loanFeeScheduleEntity.getFeeAmountPaid());
+                    Assert.assertEquals(TestUtils.makeMoney() ,loanFeeScheduleEntity.getFeeAmountPaid());
                 }
             }
         }
