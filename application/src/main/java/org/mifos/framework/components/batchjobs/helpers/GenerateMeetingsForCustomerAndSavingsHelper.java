@@ -102,7 +102,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 
                 if (currentRecordNumber % batchSize == 0) {
                     StaticHibernateUtil.flushAndClearSession();
-                    getLogger().info("completed HibernateUtil.flushAndClearSession()");
+                    getLogger().debug("completed HibernateUtil.flushAndClearSession()");
                 }
                 if (updatedRecordCount > 0) {
                     if (updatedRecordCount % recordCommittingSize == 0) {
