@@ -688,7 +688,7 @@ msgstr "أختر مما يلي 'الوضع' المناسبة."
 msgid "/"
 msgstr "/"
 
-#: loan.TimeOfDisbursmentFees
+#: loan.TimeOfDisbursementFees
 msgid "Fee deducted at disbursement"
 msgstr "الرسم مطرح عند التوزيع"
 

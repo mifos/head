@@ -25,7 +25,7 @@ package org.mifos.accounts.util.helpers;
  */
 public interface PathConstants {
     public final String LOANACCOUNTSPATH = "loanAccounts";
-    public final String DISBURSELOAN = "loanDisbursment";
+    public final String DISBURSELOAN = "loanDisbursement";
     public final String APPLYADJUSTMENT = "applyAdjustment";
     public final String EARLYREPAYMENT = "earlyRepayment";
     public final String REPAYMENT = "repayment";

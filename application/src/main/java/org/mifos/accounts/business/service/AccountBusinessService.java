@@ -193,7 +193,7 @@ public class AccountBusinessService implements BusinessService {
             Short accountMeetingRecurrance = loanBO.getCustomer().getCustomerMeeting().getMeeting().getMeetingDetails()
                     .getRecurrenceType().getRecurrenceId();
             filterBasedOnRecurranceType(feeList, accountMeetingRecurrance);
-            filterDisbursmentFee(feeList, loanBO);
+            filterDisbursementFee(feeList, loanBO);
             filterTimeOfFirstRepaymentFee(feeList, loanBO);
             if(AccountingRules.isMultiCurrencyEnabled()){
                 filterBasedOnCurrencyOfLoan(feeList, loanBO);
@@ -252,13 +252,13 @@ public class AccountBusinessService implements BusinessService {
         }
     }
 
-    private void filterDisbursmentFee(List<FeeBO> feeList, AccountBO account) {
+    private void filterDisbursementFee(List<FeeBO> feeList, AccountBO account) {
         for (Iterator<FeeBO> iter = feeList.iterator(); iter.hasNext();) {
             FeeBO fee = iter.next();
             FeePaymentEntity feePaymentEntity = fee.getFeeFrequency().getFeePayment();
             if (feePaymentEntity != null) {
                 Short paymentType = feePaymentEntity.getId();
-                if (paymentType.equals(FeePayment.TIME_OF_DISBURSMENT.getValue())) {
+                if (paymentType.equals(FeePayment.TIME_OF_DISBURSEMENT.getValue())) {
                     AccountState accountState = account.getState();
                     if (accountState == AccountState.LOAN_PARTIAL_APPLICATION
                             || accountState == AccountState.LOAN_PENDING_APPROVAL

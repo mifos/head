@@ -29,7 +29,7 @@ import java.util.Map;
 import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction;
 import org.mifos.accounts.loan.struts.action.AccountStatusAction;
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
-import org.mifos.accounts.loan.struts.action.LoanDisbursmentAction;
+import org.mifos.accounts.loan.struts.action.LoanDisbursementAction;
 import org.mifos.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.accounts.loan.struts.action.RepayLoanAction;
 import org.mifos.accounts.loan.struts.action.ReverseLoanDisbursalAction;
@@ -217,7 +217,7 @@ public class ActivityMapper {
         parseActionSecurity(CustomerAction.getSecurity());
         parseActionSecurity(LoanAccountAction.getSecurity());
         parseActionSecurity(AccountApplyPaymentAction.getSecurity());
-        parseActionSecurity(LoanDisbursmentAction.getSecurity());
+        parseActionSecurity(LoanDisbursementAction.getSecurity());
         parseActionSecurity(SavingsDepositWithdrawalAction.getSecurity());
         parseActionSecurity(EditCustomerStatusAction.getSecurity());
         parseActionSecurity(ApplyChargeAction.getSecurity());

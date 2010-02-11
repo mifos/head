@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="ReviewLoanDisbursment" />
+	<span id="page.id" title="ReviewLoanDisbursement" />
 
 		<script>
 			function fun_return(form)
@@ -43,11 +43,11 @@ explanation of the license and how it is applied.
 			function fun_edit(form)
 					{
 						
-						form.action="loanDisbursmentAction.do?method=previous";
+						form.action="loanDisbursementAction.do?method=previous";
 						form.submit();
 					}
 	</script>
-		<html-el:form action="loanDisbursmentAction.do?method=update">
+		<html-el:form action="loanDisbursementAction.do?method=update">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -65,8 +65,8 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="100%" colspan="2" class="headingorange"><span
 								class="heading"> <c:out
-								value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
-							<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
+								value="${loanDisbursementActionForm.prdOfferingName}" />&nbsp;#&nbsp;
+							<c:out value="${loanDisbursementActionForm.globalAccountNum}" />
 							&nbsp;-&nbsp; </span><mifos:mifoslabel
 								name="loan.reviewtransaction" /></td>
 						</tr>
@@ -76,7 +76,7 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 						  <td>
-						   <font class="fontnormalRedBold"> <span id="Review_loanDisbursment.error.message"><html-el:errors
+						   <font class="fontnormalRedBold"> <span id="Review_loanDisbursement.error.message"><html-el:errors
 							bundle="loanUIResources" /></span> </font>
 						  </td>
 						</tr>
@@ -95,19 +95,19 @@ explanation of the license and how it is applied.
 							<td align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.dateofdisb/payment" />:&nbsp;</td>
 							<td class="fontnormal"><c:out
-								value="${loanDisbursmentActionForm.transactionDate}" /></td>
+								value="${loanDisbursementActionForm.transactionDate}" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.receiptId" />:&nbsp;</td>
 							<td class="fontnormal"><c:out
-								value="${loanDisbursmentActionForm.receiptId}" /></td>
+								value="${loanDisbursementActionForm.receiptId}" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.receiptdate" />:&nbsp;</td>
 							<td class="fontnormal"><c:out
-								value="${loanDisbursmentActionForm.receiptDate}" /></td>
+								value="${loanDisbursementActionForm.receiptDate}" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" class="fontnormalbold"><img
@@ -122,14 +122,14 @@ explanation of the license and how it is applied.
 								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
 								name="loan.amt" />:&nbsp;</td>
 							<td width="72%" class="fontnormal"><c:out
-								value="${loanDisbursmentActionForm.loanAmount}" /></td>
+								value="${loanDisbursementActionForm.loanAmount}" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.mode_of_payment" />:&nbsp;</td>
 							<td class="fontnormal"><c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 								<c:if
-									test="${payment.id == sessionScope.loanDisbursmentActionForm.paymentTypeId}">
+									test="${payment.id == sessionScope.loanDisbursementActionForm.paymentTypeId}">
 									<c:out value="${payment.name}" />
 								</c:if>
 							</c:forEach></td>
@@ -148,7 +148,7 @@ explanation of the license and how it is applied.
 							<td width="28%" align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.amount" />:&nbsp;</td>
 							<td width="72%" class="fontnormal"><c:out
-								value="${loanDisbursmentActionForm.amount}" /></td>
+								value="${loanDisbursementActionForm.amount}" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormalbold"><mifos:mifoslabel
@@ -157,7 +157,7 @@ explanation of the license and how it is applied.
 							
 							<c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 								<c:if
-									test="${payment.id == sessionScope.loanDisbursmentActionForm.paymentModeOfPayment}">
+									test="${payment.id == sessionScope.loanDisbursementActionForm.paymentModeOfPayment}">
 									<c:out value="${payment.name}" />
 								</c:if>
 							</c:forEach>
@@ -169,7 +169,7 @@ explanation of the license and how it is applied.
 							<td height="3" align="left">&nbsp;</td>
 						</tr>
 						<tr align="center">
-							<td height="3" align="left"><html-el:button styleId="Review_loanDisbursment.button.edit" property="editButton"
+							<td height="3" align="left"><html-el:button styleId="Review_loanDisbursement.button.edit" property="editButton"
 								styleClass="insidebuttn"
 								onclick="javascript:fun_edit(this.form)">
 								<mifos:mifoslabel name="loan.editTrxn" />
@@ -185,9 +185,9 @@ explanation of the license and how it is applied.
 					</table>
 					<table width="96%" border="0" cellspacing="0" cellpadding="1">
 						<tr>
-							<td align="center"><html-el:submit styleId="Review_loanDisbursment.button.submit" styleClass="buttn">
+							<td align="center"><html-el:submit styleId="Review_loanDisbursement.button.submit" styleClass="buttn">
 								<mifos:mifoslabel name="loan.submit" />
-							</html-el:submit> &nbsp; <html-el:button styleId="Review_loanDisbursment.button.cancel" property="cancelButton"
+							</html-el:submit> &nbsp; <html-el:button styleId="Review_loanDisbursement.button.cancel" property="cancelButton"
 								styleClass="cancelbuttn"
 								onclick="javascript:fun_return(this.form)">
 								<mifos:mifoslabel name="loan.cancel" />
@@ -200,11 +200,11 @@ explanation of the license and how it is applied.
 			</table>
 			<br>
 			<html-el:hidden property="prdOfferingName"
-				value="${loanDisbursmentActionForm.prdOfferingName}" />
+				value="${loanDisbursementActionForm.prdOfferingName}" />
 			<html-el:hidden property="globalAccountNum"
-				value="${loanDisbursmentActionForm.globalAccountNum}" />
+				value="${loanDisbursementActionForm.globalAccountNum}" />
 			<html-el:hidden property="accountId"
-				value="${loanDisbursmentActionForm.accountId}" />
+				value="${loanDisbursementActionForm.accountId}" />
 			<html-el:hidden property="method" value="" />
 
 		</html-el:form>

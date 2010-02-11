@@ -892,7 +892,7 @@ public class AccountBO extends BusinessObject {
                 // payment date for loans must be >= disbursement date
                 if (this instanceof LoanBO) {
                     Date apporvalDate = this.getAccountApprovalDate();
-                    // This is call for disbursment.
+                    // This is call for disbursement.
                     if (this.getState().equals(AccountState.LOAN_APPROVED)) {
                         return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
                     } else {

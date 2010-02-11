@@ -782,7 +782,7 @@ where o.OFFICE_ID=$P{branchid}  group by o.office_id]]></queryString>
 					<textElement>
 						<font fontName="Times New Roman" size="13" isUnderline="false"/>
 					</textElement>
-				<text><![CDATA[ Cash Taken For Loan Disbursment]]></text>
+				<text><![CDATA[ Cash Taken For Loan Disbursement]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -795,7 +795,7 @@ where o.OFFICE_ID=$P{branchid}  group by o.office_id]]></queryString>
 					<textElement>
 						<font fontName="Times New Roman" size="13"/>
 					</textElement>
-				<text><![CDATA[ Actual Disbursments made]]></text>
+				<text><![CDATA[ Actual Disbursements made]]></text>
 				</staticText>
 				<staticText>
 					<reportElement

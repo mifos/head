@@ -61,7 +61,7 @@ explanation of the license and how it is applied.
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
 		<html-el:form
-			action="loanDisbursmentAction.do?method=preview&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}"
+			action="loanDisbursementAction.do?method=preview&globalAccountNum=${loanDisbursementActionForm.globalAccountNum}"
 			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))">
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
@@ -78,8 +78,8 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="70%" class="headingorange"><span class="heading">
-							<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
-							<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
+							<c:out value="${loanDisbursementActionForm.prdOfferingName}" />&nbsp;#&nbsp;
+							<c:out value="${loanDisbursementActionForm.globalAccountNum}" />
 							&nbsp;-&nbsp; </span> 
 							<fmt:message key="loan.disburseLoan">
 								<fmt:param><mifos:mifoslabel
@@ -134,7 +134,7 @@ explanation of the license and how it is applied.
 										name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message></span>:&nbsp;</td>
 							<td width="71%"><html-el:text styleId="DisburseLoan.input.disbursementAmount"
-								property="loanAmount" name="loanDisbursmentActionForm"
+								property="loanAmount" name="loanDisbursementActionForm"
 								disabled="true" /></td>
 						</tr>
 						<tr>
@@ -162,14 +162,14 @@ explanation of the license and how it is applied.
 							<td width="29%" align="right" class="fontnormal"><span id="DisburseLoan.label.paymentAmount"><mifos:mifoslabel
 								name="loan.amount" /></span>:&nbsp;</td>
 							<td width="71%"><html-el:text styleId="DisburseLoan.input.paymentAmount" property="amount"
-								name="loanDisbursmentActionForm" disabled="true" /></td>
+								name="loanDisbursementActionForm" disabled="true" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
 							<td><c:choose>
 								<c:when
-									test="${loanDisbursmentActionForm.loanAmountGreaterThanZero}">
+									test="${loanDisbursementActionForm.loanAmountGreaterThanZero}">
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;" disabled="true">
 										<c:forEach var="PT"
@@ -212,11 +212,11 @@ explanation of the license and how it is applied.
 			</table>
 			<br>
 			<html-el:hidden property="prdOfferingName"
-				value="${loanDisbursmentActionForm.prdOfferingName}" />
+				value="${loanDisbursementActionForm.prdOfferingName}" />
 			<html-el:hidden property="globalAccountNum"
-				value="${loanDisbursmentActionForm.globalAccountNum}" />
+				value="${loanDisbursementActionForm.globalAccountNum}" />
 			<html-el:hidden property="accountId"
-				value="${loanDisbursmentActionForm.accountId}" />
+				value="${loanDisbursementActionForm.accountId}" />
 			<html-el:hidden property="method" value="" />
 		</html-el:form>
 

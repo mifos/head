@@ -36,7 +36,7 @@ public class RateFeeBO extends FeeBO {
 
     /**
      * Constructor to create one time Rate Fee. Fee Payment tells the time when
-     * fee should be charged. (upfront/time of disbursment etc.)
+     * fee should be charged. (upfront/time of disbursement etc.)
      */
     public RateFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
             FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Double rate,

@@ -36,7 +36,7 @@ import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.FilePaths;
 
-public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
+public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
 
     private String loanAmount;
 

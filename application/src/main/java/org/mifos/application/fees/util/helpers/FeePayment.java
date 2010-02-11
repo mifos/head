@@ -23,7 +23,7 @@ package org.mifos.application.fees.util.helpers;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum FeePayment {
-    UPFRONT((short) 1), TIME_OF_DISBURSMENT((short) 2), TIME_OF_FIRSTLOANREPAYMENT((short) 3);
+    UPFRONT((short) 1), TIME_OF_DISBURSEMENT((short) 2), TIME_OF_FIRSTLOANREPAYMENT((short) 3);
 
     private Short value;
 

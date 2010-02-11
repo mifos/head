@@ -37,7 +37,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
-import org.mifos.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
+import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -62,22 +62,22 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
-public class LoanDisbursmentAction extends BaseAction {
+public class LoanDisbursementAction extends BaseAction {
 
     private LoanBusinessService loanBusinessService = null;
     private final ProductMixValidator productMixValidator;
 
-    LoanDisbursmentAction(final LoanBusinessService service, final ProductMixValidator validator) {
+    LoanDisbursementAction(final LoanBusinessService service, final ProductMixValidator validator) {
         this.loanBusinessService = service;
         this.productMixValidator = validator;
     }
 
-    public LoanDisbursmentAction() {
+    public LoanDisbursementAction() {
         this(new LoanBusinessService(), new ProductMixValidator());
     }
 
     public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("loanDisbursmentAction");
+        ActionSecurity security = new ActionSecurity("loanDisbursementAction");
         security.allow("load", SecurityConstants.LOAN_CAN_DISBURSE_LOAN);
         security.allow("preview", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
@@ -91,16 +91,16 @@ public class LoanDisbursmentAction extends BaseAction {
         setIsRepaymentScheduleEnabled(request);
 
         setIsBackdatedTransactionAllowed(request);
-        LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm) form;
-        loanDisbursmentActionForm.clear();
-        loanDisbursmentActionForm.setAmountCannotBeZero(false);
+        LoanDisbursementActionForm loanDisbursementActionForm = (LoanDisbursementActionForm) form;
+        loanDisbursementActionForm.clear();
+        loanDisbursementActionForm.setAmountCannotBeZero(false);
 
-        productMixValidator.checkIfProductsOfferingCanCoexist(getLoan(loanDisbursmentActionForm));
+        productMixValidator.checkIfProductsOfferingCanCoexist(getLoan(loanDisbursementActionForm));
 
         Date currentDate = new DateTimeService().getCurrentJavaDateTime();
-        LoanBO loan = getLoan(loanDisbursmentActionForm);
+        LoanBO loan = getLoan(loanDisbursementActionForm);
         setProposedDisbursementDate(request, currentDate, loan);
-        loanDisbursmentActionForm.setTransactionDate(getUserLocaleDate(getUserContext(request).getPreferredLocale(),
+        loanDisbursementActionForm.setTransactionDate(getUserLocaleDate(getUserContext(request).getPreferredLocale(),
                 getProposedDisbursementDateFromSession(request)));
 
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
@@ -109,14 +109,14 @@ public class LoanDisbursmentAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, getAcceptedPaymentTypes(uc.getLocaleId()),
                 request);
-        loanDisbursmentActionForm.setAmount(loan.getAmountTobePaidAtdisburtail().toString());
-        loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount().toString());
+        loanDisbursementActionForm.setAmount(loan.getAmountTobePaidAtdisburtail().toString());
+        loanDisbursementActionForm.setLoanAmount(loan.getLoanAmount().toString());
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
 
-    private LoanBO getLoan(final LoanDisbursmentActionForm loanDisbursmentActionForm) throws ServiceException {
+    private LoanBO getLoan(final LoanDisbursementActionForm loanDisbursementActionForm) throws ServiceException {
         return ((LoanBusinessService) getService()).getAccount(Integer
-                .valueOf(loanDisbursmentActionForm.getAccountId()));
+                .valueOf(loanDisbursementActionForm.getAccountId()));
     }
 
     private static List<PaymentTypeEntity> getAcceptedPaymentTypes(final Short localeId) throws Exception {
@@ -166,7 +166,7 @@ public class LoanDisbursmentAction extends BaseAction {
             final HttpServletResponse response) throws Exception {
 
         LoanBO savedloan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) form;
+        LoanDisbursementActionForm actionForm = (LoanDisbursementActionForm) form;
         LoanBO loan = getLoan(actionForm);
         checkVersionMismatch(savedloan.getVersionNo(), loan.getVersionNo());
         loan.setVersionNo(savedloan.getVersionNo());

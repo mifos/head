@@ -720,7 +720,7 @@ msgstr "Válasszon az alábbi lehetséges státuszok közül."
 msgid "/"
 msgstr "/"
 
-#: loan.TimeOfDisbursmentFees
+#: loan.TimeOfDisbursementFees
 msgid "Fee deducted at disbursement"
 msgstr "Díj levonása folyósításkor"
 

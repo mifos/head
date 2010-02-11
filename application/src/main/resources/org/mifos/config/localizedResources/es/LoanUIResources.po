@@ -762,7 +762,7 @@ msgstr "Seleccione de las opciones de estado de abajo."
 msgid "/"
 msgstr "/"
 
-#: loan.TimeOfDisbursmentFees
+#: loan.TimeOfDisbursementFees
 msgid "Fee deducted at disbursement"
 msgstr "La cuota se dedujo al momento del desembolso"
 

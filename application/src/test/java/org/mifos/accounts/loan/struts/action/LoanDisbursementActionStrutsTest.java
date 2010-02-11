@@ -29,7 +29,7 @@ import junit.framework.Assert;
 
 import org.junit.Ignore;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
+import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -45,9 +45,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 @Ignore
-public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
+public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public LoanDisbursmentActionStrutsTest() throws Exception {
+    public LoanDisbursementActionStrutsTest() throws Exception {
         super();
     }
 
@@ -84,8 +84,8 @@ public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("recordOfficeId", "1");
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-        flowKey = createFlow(request, LoanDisbursmentAction.class);
-        setRequestPathInfo("/loanDisbursmentAction");
+        flowKey = createFlow(request, LoanDisbursementAction.class);
+        setRequestPathInfo("/loanDisbursementAction");
         currentDate = new Date(System.currentTimeMillis());
     }
 
@@ -131,8 +131,8 @@ public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(Constants.LOAD_SUCCESS);
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
-        LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) request.getSession().getAttribute(
-                "loanDisbursmentActionForm");
+        LoanDisbursementActionForm actionForm = (LoanDisbursementActionForm) request.getSession().getAttribute(
+                "loanDisbursementActionForm");
        Assert.assertEquals(actionForm.getAmount(), loanBO.getAmountTobePaidAtdisburtail());
        Assert.assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
     }

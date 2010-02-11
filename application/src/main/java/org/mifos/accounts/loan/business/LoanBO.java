@@ -531,7 +531,7 @@ public class LoanBO extends AccountBO {
     }
 
     public boolean isInterestDeductedAtDisbursement() {
-        return intrestAtDisbursement == LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT;
+        return intrestAtDisbursement == LoanConstants.INTEREST_DEDUCTED_AT_DISBURSEMENT;
     }
 
     void setInterestDeductedAtDisbursement(final boolean interestDedAtDisb) {
@@ -1269,13 +1269,13 @@ public class LoanBO extends AccountBO {
         save();
     }
 
-    public void updateLoan(final Boolean interestDeductedAtDisbursment, final Money loanAmount,
+    public void updateLoan(final Boolean interestDeductedAtDisbursement, final Money loanAmount,
             final Double interestRate, final Short noOfInstallments, final Date disbursementDate,
             final Short gracePeriodDuration, final Integer businessActivityId, final String collateralNote,
             final Integer collateralTypeId, final List<CustomFieldView> customFields,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay, FundBO fund)
             throws AccountException {
-        if (interestDeductedAtDisbursment) {
+        if (interestDeductedAtDisbursement) {
             try {
                 if (noOfInstallments <= 1) {
                     throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
@@ -1292,7 +1292,7 @@ public class LoanBO extends AccountBO {
         setInterestRate(interestRate);
         setNoOfInstallments(noOfInstallments);
         setGracePeriodDuration(gracePeriodDuration);
-        setInterestDeductedAtDisbursement(interestDeductedAtDisbursment);
+        setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
         setBusinessActivityId(businessActivityId);
         setCollateralNote(collateralNote);
         setCollateralTypeId(collateralTypeId);
@@ -2115,7 +2115,7 @@ public class LoanBO extends AccountBO {
 
     private void filterTimeOfDisbursementFees(final LoanScheduleEntity loanScheduleEntity, final FeeBO fee) {
         Short paymentType = fee.getFeeFrequency().getFeePayment().getId();
-        if (paymentType.equals(FeePayment.TIME_OF_DISBURSMENT.getValue()) && !isInterestDeductedAtDisbursement()) {
+        if (paymentType.equals(FeePayment.TIME_OF_DISBURSEMENT.getValue()) && !isInterestDeductedAtDisbursement()) {
             Set<AccountFeesActionDetailEntity> accountFeesDetailSet = loanScheduleEntity.getAccountFeesActionDetails();
             for (Iterator<AccountFeesActionDetailEntity> iter = accountFeesDetailSet.iterator(); iter.hasNext();) {
                 AccountFeesActionDetailEntity accountFeesActionDetailEntity = iter.next();

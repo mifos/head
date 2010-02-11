@@ -96,7 +96,7 @@ public interface LoanConstants {
     public static final String LOANACCOUNTOWNERISACLIENT = "loanaccountownerisaclient";
 
     // disburse loan
-    public static final String GET_LOAD_DISBURSEMENT_DATA = "getDataOnLoadOfDisbursment";
+    public static final String GET_LOAD_DISBURSEMENT_DATA = "getDataOnLoadOfDisbursement";
     public static final String DISBURSE_LOAN = "disburseLoan";
 
     // View installments details
@@ -119,7 +119,7 @@ public interface LoanConstants {
     public static final Short PAYMENT_RECIEVED = 1; // check
     public static final Short PAYMENT_NOT_RECIEVED = 0;
 
-    public static final Short INTEREST_DEDUCTED_AT_DISBURSMENT = 1;
+    public static final Short INTEREST_DEDUCTED_AT_DISBURSEMENT = 1;
 
     public static final String TOTAL_REPAYMENT_AMOUNT = "totalRepaymentAmount";
     public static final String DONOT_PAY_FEES_PENALTY_INTEREST = "doNotPayFeesPenaltyAndInterest";

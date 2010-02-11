@@ -590,7 +590,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<tr>
 										<td class="paddingL10"><span class="fontnormal8pt">
 										<html-el:link styleId="loanaccountdetail.link.disburseLoan"
-											href="loanDisbursmentAction.do?method=load&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											href="loanDisbursementAction.do?method=load&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="loan.disburseloan" />
 										</html-el:link> <br>
 										</span></td>

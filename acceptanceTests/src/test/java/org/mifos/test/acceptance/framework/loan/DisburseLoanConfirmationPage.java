@@ -30,11 +30,11 @@ public class DisburseLoanConfirmationPage extends MifosPage {
     }
 
     public void verifyPage() {
-        this.verifyPage("ReviewLoanDisbursment");
+        this.verifyPage("ReviewLoanDisbursement");
     }
     
     public LoanAccountPage submitAndNavigateToLoanAccountPage() {
-        selenium.click("Review_loanDisbursment.button.submit");       
+        selenium.click("Review_loanDisbursement.button.submit");       
         waitForPageToLoad();        
         return new LoanAccountPage(selenium);
     }

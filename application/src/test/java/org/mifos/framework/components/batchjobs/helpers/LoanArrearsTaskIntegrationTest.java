@@ -114,7 +114,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
     private void setDisbursementDateAsOldDate(AccountBO account) {
         Date startDate = offSetCurrentDate(15);
         LoanBO loan = (LoanBO) account;
-        LoanBOTestUtils.modifyDisbursmentDate(loan, startDate);
+        LoanBOTestUtils.modifyDisbursementDate(loan, startDate);
         for (AccountActionDateEntity actionDate : loan.getAccountActionDates())
             LoanBOTestUtils.setActionDate(actionDate, offSetGivenDate(actionDate.getActionDate(), 18));
     }

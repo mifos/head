@@ -695,7 +695,7 @@ msgstr "ជ្រើសរើសជំរើសនៃលក្ខ័ណខាង
 msgid "/"
 msgstr "/"
 
-#: loan.TimeOfDisbursmentFees
+#: loan.TimeOfDisbursementFees
 msgid "Fee deducted at disbursement"
 msgstr "ថ្លៃសេវាបានដកយកហើយនាពេលដែលសង"
 

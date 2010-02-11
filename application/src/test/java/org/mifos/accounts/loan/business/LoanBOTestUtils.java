@@ -222,18 +222,18 @@ public class LoanBOTestUtils {
 
         if (disbursalType == 1 || disbursalType == 2) {
             disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee 1", FeeCategory.LOAN, "10",
-                    FeePayment.TIME_OF_DISBURSMENT);
+                    FeePayment.TIME_OF_DISBURSEMENT);
             accountDisbursementFee = new AccountFeesEntity(loan, disbursementFee, new Double("10.0"));
             AccountTestUtils.addAccountFees(accountDisbursementFee, loan);
 
             disbursementFee2 = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee 2", FeeCategory.LOAN, "20",
-                    FeePayment.TIME_OF_DISBURSMENT);
+                    FeePayment.TIME_OF_DISBURSEMENT);
             accountDisbursementFee2 = new AccountFeesEntity(loan, disbursementFee2, new Double("20.0"));
             AccountTestUtils.addAccountFees(accountDisbursementFee2, loan);
         }
         loan.setLoanMeeting(meeting);
 
-        if (disbursalType == 2)// 2-Interest At Disbursment
+        if (disbursalType == 2)// 2-Interest At Disbursement
         {
             loan.setInterestDeductedAtDisbursement(true);
             meetingDates = TestObjectFactory.getMeetingDates(loan.getLoanMeeting(), 6);
@@ -372,8 +372,8 @@ public class LoanBOTestUtils {
         loanSummary.setOriginalInterest(new Money(currency, "36.0"));
     }
     
-    public static void modifyDisbursmentDate(final LoanBO loan, final Date disbursmentDate) {
-        loan.setDisbursementDate(disbursmentDate);
+    public static void modifyDisbursementDate(final LoanBO loan, final Date disbursementDate) {
+        loan.setDisbursementDate(disbursementDate);
     }
     
     /**

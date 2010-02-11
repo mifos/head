@@ -131,7 +131,7 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetRateFee() throws Exception {
         fee1 = TestObjectFactory.createOneTimeRateFee("Loanfee", FeeCategory.LOAN, 11.1, FeeFormula.AMOUNT,
-                FeePayment.TIME_OF_DISBURSMENT);
+                FeePayment.TIME_OF_DISBURSEMENT);
 
         Short feeId = fee1.getFeeId();
         StaticHibernateUtil.commitTransaction();

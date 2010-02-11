@@ -80,7 +80,7 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
     private List<FeeBO> getFee() {
         List<FeeBO> fees = new ArrayList<FeeBO>();
         FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee("One Time Amount Fee", FeeCategory.LOAN, "120.0",
-                FeePayment.TIME_OF_DISBURSMENT);
+                FeePayment.TIME_OF_DISBURSEMENT);
         FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "10.0",
                 RecurrenceType.WEEKLY, (short) 1);
         StaticHibernateUtil.commitTransaction();

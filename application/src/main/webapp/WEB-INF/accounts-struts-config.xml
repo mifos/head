@@ -4,8 +4,8 @@
 <struts-config>
     <form-beans>
         <!-- Disburse loan-->
-        <form-bean name="loanDisbursmentActionForm"
-                   type="org.mifos.accounts.loan.struts.actionforms.LoanDisbursmentActionForm"/>
+        <form-bean name="loanDisbursementActionForm"
+                   type="org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm"/>
         <!-- Repay Loan -->
         <form-bean name="repayLoanActionForm"
                    type="org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm"/>
@@ -78,18 +78,18 @@
             <forward name="create_failure" path="/pages/accounts/jsp/account_previewnotes.jsp"/>
         </action>
         <!-- Ends-->
-        <!-- Loan Disbursment-->
-        <action path="/loanDisbursmentAction"
-                type="org.mifos.accounts.loan.struts.action.LoanDisbursmentAction" parameter="method"
-                scope="session" name="loanDisbursmentActionForm" validate="true"
-                input="/loanDisbursmentAction.do?method=validate">
+        <!-- Loan Disbursement-->
+        <action path="/loanDisbursementAction"
+                type="org.mifos.accounts.loan.struts.action.LoanDisbursementAction" parameter="method"
+                scope="session" name="loanDisbursementActionForm" validate="true"
+                input="/loanDisbursementAction.do?method=validate">
             <forward name="load_success" path="/pages/application/loan/jsp/DisburseLoan.jsp"/>
             <forward name="load_failure" path="/pages/application/loan/jsp/loanaccountdetail.jsp"/>
-            <forward name="preview_success" path="/pages/application/loan/jsp/Review_loanDisbursment.jsp"/>
+            <forward name="preview_success" path="/pages/application/loan/jsp/Review_loanDisbursement.jsp"/>
             <forward name="preview_failure" path="/pages/application/loan/jsp/DisburseLoan.jsp"/>
             <forward name="previous_success" path="/pages/application/loan/jsp/DisburseLoan.jsp"/>
             <forward name="update_success" path="/loanAccountAction.do?method=get"/>
-            <forward name="update_failure" path="/pages/application/loan/jsp/Review_loanDisbursment.jsp"/>
+            <forward name="update_failure" path="/pages/application/loan/jsp/Review_loanDisbursement.jsp"/>
         </action>
         <!-- End -->
         <!-- Repay Loan-->

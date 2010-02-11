@@ -77,7 +77,7 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("recordOfficeId", "1");
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-        flowKey = createFlow(request, LoanDisbursmentAction.class);
+        flowKey = createFlow(request, LoanDisbursementAction.class);
         setRequestPathInfo("/editStatusAction");
         currentDate = new Date(System.currentTimeMillis());
     }

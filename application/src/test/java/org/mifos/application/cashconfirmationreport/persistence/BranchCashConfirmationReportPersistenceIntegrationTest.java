@@ -130,7 +130,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         List<Object[]> disbursements = persistence.extractDisbursements(currency, AccountTypes.LOAN_ACCOUNT,
                 DISBURSEMENT_PRODUCT_OFFERING_IDS, FIRST_JAN_2008);
         Assert.assertNotNull(disbursements);
-        Assert.assertFalse("disbursments should not be empty", disbursements.isEmpty());
+        Assert.assertFalse("disbursements should not be empty", disbursements.isEmpty());
         AssertionUtils
                 .assertSameCollections(Arrays.asList(new Object[] { Short.valueOf("3"), "TESTPRDOFFERING1",
                         BigDecimal.ZERO.setScale(DIGITS_AFTER_DECIMAL_FOR_AMOUNT_IN_DB) }), Arrays.asList(disbursements

@@ -367,7 +367,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     @Test(dependsOnMethods = { "testGetTransactionHistoryViewByOtherUser" })
     public void testGetPeriodicFeeList() throws PersistenceException {
         FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.LOAN, "20",
-                FeePayment.TIME_OF_DISBURSMENT);
+                FeePayment.TIME_OF_DISBURSEMENT);
         AccountFeesEntity accountOneTimeFee = new AccountFeesEntity(accountBO, oneTimeFee, new Double("1.0"));
         accountBO.addAccountFees(accountOneTimeFee);
         accountPersistence.createOrUpdate(accountBO);

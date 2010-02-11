@@ -3432,8 +3432,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * FeeCategory.LOAN, Double.valueOf("20"), FeeFormula.AMOUNT,
      * FeePayment.UPFRONT); feeViewList.add(new FeeView(userContext,
      * upfrontFee)); FeeBO disbursementFee =
-     * TestObjectFactory.createOneTimeAmountFee( "Disbursment Fee",
-     * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSMENT);
+     * TestObjectFactory.createOneTimeAmountFee( "Disbursement Fee",
+     * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSEMENT);
      * feeViewList.add(new FeeView(userContext, disbursementFee));
      * 
      * accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -3468,7 +3468,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * Assert.assertEquals(new Money(getCurrency(), "60.0"), accountFeesEntity
      * .getAccountFeeAmount());Assert.assertEquals(new Double("20.0"),
      * accountFeesEntity .getFeeAmount()); } else if
-     * (accountFeesEntity.getFees().getFeeName().equals( "Disbursment Fee")) {
+     * (accountFeesEntity.getFees().getFeeName().equals( "Disbursement Fee")) {
      * Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesEntity
      * .getAccountFeeAmount());Assert.assertEquals(new Double("30.0"),
      * accountFeesEntity .getFeeAmount()); } else {Assert.assertEquals(new
@@ -3485,9 +3485,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      */
 
     /*
-     * TODO: turn back on when InterestDeductedAtDisbursment is re-enabled
+     * TODO: turn back on when InterestDeductedAtDisbursement is re-enabled
      * 
-     * public void testCreateLoanAccountWithInterestDeductedAtDisbursment()
+     * public void testCreateLoanAccountWithInterestDeductedAtDisbursement()
      * throws Exception { Date startDate = new Date(System.currentTimeMillis());
      * MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
      * .getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
@@ -3506,8 +3506,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * FeeCategory.LOAN, Double.valueOf("20"), FeeFormula.AMOUNT,
      * FeePayment.UPFRONT); feeViewList.add(new FeeView(userContext,
      * upfrontFee)); FeeBO disbursementFee =
-     * TestObjectFactory.createOneTimeAmountFee( "Disbursment Fee",
-     * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSMENT);
+     * TestObjectFactory.createOneTimeAmountFee( "Disbursement Fee",
+     * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSEMENT);
      * feeViewList.add(new FeeView(userContext, disbursementFee));
      * 
      * accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -3517,7 +3517,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * TestObjectPersistence().persist(accountBO);
      * 
      * HashMap fees3 = new HashMap(); fees3.put("Periodic Fee", "100.0");
-     * fees3.put("Disbursment Fee", "30.0"); fees3.put("Upfront Fee", "60.0");
+     * fees3.put("Disbursement Fee", "30.0"); fees3.put("Upfront Fee", "60.0");
      * 
      * HashMap fees0 = new HashMap();
      * 
@@ -3541,7 +3541,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * Assert.assertEquals(new Money(getCurrency(), "60.0"), accountFeesEntity
      * .getAccountFeeAmount());Assert.assertEquals(new Double("20.0"),
      * accountFeesEntity .getFeeAmount()); } else if
-     * (accountFeesEntity.getFees().getFeeName().equals( "Disbursment Fee")) {
+     * (accountFeesEntity.getFees().getFeeName().equals( "Disbursement Fee")) {
      * Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesEntity
      * .getAccountFeeAmount());Assert.assertEquals(new Double("30.0"),
      * accountFeesEntity .getFeeAmount()); } else {Assert.assertEquals(new
@@ -3580,8 +3580,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * FeeCategory.LOAN, Double.valueOf("20"), FeeFormula.AMOUNT,
      * FeePayment.UPFRONT); feeViewList.add(new FeeView(userContext,
      * upfrontFee)); FeeBO disbursementFee =
-     * TestObjectFactory.createOneTimeAmountFee( "Disbursment Fee",
-     * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSMENT);
+     * TestObjectFactory.createOneTimeAmountFee( "Disbursement Fee",
+     * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSEMENT);
      * feeViewList.add(new FeeView(userContext, disbursementFee));
      * 
      * accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -3595,7 +3595,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * HashMap fees1 = new HashMap(); fees1.put("Periodic Fee", "100.0");
      * 
      * HashMap fees3 = new HashMap(); fees3.put("Periodic Fee", "100.0");
-     * fees3.put("Disbursment Fee", "30.0"); fees3.put("Upfront Fee", "60.0");
+     * fees3.put("Disbursement Fee", "30.0"); fees3.put("Upfront Fee", "60.0");
      * 
      * Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
      * .getAccountActionDates(); LoanScheduleEntity[] paymentsArray =
@@ -3618,7 +3618,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * Assert.assertEquals(new Money(getCurrency(), "60.0"), accountFeesEntity
      * .getAccountFeeAmount());Assert.assertEquals(new Double("20.0"),
      * accountFeesEntity .getFeeAmount()); } else if
-     * (accountFeesEntity.getFees().getFeeName().equals( "Disbursment Fee")) {
+     * (accountFeesEntity.getFees().getFeeName().equals( "Disbursement Fee")) {
      * Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesEntity
      * .getAccountFeeAmount());Assert.assertEquals(new Double("30.0"),
      * accountFeesEntity .getFeeAmount()); } else {Assert.assertEquals(new
@@ -3652,8 +3652,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
         feeViewList.add(new FeeView(userContext, upfrontFee));
-        FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee", FeeCategory.LOAN, "30",
-                FeePayment.TIME_OF_DISBURSMENT);
+        FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN, "30",
+                FeePayment.TIME_OF_DISBURSEMENT);
         feeViewList.add(new FeeView(userContext, disbursementFee));
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -3686,7 +3686,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
                 Assert.assertEquals(new Money(getCurrency(), "60.0"), accountFeesEntity.getAccountFeeAmount());
                 Assert.assertEquals(new Double("20.0"), accountFeesEntity.getFeeAmount());
-            } else if (accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")) {
+            } else if (accountFeesEntity.getFees().getFeeName().equals("Disbursement Fee")) {
                 Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesEntity.getAccountFeeAmount());
                 Assert.assertEquals(new Double("30.0"), accountFeesEntity.getFeeAmount());
             } else {
@@ -3720,8 +3720,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
         feeViewList.add(new FeeView(userContext, upfrontFee));
-        FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee", FeeCategory.LOAN, "30",
-                FeePayment.TIME_OF_DISBURSMENT);
+        FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN, "30",
+                FeePayment.TIME_OF_DISBURSEMENT);
         feeViewList.add(new FeeView(userContext, disbursementFee));
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -3754,7 +3754,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
                 Assert.assertEquals(new Money(getCurrency(), "60.0"), accountFeesEntity.getAccountFeeAmount());
                 Assert.assertEquals(new Double("20.0"), accountFeesEntity.getFeeAmount());
-            } else if (accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")) {
+            } else if (accountFeesEntity.getFees().getFeeName().equals("Disbursement Fee")) {
                 Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesEntity.getAccountFeeAmount());
                 Assert.assertEquals(new Double("30.0"), accountFeesEntity.getFeeAmount());
             } else {
@@ -3812,8 +3812,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
         feeViewList.add(new FeeView(userContext, upfrontFee));
-        FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursment Fee", FeeCategory.LOAN, Double
-                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSMENT);
+        FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursement Fee", FeeCategory.LOAN, Double
+                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT);
         feeViewList.add(new FeeView(userContext, disbursementFee));
         FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee", FeeCategory.LOAN,
                 Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
@@ -3850,7 +3850,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
                 Assert.assertEquals(new Money(getCurrency(), "60.0"), accountFeesEntity.getAccountFeeAmount());
                 Assert.assertEquals(new Double("20.0"), accountFeesEntity.getFeeAmount());
-            } else if (accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")) {
+            } else if (accountFeesEntity.getFees().getFeeName().equals("Disbursement Fee")) {
                 // TODO: fee_rounding should there be 2 digits to
                 // the right of the decimal here?
                 Assert.assertEquals(new Money(getCurrency(), "91.08"), accountFeesEntity.getAccountFeeAmount());
@@ -3904,8 +3904,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
         feeViewList.add(new FeeView(userContext, upfrontFee));
-        FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursment Fee", FeeCategory.LOAN, Double
-                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSMENT);
+        FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursement Fee", FeeCategory.LOAN, Double
+                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT);
         feeViewList.add(new FeeView(userContext, disbursementFee));
         FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee", FeeCategory.LOAN,
                 Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
@@ -5293,7 +5293,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private List<FeeView> getFeeViews() {
         FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee("One Time Amount Fee", FeeCategory.LOAN, "120.0",
-                FeePayment.TIME_OF_DISBURSMENT);
+                FeePayment.TIME_OF_DISBURSEMENT);
         FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "10.0",
                 RecurrenceType.WEEKLY, (short) 1);
         List<FeeView> feeViews = new ArrayList<FeeView>();

@@ -63,7 +63,7 @@ public class AmountFeeBO extends FeeBO {
 
     /**
      * Constructor to create one time Amount Fee. Fee Payment tells the time
-     * when fee should be charged. (upfront/time of disbursment etc.)
+     * when fee should be charged. (upfront/time of disbursement etc.)
      */
     public AmountFeeBO(final UserContext userContext, final String feeName, final CategoryTypeEntity categoryType,
             final FeeFrequencyTypeEntity feeFrequencyType, final GLCodeEntity glCodeEntity, final Money amount,

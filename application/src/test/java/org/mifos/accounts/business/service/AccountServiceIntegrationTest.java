@@ -372,14 +372,14 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         loanScheduleEntity = (LoanScheduleEntity) accountBO.getAccountActionDate(Short.valueOf("1"));
-        FeeBO timeOfDisbursmentFees = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee", FeeCategory.LOAN,
-                "30", FeePayment.TIME_OF_DISBURSMENT);
-        AccountFeesEntity accountDisbursmentFee = new AccountFeesEntity(accountBO, timeOfDisbursmentFees, new Double(
+        FeeBO timeOfDisbursementFees = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN,
+                "30", FeePayment.TIME_OF_DISBURSEMENT);
+        AccountFeesEntity accountDisbursementFee = new AccountFeesEntity(accountBO, timeOfDisbursementFees, new Double(
                 "30.0"), FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
-        AccountTestUtils.addAccountFees(accountDisbursmentFee, accountBO);
-        AccountFeesActionDetailEntity accountDisbursmentFeesaction = new LoanFeeScheduleEntity(loanScheduleEntity,
-                timeOfDisbursmentFees, accountDisbursmentFee, new Money(getCurrency(), "30.0"));
-        loanScheduleEntity.addAccountFeesAction(accountDisbursmentFeesaction);
+        AccountTestUtils.addAccountFees(accountDisbursementFee, accountBO);
+        AccountFeesActionDetailEntity accountDisbursementFeesaction = new LoanFeeScheduleEntity(loanScheduleEntity,
+                timeOfDisbursementFees, accountDisbursementFee, new Money(getCurrency(), "30.0"));
+        loanScheduleEntity.addAccountFeesAction(accountDisbursementFeesaction);
         TestObjectFactory.updateObject(accountBO);
 
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());

@@ -33,7 +33,7 @@ public class FeePaymentEntity extends MasterDataEntity {
     }
 
     public boolean isTimeOfDisbursement() {
-        return getId().equals(FeePayment.TIME_OF_DISBURSMENT.getValue());
+        return getId().equals(FeePayment.TIME_OF_DISBURSEMENT.getValue());
     }
 
     public FeePayment getFeePayment() {

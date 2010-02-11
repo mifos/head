@@ -546,7 +546,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         return defaultFees.get(i);
     }
 
-    public Boolean isInterestDeductedAtDisbursment() {
+    public Boolean isInterestDeductedAtDisbursement() {
         if (getIntDedDisbursement().equals("1"))
             return true;
         return false;
