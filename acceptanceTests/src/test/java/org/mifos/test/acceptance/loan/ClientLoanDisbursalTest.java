@@ -25,6 +25,7 @@ import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -35,8 +36,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"smoke","acceptance","ui", "loan"})
@@ -50,15 +49,12 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
     
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         
         loanTestHelper = new LoanTestHelper(selenium);
     }
@@ -70,6 +66,10 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void disburseLoan() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
 
         // account w/ id 000100000000005 has an approved but not disbursed loan.
@@ -90,5 +90,20 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
 
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
         
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void ensurePaymentModeOfPaymentTypeIsEditable() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService =
+            new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2010,2,12,1,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml.zip",
+                dataSource, selenium);
+
+        DisburseLoanPage loanAccountPage = loanTestHelper.prepareToDisburseLoan("000100000000004");
+        loanAccountPage.verifyPaymentModeOfPaymentIsEditable(
+                "payment mode of payment must be editable when a disbursal fee exists.");
     }
 }

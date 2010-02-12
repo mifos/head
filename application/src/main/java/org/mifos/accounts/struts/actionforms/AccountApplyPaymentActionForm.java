@@ -115,7 +115,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             
             if (null != errors2 && !errors2.isEmpty())
                 errors.add(errors2);
-            if (getPaymentTypeId() == null || getPaymentTypeId().equals("")) {
+            if (StringUtils.isEmpty(getPaymentTypeId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("accounts.mode_of_payment")));
             }

@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -57,6 +58,10 @@ public class DisburseLoanPage extends MifosPage {
         
         waitForPageToLoad();
         return new DisburseLoanConfirmationPage(selenium);
+    }
+
+    public void verifyPaymentModeOfPaymentIsEditable(String message) {
+        Assert.assertTrue(selenium.isEditable("paymentModeOfPayment"), message);
     }
     
 }

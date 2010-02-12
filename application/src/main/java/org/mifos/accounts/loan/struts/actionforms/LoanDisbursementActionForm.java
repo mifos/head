@@ -50,7 +50,7 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
             errors.add(errors1);
 
         String method = request.getParameter(MethodNameConstants.METHOD);
-        if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount())
+        if (isPreviewMethod(method) && getPaymentAmountGreaterThanZero()
                 && StringUtils.isBlank(paymentModeOfPayment)) {
             String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
@@ -72,9 +72,9 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
         return methodName != null && methodName.equals(MethodNameConstants.PREVIEW);
     }
 
-    private boolean isAmountGreaterThanZero(String amount) {
-        double doubleAmount = (StringUtils.isNotBlank(amount) && !amount.trim().equals(".")) ? Double.parseDouble(amount) : 0.0;
-        return doubleAmount > 0.0;
+    private boolean isValueGreaterThanZero(String value) {
+        double doubleValue = (StringUtils.isNotBlank(value) && !value.trim().equals(".")) ? Double.parseDouble(value) : 0.0;
+        return doubleValue > 0.0;
     }
     
     public String getPaymentModeOfPayment() {
@@ -90,7 +90,11 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
     }
 
     public boolean getLoanAmountGreaterThanZero() {
-        return isAmountGreaterThanZero(getLoanAmount());        
+        return isValueGreaterThanZero(getLoanAmount());        
+    }
+
+    public boolean getPaymentAmountGreaterThanZero() {
+        return isValueGreaterThanZero(getAmount());        
     }
     
     public void setLoanAmount(String loanAmount) {

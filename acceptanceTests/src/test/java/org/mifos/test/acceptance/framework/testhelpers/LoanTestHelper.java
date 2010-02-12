@@ -111,6 +111,8 @@ public class LoanTestHelper {
         loanAccountPage = confirmationPage.submitAndNavigateToLoanAccountPage();
         loanAccountPage.verifyPage();
     }
+
+    
     
     /**
      * Disburses the loan with id <tt>loanId</tt>. 
@@ -119,19 +121,24 @@ public class LoanTestHelper {
      * @return The loan account page of the loan account with id loanId.
      */
     public LoanAccountPage disburseLoan(String loanId, DisburseLoanParameters disburseParameters) {
+        DisburseLoanPage disburseLoanPage = prepareToDisburseLoan(loanId);
+        
+        DisburseLoanConfirmationPage disburseLoanConfirmationPage = disburseLoanPage.submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters);
+        disburseLoanConfirmationPage.verifyPage();
+        
+        LoanAccountPage loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyPage();
+        
+        return loanAccountPage;
+    }
+
+    public DisburseLoanPage prepareToDisburseLoan(String loanId) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
         disburseLoanPage.verifyPage();
-        
-        DisburseLoanConfirmationPage disburseLoanConfirmationPage = disburseLoanPage.submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters);
-        disburseLoanConfirmationPage.verifyPage();
-        
-        loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
-        loanAccountPage.verifyPage();
-        
-        return loanAccountPage;
+        return disburseLoanPage;
     }
     
     /**

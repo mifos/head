@@ -167,27 +167,16 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
-							<td><c:choose>
-								<c:when
-									test="${loanDisbursementActionForm.loanAmountGreaterThanZero}">
-									<mifos:select property="paymentModeOfPayment"
-										style="width:136px;" disabled="true">
+							<td>
+							    <c:set var="disablePaymentModeOfPayment" value="${!loanDisbursementActionForm.paymentAmountGreaterThanZero}"/>
+							    <mifos:select property="paymentModeOfPayment"
+										style="width:136px;" disabled="${disablePaymentModeOfPayment}">
 										<c:forEach var="PT"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}">
 											<html-el:option value="${PT.id}">${PT.name}</html-el:option>
 										</c:forEach>
 									</mifos:select>
-								</c:when>
-								<c:otherwise>
-									<mifos:select property="paymentModeOfPayment"
-										style="width:136px;">
-										<c:forEach var="PT"
-											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}">
-											<html-el:option value="${PT.id}">${PT.name}</html-el:option>
-										</c:forEach>
-									</mifos:select>
-								</c:otherwise>
-							</c:choose></td>
+								</td>
 						</tr>
 					</table>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
