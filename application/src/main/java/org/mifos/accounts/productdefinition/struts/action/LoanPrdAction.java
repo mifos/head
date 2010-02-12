@@ -236,7 +236,10 @@ public class LoanPrdAction extends BaseAction {
         loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
         loadStatusList(request);
         setDataIntoActionForm(loanOffering, loanPrdActionForm, request);
-
+        request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
+        if (AccountingRules.isMultiCurrencyEnabled()) {
+            request.getSession().setAttribute("currencyCode", loanOffering.getCurrency().getCurrencyCode());
+        }
         prdDefLogger.debug("manage of Loan Product Action called" + prdOfferingId);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }

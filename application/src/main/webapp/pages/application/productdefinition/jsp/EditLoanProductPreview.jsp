@@ -151,11 +151,18 @@ explanation of the license and how it is applied.
 
 								</c:if>
 							</c:forEach> </span> <br>
-							<fmt:message key="product.inclInLoanCycleCounter">
-								<fmt:param><mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}"
-								bundle="ProductDefUIResources" /></fmt:param>
-							</fmt:message>:
+                            <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
+                                <mifos:mifoslabel name="product.currency" bundle="ProductDefUIResources"
+                                    isColonRequired="yes" />
+                                <span class="fontnormal"><c:out value="${sessionScope.currencyCode}" /> </span>
+                                <br>
+                            </c:if> 
+                            <fmt:message key="product.inclInLoanCycleCounter">
+                                <fmt:param>
+                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+                                        bundle="ProductDefUIResources" />
+                                </fmt:param>
+                            </fmt:message>:
 							<span class="fontnormal"> <c:choose>
 								<c:when
 									test="${sessionScope.loanproductactionform.loanCounter==1}">

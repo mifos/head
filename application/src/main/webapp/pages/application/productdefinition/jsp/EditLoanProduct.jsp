@@ -269,7 +269,17 @@ explanation of the license and how it is applied.
 								</c:forEach>
 							</mifos:select></td>
 						</tr>
-						<tr class="fontnormal">
+                        <tr class="fontnormal">
+                            <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
+                                <td align="right"><mifos:mifoslabel name="product.currency"
+                                    bundle="ProductDefUIResources" isColonRequired="yes" /></td>
+                                <td><html:text property="currencyId" name="notAllowedToEdit" 
+                                    disabled="true" readonly="true"
+                                    value="${sessionScope.currencyCode}" /></td>
+                                <br />
+                            </c:if>
+                        </tr>
+                        <tr class="fontnormal">
 							<td align="right">
 								<span id="EditLoanProduct.label.includeInLoanCycleCounter">
 								<fmt:message key="product.inclInLoanCycleCounter">
