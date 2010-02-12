@@ -29,7 +29,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.AnnotationConfiguration;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -45,7 +45,7 @@ public class HibernateUtil {
 
     private static Boolean initialized = Boolean.FALSE;
     private static SessionFactory sessionFactory;
-    private static Configuration config = null;
+    private static AnnotationConfiguration config = null;
     private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
 
     public HibernateUtil() {
@@ -55,7 +55,7 @@ public class HibernateUtil {
     public void initialize() throws HibernateStartUpException {
         synchronized (initialized) {
             if (initialized == Boolean.FALSE) {
-                config = new Configuration();
+                config = new AnnotationConfiguration();
                 initializeHibernateConfiguration();
                 initializeDatabaseConnnectionSettings();
                 HibernateSessionFactory.setConfiguration(config);

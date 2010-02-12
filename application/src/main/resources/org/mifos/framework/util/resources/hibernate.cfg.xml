@@ -8,7 +8,7 @@
    
 		<!-- master data mapping files-->
 
-		<mapping resource="org/mifos/application/master/business/LookUpEntity.hbm.xml" />
+		<mapping class="org.mifos.application.master.business.LookUpEntity" />
 		<mapping resource="org/mifos/accounts/business/AccountTypeEntity.hbm.xml" />
 
 		<mapping resource="org/mifos/application/checklist/business/CheckListBO.hbm.xml" />
