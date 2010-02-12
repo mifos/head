@@ -305,17 +305,17 @@
 		org.mifos.application.configuration.util.helpers.ConfigurationConstants,
 		org.mifos.accounts.util.helpers.AccountStates,
 		org.mifos.accounts.savings.util.helpers.SavingsConstants,
-		org.mifos.application.fees.util.helpers.FeeConstants"/>
+		org.mifos.accounts.fees.util.helpers.FeeConstants"/>
     </plug-in>
     <plug-in className="org.mifos.framework.struts.plugin.EnumPlugin">
         <set-property property="enumFileNames"
-                      value="org.mifos.application.fees.util.helpers.FeeFrequencyType,
+                      value="org.mifos.accounts.fees.util.helpers.FeeFrequencyType,
 		org.mifos.application.master.business.CustomFieldType,
-		org.mifos.application.fees.util.helpers.FeeCategory,
-		org.mifos.application.fees.util.helpers.FeeLevel,
-		org.mifos.application.fees.util.helpers.FeePayment,
-		org.mifos.application.fees.util.helpers.FeeStatus,
-		org.mifos.application.fees.util.helpers.RateAmountFlag,
+		org.mifos.accounts.fees.util.helpers.FeeCategory,
+		org.mifos.accounts.fees.util.helpers.FeeLevel,
+		org.mifos.accounts.fees.util.helpers.FeePayment,
+		org.mifos.accounts.fees.util.helpers.FeeStatus,
+		org.mifos.accounts.fees.util.helpers.RateAmountFlag,
 		org.mifos.application.meeting.util.helpers.RecurrenceType,
 		org.mifos.application.meeting.util.helpers.MeetingType,
 		org.mifos.accounts.util.helpers.AccountTypes,

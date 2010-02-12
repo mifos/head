@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.ApplicationException;

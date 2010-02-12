@@ -53,8 +53,8 @@ import org.mifos.application.configuration.business.service.ConfigurationBusines
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.exceptions.MeetingException;

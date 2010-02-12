@@ -59,7 +59,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
-import org.mifos.application.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;

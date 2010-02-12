@@ -26,7 +26,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;

@@ -39,7 +39,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;

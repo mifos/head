@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.accounts.fees.business.FeeBO" table="FEES">
+		<id name="feeId" column="FEE_ID" type="short" unsaved-value="null" access="field">
+			<generator class="native" />
+		</id>
+		<discriminator>
+			<column name="DISCRIMINATOR" />
+		</discriminator>
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+
+		<property name="createdDate" column="CREATED_DATE" />
+		<property name="createdBy" column="CREATED_BY" />
+		<property name="updatedDate" column="UPDATED_DATE" />
+		<property name="updatedBy" column="UPDATED_BY" />
+		<property name="feeName" column="FEE_NAME" access="field" />
+		<property name="changeType" column="UPDATE_FLAG" access="field" />
+		
+		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" insert="true" update="false" access="field" />
+		<many-to-one name="categoryType" column="CATEGORY_ID" class="org.mifos.accounts.fees.business.CategoryTypeEntity" update="false" insert="true" access="field" />
+		<many-to-one name="glCode" column="GLCODE_ID" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
+		<one-to-one name="feeFrequency" class="org.mifos.accounts.fees.business.FeeFrequencyEntity" cascade="all" property-ref="fee" lazy="false" access="field" />
+		<many-to-one name="feeStatus" column="STATUS" class="org.mifos.accounts.fees.business.FeeStatusEntity" insert="true" update="true" />
+        <set name="feeLevels" cascade="all" inverse="true" table="FEELEVEL" access="field">
+			<key column="FEE_ID" not-null="false" />
+			<one-to-many class="org.mifos.accounts.fees.business.FeeLevelEntity" />
+		</set>
+
+		<subclass name="org.mifos.accounts.fees.business.RateFeeBO" discriminator-value="RATE">
+			<property name="rate" column="RATE" />
+			<many-to-one name="feeFormula" column="FORMULA_ID" class="org.mifos.accounts.fees.business.FeeFormulaEntity"  lazy="false" insert="true" update="false" access="field" />
+		</subclass>
+
+		<subclass name="org.mifos.accounts.fees.business.AmountFeeBO" discriminator-value="AMOUNT">
+			<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+				<column name="FEE_AMOUNT_CURRENCY_ID" />
+				<column name="FEE_AMOUNT" />
+			</property>
+		</subclass>
+	</class>
+	<query name="retrieveCustomerFees">
+		<![CDATA[from FeeBO fee where fee.categoryType.id in (1,2,3,4) order by fee.feeName]]>
+	</query>
+
+	<query name="retrieveProductFees">
+		<![CDATA[from FeeBO fee where fee.categoryType.id in (5) order by fee.feeName]]>
+	</query>
+
+	<query name="getUpdatedFeesForCustomers">
+		<![CDATA[from FeeBO fee where  fee.changeType in (1,2,3) and fee.categoryType.id in (1,2,3,4)]]>
+	</query>
+
+	<query name="retrieveCustomerFeesByCategoryType">
+		<![CDATA[from FeeBO fee where fee.feeStatus=1 and (fee.categoryType.id=:ALLCUSTOMERS or fee.categoryType.id=:CUSTOMER_CATEGAORY) order by fee.feeName]]>
+	</query>
+	<query name="getAllApplicableFeesForCustomer">
+		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id in (:category1,:category2) 
+		and fees.feeId not in ( select af.fees.feeId from org.mifos.accounts.business.AccountFeesEntity af 
+		where af.account.accountId=:accountId and af.fees.feeFrequency.feeFrequencyType.id=:feeFrequencyTypeId and (af.feeStatus=null or af.feeStatus=:active))
+		]]>
+	</query>
+	<query name="getAllApplicableFeesForLoan">
+		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id in (:category) 
+		and fees.feeId not in ( select af.fees.feeId from org.mifos.accounts.business.AccountFeesEntity af 
+		where af.account.accountId=:accountId and af.fees.feeFrequency.feeFrequencyType.id=:feeFrequencyTypeId and (af.feeStatus=null or af.feeStatus=:active))
+		]]>
+	</query>
+	<query name="getAllApplicableFeesForLoanCreation">
+		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id =:category]]>
+	</query>
+
+</hibernate-mapping>

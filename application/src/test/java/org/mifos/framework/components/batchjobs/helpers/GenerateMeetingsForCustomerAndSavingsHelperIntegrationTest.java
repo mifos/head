@@ -34,7 +34,7 @@ import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;

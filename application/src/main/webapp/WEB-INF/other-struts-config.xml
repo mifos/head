@@ -23,13 +23,13 @@
         <form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm"/>
         <form-bean name="systemInfoActionForm" type="org.mifos.application.admin.struts.actionforms.SystemInfoActionForm"/>
         <!-- Notes form bean -->
-        <form-bean name="feeactionform" type="org.mifos.application.fees.struts.actionforms.FeeActionForm"/>
+        <form-bean name="feeactionform" type="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
         <!-- ChkListActionForm Action Form  -->
         <form-bean name="ChkListActionForm"
                    type="org.mifos.application.checklist.struts.actionforms.ChkListActionForm"/>
         <!--  end -->
         <!-- FundsActionForm Action Form  -->
-        <form-bean name="fundActionForm" type="org.mifos.application.fund.struts.actionforms.FundActionForm"/>
+        <form-bean name="fundActionForm" type="org.mifos.accounts.fund.struts.actionforms.FundActionForm"/>
         <!--  end -->
 
         <!-- Bulk Entry form -->
@@ -60,7 +60,7 @@
         <!-- End Products mix -->
         <!--  Accepted Payment Type Form -->
         <form-bean name="acceptedpaymenttypeactionform"
-                   type="org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm"/>
+                   type="org.mifos.accounts.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm"/>
 
         <!-- Moratorium module -->
         <form-bean name="moratoriumActionForm"
@@ -197,7 +197,7 @@
             <forward name="load_success" path="/pages/application/admin/jsp/sysinfo.jsp" />
         </action>
         <!-- Fee Action -->
-        <action path="/feeaction" type="org.mifos.application.fees.struts.action.FeeAction" parameter="method"
+        <action path="/feeaction" type="org.mifos.accounts.fees.struts.action.FeeAction" parameter="method"
                 input="/feeaction.do?method=validate" name="feeactionform">
             <forward name="load_success" path="/pages/application/fees/jsp/feescreate.jsp"/>
             <forward name="load_failure" path="/pages/framework/jsp/error.jsp"/>
@@ -254,7 +254,7 @@
         <!-- Ends-->
 
         <!-- Funds Action -->
-        <action path="/fundAction" type="org.mifos.application.fund.struts.action.FundAction" parameter="method"
+        <action path="/fundAction" type="org.mifos.accounts.fund.struts.action.FundAction" parameter="method"
                 scope="session" name="fundActionForm" validate="true" input="/fundAction.do?method=validate">
             <forward name="load_success" path="/pages/application/fund/jsp/createfund.jsp"/>
             <forward name="load_failure" path="/pages/application/fund/jsp/createfund.jsp"/>
@@ -427,7 +427,7 @@
 
         </action>
         <action path="/acceptedPaymentTypeAction"
-                type="org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction"
+                type="org.mifos.accounts.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction"
                 name="acceptedpaymenttypeactionform" parameter="method"
                 input="/acceptedPaymentTypeAction.do?method=validate"
                 validate="false" scope="session">

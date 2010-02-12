@@ -37,7 +37,7 @@ import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;

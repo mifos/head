@@ -42,7 +42,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.accounts.fees.business.FeeLevelEntity" table="FEELEVEL">
+		<id name="feeLevelId" column="FEELEVEL_ID" type="short" access="field">
+			<generator class="native" />
+		</id>
+
+		<property name="levelId" column="LEVEL_ID" />
+
+		<many-to-one name="fee" column="FEE_ID" class="org.mifos.accounts.fees.business.FeeBO" cascade="all" insert="true" access="field" />
+	</class>
+</hibernate-mapping>

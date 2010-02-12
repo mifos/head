@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;

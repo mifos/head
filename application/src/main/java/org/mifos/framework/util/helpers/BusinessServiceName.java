@@ -26,7 +26,7 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
-import org.mifos.application.fees.business.service.FeeBusinessService;
+import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;

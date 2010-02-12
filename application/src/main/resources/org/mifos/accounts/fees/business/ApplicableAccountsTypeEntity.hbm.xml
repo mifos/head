@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <!-- Seems not to be used by anything -->
+
+    <class name="org.mifos.accounts.fees.business.ApplicableAccountsTypeEntity" 
+        table="FEE_UPDATE_TYPE">
+        <id name="id" column="FEE_UPDATE_TYPE_ID" >
+            <generator class="native"/>
+        </id>
+        <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" insert="true" update="false"/>
+    </class>
+    
+    <query name="getFeeUpdateType">
+    
+    <![CDATA[ from  ApplicableAccountsTypeEntity entity where entity.id =:ID ]]>
+    </query>
+</hibernate-mapping>

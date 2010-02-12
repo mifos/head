@@ -23,7 +23,7 @@ package org.mifos.accounts.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;

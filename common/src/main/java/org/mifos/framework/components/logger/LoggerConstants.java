@@ -44,7 +44,7 @@ public interface LoggerConstants {
 
     String CENTERLOGGER = "org.mifos.application.center";
 
-    String FUNDLOGGER = "org.mifos.application.fund";
+    String FUNDLOGGER = "org.mifos.accounts.fund";
 
     String CLIENTLOGGER = "org.mifos.application.client";
 
@@ -61,7 +61,7 @@ public interface LoggerConstants {
 
     String CONFIGURATION_LOGGER = "org.mifos.framework.components.configuration";
 
-    String FEESLOGGER = "org.mifos.application.fees";
+    String FEESLOGGER = "org.mifos.accounts.fees";
 
     String REPAYMENTSCHEDULAR = "org.mifos.framework.components.repaymentschedule";
 

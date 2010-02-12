@@ -24,7 +24,7 @@
 
 		<many-to-one name="accountFee" column="ACCOUNT_FEE_ID" class="org.mifos.accounts.business.AccountFeesEntity" access="field"/>
 		<many-to-one name="accountActionDate" column="ID" class="org.mifos.accounts.loan.business.LoanScheduleEntity" access="field"/>
-		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeeBO" access="field"/>
+		<many-to-one name="fee" column="FEE_ID" class="org.mifos.accounts.fees.business.FeeBO" access="field"/>
 
 	</class>
 </hibernate-mapping>

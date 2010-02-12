@@ -23,7 +23,7 @@ package org.mifos.application.customer;
 import java.util.List;
 
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.business.util.Address;

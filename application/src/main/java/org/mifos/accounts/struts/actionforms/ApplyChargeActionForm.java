@@ -30,7 +30,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;

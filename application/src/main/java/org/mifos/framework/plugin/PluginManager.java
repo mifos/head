@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.mifos.accounts.api.StandardAccountService;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;

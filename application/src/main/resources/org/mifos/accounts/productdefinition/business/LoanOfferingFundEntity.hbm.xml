@@ -12,6 +12,6 @@
 		</id>
 
 		<many-to-one name="loanOffering" column="PRD_OFFERING_ID" class="org.mifos.accounts.productdefinition.business.LoanOfferingBO" cascade="none" insert="true" update="true" unique="true" access="field" />
-		<many-to-one name="fund" column="FUND_ID" class="org.mifos.application.fund.business.FundBO" cascade="none" insert="true" update="true" unique="true" access="field" />
+		<many-to-one name="fund" column="FUND_ID" class="org.mifos.accounts.fund.business.FundBO" cascade="none" insert="true" update="true" unique="true" access="field" />
 	</class>
 </hibernate-mapping>

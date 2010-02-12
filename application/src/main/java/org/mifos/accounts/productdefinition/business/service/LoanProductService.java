@@ -22,9 +22,9 @@ package org.mifos.accounts.productdefinition.business.service;
 
 import java.util.List;
 
-import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fees.business.service.FeeBusinessService;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.business.service.Service;

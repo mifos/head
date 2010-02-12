@@ -28,7 +28,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;

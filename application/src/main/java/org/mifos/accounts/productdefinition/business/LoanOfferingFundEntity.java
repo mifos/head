@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import org.mifos.application.fund.business.FundBO;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class LoanOfferingFundEntity extends PersistentObject {

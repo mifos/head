@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import org.mifos.application.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;

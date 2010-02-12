@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.mifos.accounts.api.AccountReferenceDto;
 import org.mifos.accounts.api.UserReferenceDto;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountTypes;

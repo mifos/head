@@ -40,7 +40,7 @@ import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;

@@ -81,7 +81,7 @@ public class ConstPlugin implements PlugIn {
      * org.mifos.application.configuration.util.helpers.ConfigurationConstants,
      * org.mifos.accounts.util.helpers.AccountStates,
      * org.mifos.accounts.savings.util.helpers.SavingsConstants,
-     * org.mifos.application.fees.util.helpers.FeeConstants"/> </plug-in>
+     * org.mifos.accounts.fees.util.helpers.FeeConstants"/> </plug-in>
      */
     private List<String> getConstantFileNames() {
         StringTokenizer tokenizer = new StringTokenizer(constantFileNames, ",");

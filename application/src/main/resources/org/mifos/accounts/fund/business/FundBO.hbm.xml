@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.accounts.fund.business.FundBO" table="FUND">
+        <id name="fundId" column="FUND_ID" type="short" access="field">
+            <generator class="native"/>
+        </id>
+        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+        <property name="fundName" column="FUND_NAME" type="string" />
+        <many-to-one name="fundCode" column="FUNDCODE_ID" class="org.mifos.application.master.business.FundCodeEntity"  unique="true" insert="true" update="false" access="field" />
+    </class>
+    <query name="fund.getFundForGivenName">
+            <![CDATA[from org.mifos.accounts.fund.business.FundBO fund where fund.fundName = :FUND_NAME]]>
+    </query>
+    <query name="fund.getFundCodes"><![CDATA[from org.mifos.application.master.business.FundCodeEntity]]></query>
+    <query name="fund.checkFundNameExist">
+		<![CDATA[select count(*) from org.mifos.accounts.fund.business.FundBO fund where fund.fundName = :FUND_NAME]]>
+	</query>
+	<query name="product.srcfund"><![CDATA[from org.mifos.accounts.fund.business.FundBO fund]]></query>
+</hibernate-mapping>

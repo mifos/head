@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
+import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;

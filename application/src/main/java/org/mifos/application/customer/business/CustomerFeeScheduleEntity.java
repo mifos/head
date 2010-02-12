@@ -23,7 +23,7 @@ package org.mifos.application.customer.business;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.application.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerFeeScheduleEntity extends AccountFeesActionDetailEntity {

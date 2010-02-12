@@ -41,8 +41,8 @@ import java.util.Set;
 
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fund.business.FundBO;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;

@@ -93,7 +93,7 @@ public interface AccountConstants {
     public static final String VIEWGROUPCHARGES = "ViewGroupCharges";
     public static final String VIEWCENTERCHARGES = "ViewCenterCharges";
     public static final String APPLYLOANCHARGES = "reviewTransactionPage";
-    public static final String FEEFORMULAPATH = "org.mifos.application.fees.util.valueobjects.FeeFormula";
+    public static final String FEEFORMULAPATH = "org.mifos.accounts.fees.util.valueobjects.FeeFormula";
     public static final String FEEFORMULAID = "feeFormulaId";
     public static final String KEYNOMEETING = "errors.nomeeting";
     public static final String UNEXPECTEDERROR = "errors.unexpected";

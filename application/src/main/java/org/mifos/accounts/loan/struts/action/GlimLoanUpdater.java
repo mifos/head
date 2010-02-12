@@ -28,7 +28,7 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;

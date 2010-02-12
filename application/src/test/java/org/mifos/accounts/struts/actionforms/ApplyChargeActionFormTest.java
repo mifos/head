@@ -26,7 +26,7 @@ import java.util.Locale;
 
 import org.apache.struts.action.ActionErrors;
 import org.junit.Test;
-import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.framework.TestUtils;
 
 public class ApplyChargeActionFormTest {

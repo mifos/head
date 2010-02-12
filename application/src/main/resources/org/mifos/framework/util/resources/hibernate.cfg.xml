@@ -121,17 +121,17 @@
 		<mapping resource="org/mifos/accounts/financial/business/FinancialActionBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/financial/business/FinancialTransactionBO.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/CustomerAttendance.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/CategoryTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeeFormulaEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeeFrequencyEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeeFrequencyTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeeLevelEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeePaymentEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeePaymentsCategoriesTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeeBO.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeeStatusEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/FeeTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/fees/business/ApplicableAccountsTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/CategoryTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeeFormulaEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeeFrequencyEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeeFrequencyTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeeLevelEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeePaymentEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeePaymentsCategoriesTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeeBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeeStatusEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/FeeTypeEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fees/business/ApplicableAccountsTypeEntity.hbm.xml" />
 
 		<!-- Mapping files for collection sheet retrieve and save-->
 		<mapping
@@ -210,7 +210,7 @@
 		<mapping resource="org/mifos/application/rolesandpermission/business/ActivityEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
-		<mapping resource="org/mifos/application/fund/business/FundBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/fund/business/FundBO.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/FundCodeEntity.hbm.xml" />
 
         <mapping resource="org/mifos/application/holiday/business/HolidayBO.hbm.xml" />
@@ -223,8 +223,8 @@
      	<mapping resource="org/mifos/application/surveys/business/SurveyResponse.hbm.xml"/>  
     	<mapping resource="org/mifos/application/surveys/business/SurveyQuestion.hbm.xml"/>
     	<mapping resource="org/mifos/application/ppi/business/PPILikelihood.hbm.xml"/>
-    	<mapping resource="org/mifos/application/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" />
-		<mapping resource="org/mifos/application/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
+    	<mapping resource="org/mifos/accounts/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" />
+		<mapping resource="org/mifos/accounts/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
 			 
 		<mapping resource="org/mifos/accounts/loan/business/MaxMinLoanAmount.hbm.xml" />
 		<mapping resource="org/mifos/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />		 

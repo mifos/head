@@ -37,7 +37,7 @@ import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
