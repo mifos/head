@@ -168,7 +168,7 @@ explanation of the license and how it is applied.
 							<td width="20%"  align="left" class="fontnormal">
 							<mifos:select styleId="applyCharges.input.type" property="chargeType" style="width:136px;" onchange="loadValues(this,1)">
 								<c:forEach var="applicableCharge" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
-									<html-el:option value="${applicableCharge.feeId}">${applicableCharge.feeName}</html-el:option>
+									<html-el:option value="${applicableCharge.feeId}:${applicableCharge.isRateType}">${applicableCharge.feeName}</html-el:option>
 								</c:forEach>
 
 							</mifos:select>

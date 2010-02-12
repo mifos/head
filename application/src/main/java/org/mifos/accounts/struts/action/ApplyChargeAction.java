@@ -88,7 +88,7 @@ public class ApplyChargeAction extends BaseAction {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
         ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
-        Short chargeType = Short.valueOf(applyChargeActionForm.getChargeType());
+        Short feeId = Short.valueOf(applyChargeActionForm.getFeeId());
         Double chargeAmount = getDoubleValue(request.getParameter("charge"));
         AccountBO accountBO = getAccountBusinessService().getAccount(
                 Integer.valueOf(applyChargeActionForm.getAccountId()));
@@ -104,7 +104,7 @@ public class ApplyChargeAction extends BaseAction {
             checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext, accountBO.getOffice()
                     .getOfficeId(), userContext.getId());
 
-        accountBO.applyCharge(chargeType, chargeAmount);
+        accountBO.applyCharge(feeId, chargeAmount);
         accountBO.update();
         return mapping.findForward(getDetailAccountPage(accountBO));
     }

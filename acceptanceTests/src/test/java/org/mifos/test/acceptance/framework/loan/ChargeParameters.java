@@ -23,6 +23,16 @@ package org.mifos.test.acceptance.framework.loan;
 public class ChargeParameters {
     public static final String MISC_FEES = "Misc Fees";
     public static final String MISC_PENALTY = "Misc Penalty";
+
+    //private static final boolean IS_RATE_TYPE = true;
+    private static final boolean IS_NOT_RATE_TYPE = false;
+    private static final String CHARGE_TYPE_SEPARATOR = ":";
+    
+    private String constructChargeType(int feeId, boolean isRateType) {
+        String isRateTypeString = isRateType ? "1" : "0";
+        return feeId + CHARGE_TYPE_SEPARATOR + isRateTypeString;
+    }
+
     
     private String type;
     private String amount;
@@ -46,10 +56,10 @@ public class ChargeParameters {
      * We do this to ensure that the parameters are independent of locale.
      */
     @SuppressWarnings("PMD.OnlyOneReturn")
-    public int getTypeValue() {
-        if (MISC_FEES.equals(type)) { return -1; }
-        if (MISC_PENALTY.equals(type)) { return -2; }
+    public String getTypeValue() {
+        if (MISC_FEES.equals(type)) { return constructChargeType(-1, IS_NOT_RATE_TYPE); }
+        if (MISC_PENALTY.equals(type)) { return constructChargeType(-2, IS_NOT_RATE_TYPE); }
         
-        return 0;
+        return constructChargeType(0, IS_NOT_RATE_TYPE);
     }
 }

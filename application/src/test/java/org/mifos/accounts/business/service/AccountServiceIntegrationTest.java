@@ -234,7 +234,8 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(6, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-               Assert.assertEquals(new Money(getCurrency(), "20.0").toString(), applicableCharge.getAmountOrRate());
+                // this is a rate, so we shouldn't have a trailing ".0"
+                Assert.assertEquals("20", applicableCharge.getAmountOrRate());
                 Assert.assertNotNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
@@ -264,7 +265,8 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(4, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-               Assert.assertEquals(new Money(getCurrency(), "20.0").toString(), applicableCharge.getAmountOrRate());
+                // this is a rate, so we shouldn't have a trailing ".0"
+                Assert.assertEquals("20", applicableCharge.getAmountOrRate());
                 Assert.assertNotNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Misc Fee")) {

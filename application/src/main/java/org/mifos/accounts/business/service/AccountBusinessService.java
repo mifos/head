@@ -67,6 +67,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class AccountBusinessService implements BusinessService {
 
@@ -222,11 +223,13 @@ public class AccountBusinessService implements BusinessService {
             applicableCharge.setFeeId(fee.getFeeId().toString());
             applicableCharge.setFeeName(fee.getFeeName());
             if (fee.getFeeType().getValue().equals(RateAmountFlag.RATE.getValue())) {
-                applicableCharge.setAmountOrRate(((RateFeeBO) fee).getRate().toString());
+                applicableCharge.setAmountOrRate(new LocalizationConverter().getDoubleStringForInterest(((RateFeeBO) fee).getRate()));
                 applicableCharge.setFormula(((RateFeeBO) fee).getFeeFormula().getFormulaString(
                         userContext.getLocaleId()));
+                applicableCharge.setIsRateType(true);
             } else {
                 applicableCharge.setAmountOrRate(((AmountFeeBO) fee).getFeeAmount().toString());
+                applicableCharge.setIsRateType(false);
             }
             MeetingBO meeting = fee.getFeeFrequency().getFeeMeetingFrequency();
             if (meeting != null) {
@@ -291,10 +294,12 @@ public class AccountBusinessService implements BusinessService {
         ApplicableCharge applicableCharge = new ApplicableCharge();
         applicableCharge.setFeeId(AccountConstants.MISC_FEES);
         applicableCharge.setFeeName("Misc Fees");
+        applicableCharge.setIsRateType(false);
         applicableChargeList.add(applicableCharge);
         applicableCharge = new ApplicableCharge();
         applicableCharge.setFeeId(AccountConstants.MISC_PENALTY);
         applicableCharge.setFeeName("Misc Penalty");
+        applicableCharge.setIsRateType(false);
         applicableChargeList.add(applicableCharge);
     }
 

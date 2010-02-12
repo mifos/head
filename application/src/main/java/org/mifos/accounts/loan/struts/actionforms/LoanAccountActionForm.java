@@ -131,7 +131,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     private String loanOfferingFund;
 
     private String gracePeriodDuration;
-    
+
     private String externalId;
 
     private String businessActivityId;
@@ -185,8 +185,8 @@ public class LoanAccountActionForm extends BaseActionForm {
     private String dayNumber;
 
     private ConfigurationBusinessService configService;
-    
-    private Date originalDisbursementDate;    
+
+    private Date originalDisbursementDate;
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -618,12 +618,12 @@ public class LoanAccountActionForm extends BaseActionForm {
             } else if (method.equals(Methods.load.toString())) {
                 checkValidationForLoad(errors, userContext);
             } else if (method.equals(Methods.schedulePreview.toString())) {
-                checkValidationForSchedulePreview(errors, request);       
+                checkValidationForSchedulePreview(errors, request);
             } else if (method.equals(Methods.managePreview.toString())) {
                 checkValidationForManagePreview(errors, request);
             } else if (method.equals(Methods.preview.toString())) {
                 checkValidationForPreview(errors, request);
-                
+
             }
         } catch (ApplicationException ae) {
             // Discard other errors (is that right?)
@@ -638,23 +638,25 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     protected void validateLoanAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), LoanConstants.LOAN_AMOUNT_KEY, errors, locale, 
-                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), LoanConstants.LOAN_AMOUNT_KEY,
+                errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
-                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
         }
     }
-    
+
     protected void validateInterest(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateInterest(getInterestRate(), LoanConstants.LOAN_INTEREST_RATE_KEY, errors, locale, 
-                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+        DoubleConversionResult conversionResult = validateInterest(getInterestRate(),
+                LoanConstants.LOAN_INTEREST_RATE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
-            addError(errors, LoanConstants.LOAN_INTEREST_RATE_KEY, LoanConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
-                    lookupLocalizedPropertyValue(LoanConstants.LOAN_INTEREST_RATE_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            addError(errors, LoanConstants.LOAN_INTEREST_RATE_KEY, LoanConstants.ERRORS_MUST_NOT_BE_NEGATIVE,
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_INTEREST_RATE_KEY, locale,
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
         }
     }
-    
+
     protected void validateDefaultFee(ActionErrors errors, Locale locale) {
         for (FeeView defaultFee : defaultFees) {
             if (defaultFee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
@@ -666,7 +668,7 @@ public class LoanAccountActionForm extends BaseActionForm {
                             lookupLocalizedPropertyValue(LoanConstants.LOAN_DEFAULT_FEE_KEY, locale,
                                     FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
                 }
-            } else { 
+            } else {
                 DoubleConversionResult conversionResult = validateInterest(defaultFee.getAmount(),
                         LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
@@ -693,7 +695,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             }
         }
     }
-    
+
     // TODO: use localized strings for error messages rather than hardcoded
     private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
         if (StringUtils.isBlank(getCustomerId())) {
@@ -731,7 +733,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateDefaultFee(errors, locale);
         validateAdditionalFee(errors, locale);
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
-           
+
         }
     }
 
@@ -740,7 +742,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
         }
     }
-    
+
     private void performGlimSpecificValidations(ActionErrors errors, HttpServletRequest request)
             throws PageExpiredException, ServiceException {
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
@@ -848,13 +850,14 @@ public class LoanAccountActionForm extends BaseActionForm {
         if (getState().equals(AccountState.LOAN_PARTIAL_APPLICATION)
                 || getState().equals(AccountState.LOAN_PENDING_APPROVAL)) {
             checkValidationForPreview(errors, request);
-            // Only validate the disbursement date before a loan has been approved.  After
+            // Only validate the disbursement date before a loan has been approved. After
             // approval, it cannot be edited.
             try {
                 // only validate if the disbursement date has changed
-                if (!getDisbursementDateValue(getUserContext(request).getPreferredLocale()).equals(getOriginalDisbursementDate())) {                        
-                    validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(request)
-                        .getPreferredLocale()));
+                if (!getDisbursementDateValue(getUserContext(request).getPreferredLocale()).equals(
+                        getOriginalDisbursementDate())) {
+                    validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(
+                            request).getPreferredLocale()));
                 }
             } catch (InvalidDateException dateException) {
                 addError(errors, LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
@@ -1048,10 +1051,9 @@ public class LoanAccountActionForm extends BaseActionForm {
                 }
             }
         }
-        
+
         if (!foundInvalidAmount
-                && (StringUtils.isBlank(Double.valueOf(totalAmount).toString()) || !amountRange
-                        .isInRange(totalAmount))) {
+                && (StringUtils.isBlank(Double.valueOf(totalAmount).toString()) || !amountRange.isInRange(totalAmount))) {
             addError(errors, LoanConstants.LOANAMOUNT,
                     LoanExceptionConstants.SUM_OF_INDIVIDUAL_AMOUNTS_IS_NOT_IN_THE_RANGE_OF_ALLOWED_AMOUNTS,
                     getStringValue(amountRange.getMinLoanAmount()), getStringValue(amountRange.getMaxLoanAmount()));
@@ -1078,14 +1080,12 @@ public class LoanAccountActionForm extends BaseActionForm {
                 } else {
                     if (getMonthType().equals("1")) {
                         // "10th day of the month"
-                        if (StringUtils.isBlank(this.getMonthDay())
-                                || StringUtils.isBlank(this.getDayRecurMonth())) {
+                        if (StringUtils.isBlank(this.getMonthDay()) || StringUtils.isBlank(this.getDayRecurMonth())) {
                             addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                         }
                     } else {
                         // "1st Monday of every month"
-                        if (StringUtils.isBlank(this.getMonthRank())
-                                || StringUtils.isBlank(this.getMonthWeek())
+                        if (StringUtils.isBlank(this.getMonthRank()) || StringUtils.isBlank(this.getMonthWeek())
                                 || StringUtils.isBlank(this.getRecurMonth())) {
                             addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                         }
@@ -1109,9 +1109,8 @@ public class LoanAccountActionForm extends BaseActionForm {
                             lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
                                     FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
                 }
-            }
-            else {
-                if (!listDetail.isEmpty())  {
+            } else {
+                if (!listDetail.isEmpty()) {
                     addError(errors, "", LoanExceptionConstants.LOAN_DETAILS_ENTERED_WITHOUT_SELECTING_INDIVIDUAL, "");
                     break;
 
@@ -1119,8 +1118,8 @@ public class LoanAccountActionForm extends BaseActionForm {
             }
         }
         int amountValidationErrors = errors.size() - errorsBeforeLoanAmountsValidation;
-        if(amountValidationErrors == 0)
-        validateSumOfTheAmountsSpecified(errors);
+        if (amountValidationErrors == 0)
+            validateSumOfTheAmountsSpecified(errors);
     }
 
     private List<FieldConfigurationEntity> getMandatoryFields(HttpServletRequest request) {
@@ -1169,19 +1168,19 @@ public class LoanAccountActionForm extends BaseActionForm {
                     continue;
                 // Meeting date is invalid
                 if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
-                    DateUtils.getLastDayOfNextYear())) {
+                        DateUtils.getLastDayOfNextYear())) {
                     errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                        LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+                            LoanExceptionConstants.INVALIDTRANSACTIONDATE));
                     continue;
                 }
-                
-                validateTotalAmount(errors, template.getTotalAmount().toString(), locale );
+
+                validateTotalAmount(errors, template.getTotalAmount().toString(), locale);
                 // User has enter a payment for future date
                 validateTransactionDate(errors, template, getDisbursementDateValue(locale));
             }
         } catch (InvalidDateException invalidDate) {
-                errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                        LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
         } catch (MeetingException e) {
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, new ActionMessage(
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
@@ -1193,13 +1192,14 @@ public class LoanAccountActionForm extends BaseActionForm {
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
         }
     }
-    
+
     protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(amount, LoanConstants.LOAN_AMOUNT_KEY, errors, locale, 
+        DoubleConversionResult conversionResult = validateAmount(amount, LoanConstants.LOAN_AMOUNT_KEY, errors, locale,
                 FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
-                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
         }
     }
 
@@ -1209,10 +1209,10 @@ public class LoanAccountActionForm extends BaseActionForm {
         try {
             if (!DateUtils.dateFallsOnOrBeforeDate(template.getTransactionDate(), DateUtils.currentDate())) {
                 errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(
-                    LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
+                        LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
             } else if (!DateUtils.dateFallsBeforeDate(disbursementDate, template.getTransactionDate())) {
                 errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+                        LoanExceptionConstants.INVALIDTRANSACTIONDATE));
             }
         } catch (InvalidDateException ide) {
             errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(

@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
@@ -39,6 +40,10 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
     private String accountId;
 
+    // chargeType is constructed in the jsp page applyCharges.jsp as "<feeId>:<isRateType>"
+    // where <feeId> is the id of the fee that has been selected and
+    // <isRateType> is "1" if the fee is a rate type (% of some amount) or "0" if it is
+    // a simple amount (money value)
     private String chargeType;
 
     private String chargeAmount;
@@ -46,7 +51,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
     private String charge;
 
     private String selectedChargeFormula;
-
+    
     public String getAccountId() {
         return accountId;
     }
@@ -86,6 +91,22 @@ public class ApplyChargeActionForm extends BaseActionForm {
     public void setSelectedChargeFormula(String selectedChargeFormula) {
         this.selectedChargeFormula = selectedChargeFormula;
     }
+    
+    /*
+     * Extract the <isRateType> boolean value from the chargeType (see note above about chargeType)
+     */
+    public boolean isRateType() {
+        String[] values = getChargeType().split(":");
+        return values[1].equals("1");
+    }
+
+    /*
+     * Extract the <feeId> value from the chargeType (see note above about chargeType)
+     */
+    public String getFeeId() {
+        String[] values = getChargeType().split(":");
+        return values[0];        
+    }
 
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -118,8 +139,15 @@ public class ApplyChargeActionForm extends BaseActionForm {
     }
     
     protected void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+        DoubleConversionResult conversionResult;
+    
+        if (isRateType()) {
+            conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+        } else {
+            conversionResult = validateAmount(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);            
+        }
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
                     lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
