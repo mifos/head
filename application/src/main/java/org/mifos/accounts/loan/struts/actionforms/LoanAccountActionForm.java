@@ -681,19 +681,43 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    protected void validateAdditionalFee(ActionErrors errors, Locale locale) {
+    protected void validateAdditionalFee(ActionErrors errors, Locale locale, HttpServletRequest request)
+            throws PageExpiredException {
+        List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
+                request);
         for (FeeView additionalFee : additionalFees) {
             if (additionalFee.getAmount() != null && !additionalFee.getAmount().equals("")) {
-                DoubleConversionResult conversionResult = validateAmount(additionalFee.getAmount(),
-                        LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
-                if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-                    addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
-                            LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
-                                    LoanConstants.LOAN_ADDITIONAL_FEE_KEY, locale,
-                                    FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                if (getAdditionalFeeType(additionalFeeList, additionalFee.getFeeId()).equals(RateAmountFlag.AMOUNT)) {
+                    DoubleConversionResult conversionResult = validateAmount(additionalFee.getAmount(),
+                            LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale,
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                    if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                        addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
+                                LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
+                                        LoanConstants.LOAN_ADDITIONAL_FEE_KEY, locale,
+                                        FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                    }
+                } else {
+                    DoubleConversionResult conversionResult = validateInterest(additionalFee.getAmount(),
+                            LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale,
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                    if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                        addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
+                                LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
+                                        LoanConstants.LOAN_ADDITIONAL_FEE_KEY, locale,
+                                        FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                    }
                 }
             }
         }
+    }
+    
+    private  RateAmountFlag getAdditionalFeeType(List<FeeView> additionalFeeList, String feeId) {
+        for (FeeView fee : additionalFeeList)
+            if (fee.getFeeId().equals(feeId)) {
+                return fee.getFeeType();
+            }
+        return null;
     }
 
     // TODO: use localized strings for error messages rather than hardcoded
@@ -731,7 +755,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateLoanAmount(errors, locale);
         validateInterest(errors, locale);
         validateDefaultFee(errors, locale);
-        validateAdditionalFee(errors, locale);
+        validateAdditionalFee(errors, locale, request);
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
 
         }

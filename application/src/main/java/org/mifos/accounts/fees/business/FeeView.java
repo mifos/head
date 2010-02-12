@@ -60,7 +60,7 @@ public class FeeView extends View {
         if (userContext != null)
             localeId = userContext.getLocaleId();
         this.feeId = fee.getFeeId().toString();
-        this.setFeeType(fee.getFeeType());
+        this.feeType = fee.getFeeType();
         this.feeName = fee.getFeeName();
         if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
             this.amount = ((AmountFeeBO) fee).getFeeAmount().toString();
@@ -147,10 +147,6 @@ public class FeeView extends View {
 
     public Short getLocaleId() {
         return localeId;
-    }
-
-    public void setFeeType(RateAmountFlag feeType) {
-        this.feeType = feeType;
     }
 
     public RateAmountFlag getFeeType() {
