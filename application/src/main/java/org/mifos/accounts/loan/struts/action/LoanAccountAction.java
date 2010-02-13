@@ -394,14 +394,15 @@ public class LoanAccountAction extends AccountAppAction {
         List<FeeView> defaultFees = new ArrayList<FeeView>();
         getDefaultAndAdditionalFees(loanActionForm.getPrdOfferingIdValue(), getUserContext(request), defaultFees,
                 additionalFees);
-        
-        SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST, additionalFees, request);
+
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), getUserContext(request)
                 .getLocaleId());
         if (AccountingRules.isMultiCurrencyEnabled()) {
-            defaultFees = getFilteredDefaultFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
+            defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
+            additionalFees = getFilteredFeesByCurrency(additionalFees, loanOffering.getCurrency().getCurrencyId());
         }
         loanActionForm.setDefaultFees(defaultFees);
+        SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST, additionalFees, request);
         // end of load fee
         
         // setDateIntoForm
@@ -474,10 +475,10 @@ public class LoanAccountAction extends AccountAppAction {
         }
     }
     
-    private List<FeeView> getFilteredDefaultFeesByCurrency(List<FeeView> defaultFees, Short loanCurrencyId) {
+    private List<FeeView> getFilteredFeesByCurrency(List<FeeView> defaultFees, Short currencyId) {
         List<FeeView> filteredFees = new ArrayList<FeeView>();
         for(FeeView feeView:defaultFees) {
-            if(feeView.isValidForCurrency(loanCurrencyId)) {
+            if(feeView.isValidForCurrency(currencyId)) {
                 filteredFees.add(feeView);
             }
         }
