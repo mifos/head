@@ -914,6 +914,17 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     }
 
+    public void testSearchWithGovernmentId() throws Exception {
+        createCustomersWithGovernmentId(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        StaticHibernateUtil.commitTransaction();
+        QueryResult queryResult = new CustomerPersistence().search("76346793216", Short.valueOf("3"), Short
+                .valueOf("1"), Short.valueOf("1"));
+        Assert.assertNotNull(queryResult);
+        Assert.assertEquals(1, queryResult.getSize());
+        Assert.assertEquals(1, queryResult.get(0, 10).size());
+
+    }
+
     @SuppressWarnings("unchecked")
     public void testSearchWithCancelLoanAccounts() throws Exception {
         groupAccount = getLoanAccount();
@@ -1229,6 +1240,13 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", groupStatus, center);
         client = TestObjectFactory.createClient("Client", clientStatus, group);
+    }
+
+    private void createCustomersWithGovernmentId(final CustomerStatus groupStatus, final CustomerStatus clientStatus) {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", groupStatus, center);
+        client = TestObjectFactory.createClient("Client", clientStatus, group, TestObjectFactory.getFees(), "76346793216", new java.util.Date(1222333444000L));
     }
 
     private static java.util.Date getMeetingDates(final MeetingBO meeting) {

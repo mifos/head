@@ -224,6 +224,10 @@
 	<query name="customer.findCountBySystemId">
 		<![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
 	</query>
+
+    <query name="customer.findCountByGovernmentId">
+		<![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO customer where customer.governmentId = :governmentId ]]>
+	</query>
 	
 	<query name="customer.findCenterSystemId">
 		<![CDATA[from org.mifos.application.customer.center.business.CenterBO as center where center.globalCustNum = :globalCustNum ]]>
@@ -508,6 +512,16 @@
 	        	   left join c.office as off  
 	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
         </query>
+
+        <query name="Customer.cust_govidsearch_withoutoffice">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+	        	   from org.mifos.application.customer.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+	        	   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+        </query>
+
         <query name="Customer.cust_idsearch">
 	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
 	        	   from org.mifos.application.customer.business.CustomerBO as c 
@@ -517,7 +531,16 @@
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
         </query>
 
-         <query name="Customer.cust_idsearch_withoutoffice_count">
+       <query name="Customer.cust_govidsearch">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+	        	   from org.mifos.application.customer.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
+        </query>
+
+        <query name="Customer.cust_idsearch_withoutoffice_count">
 	        	   <![CDATA[select count(*)
 	        	   from org.mifos.application.customer.business.CustomerBO as c 
 	        	   left join c.parentCustomer as pa 
@@ -525,13 +548,32 @@
 	        	   left join c.office as off  
 	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
         </query>
+
+        <query name="Customer.cust_govidsearch_withoutoffice_count">
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.application.customer.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+	        	   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+        </query>
+
         <query name="Customer.cust_idsearch_count">
-	        	   <![CDATA[select count(*)  
-	        	   from org.mifos.application.customer.business.CustomerBO as c 
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.application.customer.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
+        </query>
+
+       <query name="Customer.cust_govidsearch_count">
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.application.customer.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
         </query>
 
         <query name="Customer.cust_idsearch_nonLo">
@@ -543,6 +585,15 @@
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
         </query>
 
+        <query name="Customer.cust_govidsearch_nonLo">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+	        	   from org.mifos.application.customer.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+        </query>
+
        <query name="Customer.cust_idsearch_count_nonLo">
 	        	   <![CDATA[select count(*)  
 	        	   from org.mifos.application.customer.business.CustomerBO as c 
@@ -550,6 +601,15 @@
 	        	   left join pa.parentCustomer as papa 
 	        	   left join c.office as off  
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+        </query>
+
+        <query name="Customer.cust_govidsearch_count_nonLo">
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.application.customer.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
         </query>
 
         

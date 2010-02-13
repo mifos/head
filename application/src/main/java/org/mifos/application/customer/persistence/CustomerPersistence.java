@@ -239,7 +239,10 @@ public class CustomerPersistence extends Persistence {
             if (queryResult == null) {
                 queryResult = idSearch(searchString, officeId, userId);
                 if (queryResult == null) {
-                    queryResult = mainSearch(searchString, officeId, userId, userOfficeId);
+                    queryResult = governmentIdSearch(searchString, officeId, userId);
+                    if (queryResult == null) {
+                        queryResult = mainSearch(searchString, officeId, userId, userOfficeId);
+                    }
                 }
             }
 
@@ -428,12 +431,69 @@ public class CustomerPersistence extends Persistence {
 
     }
 
+    private QueryResult governmentIdSearch(final String searchString, final Short officeId, final Short userId) throws HibernateSearchException,
+            SystemException, PersistenceException {
+        if (!isCustomerExistWithGovernmentId(searchString)) {
+            return null;
+        }
+        String[] namedQuery = new String[2];
+        List<Param> paramList = new ArrayList<Param>();
+        QueryInputs queryInputs = new QueryInputs();
+        String[] Names = { "customerId", "centerName", "centerGlobalCustNum", "customerType", "branchGlobalNum",
+                "branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
+                "groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
+        QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
+        queryInputs.setPath("org.mifos.application.customer.business.CustomerSearch");
+        queryInputs.setAliasNames(Names);
+        queryResult.setQueryInputs(queryInputs);
+        queryInputs.setQueryStrings(namedQuery);
+        queryInputs.setParamList(paramList);
+        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+
+        if (officeId != null && officeId.shortValue() == 0) {
+            namedQuery[0] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID_COUNT;
+            namedQuery[1] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID;
+            if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
+                paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
+            } else {
+                paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
+            }
+        } else {
+            paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+            if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
+                paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
+                namedQuery[0] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT;
+                namedQuery[1] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH;
+            } else {
+                paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
+                namedQuery[0] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT_NONLO;
+                namedQuery[1] = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NONLO;
+            }
+
+        }
+
+        paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
+
+        return queryResult;
+
+    }
+
     private boolean isCustomerExist(final String globalCustNum) throws PersistenceException {
 
         Map<String, String> queryParameters = new HashMap<String, String>();
         queryParameters.put("globalCustNum", globalCustNum);
         Integer count = new Long((Long) execUniqueResultNamedQuery(
                 NamedQueryConstants.CUSTOMER_FIND_COUNT_BY_SYSTEM_ID, queryParameters)).intValue();
+        return count != null && count > 0 ? true : false;
+
+    }
+
+    private boolean isCustomerExistWithGovernmentId(final String governmentId) throws PersistenceException {
+
+        Map<String, String> queryParameters = new HashMap<String, String>();
+        queryParameters.put("governmentId", governmentId);
+        Integer count = new Long((Long) execUniqueResultNamedQuery(
+                NamedQueryConstants.CUSTOMER_FIND_COUNT_BY_GOVERNMENT_ID, queryParameters)).intValue();
         return count != null && count > 0 ? true : false;
 
     }

@@ -447,6 +447,7 @@ public interface NamedQueryConstants {
     public String CUSTOMER_ACTIVE_SAVINGS_ACCOUNTS = "Customer.getActiveSavingsAccounts";
     public String CUSTOMER_FIND_ACCOUNT_BY_SYSTEM_ID = "customer.findBySystemId";
     public String CUSTOMER_FIND_COUNT_BY_SYSTEM_ID = "customer.findCountBySystemId";
+    public String CUSTOMER_FIND_COUNT_BY_GOVERNMENT_ID = "customer.findCountByGovernmentId";
     public String GET_CUSTOMER_STATUS_LIST = "customer.getStatusForCustomer";
     public String GET_CENTER_BY_SYSTEMID = "customer.findCenterSystemId";
     public String GET_GROUP_BY_SYSTEMID = "customer.findGroupSystemId";
@@ -597,11 +598,20 @@ public interface NamedQueryConstants {
     public String CUSTOMER_ID_SEARCH_NOOFFICEID = "Customer.cust_idsearch_withoutoffice";
     public String CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT = "Customer.cust_idsearch_withoutoffice_count";
 
+    public String CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID = "Customer.cust_govidsearch_withoutoffice";
+    public String CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID_COUNT = "Customer.cust_govidsearch_withoutoffice_count";
+
     public String CUSTOMER_ID_SEARCH = "Customer.cust_idsearch";
     public String CUSTOMER_ID_SEARCH_COUNT = "Customer.cust_idsearch_count";
 
+    public String CUSTOMER_GOVERNMENT_ID_SEARCH = "Customer.cust_govidsearch";
+    public String CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT = "Customer.cust_govidsearch_count";
+
     public String CUSTOMER_ID_SEARCH_NONLO = "Customer.cust_idsearch_nonLo";
     public String CUSTOMER_ID_SEARCH_COUNT_NONLO = "Customer.cust_idsearch_count_nonLo";
+
+    public String CUSTOMER_GOVERNMENT_ID_SEARCH_NONLO = "Customer.cust_govidsearch_nonLo";
+    public String CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT_NONLO = "Customer.cust_govidsearch_count_nonLo";
 
     public String ACCOUNT_ID_SEARCH = "accounts.account_IdSearch";
     public String ACCOUNT_ID_SEARCH_NOOFFICEID = "accounts.account_IdSearch_withoutoffice";
