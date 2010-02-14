@@ -122,8 +122,8 @@ public class LoanBO extends AccountBO {
 
     /**
      * Is this used? Is it related to the activity IDs in places like
-     * {@link ActivityMapper#SAVING_CANCHANGESTATETO_PARTIALAPPLICATION} or
-     * {@link SecurityConstants#FUNDS_CREATE_FUNDS} ?
+     * {@link ActivityMapper#SAVING_CANCHANGESTATETO_PARTIALAPPLICATION} or {@link SecurityConstants#FUNDS_CREATE_FUNDS}
+     * ?
      */
     private Integer businessActivityId;
 
@@ -767,8 +767,7 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Remove the fee from all unpaid current or future installments, and update
-     * the loan accordingly.
+     * Remove the fee from all unpaid current or future installments, and update the loan accordingly.
      */
     @Override
     public final void removeFees(final Short feeId, final Short personnelId) throws AccountException {
@@ -802,9 +801,8 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Remove unpaid or partially paid fee from each installment whose id is in
-     * installmentIdList, and return the total of all unpaid fees that were
-     * removed.
+     * Remove unpaid or partially paid fee from each installment whose id is in installmentIdList, and return the total
+     * of all unpaid fees that were removed.
      */
     @Override
     public Money updateAccountActionDateEntity(final List<Short> intallmentIdList, final Short feeId) {
@@ -846,7 +844,8 @@ public class LoanBO extends AccountBO {
         } else {
             FeeBO fee = new FeePersistence().getFee(feeId);
 
-            if (havePaymentsBeenMade() && (fee.doesFeeInvolveFractionalAmounts() || !MoneyUtils.isRoundedAmount(charge))) {
+            if (havePaymentsBeenMade()
+                    && (fee.doesFeeInvolveFractionalAmounts() || !MoneyUtils.isRoundedAmount(charge))) {
                 throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
             }
 
@@ -862,13 +861,11 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * It calculates over due amounts till installment 1 less than the one
-     * passed,because whatever amount is associated with the current installment
-     * it is the due amount and not the over due amount. It calculates that by
-     * iterating over the accountActionDates associated and summing up all the
-     * principal and principalPaid till installment-1 and then returning the
-     * difference of the two.It also takes into consideration any miscellaneous
-     * fee or miscellaneous penalty.
+     * It calculates over due amounts till installment 1 less than the one passed,because whatever amount is associated
+     * with the current installment it is the due amount and not the over due amount. It calculates that by iterating
+     * over the accountActionDates associated and summing up all the principal and principalPaid till installment-1 and
+     * then returning the difference of the two.It also takes into consideration any miscellaneous fee or miscellaneous
+     * penalty.
      * 
      * @param installmentId
      *            - Installment id till which we want over due amounts.
@@ -911,10 +908,10 @@ public class LoanBO extends AccountBO {
     }
 
     private void disburseLoan(final String receiptNum, final Date transactionDate, final Short paymentTypeId,
-            final PersonnelBO personnel, final Date receiptDate, final Short rcvdPaymentTypeId,
+            final PersonnelBO loggedInUser, final Date receiptDate, final Short rcvdPaymentTypeId,
             final boolean persistChange) throws AccountException {
 
-        addLoanActivity(buildLoanActivity(this.loanAmount, personnel, AccountConstants.LOAN_DISBURSAL, transactionDate));
+        addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL, transactionDate));
 
         // if the trxn date is not equal to disbursementDate we need to
         // regenerate the installments
@@ -924,44 +921,45 @@ public class LoanBO extends AccountBO {
             regeneratePaymentSchedule(false, null);
         }
         this.disbursementDate = transactionDate;
-        final AccountStateEntity newState = new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
-        // update status change history also
+        final AccountStateEntity newState = new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
         this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(this.getAccountState(), newState,
-                personnel, this));
+                loggedInUser, this));
         this.setAccountState(newState);
 
-        AccountPaymentEntity accountPaymentEntity = null;
+        //
+        // build up account payment related data
+        AccountPaymentEntity accountPayment = null;
         if (this.isInterestDeductedAtDisbursement()) {
-            accountPaymentEntity = payInterestAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId, personnel,
+            // the 1st payment is made and creates an initial accountPaymentEntity.
+            // This disbursal process carries on with that accountPaymentEntity by updating the 'amount' to the actual
+            // disbursed amount.
+            accountPayment = payInterestAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId, loggedInUser,
                     receiptDate);
-        } else {
-            try {
-                
-                    accountPaymentEntity = insertOnlyFeeAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId,
-                            personnel);
-                
-            } catch (MifosRuntimeException e) {
-                throw new AccountException(e);
+            accountPayment.setAmount(this.loanAmount.subtract(accountPayment.getAmount()));
+        } else {//jjjj
+            //Disbursal process has to create its own accountPayment taking into account any disbursement fees
+            Money feeAmountAtDisbursement = getFeesDueAtDisbursement();
+            accountPayment = new AccountPaymentEntity(this, this.loanAmount.subtract(feeAmountAtDisbursement),
+                    receiptNum, receiptDate, getPaymentTypeEntity(paymentTypeId), transactionDate);
+            accountPayment.setCreatedByUser(loggedInUser);
+            
+            if (feeAmountAtDisbursement.isGreaterThanZero()) {
+                processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement);
             }
-        }
-        if (accountPaymentEntity == null) {
-            accountPaymentEntity = new AccountPaymentEntity(this, this.loanAmount, receiptNum, transactionDate,
-                    getPaymentTypeEntity(paymentTypeId), new DateTime().toDate());
-        } else {
-            accountPaymentEntity.setAmount(this.loanAmount.subtract(accountPaymentEntity.getAmount()));
         }
 
         // create trxn entry for disbursal
-        final LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
-                AccountActionTypes.DISBURSAL, Short.valueOf("0"), transactionDate, personnel, transactionDate,
+        final LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
+                AccountActionTypes.DISBURSAL, Short.valueOf("0"), transactionDate, loggedInUser, transactionDate,
                 this.loanAmount, "-", null, this.loanAmount, new Money(getCurrency()), new Money(getCurrency()),
                 new Money(getCurrency()), new Money(getCurrency()), null, getLoanPersistence());
 
-        accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-        this.addAccountPayment(accountPaymentEntity);
-        this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+        accountPayment.addAccountTrxn(loanTrxnDetailEntity);
+        this.addAccountPayment(accountPayment);
+        this.buildFinancialEntries(accountPayment.getAccountTrxns());
 
+        //
         // Client performance entry
         updateCustomerHistoryOnDisbursement(this.loanAmount);
         if (getPerformanceHistory() != null) {
@@ -980,21 +978,21 @@ public class LoanBO extends AccountBO {
     /*
      * This disburseLoan only used via saveCollectionSheet - JPW
      * 
-     * During refactoring... the checks in here should be applied to any loan disbursal
-     * and the error msgs organised and internationalised
+     * During refactoring... the checks in here should be applied to any loan disbursal and the error msgs organised and
+     * internationalised
      */
-    public void disburseLoan(final AccountPaymentEntity disbursalPayment)
-            throws AccountException {
+    public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException {
 
         if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
                 && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
             throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
         }
         if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {
-            throw new AccountException("Loan Amount to be Disbursed Held on Database : " + this.getLoanAmount().getAmount() 
-                    + " does not match the Input Loan Amount to be Disbursed: " + disbursalPayment.getAmount().getAmount());
+            throw new AccountException("Loan Amount to be Disbursed Held on Database : "
+                    + this.getLoanAmount().getAmount() + " does not match the Input Loan Amount to be Disbursed: "
+                    + disbursalPayment.getAmount().getAmount());
         }
-            
+
         disburseLoan(disbursalPayment.getReceiptNumber(), disbursalPayment.getPaymentDate(), disbursalPayment
                 .getPaymentType().getId(), disbursalPayment.getCreatedByUser(), disbursalPayment.getReceiptDate(),
                 disbursalPayment.getPaymentType().getId(), false);
@@ -1387,8 +1385,7 @@ public class LoanBO extends AccountBO {
      * 
      * An AccountPaymentEntity is created from the PaymentData passed in.
      * 
-     * FIXME: - keithw - this should use model concept {@link
-     * AccountPaymentEntity} and not {@link PaymentData} dto
+     * FIXME: - keithw - this should use model concept {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
@@ -1397,7 +1394,7 @@ public class LoanBO extends AccountBO {
                 && (this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) != 0)) {
             throw new AccountException("Loan not in a State for a Repayment to be made: " + this.getState().toString());
         }
-        
+
         if (!paymentAmountIsValid(paymentData.getTotalAmount())) {
             throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });
         }
@@ -1415,6 +1412,7 @@ public class LoanBO extends AccountBO {
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
                 paymentData.getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData
                         .getPaymentTypeId()), paymentData.getTransactionDate());
+        accountPayment.setCreatedByUser(paymentData.getPersonnel());
         accountPayment.setComment(paymentData.getComment());
 
         java.sql.Date paymentDate = new java.sql.Date(paymentData.getTransactionDate().getTime());
@@ -1598,8 +1596,7 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * This method checks if the loan account has been reopened because of
-     * payment adjustments made.
+     * This method checks if the loan account has been reopened because of payment adjustments made.
      */
     private boolean isAccountReOpened(final AccountStateEntity currentAccountState,
             final AccountStateEntity newAccountState) {
@@ -1776,26 +1773,21 @@ public class LoanBO extends AccountBO {
     }
 
     private Short getInstallmentSkipToStartRepayment(final boolean isRepaymentIndepOfMeetingEnabled) {
-        /* TODO: if interest deducted at disbursement is re-enabled, then we need
-         * to figure out why this logic was here.  This logic broke grace period
-         * functionality in normal loan cases and was removed as part of MIFOS-1994
-         *
-        boolean isInterestDeductedatDisbursement = isInterestDeductedAtDisbursement();
-        if (isRepaymentIndepOfMeetingEnabled) {
-            isInterestDeductedatDisbursement = !isInterestDeductedAtDisbursement();
-        } else {
-            isInterestDeductedatDisbursement = isInterestDeductedAtDisbursement();
-        }
-        if (isInterestDeductedatDisbursement) {
-            return (short) 0;
-        }        
-        */
-        
+        /*
+         * TODO: if interest deducted at disbursement is re-enabled, then we need to figure out why this logic was here.
+         * This logic broke grace period functionality in normal loan cases and was removed as part of MIFOS-1994
+         * 
+         * boolean isInterestDeductedatDisbursement = isInterestDeductedAtDisbursement(); if
+         * (isRepaymentIndepOfMeetingEnabled) { isInterestDeductedatDisbursement = !isInterestDeductedAtDisbursement();
+         * } else { isInterestDeductedatDisbursement = isInterestDeductedAtDisbursement(); } if
+         * (isInterestDeductedatDisbursement) { return (short) 0; }
+         */
+
         // in the default case of loan schedules tied to meeting schedules,
         // the loan is disbursed at the first meeting (#0) and the first
         // payment is made at the following meeting (#1)
         short firstRepaymentInstallment = 1;
-        // if LoanScheduleIndependentofMeeting is on, then repayments start on 
+        // if LoanScheduleIndependentofMeeting is on, then repayments start on
         // the first meeting in the schedule (#0)
         if (isRepaymentIndepOfMeetingEnabled) {
             firstRepaymentInstallment = 0;
@@ -1838,22 +1830,17 @@ public class LoanBO extends AccountBO {
     /**
      * Returns the number of payment periods in the fiscal year for this loan.
      * 
-     * This method contains two defects that are corrected in the _v2 version.
-     * The defects are described below.
+     * This method contains two defects that are corrected in the _v2 version. The defects are described below.
      * 
-     * KEITH TODO: This appears to be incorrect. For example, if fiscal year =
-     * 360 days interest rate = 1 percent recurrence = every 1 week then the
-     * correct result should be ______ 360 / (7 * 1) = 51.428571 But because the
-     * three factors are ints or shorts, the calculation is rounded to the
-     * nearest integer, 51.0.
+     * KEITH TODO: This appears to be incorrect. For example, if fiscal year = 360 days interest rate = 1 percent
+     * recurrence = every 1 week then the correct result should be ______ 360 / (7 * 1) = 51.428571 But because the
+     * three factors are ints or shorts, the calculation is rounded to the nearest integer, 51.0.
      * 
-     * I have corrected the method here, but am not sure if this is correct
-     * Should the method return the number of periods rounded to the nearest
-     * integer? Note that the spreadsheet assumes that the number of periods is
-     * an exact floating point number, not rounded.
+     * I have corrected the method here, but am not sure if this is correct Should the method return the number of
+     * periods rounded to the nearest integer? Note that the spreadsheet assumes that the number of periods is an exact
+     * floating point number, not rounded.
      * 
-     * Ththe formula is incorrect for monthly loans, when fiscal year is 365.
-     * You should just divide recurAfter by 12.
+     * Ththe formula is incorrect for monthly loans, when fiscal year is 365. You should just divide recurAfter by 12.
      */
     private double getDecliningInterestAnnualPeriods() {
         RecurrenceType meetingFrequency = getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum();
@@ -1867,8 +1854,8 @@ public class LoanBO extends AccountBO {
 
         }
         /*
-         * The use of monthly interest here does not distinguish between the 360
-         * (with equal 30 day months) and the 365 day year cases. Should it?
+         * The use of monthly interest here does not distinguish between the 360 (with equal 30 day months) and the 365
+         * day year cases. Should it?
          */
         else if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
             period = getInterestDays() / (getDaysInMonth() * recurAfter);
@@ -2082,12 +2069,9 @@ public class LoanBO extends AccountBO {
                     lastAppliedDate = loanScheduleEntity.getActionDate();
                     totalFeeAmountApplied = totalFeeAmountApplied.add(feeInstallment.getAccountFee());
                     /*
-                     * AccountFeesActionDetailEntity
-                     * accountFeesActionDetailEntity = new
-                     * LoanFeeScheduleEntity( loanScheduleEntity, feeInstallment
-                     * .getAccountFeesEntity().getFees(),
-                     * feeInstallment.getAccountFeesEntity(),
-                     * feeInstallment.getAccountFee()); loanScheduleEntity
+                     * AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
+                     * loanScheduleEntity, feeInstallment .getAccountFeesEntity().getFees(),
+                     * feeInstallment.getAccountFeesEntity(), feeInstallment.getAccountFee()); loanScheduleEntity
                      * .addAccountFeesAction(accountFeesActionDetailEntity);
                      */
                     if (feeInstallment.getAccountFeesEntity().getFees().isPeriodic()
@@ -2355,8 +2339,8 @@ public class LoanBO extends AccountBO {
                 break;
             }
         }
-        List<AccountActionDateEntity> installmentsToBePaid = new ArrayList<AccountActionDateEntity>();
-        installmentsToBePaid.add(firstInstallment);
+        // jpw not used List<AccountActionDateEntity> installmentsToBePaid = new ArrayList<AccountActionDateEntity>();
+        // installmentsToBePaid.add(firstInstallment);
 
         PaymentData paymentData = getLoanAccountPaymentData(((LoanScheduleEntity) firstInstallment)
                 .getTotalDueWithFees(), personnel, receiptNum, paymentTypeId, receiptDate, transactionDate);
@@ -2430,26 +2414,10 @@ public class LoanBO extends AccountBO {
         return amount;
     }
 
-    private AccountPaymentEntity insertOnlyFeeAtDisbursement(final String receiptNum, final Date receiptDate,
-            final Short paymentTypeId, final PersonnelBO personnel) {
+    private void processFeesAtDisbursement(final AccountPaymentEntity accountPayment,
+            final Money feeAmountAtDisbursement) {
 
-        Money totalPayment = new Money(getCurrency());
-        for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-            if (accountFeesEntity.isTimeOfDisbursement()) {
-                totalPayment = totalPayment.add(accountFeesEntity.getAccountFeeAmount());
-            }
-        }
-
-        if (totalPayment.isZero()) {
-            return null;
-        }
-        
-        loanSummary.updateFeePaid(totalPayment);
-
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalPayment, receiptNum,
-                receiptDate, getPaymentTypeEntity(paymentTypeId), new DateTime().toDate());
-
-        LoanTrxnDetailEntity loanTrxnDetailEntity = null;
+        loanSummary.updateFeePaid(feeAmountAtDisbursement);
 
         List<AccountFeesEntity> applicableAccountFees = new ArrayList<AccountFeesEntity>();
         for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
@@ -2458,16 +2426,16 @@ public class LoanBO extends AccountBO {
             }
         }
 
-        loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, AccountActionTypes.FEE_REPAYMENT, Short
-                .valueOf("0"), receiptDate, personnel, receiptDate, totalPayment, "-", null, new Money(getCurrency()),
+        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
+                AccountActionTypes.FEE_REPAYMENT, Short.valueOf("0"), accountPayment.getPaymentDate(), accountPayment
+                        .getCreatedByUser(), accountPayment.getPaymentDate(), feeAmountAtDisbursement, "-", null,
                 new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()),
-                applicableAccountFees, getLoanPersistence());
+                new Money(getCurrency()), applicableAccountFees, getLoanPersistence());
 
-        accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
+        accountPayment.addAccountTrxn(loanTrxnDetailEntity);
 
-        addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), personnel,
-                AccountConstants.PAYMENT_RCVD, receiptDate));
-        return accountPaymentEntity;
+        addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), accountPayment.getCreatedByUser(),
+                AccountConstants.PAYMENT_RCVD, accountPayment.getPaymentDate()));
     }
 
     private PaymentData getLoanAccountPaymentData(final Money totalAmount, final PersonnelBO personnel,
@@ -2479,8 +2447,8 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Validate that a given payment amount is valid. Payments greater than the
-     * total outstanding amount due on the loan are not valid.
+     * Validate that a given payment amount is valid. Payments greater than the total outstanding amount due on the loan
+     * are not valid.
      * 
      * @param amount
      *            the amount of a payment
@@ -2498,8 +2466,7 @@ public class LoanBO extends AccountBO {
             return LoanPaymentTypes.FULL_PAYMENT;
         } else if (amount.isLessThan(getTotalPaymentDue())) {
             return LoanPaymentTypes.PARTIAL_PAYMENT;
-        } else if (amount.isGreaterThan(getTotalPaymentDue())
-                && amount.isLessThanOrEqual(getTotalRepayableAmount())) {
+        } else if (amount.isGreaterThan(getTotalPaymentDue()) && amount.isLessThanOrEqual(getTotalRepayableAmount())) {
             return LoanPaymentTypes.FUTURE_PAYMENT;
         }
         return null;
@@ -2714,8 +2681,7 @@ public class LoanBO extends AccountBO {
         Money principalInArrearsAndOutsideLateness = getTotalPrincipalAmountInArrearsAndOutsideLateness();
         Money totalPrincipal = getTotalPrincipalAmount();
         BigDecimal numOfInstallments = new BigDecimal(getNoOfInstallments());
-        return principalInArrearsAndOutsideLateness.multiply(numOfInstallments).divide(totalPrincipal)
-                .doubleValue();
+        return principalInArrearsAndOutsideLateness.multiply(numOfInstallments).divide(totalPrincipal).doubleValue();
 
     }
 
@@ -2807,11 +2773,9 @@ public class LoanBO extends AccountBO {
         List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
         if (getAccountFees().size() != 0) {
             /*
-             * KEITH TODO: The loan interest is not correct for declining
-             * balance modes, and appears to be causing unit test to fail for
-             * this mode. For declining-balance loans, to calculate the loan
-             * interest you must either (a) apply a complicated formula (b)
-             * compute the sum of interest paid across all installments.
+             * KEITH TODO: The loan interest is not correct for declining balance modes, and appears to be causing unit
+             * test to fail for this mode. For declining-balance loans, to calculate the loan interest you must either
+             * (a) apply a complicated formula (b) compute the sum of interest paid across all installments.
              */
             populateAccountFeeAmount(getAccountFees(), loanInterest);
             feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates, nonAdjustedInstallmentDates));
@@ -2899,18 +2863,15 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Compute the total interest due on a declining-interest loan. Interest
-     * during a principal-only grace period is calculated differently from
-     * non-grace-periods.
+     * Compute the total interest due on a declining-interest loan. Interest during a principal-only grace period is
+     * calculated differently from non-grace-periods.
      * <p>
      * The formula is as follows:
      * <p>
-     * The total interest paid is I = Ig + In where Ig = interest paid during
-     * any principal-only grace periods In = interest paid during regular
-     * payment periods In = A - P A = total amount paid across regular payment
-     * periods The formula for computing A is A = p * n where A = total amount
-     * paid p = payment per installment n = number of regular (non-grace)
-     * installments P = principal i = interest per period
+     * The total interest paid is I = Ig + In where Ig = interest paid during any principal-only grace periods In =
+     * interest paid during regular payment periods In = A - P A = total amount paid across regular payment periods The
+     * formula for computing A is A = p * n where A = total amount paid p = payment per installment n = number of
+     * regular (non-grace) installments P = principal i = interest per period
      */
     private Money getDecliningInterestAmount_v2() throws AccountException {
 
@@ -2985,32 +2946,26 @@ public class LoanBO extends AccountBO {
     private List<EMIInstallment> generateEMI_v2(final Money loanInterest) throws AccountException {
         if (isInterestDeductedAtDisbursement()) {
             /*
-             * Interest deducted at disbursement has been cut from r1.1 so throw
-             * an exception if we reach this code.
+             * Interest deducted at disbursement has been cut from r1.1 so throw an exception if we reach this code.
              */
             throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
             /*
-             * if (getLoanOffering().isPrinDueLastInst()) { return
-             * interestDeductedFirstPrincipalLast_v2(loanInterest); } else {
-             * return interestDeductedAtDisbursement_v2(loanInterest); }
+             * if (getLoanOffering().isPrinDueLastInst()) { return interestDeductedFirstPrincipalLast_v2(loanInterest);
+             * } else { return interestDeductedAtDisbursement_v2(loanInterest); }
              */
         } else {
 
             if (getLoanOffering().isPrinDueLastInst()) {
                 /*
-                 * Principal due on last installment has been cut, so throw an
-                 * exception if we reach this code.
+                 * Principal due on last installment has been cut, so throw an exception if we reach this code.
                  */
                 throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
                 /*
-                 * if (getLoanOffering().getInterestTypes().getId().equals(
-                 * InterestType.FLAT.getValue())) { return
+                 * if (getLoanOffering().getInterestTypes().getId().equals( InterestType.FLAT.getValue())) { return
                  * principalInLastPayment_v2(loanInterest); } else if
-                 * ((getLoanOffering().getInterestTypes().getId().equals(
-                 * InterestType.DECLINING.getValue())) ||
-                 * (getLoanOffering().getInterestTypes().getId().equals(
-                 * InterestType.DECLINING_EPI.getValue()))) { return
-                 * principalInLastPaymentDecliningInterest_v2(loanInterest); }
+                 * ((getLoanOffering().getInterestTypes().getId().equals( InterestType.DECLINING.getValue())) ||
+                 * (getLoanOffering().getInterestTypes().getId().equals( InterestType.DECLINING_EPI.getValue()))) {
+                 * return principalInLastPaymentDecliningInterest_v2(loanInterest); }
                  */
             } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.FLAT.getValue())) {
                 return allFlatInstallments_v2(loanInterest);
@@ -3087,8 +3042,8 @@ public class LoanBO extends AccountBO {
         if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
             Money principalLastInstallment = getLoanAmount();
 
-            Money interestPerInstallment = getLoanAmount().multiply(getInterestRate()).divide(100)
-                                                          .divide(getDecliningInterestAnnualPeriods());
+            Money interestPerInstallment = getLoanAmount().multiply(getInterestRate()).divide(100).divide(
+                    getDecliningInterestAnnualPeriods());
             EMIInstallment installment = null;
             for (int i = 0; i < getNoOfInstallments() - 1; i++) {
                 installment = new EMIInstallment(getCurrency());
@@ -3107,20 +3062,16 @@ public class LoanBO extends AccountBO {
     }
 
     /****************
-     * Loan calculation refactoring -- Flat-installment calculations, including
-     * grace-period calculations.
+     * Loan calculation refactoring -- Flat-installment calculations, including grace-period calculations.
      ****************/
 
     /**
-     * Generate flat-interest installment variants based on the type of grace
-     * period.
+     * Generate flat-interest installment variants based on the type of grace period.
      * <ul>
-     * <li>If grace period is none, or applies to both principal and interest,
-     * the loan calculations are the same.
-     * <li>If grace period is for principal only, don't add new installments.
-     * The first grace installments are interest-only, and principal is paid off
-     * with the remaining installments. NOTE: Principal-only grace period should
-     * be disable for release 1.1.
+     * <li>If grace period is none, or applies to both principal and interest, the loan calculations are the same.
+     * <li>If grace period is for principal only, don't add new installments. The first grace installments are
+     * interest-only, and principal is paid off with the remaining installments. NOTE: Principal-only grace period
+     * should be disable for release 1.1.
      * </ul>
      */
     private List<EMIInstallment> allFlatInstallments_v2(final Money loanInterest) throws AccountException {
@@ -3137,8 +3088,7 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Divide principal and interest evenly among all installments, no grace
-     * period
+     * Divide principal and interest evenly among all installments, no grace period
      */
     private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
@@ -3154,10 +3104,9 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Calculate the installments after grace period, in the case of
-     * principal-only grace type for a flat-interest loan. Divide interest
-     * evenly among all installments, but divide principle evenly among
-     * installments after the grace period.
+     * Calculate the installments after grace period, in the case of principal-only grace type for a flat-interest loan.
+     * Divide interest evenly among all installments, but divide principle evenly among installments after the grace
+     * period.
      */
     private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(final Money loanInterest)
             throws AccountException {
@@ -3174,9 +3123,8 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Generate zero-payment installments for the duration of the grace period.
-     * NOTE: Not used, since zero-payment installments are not added to the list
-     * of all installments.
+     * Generate zero-payment installments for the duration of the grace period. NOTE: Not used, since zero-payment
+     * installments are not added to the list of all installments.
      */
     private List<EMIInstallment> generateSkippedGraceInstallments_v2() {
 
@@ -3194,9 +3142,8 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Generate interest-only payments for the duration of the grace period.
-     * Interest is divided evenly among all installments, but only interest is
-     * paid during the grace period.
+     * Generate interest-only payments for the duration of the grace period. Interest is divided evenly among all
+     * installments, but only interest is paid during the grace period.
      */
     private List<EMIInstallment> generateFlatInstallmentsInterestOnly_v2(final Money loanInterest) {
 
@@ -3216,27 +3163,21 @@ public class LoanBO extends AccountBO {
     }
 
     /*
-     * Calculates equal payments per period for fixed payment,
-     * declining-interest loan type. Uses formula from
-     * http://confluence.mifos.org
-     * :9090/display/Main/Declining+Balance+Example+Calcs The formula is copied
-     * here: EMI = P * i / [1- (1+i)^-n] where p = principal (amount of loan) i
-     * = rate of interest per installment period as a decimal (not percent) n =
-     * no. of installments
+     * Calculates equal payments per period for fixed payment, declining-interest loan type. Uses formula from
+     * http://confluence.mifos.org :9090/display/Main/Declining+Balance+Example+Calcs The formula is copied here: EMI =
+     * P * i / [1- (1+i)^-n] where p = principal (amount of loan) i = rate of interest per installment period as a
+     * decimal (not percent) n = no. of installments
      * 
      * Translated into program variables and method calls:
      * 
-     * paymentPerPeriod = interestFractionalRatePerPeriod * getLoanAmount() / (
-     * 1 - (1 + interestFractionalRatePerPeriod) ^ (-getNoOfInstallments()))
+     * paymentPerPeriod = interestFractionalRatePerPeriod * getLoanAmount() / ( 1 - (1 +
+     * interestFractionalRatePerPeriod) ^ (-getNoOfInstallments()))
      * 
-     * NOTE: Use double here, not BigDecimal, to calculate the factor that
-     * getLoanAmount() is multiplied by. Since calculations all involve small
-     * quantities, 64-bit precision is sufficient. It is is more accurate to use
-     * floating-point, for quantities of small magnitude (say for very small
-     * interest rates)
+     * NOTE: Use double here, not BigDecimal, to calculate the factor that getLoanAmount() is multiplied by. Since
+     * calculations all involve small quantities, 64-bit precision is sufficient. It is is more accurate to use
+     * floating-point, for quantities of small magnitude (say for very small interest rates)
      * 
-     * NOTE: These calculations do not take into account EPI or grace period
-     * adjustments.
+     * NOTE: These calculations do not take into account EPI or grace period adjustments.
      */
     private Money getPaymentPerPeriodForDecliningInterest_v2(final int numInstallments) {
         double factor = 0.0;
@@ -3245,7 +3186,7 @@ public class LoanBO extends AccountBO {
             return paymentPerPeriod;
         } else {
             factor = getInterestFractionalRatePerInstallment_v2()
-                    / (1.0 - Math.pow(1.0 + getInterestFractionalRatePerInstallment_v2(), - numInstallments));
+                    / (1.0 - Math.pow(1.0 + getInterestFractionalRatePerInstallment_v2(), -numInstallments));
             Money paymentPerPeriod = getLoanAmount().multiply(factor);
             return paymentPerPeriod;
         }
@@ -3257,14 +3198,11 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Generate declining-interest installment variants based on the type of
-     * grace period.
+     * Generate declining-interest installment variants based on the type of grace period.
      * <ul>
-     * <li>If grace period is none, or applies to both principal and interest,
-     * the loan calculations are the same.
-     * <li>If grace period is for principal only, don't add new installments.
-     * The first grace installments are interest-only, and principal is paid off
-     * with the remaining installments.
+     * <li>If grace period is none, or applies to both principal and interest, the loan calculations are the same.
+     * <li>If grace period is for principal only, don't add new installments. The first grace installments are
+     * interest-only, and principal is paid off with the remaining installments.
      * </ul>
      */
     private List<EMIInstallment> allDecliningInstallments_v2() throws AccountException {
@@ -3301,8 +3239,7 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Return the list if payment installments for declining interest method,
-     * for the number of installments specified.
+     * Return the list if payment installments for declining interest method, for the number of installments specified.
      */
     private List<EMIInstallment> generateDecliningInstallmentsNoGrace_v2(final int numInstallments)
             throws AccountException {
@@ -3355,9 +3292,8 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Generate interest-only payments for the duration of the grace period.
-     * Interest paid is on the outstanding balance, which during the grace
-     * period is the entire principal amount.
+     * Generate interest-only payments for the duration of the grace period. Interest paid is on the outstanding
+     * balance, which during the grace period is the entire principal amount.
      */
     private List<EMIInstallment> generateDecliningInstallmentsInterestOnly_v2() {
 
@@ -3380,10 +3316,9 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * Calculate the installments after grace period, in the case of
-     * principal-only grace type for a declining-interest loan. Calculation is
-     * identical to the no-grace scenario except that the number of installments
-     * is reduced by the grace period.
+     * Calculate the installments after grace period, in the case of principal-only grace type for a declining-interest
+     * loan. Calculation is identical to the no-grace scenario except that the number of installments is reduced by the
+     * grace period.
      */
     private List<EMIInstallment> generateDecliningInstallmentsAfterInterestOnlyGraceInstallments_v2()
             throws AccountException {
@@ -3424,11 +3359,10 @@ public class LoanBO extends AccountBO {
     /**
      * Corrects two defects:
      * <ul>
-     * <li>period was being rounded to the closest integer because all of the
-     * factors involved in the calculation are integers. First, convert the
-     * factors to double values.
-     * <li>calculation uses the wrong formula for monthly installments. Whether
-     * fiscal year is 360 or 365, just consider a month to be 1/12 of a year.
+     * <li>period was being rounded to the closest integer because all of the factors involved in the calculation are
+     * integers. First, convert the factors to double values.
+     * <li>calculation uses the wrong formula for monthly installments. Whether fiscal year is 360 or 365, just consider
+     * a month to be 1/12 of a year.
      */
     private double getDecliningInterestAnnualPeriods_v2() {
         RecurrenceType meetingFrequency = getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum();
@@ -3444,8 +3378,8 @@ public class LoanBO extends AccountBO {
 
         }
         /*
-         * The use of monthly interest here does not distinguish between the 360
-         * (with equal 30 day months) and the 365 day year cases. Should it?
+         * The use of monthly interest here does not distinguish between the 360 (with equal 30 day months) and the 365
+         * day year cases. Should it?
          */
         else if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
             period = recurAfter * 12;
@@ -3479,12 +3413,10 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * for V1.1, assume that apply-rounding is applied only to "fresh" loans
-     * that have no prior payments, and then only when rounding is needed --
-     * when applying or removing charges that carry greater precision than the
-     * rounding precision specified for applicable installments. TODO: correct
-     * this after establishing business rules for what installments must be
-     * re-rounded when changing the loan mid-stream.
+     * for V1.1, assume that apply-rounding is applied only to "fresh" loans that have no prior payments, and then only
+     * when rounding is needed -- when applying or removing charges that carry greater precision than the rounding
+     * precision specified for applicable installments. TODO: correct this after establishing business rules for what
+     * installments must be re-rounded when changing the loan mid-stream.
      */
     protected List<AccountActionDateEntity> getInstallmentsToRound() {
         List<AccountActionDateEntity> installments = this.getAllInstallments();
@@ -3493,28 +3425,22 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * This method adjusts payments by applying rounding rules from
-     * AccountingRules.
+     * This method adjusts payments by applying rounding rules from AccountingRules.
      * 
-     * <h2>Summary of rounding rules</h2> There are two factors that make up a
-     * rounding rule: precision and mode.
+     * <h2>Summary of rounding rules</h2> There are two factors that make up a rounding rule: precision and mode.
      * 
      * <dl>
      * <dt> <em>Precision</em>
-     * <dd>specifies the degree of rounding, to the closest decimal place.
-     * Example: 1 (closest Rupee), 0.5 (closest half-dollar, for example), 0.1,
-     * 0.01 (closest US penny) 0.001, etc. Precision is limited by the currency
-     * being used by the application. For example, US dollars limit the
-     * precision to two decimal places (closest penny).
+     * <dd>specifies the degree of rounding, to the closest decimal place. Example: 1 (closest Rupee), 0.5 (closest
+     * half-dollar, for example), 0.1, 0.01 (closest US penny) 0.001, etc. Precision is limited by the currency being
+     * used by the application. For example, US dollars limit the precision to two decimal places (closest penny).
      * 
      * <dt> <em>Mode</em>
-     * <dd>specfies how rounding occurs. Currently three modes are supported:
-     * HALF_UP, FLOOR, CEILING.
+     * <dd>specfies how rounding occurs. Currently three modes are supported: HALF_UP, FLOOR, CEILING.
      * </dl>
      * 
-     * Three installment-rounding conventions apply to loan-installment
-     * payments. Each specifies the precision and mode to be applied in certain
-     * contexts:
+     * Three installment-rounding conventions apply to loan-installment payments. Each specifies the precision and mode
+     * to be applied in certain contexts:
      * 
      * <dl>
      * <dt> <em>Currency-rounding</em>
@@ -3530,91 +3456,77 @@ public class LoanBO extends AccountBO {
      * 
      * <h2>Summary of rounding and adjustment logic</h2>
      * 
-     * Assume we've calculated exact values for each installment's principal,
-     * interest, and fees payment, and installment's total payment (their sum).
+     * Assume we've calculated exact values for each installment's principal, interest, and fees payment, and
+     * installment's total payment (their sum).
      * <p/>
-     * The concept here is that exact values will be rounded and the amounts
-     * that the customer actually pays will drift away from what's actually due,
-     * resulting in the components of each installment not exactly adding up to
-     * the total payment.
+     * The concept here is that exact values will be rounded and the amounts that the customer actually pays will drift
+     * away from what's actually due, resulting in the components of each installment not exactly adding up to the total
+     * payment.
      * <p/>
-     * Generally, within each installment but the last, the principal payment is
-     * the "fall guy", making up for any difference. For the last installment,
-     * the interest payment is the fall guy.
+     * Generally, within each installment but the last, the principal payment is the "fall guy", making up for any
+     * difference. For the last installment, the interest payment is the fall guy.
      * <p/>
-     * Differences in total paid across all installments are made up in the last
-     * installment.
+     * Differences in total paid across all installments are made up in the last installment.
      * <p/>
      * <h4>Rounding and adjusting total payments</h4>
-     * First compute the rounded and adjusted totals for the loan. These are
-     * used to adjust the final installment's payments.
+     * First compute the rounded and adjusted totals for the loan. These are used to adjust the final installment's
+     * payments.
      * <ul>
-     * <li>Round the loan's exact total payments (sum of exact principal, exact
-     * interest, exact fees) using final rounding.
-     * <li>No need to round the principal, since it is entered using precision
-     * of the prevailing currency.
+     * <li>Round the loan's exact total payments (sum of exact principal, exact interest, exact fees) using final
+     * rounding.
+     * <li>No need to round the principal, since it is entered using precision of the prevailing currency.
      * <li>Round total fees using currency rounding
-     * <li>Adjust the total interest so that rounded fees, principal, and
-     * adjusted interest sum to the rounded total payments.
+     * <li>Adjust the total interest so that rounded fees, principal, and adjusted interest sum to the rounded total
+     * payments.
      * </ul>
      * </ul>
      * <h4>Non-grace-period installments except the last:</h4>
      * <ul>
      * <li>Round the installment's exact total payment using initial rounding.
-     * <li>Round the installment's exact interest and fee payments using
-     * currency rounding.
+     * <li>Round the installment's exact interest and fee payments using currency rounding.
      * <li>Round each of the installment's account fees using currency rounding.
-     * <li>Adjust the installment's principal to make up the difference between
-     * the installment's rounded total payment and its rounded interest and fee
-     * payments.
-     * <li>After rounding and adjusting, the installment's (rounded) total
-     * payment is exactly the sum of (rounded) principal, interest and fees.
+     * <li>Adjust the installment's principal to make up the difference between the installment's rounded total payment
+     * and its rounded interest and fee payments.
+     * <li>After rounding and adjusting, the installment's (rounded) total payment is exactly the sum of (rounded)
+     * principal, interest and fees.
      * </ul>
      * 
      * <h4>The last installment:</h4>
      * <ul>
-     * <li>Correct for over- or underpayment of prior installment's payments due
-     * to rounding:
+     * <li>Correct for over- or underpayment of prior installment's payments due to rounding:
      * <ul>
-     * <li>Compute the loan's exact total payment as the sum of all
-     * installment's exact principal, interest and fees.
-     * <li>Round the loan's exact total payment using final rounding. This is
-     * what the customer must pay to pay off the loan.
-     * <li>Set the final installment's total payment to the difference between
-     * the loan's rounded total payment and the sum of all prior installments'
-     * (already rounded) payments.
+     * <li>Compute the loan's exact total payment as the sum of all installment's exact principal, interest and fees.
+     * <li>Round the loan's exact total payment using final rounding. This is what the customer must pay to pay off the
+     * loan.
+     * <li>Set the final installment's total payment to the difference between the loan's rounded total payment and the
+     * sum of all prior installments' (already rounded) payments.
      * </ul>
-     * <li>Correct for over or underpayment of principal. Set the last
-     * installment's principal payment to the difference between the loan amount
-     * and the sum of all prior installment's principal payments, then round it
-     * using currency rounding rules.
+     * <li>Correct for over or underpayment of principal. Set the last installment's principal payment to the difference
+     * between the loan amount and the sum of all prior installment's principal payments, then round it using currency
+     * rounding rules.
      * <li>Correct for over- or underpayment of fees:
      * <ul>
      * <li>Round the exact total fees using Currency rounding rules.
-     * <li>Set one of last installment's fee payments to the difference between
-     * the rounded total fees and the sum of all prior installments' (already
-     * rounded) fee payments.
+     * <li>Set one of last installment's fee payments to the difference between the rounded total fees and the sum of
+     * all prior installments' (already rounded) fee payments.
      * </ul>
-     * <li>Finally, adjust the last installment's interest payment as the
-     * difference between the last installment's total payment and the sum of
-     * the last installment's principal and fee payments.
+     * <li>Finally, adjust the last installment's interest payment as the difference between the last installment's
+     * total payment and the sum of the last installment's principal and fee payments.
      * </ul>
      * 
      * <h4>Principal-only grace-period installments</h4>
      * 
-     * The principal is always zero, and only interest and fees are paid. Here,
-     * interest is the "fall guy", absorbing any rounding discrepancies:
+     * The principal is always zero, and only interest and fees are paid. Here, interest is the "fall guy", absorbing
+     * any rounding discrepancies:
      * <ul>
      * <li>Round the installment's total payments as above.
      * <li>Round the installment's fee payment as above.
-     * <li>Adjust the interest to force interest and fee payments to add up to
-     * the installment's total payment.
+     * <li>Adjust the interest to force interest and fee payments to add up to the installment's total payment.
      * </ul>
      * <h4>Principal + interest grace-period installments</h4>
      * 
-     * Calculations are the same as if there were no grace, since the
-     * zero-payment installments are not included in the installment list at
-     * all.
+     * Calculations are the same as if there were no grace, since the zero-payment installments are not included in the
+     * installment list at all.
      */
 
     protected final void applyRounding_v2() {
@@ -3661,27 +3573,24 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * A grace-period installment can appear in the loan schedule only if the
-     * loan is setup with principal-only grace.
+     * A grace-period installment can appear in the loan schedule only if the loan is setup with principal-only grace.
      */
     private boolean isGraceInstallment_v2(final int installmentNum) {
         return getGraceType().equals(GraceType.PRINCIPALONLYGRACE) && installmentNum <= getGracePeriodDuration();
     }
 
     /**
-     * See Javadoc comment for method applyRounding() for business rules for
-     * rounding and adjusting all installments but the last. LoanScheduleEntity
-     * does not store the total payment due, directly, but it is the sum of
-     * principal, interest, and non-miscellaneous fees.
+     * See Javadoc comment for method applyRounding() for business rules for rounding and adjusting all installments but
+     * the last. LoanScheduleEntity does not store the total payment due, directly, but it is the sum of principal,
+     * interest, and non-miscellaneous fees.
      * <p>
      * 
-     * how to set rounded fee for installment?????? This is what I want to do:
-     * currentInstallment.setFee (currencyRound_v2 (currentInstallment.getFee));
+     * how to set rounded fee for installment?????? This is what I want to do: currentInstallment.setFee
+     * (currencyRound_v2 (currentInstallment.getFee));
      * 
-     * Then I want to adjust principal, but need to extract the rounded fee,
-     * like this: currentInstallment.setPrincipal(installmentRoundedTotalPayment
-     * .subtract (currentInstallment.getInterest() .subtract
-     * (currentInstallment.getFee());
+     * Then I want to adjust principal, but need to extract the rounded fee, like this:
+     * currentInstallment.setPrincipal(installmentRoundedTotalPayment .subtract (currentInstallment.getInterest()
+     * .subtract (currentInstallment.getFee());
      */
     private void roundAndAdjustButLastNonGraceInstallment_v2(final LoanScheduleEntity installment) {
         Money roundedTotalInstallmentPaymentDue = MoneyUtils.initialRound(installment.getTotalPaymentDue());
@@ -3710,11 +3619,12 @@ public class LoanBO extends AccountBO {
 
         roundInstallmentAccountFeesDue_v2(lastInstallment);
         Money installmentPayment = MoneyUtils.finalRound(totals.roundedPaymentsDue.subtract(totals.runningPayments));
-        lastInstallment
-                .setPrincipal(MoneyUtils.currencyRound(totals.getRoundedPrincipalDue().subtract(totals.runningPrincipal)));
+        lastInstallment.setPrincipal(MoneyUtils.currencyRound(totals.getRoundedPrincipalDue().subtract(
+                totals.runningPrincipal)));
         adjustLastInstallmentFees_v2(lastInstallment, totals);
-        lastInstallment.setInterest(MoneyUtils.currencyRound(installmentPayment.subtract(lastInstallment.getPrincipalDue())
-                .subtract(lastInstallment.getTotalFeeDueWithMiscFeeDue()).subtract(lastInstallment.getPenaltyDue())));
+        lastInstallment.setInterest(MoneyUtils.currencyRound(installmentPayment.subtract(
+                lastInstallment.getPrincipalDue()).subtract(lastInstallment.getTotalFeeDueWithMiscFeeDue()).subtract(
+                lastInstallment.getPenaltyDue())));
     }
 
     /**
@@ -3738,8 +3648,7 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * For principal-only grace installments, adjust the interest to account for
-     * rounding discrepancies.
+     * For principal-only grace installments, adjust the interest to account for rounding discrepancies.
      */
     private void roundAndAdjustGraceInstallment_v2(final LoanScheduleEntity installment) {
         Money roundedInstallmentTotalPaymentDue = MoneyUtils.initialRound(installment.getTotalPaymentDue());
@@ -3807,8 +3716,7 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * A struct to hold totals that can be passed around during rounding
-     * computations.
+     * A struct to hold totals that can be passed around during rounding computations.
      */
     private class RepaymentTotals {
         // rounded or adjusted totals prior to rounding installments
@@ -3956,8 +3864,7 @@ public class LoanBO extends AccountBO {
     }
 
     /*
-     * Existing loan accounts before Mifos 1.1 release will have
-     * loan_summary.raw_amount_total = 0
+     * Existing loan accounts before Mifos 1.1 release will have loan_summary.raw_amount_total = 0
      */
     public boolean isLegacyLoan() {
 
@@ -3970,10 +3877,9 @@ public class LoanBO extends AccountBO {
     }
 
     /*
-     * 999 Account = interest paid + fees paid - (raw interest + raw fees)
-     * Notes: loan accounts before Mifos 1.1 release will have their 999
-     * accounts calculated the old way which is the difference between the last
-     * payment rounded amount and original amount
+     * 999 Account = interest paid + fees paid - (raw interest + raw fees) Notes: loan accounts before Mifos 1.1 release
+     * will have their 999 accounts calculated the old way which is the difference between the last payment rounded
+     * amount and original amount
      */
 
     public Money calculate999Account(final boolean lastPayment) {
@@ -4008,17 +3914,34 @@ public class LoanBO extends AccountBO {
     }
 
     /*
-     * In order to do audit logging, we need to get the name of the
-     * PaymentTypeEntity. A new instance constructed with the paymentTypeId is
-     * not good enough for this, we need to get the lookup value loaded so that
-     * we can resolve the name of the PaymentTypeEntity.
+     * 
+     */
+    private Money getFeesDueAtDisbursement() {
+
+        Money totalFeesDueAtDisbursement = new Money(getCurrency());
+        if (getAccountFees() != null && getAccountFees().size() > 0) {
+            for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+                if (accountFeesEntity.isTimeOfDisbursement()) {
+                    totalFeesDueAtDisbursement = totalFeesDueAtDisbursement
+                            .add(accountFeesEntity.getAccountFeeAmount());
+                }
+            }
+        }
+        return totalFeesDueAtDisbursement;
+    }
+
+    /*
+     * In order to do audit logging, we need to get the name of the PaymentTypeEntity. A new instance constructed with
+     * the paymentTypeId is not good enough for this, we need to get the lookup value loaded so that we can resolve the
+     * name of the PaymentTypeEntity.
      */
     private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
         return (PaymentTypeEntity) getLoanPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
-    
+
     /*
-     * A loan account knows its currency from its associated loan product 
+     * A loan account knows its currency from its associated loan product
+     * 
      * @see org.mifos.accounts.business.AccountBO#getCurrency()
      */
     @Override
@@ -4026,5 +3949,4 @@ public class LoanBO extends AccountBO {
         return getLoanOffering().getCurrency();
     }
 
-    
 }
