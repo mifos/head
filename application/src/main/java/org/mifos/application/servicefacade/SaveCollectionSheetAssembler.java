@@ -282,7 +282,7 @@ public class SaveCollectionSheetAssembler {
             final Short paymentType, final String receiptId, final LocalDate receiptDate, final Short userId) {
 
         final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
-        final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Money.getDefaultCurrency(), "0"),
+        final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Money.getDefaultCurrency()),
                 receiptId, DateUtils.getDateFromLocalDate(receiptDate), new PaymentTypeEntity(paymentType), DateUtils
                         .getDateFromLocalDate(transactionDate));
         payment.setCreatedByUser(user);

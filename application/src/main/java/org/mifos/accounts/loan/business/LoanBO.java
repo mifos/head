@@ -937,10 +937,10 @@ public class LoanBO extends AccountBO {
                     receiptDate);
         } else {
             try {
-                if (getLoanPersistence().getFeeAmountAtDisbursement(this.getAccountId(), getCurrency()).isGreaterThanZero()) {
+                
                     accountPaymentEntity = insertOnlyFeeAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId,
                             personnel);
-                }
+                
             } catch (MifosRuntimeException e) {
                 throw new AccountException(e);
             }
@@ -2440,6 +2440,10 @@ public class LoanBO extends AccountBO {
             }
         }
 
+        if (totalPayment.isZero()) {
+            return null;
+        }
+        
         loanSummary.updateFeePaid(totalPayment);
 
         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalPayment, receiptNum,
