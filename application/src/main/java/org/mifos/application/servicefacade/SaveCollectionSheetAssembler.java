@@ -128,7 +128,8 @@ public class SaveCollectionSheetAssembler {
 
                         if (isDeposit) {
                             final AccountPaymentEntity accountDeposit = new AccountPaymentEntity(account, new Money(
-                                    Money.getDefaultCurrency(), amountToDeposit.toString()), receiptNumber, receiptDate, paymentType, paymentDate);
+                                    Money.getDefaultCurrency(), amountToDeposit.toString()), receiptNumber,
+                                    receiptDate, paymentType, paymentDate);
                             accountDeposit.setCreatedByUser(user);
 
                             try {
@@ -143,7 +144,8 @@ public class SaveCollectionSheetAssembler {
 
                         if (isWithdrawal) {
                             final AccountPaymentEntity accountWithdrawal = new AccountPaymentEntity(account, new Money(
-                                    Money.getDefaultCurrency(), amountToWithdraw.toString()), receiptNumber, receiptDate, paymentType, paymentDate);
+                                    Money.getDefaultCurrency(), amountToWithdraw.toString()), receiptNumber,
+                                    receiptDate, paymentType, paymentDate);
                             accountWithdrawal.setCreatedByUser(user);
 
                             try {
@@ -195,12 +197,12 @@ public class SaveCollectionSheetAssembler {
 
                         try {
                             final AccountPaymentEntity accountDisbursalPayment = new AccountPaymentEntity(account,
-                                    new Money(account.getCurrency(), disbursalAmount.toString()), payment.getReceiptNumber(), payment
-                                            .getReceiptDate(), new PaymentTypeEntity(payment.getPaymentType().getId()),
+                                    new Money(account.getCurrency(), disbursalAmount.toString()), payment
+                                            .getReceiptNumber(), payment.getReceiptDate(), payment.getPaymentType(),
                                     payment.getPaymentDate());
                             accountDisbursalPayment.setCreatedByUser(payment.getCreatedByUser());
 
-                            account.disburseLoan(accountDisbursalPayment, null);
+                            account.disburseLoan(accountDisbursalPayment);
                             loans.add(account);
                         } catch (AccountException ae) {
                             logger.warn("Disbursal of loan on account [" + globalAccountNum
@@ -213,8 +215,8 @@ public class SaveCollectionSheetAssembler {
 
                         if (loanPaymentAmount != null && loanPaymentAmount.compareTo(BigDecimal.ZERO) > 0) {
                             try {
-                                final PaymentData paymentData = getCustomerAccountPaymentDataView(new Money(
-                                        account.getCurrency(), loanPaymentAmount.toString()), payment);
+                                final PaymentData paymentData = getCustomerAccountPaymentDataView(new Money(account
+                                        .getCurrency(), loanPaymentAmount.toString()), payment);
                                 account.applyPayment(paymentData, false);
                                 loans.add(account);
                             } catch (AccountException ae) {
@@ -244,8 +246,8 @@ public class SaveCollectionSheetAssembler {
                 final BigDecimal amount = saveCollectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee();
                 if (null != amount && amount.compareTo(BigDecimal.ZERO) > 0) {
 
-                    final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(new Money(
-                            Money.getDefaultCurrency(), amount.toString()), payment);
+                    final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(new Money(Money
+                            .getDefaultCurrency(), amount.toString()), payment);
 
                     final Integer accountId = saveCollectionSheetCustomer.getSaveCollectionSheetCustomerAccount()
                             .getAccountId();
@@ -276,12 +278,13 @@ public class SaveCollectionSheetAssembler {
         return paymentData;
     }
 
-    public AccountPaymentEntity accountPaymentAssemblerFromDto(final LocalDate transactionDate, final Short paymentType,
-            final String receiptId, final LocalDate receiptDate, final Short userId) {
+    public AccountPaymentEntity accountPaymentAssemblerFromDto(final LocalDate transactionDate,
+            final Short paymentType, final String receiptId, final LocalDate receiptDate, final Short userId) {
 
         final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
-        final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Money.getDefaultCurrency(),"0"), receiptId, DateUtils.getDateFromLocalDate(receiptDate),
-                new PaymentTypeEntity(paymentType), DateUtils.getDateFromLocalDate(transactionDate));
+        final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Money.getDefaultCurrency(), "0"),
+                receiptId, DateUtils.getDateFromLocalDate(receiptDate), new PaymentTypeEntity(paymentType), DateUtils
+                        .getDateFromLocalDate(transactionDate));
         payment.setCreatedByUser(user);
 
         return payment;

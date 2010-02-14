@@ -983,7 +983,7 @@ public class LoanBO extends AccountBO {
      * During refactoring... the checks in here should be applied to any loan disbursal
      * and the error msgs organised and internationalised
      */
-    public void disburseLoan(final AccountPaymentEntity disbursalPayment, final Money feesAtDisbursement)
+    public void disburseLoan(final AccountPaymentEntity disbursalPayment)
             throws AccountException {
 
         if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
