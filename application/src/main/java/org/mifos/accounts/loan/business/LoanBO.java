@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -46,12 +45,27 @@ import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
@@ -70,16 +84,6 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.business.RateFeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
-import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -95,13 +99,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
-import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.config.AccountingRules;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
@@ -911,7 +909,8 @@ public class LoanBO extends AccountBO {
             final PersonnelBO loggedInUser, final Date receiptDate, final Short rcvdPaymentTypeId,
             final boolean persistChange) throws AccountException {
 
-        addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL, transactionDate));
+        addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL,
+                transactionDate));
 
         // if the trxn date is not equal to disbursementDate we need to
         // regenerate the installments
@@ -937,13 +936,13 @@ public class LoanBO extends AccountBO {
             accountPayment = payInterestAtDisbursement(receiptNum, transactionDate, rcvdPaymentTypeId, loggedInUser,
                     receiptDate);
             accountPayment.setAmount(this.loanAmount.subtract(accountPayment.getAmount()));
-        } else {//jjjj
-            //Disbursal process has to create its own accountPayment taking into account any disbursement fees
+        } else {
+            // Disbursal process has to create its own accountPayment taking into account any disbursement fees
             Money feeAmountAtDisbursement = getFeesDueAtDisbursement();
             accountPayment = new AccountPaymentEntity(this, this.loanAmount.subtract(feeAmountAtDisbursement),
                     receiptNum, receiptDate, getPaymentTypeEntity(paymentTypeId), transactionDate);
             accountPayment.setCreatedByUser(loggedInUser);
-            
+
             if (feeAmountAtDisbursement.isGreaterThanZero()) {
                 processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement);
             }
@@ -2330,7 +2329,7 @@ public class LoanBO extends AccountBO {
     }
 
     private AccountPaymentEntity payInterestAtDisbursement(final String receiptNum, final Date transactionDate,
-            final Short paymentTypeId, final PersonnelBO personnel, final Date receiptDate) throws AccountException {
+            final Short paymentTypeId, final PersonnelBO loggedInUser, final Date receiptDate) throws AccountException {
 
         AccountActionDateEntity firstInstallment = null;
         for (AccountActionDateEntity accountActionDate : this.getAccountActionDates()) {
@@ -2339,12 +2338,13 @@ public class LoanBO extends AccountBO {
                 break;
             }
         }
-        // jpw not used List<AccountActionDateEntity> installmentsToBePaid = new ArrayList<AccountActionDateEntity>();
-        // installmentsToBePaid.add(firstInstallment);
 
-        PaymentData paymentData = getLoanAccountPaymentData(((LoanScheduleEntity) firstInstallment)
-                .getTotalDueWithFees(), personnel, receiptNum, paymentTypeId, receiptDate, transactionDate);
+        PaymentData paymentData = PaymentData.createPaymentData(((LoanScheduleEntity) firstInstallment)
+                .getTotalDueWithFees(), loggedInUser, paymentTypeId, transactionDate);
+        paymentData.setReceiptDate(receiptDate);
+        paymentData.setReceiptNum(receiptNum);
 
+        //Pay 1st installment and return accountPayableEntity to disbursal process
         return makePayment(paymentData);
 
     }
@@ -2436,14 +2436,6 @@ public class LoanBO extends AccountBO {
 
         addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), accountPayment.getCreatedByUser(),
                 AccountConstants.PAYMENT_RCVD, accountPayment.getPaymentDate()));
-    }
-
-    private PaymentData getLoanAccountPaymentData(final Money totalAmount, final PersonnelBO personnel,
-            final String receiptId, final Short paymentId, final Date receiptDate, final Date transactionDate) {
-        PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
-        paymentData.setReceiptDate(receiptDate);
-        paymentData.setReceiptNum(receiptId);
-        return paymentData;
     }
 
     /**
