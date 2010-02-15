@@ -927,6 +927,14 @@ public class LoanBO extends AccountBO {
         this.setAccountState(newState);
 
         //
+        // Client performance entry
+        updateCustomerHistoryOnDisbursement(this.loanAmount);
+        if (getPerformanceHistory() != null) {
+            getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
+        }
+        
+        //
+        //
         // build up account payment related data
         AccountPaymentEntity accountPayment = null;
         if (this.isInterestDeductedAtDisbursement()) {
@@ -958,12 +966,6 @@ public class LoanBO extends AccountBO {
         this.addAccountPayment(accountPayment);
         this.buildFinancialEntries(accountPayment.getAccountTrxns());
 
-        //
-        // Client performance entry
-        updateCustomerHistoryOnDisbursement(this.loanAmount);
-        if (getPerformanceHistory() != null) {
-            getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
-        }
 
         if (persistChange) {
             try {
