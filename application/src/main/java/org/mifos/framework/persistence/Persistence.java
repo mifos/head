@@ -218,7 +218,7 @@ public abstract class Persistence {
     }
 
     /**
-     * Deleagtes to {@link Session#get(Class, Serializable)}.
+     * Delegates to {@link Session#get(Class, Serializable)}.
      */
     public Object getPersistentObject(final Class clazz, final Serializable persistentObjectId) throws PersistenceException {
         // keep current unit tests happy, they get confused with an

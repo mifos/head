@@ -22,49 +22,65 @@ package org.mifos.accounts.business;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.framework.persistence.Persistence;
 
 /**
  * This class depicts the different account types. Obsolete; replaced by
  * {@link AccountTypes}.
  */
-public class AccountTypeEntity extends Persistence implements Serializable {
+@Entity
+@Table(name = "ACCOUNT_TYPE")
+public class AccountTypeEntity implements Serializable {
+
+    private Short accountTypeId;
+    private String description;
+    private Integer lookUpId;
 
     public AccountTypeEntity() {
-        super();
+    }
 
+    public AccountTypeEntity(Integer lookUpId) {
+        this.lookUpId = lookUpId;
+    }
+
+    public AccountTypeEntity(String description, Integer lookUpId) {
+        this.description = description;
+        this.lookUpId = lookUpId;
     }
 
     public AccountTypeEntity(Short accountTypeId) {
-        super();
         this.accountTypeId = accountTypeId;
     }
 
-    private java.lang.Short accountTypeId;
-
-    private Integer lookUpId;
-
-    private java.lang.String description;
-
-    public java.lang.Short getAccountTypeId() {
-        return accountTypeId;
+    @Id
+    @GeneratedValue
+    @Column(name = "ACCOUNT_TYPE_ID", nullable = false)
+    public Short getAccountTypeId() {
+        return this.accountTypeId;
     }
 
-    public void setAccountTypeId(java.lang.Short accountTypeId) {
+    public void setAccountTypeId(Short accountTypeId) {
         this.accountTypeId = accountTypeId;
     }
 
-    public java.lang.String getDescription() {
-        return description;
+    @Column(name = "DESCRIPTION")
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setDescription(java.lang.String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
+    @Column(name = "LOOKUP_ID", nullable = false)
     public Integer getLookUpId() {
-        return lookUpId;
+        return this.lookUpId;
     }
 
     public void setLookUpId(Integer lookUpId) {

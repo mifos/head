@@ -9,7 +9,7 @@
 		<!-- master data mapping files-->
 
 		<mapping class="org.mifos.application.master.business.LookUpEntity" />
-		<mapping resource="org/mifos/accounts/business/AccountTypeEntity.hbm.xml" />
+		<mapping class="org.mifos.accounts.business.AccountTypeEntity" />
 
 		<mapping resource="org/mifos/application/checklist/business/CheckListBO.hbm.xml" />
 		<mapping resource="org/mifos/application/checklist/business/CheckListDetailEntity.hbm.xml" />
@@ -22,7 +22,7 @@
 		<mapping resource="org/mifos/accounts/productsmix/business/ProductMixBO.hbm.xml" />	
 
 		<!-- Audit Log -->
-		<mapping resource="org/mifos/framework/components/fieldConfiguration/business/EntityMaster.hbm.xml" />
+		<mapping class="org.mifos.framework.components.fieldConfiguration.business.EntityMaster" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLog.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLogRecord.hbm.xml" />
 		<!-- Batch Jobs -->
@@ -146,7 +146,7 @@
 		<!--<mapping resource="org/mifos/application/reports/ui/DateSelectionItem.hbm.xml" />-->
 		<!-- Mapping files for Master Data -->
 		<mapping resource="org/mifos/application/master/business/MifosCurrency.hbm.xml" />
-		<mapping resource="org/mifos/application/master/business/CountryEntity.hbm.xml" />
+		<mapping class="org.mifos.application.master.business.CountryEntity" />
 		<mapping resource="org/mifos/application/master/business/LanguageEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/LookUpLabelEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/LookUpValueEntity.hbm.xml" />
@@ -175,7 +175,7 @@
 		<mapping resource="org/mifos/application/reports/business/ReportsParams.hbm.xml" />
 		<mapping resource="org/mifos/application/reports/business/ReportsParamsValue.hbm.xml" />
 		<mapping resource="org/mifos/application/reports/business/ReportsDataSource.hbm.xml" />
-		<mapping resource="org/mifos/application/reports/business/ReportsParamsMapValue.hbm.xml" />
+		<mapping class="org.mifos.application.reports.business.ReportsParamsMapValue" />
 		<mapping resource="org/mifos/application/reports/business/ReportsParamsMap.hbm.xml" />
 		<mapping resource="org/mifos/application/reports/business/ReportsJasperMap.hbm.xml" />
 		<!-- End mapping files for reports -->
@@ -211,7 +211,7 @@
 		<mapping resource="org/mifos/application/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fund/business/FundBO.hbm.xml" />
-		<mapping resource="org/mifos/application/master/business/FundCodeEntity.hbm.xml" />
+		<mapping class="org.mifos.application.master.business.FundCodeEntity" />
 
         <mapping resource="org/mifos/application/holiday/business/HolidayBO.hbm.xml" />
     	<mapping resource="org/mifos/application/holiday/business/RepaymentRuleEntity.hbm.xml" />

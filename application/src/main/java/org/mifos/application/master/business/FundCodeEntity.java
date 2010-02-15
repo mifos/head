@@ -22,30 +22,43 @@ package org.mifos.application.master.business;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "FUND_CODE")
 public class FundCodeEntity implements Serializable {
-    private final Short fundCodeId;
+    
+    private Short fundCodeId;
 
     private String fundCodeValue;
 
     public FundCodeEntity(String fundCode) {
-        this.fundCodeId = null;
         this.fundCodeValue = fundCode;
     }
 
-    protected FundCodeEntity() {
-        this.fundCodeId = null;
-        this.fundCodeValue = null;
+    protected FundCodeEntity() { }
+
+    @Id
+    @GeneratedValue
+    @Column(name = "FUNDCODE_ID", nullable = false)
+    public Short getFundCodeId() {
+        return fundCodeId;
     }
 
+    @Column(name = "FUNDCODE_VALUE")
     public String getFundCodeValue() {
         return fundCodeValue;
     }
 
-    public void setFundCodeValue(String fundCode) {
-        this.fundCodeValue = fundCode;
+    public void setFundCodeId(Short fundCodeId) {
+        this.fundCodeId = fundCodeId;
     }
 
-    public Short getFundCodeId() {
-        return fundCodeId;
+    public void setFundCodeValue(String fundCode) {
+        this.fundCodeValue = fundCode;
     }
 }

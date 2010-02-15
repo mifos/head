@@ -20,14 +20,35 @@
 
 package org.mifos.framework.components.fieldConfiguration.business;
 
-import org.mifos.framework.persistence.Persistence;
+import java.io.Serializable;
 
-public class EntityMaster extends Persistence {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+@NamedQueries(
+ {         
+  @NamedQuery(
+    name="getEntityMaster",
+    query="from EntityMaster"
+  ) 
+ }
+)
+@Entity
+@Table(name = "ENTITY_MASTER")
+public class EntityMaster implements Serializable {
 
     private Short id;
 
     private String entityType;
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ENTITY_TYPE_ID", nullable = false)
     public Short getId() {
         return id;
     }
@@ -36,6 +57,7 @@ public class EntityMaster extends Persistence {
         this.id = id;
     }
 
+    @Column(name = "ENTITY_TYPE")
     public String getEntityType() {
         return entityType;
     }

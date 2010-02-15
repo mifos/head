@@ -22,7 +22,6 @@ package org.mifos.application.master.business;
 
 import java.io.Serializable;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,35 +35,31 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * {@link LookUpEntity} is now deprecated and should not be used. Use
+ * {@link LookUpEntity} is now depreciated and should not be used. Use
  * {@link MifosLookUpEntity} instead which provides the same functionality and
  * includes the constants previously defined here.
  * 
  * This class can probably be deleted now-- will make sure no issues show up
  * first.
  */
-@Entity
-@Table(name = "LOOKUP_ENTITY")
 @NamedQueries(
  {         
   @NamedQuery(
     name="masterdata.entityvalue",
     query="select new org.mifos.application.master.business.CustomValueList(entity.entityId ,label.localeId,label.labelName) "
-                +"from org.mifos.application.master.business.LookUpEntity entity, "
-                +"org.mifos.application.master.business.LookUpLabelEntity label "
-                +"where entity.entityId = label.lookUpEntity.entityId "
-                +"and entity.entityType=:entityType"
+                +"from LookUpEntity entity, LookUpLabelEntity label "
+                +"where entity.entityId = label.lookUpEntity.entityId and entity.entityType=:entityType"
   ),
   @NamedQuery(
     name="masterdata.entitylookupvalue",
-    query="select new org.mifos.application.master.business.CustomValueListElement("
-                +"lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
-                +"from org.mifos.application.master.business.LookUpValueEntity lookup,"
-                +"org.mifos.application.master.business.LookUpEntity entity "
+    query="select new org.mifos.application.master.business.CustomValueListElement(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
+                +"from LookUpValueEntity lookup, LookUpEntity entity "
                 +"where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId" 
   ) 
  }
 )
+@Entity
+@Table(name = "LOOKUP_ENTITY")
 public class LookUpEntity implements Serializable {
 
     private Short entityId;

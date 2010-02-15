@@ -20,51 +20,54 @@
 
 package org.mifos.application.reports.business;
 
-import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.security.util.UserContext;
+import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 /**
  * This class encapsulates the Reports Parameters Map with Reports Parameter
  */
-public class ReportsParamsMapValue extends BusinessObject {
+public class ReportsParamsMapValue implements Serializable {
     private int parameterId;
     private int reportId;
     private int mapId;
 
     public ReportsParamsMapValue() {
-
     }
 
-    public ReportsParamsMapValue(UserContext userContext) {
-        super(userContext);
-    }
-
-    public int getParameterId() {
-        return parameterId;
-    }
-
-    public void setParameterId(int parameterId) {
+    public ReportsParamsMapValue(int reportId, int parameterId) {
+        this.reportId = reportId;
         this.parameterId = parameterId;
     }
 
-    public int getReportId() {
-        return reportId;
-    }
-
-    public void setReportId(int reportId) {
-        this.reportId = reportId;
-    }
-
+    @Id
+    @GeneratedValue
+    @Column(name = "map_id", nullable = false)
     public int getMapId() {
-        return mapId;
+        return this.mapId;
     }
 
     public void setMapId(int mapId) {
         this.mapId = mapId;
     }
 
-    public Short getEntityID() {
-        return null;
+    @Column(name = "report_id")
+    public int getReportId() {
+        return this.reportId;
+    }
+
+    public void setReportId(int reportId) {
+        this.reportId = reportId;
+    }
+
+    @Column(name = "parameter_id")
+    public int getParameterId() {
+        return this.parameterId;
+    }
+
+    public void setParameterId(int parameterId) {
+        this.parameterId = parameterId;
     }
 
 }
