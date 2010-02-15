@@ -26,7 +26,7 @@ public enum RankType {
 
     Short value;
 
-    RankType(Short value) {
+    RankType(final Short value) {
         this.value = value;
     }
 
@@ -34,10 +34,14 @@ public enum RankType {
         return value;
     }
 
-    public static RankType getRankType(Short value) {
+    public static RankType getRankType(final Short value) {
         for (RankType rank : RankType.values())
             if (rank.getValue().equals(value))
                 return rank;
         return null;
+    }
+
+    public static RankType fromInt(final int weekOfMonth) {
+        return getRankType((short) weekOfMonth);
     }
 }

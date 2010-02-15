@@ -36,11 +36,13 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.calendar.CalendarUtils;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.schedule.ScheduleGenerationStrategy;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -368,10 +370,18 @@ public class MeetingBO extends BusinessObject {
         return meetingDates;
     }
 
+    /**
+     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
+     */
+    @Deprecated
     public List<Date> getAllDates(final int occurrences) throws MeetingException {
         return getAllDates(occurrences, true);
     }
 
+    /**
+     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
+     */
+    @Deprecated
     public List<Date> getAllDates(final int occurrences, final boolean adjustForHolidays) throws MeetingException {
         validateOccurences(occurrences);
         List meetingDates = new ArrayList();
@@ -429,6 +439,10 @@ public class MeetingBO extends BusinessObject {
         }
     }
 
+    /**
+     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates}
+     */
+    @Deprecated
     public Date getFirstDate(final Date startDate) {
         if (isWeekly()) {
             return getFirstDateForWeek(startDate);
@@ -439,6 +453,10 @@ public class MeetingBO extends BusinessObject {
         }
     }
 
+    /**
+     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates}
+     */
+    @Deprecated
     private Date getNextDate(final Date startDate) {
         if (isWeekly()) {
             return getNextDateForWeek(startDate);
@@ -469,10 +487,19 @@ public class MeetingBO extends BusinessObject {
         }
     }
 
+
+    /**
+     * @deprecated - Please use {@link CalendarUtils#getNextDateForDay}.
+     */
+    @Deprecated
     private Date getFirstDateForDay(final Date startDate) {
         return getNextDateForDay(startDate);
     }
 
+    /**
+     * @deprecated - Please use {@link CalendarUtils#getNextDateForDay}.
+     */
+    @Deprecated
     private Date getNextDateForDay(final Date startDate) {
         gc.setTime(startDate);
         gc.add(Calendar.DAY_OF_WEEK, getMeetingDetails().getRecurAfter());
@@ -480,20 +507,19 @@ public class MeetingBO extends BusinessObject {
     }
 
     /**
-     * Set the day of week according to given start day to the require weekday,
-     * i.e. so it matches the meeting week day.
+     * Set the day of week according to given start day to the require weekday, i.e. so it matches the meeting week day.
      * 
-     * e.g. - If start date is Monday 9 June 2008 and meeting week day is
-     * Tuesday, then roll forward the date to Tuesday 10 June 2008 - or if start
-     * date is Sunday 8 June 2008 and meeting week day is Saturday, then roll
-     * forward the date to Saturday 14 June 2008 - or if start date is Tuesday
-     * 10 2008 June and meeting week day is Monday, then roll forward the date
-     * to Monday 16 June 2008 - or if start date is Sunday 8 June 2008 and
-     * meeting week day is Sunday, then keep the date as Sunday 8 June 2008 - or
-     * if start date is Saturday 7 June 2008 and meeting week day is Sunday,
-     * then roll forward the date to Sunday 9 June 2008
+     * e.g. - If start date is Monday 9 June 2008 and meeting week day is Tuesday, then roll forward the date to Tuesday
+     * 10 June 2008 - or if start date is Sunday 8 June 2008 and meeting week day is Saturday, then roll forward the
+     * date to Saturday 14 June 2008 - or if start date is Tuesday 10 2008 June and meeting week day is Monday, then
+     * roll forward the date to Monday 16 June 2008 - or if start date is Sunday 8 June 2008 and meeting week day is
+     * Sunday, then keep the date as Sunday 8 June 2008 - or if start date is Saturday 7 June 2008 and meeting week day
+     * is Sunday, then roll forward the date to Sunday 9 June 2008
      * 
+     * @deprecated - Please use {@link CalendarUtils#getFirstDateForWeek(Date, int)} instead. Also when generating
+     *             schedules please use {@link ScheduleGenerationStrategy#generateScheduledDates}.
      */
+    @Deprecated
     Date getFirstDateForWeek(final Date startDate) {
         final GregorianCalendar firstDateForWeek = new GregorianCalendar();
         firstDateForWeek.setTime(startDate);
@@ -513,6 +539,10 @@ public class MeetingBO extends BusinessObject {
         return firstDateForWeek.getTime();
     }
 
+    /**
+     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates}
+     */
+    @Deprecated
     private Date getNextDateForWeek(final Date startDate) {
         gc.setTime(startDate);
         gc.add(Calendar.WEEK_OF_MONTH, getMeetingDetails().getRecurAfter());
@@ -520,10 +550,14 @@ public class MeetingBO extends BusinessObject {
     }
 
     /**
-     * for monthly on date return the next date falling on the same day. If date
-     * has passed, pass in the date of next month, adjust to day number if day
-     * number exceed total number of days in month
+     * for monthly on date return the next date falling on the same day. If date has passed, pass in the date of next
+     * month, adjust to day number if day number exceed total number of days in month.
+     * 
+     * @deprecated - Please use {@link CalendarUtils#getFirstDateForMonthOnDate)} or
+     *             {@link CalendarUtils#getFirstDayForMonthUsingWeekRankAndWeekday} instead. Also when generating
+     *             schedules please use {@link ScheduleGenerationStrategy#generateScheduledDates}.
      */
+    @Deprecated
     private Date getFirstDateForMonth(final Date startDate) {
         Date scheduleDate = null;
         gc.setTime(startDate);
@@ -590,7 +624,11 @@ public class MeetingBO extends BusinessObject {
     /**
      * for monthly is on date add the number of months after which meeting is to
      * recur, and then adjust the date for day on which meeting is to occur
+     * 
+     * @deprecated - Please use {@link CalendarUtils#getNextDateForMonthOnDate)} or
+     *             {@link CalendarUtils#getNextDayForMonthUsingWeekRankAndWeekday} instead.
      */
+    @Deprecated
     private Date getNextDateForMonth(final Date startDate) {
         Date scheduleDate = null;
         gc.setTime(startDate);

@@ -25,11 +25,22 @@ public enum RepaymentRuleTypes {
 
     Short value;
 
-    RepaymentRuleTypes(Short value) {
+    RepaymentRuleTypes(final Short value) {
         this.value = value;
     }
 
     public Short getValue() {
         return value;
+    }
+
+    public static RepaymentRuleTypes fromShort(final Short id) {
+        
+        for (RepaymentRuleTypes adjustmentRule : values()) {
+            if (adjustmentRule.getValue().equals(id)) {
+                return adjustmentRule;
+            }
+        }
+        
+        return null;
     }
 }
