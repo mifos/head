@@ -43,17 +43,18 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.schedule.ScheduleGenerationStrategy;
 
 /**
  * Helper methods related to holidays logic
  */
 public class HolidayUtils {
 
-    public static boolean isWorkingDay(Calendar day) throws RuntimeException {
+    public static boolean isWorkingDay(final Calendar day) throws RuntimeException {
         return FiscalCalendarRules.isWorkingDay(day);
     }
 
-    static HolidayBO inHoliday(Calendar pday, List<HolidayBO> holidays) {
+    static HolidayBO inHoliday(final Calendar pday, final List<HolidayBO> holidays) {
         Calendar day = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
         day.setTimeInMillis(0);
         day.set(pday.get(Calendar.YEAR), pday.get(Calendar.MONTH), pday.get(Calendar.DAY_OF_MONTH));
@@ -65,7 +66,11 @@ public class HolidayUtils {
         return null;
     }
 
-    public static Calendar adjustDate(Calendar day, MeetingBO meeting) throws MeetingException {
+    /**
+     * @deprecated - please use {@link ScheduleGenerationStrategy} for generating dates that take into account working days and holidays.
+     */
+    @Deprecated
+    public static Calendar adjustDate(final Calendar day, final MeetingBO meeting) throws MeetingException {
         Calendar adjustedDate = isWorkingDay(day) ? day : getNextWorkingDay(day);
         HolidayBO holiday;
         try {
@@ -78,14 +83,14 @@ public class HolidayUtils {
         return adjustDateUsingRepaymentRule(holiday.getRepaymentRuleId(), adjustedDate, meeting);
     }
 
-    public static Calendar getNextWorkingDay(Calendar day) {
+    public static Calendar getNextWorkingDay(final Calendar day) {
         do {
             day.add(Calendar.DATE, 1);
         } while (!isWorkingDay(day));
         return day;
     }
 
-    private static Calendar adjustDateUsingRepaymentRule(Short repaymentRuleId, Calendar adjustedDate, MeetingBO meeting)
+    private static Calendar adjustDateUsingRepaymentRule(final Short repaymentRuleId, final Calendar adjustedDate, final MeetingBO meeting)
             throws MeetingException {
         if (NEXT_WORKING_DAY.getValue().equals(repaymentRuleId)) {
             adjustedDate.add(Calendar.DATE, 1);
@@ -97,7 +102,7 @@ public class HolidayUtils {
         return adjustedDate;
     }
 
-    private static List<HolidayBO> getAllHolidaysInCurrentAndNextYears(int year) throws ServiceException {
+    private static List<HolidayBO> getAllHolidaysInCurrentAndNextYears(final int year) throws ServiceException {
         List<HolidayBO> holidays = new ArrayList<HolidayBO>();
         HolidayBusinessService service = new HolidayBusinessService();
         holidays.addAll(service.getHolidays(year));
@@ -105,7 +110,7 @@ public class HolidayUtils {
         return holidays;
     }
 
-    public static void rescheduleLoanRepaymentDates(HolidayBO holiday) throws RuntimeException {
+    public static void rescheduleLoanRepaymentDates(final HolidayBO holiday) throws RuntimeException {
         try {
             List<LoanScheduleEntity> loanSchedulsList = new HolidayBusinessService().getAllLoanSchedule(holiday);
             for (LoanScheduleEntity loanScheduleEntity : loanSchedulsList) {
@@ -123,7 +128,7 @@ public class HolidayUtils {
         }
     }
 
-    public static void rescheduleSavingDates(HolidayBO holiday) throws RuntimeException {
+    public static void rescheduleSavingDates(final HolidayBO holiday) throws RuntimeException {
         try {
             List<SavingsScheduleEntity> savingSchedulsList = new HolidayBusinessService().getAllSavingSchedule(holiday);
             for (SavingsScheduleEntity savingScheduleEntity : savingSchedulsList) {

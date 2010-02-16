@@ -20,11 +20,12 @@
 
 package org.mifos.config;
 
-import org.mifos.application.meeting.util.helpers.WeekDay;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import org.joda.time.Days;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 
 public class FiscalCalendarRules {
 
@@ -49,7 +50,7 @@ public class FiscalCalendarRules {
         configWorkingDays = getConfiguredWorkingDays();
     }
 
-    private static WeekDay findWeekDay(String workingDay) {
+    private static WeekDay findWeekDay(final String workingDay) {
         WeekDay[] weekDays = WeekDay.values(); // all weekdays
 
         for (int i = 0; i < weekDays.length; i++) {
@@ -90,20 +91,20 @@ public class FiscalCalendarRules {
         return offDays;
     }
 
-    private static boolean isWorkingDay(WeekDay weekDay) {
+    private static boolean isWorkingDay(final WeekDay weekDay) {
         for (int i = 0; i < configWorkingDays.length; i++)
             if (configWorkingDays[i].toUpperCase().equals(weekDay.name().toUpperCase()))
                 return true;
         return false;
     }
 
-    public static boolean isWorkingDay(Calendar day) {
+    public static boolean isWorkingDay(final Calendar day) {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         return isWorkingDay(WeekDay.getWeekDay(day.get(Calendar.DAY_OF_WEEK)));
     }
 
-    public static boolean isWorkingDay(Short dayOfWeek) {
+    public static boolean isWorkingDay(final Short dayOfWeek) {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         WeekDay weekDay = WeekDay.getWeekDay(dayOfWeek);
@@ -111,7 +112,7 @@ public class FiscalCalendarRules {
 
     }
 
-    public static boolean isStartOfFiscalWeek(Short dayOfWeek) {
+    public static boolean isStartOfFiscalWeek(final Short dayOfWeek) {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         Short startOfWeekDay = getStartOfWeek();
@@ -146,13 +147,28 @@ public class FiscalCalendarRules {
         return days;
     }
 
-    public static void setWorkingDays(String workingDays) {
+    public static void setWorkingDays(final String workingDays) {
         ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesWorkingDays, workingDays);
         reloadConfigWorkingDays();
     }
 
-    public static void setScheduleTypeForMeetingOnHoliday(String scheduleTypeForMeetingOnHoliday) {
+    public static void setScheduleTypeForMeetingOnHoliday(final String scheduleTypeForMeetingOnHoliday) {
         ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday, scheduleTypeForMeetingOnHoliday);
+    }
+
+    public static List<Days> getWorkingDaysAsJodaTimeDays() {
+        
+        List<Days> jodaWorkingDays = new ArrayList<Days>();
+        
+        List<WeekDay> workingDaysAsWeekDays = getWorkingDays();
+        for (WeekDay weekDay : workingDaysAsWeekDays) {
+            
+            Days jodaWeekDay = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(weekDay.getValue());
+            
+            jodaWorkingDays.add(jodaWeekDay);
+        }
+        
+        return jodaWorkingDays;
     }
 
 }

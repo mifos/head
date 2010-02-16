@@ -29,10 +29,10 @@ import org.mifos.schedule.ScheduledEvent;
 public class HolidayAdjustmentRuleFactory {
 
     public static DateAdjustmentStrategy createStrategy(final List<Days> workingDays, final ScheduledEvent scheduledEvent,
-            final RepaymentRuleTypes repaymentRule) {
+            final RepaymentRuleTypes holidayAdjustmentRule) {
 
         DateAdjustmentStrategy holidayAdjustmentStrategy;
-        switch (repaymentRule) {
+        switch (holidayAdjustmentRule) {
         case NEXT_WORKING_DAY:
             holidayAdjustmentStrategy = new NextWorkingDayStrategy(workingDays);
             break;
@@ -44,8 +44,7 @@ public class HolidayAdjustmentRuleFactory {
             holidayAdjustmentStrategy = new NextWorkingDayStrategy(workingDays);
             break;
         default:
-            holidayAdjustmentStrategy = new NextWorkingDayStrategy(workingDays);
-            break;
+            throw new IllegalStateException("unknown holiday ajustment rule type.");
         }
 
         return holidayAdjustmentStrategy;

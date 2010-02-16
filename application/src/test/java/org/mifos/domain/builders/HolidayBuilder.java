@@ -34,14 +34,16 @@ public class HolidayBuilder {
     private DateTime from;
     private DateTime to;
     private final RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
+    
+    private final Short officeId = Short.valueOf("1");
 
     public Holiday build() {
         
-        HolidayPK holidayPK = new HolidayPK(null, from.toDate());
+        HolidayPK holidayPK = new HolidayPK(officeId, from.toDate());
         RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity(repaymentRule.getValue(), "lookup.value.key");
         
         try {
-            return new HolidayBO(holidayPK, to.toDate(), "builderHoliday", repaymentRuleEntity);
+            return new HolidayBO(holidayPK, to.toDate(), "builderCreatedHoliday", repaymentRuleEntity);
         } catch (ApplicationException e) {
             throw new MifosRuntimeException(e);
         }

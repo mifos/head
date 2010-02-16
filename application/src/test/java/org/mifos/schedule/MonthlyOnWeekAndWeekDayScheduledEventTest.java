@@ -8,19 +8,19 @@ import org.junit.Test;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.domain.builders.ScheduledEventBuilder;
 
-public class MonthlyOnWeekAndWeekDayRecurringEventTest {
+public class MonthlyOnWeekAndWeekDayScheduledEventTest {
 
-    private ScheduledEvent recurringEvent;
+    private ScheduledEvent scheduledEvent;
 
     @Test
     public void canRollForwardDateToMatchWeekOfMonthAndDayOfWeekWhenStartingInSameWeekButOneDayBehind() {
 
-        recurringEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
+        scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
 
         DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).withDayOfWeek(DayOfWeek.monday())
                 .toDateMidnight().toDateTime();
 
-        DateTime result = recurringEvent.nearestMatchingDateBeginningAt(firstOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstOfNextMonth);
 
         assertThat(result, is(firstOfNextMonth.plusDays(1)));
     }
@@ -28,12 +28,12 @@ public class MonthlyOnWeekAndWeekDayRecurringEventTest {
     @Test
     public void canRollForwardDateToMatchWeekOfMonthAndDayOfWeekWhenStartingOneWeekAndDayBehind() {
 
-        recurringEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(2).on(DayOfWeek.tuesday()).build();
+        scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(2).on(DayOfWeek.tuesday()).build();
 
         DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).withDayOfWeek(DayOfWeek.monday())
                 .toDateMidnight().toDateTime();
 
-        DateTime result = recurringEvent.nearestMatchingDateBeginningAt(firstOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstOfNextMonth);
 
         assertThat(result, is(firstOfNextMonth.plusDays(1).plusWeeks(1)));
     }
@@ -41,12 +41,12 @@ public class MonthlyOnWeekAndWeekDayRecurringEventTest {
     @Test
     public void canRollForwardDateToMatchWeekOfMonthAndDayOfWeekWhenStartingOneWeekAndDayAhead() {
 
-        recurringEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
+        scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
 
         DateTime ninthOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(9).withDayOfWeek(DayOfWeek.wednesday())
                 .toDateMidnight().toDateTime();
 
-        DateTime result = recurringEvent.nearestMatchingDateBeginningAt(ninthOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(ninthOfNextMonth);
 
         assertThat(result, is(tuesdayOnFirstWeekOneMonthFrom(ninthOfNextMonth)));
     }

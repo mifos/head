@@ -95,6 +95,19 @@ public class GenericDaoHibernate implements GenericDao {
         }
     }
 
+    @Override
+    public void createOrUpdate(final Object entity) {
+        try {
+            Session session = getHibernateUtil().getSessionTL();
+            session.saveOrUpdate(entity);
+            if (getHibernateUtil().getInterceptor().isAuditLogRequired()) {
+                getHibernateUtil().getInterceptor().createChangeValueMap(entity);
+            }
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
     private void setParametersInQuery(final Query query, final Map<String, ?> queryParameters) {
 
         final Set<String> queryParamKeys = queryParameters.keySet();

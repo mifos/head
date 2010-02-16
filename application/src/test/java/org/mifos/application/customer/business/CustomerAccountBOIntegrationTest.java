@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.junit.Assert;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -46,6 +47,12 @@ import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -55,16 +62,12 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -114,6 +117,36 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
         StaticHibernateUtil.closeSession();
         super.tearDown();
+    }
+    
+    public void testGenerateMeetingsForNextSet() throws Exception {
+        createInitialObjects();
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        int lastInstallmentId = center.getCustomerAccount().getAccountActionDates().size();
+        AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getAccountActionDate(
+                (short) lastInstallmentId);
+        
+
+        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        List<Holiday> holidays = new ArrayList<Holiday>();
+        
+        // exercise test
+        center.getCustomerAccount().generateNextSetOfMeetingDates(workingDays, holidays);
+        
+        MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
+        meetingBO.setMeetingStartDate(accountActionDateEntity.getActionDate());
+        List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfYearAfterNextYear().getTime());
+        meetingDates.remove(0);
+        Date date = center.getCustomerAccount().getAccountActionDate((short) (lastInstallmentId + 1)).getActionDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(meetingDates.get(0));
+        Assert.assertEquals(0, new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DATE), 0, 0, 0).compareTo(new GregorianCalendar(calendar2.get(Calendar.YEAR),
+                calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0)));
+
     }
 
     public void testSuccessfulMakePayment() throws Exception {
@@ -573,29 +606,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
-    }
-
-    public void testGenerateMeetingsForNextSet() throws Exception {
-        createInitialObjects();
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        int lastInstallmentId = center.getCustomerAccount().getAccountActionDates().size();
-        AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getAccountActionDate(
-                (short) lastInstallmentId);
-        center.getCustomerAccount().generateNextSetOfMeetingDates();
-        MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
-        meetingBO.setMeetingStartDate(accountActionDateEntity.getActionDate());
-        List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfYearAfterNextYear().getTime());
-        meetingDates.remove(0);
-        Date date = center.getCustomerAccount().getAccountActionDate((short) (lastInstallmentId + 1)).getActionDate();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTime(meetingDates.get(0));
-        Assert.assertEquals(0, new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DATE), 0, 0, 0).compareTo(new GregorianCalendar(calendar2.get(Calendar.YEAR),
-                calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0)));
-
     }
 
     public void testApplyMiscCharge() throws Exception {

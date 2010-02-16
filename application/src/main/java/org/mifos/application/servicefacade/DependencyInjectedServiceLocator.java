@@ -23,6 +23,8 @@ import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.productdefinition.business.LoanProductDaoHibernate;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -34,11 +36,11 @@ import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.persistence.CustomerDao;
 import org.mifos.application.customer.persistence.CustomerDaoHibernate;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.accounts.productdefinition.business.LoanProductDaoHibernate;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 
 /**
  * I contain static factory methods for locating/creating application services.
@@ -51,7 +53,6 @@ public class DependencyInjectedServiceLocator {
     // service facade
     private static CollectionSheetServiceFacade collectionSheetServiceFacade;
     private static LoanServiceFacade loanServiceFacade;
-
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -68,6 +69,7 @@ public class DependencyInjectedServiceLocator {
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
     
     private static GenericDao genericDao = new GenericDaoHibernate();
+    private static HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
     private static CustomerDao customerDao = new CustomerDaoHibernate(genericDao);
     private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
@@ -108,4 +110,7 @@ public class DependencyInjectedServiceLocator {
         return customerDao;
     }
 
+    public static HolidayDao locateHolidayDao() {
+        return holidayDao;
+    }
 }

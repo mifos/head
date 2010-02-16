@@ -44,6 +44,7 @@ import junit.framework.Assert;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -58,6 +59,14 @@ import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -75,6 +84,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
@@ -83,15 +93,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -123,23 +126,23 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     private SavingsOfferingBO savingsOffering;
 
-    private SavingsTestHelper helper = new SavingsTestHelper();
+    private final SavingsTestHelper helper = new SavingsTestHelper();
 
-    private SavingsPersistence savingsPersistence = new SavingsPersistence();
+    private final SavingsPersistence savingsPersistence = new SavingsPersistence();
 
-    private AccountPersistence accountPersistence = new AccountPersistence();
+    private final AccountPersistence accountPersistence = new AccountPersistence();
 
-    private CustomerPersistence customerPersistence = new CustomerPersistence();
+    private final CustomerPersistence customerPersistence = new CustomerPersistence();
 
-    private MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
+    private final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
 
     PersonnelBO createdBy = null;
 
-    private Money getRoundedMoney(Money value) {
+    private Money getRoundedMoney(final Money value) {
         return MoneyUtils.currencyRound(value);
     }
     
-    private Money getRoundedMoney(Double value) {
+    private Money getRoundedMoney(final Double value) {
         return MoneyUtils.currencyRound(new Money(TestUtils.RUPEE, value.toString()));
     }
 
@@ -517,9 +520,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     // ///////////////////////////////////////////////////
-    private SavingsOfferingBO createSavingsOffering(String offeringName, String shortName, SavingsType savingsType,
-            InterestCalcType interestCalcType, RecurrenceType freqeuncyIntCalc, short recurAfterIntCalc,
-            double interestRate, Date startDate, Double minAmtToCalculateInterest, Double maxAmtToWithdraw)
+    private SavingsOfferingBO createSavingsOffering(final String offeringName, final String shortName, final SavingsType savingsType,
+            final InterestCalcType interestCalcType, final RecurrenceType freqeuncyIntCalc, final short recurAfterIntCalc,
+            final double interestRate, final Date startDate, final Double minAmtToCalculateInterest, final Double maxAmtToWithdraw)
             throws Exception {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(helper.getMeeting(freqeuncyIntCalc,
                 recurAfterIntCalc, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
@@ -530,10 +533,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 minAmtToCalculateInterest, savingsType, interestCalcType, meetingIntCalc, meetingIntPost);
     }
 
-    private SavingsOfferingBO createSavingsOfferingForWeekly(String offeringName, String shortName,
-            SavingsType savingsType, InterestCalcType interestCalcType, RecurrenceType freqeuncyIntCalc,
-            short recurAfterIntCalc, double interestRate, Date startDate, Double minAmtToCalculateInterest,
-            Double maxAmtToWithdraw) throws Exception {
+    private SavingsOfferingBO createSavingsOfferingForWeekly(final String offeringName, final String shortName,
+            final SavingsType savingsType, final InterestCalcType interestCalcType, final RecurrenceType freqeuncyIntCalc,
+            final short recurAfterIntCalc, final double interestRate, final Date startDate, final Double minAmtToCalculateInterest,
+            final Double maxAmtToWithdraw) throws Exception {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(helper.getMeeting(freqeuncyIntCalc,
                 recurAfterIntCalc, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(helper.getMeeting(WEEKLY, EVERY_WEEK,
@@ -543,10 +546,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 minAmtToCalculateInterest, savingsType, interestCalcType, meetingIntCalc, meetingIntPost);
     }
 
-    private SavingsOfferingBO createSavingsOfferingForDaily(String offeringName, String shortName,
-            SavingsType savingsType, InterestCalcType interestCalcType, RecurrenceType freqeuncyIntCalc,
-            short recurAfterIntCalc, double interestRate, Date startDate, Double minAmtToCalculateInterest,
-            Double maxAmtToWithdraw) throws Exception {
+    private SavingsOfferingBO createSavingsOfferingForDaily(final String offeringName, final String shortName,
+            final SavingsType savingsType, final InterestCalcType interestCalcType, final RecurrenceType freqeuncyIntCalc,
+            final short recurAfterIntCalc, final double interestRate, final Date startDate, final Double minAmtToCalculateInterest,
+            final Double maxAmtToWithdraw) throws Exception {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(helper.getMeeting(freqeuncyIntCalc,
                 recurAfterIntCalc, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(helper.getMeeting(DAILY, EVERY_DAY,
@@ -1523,7 +1526,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private Date getTimeStampDate(Date date) {
+    private Date getTimeStampDate(final Date date) {
         return new Timestamp(date.getTime());
     }
 
@@ -2289,7 +2292,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
     }
 
-    private SavingsPaymentData getSavingsPaymentdata(CollectionSheetEntryInstallmentView bulkEntryAccountActionView) {
+    private SavingsPaymentData getSavingsPaymentdata(final CollectionSheetEntryInstallmentView bulkEntryAccountActionView) {
         return new SavingsPaymentData(bulkEntryAccountActionView);
     }
 
@@ -3591,9 +3594,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
     }
 
-    private SavingsOfferingBO createSavingsOfferingForIntCalc(String offeringName, String shortName,
-            SavingsType savingsType, InterestCalcType interestCalcType, RecurrenceType freqeuncyIntCalc,
-            short recurAfterIntCalc) throws Exception {
+    private SavingsOfferingBO createSavingsOfferingForIntCalc(final String offeringName, final String shortName,
+            final SavingsType savingsType, final InterestCalcType interestCalcType, final RecurrenceType freqeuncyIntCalc,
+            final short recurAfterIntCalc) throws Exception {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(helper.getMeeting(freqeuncyIntCalc,
                 recurAfterIntCalc, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(helper.getMeeting(MONTHLY, EVERY_MONTH,
@@ -3610,12 +3613,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 new Date(System.currentTimeMillis()), savingsOffering);
     }
 
-    private AccountBO saveAndFetch(AccountBO account) throws Exception {
+    private AccountBO saveAndFetch(final AccountBO account) throws Exception {
         TestObjectFactory.updateObject(account);
         return accountPersistence.getAccount(account.getAccountId());
     }
 
-    private java.sql.Date offSetCurrentDate(int noOfDays) {
+    private java.sql.Date offSetCurrentDate(final int noOfDays) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -3895,7 +3898,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         center = group.getParentCustomer();
     }
 
-    private void createObjectToCheckForTotalInstallmentDue(SavingsType savingsType) throws Exception {
+    private void createObjectToCheckForTotalInstallmentDue(final SavingsType savingsType) throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("prd1df", InterestCalcType.MINIMUM_BALANCE, savingsType);
         savings = helper.createSavingsAccount(savingsOffering, group, AccountState.SAVINGS_PENDING_APPROVAL,
@@ -4006,15 +4009,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void addNotes(String comment) throws Exception {
-        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
-        AccountNotesEntity accountNotesEntity = new AccountNotesEntity(currentDate, comment, personnelBO, savings);
-        savings.addAccountNotes(accountNotesEntity);
-        savings.update();
-        StaticHibernateUtil.commitTransaction();
-    }
-
     public void testGenerateMeetingForNextYear() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -4034,7 +4028,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         Integer installmetId = lastYearLastInstallment.getInstallmentId().intValue() + (short) 1;
 
-        savingsBO.generateNextSetOfMeetingDates();
+        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        List<Holiday> holidays = new ArrayList<Holiday>();
+
+        savingsBO.generateNextSetOfMeetingDates(workingDays, holidays);
+
         TestObjectFactory.updateObject(savingsBO);
         TestObjectFactory.updateObject(center);
         TestObjectFactory.updateObject(group);
@@ -4053,9 +4051,18 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         calendar2.setTime(meetingDates.get(0));
         Calendar calendar3 = Calendar.getInstance();
         calendar3.setTime(FirstSavingInstallmetDate);
-       Assert.assertEquals(0, new GregorianCalendar(calendar3.get(Calendar.YEAR), calendar3.get(Calendar.MONTH), calendar3
-                .get(Calendar.DATE), 0, 0, 0).compareTo(new GregorianCalendar(calendar2.get(Calendar.YEAR), calendar2
-                .get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0)));
+        Assert.assertEquals(0, new GregorianCalendar(calendar3.get(Calendar.YEAR), calendar3.get(Calendar.MONTH),
+                calendar3.get(Calendar.DATE), 0, 0, 0).compareTo(new GregorianCalendar(calendar2.get(Calendar.YEAR),
+                calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0)));
         TestObjectFactory.cleanUp(savingsBO);
+    }
+    
+    private void addNotes(final String comment) throws Exception {
+        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        AccountNotesEntity accountNotesEntity = new AccountNotesEntity(currentDate, comment, personnelBO, savings);
+        savings.addAccountNotes(accountNotesEntity);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
     }
 }

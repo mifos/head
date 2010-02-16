@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
@@ -155,6 +156,10 @@ public class HolidayBO extends BusinessObject implements Holiday {
         this.holidayChangesAppliedFlag = flag;
     }
 
+    /**
+     * @deprecated use {@link HolidayDao#save}
+     */
+    @Deprecated
     public void save() throws ApplicationException {
         if (this.getHolidayThruDate() == null) {
             this.setHolidayThruDate(this.getHolidayFromDate());

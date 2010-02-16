@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -36,6 +38,12 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -51,12 +59,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.persistence.FeePersistence;
-import org.mifos.accounts.fees.util.helpers.FeeChangeType;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -74,6 +77,10 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.schedule.ScheduleGenerationStrategy;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduleGenerationStrategy;
 
 /**
  * Clients, groups, and centers are stored in the db as customer accounts.
@@ -473,41 +480,34 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    public void generateNextSetOfMeetingDates() throws AccountException {
-        Short lastInstallmentId = getLastInstallmentId();
-        AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
-        MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
-        Date meetingStartDate = meeting.getMeetingStartDate();
-        // what does this do? I don't understand why we temporarily
-        // replace the meeting start date
-        meeting.setMeetingStartDate(lastInstallment.getActionDate());
-
-        List<Date> installmentDates = null;
-        try {
-            // we're going to schedule 10 new meetings. Brute force:
-            // generate them, then look for overlap and adjust as
-            // necessary.
-            installmentDates = meeting.getAllDates((short) 11);
-            if (installmentDates.get(0).compareTo(lastInstallment.getActionDate()) == 0) {
-                // date overlap: trim head
-                installmentDates.remove(0);
-            } else {
-                // trim tail
-                installmentDates.remove(10);
-            }
-        } catch (MeetingException me) {
-            throw new AccountException(me);
+    public void generateNextSetOfMeetingDates(final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) {
+        
+        Short lastInstallmentId = Short.valueOf("0"); 
+        if (getLastInstallmentId() != null) {
+            lastInstallmentId = getLastInstallmentId();
         }
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Fee installment obtained ");
+            
+        AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
+        MeetingBO meeting = getCustomer().getCustomerMeetingValue();
+        
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+        Date lastInstallmentDate = new Date();
+        if (lastInstallment != null) {
+            lastInstallmentDate = lastInstallment.getActionDate();
+        }
+        
+        DateTime startFromDayAfterLastKnownSchedule = new DateTime(lastInstallmentDate).toDateMidnight().toDateTime().plusDays(1);
+        ScheduleGenerationStrategy scheduleGenerationStrategy = new HolidayAndWorkingDaysScheduleGenerationStrategy(workingDays, orderedUpcomingHolidays);
+        List<DateTime> scheduledDates = scheduleGenerationStrategy.generateScheduledDates(10, startFromDayAfterLastKnownSchedule, scheduledEvent);
+        
         int count = 1;
-        for (Date installmentDate : installmentDates) {
+        for (DateTime installmentDate : scheduledDates) {
             CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(this, getCustomer(), Short
-                    .valueOf(String.valueOf(count + lastInstallmentId)), new java.sql.Date(installmentDate.getTime()),
+                    .valueOf(String.valueOf(count + lastInstallmentId)), new java.sql.Date(installmentDate.toDate().getTime()),
                     PaymentStatus.UNPAID);
             count++;
             addAccountActionDate(customerScheduleEntity);
         }
-        meeting.setMeetingStartDate(meetingStartDate);
     }
 
     @Override
@@ -911,7 +911,7 @@ public class CustomerAccountBO extends AccountBO {
      * we need to get the lookup value loaded so that we can resolve the name of the
      * PaymentTypeEntity.
      */
-    private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
+    private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return (PaymentTypeEntity)getFeePersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }    
 }

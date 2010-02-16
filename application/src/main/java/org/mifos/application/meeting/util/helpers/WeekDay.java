@@ -20,7 +20,9 @@
 
 package org.mifos.application.meeting.util.helpers;
 
+import org.joda.time.Days;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.calendar.DayOfWeek;
 import org.mifos.config.LocalizedTextLookup;
 
 public enum WeekDay implements LocalizedTextLookup {
@@ -30,7 +32,7 @@ public enum WeekDay implements LocalizedTextLookup {
     Short value;
     String name;
 
-    WeekDay(Short value) {
+    WeekDay(final Short value) {
         this.value = value;
         this.name = null;
 
@@ -44,11 +46,30 @@ public enum WeekDay implements LocalizedTextLookup {
      * In Joda time MONDAY=1 and SUNDAY=7, so shift these
      * to SUNDAY=1, SATURDAY=7 to match this class 
      */
-    public static WeekDay getJodaWeekDay(int value) {
+    public static WeekDay getJodaWeekDay(final int value) {
         return getWeekDay((value%7)+1);
     }
     
-    public static WeekDay getWeekDay(int value) {
+    /*
+     * Shift Sunday=1 to joda time equivalent Sunday=7
+     * Shift Monday=2 to joda time equivalent Monday=1
+     * Shift Tuesday=3 to joda time equivalent Tuesday=2
+     * etc.
+     */
+    public static Days getJodaDayOfWeekThatMatchesMifosWeekDay(final int mifosWeekDayValue) {
+        
+        if (WeekDay.SUNDAY.getValue().equals((short)mifosWeekDayValue)) {
+            return DayOfWeek.sundayAsDay();
+        }
+        
+        if (WeekDay.SATURDAY.getValue().equals((short)mifosWeekDayValue)) {
+            return DayOfWeek.saturdayAsDay();
+        }
+        
+        return Days.days((mifosWeekDayValue%7)-1);
+    }
+    
+    public static WeekDay getWeekDay(final int value) {
         for (WeekDay weekday : WeekDay.values()) {
             if (weekday.value == value) {
                 return weekday;

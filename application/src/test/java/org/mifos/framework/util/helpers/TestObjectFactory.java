@@ -46,15 +46,51 @@ import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.CategoryTypeEntity;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
+import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingTestUtils;
+import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
+import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
+import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
+import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
@@ -101,19 +137,6 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.CategoryTypeEntity;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
-import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.business.RateFeeBO;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -137,29 +160,6 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingTestUtils;
-import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
-import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
-import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
-import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
-import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
-import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
-import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
-import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
@@ -179,7 +179,6 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.DateTimeService;
 
 /**
  * This class assumes that you are connected to the model database, which has master data in it and also you have some
@@ -1672,7 +1671,9 @@ public class TestObjectFactory {
 
     private static void deleteHolidays(List<HolidayBO> holidayList) {
         for (HolidayBO holidayBO : holidayList) {
-            deleteHoliday(holidayBO);
+            if (holidayBO != null) {
+                deleteHoliday(holidayBO);
+            }
         }
         holidayList = null;
     }
@@ -2159,7 +2160,7 @@ public class TestObjectFactory {
     }
 
     public static SavingsOfferingBO createSavingsProduct(final String productName, final String shortName,
-            final Date currentDate, RecommendedAmountUnit recommendedAmountUnit) {
+            final Date currentDate, final RecommendedAmountUnit recommendedAmountUnit) {
         MeetingBO meetingIntCalc = createMeeting(getTypicalMeeting());
         MeetingBO meetingIntPost = createMeeting(getTypicalMeeting());
         return createSavingsProduct(productName, shortName, currentDate, recommendedAmountUnit, meetingIntCalc,
@@ -2167,7 +2168,7 @@ public class TestObjectFactory {
     }
 
     public static SavingsOfferingBO createSavingsProduct(final String productName, final String shortName,
-            final Date currentDate, RecommendedAmountUnit recommendedAmountUnit,
+            final Date currentDate, final RecommendedAmountUnit recommendedAmountUnit,
             final MeetingBO meetingIntCalc, final MeetingBO meetingIntPost) {
         return createSavingsProduct(productName, shortName, ApplicableTo.GROUPS, currentDate, PrdStatus.SAVINGS_ACTIVE,
                 300.0, recommendedAmountUnit, 1.2, 200.0, 200.0, SavingsType.VOLUNTARY,

@@ -20,6 +20,9 @@
 
 package org.mifos.config;
 
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,10 +35,12 @@ import java.util.TimeZone;
 
 import junit.framework.Assert;
 
+import org.joda.time.Days;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.calendar.DayOfWeek;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FiscalCalendarRulesTest {
@@ -53,9 +58,25 @@ public class FiscalCalendarRulesTest {
         configMgr.clear();
     }
 
-    private void setNewWorkingDays(String newWorkingDays) {
+    private void setNewWorkingDays(final String newWorkingDays) {
         configMgr.setProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays, newWorkingDays);
         FiscalCalendarRules.reloadConfigWorkingDays();
+    }
+    
+    @Test
+    public void shouldConvertWorkingDaysOfMifosWeekDayToJodaTimeDays() {
+        
+        // setup
+        String configWorkingDays = "MONDAY,WEDNESDAY,SATURDAY,SUNDAY";
+        setNewWorkingDays(configWorkingDays);
+        
+        // exercise test
+        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+
+        assertThat(workingDays, hasItem(DayOfWeek.mondayAsDay()));
+        assertThat(workingDays, hasItem(DayOfWeek.wednesdayAsDay()));
+        assertThat(workingDays, hasItem(DayOfWeek.saturdayAsDay()));
+        assertThat(workingDays, hasItem(DayOfWeek.sundayAsDay()));
     }
 
     @Test

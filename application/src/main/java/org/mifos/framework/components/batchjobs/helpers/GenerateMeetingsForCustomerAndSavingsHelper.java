@@ -23,10 +23,15 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
@@ -38,12 +43,14 @@ import org.mifos.framework.util.DateTimeService;
 
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
-    public GenerateMeetingsForCustomerAndSavingsHelper(MifosTask mifosTask) {
+    private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+    
+    public GenerateMeetingsForCustomerAndSavingsHelper(final MifosTask mifosTask) {
         super(mifosTask);
     }
 
     @Override
-    public void execute(long timeInMillis) throws BatchJobException {
+    public void execute(final long timeInMillis) throws BatchJobException {
         long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
         AccountPersistence accountPersistence = new AccountPersistence();
         List<Integer> customerAndSavingsAccountIds;
@@ -81,6 +88,11 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         long startTime = new DateTimeService().getCurrentDateTime().getMillis();
         Integer currentAccountId = null;
         int updatedRecordCount = 0;
+
+        List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+        
+        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        
         try {
             StaticHibernateUtil.getSessionTL();
             StaticHibernateUtil.startTransaction();
@@ -90,10 +102,10 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
                 
                 if (accountBO instanceof CustomerAccountBO) {
-                    ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates();
+                    ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
                     updatedRecordCount++;
                 } else if (accountBO instanceof SavingsBO) {
-                    ((SavingsBO) accountBO).generateNextSetOfMeetingDates();
+                    ((SavingsBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
                     updatedRecordCount++;
                 }
                 

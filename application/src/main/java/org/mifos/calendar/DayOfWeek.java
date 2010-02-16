@@ -104,4 +104,12 @@ public class DayOfWeek {
     public static Days fridayAsDay() {
         return Days.days(friday());
     }
+
+    public static Days saturdayAsDay() {
+        return Days.days(saturday());
+    }
+    
+    public static Days sundayAsDay() {
+        return Days.days(sunday());
+    }
 }

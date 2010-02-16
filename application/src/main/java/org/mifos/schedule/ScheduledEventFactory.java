@@ -20,7 +20,9 @@
 
 package org.mifos.schedule;
 
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.schedule.internal.DailyScheduledEvent;
 import org.mifos.schedule.internal.MonthlyOnDateScheduledEvent;
 import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
@@ -52,6 +54,27 @@ public class ScheduledEventFactory {
         }
 
         return recurringEvent;
+    }
+
+    public static ScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
+        
+        RecurrenceType period = meeting.getRecurrenceType();
+        int every = meeting.getRecurAfter();
+        int dayOfWeek = 0;
+        if (meeting.getMeetingDetails().getWeekDay() != null) {
+            dayOfWeek = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(meeting.getMeetingDetails().getWeekDay().getValue()).getDays();
+        }
+            
+        int dayOfMonth = 0;
+        if (meeting.getMeetingDetails().getDayNumber() != null) {
+            dayOfMonth = meeting.getMeetingDetails().getDayNumber();
+        }
+        int weekOfMonth = 0; 
+        if (meeting.getMeetingDetails().getWeekRank() != null) {
+            weekOfMonth = meeting.getMeetingDetails().getWeekRank().getValue();
+        }
+        
+        return createScheduledEvent(period, every, dayOfWeek, dayOfMonth, weekOfMonth);
     }
 
 }

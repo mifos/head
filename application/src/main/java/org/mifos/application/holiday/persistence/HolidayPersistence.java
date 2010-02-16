@@ -22,27 +22,32 @@ package org.mifos.application.holiday.persistence;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.exceptions.PersistenceException;
 
+/**
+ * @deprecated - please use {@link HolidayDao} instead.
+ * 
+ * FIXME - move holiday dao functionality from here to {@link HolidayDaoHibernate}.
+ */
+@Deprecated
 public class HolidayPersistence extends MasterPersistence {
 
     public HolidayPersistence() {
     }
 
-    public HolidayBO getHoliday(Short holidayId) throws PersistenceException {
+    public HolidayBO getHoliday(final Short holidayId) throws PersistenceException {
         return (HolidayBO) getPersistentObject(HolidayBO.class, holidayId);
     }
 
@@ -53,8 +58,11 @@ public class HolidayPersistence extends MasterPersistence {
      * 
      * Force a locale that works with pattern parsing.
      */
-
-    public List<HolidayBO> getHolidays(int year) throws PersistenceException {
+    /**
+     * @deprecated use {@link HolidayDao#findAllHolidaysForYear}.
+     */
+    @Deprecated
+    public List<HolidayBO> getHolidays(final int year) throws PersistenceException {
         SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd",new Locale("en","GB"));
         isoDateFormat.setLenient(false);
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -73,14 +81,14 @@ public class HolidayPersistence extends MasterPersistence {
         return executeNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE_TYPES, parameters);
     }
 
-    public RepaymentRuleEntity getRepaymentRule(short repaymentRuleId) throws PersistenceException {
+    public RepaymentRuleEntity getRepaymentRule(final short repaymentRuleId) throws PersistenceException {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("repaymentRuleId", repaymentRuleId);
         return (RepaymentRuleEntity) execUniqueResultNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE, parameters);
     }
 
-    public List<LoanScheduleEntity> getAllLoanSchedules(HolidayBO holiday) throws PersistenceException {
+    public List<LoanScheduleEntity> getAllLoanSchedules(final HolidayBO holiday) throws PersistenceException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("FROM_DATE", holiday.getHolidayFromDate());
         parameters.put("THRU_DATE", holiday.getHolidayThruDate());
@@ -95,7 +103,7 @@ public class HolidayPersistence extends MasterPersistence {
         return queryResult;
     }
 
-    public List<SavingsScheduleEntity> getAllSavingSchedules(HolidayBO holiday) throws PersistenceException {
+    public List<SavingsScheduleEntity> getAllSavingSchedules(final HolidayBO holiday) throws PersistenceException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("FROM_DATE", holiday.getHolidayFromDate());
         parameters.put("THRU_DATE", holiday.getHolidayThruDate());
@@ -103,7 +111,7 @@ public class HolidayPersistence extends MasterPersistence {
         return executeNamedQuery(NamedQueryConstants.ALL_SAVING_SCHEDULE, parameters);
     }
 
-    public int isValidHolidayState(Short levelId, Short stateId, boolean isCustomer) throws PersistenceException {
+    public int isValidHolidayState(final Short levelId, final Short stateId, final boolean isCustomer) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", levelId);
         queryParameters.put("stateId", stateId);

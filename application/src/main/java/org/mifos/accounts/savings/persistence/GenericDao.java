@@ -37,4 +37,6 @@ public interface GenericDao {
     
     Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
 
+    void createOrUpdate(Object entity);
+
 }

@@ -28,6 +28,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -39,6 +41,14 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
+import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -58,6 +68,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -66,14 +77,6 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
-import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
-import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -87,6 +90,10 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
+import org.mifos.schedule.ScheduleGenerationStrategy;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduleGenerationStrategy;
 
 public class SavingsBO extends AccountBO {
 
@@ -953,26 +960,22 @@ public class SavingsBO extends AccountBO {
     }
 
     private void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting,
-            final AccountActionDateEntity lastInstallment) throws AccountException {
-        List<Date> depositDates;
-        try {
-            depositDates = meeting.getAllDates((short) 11);
-            if (depositDates.get(0).compareTo(lastInstallment.getActionDate()) == 0) {
-                depositDates.remove(0);
-            } else {
-                depositDates.remove(10);
-            }
-        } catch (MeetingException me) {
-            throw new AccountException(me);
-        }
+            final AccountActionDateEntity lastInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+        
+        DateTime startFromDayAfterLastKnownInstallmentDate = new DateTime(lastInstallment.getActionDate()).plusDays(1);
+        
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+        ScheduleGenerationStrategy dateGeneration = new HolidayAndWorkingDaysScheduleGenerationStrategy(workingDays, holidays);
+        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
+        
         short installmentNumber = lastInstallment.getInstallmentId();
-        for (Date dt : depositDates) {
-            AccountActionDateEntity actionDate = helper.createActionDateObject(this, customer, ++installmentNumber, dt,
+        for (DateTime depositDate : depositDates) {
+            AccountActionDateEntity actionDate = helper.createActionDateObject(this, customer, ++installmentNumber, depositDate.toDate(),
                     (short) 1, getRecommendedAmount());
 
             addAccountActionDate(actionDate);
             logger.debug("In SavingsBO::generateDepositAccountActions(), Successfully added account action on date: "
-                    + dt);
+                    + depositDate);
         }
     }
 
@@ -1986,18 +1989,21 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    public void generateNextSetOfMeetingDates() throws AccountException {
+    public void generateNextSetOfMeetingDates(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
         CustomerBO customerBO = getCustomer();
         if (customerBO.getCustomerMeeting() != null && customerBO.getCustomerMeeting().getMeeting() != null) {
+            
             MeetingBO depositSchedule = customerBO.getCustomerMeeting().getMeeting();
+            
             Date oldMeetingDate = depositSchedule.getStartDate();
             Short lastInstallmentId = getLastInstallmentId();
             AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
             depositSchedule.setMeetingStartDate(lastInstallment.getActionDate());
+            
             if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                     || customerBO.getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
                     && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                generateDepositAccountActions(customerBO, depositSchedule, lastInstallment);
+                generateDepositAccountActions(customerBO, depositSchedule, lastInstallment, workingDays, holidays);
             } else {
                 List<CustomerBO> children;
                 try {
@@ -2006,7 +2012,7 @@ public class SavingsBO extends AccountBO {
                     throw new AccountException(ce);
                 }
                 for (CustomerBO customer : children) {
-                    generateDepositAccountActions(customer, depositSchedule, lastInstallment);
+                    generateDepositAccountActions(customer, depositSchedule, lastInstallment, workingDays, holidays);
                 }
             }
             depositSchedule.setStartDate(oldMeetingDate);
@@ -2074,7 +2080,7 @@ public class SavingsBO extends AccountBO {
      * we need to get the lookup value loaded so that we can resolve the name of the
      * PaymentTypeEntity.
      */
-    private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
+    private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return (PaymentTypeEntity)getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }    
 }
