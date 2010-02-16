@@ -222,7 +222,7 @@ explanation of the license and how it is applied.
 												test="${loan.accountState.id==5 || loan.accountState.id==9}">
 												<span class="fontnormal"> <mifos:mifoslabel
 													name="loan.outstandingbalance" />: <c:out
-													value="${loan.loanSummary.oustandingBalance}" /><br>
+													value="${loan.loanSummary.outstandingBalance}" /><br>
 												<mifos:mifoslabel name="loan.amount_due" />: <c:out
 													value="${loan.totalAmountDue}" /> </span>
 											</c:if></td>

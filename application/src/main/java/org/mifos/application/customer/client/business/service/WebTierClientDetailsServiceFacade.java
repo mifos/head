@@ -20,6 +20,10 @@
 
 package org.mifos.application.customer.client.business.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.master.MessageLookup;
@@ -50,7 +54,25 @@ public class WebTierClientDetailsServiceFacade implements ClientDetailsServiceFa
         } catch(CurrencyMismatchException e) {
             delinquentPortfolioAmountString = localizedMessageLookup("errors.multipleCurrencies");
         }
-        ClientInformationDto clientInformationDto = new ClientInformationDto(delinquentPortfolioAmountString, client.getDisplayName());
+        
+        List<ClientLoanInformationDto> clientLoans = new ArrayList<ClientLoanInformationDto>(); 
+        for (LoanBO loan : client.getOpenLoanAccounts()) {        
+            String totalAmountDueString;
+            try {
+                Money totalAmountDue = loan.getTotalAmountDue();
+                totalAmountDueString = totalAmountDue.toString();
+            } catch(CurrencyMismatchException e) {
+                totalAmountDueString = localizedMessageLookup("errors.multipleCurrencies");        
+            }
+            clientLoans.add(new ClientLoanInformationDto(totalAmountDueString, loan.getGlobalAccountNum(), 
+                loan.getLoanOffering().getPrdOfferingName(), loan.getAccountState().getId().toString(), 
+                loan.getAccountState().getName(), loan.getLoanSummary().getOutstandingBalance().toString()));
+        }           
+        
+        ClientInformationDto clientInformationDto = new ClientInformationDto(
+                client.getCustomerStatus().getId(),
+                client.getCustomerStatus().getName(), delinquentPortfolioAmountString, 
+                client.getDisplayName(), client.getGlobalCustNum(), clientLoans);
         return clientInformationDto;
     }
     

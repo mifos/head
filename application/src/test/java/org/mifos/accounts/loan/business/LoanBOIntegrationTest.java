@@ -1890,7 +1890,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetOustandingBalance() {
         accountBO = getLoanAccount();
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOustandingBalance(), TestUtils.makeMoney(336.0));
+        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOutstandingBalance(), TestUtils.makeMoney(336.0));
     }
 
     public void testGetOustandingBalancewithPayment() throws Exception {
@@ -1902,7 +1902,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
 
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOustandingBalance(), TestUtils.makeMoney(306.0));
+        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getOutstandingBalance(), TestUtils.makeMoney(306.0));
     }
 
     public void testGetNextMeetingDateAsCurrentDate() throws Exception {

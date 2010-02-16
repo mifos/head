@@ -69,7 +69,7 @@ explanation of the license and how it is applied.
 								value="${clientDetailsDto.displayName}" /></span></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
-								test="${BusinessKey.customerStatus.id != 6}">
+								test="${clientDetailsDto.customerStatusId != 6}">
 								<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
 									<fmt:message key="client.editStatus">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
@@ -85,8 +85,8 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage
-								id="${BusinessKey.customerStatus.id}" moduleName="org.mifos.application.customer.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
-								value="${BusinessKey.customerStatus.name}" /></span> <c:forEach
+								id="${clientDetailsDto.customerStatusId}" moduleName="org.mifos.application.customer.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
+								value="${clientDetailsDto.customerStatusName}" /></span> <c:forEach
 								var="flagSet" items="${BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
 									test="${BusinessKey.blackListed}">
@@ -96,7 +96,7 @@ explanation of the license and how it is applied.
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
 								name="client.SystemId" bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></span>
 							<span class="fontnormal"><c:out
-								value="${BusinessKey.globalCustNum}" /></span><br>
+								value="${clientDetailsDto.globalCustNum}" /></span><br>
 							<!-- Loan Officer of the client --> <span class="fontnormal"> <mifos:mifoslabel
 								name="client.LoanOff" bundle="ClientUIResources"></mifos:mifoslabel>
 							<c:out value="${BusinessKey.personnel.displayName}" /></span><br>
@@ -130,7 +130,7 @@ explanation of the license and how it is applied.
 								name="client.AccountHeading" bundle="ClientUIResources"></mifos:mifoslabel></td>
 						</tr>
 						<!-- bug id 28004. Added if condition to show link to open accounts if only client is active-->
-						<c:if test="${BusinessKey.customerStatus.id == 3}">
+						<c:if test="${clientDetailsDto.customerStatusId == 3}">
 							<tr align="right">
 								<td class="headingorange"><span class="fontnormal"><mifos:mifoslabel
 									name="client.AccountsLink" bundle="ClientUIResources"/>&nbsp; <html-el:link styleId="viewClientDetails.link.newLoanAccount"
@@ -143,7 +143,7 @@ explanation of the license and how it is applied.
 							</tr>
 						</c:if>
 					</table>
-					<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerLoanAccountsInUse')}">
+					<c:if test="${!empty clientDetailsDto.clientLoans}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -158,7 +158,7 @@ explanation of the license and how it is applied.
 								<span class="fontnormal"></span>
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
-									<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerLoanAccountsInUse')}"
+									<c:forEach items="${clientDetailsDto.clientLoans}"
 										var="loan">
 										<tr>
 											<td>
@@ -167,19 +167,19 @@ explanation of the license and how it is applied.
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewLoanAccount"
 														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${BusinessKey.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-														<c:out value="${loan.loanOffering.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
+														<c:out value="${loan.loanProductName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
-														id="${loan.accountState.id}" moduleName="org.mifos.accounts.loan.util.resources.loanImages" />
-													<c:out value="${loan.accountState.name}" /> </span></td>
+														id="${loan.accountStateId}" moduleName="org.mifos.accounts.loan.util.resources.loanImages" />
+													<c:out value="${loan.accountStateName}" /> </span></td>
 												</tr>
 											</table>
 											<c:if
-												test="${loan.accountState.id==5 || loan.accountState.id==9}">
+												test="${loan.accountStateId==5 || loan.accountStateId==9}">
 												<span class="fontnormal"> <mifos:mifoslabel
 													name="loan.outstandingbalance" isColonRequired="yes"/> <c:out
-													value="${loan.loanSummary.oustandingBalance}" /><br>
+													value="${loan.outstandingBalance}" /><br>
 												<mifos:mifoslabel name="loan.amount_due" isColonRequired="yes"/> <c:out
 													value="${loan.totalAmountDue}" /> </span>
 											</c:if></td>
@@ -293,7 +293,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="69%" align="right" class="fontnormal">
 							<span class="fontnormal">
-								<c:if test="${BusinessKey.customerStatus.id !=1 && BusinessKey.customerStatus.id !=2}">
+								<c:if test="${clientDetailsDto.customerStatusId !=1 && clientDetailsDto.customerStatusId !=2}">
 									<html-el:link styleId="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
                   						<mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" />
                   					</html-el:link>
@@ -715,7 +715,7 @@ explanation of the license and how it is applied.
 								</c:forEach>
   							</c:if>
 							<tr><td class="paddingL10"> <br>
-							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
+							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientDetailsDto.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
 							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -841,7 +841,7 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewClientDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=client">
+                  <a id="viewClientDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${clientDetailsDto.globalCustNum}&surveyType=client">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                   <a id="viewClientDetails.link.viewAllSurveys" href="surveysAction.do?method=mainpage">
@@ -896,7 +896,7 @@ explanation of the license and how it is applied.
                 <span class="fontnormal8pt"> 
                   <c:if test="${!empty BusinessKey.customerNotes}">
                     <html-el:link styleId="viewClientDetails.link.seeAllNotes"
-                    href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                    href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${clientDetailsDto.globalCustNum}&customerName=${BusinessKey.displayName}&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
                       <mifos:mifoslabel name="client.SeeAllNotesLink" bundle="ClientUIResources"/>
                     </html-el:link>
 								    <br/>

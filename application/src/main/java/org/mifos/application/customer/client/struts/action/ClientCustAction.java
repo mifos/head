@@ -1052,11 +1052,8 @@ public class ClientCustAction extends CustAction {
                 .numberOfMeetings(false, clientBO.getCustomerId()), request);
         SessionUtils.setCollectionAttribute(ClientConstants.LOANCYCLECOUNTER, getCustomerBusinessService()
                 .fetchLoanCycleCounter(clientBO), request);
-        List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
         List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
-        setLocaleIdToLoanStatus(loanAccounts, localeId);
         setLocaleIdToSavingsStatus(savingsAccounts, localeId);
-        SessionUtils.setCollectionAttribute(ClientConstants.CUSTOMERLOANACCOUNTSINUSE, loanAccounts, request);
         SessionUtils.setCollectionAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, savingsAccounts, request);
         SessionUtils.setAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME, getNameForBusinessActivityEntity(
                 clientBO.getCustomerDetail().getBusinessActivities(), localeId), request);
@@ -1077,11 +1074,6 @@ public class ClientCustAction extends CustAction {
                         .retrieveMasterEntities(MasterConstants.POVERTY_STATUS, getUserContext(request).getLocaleId()),
                         request);
 
-    }
-
-    private void setLocaleIdToLoanStatus(List<LoanBO> accountList, Short localeId) {
-        for (LoanBO accountBO : accountList)
-            setLocaleForAccount(accountBO, localeId);
     }
 
     private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList, Short localeId) {

@@ -20,6 +20,8 @@
 
 package org.mifos.application.customer.client.business.service;
 
+import java.util.List;
+
 import org.mifos.framework.business.service.DataTransferObject;
 
 /**
@@ -28,13 +30,39 @@ import org.mifos.framework.business.service.DataTransferObject;
  *
  */
 public class ClientInformationDto implements DataTransferObject {
+    private final Short customerStatusId;
+    private final String customerStatusName;
     private final String delinquentPortfolioAmount;
     private final String displayName;
-
+    private final String globalCustNum;
+    private final List<ClientLoanInformationDto> clientLoans;
     
-    public ClientInformationDto(String delinquentPortfolioAmount, String displayName) {
+
+    public ClientInformationDto(Short customerStatusId, String customerStatusName, String delinquentPortfolioAmount,
+            String displayName, String globalCustNum, List<ClientLoanInformationDto> clientLoans) {
+        super();
+        this.customerStatusId = customerStatusId;
+        this.customerStatusName = customerStatusName;
         this.delinquentPortfolioAmount = delinquentPortfolioAmount;
         this.displayName = displayName;
+        this.globalCustNum = globalCustNum;
+        this.clientLoans = clientLoans;
+    }
+    
+    public Short getCustomerStatusId() {
+        return this.customerStatusId;
+    }
+
+    public String getCustomerStatusName() {
+        return this.customerStatusName;
+    }
+
+    public List<ClientLoanInformationDto> getClientLoans() {
+        return this.clientLoans;
+    }
+
+    public String getGlobalCustNum() {
+        return this.globalCustNum;
     }
 
     public String getDelinquentPortfolioAmount() {

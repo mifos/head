@@ -35,6 +35,7 @@ import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
@@ -70,6 +71,9 @@ public class WebTierClientDetailsServiceFacadeTest {
     @Mock
     private ClientPerformanceHistoryEntity clientPerformanceHistoryEntity;
     
+    @Mock
+    private CustomerStatusEntity customerStatusEntity;    
+    
     @Before
     public void setupAndInjectDependencies() {
         clientDetailsServiceFacade = new WebTierClientDetailsServiceFacade();
@@ -81,10 +85,23 @@ public class WebTierClientDetailsServiceFacadeTest {
         String globalCustNum = "123";
         Short levelId = 1;
         String amount = "10.0";
+        String clientName = "client name";
+        String globalCusttomerNumber = "1234";
+        String customerStatusEntityName = "status name";
+        Short customerStatusId = 1;
         when(customerBusinessService.findBySystemId(globalCustNum, levelId)).thenReturn(client);
         when(client.getClientPerformanceHistory()).thenReturn(clientPerformanceHistoryEntity);
+        when(client.getCustomerStatus()).thenReturn(customerStatusEntity);
+        when(client.getDisplayName()).thenReturn(clientName);
+        when(client.getGlobalCustNum()).thenReturn(globalCusttomerNumber);
+        when(customerStatusEntity.getId()).thenReturn(customerStatusId);
+        when(customerStatusEntity.getName()).thenReturn(customerStatusEntityName);
         when(clientPerformanceHistoryEntity.getDelinquentPortfolioAmount()).thenReturn(new Money(TestUtils.RUPEE,amount));
         ClientInformationDto clientInformationDto = clientDetailsServiceFacade.getClientInformationDto(globalCustNum, levelId);
         assertThat(clientInformationDto.getDelinquentPortfolioAmount(), is(amount));
+        assertThat(clientInformationDto.getCustomerStatusId(), is(customerStatusId));
+        assertThat(clientInformationDto.getCustomerStatusName(), is(customerStatusEntityName));
+        assertThat(clientInformationDto.getDisplayName(), is(clientName));
+        assertThat(clientInformationDto.getGlobalCustNum(), is(globalCusttomerNumber));
     }
 }
