@@ -20,6 +20,8 @@
 
 package org.mifos.application.master.business;
 
+import java.math.BigDecimal;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -30,18 +32,14 @@ public class MifosCurrencyTest extends TestCase {
 
     
     public void testEqualsOnCurrencyId() {
-        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", Float
-                .valueOf("1"), Short.valueOf("3"), "USD");
-        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1"), "Dollar", Float
-                .valueOf("1"), Short.valueOf("3"), "USD");
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
        Assert.assertTrue(currency1.equals(currency2));
     }
 
     public void testEqualsFailureOnCurrencyId() {
-        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", Float
-                .valueOf("1"), Short.valueOf("3"), "USD");
-        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("2"), "Rupees", Float
-                .valueOf("1"), Short.valueOf("3"), "USD");
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("2"), "Rupees", BigDecimal.valueOf(1), "USD");
         Assert.assertFalse(currency1.equals(currency2));
     }
 

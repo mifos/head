@@ -145,13 +145,13 @@
 		<mapping resource="org/mifos/application/reports/ui/SelectionItem.hbm.xml" />
 		<!--<mapping resource="org/mifos/application/reports/ui/DateSelectionItem.hbm.xml" />-->
 		<!-- Mapping files for Master Data -->
-		<mapping resource="org/mifos/application/master/business/MifosCurrency.hbm.xml" />
+		<mapping class="org.mifos.application.master.business.MifosCurrency" />
 		<mapping class="org.mifos.application.master.business.CountryEntity" />
 		<mapping resource="org/mifos/application/master/business/LanguageEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/LookUpLabelEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/LookUpValueEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/LookUpValueLocaleEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/master/business/MifosLookUpEntity.hbm.xml" />
+		<mapping class="org.mifos.application.master.business.MifosLookUpEntity" />
 		<mapping resource="org/mifos/application/master/business/SupportedLocalesEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/PaymentTypeEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/SpouseFatherLookupEntity.hbm.xml" />

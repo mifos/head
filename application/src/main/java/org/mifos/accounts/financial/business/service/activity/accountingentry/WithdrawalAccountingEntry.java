@@ -59,7 +59,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
     private void handleRoundingForWithdrawal(SavingsBO savings, SavingsTrxnDetailEntity savingsTrxn)
             throws FinancialException {
         Money roundedAmount = Money.round(savingsTrxn.getWithdrawlAmount(), 
-                savingsTrxn.getWithdrawlAmount().getCurrency().getRoundingAmountBigDecimal(), AccountingRules.getCurrencyRoundingMode());
+                savingsTrxn.getWithdrawlAmount().getCurrency().getRoundingAmount(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(savingsTrxn.getWithdrawlAmount())) {
             FinancialActionBO finActionRounding = FinancialActionCache
                     .getFinancialAction(FinancialActionConstants.ROUNDING);

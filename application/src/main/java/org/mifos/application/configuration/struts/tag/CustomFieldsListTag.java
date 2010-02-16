@@ -85,7 +85,7 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
         html.endTag("td");
         html.newline();
         html.startTag("td", "width", "22%", "class", "drawtablerow");
-        String label = customField.getLookUpEntity().getLabel();
+        String label = customField.getLookUpEntity().findLabel();
         html.text(label);
         html.endTag("td");
         html.newline();

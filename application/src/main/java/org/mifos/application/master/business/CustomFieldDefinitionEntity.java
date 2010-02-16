@@ -210,7 +210,7 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
     }
 
     public String getLabel() {
-        return lookUpEntity.getLabel();
+        return lookUpEntity.findLabel();
     }
 
     /*

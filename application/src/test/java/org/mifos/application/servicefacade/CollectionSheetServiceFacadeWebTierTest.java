@@ -93,7 +93,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
-        defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null, null);
+        defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null);
         Money.setDefaultCurrency(defaultCurrency);
     }
 

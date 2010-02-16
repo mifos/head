@@ -20,8 +20,16 @@
 
 package org.mifos.application.master.business;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -29,9 +37,19 @@ import org.mifos.framework.business.PersistentObject;
  * currency name , the display symbol, Whether this currency has been chosen as
  * the default currency for the MFI. This class is immutable and hence all the
  * setter methods are private. The class is final and the mapping for this class
- * specifies lazy=false so that hibernate doesnt initialize a proxy
+ * specifies lazy=false so that hibernate doesn't initialize a proxy
  */
-public final class MifosCurrency extends PersistentObject {
+@NamedQueries(
+ {         
+  @NamedQuery(
+    name="getCurrency",
+    query="from MifosCurrency currency where currency.currencyCode = :currencyCode"
+  )
+ }
+)
+@Entity
+@Table(name = "CURRENCY")
+public final class MifosCurrency implements Serializable {
 
     public static final short CEILING_MODE = 1;
     public static final short FLOOR_MODE = 2;
@@ -42,51 +60,61 @@ public final class MifosCurrency extends PersistentObject {
     /** English multiple-word descriptive name. */
     private String currencyName;
 
-    private Float roundingAmount;
-
-    private Short defaultDigitsAfterDecimal;
+    private BigDecimal roundingAmount;
 
     /** ISO 4217 currency code. */
     private String currencyCode;
 
-    public MifosCurrency(Short currencyId, String currencyName, Float roundingAmount,
-            Short defaultDigitsAfterDecimal, String currencyCode) {
+    public MifosCurrency(Short currencyId, String currencyName, BigDecimal roundingAmount, String currencyCode) {
         this.currencyId = currencyId;
         this.currencyName = currencyName;
         this.roundingAmount = roundingAmount;
-        this.defaultDigitsAfterDecimal = defaultDigitsAfterDecimal;
         this.currencyCode = currencyCode;
     }
 
     protected MifosCurrency() {
     }
 
+    @Id
+    @GeneratedValue
+    @Column(name = "CURRENCY_ID", nullable = false)
     public Short getCurrencyId() {
         return currencyId;
     }
 
     @SuppressWarnings("unused")
-    // See .hbm.xml file
     private void setCurrencyId(Short currencyId) {
         this.currencyId = currencyId;
     }
 
+    @Column(name = "CURRENCY_NAME")
     public String getCurrencyName() {
         return currencyName;
     }
 
     @SuppressWarnings("unused")
-    // See .hbm.xml file
     private void setCurrencyName(String currencyName) {
         this.currencyName = currencyName;
     }
 
+    @Column(name = "CURRENCY_CODE")
     public String getCurrencyCode() {
         return currencyCode;
     }
 
-    public void setCurrencyCode(String currencyCode) {
+    @SuppressWarnings("unused")
+    private void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
+    }
+    
+    @Column(name = "ROUNDING_AMOUNT")
+    public BigDecimal getRoundingAmount() {
+        return roundingAmount;
+    }
+
+    @SuppressWarnings("unused")
+    private void setRoundingAmount(BigDecimal roundingAmount) {
+        this.roundingAmount = roundingAmount;
     }
 
     @Override
@@ -107,20 +135,6 @@ public final class MifosCurrency extends PersistentObject {
     @Override
     public int hashCode() {
         return currencyId == null ? 0 : currencyId.hashCode();
-    }
-
-    public Float getRoundingAmount() {
-        return roundingAmount;
-    }
-    
-    public BigDecimal getRoundingAmountBigDecimal() {
-        return new BigDecimal(roundingAmount);
-    }
-
-    @SuppressWarnings("unused")
-    // See .hbm.xml file
-    private void setRoundingAmount(Float roundingAmount) {
-        this.roundingAmount = roundingAmount;
     }
 
 }

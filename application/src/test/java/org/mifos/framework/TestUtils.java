@@ -109,9 +109,9 @@ public class TestUtils {
         return new Locale("EN", "GB");
     }
 
-    public static final MifosCurrency RUPEE = new MifosCurrency((short) 2, "RUPEE", 1.0f, (short) 1, "INR");
+    public static final MifosCurrency RUPEE = new MifosCurrency((short) 2, "RUPEE", BigDecimal.valueOf(1.0), "INR");
 
-    public static final MifosCurrency EURO = new MifosCurrency((short) 3, "EURO", 0.5f, (short) 1, "EUR");
+    public static final MifosCurrency EURO = new MifosCurrency((short) 3, "EURO", BigDecimal.valueOf(0.5), "EUR");
 
     public static void assertWellFormedFragment(String xml) throws DocumentException {
         assertWellFormedDocument("<root>" + xml + "</root>");

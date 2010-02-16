@@ -73,7 +73,7 @@ public class CollectionSheetDtoTranslatorImplTest {
 
     @BeforeClass
     public static void setupStaticClientRules() {
-        defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null, null);
+        defaultCurrency = new MifosCurrency(defaultCurrencyId, null, null, null);
         Money.setDefaultCurrency(defaultCurrency);
     }
 

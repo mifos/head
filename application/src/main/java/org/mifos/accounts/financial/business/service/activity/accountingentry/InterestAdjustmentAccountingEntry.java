@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import java.math.BigDecimal;
-
 import org.mifos.accounts.financial.business.FinancialActionBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
@@ -60,7 +58,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 
         // check if rounding is required
         Money roundedAmount = Money.round(loanTrxn.getInterestAmount(), 
-                loanTrxn.getInterestAmount().getCurrency().getRoundingAmountBigDecimal(), AccountingRules.getCurrencyRoundingMode());
+                loanTrxn.getInterestAmount().getCurrency().getRoundingAmount(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(loanTrxn.getInterestAmount())) {
             FinancialActionBO finActionRounding = FinancialActionCache
                     .getFinancialAction(FinancialActionConstants.ROUNDING);

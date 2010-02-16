@@ -70,9 +70,9 @@ public class AccountingRules {
             throw new RuntimeException("Can't find in the database the currency define in the config file "
                     + currencyCode);
         Short digitsAfterDecimal = getDigitsAfterDecimal(currency);
-        Float amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
+        BigDecimal amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
         return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(),
-                amountToBeRoundedTo, digitsAfterDecimal, currencyCode);
+                amountToBeRoundedTo, currencyCode);
     }
     
     /**
@@ -180,8 +180,8 @@ public class AccountingRules {
     }
 
     // the defaultValue passed in should be the value from database
-    public static Float getAmountToBeRoundedTo(Float defaultValue) {
-        return ConfigurationManager.getInstance().getFloat(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO,
+    public static BigDecimal getAmountToBeRoundedTo(BigDecimal defaultValue) {
+        return ConfigurationManager.getInstance().getBigDecimal(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO,
                 defaultValue);
     }
 

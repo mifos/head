@@ -23,6 +23,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Comparator;
@@ -128,8 +129,7 @@ public class InterestPostingAccountingEntryTest {
         // setup
         DateMidnight savingsTrxnDetailActionDate = new DateMidnight(2009, 9, 9);
         DateMidnight savingsTrxnDetailCreationDate = new DateMidnight(2009, 1, 1);
-        MifosCurrency currency = new MifosCurrency(Short.valueOf("1"), "Dollar", Float.valueOf("1"),
-                Short.valueOf("3"), "USD");
+        MifosCurrency currency = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
 
         // stubbing
         when(savingsTrxnDetail.getAccount()).thenReturn(savingsBO);
