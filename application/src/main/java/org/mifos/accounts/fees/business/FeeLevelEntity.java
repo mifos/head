@@ -20,34 +20,64 @@
 
 package org.mifos.accounts.fees.business;
 
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.mifos.accounts.fees.util.helpers.FeeLevel;
-import org.mifos.framework.business.PersistentObject;
 
-public class FeeLevelEntity extends PersistentObject {
-
-    private final Short feeLevelId;
-
-    private final FeeBO fee;
-
+@Entity
+@Table(name = "FEELEVEL")
+public class FeeLevelEntity implements Serializable {
+    private Short feeLevelId;
     private Short levelId;
+    private FeeBO fee;
 
     public FeeLevelEntity(FeeBO fee, FeeLevel feeLevel) {
-        this.feeLevelId = null;
         this.fee = fee;
-        this.levelId = feeLevel.getValue();
+        levelId = feeLevel.getValue();
     }
 
     protected FeeLevelEntity() {
         fee = null;
-        feeLevelId = null;
     }
 
+    @Id
+    @GeneratedValue
+    @Column(name = "FEELEVEL_ID", nullable = false)
+    protected Short getFeeLevelId() {
+        return feeLevelId;
+    }
+
+    @Column(name = "LEVEL_ID")
     public Short getLevelId() {
         return levelId;
     }
 
-    private void setLevelId(Short levelId) {
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "FEE_ID")
+    public FeeBO getFee() {
+        return fee;
+    }
+
+    protected void setFeeLevelId(Short feeLevelId) {
+        this.feeLevelId = feeLevelId;
+    }
+
+    protected void setLevelId(Short levelId) {
         this.levelId = levelId;
+    }
+
+    protected void setFee(FeeBO fee) {
+        this.fee = fee;
     }
 
 }

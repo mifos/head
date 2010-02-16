@@ -104,9 +104,9 @@
 		<mapping resource="org/mifos/accounts/productdefinition/business/NoOfInstallSameForAllLoanBO.hbm.xml" />
 			
 		<!--M2 style object for GLCODE-->
-		<mapping resource="org/mifos/accounts/financial/business/GLCodeEntity.hbm.xml" />
+		<mapping class="org.mifos.accounts.financial.business.GLCodeEntity" />
 		<mapping resource="org/mifos/accounts/business/AccountBO.hbm.xml" />
-		<mapping resource="org/mifos/accounts/business/AccountCustomFieldEntity.hbm.xml" />
+		<mapping class="org.mifos.accounts.business.AccountCustomFieldEntity" />
 		<mapping resource="org/mifos/accounts/business/AccountFeesEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/business/AccountPaymentEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/business/AccountNotesEntity.hbm.xml" />
@@ -117,15 +117,15 @@
 		<mapping resource="org/mifos/accounts/business/AccountStateEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/financial/business/COABO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/financial/business/COAHierarchyEntity.hbm.xml" />
-		<mapping resource="org/mifos/accounts/financial/business/COAIDMapperEntity.hbm.xml" />
+		<mapping class="org.mifos.accounts.financial.business.COAIDMapperEntity" />
 		<mapping resource="org/mifos/accounts/financial/business/FinancialActionBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/financial/business/FinancialTransactionBO.hbm.xml" />
-		<mapping resource="org/mifos/application/master/business/CustomerAttendance.hbm.xml" />
+		<mapping class="org.mifos.application.master.business.CustomerAttendanceType" />
 		<mapping resource="org/mifos/accounts/fees/business/CategoryTypeEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fees/business/FeeFormulaEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fees/business/FeeFrequencyEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fees/business/FeeFrequencyTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/accounts/fees/business/FeeLevelEntity.hbm.xml" />
+		<mapping class="org.mifos.accounts.fees.business.FeeLevelEntity" />
 		<mapping resource="org/mifos/accounts/fees/business/FeePaymentEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fees/business/FeePaymentsCategoriesTypeEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fees/business/FeeBO.hbm.xml" />

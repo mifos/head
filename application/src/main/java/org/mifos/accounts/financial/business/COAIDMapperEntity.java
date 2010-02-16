@@ -20,20 +20,38 @@
 
 package org.mifos.accounts.financial.business;
 
-import org.mifos.framework.business.PersistentObject;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * Unused and candidate for removal.
  */
-public class COAIDMapperEntity extends PersistentObject {
-    private final Short constantId;
+@NamedQueries(
+ {
+  @NamedQuery(
+    name="GETALLCOA",
+    query="from COAIDMapperEntity"
+  )
+ }
+)
+@Entity
+@Table(name = "COA_IDMAPPER")
+public class COAIDMapperEntity implements Serializable {
 
-    private final COABO coa;
+    private Short constantId;
+    private COABO coa;
 
     protected COAIDMapperEntity() {
-        super();
-        constantId = null;
-        coa = null;
     }
 
     public COAIDMapperEntity(Short constantId, COABO coa) {
@@ -41,12 +59,25 @@ public class COAIDMapperEntity extends PersistentObject {
         this.coa = coa;
     }
 
+    @Id
+    @GeneratedValue
+    @Column(name = "CONSTANT_ID", nullable = false)
+    public Short getConstantId() {
+        return constantId;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COA_ID", unique = true, insertable = false, updatable = false)
     public COABO getCoa() {
         return coa;
     }
 
-    public Short getConstantId() {
-        return constantId;
+    protected void setConstantId(Short constantId) {
+        this.constantId = constantId;
+    }
+
+    protected void setCoa(COABO coa) {
+        this.coa = coa;
     }
 
 }

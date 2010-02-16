@@ -20,14 +20,23 @@
 
 package org.mifos.accounts.financial.business;
 
-import org.mifos.framework.business.PersistentObject;
+import java.io.Serializable;
 
-public class GLCodeEntity extends PersistentObject {
-    private final Short glcodeId;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-    private final String glcode;
+@Entity
+@Table(name = "GL_CODE")
+public class GLCodeEntity implements Serializable {
 
-    private final COABO associatedCOA;
+    private Short glcodeId;
+    private String glcode;
+    private COABO associatedCOA;
 
     protected GLCodeEntity() {
         this(null, null);
@@ -36,19 +45,35 @@ public class GLCodeEntity extends PersistentObject {
     public GLCodeEntity(Short glcodeId, String glcode) {
         this.glcodeId = glcodeId;
         this.glcode = glcode;
-        this.associatedCOA = null;
+        associatedCOA = null;
     }
 
-    public String getGlcode() {
-        return glcode;
-    }
-
+    @Id
+    @GeneratedValue
+    @Column(name = "GLCODE_ID", nullable = false)
     public Short getGlcodeId() {
         return glcodeId;
     }
 
+    @Column(name = "GLCODE_VALUE")
+    public String getGlcode() {
+        return glcode;
+    }
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "associatedGlcode")
     public COABO getAssociatedCOA() {
         return associatedCOA;
+    }
+
+    protected void setGlcodeId(Short glcodeId) {
+        this.glcodeId = glcodeId;
+    }
+
+    protected void setGlcode(String glcode) {
+        this.glcode = glcode;
+    }
+
+    protected void setAssociatedCOA(COABO associatedCOA) {
+        this.associatedCOA = associatedCOA;
     }
 
     @Override

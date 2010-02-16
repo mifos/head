@@ -20,25 +20,35 @@
 
 package org.mifos.application.master.business;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.mifos.application.customer.client.business.AttendanceType;
-import org.mifos.framework.persistence.Persistence;
 
 /**
  * @deprecated Use {@link AttendanceType} instead.
  */
 @Deprecated
-public class CustomerAttendanceType extends Persistence {
+@Entity
+@Table(name = "CUSTOMER_ATTENDANCE_TYPES")
+public class CustomerAttendanceType implements Serializable {
+
+    private short attendanceId;
+    private Integer lookUpId;
+    private String desciption;
 
     public CustomerAttendanceType() {
         super();
     }
 
-    private Short attendanceId;
-
-    private Integer lookUpId;
-
-    private String desciption;
-
+    @Id
+    @GeneratedValue
+    @Column(name = "ATTENDANCE_ID", nullable = false)
     public Short getAttendanceId() {
         return attendanceId;
     }
@@ -47,6 +57,7 @@ public class CustomerAttendanceType extends Persistence {
         this.attendanceId = attendanceId;
     }
 
+    @Column(name = "DESCRIPTION")
     public String getDesciption() {
         return desciption;
     }
@@ -55,6 +66,7 @@ public class CustomerAttendanceType extends Persistence {
         this.desciption = desciption;
     }
 
+    @Column(name = "ATTENDANCE_LOOKUP_ID")
     public Integer getLookUpId() {
         return lookUpId;
     }

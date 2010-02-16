@@ -20,11 +20,23 @@
 
 package org.mifos.accounts.business;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.ApplicationException;
 
-public class AccountCustomFieldEntity extends PersistentObject {
+@Entity
+@Table(name = "ACCOUNT_CUSTOM_FIELD")
+public class AccountCustomFieldEntity implements Serializable {
 
     private Integer accountCustomFieldId;
 
@@ -48,6 +60,9 @@ public class AccountCustomFieldEntity extends PersistentObject {
 
     }
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ACCOUNT_CUSTOM_FIELD_ID", nullable = false)
     public Integer getAccountCustomFieldId() {
         return accountCustomFieldId;
     }
@@ -56,6 +71,8 @@ public class AccountCustomFieldEntity extends PersistentObject {
         this.accountCustomFieldId = accountCustomFieldId;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACCOUNT_ID", unique = true)
     public AccountBO getAccount() {
         return account;
     }
@@ -64,6 +81,7 @@ public class AccountCustomFieldEntity extends PersistentObject {
         this.account = account;
     }
 
+    @Column(name = "FIELD_ID")
     public Short getFieldId() {
         return fieldId;
     }
@@ -72,6 +90,7 @@ public class AccountCustomFieldEntity extends PersistentObject {
         this.fieldId = fieldId;
     }
 
+    @Column(name = "FIELD_VALUE")
     public String getFieldValue() {
         return fieldValue;
     }
