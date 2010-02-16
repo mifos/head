@@ -25,7 +25,7 @@ import java.sql.Timestamp;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.persistence.HibernateImportedFilesDao;
 import org.mifos.application.importexport.persistence.ImportedFilesDao;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 

@@ -27,7 +27,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Query;
-import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;

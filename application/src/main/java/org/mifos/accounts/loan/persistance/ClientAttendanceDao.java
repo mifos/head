@@ -23,7 +23,7 @@ package org.mifos.accounts.loan.persistance;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.DataAccessObject;
 

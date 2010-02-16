@@ -20,9 +20,9 @@
 
 package org.mifos.application.branchreport.persistence;
 
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.CUSTOMER_LEVEL_ID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.CUSTOMER_STATUS_DESCRIPTION;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.OFFICE_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.CUSTOMER_LEVEL_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.CUSTOMER_STATUS_DESCRIPTION;
+import static org.mifos.customers.util.helpers.QueryParamConstants.OFFICE_ID;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,8 +33,8 @@ import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.QueryParamConstants;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 

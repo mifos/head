@@ -40,8 +40,8 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
-import org.mifos.application.customer.client.business.AttendanceType;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.customers.client.business.AttendanceType;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 

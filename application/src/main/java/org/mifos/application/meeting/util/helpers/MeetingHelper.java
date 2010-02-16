@@ -20,7 +20,7 @@
 
 package org.mifos.application.meeting.util.helpers;
 
-import org.mifos.application.customer.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;

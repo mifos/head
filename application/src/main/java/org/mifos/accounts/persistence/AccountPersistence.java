@@ -46,14 +46,14 @@ import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.checklist.business.AccountCheckListBO;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.customer.util.helpers.Param;
-import org.mifos.application.customer.util.helpers.QueryParamConstants;
+import org.mifos.customers.checklist.business.AccountCheckListBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.Param;
+import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -221,7 +221,7 @@ public class AccountPersistence extends Persistence {
         String[] aliasNames = { "customerId", "centerName", "centerGlobalCustNum", "customerType", "branchGlobalNum",
                 "branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
                 "groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
-        queryInputs.setPath("org.mifos.application.customer.business.CustomerSearch");
+        queryInputs.setPath("org.mifos.customers.business.CustomerSearch");
         queryInputs.setAliasNames(aliasNames);
         if (officeId != null) {
             if (officeId.shortValue() == 0) {

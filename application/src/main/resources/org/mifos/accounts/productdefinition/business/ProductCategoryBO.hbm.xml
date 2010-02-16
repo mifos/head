@@ -20,7 +20,7 @@
 		<property name="productCategoryDesc" column="DESCRIPTION" type="string" />
 		<many-to-one name="productType" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" cascade="none" not-null="true" access="field" />
 		<many-to-one name="prdCategoryStatus" column="STATE" class="org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity" cascade="none" not-null="true" />
-		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" access="field" />
+		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO" access="field" />
 	</class>
 
 	<query name="product.searchcategories">

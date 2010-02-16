@@ -22,8 +22,8 @@ package org.mifos.application.meeting.business.service;
 
 import java.util.List;
 
-import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.framework.business.BusinessObject;

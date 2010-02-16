@@ -8,7 +8,7 @@
 <uri>/office/officetags</uri>
 <tag>
 <name>OfficeListTag</name>
-<tagclass>org.mifos.application.office.struts.tag.OfficeListTag</tagclass>
+<tagclass>org.mifos.customers.office.struts.tag.OfficeListTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>actionName</name>

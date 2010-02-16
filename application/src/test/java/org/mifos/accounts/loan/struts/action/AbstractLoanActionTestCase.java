@@ -30,10 +30,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;

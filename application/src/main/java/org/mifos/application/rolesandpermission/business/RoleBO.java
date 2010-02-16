@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;

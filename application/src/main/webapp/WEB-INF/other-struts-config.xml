@@ -6,9 +6,9 @@
         <!-- Login Form -->
         <form-bean name="loginActionForm" type="org.mifos.application.login.struts.actionforms.LoginActionForm"/>
         <form-bean name="personnelNoteActionForm"
-                   type="org.mifos.application.personnel.struts.actionforms.PersonnelNoteActionForm"/>
+                   type="org.mifos.customers.personnel.struts.actionforms.PersonnelNoteActionForm"/>
         <!-- Person Action Form -->
-        <form-bean name="personActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonActionForm"/>
+        <form-bean name="personActionForm" type="org.mifos.customers.personnel.struts.actionforms.PersonActionForm"/>
         <!-- roles and permission -->
         <form-bean name="rolesandPermissionActionForm"
                    type="org.mifos.application.rolesandpermission.struts.actionforms.RolesPermissionActionForm"/>
@@ -16,7 +16,7 @@
         <form-bean name="rolesPermissionsActionForm"
                    type="org.mifos.application.rolesandpermission.struts.actionforms.RolesPermissionsActionForm"/>
         <!-- office form beans -->
-        <form-bean name="offActionForm" type="org.mifos.application.office.struts.actionforms.OffActionForm"/>
+        <form-bean name="offActionForm" type="org.mifos.customers.office.struts.actionforms.OffActionForm"/>
         <!-- meeting form -->
         <form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm"/>
         <!-- admin action form -->
@@ -26,7 +26,7 @@
         <form-bean name="feeactionform" type="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
         <!-- ChkListActionForm Action Form  -->
         <form-bean name="ChkListActionForm"
-                   type="org.mifos.application.checklist.struts.actionforms.ChkListActionForm"/>
+                   type="org.mifos.customers.checklist.struts.actionforms.ChkListActionForm"/>
         <!--  end -->
         <!-- FundsActionForm Action Form  -->
         <form-bean name="fundActionForm" type="org.mifos.accounts.fund.struts.actionforms.FundActionForm"/>
@@ -37,10 +37,10 @@
                    type="org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm"/>
         <!-- Office Hierarchy Action form -->
         <form-bean name="offhierarchyactionform"
-                   type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"/>
+                   type="org.mifos.customers.office.struts.actionforms.OffHierarchyActionForm"/>
         <!-- Your Settings Action form -->
         <form-bean name="personnelSettingsActionForm"
-                   type="org.mifos.application.personnel.struts.actionforms.PersonnelSettingsActionForm"/>
+                   type="org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm"/>
         <form-bean name="labelconfigurationactionform"
                    type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"/>
         <form-bean name="hiddenmandatoryconfigurationactionform"
@@ -102,7 +102,7 @@
 
         </action>
         <!-- End Products mix -->
-        <action path="/yourSettings" type="org.mifos.application.personnel.struts.action.PersonnelSettingsAction"
+        <action path="/yourSettings" type="org.mifos.customers.personnel.struts.action.PersonnelSettingsAction"
                 name="personnelSettingsActionForm" parameter="method" validate="true"
                 input="/yourSettings.do?method=validate" scope="session">
             <forward name="editPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
@@ -114,7 +114,7 @@
             <forward name="updateSettings_success" path="/yourSettings.do?method=get"/>
         </action>
         <action path="/home" type="org.apache.struts.actions.ForwardAction" parameter="/login.jsp"/>
-        <action path="/PersonAction" type="org.mifos.application.personnel.struts.action.PersonAction"
+        <action path="/PersonAction" type="org.mifos.customers.personnel.struts.action.PersonAction"
                 name="personActionForm" parameter="method" validate="true" input="/PersonAction.do?method=validate"
                 scope="session">
             <forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp"/>
@@ -143,7 +143,7 @@
         </action>
 
         <!-- M2 Personnel Note action -->
-        <action path="/personnelNoteAction" type="org.mifos.application.personnel.struts.action.PersonnelNoteAction"
+        <action path="/personnelNoteAction" type="org.mifos.customers.personnel.struts.action.PersonnelNoteAction"
                 name="personnelNoteActionForm" parameter="method" validate="true"
                 input="/personnelNoteAction.do?method=validate" scope="session">
             <forward name="load_success" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp"/>
@@ -224,7 +224,7 @@
         </action>
         <!-- CheckList Action M2-->
         <action path="/chkListAction"
-                type="org.mifos.application.checklist.struts.action.ChkListAction"
+                type="org.mifos.customers.checklist.struts.action.ChkListAction"
                 parameter="method"
                 scope="session"
                 name="ChkListActionForm"
@@ -295,7 +295,7 @@
         <!-- Ends-->
 
         <!-- offAction start-->
-        <action path="/offAction" type="org.mifos.application.office.struts.action.OffAction"
+        <action path="/offAction" type="org.mifos.customers.office.struts.action.OffAction"
                 name="offActionForm" parameter="method"
                 input="/offAction.do?method=validate" validate="true">
             <forward name="load_success" path="/pages/application/office/jsp/CreateNewOffice.jsp"/>
@@ -316,7 +316,7 @@
         </action>
         <!-- offAction End-->
         <!-- off hierarchy Action start-->
-        <action path="/offhierarchyaction" type="org.mifos.application.office.struts.action.OffHierarchyAction"
+        <action path="/offhierarchyaction" type="org.mifos.customers.office.struts.action.OffHierarchyAction"
                 name="offhierarchyactionform" parameter="method" scope="session"
                 input="/offhierarchyaction.do?method=validate" validate="true">
             <forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp"/>
@@ -467,7 +467,7 @@
         </action>
 
         <action path="/surveysAction"
-                type="org.mifos.application.surveys.struts.action.SurveysAction"
+                type="org.mifos.customers.surveys.struts.action.SurveysAction"
                 parameter="method"
                 scope="session"
                 validate="false"
@@ -484,7 +484,7 @@
 
 
         <action path="/questionsAction"
-                type="org.mifos.application.surveys.struts.action.QuestionsAction"
+                type="org.mifos.customers.surveys.struts.action.QuestionsAction"
                 parameter="method"
                 scope="session"
                 validate="false"
@@ -499,7 +499,7 @@
         </action>
 
         <action path="/surveyInstanceAction"
-                type="org.mifos.application.surveys.struts.action.SurveyInstanceAction"
+                type="org.mifos.customers.surveys.struts.action.SurveyInstanceAction"
                 parameter="method"
                 scope="session"
                 validate="false"
@@ -525,7 +525,7 @@
          </action>
 
         <action path="/ppiAction"
-                type="org.mifos.application.ppi.struts.action.PPIAction"
+                type="org.mifos.customers.ppi.struts.action.PPIAction"
                 parameter="method"
                 scope="session"
                 validate="false"

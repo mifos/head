@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.struts.tags.XmlBuilder;
 

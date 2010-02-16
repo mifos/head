@@ -26,8 +26,8 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;

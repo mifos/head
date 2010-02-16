@@ -31,7 +31,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mockito.runners.MockitoJUnitRunner;
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.customers.group.business.GroupPerformanceHistoryEntity" table="GROUP_PERF_HISTORY">
+        <id name="id" column="ID" type="integer">
+            <generator class="native"/>
+        </id>
+        
+        <property name="clientCount" column="NO_OF_CLIENTS" />
+        <property name="lastGroupLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="LAST_GROUP_LOAN_AMNT_DISB_CURRENCY_ID" /> 
+			<column name="LAST_GROUP_LOAN_AMNT_DISB" />
+		</property>
+		<property name="avgLoanForMember" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="AVG_LOAN_SIZE_CURRENCY_ID" /> 
+			<column name="AVG_LOAN_SIZE" />
+		</property>
+		<property name="totalOutstandingPortfolio" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="TOTAL_OUTSTAND_LOAN_AMNT_CURRENCY_ID" /> 
+			<column name="TOTAL_OUTSTAND_LOAN_AMNT" />
+		</property>
+		<property name="totalSavings" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="TOTAL_SAVINGS_AMNT_CURRENCY_ID" /> 
+			<column name="TOTAL_SAVINGS_AMNT" />
+		</property>
+		<property name="portfolioAtRisk" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="PORTFOLIO_AT_RISK_CURRENCY_ID" /> 
+			<column name="PORTFOLIO_AT_RISK" />
+		</property>        
+		<set name="loanCounters" cascade="all" table="GROUP_LOAN_COUNTER" lazy="false" access="field" inverse="true">
+			<key column="GROUP_PERF_ID" />
+			<one-to-many class="org.mifos.customers.group.business.GroupLoanCounter" />
+		</set>
+        <many-to-one name="group" column="CUSTOMER_ID"
+			class="org.mifos.customers.group.business.GroupBO" unique="true"/>
+    </class>    
+    
+</hibernate-mapping>

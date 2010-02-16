@@ -21,8 +21,8 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import org.mifos.application.branchreport.BranchReportBO;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.application.reports.business.service.BranchReportConfigService;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;

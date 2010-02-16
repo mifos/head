@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.config.Localization;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 

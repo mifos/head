@@ -24,7 +24,7 @@ import static org.mifos.application.reports.util.helpers.ReportUtils.toDisplayDa
 
 import java.util.Date;
 
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeBO;
 
 public class BranchReportHeaderDTO {
 

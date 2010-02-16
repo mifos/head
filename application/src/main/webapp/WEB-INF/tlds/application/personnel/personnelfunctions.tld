@@ -16,7 +16,7 @@
      This takes a collection of Roles and returns the , separated role names as a String
     </description>
     <name>getRoleNamesFromSet</name>
-    <function-class>org.mifos.application.personnel.struts.uihelpers.PersonnelUIHelperFn</function-class>
+    <function-class>org.mifos.customers.personnel.struts.uihelpers.PersonnelUIHelperFn</function-class>
     <function-signature>java.lang.String getRoleNamesFromSet(java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getCommaSeparatedRoles(object)}">
@@ -28,7 +28,7 @@
      This takes a collection of Roles and returns the , separated role names as a String
     </description>
     <name>getRoleNamesFromList</name>
-    <function-class>org.mifos.application.personnel.struts.uihelpers.PersonnelUIHelperFn</function-class>
+    <function-class>org.mifos.customers.personnel.struts.uihelpers.PersonnelUIHelperFn</function-class>
     <function-signature>java.lang.String getRoleNamesFromList(java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getRoleNamesFromList(object)}">

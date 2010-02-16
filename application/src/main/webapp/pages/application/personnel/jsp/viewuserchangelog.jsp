@@ -79,7 +79,7 @@ explanation of the license and how it is applied.
               </tr>
             </table>
             <br>    
-            <mifoscustom:mifostabletag moduleName="org/mifos/application/personnel/util/resources" scope="request" source="UserChangeLogList" xmlFileName="UserChangeLog.xml" passLocale="true"/>        
+            <mifoscustom:mifostabletag moduleName="org/mifos/customers/personnel/util/resources" scope="request" source="UserChangeLogList" xmlFileName="UserChangeLog.xml" passLocale="true"/>        
             <table width="96%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">

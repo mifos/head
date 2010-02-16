@@ -76,7 +76,7 @@
 	
 	<tag>
 		<name>surveyquestion</name>
-		<tagclass>org.mifos.application.surveys.struts.tag.QuestionTag</tagclass>
+		<tagclass>org.mifos.customers.surveys.struts.tag.QuestionTag</tagclass>
 		<bodycontent>empty</bodycontent>
 		<info>A tag for rendering survey questions</info>
 		

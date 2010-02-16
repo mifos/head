@@ -16,11 +16,11 @@
 	<bean id="collectionSheetService"
 		class="org.mifos.application.reports.business.service.CollectionSheetService" />
 	<bean id="officeBusinessService"
-		class="org.mifos.application.office.business.service.OfficeBusinessService" />
+		class="org.mifos.customers.office.business.service.OfficeBusinessService" />
 	<bean id="personnelBusinessService"
-		class="org.mifos.application.personnel.business.service.PersonnelBusinessService" />
+		class="org.mifos.customers.personnel.business.service.PersonnelBusinessService" />
 	<bean id="customerBusinessService"
-		class="org.mifos.application.customer.business.service.CustomerBusinessService" />
+		class="org.mifos.customers.business.service.CustomerBusinessService" />
 	<bean id="accountBusinessService"
 		class="org.mifos.accounts.business.service.AccountBusinessService" />
 	<bean id="savingsPrdBusinessService"

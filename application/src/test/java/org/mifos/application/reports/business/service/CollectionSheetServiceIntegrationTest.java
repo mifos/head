@@ -39,7 +39,7 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;

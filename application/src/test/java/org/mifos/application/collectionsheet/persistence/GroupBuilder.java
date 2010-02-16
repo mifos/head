@@ -19,15 +19,15 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerMeetingEntity;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Constants;
 
 /**

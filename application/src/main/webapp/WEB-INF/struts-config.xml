@@ -26,13 +26,13 @@
     <form-beans>
         <!-- Center Action form -->
         <form-bean name="centerCustActionForm"
-                   type="org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm"/>
+                   type="org.mifos.customers.center.struts.actionforms.CenterCustActionForm"/>
         <!-- Group Action form -->
         <form-bean name="groupCustActionForm"
-                   type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm"/>
+                   type="org.mifos.customers.group.struts.actionforms.GroupCustActionForm"/>
         <!-- Client Action form -->
         <form-bean name="clientCustActionForm"
-                   type="org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm"/>
+                   type="org.mifos.customers.client.struts.actionforms.ClientCustActionForm"/>
         <!-- savings accounts form beans -->
         <form-bean name="savingsActionForm"
                    type="org.mifos.accounts.savings.struts.actionforms.SavingsActionForm"/>
@@ -70,7 +70,7 @@
 
     <action-mappings>
         <!-- Center Action -->
-        <action path="/centerCustAction" type="org.mifos.application.customer.center.struts.action.CenterCustAction"
+        <action path="/centerCustAction" type="org.mifos.customers.center.struts.action.CenterCustAction"
                 name="centerCustActionForm" parameter="method"
                 input="/centerCustAction.do?method=validate" validate="true" scope="session">
             <forward name="chooseOffice_success" path="/pages/application/center/jsp/chooseOffice.jsp"/>
@@ -107,7 +107,7 @@
 
                 <!-- Group action M2 style-->
         <action path="/groupCustAction"
-                type="org.mifos.application.customer.group.struts.action.GroupCustAction"
+                type="org.mifos.customers.group.struts.action.GroupCustAction"
                 name="groupCustActionForm" parameter="method" validate="true"
                 input="/groupCustAction.do?method=validate" scope="session">
             <forward name="loadCreateGroup" path="/groupCustAction.do?method=chooseOffice"/>
@@ -157,7 +157,7 @@
 
         <!-- Client Creation Action -->
         <action path="/clientCustAction"
-                type="org.mifos.application.customer.client.struts.action.ClientCustAction"
+                type="org.mifos.customers.client.struts.action.ClientCustAction"
                 name="clientCustActionForm" parameter="method"
                 input="/clientCustAction.do?method=validate" validate="true"
                 scope="session">
@@ -301,7 +301,7 @@
         <set-property property="constantFileNames"
                       value="org.mifos.framework.util.helpers.Constants,
 		org.mifos.application.master.util.helpers.MasterConstants,
-		org.mifos.application.customer.util.helpers.CustomerConstants,
+		org.mifos.customers.util.helpers.CustomerConstants,
 		org.mifos.application.configuration.util.helpers.ConfigurationConstants,
 		org.mifos.accounts.util.helpers.AccountStates,
 		org.mifos.accounts.savings.util.helpers.SavingsConstants,
@@ -319,10 +319,10 @@
 		org.mifos.application.meeting.util.helpers.RecurrenceType,
 		org.mifos.application.meeting.util.helpers.MeetingType,
 		org.mifos.accounts.util.helpers.AccountTypes,
-		org.mifos.application.office.util.helpers.OfficeStatus,
-		org.mifos.application.office.util.helpers.OfficeLevel,
-		org.mifos.application.customer.util.helpers.CustomerStatus,
-		org.mifos.application.customer.util.helpers.CustomerLevel,
+		org.mifos.customers.office.util.helpers.OfficeStatus,
+		org.mifos.customers.office.util.helpers.OfficeLevel,
+		org.mifos.customers.util.helpers.CustomerStatus,
+		org.mifos.customers.util.helpers.CustomerLevel,
 		org.mifos.accounts.productdefinition.util.helpers.PrdStatus,
 		org.mifos.accounts.util.helpers.AccountState,
 		org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit"/>

@@ -77,7 +77,7 @@ public class ConstPlugin implements PlugIn {
      * property="constantFileNames"
      * value="org.mifos.framework.util.helpers.Constants,
      * org.mifos.application.master.util.helpers.MasterConstants,
-     * org.mifos.application.customer.util.helpers.CustomerConstants,
+     * org.mifos.customers.util.helpers.CustomerConstants,
      * org.mifos.application.configuration.util.helpers.ConfigurationConstants,
      * org.mifos.accounts.util.helpers.AccountStates,
      * org.mifos.accounts.savings.util.helpers.SavingsConstants,

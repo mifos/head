@@ -29,7 +29,7 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;

@@ -35,7 +35,7 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReport
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportHeader;
 import org.mifos.application.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;

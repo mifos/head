@@ -35,10 +35,10 @@ import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.reports.ui.DateSelectionItem;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.exceptions.ServiceException;

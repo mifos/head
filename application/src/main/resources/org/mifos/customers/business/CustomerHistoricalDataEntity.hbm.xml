@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.customers.business.CustomerHistoricalDataEntity" table="CUSTOMER_HISTORICAL_DATA">
+        <id name="historicalId" column="HISTORICAL_ID" access="field">
+            <generator class="native"/>
+        </id>
+        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
+        <property name="productName" column="PRODUCT_NAME" />
+        <property name="loanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="LOAN_AMOUNT_CURRENCY_ID" />
+			<column name="LOAN_AMOUNT" />
+		</property>
+        <property name="totalAmountPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="TOTAL_AMOUNT_PAID_CURRENCY_ID" />
+			<column name="TOTAL_AMOUNT_PAID" />
+		</property>
+		<property name="interestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="INTEREST_PAID_CURRENCY_ID" />
+			<column name="INTEREST_PAID" />
+		</property>
+        <property name="missedPaymentsCount" column="MISSED_PAYMENTS_COUNT" />
+	    <property name="totalPaymentsCount" column="TOTAL_PAYMENTS_COUNT" />
+	    <property name="notes" column="NOTES"    />
+	    <property name="loanCycleNumber" column="LOAN_CYCLE_NUMBER"  />
+	    <property name="createdDate" column="CREATED_DATE"  />
+     	<property name="updatedDate" column="UPDATED_DATE"  />
+    	<property name="createdBy" column="CREATED_BY"  />
+    	<property name="updatedBy" column="UPDATED_BY"  />
+       <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" insert="true" update="true" cascade="none" unique="true" access="field"/>
+    </class>
+    
+</hibernate-mapping>

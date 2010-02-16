@@ -23,9 +23,9 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.customer.group.BasicGroupInfo;
-import org.mifos.application.customer.group.persistence.GroupPersistence;
-import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.customers.group.BasicGroupInfo;
+import org.mifos.customers.group.persistence.GroupPersistence;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;

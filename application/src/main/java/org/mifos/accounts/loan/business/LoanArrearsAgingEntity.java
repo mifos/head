@@ -20,8 +20,8 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 

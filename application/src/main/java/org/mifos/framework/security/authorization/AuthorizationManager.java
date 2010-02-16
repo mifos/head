@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
-import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;

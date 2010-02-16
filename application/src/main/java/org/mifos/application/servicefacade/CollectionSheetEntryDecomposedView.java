@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountView;
 
 /**
  *

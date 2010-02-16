@@ -76,10 +76,10 @@ explanation of the license and how it is applied.
 						<td height="23" class="fontnormalbold"><span class="fontnormal"> <c:choose>
 							<%-- Active State --%>
 							<c:when test="${personnelBO.status.id == 1}">
-								<mifos:MifosImage id="active" moduleName="org.mifos.application.personnel.util.resources.personnelImages" />
+								<mifos:MifosImage id="active" moduleName="org.mifos.customers.personnel.util.resources.personnelImages" />
 							</c:when>
 							<c:when test="${personnelBO.status.id  == 2}">
-								<mifos:MifosImage id="inactive" moduleName="org.mifos.application.personnel.util.resources.personnelImages" />
+								<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.personnel.util.resources.personnelImages" />
 							</c:when>
 							<c:otherwise>
 							</c:otherwise>

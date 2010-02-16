@@ -25,9 +25,9 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.customer.business.CustomerSearch;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.customers.business.CustomerSearch;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {

@@ -41,7 +41,7 @@ import org.mifos.application.configuration.struts.actionform.CustomFieldsActionF
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.CustomFieldsBackfiller;
 import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;

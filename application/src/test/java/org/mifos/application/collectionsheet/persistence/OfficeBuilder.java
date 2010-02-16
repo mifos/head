@@ -19,7 +19,7 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeBO;
 
 /**
  *

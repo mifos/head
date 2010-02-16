@@ -33,13 +33,13 @@ public interface LoggerConstants {
     /** Product Definition logger name */
     String PRDDEFINITIONLOGGER = "org.mifos.accounts.productdefinition";
 
-    String CUSTOMERSEARCHLOGGER = "org.mifos.application.customersearch";
+    String CUSTOMERSEARCHLOGGER = "org.mifos.customerssearch";
 
-    String OFFICELOGGER = "org.mifos.application.office";
+    String OFFICELOGGER = "org.mifos.customers.office";
     String ROLEANDPERMISSIONLOGGER = "org.mifos.application.roleandpermission";
 
-    String CUSTOMERNOTELOGGER = "org.mifos.application.customer.customernote";
-    String PERSONNEL_LOGGER = "org.mifos.application.personnel";
+    String CUSTOMERNOTELOGGER = "org.mifos.customers.customernote";
+    String PERSONNEL_LOGGER = "org.mifos.customers.personnel";
     String GROUP_LOGGER = "org.mifos.application.group";
 
     String CENTERLOGGER = "org.mifos.application.center";
@@ -80,7 +80,7 @@ public interface LoggerConstants {
      */
     String COLLECTIONSHEETLOGGER = "org.mifos.application.collectionsheet";
 
-    String CUSTOMERLOGGER = "org.mifos.application.customer.business.CustomerBO";
+    String CUSTOMERLOGGER = "org.mifos.customers.business.CustomerBO";
 
     String REPORTSLOGGER = "org.mifos.application.reports";
 

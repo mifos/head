@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+    <class name="org.mifos.customers.business.CustomerLevelEntity" table="CUSTOMER_LEVEL">
+        <id name="id" column="LEVEL_ID" type="short">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="lookUpValue" column="LEVEL_NAME_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+    			cascade="none" update="false" unique="true"/>
+        <many-to-one name="parentCustomerLevel" column="PARENT_LEVEL_ID" class="org.mifos.customers.business.CustomerLevelEntity" access="field"/>
+     </class>
+</hibernate-mapping>

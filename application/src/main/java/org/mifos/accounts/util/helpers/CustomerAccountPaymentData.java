@@ -29,7 +29,7 @@ import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 
 /**

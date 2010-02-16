@@ -25,8 +25,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;

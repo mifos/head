@@ -38,7 +38,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.checklist.business.AccountCheckListBO;
+import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;

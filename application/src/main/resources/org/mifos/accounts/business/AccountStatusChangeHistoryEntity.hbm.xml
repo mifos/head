@@ -15,7 +15,7 @@
 		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" access="field" />
 		<many-to-one name="oldStatus" column="OLD_STATUS" class="org.mifos.accounts.business.AccountStateEntity" cascade="none" update="false" insert="true" unique="true" access="field" />
 		<many-to-one name="newStatus" column="NEW_STATUS" class="org.mifos.accounts.business.AccountStateEntity" cascade="none" update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="personnel" column="CHANGED_BY" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
+		<many-to-one name="personnel" column="CHANGED_BY" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
 	</class>
 	<query name="accounts.getLastLoanAmount">
 		<![CDATA[select loan.loanAmount from org.mifos.accounts.loan.business.LoanBO as loan,

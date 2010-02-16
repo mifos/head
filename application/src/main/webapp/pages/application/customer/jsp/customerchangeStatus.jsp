@@ -79,7 +79,7 @@ explanation of the license and how it is applied.
 							<td class="headingorange"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="accounts.currentstatus" />:<mifoscustom:MifosImage
 								id="${sessionScope.editCustomerStatusActionForm.currentStatusId}"
-								moduleName="org.mifos.application.customer.util.resources.customerImages" /></span> <span class="fontnormal"><c:out value="${BusinessKey.customerStatus.name}" />
+								moduleName="org.mifos.customers.util.resources.customerImages" /></span> <span class="fontnormal"><c:out value="${BusinessKey.customerStatus.name}" />
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>

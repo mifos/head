@@ -70,10 +70,10 @@ explanation of the license and how it is applied.
 									</span>
 									<span class="fontnormal">
 									<c:if test="${BusinessKey.officeStatus == OfficeStatus.ACTIVE}">
-									<mifos:MifosImage id="active" moduleName="org.mifos.application.office.util.resources.officeImages" />
+									<mifos:MifosImage id="active" moduleName="org.mifos.customers.office.util.resources.officeImages" />
 									</c:if>
 									<c:if test="${BusinessKey.officeStatus == OfficeStatus.INACTIVE}">
-									<mifos:MifosImage id="inactive" moduleName="org.mifos.application.office.util.resources.officeImages" />
+									<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
 									</c:if>
 									<c:out value="${BusinessKey.status.name}"></c:out>
 									</span>

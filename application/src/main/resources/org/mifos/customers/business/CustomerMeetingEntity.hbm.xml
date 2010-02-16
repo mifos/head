@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.customers.business.CustomerMeetingEntity" table="CUSTOMER_MEETING">
+        <id name="custMeetingId" column="CUSTOMER_MEETING_ID" type="integer" 
+            access="field">
+            <generator class="native"/>
+        </id>
+        
+        <property name="updatedFlag"  column="UPDATED_FLAG"/>
+		<many-to-one name="meeting" column="MEETING_ID"  
+		    class="org.mifos.application.meeting.business.MeetingBO" 
+		    insert="true" update="true"   unique="true" lazy="false" 
+		    cascade="save-update" access="field"/>
+		<many-to-one name="updatedMeeting" column="UPDATED_MEETING_ID"  
+		    class="org.mifos.application.meeting.business.MeetingBO" 
+		    insert="true" update="true"   unique="true" lazy="false" 
+		    cascade="save-update" access="field"/>
+ 		<many-to-one name="customer" column="CUSTOMER_ID"  
+ 		    class="org.mifos.customers.business.CustomerBO" 
+ 		    insert="true" update="true"  unique="true" 
+ 		    cascade="none" access="field"/>
+    </class>
+    <query name="getUpdatedMeetings">
+    	<![CDATA[select meeting.customer.customerId from org.mifos.customers.business.CustomerMeetingEntity as meeting where meeting.updatedFlag=:updated  ]]>
+    </query>
+</hibernate-mapping>

@@ -32,8 +32,8 @@ import java.sql.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;

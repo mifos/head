@@ -23,8 +23,8 @@ package org.mifos.framework.components.audit.business.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.audit.business.AuditLog;

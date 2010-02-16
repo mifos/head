@@ -28,7 +28,7 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

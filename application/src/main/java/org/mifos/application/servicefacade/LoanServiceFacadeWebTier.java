@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.persistence.CustomerDao;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;

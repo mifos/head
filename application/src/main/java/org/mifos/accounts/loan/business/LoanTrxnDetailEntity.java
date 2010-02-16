@@ -39,7 +39,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;

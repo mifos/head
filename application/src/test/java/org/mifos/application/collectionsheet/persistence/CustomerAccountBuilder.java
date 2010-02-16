@@ -24,11 +24,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.joda.time.DateTime;
-import org.mifos.application.customer.business.CustomerAccountBO;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
 
 /**

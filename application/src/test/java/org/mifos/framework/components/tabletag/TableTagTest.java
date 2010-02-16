@@ -33,8 +33,8 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.customer.business.CustomerSearch;
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.customers.business.CustomerSearch;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;

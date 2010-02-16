@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.customers.surveys.business.Survey" table="SURVEY">
+		<id name="surveyId" column="SURVEY_ID" type="integer" unsaved-value="0" access="field">
+			<generator class="native"/>
+		</id>
+		<property name="name" column="SURVEY_NAME"/>
+		<property name="appliesTo" column="SURVEY_APPLIES_TO"/>
+		<property name="dateOfCreation" column="DATE_OF_CREATION"/>
+		<property name="state" column="STATE" not-null="true"/>
+		<list name="questions" lazy="false" inverse="true" cascade="save-update">
+			<key column="SURVEY_ID" not-null="true"/>
+			<index column="QUESTION_ORDER"/>
+			<one-to-many class="org.mifos.customers.surveys.business.SurveyQuestion"/>
+		</list>
+		
+		<joined-subclass table="PPI_SURVEY" name="org.mifos.customers.ppi.business.PPISurvey">
+			<key column="SURVEY_ID"/>
+			<property name="veryPoorMin" column="VERY_POOR_MIN"/>
+			<property name="veryPoorMax" column="VERY_POOR_MAX"/>
+			<property name="poorMin" column="POOR_MIN"/>
+			<property name="poorMax" column="POOR_MAX"/>
+			<property name="atRiskMin" column="AT_RISK_MIN"/>
+			<property name="atRiskMax" column="AT_RISK_MAX"/>
+			<property name="nonPoorMin" column="NON_POOR_MIN"/>
+			<property name="nonPoorMax" column="NON_POOR_MAX"/>
+			<property name="country" column="COUNTRY_ID"/>
+			<list name="likelihoods" lazy="true" inverse="true" cascade="save-update">
+				<key column="SURVEY_ID" not-null="true"/>
+				<index column="LIKELIHOOD_ORDER"/>
+				<one-to-many class="org.mifos.customers.ppi.business.PPILikelihood"/>
+			</list>
+		</joined-subclass>
+	</class>
+	<query name="surveys.retrieveAllSurveys">
+		<![CDATA[from Survey as survey order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveSurveysByType">
+		<![CDATA[from Survey as survey where survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='all' order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveSurveysByName">
+		<![CDATA[from Survey as survey where survey.name=:SURVEY_NAME order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveSurveysByState">
+		<![CDATA[from Survey as survey where survey.state=:SURVEY_STATE order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveSurveysByTypeAndState">
+		<![CDATA[from Survey as survey where (survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='all') and survey.state=:SURVEY_STATE order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveCustomersSurveys">
+		<![CDATA[from Survey as survey where survey.appliesTo='client' or survey.appliesTo='group' or survey.appliesTo='center' or survey.appliesTo='all' order by survey.name]]>
+	</query>	
+	<query name="surveys.retrieveAccountsSurveys">
+		<![CDATA[from Survey as survey where survey.appliesTo='loan' or survey.appliesTo='savings' or survey.appliesTo='all' order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveActivePPISurvey">
+		<![CDATA[from PPISurvey as survey where survey.state=1 order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveAllPPISurveys">
+		<![CDATA[from PPISurvey as survey order by survey.name]]>
+	</query>
+	<query name="surveys.retrievePPISurveyByCountry">
+		<![CDATA[from PPISurvey as survey where survey.country=:COUNTRY]]>
+	</query>
+</hibernate-mapping>

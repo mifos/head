@@ -30,7 +30,7 @@ import org.mifos.accounts.financial.business.service.activity.accountingentry.Ba
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.customers.business.CustomerTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public abstract class BaseFinancialActivity {

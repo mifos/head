@@ -23,7 +23,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@page import="org.mifos.application.surveys.helpers.AnswerType"%>
+<%@page import="org.mifos.customers.surveys.helpers.AnswerType"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 <span id="page.id" title="preview_question" />

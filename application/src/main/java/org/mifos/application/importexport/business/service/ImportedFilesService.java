@@ -21,7 +21,7 @@
 package org.mifos.application.importexport.business.service;
 
 import org.mifos.application.importexport.business.ImportedFilesEntity;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 
 public interface ImportedFilesService {
     

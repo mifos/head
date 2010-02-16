@@ -20,7 +20,7 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 
 public class SpouseFatherLookupEntity extends MasterDataEntity {
 

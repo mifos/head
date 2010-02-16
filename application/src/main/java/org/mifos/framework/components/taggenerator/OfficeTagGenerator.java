@@ -20,7 +20,7 @@
 
 package org.mifos.framework.components.taggenerator;
 
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 

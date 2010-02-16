@@ -26,7 +26,7 @@ import java.util.Map;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;

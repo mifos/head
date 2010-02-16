@@ -25,8 +25,8 @@ import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 
 /**

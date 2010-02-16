@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;

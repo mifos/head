@@ -34,7 +34,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.GenericJDBCException;
 import org.hibernate.transform.Transformers;
-import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.customers.util.helpers.Param;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;

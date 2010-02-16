@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 
 /**
  * I encapsulate the data types used for {@link CustomerBO} hierarchy's.

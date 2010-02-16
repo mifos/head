@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.office.exceptions.OfficeException;
-import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;

@@ -59,7 +59,7 @@
 		</property>
 
 		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field"/>
-		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" access="field"/>
+		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" access="field"/>
 		<set name="accountFeesActionDetails" cascade="all,delete-orphan" lazy="true" inverse="true" access="field">
 			<key column="ID" update="false" />
 			<one-to-many class="org.mifos.accounts.loan.business.LoanFeeScheduleEntity" />

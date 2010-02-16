@@ -26,14 +26,14 @@ import static org.mifos.application.NamedQueryConstants.GET_BRANCH_CASH_CONFIRMA
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_CASH_CONFIRMATION_CENTER_RECOVERIES;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_CASH_CONFIRMATION_DISBURSEMENTS;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE;
-import static org.mifos.application.customer.util.helpers.CustomerSearchConstants.OFFICELEVELID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.ACCOUNT_TYPE_ID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.ACTION_DATE;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.BRANCH_ID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.CURRENCY_ID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.DISBURSEMENT_DATE;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.PRODUCT_OFFERING_IDS;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.RUN_DATE;
+import static org.mifos.customers.util.helpers.CustomerSearchConstants.OFFICELEVELID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.ACCOUNT_TYPE_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.ACTION_DATE;
+import static org.mifos.customers.util.helpers.QueryParamConstants.BRANCH_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.CURRENCY_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.DISBURSEMENT_DATE;
+import static org.mifos.customers.util.helpers.QueryParamConstants.PRODUCT_OFFERING_IDS;
+import static org.mifos.customers.util.helpers.QueryParamConstants.RUN_DATE;
 import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
 
 import java.math.BigDecimal;
@@ -50,7 +50,7 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbur
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;

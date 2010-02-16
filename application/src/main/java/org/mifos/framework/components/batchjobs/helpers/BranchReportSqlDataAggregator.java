@@ -28,9 +28,9 @@ import java.util.Map;
 
 import org.mifos.application.branchreport.BranchReportClientSummaryBO;
 import org.mifos.application.branchreport.persistence.BranchReportSqlPersistence;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.application.reports.business.service.BranchReportConfigService;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.framework.exceptions.PersistenceException;

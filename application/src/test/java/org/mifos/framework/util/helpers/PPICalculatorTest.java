@@ -29,17 +29,17 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.junit.Ignore;
-import org.mifos.application.ppi.business.PPIChoice;
-import org.mifos.application.ppi.business.PPISurvey;
-import org.mifos.application.ppi.helpers.Country;
-import org.mifos.application.surveys.business.Question;
-import org.mifos.application.surveys.business.QuestionChoice;
-import org.mifos.application.surveys.business.SurveyInstance;
-import org.mifos.application.surveys.business.SurveyQuestion;
-import org.mifos.application.surveys.business.SurveyResponse;
-import org.mifos.application.surveys.helpers.AnswerType;
-import org.mifos.application.surveys.helpers.SurveyState;
-import org.mifos.application.surveys.helpers.SurveyType;
+import org.mifos.customers.ppi.business.PPIChoice;
+import org.mifos.customers.ppi.business.PPISurvey;
+import org.mifos.customers.ppi.helpers.Country;
+import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
+import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.business.SurveyQuestion;
+import org.mifos.customers.surveys.business.SurveyResponse;
+import org.mifos.customers.surveys.helpers.AnswerType;
+import org.mifos.customers.surveys.helpers.SurveyState;
+import org.mifos.customers.surveys.helpers.SurveyType;
 
 @Ignore
 public class PPICalculatorTest extends TestCase {

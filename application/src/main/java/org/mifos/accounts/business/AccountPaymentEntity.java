@@ -30,7 +30,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;

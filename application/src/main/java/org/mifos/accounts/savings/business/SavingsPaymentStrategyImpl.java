@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.util.helpers.Money;

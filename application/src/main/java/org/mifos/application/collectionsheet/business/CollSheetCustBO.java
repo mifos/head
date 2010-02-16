@@ -26,8 +26,8 @@ import java.util.Set;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.framework.business.BusinessObject;

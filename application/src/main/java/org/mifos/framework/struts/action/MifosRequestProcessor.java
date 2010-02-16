@@ -38,7 +38,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.tiles.TilesRequestProcessor;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;

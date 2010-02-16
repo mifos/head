@@ -21,7 +21,7 @@ package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 

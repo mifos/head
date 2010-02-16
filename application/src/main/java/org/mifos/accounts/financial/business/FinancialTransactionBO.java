@@ -24,7 +24,7 @@ import java.util.Date;
 
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.util.helpers.Money;
 

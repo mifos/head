@@ -27,10 +27,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
-import org.mifos.application.customer.business.CustomerCustomFieldEntity;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -113,7 +113,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
 
         // make sure record was added that joins the custom field with the
         // customer that existed before the custom field was added
-        Query query = session.createQuery("from org.mifos.application.customer.business.CustomerCustomFieldEntity "
+        Query query = session.createQuery("from org.mifos.customers.business.CustomerCustomFieldEntity "
                 + "where fieldId=:fieldId and customer=:customerId");
         query.setInteger("fieldId", customField.getFieldId());
         query.setInteger("customerId", client.getCustomerId());
@@ -137,7 +137,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
 
         // make sure record was added that joins the custom field with the
         // customer that existed before the custom field was added
-        Query query = session.createQuery("from org.mifos.application.customer.business.CustomerCustomFieldEntity "
+        Query query = session.createQuery("from org.mifos.customers.business.CustomerCustomFieldEntity "
                 + "where fieldId=:fieldId and customer=:customerId");
         query.setInteger("fieldId", customField.getFieldId());
         query.setInteger("customerId", client.getCustomerId());

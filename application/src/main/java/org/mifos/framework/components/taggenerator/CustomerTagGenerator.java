@@ -20,8 +20,8 @@
 
 package org.mifos.framework.components.taggenerator;
 
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 

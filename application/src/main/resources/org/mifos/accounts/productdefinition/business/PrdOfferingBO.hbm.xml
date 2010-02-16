@@ -28,7 +28,7 @@
 		<property name="updatedBy" column="UPDATED_BY" />
 
 		<many-to-one name="office" column="OFFICE_ID"
-			class="org.mifos.application.office.business.OfficeBO" cascade="none"
+			class="org.mifos.customers.office.business.OfficeBO" cascade="none"
 			access="field" />
 		<many-to-one name="prdCategory" column="PRD_CATEGORY_ID"
 			class="org.mifos.accounts.productdefinition.business.ProductCategoryBO"

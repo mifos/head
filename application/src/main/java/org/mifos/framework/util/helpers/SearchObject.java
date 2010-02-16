@@ -23,7 +23,7 @@ package org.mifos.framework.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
 
 public class SearchObject {// extends BasicDynaBean {
 

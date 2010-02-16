@@ -85,12 +85,12 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage
-								id="${clientDetailsDto.customerStatusId}" moduleName="org.mifos.application.customer.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
+								id="${clientDetailsDto.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
 								value="${clientDetailsDto.customerStatusName}" /></span> <c:forEach
 								var="flagSet" items="${BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
 									test="${BusinessKey.blackListed}">
-									<mifos:MifosImage id="blackListed" moduleName="org.mifos.application.customer.client.util.resources.clientImages" />
+									<mifos:MifosImage id="blackListed" moduleName="org.mifos.customers.client.util.resources.clientImages" />
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> </span><br>
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel

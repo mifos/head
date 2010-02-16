@@ -30,7 +30,7 @@ import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
 

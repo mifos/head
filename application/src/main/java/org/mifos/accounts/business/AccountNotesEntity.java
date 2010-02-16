@@ -22,7 +22,7 @@ package org.mifos.accounts.business;
 
 import java.sql.Date;
 
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 
 /**

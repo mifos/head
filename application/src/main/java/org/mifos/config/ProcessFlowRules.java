@@ -24,9 +24,9 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 

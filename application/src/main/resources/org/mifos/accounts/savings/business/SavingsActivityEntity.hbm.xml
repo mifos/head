@@ -16,7 +16,7 @@
 			<column name="BALANCE_AMOUNT_CURRENCY_ID" />
 			<column name="BALANCE_AMOUNT" />
 		</property>
-		<many-to-one name="trxnCreatedBy" column="CREATED_BY" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
+		<many-to-one name="trxnCreatedBy" column="CREATED_BY" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
 		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
 		<many-to-one name="activity" column="ACCOUNT_ACTION_ID" class="org.mifos.accounts.business.AccountActionEntity" cascade="none" update="false" insert="true" access="field"/>
 	</class>

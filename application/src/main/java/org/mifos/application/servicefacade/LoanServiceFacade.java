@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 
 /**

@@ -33,7 +33,7 @@ import junit.framework.Assert;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.framework.MifosIntegrationTestCase;

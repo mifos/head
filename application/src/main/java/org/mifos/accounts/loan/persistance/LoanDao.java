@@ -29,7 +29,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldView;

@@ -21,10 +21,10 @@
 package org.mifos.application.collectionsheet.persistence;
 
 import static org.mifos.application.NamedQueryConstants.COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.BRANCH_ID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.CENTER_ID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.MEETING_DATE;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.PERSONNEL_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.BRANCH_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.CENTER_ID;
+import static org.mifos.customers.util.helpers.QueryParamConstants.MEETING_DATE;
+import static org.mifos.customers.util.helpers.QueryParamConstants.PERSONNEL_ID;
 
 import java.util.ArrayList;
 import java.util.Date;

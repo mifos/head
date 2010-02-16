@@ -45,7 +45,7 @@
 
 	</entityType>
 
-	<entityType name="Client" classPath="org.mifos.application.customer.client.business.ClientBO">
+	<entityType name="Client" classPath="org.mifos.customers.client.business.ClientBO">
 		<entitiesToLog>
 			<entity name="customerStatus"/>
 			<entity name="customerFlags"/>
@@ -114,12 +114,12 @@
 
   		<propertyName name="customerStatus" displayKey="Group.statusId" doNotLog="No" lookUp="yes">
 			<entityName name="CustomerStatus">
-				<classPath  path="org.mifos.application.customer.business.CustomerStatusEntity"/>
+				<classPath  path="org.mifos.customers.business.CustomerStatusEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="statusFlag" parentName="customerFlags" displayKey="Group.flagId" doNotLog="No" lookUp="yes">
 			<entityName name="Flag">
-				<classPath  path="org.mifos.application.customer.business.CustomerStatusFlagEntity"/>
+				<classPath  path="org.mifos.customers.business.CustomerStatusFlagEntity"/>
 			</entityName>
 		</propertyName>
 
@@ -232,7 +232,7 @@
 		<propertyName name="operationMode" parentName="office" doNotLog="yes" />
 	</entityType>
 
-	<entityType name="Center" classPath="org.mifos.application.customer.center.business.CenterBO">
+	<entityType name="Center" classPath="org.mifos.customers.center.business.CenterBO">
 		<entitiesToLog>
 
 			<entity  name="personnel"/>
@@ -263,12 +263,12 @@
  		<propertyName name="commentDate" parentName="customerNotes" doNotLog="yes" />
   		<propertyName name="customerStatus" displayKey="Group.statusId" doNotLog="No" lookUp="yes">
 			<entityName name="CustomerStatus">
-				<classPath  path="org.mifos.application.customer.business.CustomerStatusEntity"/>
+				<classPath  path="org.mifos.customers.business.CustomerStatusEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="statusFlag" parentName="customerFlags" displayKey="Group.flagId" doNotLog="No" lookUp="yes">
 			<entityName name="Flag">
-				<classPath  path="org.mifos.application.customer.business.CustomerStatusFlagEntity"/>
+				<classPath  path="org.mifos.customers.business.CustomerStatusFlagEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="comment" displayKey="Group.comment" parentName="customerNotes" />
@@ -278,7 +278,7 @@
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Customer.customField.feildValue" />
 		<propertyName name="position" parentName="customerPositions" displayKey="Group.Position.displayName" doNotLog="No" lookUp="yes">
 			<entityName name="Position">
-				<classPath  path="org.mifos.application.customer.business.PositionEntity"/>
+				<classPath  path="org.mifos.customers.business.PositionEntity"/>
 			</entityName>
 		</propertyName>
 
@@ -363,7 +363,7 @@
 	</entityType>
 
 
-	<entityType name="Group" classPath="org.mifos.application.customer.group.business.GroupBO">
+	<entityType name="Group" classPath="org.mifos.customers.group.business.GroupBO">
 
 		<entitiesToLog>
 			<entity name="customerAddressDetail"/>
@@ -403,12 +403,12 @@
  		<propertyName name="commentDate" parentName="customerNotes" doNotLog="yes" />
   		<propertyName name="customerStatus" displayKey="Group.statusId" doNotLog="No" lookUp="yes">
 			<entityName name="CustomerStatus">
-				<classPath  path="org.mifos.application.customer.business.CustomerStatusEntity"/>
+				<classPath  path="org.mifos.customers.business.CustomerStatusEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="statusFlag" parentName="customerFlags" displayKey="Group.flagId" doNotLog="No" lookUp="yes">
 			<entityName name="Flag">
-				<classPath  path="org.mifos.application.customer.business.CustomerStatusFlagEntity"/>
+				<classPath  path="org.mifos.customers.business.CustomerStatusFlagEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="comment" displayKey="Group.comment" parentName="customerNotes" />
@@ -419,7 +419,7 @@
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Customer.customField.feildValue" />
 		<propertyName name="position" parentName="customerPositions" displayKey="Group.Position.displayName" doNotLog="No" lookUp="yes">
 			<entityName name="Position">
-				<classPath  path="org.mifos.application.customer.business.PositionEntity"/>
+				<classPath  path="org.mifos.customers.business.PositionEntity"/>
 			</entityName>
 		</propertyName>
 
@@ -763,7 +763,7 @@
 
 	</entityType>
 
-	<entityType name="Personnel" classPath="org.mifos.application.personnel.business.PersonnelBO">
+	<entityType name="Personnel" classPath="org.mifos.customers.personnel.business.PersonnelBO">
 		<entitiesToLog>
 			<entity name="personnelDetails"/>
 			<entity name="level"/>
@@ -778,7 +778,7 @@
 		</entitiesToLog>
 		<propertyName name="level" displayKey="Personnel.userHierarchy"  doNotLog="No" lookUp="yes">
 			<entityName name="PersonnelLevels">
-				<classPath  path="org.mifos.application.personnel.business.PersonnelLevelEntity"/>
+				<classPath  path="org.mifos.customers.personnel.business.PersonnelLevelEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="personnelCustomFieldId" parentName="customFields" doNotLog="yes" />		
@@ -801,7 +801,7 @@
 
 		<propertyName name="status" displayKey="Personnel.Status"  doNotLog="No" lookUp="yes" >
 			<entityName name="PersonnelStatus">
-				<classPath  path="org.mifos.application.personnel.business.PersonnelStatusEntity"/>
+				<classPath  path="org.mifos.customers.personnel.business.PersonnelStatusEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="line1" parentName="address" displayKey="Address1"  />

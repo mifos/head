@@ -26,7 +26,7 @@ import java.util.Date;
 
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 // Understands collection sheet report properties

@@ -22,7 +22,7 @@ package org.mifos.accounts.util.helpers;
 
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 
 import java.util.Date;
 

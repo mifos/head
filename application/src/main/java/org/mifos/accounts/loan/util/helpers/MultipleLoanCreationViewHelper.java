@@ -24,7 +24,7 @@ import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
 import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;

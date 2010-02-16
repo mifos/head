@@ -39,7 +39,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.application.collectionsheet.persistence.SavingsScheduleBuilder;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.TestUtils;

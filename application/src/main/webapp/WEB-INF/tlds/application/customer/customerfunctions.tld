@@ -16,7 +16,7 @@
      This takes a collection of customerpositions and returns the , separated position names for a client as a String
     </description>
     <name>getClientPositions</name>
-    <function-class>org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn</function-class>
+    <function-class>org.mifos.customers.struts.uihelpers.CustomerUIHelperFn</function-class>
     <function-signature>java.lang.String getClientPositions(java.lang.Object,java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getClientPositions(object,object)}">
@@ -27,7 +27,7 @@
      This takes a collection of customerposition and returns the , separated position names for a client as a String
     </description>
     <name>getClientPosition</name>
-    <function-class>org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn</function-class>
+    <function-class>org.mifos.customers.struts.uihelpers.CustomerUIHelperFn</function-class>
     <function-signature>java.lang.String getClientPosition(java.lang.Object,java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getClientPosition(object,object)}">
@@ -38,7 +38,7 @@
      This returns the string representing meeting schedule
     </description>
     <name>getMeetingSchedule</name>
-  <function-class>org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn</function-class>
+  <function-class>org.mifos.customers.struts.uihelpers.CustomerUIHelperFn</function-class>
     <function-signature>java.lang.String getMeetingSchedule(java.lang.Object,java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getMeetingSchedule(object,object)}">
@@ -49,7 +49,7 @@
      This returns the string representing the updated meeting schedule
     </description>
     <name>getUpdatedMeetingSchedule</name>
-  <function-class>org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn</function-class>
+  <function-class>org.mifos.customers.struts.uihelpers.CustomerUIHelperFn</function-class>
     <function-signature>java.lang.String getUpdatedMeetingSchedule(java.lang.Object,java.lang.Object)</function-signature>
     <example>
       &lt;c:out value="${fn:getUpdatedMeetingSchedule(object,object)}">

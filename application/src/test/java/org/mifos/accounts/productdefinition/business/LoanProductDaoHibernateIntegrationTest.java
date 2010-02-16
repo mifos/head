@@ -27,8 +27,8 @@ import java.util.List;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.application.customer.business.CustomerLevelEntity;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.framework.MifosIntegrationTestCase;

@@ -33,7 +33,7 @@ import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.application.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.framework.exceptions.ServiceException;
 

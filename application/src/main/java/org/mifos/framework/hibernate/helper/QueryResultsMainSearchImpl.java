@@ -22,7 +22,7 @@ package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.application.customer.business.CustomerSearch;
+import org.mifos.customers.business.CustomerSearch;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {

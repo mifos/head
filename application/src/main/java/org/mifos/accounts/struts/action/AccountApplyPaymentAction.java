@@ -47,7 +47,7 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
-import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;

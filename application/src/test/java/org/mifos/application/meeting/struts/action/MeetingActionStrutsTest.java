@@ -24,12 +24,12 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;

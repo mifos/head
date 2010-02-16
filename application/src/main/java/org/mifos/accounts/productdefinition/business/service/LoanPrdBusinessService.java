@@ -23,7 +23,7 @@ package org.mifos.accounts.productdefinition.business.service;
 import java.util.Iterator;
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
@@ -120,7 +120,7 @@ public class LoanPrdBusinessService implements BusinessService {
 
     /**
      * @deprecated use
-     *             {@link LoanServiceFacade#loadActiveProductsApplicableForCustomer(org.mifos.application.customer.business.CustomerBO)}
+     *             {@link LoanServiceFacade#loadActiveProductsApplicableForCustomer(org.mifos.customers.business.CustomerBO)}
      *             or use {@link LoanProductDao#}
      */
     @Deprecated

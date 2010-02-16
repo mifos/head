@@ -39,11 +39,11 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDt
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.customer.util.helpers.CustomerAccountView;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.util.helpers.OfficeConstants;
+import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.application.servicefacade.CollectionSheetDataViewAssembler;
 import org.mifos.application.servicefacade.CollectionSheetEntryDecomposedView;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;

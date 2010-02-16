@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;

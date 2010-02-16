@@ -22,9 +22,9 @@ package org.mifos.application.servicefacade;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.personnel.business.PersonnelView;
 
 /**
  * DTO for data entered on collection sheet form.

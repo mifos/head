@@ -26,7 +26,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
 
 /**

@@ -25,7 +25,7 @@ import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.customers.business.CustomerTrxnDetailEntity;
 
 public class CustomerPenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 

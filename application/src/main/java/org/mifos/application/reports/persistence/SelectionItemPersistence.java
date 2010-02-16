@@ -31,12 +31,12 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.helpers.OfficeStatus;
-import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.personnel.util.helpers.PersonnelStatus;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.reports.ui.DateSelectionItem;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.exceptions.PersistenceException;

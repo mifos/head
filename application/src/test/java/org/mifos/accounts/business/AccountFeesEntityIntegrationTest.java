@@ -33,8 +33,8 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;

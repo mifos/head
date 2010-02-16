@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.Money;
 

@@ -5,37 +5,37 @@
     <form-beans>
         <!-- Edit Client Transfer Action form -->
         <form-bean name="clientTransferActionForm"
-                   type="org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm"/>
+                   type="org.mifos.customers.client.struts.actionforms.ClientTransferActionForm"/>
         <!-- Group Transfer Action form -->
         <form-bean name="groupTransferActionForm"
-                   type="org.mifos.application.customer.group.struts.actionforms.GroupTransferActionForm"/>
+                   type="org.mifos.customers.group.struts.actionforms.GroupTransferActionForm"/>
         <!-- Customer Historical Data Action Form -->
         <form-bean name="custHistoricalDataActionForm"
-                   type="org.mifos.application.customer.struts.actionforms.CustHistoricalDataActionForm"/>
+                   type="org.mifos.customers.struts.actionforms.CustHistoricalDataActionForm"/>
         <!-- Apply Adjustment action form for customer -->
         <form-bean name="custApplyAdjustmentActionForm"
-                   type="org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm"/>
+                   type="org.mifos.customers.struts.actionforms.CustomerApplyAdjustmentActionForm"/>
         <!-- Edit status for customers-->
         <form-bean name="editCustomerStatusActionForm"
-                   type="org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm"/>
+                   type="org.mifos.customers.struts.actionforms.EditCustomerStatusActionForm"/>
         <!-- add notesform  for customer-->
         <form-bean name="customerNotesActionForm"
-                   type="org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm"/>
+                   type="org.mifos.customers.struts.actionforms.CustomerNotesActionForm"/>
         <!-- Customer Action form -->
-        <form-bean name="custActionForm" type="org.mifos.application.customer.struts.actionforms.CustActionForm"/>
+        <form-bean name="custActionForm" type="org.mifos.customers.struts.actionforms.CustActionForm"/>
         <!-- Customer Account Action form -->
         <form-bean name="customerAccountActionForm"
-                   type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"/>
+                   type="org.mifos.customers.struts.actionforms.CustomerAccountActionForm"/>
 
         <form-bean name="custSearchActionForm"
-                   type="org.mifos.application.customer.struts.actionforms.CustSearchActionForm"/>
+                   type="org.mifos.customers.struts.actionforms.CustSearchActionForm"/>
         <!-- Add group Membership Form -->
         <form-bean name="addGroupMembershipForm"
-                   type="org.mifos.application.customer.group.struts.actionforms.AddGroupMembershipForm"/>
+                   type="org.mifos.customers.group.struts.actionforms.AddGroupMembershipForm"/>
     </form-beans>
 
     <action-mappings>
-        <action path="/custSearchAction" type="org.mifos.application.customer.struts.action.CustSearchAction"
+        <action path="/custSearchAction" type="org.mifos.customers.struts.action.CustSearchAction"
                 name="custSearchActionForm"
                 parameter="method"
                 scope="session">
@@ -53,7 +53,7 @@
                      path="/pages/application/moratorium/jsp/moratoriumSearchResults.jsp"/>
         </action>
         <action path="/customerAccountAction"
-                type="org.mifos.application.customer.struts.action.CustomerAccountAction"
+                type="org.mifos.customers.struts.action.CustomerAccountAction"
                 name="customerAccountActionForm"
                 parameter="method"
                 scope="session">
@@ -63,7 +63,7 @@
         </action>
         <!-- Edit Client Transfer Action -->
         <action path="/clientTransferAction"
-                type="org.mifos.application.customer.client.struts.action.ClientTransferAction"
+                type="org.mifos.customers.client.struts.action.ClientTransferAction"
                 name="clientTransferActionForm" parameter="method" input="/clientTransferAction.do?method=validate"
                 validate="false"
                 scope="session">
@@ -85,7 +85,7 @@
         </action>
         <!-- Edit Group Transfer Action -->
         <action path="/groupTransferAction"
-                type="org.mifos.application.customer.group.struts.action.GroupTransferAction"
+                type="org.mifos.customers.group.struts.action.GroupTransferAction"
                 name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate"
                 validate="true"
                 scope="session">
@@ -110,7 +110,7 @@
 
         </action>
         <action path="/custHistoricalDataAction"
-                type="org.mifos.application.customer.struts.action.CustHistoricalDataAction"
+                type="org.mifos.customers.struts.action.CustHistoricalDataAction"
                 name="custHistoricalDataActionForm" parameter="method" validate="true"
                 input="/custHistoricalDataAction.do?method=validate" scope="session">
             <forward name="group_detail_page" path="/groupCustAction.do?method=get"/>
@@ -130,7 +130,7 @@
         </action>
         <!-- Apply Adjustment action for customer-->
         <action path="/custApplyAdjustment"
-                type="org.mifos.application.customer.struts.action.CustomerApplyAdjustmentAction"
+                type="org.mifos.customers.struts.action.CustomerApplyAdjustmentAction"
                 name="custApplyAdjustmentActionForm" parameter="method" validate="true"
                 input="/pages/application/customer/jsp/applyadjustment.jsp" scope="session">
             <forward name="loadAdjustment_success" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
@@ -146,7 +146,7 @@
             <forward name="canceladj_center_success" path="/customerAccountAction.do?method=load"/>
             <forward name="canceladj_client_success" path="/customerAccountAction.do?method=load"/>
         </action>
-        <action path="/customerAction" type="org.mifos.application.customer.struts.action.CustomerAction"
+        <action path="/customerAction" type="org.mifos.customers.struts.action.CustomerAction"
                 parameter="method" scope="session">
             <forward name="waiveChargesDue_Success" path="/customerAction.do?method=forwardWaiveChargeDue"/>
             <forward name="waiveChargesOverDue_Success" path="/customerAction.do?method=forwardWaiveChargeOverDue"/>
@@ -171,7 +171,7 @@
         </action>
         <!-- Edit Customer Status Action -->
         <action path="/editCustomerStatusAction"
-                type="org.mifos.application.customer.struts.action.EditCustomerStatusAction"
+                type="org.mifos.customers.struts.action.EditCustomerStatusAction"
                 name="editCustomerStatusActionForm"
                 parameter="method"
                 input="/editCustomerStatusAction.do?method=validate"
@@ -190,7 +190,7 @@
         </action>
 
         <!-- CustomerNotes action -->
-        <action path="/customerNotesAction" type="org.mifos.application.customer.struts.action.CustomerNotesAction"
+        <action path="/customerNotesAction" type="org.mifos.customers.struts.action.CustomerNotesAction"
                 name="customerNotesActionForm"
                 parameter="method"
                 validate="true"
@@ -209,7 +209,7 @@
 
         <!-- Customer action M2 style-->
         <action path="/custAction"
-                type="org.mifos.application.customer.struts.action.CustAction"
+                type="org.mifos.customers.struts.action.CustAction"
                 name="custActionForm" parameter="method" validate="true"
                 input="/custAction.do?method=validate" scope="session">
 
@@ -220,7 +220,7 @@
         </action>
         <!-- Add group membership action -->
         <action path="/addGroupMembershipAction"
-                type="org.mifos.application.customer.group.struts.action.AddGroupMembershipAction"
+                type="org.mifos.customers.group.struts.action.AddGroupMembershipAction"
                 name="addGroupMembershipForm"
                 parameter="method"
                 scope="session"

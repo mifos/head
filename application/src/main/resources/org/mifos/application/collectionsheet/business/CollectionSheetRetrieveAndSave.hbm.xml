@@ -4,7 +4,7 @@
 <hibernate-mapping>
 
 	<query name="prefetchCustomerHierarchy">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as c	
+		<![CDATA[from org.mifos.customers.business.CustomerBO as c	
 				left outer join fetch c.customerAddressDetail
 				 left outer join fetch c.historicalData
 				  left outer join fetch c.customerMeeting
@@ -50,7 +50,7 @@
 	</query>
 	
 	<query name="prefetchCustomerSchedules">
-		<![CDATA[from org.mifos.application.customer.business.CustomerAccountBO as ca
+		<![CDATA[from org.mifos.customers.business.CustomerAccountBO as ca
 				inner join fetch ca.accountActionDates aad
 				left outer join fetch aad.accountFeesActionDetails
 				inner join ca.customer c
@@ -77,7 +77,7 @@
 
 	
 	<query name="ClientAttendance.getAttendanceForClientsOnMeetingDate">
-       <![CDATA[select clientAttendance from org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance  
+       <![CDATA[select clientAttendance from org.mifos.customers.client.business.ClientAttendanceBO clientAttendance  
        inner join clientAttendance.customer c
        where c.office.id = :BRANCH_ID 
 	   and c.searchId like :SEARCH_ID

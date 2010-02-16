@@ -31,7 +31,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 
-import org.mifos.application.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeView;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.testng.annotations.Test;

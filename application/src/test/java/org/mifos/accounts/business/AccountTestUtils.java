@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountTestUtils {

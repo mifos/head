@@ -24,8 +24,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;

@@ -28,7 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.customers.client.business.AttendanceType;
 
 /**
  * @deprecated Use {@link AttendanceType} instead.

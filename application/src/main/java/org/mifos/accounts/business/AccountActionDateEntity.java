@@ -23,7 +23,7 @@ package org.mifos.accounts.business;
 import java.sql.Date;
 
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.PersistentObject;
 

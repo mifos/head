@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;

@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.config.AccountingRules;

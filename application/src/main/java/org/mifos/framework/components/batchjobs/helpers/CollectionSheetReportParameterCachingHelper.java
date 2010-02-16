@@ -22,8 +22,8 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.List;
 
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.application.reports.business.service.CascadingReportParameterService;
 import org.mifos.application.reports.business.service.ReportServiceFactory;
 import org.mifos.application.reports.ui.SelectionItem;

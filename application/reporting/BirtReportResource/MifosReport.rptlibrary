@@ -298,7 +298,7 @@ return true;]]></method>
 	var officer = params["loanOfficerId"];
 	
 	if(!(officer instanceof Packages.java.lang.Integer)) {
-		var pbs = new Packages.org.mifos.application.personnel.business.service.PersonnelBusinessService();
+		var pbs = new Packages.org.mifos.customers.personnel.business.service.PersonnelBusinessService();
 		officer = pbs.getPersonnel(Packages.java.lang.Short.valueOf(""+params["userId"])).isLoanOfficer() ? SELECT_ID : ALL_ID;
 	}  
     centerIterator = reportParameterService.getActiveCentersForLoanOfficer(officer, branch).iterator();

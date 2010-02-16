@@ -109,11 +109,11 @@ public interface FilePaths {
     public static final String TABLE_TAG_PROPERTIESFILE = LOCALIZED_RESOURCE_PATH + "Resources";
     // "org.mifos.application.meeting.util.resources.Meeting"
     public final String MEETING_RESOURCE = LOCALIZED_RESOURCE_PATH + "Meeting";
-    // "org/mifos/application/office/util/resources/OfficeUIResources"
+    // "org/mifos/customers/office/util/resources/OfficeUIResources"
     public static final String OFFICERESOURCEPATH = LOCALIZED_RESOURCE_PATH + "OfficeUIResources";
-    // "org/mifos/application/personnel/util/resources/PersonnelUIResources"
+    // "org/mifos/customers/personnel/util/resources/PersonnelUIResources"
     public static final String PERSONNELUIRESOURCESPATH = LOCALIZED_RESOURCE_PATH + "PersonnelUIResources";
-    // "org/mifos/application/personnel/util/resources/PersonnelUIResources"
+    // "org/mifos/customers/personnel/util/resources/PersonnelUIResources"
     public static final String FUND_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "FundUIResources";
     // "org.mifos.accounts.productdefinition.util.resources.ProductDefinitionResources"
     public static final String PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH

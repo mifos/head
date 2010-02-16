@@ -30,7 +30,7 @@ public class MifosImageTagTest extends TestCase {
 
     public void testRender() throws DocumentException {
         MifosImageTag mifosImageTag = new MifosImageTag();
-        String path = "org.mifos.application.customer.util.resources.customerImages";
+        String path = "org.mifos.customers.util.resources.customerImages";
         mifosImageTag.setModuleName(path);
         mifosImageTag.setId("3");
         StringBuilder stringBuilder = new StringBuilder();

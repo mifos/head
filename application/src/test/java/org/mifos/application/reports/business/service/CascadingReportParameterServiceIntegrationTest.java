@@ -38,10 +38,10 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.PersonnelFixture;
-import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelFixture;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.reports.ui.DateSelectionItem;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.application.reports.ui.SelectionItemFixture;

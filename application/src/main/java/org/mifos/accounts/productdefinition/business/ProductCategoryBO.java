@@ -21,8 +21,8 @@
 package org.mifos.accounts.productdefinition.business;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;

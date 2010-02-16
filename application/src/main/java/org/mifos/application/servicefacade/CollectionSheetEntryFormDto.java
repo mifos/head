@@ -23,9 +23,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.personnel.business.PersonnelView;
 
 /**
  * I am a DTO for data that is needed to display collection sheet form.

@@ -35,7 +35,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;

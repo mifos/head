@@ -27,7 +27,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 

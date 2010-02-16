@@ -27,7 +27,7 @@ import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;

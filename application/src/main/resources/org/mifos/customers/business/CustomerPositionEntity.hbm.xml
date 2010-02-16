@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.customers.business.CustomerPositionEntity" table="CUSTOMER_POSITION">
+        <id name="customerPositionId" column="CUSTOMER_POSITION_ID" type="integer" unsaved-value="-1" access="field">
+                <generator class="native"/>
+        </id>
+       <!-- <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>-->
+       <many-to-one name="position" column="POSITION_ID" class="org.mifos.customers.business.PositionEntity" insert="true" update="false" access="field"/>
+	   <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO"  insert="true" update="true" />	
+	   <many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO"  insert="true" update="false" access="field"/>	
+    </class>    
+</hibernate-mapping>

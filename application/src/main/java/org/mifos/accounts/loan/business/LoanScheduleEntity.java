@@ -33,7 +33,7 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.LoanPaymentData;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 

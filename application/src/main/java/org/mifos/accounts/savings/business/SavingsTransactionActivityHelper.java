@@ -22,8 +22,8 @@ package org.mifos.accounts.savings.business;
 import java.util.Date;
 
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 
 /**

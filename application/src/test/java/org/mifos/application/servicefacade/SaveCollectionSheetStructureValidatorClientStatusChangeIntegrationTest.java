@@ -72,10 +72,10 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
          * .getImplementation(AbstractLazyInitializer.java:111) at
          * org.hibernate.
          * proxy.pojo.cglib.CGLIBLazyInitializer.invoke(CGLIBLazyInitializer
-         * .java:150) atorg.mifos.application.personnel.business.
+         * .java:150) atorg.mifos.customers.personnel.business.
          * PersonnelStatusEntity$$EnhancerByCGLIB$$78c4a612.getId(<generated>)
          * at
-         * org.mifos.application.personnel.business.PersonnelBO.getStatusAsEnum
+         * org.mifos.customers.personnel.business.PersonnelBO.getStatusAsEnum
          * (PersonnelBO.java:369)
          */
         /*

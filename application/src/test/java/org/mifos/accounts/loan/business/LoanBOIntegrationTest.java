@@ -75,13 +75,13 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerBOTestUtils;
-import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerBOTestUtils;
+import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
@@ -2510,7 +2510,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
          * sometimes goes astray here? if (null == customerPerformanceHistory) {
          * customerPerformanceHistory = (CustomerPerformanceHistory)
          * StaticHibernateUtil.getSessionTL().createQuery(
-         * "from org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity e where e.client.customerId = "
+         * "from org.mifos.customers.client.business.ClientPerformanceHistoryEntity e where e.client.customerId = "
          * + ((LoanBO) accountBO).getCustomer().getCustomerId()).uniqueResult();
          * }
          */

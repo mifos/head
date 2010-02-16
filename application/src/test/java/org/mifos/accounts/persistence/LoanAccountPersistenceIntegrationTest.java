@@ -24,7 +24,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestCase {

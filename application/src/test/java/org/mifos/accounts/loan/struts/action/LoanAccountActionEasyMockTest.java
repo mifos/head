@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
-import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;

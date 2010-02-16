@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+    <class name="org.mifos.customers.client.business.ClientDetailEntity" table="CUSTOMER_DETAIL">
+       <id name="customerId" column="CUSTOMER_ID" type="integer" access="field">
+            <generator class="foreign">
+            	<param name="property">client</param>
+            </generator>
+        </id>
+ 		
+        <property name="ethinicity" column="ETHINICITY" type="integer"   />
+        <property name="citizenship" column="CITIZENSHIP" type="integer"  />
+        <property name="handicapped" column="HANDICAPPED" type="integer"   />
+        <property name="businessActivities" column="BUSINESS_ACTIVITIES" type="integer"   />
+        <property name="maritalStatus" column="MARITAL_STATUS" type="integer"   />
+        <property name="educationLevel" column="EDUCATION_LEVEL" type="integer"   />
+        <property name="numChildren" column="NUM_CHILDREN" type="short"   />
+        <property name="gender" column="GENDER" type="short" />
+        <property name="dateStarted" column="DATE_STARTED" type="date" />
+        <property name="handicappedDetails" column="HANDICAPPED_DETAILS" type="string"  />
+        <property name="povertyStatus" column="POVERTY_STATUS" />
+        <property name="povertyLikelihoodPercent" column="POVERTY_LHOOD_PCT" />
+        <one-to-one name="client" class="org.mifos.customers.client.business.ClientBO" cascade="all" access="field"/>
+    </class>
+         
+</hibernate-mapping>

@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.TestUtils;
 import org.mockito.Mock;

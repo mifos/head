@@ -24,15 +24,15 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldEntity;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.business.OfficeCustomFieldEntity;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeCustomFieldEntity;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.application.util.helpers.EntityType;
 
 /**

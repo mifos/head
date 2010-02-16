@@ -35,7 +35,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.AccountAppActionForm;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;

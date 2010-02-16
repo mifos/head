@@ -74,12 +74,12 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"> <mifoscustom:MifosImage
-								id="${BusinessKey.customerStatus.id}" moduleName="org.mifos.application.customer.util.resources.customerImages" />
+								id="${BusinessKey.customerStatus.id}" moduleName="org.mifos.customers.util.resources.customerImages" />
 							<c:out value="${BusinessKey.customerStatus.name}" /> <c:forEach
 								var="flagSet" items="${BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
 									test="${BusinessKey.blackListed}">
-									<mifoscustom:MifosImage id="blackListed" moduleName="org.mifos.application.customer.util.resources.customerImages" />
+									<mifoscustom:MifosImage id="blackListed" moduleName="org.mifos.customers.util.resources.customerImages" />
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> <span class="fontnormal"><br>
 							<mifos:mifoslabel name="Group.systemId" bundle="GroupUIResources" />

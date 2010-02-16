@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.customers.checklist.business.CheckListBO" table="CHECKLIST">
+		<id name="checklistId" column="CHECKLIST_ID" type="short" access="field">
+			<generator class="native" />
+		</id>
+
+		<property name="checklistName" column="CHECKLIST_NAME" type="string" />
+		<property name="checklistStatus" column="CHECKLIST_STATUS" type="short" not-null="true" />
+		<property name="createdBy" column="CREATED_BY" type="short" />
+		<property name="createdDate" column="CREATED_DATE" type="date" />
+		<property name="updatedBy" column="UPDATED_BY" type="short" />
+		<property name="updatedDate" column="UPDATED_DATE" type="date" />
+
+		<many-to-one name="supportedLocales" column="LOCALE_ID" class="org.mifos.application.master.business.SupportedLocalesEntity" not-null="true" />
+
+		<set name="checklistDetails" table="CHECKLIST_DETAIL" cascade="all,delete-orphan" order-by="DETAIL_ID asc" inverse="true">
+			<key column="CHECKLIST_ID" />
+			<one-to-many class="org.mifos.customers.checklist.business.CheckListDetailEntity" />
+		</set>
+
+		<joined-subclass name="org.mifos.customers.checklist.business.CustomerCheckListBO" table="CUSTOMER_CHECKLIST">
+			<key column="CHECKLIST_ID" />
+			<many-to-one name="customerLevel" column="LEVEL_ID" class="org.mifos.customers.business.CustomerLevelEntity" insert="true" update="true" unique="true" not-null="true" />
+			<many-to-one name="customerStatus" column="CUSTOMER_STATUS_ID" class="org.mifos.customers.business.CustomerStatusEntity" not-null="true" />
+		</joined-subclass>
+
+		<joined-subclass name="org.mifos.customers.checklist.business.AccountCheckListBO" table="PRD_CHECKLIST">
+			<key column="CHECKLIST_ID" />
+			<many-to-one name="productTypeEntity" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" insert="true" update="true" unique="true" not-null="true" />
+			<many-to-one name="accountStateEntity" column="ACCOUNT_STATUS" class="org.mifos.accounts.business.AccountStateEntity" not-null="true" />
+		</joined-subclass>
+
+	</class>
+
+	<query name="account.statusChecklist">
+   	       <![CDATA[from org.mifos.customers.checklist.business.AccountCheckListBO  accountCheckList 
+   	       where accountCheckList.checklistStatus=:checklistStatus 
+   	       and accountCheckList.accountStateEntity.id=:accountStatus 
+   	       and accountCheckList.productTypeEntity.productTypeID=:accountTypeId
+   	       ]]>
+    </query>
+	<query name="customer.checklist">
+		<![CDATA[from org.mifos.customers.checklist.business.CustomerCheckListBO customerChecklist 
+    	       			where customerChecklist.checklistStatus =:CHECKLIST_STATUS and customerChecklist.customerStatus.id=:STATUS_ID and customerChecklist.customerLevel.id =:LEVEL_ID
+    	       			]]>
+	</query>
+	<query name="masterdata.customer_checklist">
+		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterView(cl.id,le.entityType) from org.mifos.customers.business.CustomerLevelEntity as cl,org.mifos.application.master.business.LookUpEntity as le where cl.lookUpValue.lookUpId=le.entityId ]]>
+	</query>
+	<query name="masterdata.product_checklist">
+		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterView(pt.productTypeID,lv.lookUpName) from org.mifos.accounts.productdefinition.business.ProductTypeEntity as pt,org.mifos.application.master.business.LookUpValueEntity as lv where pt.lookUpValue.lookUpId=lv.lookUpId ]]>
+	</query>
+    <query name="customer.validateState">
+    	<![CDATA[select count(*) from org.mifos.customers.checklist.business.CustomerCheckListBO as ccl where ccl.customerLevel.id=:levelId and ccl.customerStatus.id=:stateId ]]>
+	</query>
+	<query name="product.validateState">
+		<![CDATA[select count(*) from org.mifos.customers.checklist.business.AccountCheckListBO as acChecklist where acChecklist.productTypeEntity.productTypeID=:levelId and acChecklist.accountStateEntity.id=:stateId]]>
+	</query>
+	
+	<query name="checklist.loadAllCustomerCheckLists">
+		<![CDATA[from org.mifos.customers.checklist.business.CustomerCheckListBO checkList ]]>
+	</query>
+	
+	<query name="checklist.loadAllAccountCheckLists">
+		<![CDATA[from org.mifos.customers.checklist.business.AccountCheckListBO checkList ]]>
+	</query>
+	 <query name="checklist.getStatusForCustomer">
+		<![CDATA[from org.mifos.customers.business.CustomerStatusEntity customerState where customerState.customerLevel.id=:LEVEL_ID and customerState.id not in (1,7)]]>
+	</query>
+	<query name="checklist.getStatusForAccount">
+		<![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
+    	where  accountStateEntity.prdType.productTypeID = :prdTypeId and accountStateEntity.id not in (1,5,6,9,11,12,13,17)]]>
+	</query>
+
+</hibernate-mapping>
