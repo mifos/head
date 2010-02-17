@@ -40,27 +40,6 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStates;
-import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerBOTestUtils;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -68,7 +47,26 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountStates;
+import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerBOTestUtils;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -87,30 +85,17 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
     }
 
     private MeetingBO meeting;
-
     private CustomerBO center;
-
     private CustomerBO client;
-
     private CustomerBO group;
-
     private AccountBO accountBO;
-
     private SavingsOfferingBO savingsOffering;
-
     private LoanOfferingBO loanOfferingBO;
-
     private CustomerBO client1;
-
     private CustomerBO client2;
-
     private SavingsBO savings;
-
     private UserContext userContext;
-
-    PersonnelBO createdBy = null;
-
-    RegenerateScheduleHelper regenerateScheduleHelper;
+    private RegenerateScheduleHelper regenerateScheduleHelper;
 
     @Override
     protected void setUp() throws Exception {
@@ -118,7 +103,6 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         RegenerateScheduleTask regenerateScheduleTask = new RegenerateScheduleTask();
         regenerateScheduleHelper = (RegenerateScheduleHelper) regenerateScheduleTask.getTaskHelper();
         userContext = TestUtils.makeUser();
-        createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
     }
 
     @Override

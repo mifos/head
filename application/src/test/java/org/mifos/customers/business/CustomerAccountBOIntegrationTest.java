@@ -98,6 +98,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     private CustomerBO client;
 
     private UserContext userContext;
+    
+    private List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+    private List<Holiday> holidays = new ArrayList<Holiday>();
 
     @Override
     protected void setUp() throws Exception {
@@ -528,7 +531,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         meetingDates = meeting.getAllDates((short) 10);
         meetingDates.remove(0);
-        center.getCustomerAccount().regenerateFutureInstallments(nextInstallmentId);
+        center.getCustomerAccount().regenerateFutureInstallments(nextInstallmentId, workingDays, holidays);
         TestObjectFactory.updateObject(center);
 
         StaticHibernateUtil.commitTransaction();
@@ -555,7 +558,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         List<java.util.Date> meetingDates = meeting.getAllDates((short) 10);
         meetingDates.remove(0);
-        group.getCustomerAccount().regenerateFutureInstallments((short) 2);
+        group.getCustomerAccount().regenerateFutureInstallments((short) 2, workingDays, holidays);
         TestObjectFactory.updateObject(center);
         TestObjectFactory.updateObject(group);
         StaticHibernateUtil.commitTransaction();
@@ -591,7 +594,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
         CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
         CustomerBOTestUtils.setCustomerStatus(group, customerStatusEntity);
-        group.getCustomerAccount().regenerateFutureInstallments((short) 2);
+        group.getCustomerAccount().regenerateFutureInstallments((short) 2, workingDays, holidays);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());

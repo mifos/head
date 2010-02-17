@@ -77,10 +77,10 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.schedule.ScheduleGenerationStrategy;
+import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduleGenerationStrategy;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
 /**
  * Clients, groups, and centers are stored in the db as customer accounts.
@@ -422,9 +422,10 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     @Override
-    protected void regenerateFutureInstallments(final Short nextInstallmentId) throws AccountException {
+    protected void regenerateFutureInstallments(final Short nextInstallmentId, List<Days> workingDays, List<Holiday> holidays) throws AccountException {
         if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
                 && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
+
             List<Date> meetingDates = null;
             int installmentSize = getLastInstallmentId();
             try {
@@ -460,10 +461,7 @@ public class CustomerAccountBO extends AccountBO {
 
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
             if (accountActionDate != null) {
-                Date meetingDate = meetingDates.get(installmentId - 1); // meeting
-                // dates
-                // are
-                // zero-based
+                Date meetingDate = meetingDates.get(installmentId - 1); 
                 ((CustomerScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
             }
             installmentId++;
@@ -497,7 +495,7 @@ public class CustomerAccountBO extends AccountBO {
         }
         
         DateTime startFromDayAfterLastKnownSchedule = new DateTime(lastInstallmentDate).toDateMidnight().toDateTime().plusDays(1);
-        ScheduleGenerationStrategy scheduleGenerationStrategy = new HolidayAndWorkingDaysScheduleGenerationStrategy(workingDays, orderedUpcomingHolidays);
+        ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, orderedUpcomingHolidays);
         List<DateTime> scheduledDates = scheduleGenerationStrategy.generateScheduledDates(10, startFromDayAfterLastKnownSchedule, scheduledEvent);
         
         int count = 1;

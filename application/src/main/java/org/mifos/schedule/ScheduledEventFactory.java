@@ -39,11 +39,13 @@ public class ScheduledEventFactory {
             recurringEvent = new WeeklyScheduledEvent(every, dayOfWeek);
             break;
         case MONTHLY:
-            if (weekOfMonth == 0 && dayOfWeek == 0) {
-                recurringEvent = new MonthlyOnDateScheduledEvent(every, dayOfMonth);
+            if (weekOfMonth != 0 && dayOfWeek != 0) {
+                recurringEvent = new MonthlyOnWeekAndWeekDayScheduledEvent(every, weekOfMonth, dayOfWeek);                
             }
-            else {
-                recurringEvent = new MonthlyOnWeekAndWeekDayScheduledEvent(every, weekOfMonth, dayOfWeek);
+            else if (dayOfMonth != 0) {
+                recurringEvent = new MonthlyOnDateScheduledEvent(every, dayOfMonth);
+            } else {
+                throw new IllegalStateException("not enough information to create a monthly scheduled event");
             }
             break;
         case DAILY:

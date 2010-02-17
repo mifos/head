@@ -43,7 +43,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.schedule.ScheduleGenerationStrategy;
+import org.mifos.schedule.ScheduledDateGeneration;
 
 /**
  * Helper methods related to holidays logic
@@ -67,7 +67,7 @@ public class HolidayUtils {
     }
 
     /**
-     * @deprecated - please use {@link ScheduleGenerationStrategy} for generating dates that take into account working days and holidays.
+     * @deprecated - please use {@link ScheduledDateGeneration} for generating dates that take into account working days and holidays.
      */
     @Deprecated
     public static Calendar adjustDate(final Calendar day, final MeetingBO meeting) throws MeetingException {

@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-public interface ScheduleGenerationStrategy {
+public interface ScheduledDateGeneration {
 
     List<DateTime> generateScheduledDates(int occurences, DateTime lastScheduledDate, ScheduledEvent scheduledEvent);
 

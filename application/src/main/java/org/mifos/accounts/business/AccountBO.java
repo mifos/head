@@ -34,7 +34,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.Days;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -49,24 +54,21 @@ import org.mifos.accounts.util.helpers.FeeInstallment;
 import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerMeetingEntity;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.config.AccountingRules;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -537,15 +539,18 @@ public class AccountBO extends BusinessObject {
         buildFinancialEntries(new HashSet(reversedTrxns));
     }
 
-    public final void handleChangeInMeetingSchedule() throws AccountException {
-        AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
+    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+        
+        AccountActionDateEntity nextInstallmentOnOrAfterToday = getDetailsOfNextInstallment();
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        if (accountActionDateEntity != null) {
-            short installmentId = accountActionDateEntity.getInstallmentId();
-            if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
-                installmentId += 1;
+        
+        if (nextInstallmentOnOrAfterToday != null) {
+            short nextInstallmentId = nextInstallmentOnOrAfterToday.getInstallmentId();
+            if (nextInstallmentOnOrAfterToday.getActionDate().compareTo(currentDate) == 0) {
+                nextInstallmentId += 1;
             }
-            regenerateFutureInstallments(installmentId);
+            
+            regenerateFutureInstallments(nextInstallmentId, workingDays, holidays);
             try {
                 getAccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {
@@ -1333,7 +1338,7 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    protected void regenerateFutureInstallments(final Short nextIntallmentId) throws AccountException {
+    protected void regenerateFutureInstallments(final Short nextIntallmentId, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
     }
 
     protected List<InstallmentDate> getInstallmentDates(final MeetingBO Meeting, final Integer installmentSkipToStartRepayment)
@@ -1571,7 +1576,7 @@ public class AccountBO extends BusinessObject {
         return AccountState.fromShort(accountState.getId()).isActiveLoanAccountState();
     }
 
-    public void setExternalId(String externalId) {
+    public void setExternalId(final String externalId) {
         this.externalId= externalId;        
     }
     public String getExternalId() {

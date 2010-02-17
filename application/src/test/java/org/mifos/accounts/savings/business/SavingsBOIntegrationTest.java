@@ -136,8 +136,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     private final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
 
-    PersonnelBO createdBy = null;
-
+    private PersonnelBO createdBy = null;
+    
+    private List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+    private List<Holiday> holidays = new ArrayList<Holiday>();
+    
     private Money getRoundedMoney(final Money value) {
         return MoneyUtils.currencyRound(value);
     }
@@ -3784,7 +3787,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
         meetingDates.remove(0);
-        savings.regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId().intValue() + 1));
+        savings.regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId().intValue() + 1), workingDays, holidays);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
@@ -3822,7 +3825,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         meetingDates.remove(0);
         savings.setUserContext(TestObjectFactory.getContext());
         savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "");
-        savings.regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId().intValue() + 1));
+        savings.regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId().intValue() + 1),  workingDays, holidays);
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());

@@ -54,6 +54,7 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -91,6 +92,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -118,6 +120,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -176,6 +179,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private Short savedDigitAfterDecimal;
 
     private LoanDao loanDao;
+    
+    private List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+    private List<Holiday> holidays = new ArrayList<Holiday>();
 
     @Override
     protected void setUp() throws Exception {
@@ -2285,7 +2291,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(WeekDay.THURSDAY);
         meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
         List<java.util.Date> meetingDates = meeting.getAllDates(6);
-        ((LoanBO) accountBO).regenerateFutureInstallments(Short.valueOf("3"));
+        ((LoanBO) accountBO).regenerateFutureInstallments(Short.valueOf("3"), workingDays, holidays);
         ((LoanBO) accountBO).update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -2336,7 +2342,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         recurrence.setWeekDay(recurrence.getWeekDayValue().next());
 
         meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
-        ((LoanBO) accountBO).regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId() + 1));
+        ((LoanBO) accountBO).regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId() + 1), workingDays, holidays);
         ((LoanBO) accountBO).update();
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
@@ -2373,7 +2379,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
         ((LoanBO) accountBO).regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId()
-                .intValue() + 1));
+                .intValue() + 1), workingDays, holidays);
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());

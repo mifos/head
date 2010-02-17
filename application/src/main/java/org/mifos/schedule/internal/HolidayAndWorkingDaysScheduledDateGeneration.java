@@ -29,16 +29,15 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.calendar.BasicHolidayStrategy;
 import org.mifos.calendar.BasicWorkingDayStrategy;
 import org.mifos.calendar.DateAdjustmentStrategy;
-import org.mifos.schedule.ScheduleGenerationStrategy;
+import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 
-
-public class HolidayAndWorkingDaysScheduleGenerationStrategy implements ScheduleGenerationStrategy {
+public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDateGeneration {
 
     private final List<Days> workingDays;
     private final List<Holiday> upcomingHolidays;
 
-    public HolidayAndWorkingDaysScheduleGenerationStrategy(final List<Days> workingDays, final List<Holiday> upcomingHolidays) {
+    public HolidayAndWorkingDaysScheduledDateGeneration(final List<Days> workingDays, final List<Holiday> upcomingHolidays) {
         this.workingDays = workingDays;
         this.upcomingHolidays = upcomingHolidays;
     }
@@ -68,5 +67,4 @@ public class HolidayAndWorkingDaysScheduleGenerationStrategy implements Schedule
 
         return scheduledDates;
     }
-
 }

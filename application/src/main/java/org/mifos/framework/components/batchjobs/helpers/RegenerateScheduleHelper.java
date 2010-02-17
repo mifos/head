@@ -24,7 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.framework.components.batchjobs.MifosTask;
@@ -35,16 +40,22 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class RegenerateScheduleHelper extends TaskHelper {
 
-    public RegenerateScheduleHelper(MifosTask mifosTask) {
+    private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+    
+    public RegenerateScheduleHelper(final MifosTask mifosTask) {
         super(mifosTask);
     }
 
     List<Integer> accountList;
 
     @Override
-    public void execute(long timeInMills) throws BatchJobException {
+    public void execute(final long timeInMills) throws BatchJobException {
         List<String> errorList = new ArrayList<String>();
         accountList = new ArrayList<Integer>();
+        
+        List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        
         List<Integer> customerIds;
         try {
             customerIds = new CustomerPersistence().getCustomersWithUpdatedMeetings();
@@ -54,7 +65,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
         if (customerIds != null && !customerIds.isEmpty())
             for (Integer customerId : customerIds) {
                 try {
-                    handleChangeInMeetingSchedule(customerId);
+                    handleChangeInMeetingSchedule(customerId, workingDays, orderedUpcomingHolidays);
                     StaticHibernateUtil.commitTransaction();
                 } catch (Exception e) {
                     StaticHibernateUtil.rollbackTransaction();
@@ -63,8 +74,10 @@ public class RegenerateScheduleHelper extends TaskHelper {
                     StaticHibernateUtil.closeSession();
                 }
             }
-        if (errorList.size() > 0)
+        
+        if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
     }
 
     @Override
@@ -72,14 +85,15 @@ public class RegenerateScheduleHelper extends TaskHelper {
         return true;
     }
 
-    private void handleChangeInMeetingSchedule(Integer customerId) throws Exception {
+    private void handleChangeInMeetingSchedule(final Integer customerId, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         CustomerBO customer = customerPersistence.getCustomer(customerId);
+        
         Set<AccountBO> accounts = customer.getAccounts();
         if (accounts != null && !accounts.isEmpty())
             for (AccountBO account : accounts) {
                 if (!accountList.contains(account.getAccountId())) {
-                    account.handleChangeInMeetingSchedule();
+                    account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
                     accountList.add(account.getAccountId());
                 }
             }
@@ -87,7 +101,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
                 .getOffice().getOfficeId());
         if (customerIds != null && !customerIds.isEmpty()) {
             for (Integer childCustomerId : customerIds) {
-                handleChangeInMeetingSchedule(childCustomerId);
+                handleChangeInMeetingSchedule(childCustomerId, workingDays, orderedUpcomingHolidays);
             }
         }
     }

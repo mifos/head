@@ -42,7 +42,7 @@ import org.mifos.framework.components.configuration.persistence.ConfigurationPer
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.schedule.ScheduleGenerationStrategy;
+import org.mifos.schedule.ScheduledDateGeneration;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -371,7 +371,7 @@ public class MeetingBO extends BusinessObject {
     }
 
     /**
-     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
+     * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
      */
     @Deprecated
     public List<Date> getAllDates(final int occurrences) throws MeetingException {
@@ -379,7 +379,7 @@ public class MeetingBO extends BusinessObject {
     }
 
     /**
-     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
+     * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
      */
     @Deprecated
     public List<Date> getAllDates(final int occurrences, final boolean adjustForHolidays) throws MeetingException {
@@ -440,7 +440,7 @@ public class MeetingBO extends BusinessObject {
     }
 
     /**
-     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates}
+     * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates}
      */
     @Deprecated
     public Date getFirstDate(final Date startDate) {
@@ -454,7 +454,7 @@ public class MeetingBO extends BusinessObject {
     }
 
     /**
-     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates}
+     * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates}
      */
     @Deprecated
     private Date getNextDate(final Date startDate) {
@@ -517,7 +517,7 @@ public class MeetingBO extends BusinessObject {
      * is Sunday, then roll forward the date to Sunday 9 June 2008
      * 
      * @deprecated - Please use {@link CalendarUtils#getFirstDateForWeek(Date, int)} instead. Also when generating
-     *             schedules please use {@link ScheduleGenerationStrategy#generateScheduledDates}.
+     *             schedules please use {@link ScheduledDateGeneration#generateScheduledDates}.
      */
     @Deprecated
     Date getFirstDateForWeek(final Date startDate) {
@@ -540,7 +540,7 @@ public class MeetingBO extends BusinessObject {
     }
 
     /**
-     * @deprecated - please use {@link ScheduleGenerationStrategy#generateScheduledDates}
+     * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates}
      */
     @Deprecated
     private Date getNextDateForWeek(final Date startDate) {
@@ -555,7 +555,7 @@ public class MeetingBO extends BusinessObject {
      * 
      * @deprecated - Please use {@link CalendarUtils#getFirstDateForMonthOnDate)} or
      *             {@link CalendarUtils#getFirstDayForMonthUsingWeekRankAndWeekday} instead. Also when generating
-     *             schedules please use {@link ScheduleGenerationStrategy#generateScheduledDates}.
+     *             schedules please use {@link ScheduledDateGeneration#generateScheduledDates}.
      */
     @Deprecated
     private Date getFirstDateForMonth(final Date startDate) {

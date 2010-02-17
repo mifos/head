@@ -32,26 +32,29 @@ import junit.framework.Assert;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.joda.time.Days;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.config.AccountingRules;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -70,6 +73,9 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     }
 
     private static final double DELTA = 0.00000001;
+    
+    private final List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+    private final List<Holiday> holidays = new ArrayList<Holiday>();
 
     /**
      * The name of this test, and some now-gone (and broken) exception-catching
@@ -407,8 +413,9 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
                 .size() + 1);
         TestObjectFactory.updateObject(center);
 
-        center.getCustomerAccount().handleChangeInMeetingSchedule();
-        accountBO.handleChangeInMeetingSchedule();
+        center.getCustomerAccount().handleChangeInMeetingSchedule(workingDays, holidays);
+        accountBO.handleChangeInMeetingSchedule(workingDays, holidays);
+        
         StaticHibernateUtil.getTransaction().commit();
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());

@@ -82,12 +82,12 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.cleanUpHolidays(Arrays.asList((HolidayBO)holidayThisYear, (HolidayBO)holidayNextYear, (HolidayBO)holidayTwoYearsAway));
     }
     
-    public void ignore_testShouldFindAllHolidaysOrderedByFromDateAscending() {
+    public void testShouldFindAllHolidaysOrderedByFromDateAscending() {
 
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
         DateTime lastDayOfYear = secondlastDayOfYear.plusDays(1);
         DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
-        DateTime thirdOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
+        DateTime thirdOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(3).toDateMidnight().toDateTime();
         
         Holiday holiday1 = new HolidayBuilder().from(secondlastDayOfYear).to(secondlastDayOfYear).build();
         Holiday holiday2 = new HolidayBuilder().from(secondOfJanNextYear).to(secondOfJanNextYear).build();

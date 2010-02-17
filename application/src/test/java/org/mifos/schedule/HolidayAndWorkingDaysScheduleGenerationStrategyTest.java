@@ -35,11 +35,11 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.domain.builders.ScheduledEventBuilder;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduleGenerationStrategy;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
 public class HolidayAndWorkingDaysScheduleGenerationStrategyTest {
 
-    private ScheduleGenerationStrategy scheduleGeneration;
+    private ScheduledDateGeneration scheduleGeneration;
 
     @Before
     public void setupAndInjectDependencies() {
@@ -51,7 +51,7 @@ public class HolidayAndWorkingDaysScheduleGenerationStrategyTest {
         Holiday independenceDay = new HolidayBuilder().from(fourthOfJuly).to(fourthOfJuly).build();
         List<Holiday> upcomingHolidays = Arrays.asList(independenceDay);
 
-        scheduleGeneration = new HolidayAndWorkingDaysScheduleGenerationStrategy(workingDays, upcomingHolidays);
+        scheduleGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, upcomingHolidays);
     }
 
     @Test

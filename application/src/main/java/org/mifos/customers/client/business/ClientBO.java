@@ -30,15 +30,28 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -48,23 +61,14 @@ import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
-import org.mifos.customers.surveys.business.SurveyInstance;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -231,7 +235,11 @@ public class ClientBO extends CustomerBO {
             validateFieldsForActiveClient(loanOfficer, meeting);
             this.setCustomerActivationDate(this.getCreatedDate());
             createAccountsForClient();
-            createDepositSchedule();
+            
+            // FIXME - keithw - pass in this info to method
+            List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+            List<Holiday> holidays = new ArrayList<Holiday>();
+            createDepositSchedule(workingDays, holidays);
         }
         generateSearchId();
     }
@@ -488,7 +496,10 @@ public class ClientBO extends CustomerBO {
             this.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
             createAccountsForClient();
             getSavingsPersistence().persistSavingAccounts(this);
-            createDepositSchedule();
+            
+            List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+            List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
+            createDepositSchedule(workingDays, holidays);
         }
     }
 
@@ -504,7 +515,7 @@ public class ClientBO extends CustomerBO {
     /**
      * This method is called for client family and name details update
      */
-     public void updateFamilyInfo(List<Integer> primaryKeys,List<ClientNameDetailView> clientNameDetailView, List<ClientFamilyDetailView> clientFamilyDetailView) throws PersistenceException {                 
+     public void updateFamilyInfo(final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) throws PersistenceException {                 
          
          updateFamilyAndNameDetails(primaryKeys,clientNameDetailView,clientFamilyDetailView);
          deleteFamilyAndNameDetails(primaryKeys);
@@ -520,7 +531,7 @@ public class ClientBO extends CustomerBO {
       * @param primaryKeys
       * @return
       */
-     private boolean isKeyExists(int clientNameId, List<Integer> primaryKeys){         
+     private boolean isKeyExists(final int clientNameId, final List<Integer> primaryKeys){         
          boolean keyFound = false;
          for(int i=0;i<primaryKeys.size();i++){
              if(primaryKeys.get(i)!=null && primaryKeys.get(i)==clientNameId){
@@ -537,7 +548,7 @@ public class ClientBO extends CustomerBO {
       * @param clientNameDetailView
       * @param clientFamilyDetailView
       */
-     public void updateFamilyAndNameDetails (List<Integer> primaryKeys,List<ClientNameDetailView> clientNameDetailView, List<ClientFamilyDetailView> clientFamilyDetailView) {
+     public void updateFamilyAndNameDetails (final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) {
          for(int key=0;key<primaryKeys.size();key++) {
              // check for the primary key if that is not null update the data
             if(primaryKeys.get(key)!=null){
@@ -564,7 +575,7 @@ public class ClientBO extends CustomerBO {
      * @param primaryKeys
      * @throws PersistenceException 
      */
-     public void deleteFamilyAndNameDetails(List<Integer> primaryKeys) throws PersistenceException{
+     public void deleteFamilyAndNameDetails(final List<Integer> primaryKeys) throws PersistenceException{
          // check for the primary  if that is null crate the data
          //get all the family entities to delete
          List<ClientFamilyDetailEntity> deleteFamilyDetailEntity = new ArrayList<ClientFamilyDetailEntity>();
@@ -602,7 +613,7 @@ public class ClientBO extends CustomerBO {
       * @param clientNameDetailView
       * @param clientFamilyDetailView
       */
-     public void insertFamilyAndNameDetails(List<Integer> primaryKeys,List<ClientNameDetailView> clientNameDetailView, List<ClientFamilyDetailView> clientFamilyDetailView) {
+     public void insertFamilyAndNameDetails(final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) {
        //INSERT data
          for(int i=0;i<primaryKeys.size();i++){
              if(primaryKeys.get(i)==null){                 
@@ -974,7 +985,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private void createDepositSchedule() throws CustomerException {
+    private void createDepositSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws CustomerException {
         try {
             if (getParentCustomer() != null) {
                 List<SavingsBO> savingsList = getCustomerPersistence().retrieveSavingsAccountForCustomer(
@@ -985,7 +996,7 @@ public class ClientBO extends CustomerBO {
                 }
                 for (SavingsBO savings : savingsList) {
                     savings.setUserContext(getUserContext());
-                    savings.generateAndUpdateDepositActionsForClient(this);
+                    savings.generateAndUpdateDepositActionsForClient(this, workingDays, holidays);
                 }
             }
         } catch (PersistenceException pe) {

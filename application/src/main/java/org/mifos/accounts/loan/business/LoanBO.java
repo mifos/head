@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -81,9 +83,7 @@ import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -97,9 +97,12 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.AccountingRules;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
@@ -115,6 +118,10 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
 public class LoanBO extends AccountBO {
 
@@ -1272,7 +1279,7 @@ public class LoanBO extends AccountBO {
             final Double interestRate, final Short noOfInstallments, final Date disbursementDate,
             final Short gracePeriodDuration, final Integer businessActivityId, final String collateralNote,
             final Integer collateralTypeId, final List<CustomFieldView> customFields,
-            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay, FundBO fund)
+            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay, final FundBO fund)
             throws AccountException {
         if (interestDeductedAtDisbursement) {
             try {
@@ -1612,32 +1619,41 @@ public class LoanBO extends AccountBO {
         return reOpened;
     }
 
+    /**
+     * regenerate installments starting from nextInstallmentId
+     */
     @Override
-    protected void regenerateFutureInstallments(final Short nextInstallmentId) throws AccountException {
+    protected void regenerateFutureInstallments(final Short nextInstallmentId, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+
         if (!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
                 && !this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
                 && !this.getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
-            List<Date> meetingDates = null;
-            int installmentSize = getLastInstallmentId();
-            try {
-                MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
-                        getLoanMeeting().getMeetingStartDate());
-                meetingDates = meeting.getAllDates(installmentSize);
-            } catch (MeetingException me) {
-                throw new AccountException(me);
-            }
+            
+            int numberOfInstallmentsToGenerate = getLastInstallmentId();
+
+            MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
+                    getLoanMeeting().getMeetingStartDate());
+
+            DateTime startFromMeetingDate = new DateTime(getLoanMeeting().getMeetingStartDate());
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+                    holidays);
+
+            List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
+                    startFromMeetingDate, scheduledEvent);
+
             updateLoanSchedule(nextInstallmentId, meetingDates);
         }
     }
 
-    private void updateLoanSchedule(final Short nextInstallmentId, final List<Date> meetingDates) {
+    private void updateLoanSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
         short installmentId = nextInstallmentId;
 
         for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 
             if (accountActionDate != null) {
-                Date meetingDate = meetingDates.get(installmentId - 1);
+                Date meetingDate = meetingDates.get(installmentId - 1).toDate();
                 ((LoanScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
             }
             installmentId++;
@@ -3929,7 +3945,7 @@ public class LoanBO extends AccountBO {
      * the paymentTypeId is not good enough for this, we need to get the lookup value loaded so that we can resolve the
      * name of the PaymentTypeEntity.
      */
-    private PaymentTypeEntity getPaymentTypeEntity(short paymentTypeId) {
+    private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return (PaymentTypeEntity) getLoanPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
