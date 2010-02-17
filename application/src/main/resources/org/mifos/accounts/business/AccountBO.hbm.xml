@@ -456,7 +456,6 @@
 
 					(select max(cs2.installment_id) from customer_schedule cs2
 					where cs2.account_id = a.account_id)
-				group by a.account_id
 			]]>
 	</sql-query>
 	
@@ -474,7 +473,6 @@
 
 					(select max(ss2.installment_id) from saving_schedule ss2
 					where ss2.account_id = a.account_id)
-				group by a.account_id
 			]]>
 	</sql-query>
 

@@ -75,8 +75,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         int outputIntervalForBatchJobs = GeneralConfig.getOutputIntervalForBatchJobs();
         int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
         // int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
-        // jpw - hardcoded recordCommittingSize to 100 because now only accounts that need more schedules are returned
-        int recordCommittingSize = 100;
+        // jpw - hardcoded recordCommittingSize to 500 because now only accounts that need more schedules are returned
+        int recordCommittingSize = 500;
         getLogger().info(
                 "Using parameters:" + "\n  OutputIntervalForBatchJobs: " + outputIntervalForBatchJobs
                         + "\n  BatchSizeForBatchJobs: " + batchSize + "\n  RecordCommittingSizeForBatchJobs: "
@@ -131,6 +131,13 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 }
             }
             StaticHibernateUtil.commitTransaction();
+            long time = System.currentTimeMillis();
+            String message = "" + currentRecordNumber + " processed, " + (accountCount - currentRecordNumber)
+                    + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime)
+                    + " ms";
+            System.out.println(message);
+            getLogger().info(message);
+            
 
         } catch (Exception e) {
             getLogger().info("account " + currentAccountId.intValue() + " exception " + e.getMessage());
