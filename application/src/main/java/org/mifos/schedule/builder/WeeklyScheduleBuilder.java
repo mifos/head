@@ -18,19 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.accounts.schedules;
+package org.mifos.schedule.builder;
 
-/**
- *
- */
-public class DailyScheduleBuilder extends ScheduleBuilder {
+import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.internal.WeeklyScheduledEvent;
+
+class WeeklyScheduleBuilder extends ScheduledEventBuilder {
     
-    public Schedule build() {
-        return null;
+    private WeekDay dayOfWeek;
+    
+    WeeklyScheduleBuilder (WeekDay dayOfWeek) {
+        if ( null == dayOfWeek ) {
+            throw new IllegalArgumentException("Scheduled day of week has not been specfied");
+        }
+        this.dayOfWeek = dayOfWeek;
     }
     
-    protected void onDayOfWeek() {
-        //do nothing -- day of week is not relevant to daily schedules
+    @Override
+    public ScheduledEvent build() {
+        validateParameters();
+        return new WeeklyScheduledEvent(every, dayOfWeek.getValue());
     }
-
 }

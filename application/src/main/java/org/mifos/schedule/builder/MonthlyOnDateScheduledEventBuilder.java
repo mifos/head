@@ -18,35 +18,43 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.accounts.schedules;
+package org.mifos.schedule.builder;
+
+import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.internal.MonthlyOnDateScheduledEvent;
 
 /**
  *
  */
-public class MonthlyByDayScheduleBuilder extends ScheduleBuilder {
+public class MonthlyOnDateScheduledEventBuilder extends ScheduledEventBuilder {
     
     private Integer dayOfMonth;
     
-    public Schedule build() {
+    MonthlyOnDateScheduledEventBuilder(Integer dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
+    }
+    
+    @Override
+    public ScheduledEventBuilder monthlyOnWeekAndWeekday(RankType weekOfMonth, WeekDay dayOfWeek) {
+        assert false : "Type of monthly schedule has already been set.";
         return null;
     }
     
-    public MonthlyByDayScheduleBuilder dayOfMonth( Integer day) {
-        this.dayOfMonth = day;
-        return this;
+    @Override
+    public ScheduledEventBuilder monthlyOnDate (Integer dayOfMonth) {
+        assert dayOfMonth != null;
+        assert (dayOfMonth >= 1) && (dayOfMonth <= 31);
+        return new MonthlyOnDateScheduledEventBuilder(dayOfMonth);
     }
 
-    protected void onDayOfWeek() {
-        //do nothing
-    }
+    
     @Override
-    protected void validateParameters() {
-        super.validateParameters();
-        if ( null == dayOfMonth ) {
-            throw new IllegalArgumentException("Scheduled day of month has not been specfied");
-        }
+    public ScheduledEvent build() {
         if ( (dayOfMonth < 1) || (dayOfMonth > 31) ) {
             throw new IllegalArgumentException("Scheduled day of month must be between 1 and 31");
         }
-    } 
+        return new MonthlyOnDateScheduledEvent(every, dayOfMonth);
+    }
 }

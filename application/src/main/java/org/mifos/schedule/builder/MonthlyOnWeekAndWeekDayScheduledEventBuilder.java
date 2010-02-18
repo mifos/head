@@ -18,35 +18,38 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.accounts.schedules;
+package org.mifos.schedule.builder;
 
-import org.joda.time.DateTime;
+import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
 
 /**
+ * 
  *
  */
-class WeeklyScheduleBuilder extends ScheduleBuilder {
+public class MonthlyOnWeekAndWeekDayScheduledEventBuilder extends ScheduledEventBuilder {
     
+    private RankType weekOfMonth;
     private WeekDay dayOfWeek;
     
     @Override
-    public Schedule build() {
-        validateParameters();
-        return new WeeklySchedule(startDate, endDate, recurAfter, dayOfWeek, numberOfOccurrences, adjustForHolidays);
+    public ScheduledEvent build() {
+        return new MonthlyOnWeekAndWeekDayScheduledEvent(every, weekOfMonth.getValue(), dayOfWeek.getValue());
     }
     
     @Override
-    protected final void onDayOfWeek() {
-        dayOfWeek = dateTimeToWeekDay(new DateTime(startDate));
+    public ScheduledEventBuilder monthlyOnDate (Integer dayOfMonth) {
+        assert false : "Type of monthly schedule has already been set.";
+        return null;
     }
+    
+    MonthlyOnWeekAndWeekDayScheduledEventBuilder ( RankType weekOfMonth, WeekDay dayOfWeek) {
+        assert weekOfMonth != null;
+        assert dayOfWeek != null;
 
-    @Override
-    protected void validateParameters() {
-        super.validateParameters();
-        if ( null == dayOfWeek ) {
-            throw new IllegalArgumentException("Scheduled day of week has not been specfied");
-        }
+        this.weekOfMonth = weekOfMonth;
+        this.dayOfWeek = dayOfWeek;
     }
-
 }

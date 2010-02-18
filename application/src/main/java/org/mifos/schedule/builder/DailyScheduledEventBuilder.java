@@ -18,13 +18,18 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.accounts.schedules;
+package org.mifos.schedule.builder;
+
+import org.mifos.application.accounts.schedules.Schedule;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.internal.DailyScheduledEvent;
 
 /**
  *
  */
-public abstract class MonthlyScheduleBuilder extends ScheduleBuilder {
+public class DailyScheduledEventBuilder extends ScheduledEventBuilder {
     
-    
-
+    public ScheduledEvent build() {
+        return new DailyScheduledEvent(every);
+    }
 }

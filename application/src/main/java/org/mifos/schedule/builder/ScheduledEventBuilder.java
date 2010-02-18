@@ -18,112 +18,89 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.accounts.schedules;
+package org.mifos.schedule.builder;
 
 import java.util.Date;
 
 import org.joda.time.DateTime;
+import org.mifos.application.accounts.schedules.Schedule;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.internal.MonthlyOnDateScheduledEvent;
+import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
 
 /**
- * Uses the Builder pattern to build a {@link Schedule}. This example builds a schedule occurring
- * every other Monday starting on 2010-01-25 and continuing for 13 occurrences, without adjusting
- * for holidays or repayment moratoria:
+ * Uses the Builder pattern to build a {@link ScheduledEvent}. 
+ * 
+ * <p>This example builds a weekly scheduled event occurring
+ * every other Monday:</p>
  * <pre>
- * Schedule schedule = new ScheduleBuilder()
- *                        .weekly()
- *                        .starting(DateUtils.getDate(2010,00,25)
- *                        .every(2)
- *                        .numberOfOccurrences(13)
- *                        .notAdjustingForHolidays()
- *                        .build();
+ * ScheduledEvent event = new ScheduledEventBuilder()
+ *                            .weekly(WeekDay.MONDAY)
+ *                            .every(2)
+ *                            .build();
  * </pre>
- * <h3>Defaults</h3>
- * <ul>
- *   <li>Whether to adjust for holidays defaults to true. To override, call <code>notAdjustedForHolidays()</code></li>
- *   <li>For weekly schedules or monthly schedules meeting in a given week, the scheduled day of the week
- *       defaults to that of the starting date. After either <code>weekly()</code> or 
- *       <code>monthly</code> + <code>weekOfMonth()</code> have been specified, this can be overridden by
- *       calling onDayOfWeek().</li>
- * </ul>
+ * <p>This example builds a monthly scheduled event occurring on the 5th of every month:</p>
+ * <pre>
+ * ScheduledEvent event = new ScheduledEventBuilder()
+ *                            .monthlyOnDate(5)
+ *                            .build();
+ * </pre>
+ * <p>To build a monthly event occurring on the second Tuesday of very 3rd month irrespective of holidays:</p>
+ * <pre>
+ * ScheduledEvent event = new ScheduledEventBuilder()
+ *                           .monthlyOnWeekAndWeekday(RankType.THIRD, WeekDay.Tuesday)
+ *                           .every(3)
+ *                           .build();
+ * </pre>
+ * <p> An event occurring every otrher working day
+ * ScheduledEvent event = new ScheduledEventBuilder()
+ *                           .daily()
+ *                           .every(2)
+ *                           .build();
+ * </pre>
  * 
- * <p>The following parameters must be specified unless described as optional:</p>
- * <dl>
- *   <dt>For all schedules:
- *     <dd>
- *       <ul>
- *         <li>Exactly one of <code>weekly()</code> or <code>monthly()</code> (must be called first) </li>
- *         <li><code>every(Int)</code></li>
- *         <li><code>startingOn(Date)</code></li>
- *         <li>Either <code>numberOfOccurrences(Short)</code> or <code>endingOn(Date) but not both</code></li>
- *         <li><code>adjustedForHolidays()</code> or <code>notAdjustedForHolidays()</code> (optional. Default is to
- *             adjust for holidays)
- *       </ul>
- *     </dd>
- *   </dt>
- *   <dt> For weekly schedules:
- *     <dd>
- *       <ul>
- *         <li><code>onDayOfWeek(WeekDay)</code> (optional -- defaults to starting date's day of week)</li>
- *       </ul>
- *     </dd>
- *   </dt>
- *   <dt> For monthly schedules:
- *     <dd>
- *       <ul>
- *         <li>Exactly one of <code>onDayOfMonth(Int)</code> or <code>onWeekOfMonth(Int)</code> (must be called second)</li>
- *         <li>if <code>onWeekOfMonth()</code>, then <code>onDayOfWeek()</code> (optional -- defaults to the
- *             starting date's day of week)</li>
- *       </ul>
- *     </dd>
- *   </dt>
- *   <dt> For daily schedules:
- *     <dd> No additional information need be specified.</dd>
- *   </dt>
- * </dl>
- *     
- * 
- * <p>Constraints:</p>
- * <ul>
- *   <li>Specifying inconsistent parameters or specifying parameters not in the order
- *       specified above raises an <code>IllegalArgumentException</code>.</li>
- * </ul>
- *
  */
-public abstract class ScheduleBuilder {
+public abstract class ScheduledEventBuilder {
     
-    protected Short recurAfter;
-    protected Date startDate;
-    protected Boolean adjustForHolidays = true;
-    protected Integer numberOfOccurrences;
-    protected Date endDate;
+    protected Short every = (short) 1;
     
-    public abstract Schedule build();
+    public ScheduledEvent build() {
+        throw new IllegalArgumentException ("Schedule occurrence (weekly or monthly) has not been set.");
+    }
     
-    protected abstract void onDayOfWeek();
-    
-    public ScheduleBuilder daily() {
-        return new DailyScheduleBuilder();
+    public ScheduledEventBuilder daily() {
+        return new DailyScheduledEventBuilder();
     }
 
-    public ScheduleBuilder weekly() {
-        return new WeeklyScheduleBuilder();
+    public ScheduledEventBuilder weekly(WeekDay dayOfWeek) {
+        assert dayOfWeek != null;
+        return new WeeklyScheduleBuilder(dayOfWeek);
     }
     
-    public MonthlyByWeekScheduleBuilder monthly(RankType weekOfMonth) {
-        return new MonthlyByWeekScheduleBuilder().weekOfMonth(weekOfMonth);
+    public ScheduledEventBuilder monthlyOnWeekAndWeekday(RankType weekOfMonth, WeekDay dayOfWeek) {
+        assert weekOfMonth != null;
+        assert dayOfWeek != null;
+        return new MonthlyOnWeekAndWeekDayScheduledEventBuilder (weekOfMonth, dayOfWeek);
     }
     
-    public MonthlyByDayScheduleBuilder monthly(Integer dayOfMonth) {
-        return new MonthlyByDayScheduleBuilder().dayOfMonth(dayOfMonth);
+    public ScheduledEventBuilder monthlyOnDate (Integer dayOfMonth) {
+        assert dayOfMonth != null;
+        assert (dayOfMonth >= 1) && (dayOfMonth <= 31);
+        return new MonthlyOnDateScheduledEventBuilder(dayOfMonth);
     }
 
-    public ScheduleBuilder every(final Integer recurAfter) {
-        this.recurAfter = recurAfter.shortValue();
+    public ScheduledEventBuilder every(final Integer recurAfter) {
+        assert recurAfter != null;
+        assert recurAfter >= 1;
+        this.every = recurAfter.shortValue();
         return this;
     }
 
+    /*
+     * Move these to factory that creates a schedule generator?
+     * 
     public ScheduleBuilder startingToday() {
         if (! (null == this.startDate) ) {
             throw new IllegalArgumentException("Starting date was already set");
@@ -171,6 +148,7 @@ public abstract class ScheduleBuilder {
         this.numberOfOccurrences = count;
         return this;
     }
+    */
     
     protected static WeekDay dateTimeToWeekDay(final DateTime dateTime) {
         final int dayOfWeekUsingDateTimeApi = dateTime.getDayOfWeek();
@@ -183,9 +161,10 @@ public abstract class ScheduleBuilder {
     }
     
     protected void validateParameters() {
-        if ( null == recurAfter ) {
+        if ( null == every ) {
             throw new IllegalArgumentException("Scheduled number of intervals to recur after has not been specified."); 
         }
+        /*
         if ( null == startDate ) {
             throw new IllegalArgumentException("Scheduled start date has not been specified."); 
         }
@@ -195,6 +174,7 @@ public abstract class ScheduleBuilder {
         if ( !(null == endDate) && !(null == numberOfOccurrences) ) {
             throw new IllegalArgumentException("Cannot specify both schedule number of occurrences and end date");
         }
+        */
     }
 
 }
