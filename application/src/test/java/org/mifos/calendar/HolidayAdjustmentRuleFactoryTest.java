@@ -26,6 +26,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,13 +45,15 @@ public class HolidayAdjustmentRuleFactoryTest {
     
     private List<Days> workingDays;
     
+    private final DateTime originalScheduledDate = new DateTime();
+    
     @Test
     public void factoryShouldReturnNextWorkingDayStrategy() {
 
         RepaymentRuleTypes holidayAdjustmentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
 
         // exercise test
-        DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(workingDays, scheduledEvent, holidayAdjustmentRule);
+        DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
         
         assertThat(adjustmentStrategy, is(instanceOf(NextWorkingDayStrategy.class)));
     }
@@ -61,7 +64,7 @@ public class HolidayAdjustmentRuleFactoryTest {
         RepaymentRuleTypes holidayAdjustmentRule = RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT;
 
         // exercise test
-        DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(workingDays, scheduledEvent, holidayAdjustmentRule);
+        DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
         
         assertThat(adjustmentStrategy, is(instanceOf(NextScheduledEventStrategy.class)));
     }
@@ -72,7 +75,7 @@ public class HolidayAdjustmentRuleFactoryTest {
         RepaymentRuleTypes holidayAdjustmentRule = RepaymentRuleTypes.SAME_DAY;
 
         // exercise test
-        DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(workingDays, scheduledEvent, holidayAdjustmentRule);
+        DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
         
         assertThat(adjustmentStrategy, is(instanceOf(SameDayStrategy.class)));
     }

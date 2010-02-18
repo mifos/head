@@ -31,6 +31,6 @@ public interface Holiday {
 
     boolean encloses(Date date);
 
-    DateTime adjust(List<Days> workingDays, ScheduledEvent scheduledEvent);
+    DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
 
 }

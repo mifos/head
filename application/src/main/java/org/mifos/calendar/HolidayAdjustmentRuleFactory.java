@@ -22,13 +22,14 @@ package org.mifos.calendar;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.schedule.ScheduledEvent;
 
 public class HolidayAdjustmentRuleFactory {
 
-    public static DateAdjustmentStrategy createStrategy(final List<Days> workingDays, final ScheduledEvent scheduledEvent,
+    public static DateAdjustmentStrategy createStrategy(final DateTime scheduledDay, final List<Days> workingDays, final ScheduledEvent scheduledEvent,
             final RepaymentRuleTypes holidayAdjustmentRule) {
 
         DateAdjustmentStrategy holidayAdjustmentStrategy;
@@ -40,7 +41,7 @@ public class HolidayAdjustmentRuleFactory {
             holidayAdjustmentStrategy = new NextScheduledEventStrategy(scheduledEvent);
             break;
         case SAME_DAY:
-            holidayAdjustmentStrategy = new SameDayStrategy();
+            holidayAdjustmentStrategy = new SameDayStrategy(scheduledDay);
             break;
         default:
             throw new IllegalStateException("unknown holiday ajustment rule type.");

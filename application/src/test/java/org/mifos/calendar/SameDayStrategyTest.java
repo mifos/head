@@ -24,27 +24,23 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
 
 public class SameDayStrategyTest {
 
     private SameDayStrategy workingDayStrategy;
-
-    @Before
-    public void setupAndInjectDependencies() {
-
-        workingDayStrategy = new SameDayStrategy();
-    }
     
     @Test
     public void returnsTheSameDatePassedInForAdjustment() {
 
+        DateTime originalScheduleDate = new DateTime();
+        workingDayStrategy = new SameDayStrategy(originalScheduleDate);
+        
         DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
 
         // exercise test
         DateTime adjustedDate = workingDayStrategy.adjust(firstOfNextMonth);
 
-        assertThat(adjustedDate, is(firstOfNextMonth));
+        assertThat(adjustedDate, is(originalScheduleDate));
     }
 }

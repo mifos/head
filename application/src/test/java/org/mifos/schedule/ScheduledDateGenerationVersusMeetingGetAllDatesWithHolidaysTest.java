@@ -155,30 +155,33 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
     
     public void testShouldReturnListOfDatesMatchingScheduleWithSameDayRule() throws Exception {
 
-        holiday = (HolidayBO) new HolidayBuilder().from(march1stNextYear.plusDays(1)).to(march1stNextYear.plusDays(3))
+        DateTime march2ndNextYear = march1stNextYear.plusDays(1);
+        meeting = new MeetingBuilder().weekly().withStartDate(march2ndNextYear).build();
+        
+        holiday = (HolidayBO) new HolidayBuilder().from(march1stNextYear.plusDays(2)).to(march1stNextYear.plusDays(14))
                 .withSameDayAsRule().build();
         insert(holiday);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
 
         List<Date> meetingDates = meeting.getAllDates(5);
-        List<DateTime> scheduledDates = scheduledDateGeneration.generateScheduledDates(5, meetingStartDate,
+        List<DateTime> scheduledDates = scheduledDateGeneration.generateScheduledDates(5, march2ndNextYear,
                 scheduledEvent);
 
-        assertThat(meetingDates.get(0), is(march1stNextYear.toDate()));
-        assertThat(scheduledDates.get(0), is(march1stNextYear));
+        assertThat(meetingDates.get(0), is(march2ndNextYear.toDate()));
+        assertThat(scheduledDates.get(0), is(march2ndNextYear));
 
-        assertThat(meetingDates.get(1), is(march1stNextYear.plusWeeks(1).toDate()));
-        assertThat(scheduledDates.get(1), is(march1stNextYear.plusWeeks(1)));
+        assertThat(meetingDates.get(1), is(march2ndNextYear.plusWeeks(1).toDate()));
+        assertThat(scheduledDates.get(1), is(march2ndNextYear.plusWeeks(1)));
 
-        assertThat(meetingDates.get(2), is(march1stNextYear.plusWeeks(2).toDate()));
-        assertThat(scheduledDates.get(2), is(march1stNextYear.plusWeeks(2)));
+        assertThat(meetingDates.get(2), is(march2ndNextYear.plusWeeks(2).toDate()));
+        assertThat(scheduledDates.get(2), is(march2ndNextYear.plusWeeks(2)));
 
-        assertThat(meetingDates.get(3), is(march1stNextYear.plusWeeks(3).toDate()));
-        assertThat(scheduledDates.get(3), is(march1stNextYear.plusWeeks(3)));
+        assertThat(meetingDates.get(3), is(march2ndNextYear.plusWeeks(3).toDate()));
+        assertThat(scheduledDates.get(3), is(march2ndNextYear.plusWeeks(3)));
 
-        assertThat(meetingDates.get(4), is(march1stNextYear.plusWeeks(4).toDate()));
-        assertThat(scheduledDates.get(4), is(march1stNextYear.plusWeeks(4)));
+        assertThat(meetingDates.get(4), is(march2ndNextYear.plusWeeks(4).toDate()));
+        assertThat(scheduledDates.get(4), is(march2ndNextYear.plusWeeks(4)));
         
         // cleanup
         TestObjectFactory.cleanUpHolidays(Arrays.asList(holiday));

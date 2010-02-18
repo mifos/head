@@ -238,9 +238,9 @@ public class HolidayBO extends BusinessObject implements Holiday {
     }
 
     @Override
-    public DateTime adjust(final List<Days> workingDays, final ScheduledEvent scheduledEvent) {
+    public DateTime adjust(final DateTime scheduledDay, final List<Days> workingDays, final ScheduledEvent scheduledEvent) {
 
-        DateAdjustmentStrategy dateAdjustment = HolidayAdjustmentRuleFactory.createStrategy(workingDays,
+        DateAdjustmentStrategy dateAdjustment = HolidayAdjustmentRuleFactory.createStrategy(scheduledDay, workingDays,
                 scheduledEvent, RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId()));
 
         DateTime dayAfterEndOfHoliday = new DateTime(this.getHolidayThruDate());
