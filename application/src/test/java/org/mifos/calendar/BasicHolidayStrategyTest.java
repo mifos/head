@@ -71,7 +71,7 @@ public class BasicHolidayStrategyTest {
 
         // stubbing
         when(holiday.encloses(firstOfNextMonth.toDate())).thenReturn(true);
-        when(holiday.adjust(firstOfNextMonth, workingDays, scheduledEvent)).thenReturn(firstOfNextMonth.plusDays(1));
+        when(holiday.adjust(workingDays, scheduledEvent)).thenReturn(firstOfNextMonth.plusDays(1));
 
         // exercise test
         DateTime adjustedDate = holidayStrategy.adjust(firstOfNextMonth);
@@ -90,10 +90,10 @@ public class BasicHolidayStrategyTest {
         DateTime secondOfNextMonth = firstOfNextMonth.plusDays(1);
         
         when(holiday.encloses(firstOfNextMonth.toDate())).thenReturn(true);
-        when(holiday.adjust(firstOfNextMonth, workingDays, scheduledEvent)).thenReturn(secondOfNextMonth);
+        when(holiday.adjust(workingDays, scheduledEvent)).thenReturn(secondOfNextMonth);
 
         when(holiday2.encloses(secondOfNextMonth.toDate())).thenReturn(true);
-        when(holiday2.adjust(secondOfNextMonth, workingDays, scheduledEvent)).thenReturn(secondOfNextMonth.plusDays(1));
+        when(holiday2.adjust(workingDays, scheduledEvent)).thenReturn(secondOfNextMonth.plusDays(1));
 
         DateTime adjustedDate = holidayStrategy.adjust(firstOfNextMonth);
 

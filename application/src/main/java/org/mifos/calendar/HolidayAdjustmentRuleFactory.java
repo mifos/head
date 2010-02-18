@@ -40,8 +40,7 @@ public class HolidayAdjustmentRuleFactory {
             holidayAdjustmentStrategy = new NextScheduledEventStrategy(scheduledEvent);
             break;
         case SAME_DAY:
-            // FIXME - keithw - this case wasnt catered for in code, assuming it should just default to next working day for now
-            holidayAdjustmentStrategy = new NextWorkingDayStrategy(workingDays);
+            holidayAdjustmentStrategy = new SameDayStrategy();
             break;
         default:
             throw new IllegalStateException("unknown holiday ajustment rule type.");

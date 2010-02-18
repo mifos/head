@@ -21,6 +21,7 @@
 package org.mifos.domain.builders;
 
 import org.joda.time.DateTime;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
@@ -33,7 +34,7 @@ public class HolidayBuilder {
     
     private DateTime from;
     private DateTime to;
-    private final RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
+    private RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
     
     private final Short officeId = Short.valueOf("1");
 
@@ -58,5 +59,19 @@ public class HolidayBuilder {
         this.to = withTo;
         return this;
     }
-
+    
+    public HolidayBuilder withNextMeetingRule() {
+        repaymentRule = RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT;
+        return this;
+    }
+    
+    public HolidayBuilder withNextWorkingDayRule() {
+        repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
+        return this;
+    }
+    
+    public HolidayBuilder withSameDayAsRule() {
+        repaymentRule = RepaymentRuleTypes.SAME_DAY;
+        return this;
+    }
 }

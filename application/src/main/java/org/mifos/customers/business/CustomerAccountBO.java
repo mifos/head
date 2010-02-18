@@ -55,18 +55,17 @@ import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -422,21 +421,29 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     @Override
-    protected void regenerateFutureInstallments(final Short nextInstallmentId, List<Days> workingDays, List<Holiday> holidays) throws AccountException {
+    protected void regenerateFutureInstallments(final Short nextInstallmentId, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
         if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
                 && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
 
-            List<Date> meetingDates = null;
-            int installmentSize = getLastInstallmentId();
             try {
                 getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
                 getCustomer().changeUpdatedMeeting();
-                meetingDates = getCustomer().getCustomerMeeting().getMeeting().getAllDates(installmentSize);
-            } catch (MeetingException me) {
-                throw new AccountException(me);
             } catch (CustomerException ce) {
                 throw new AccountException(ce);
             }
+            
+            int numberOfInstallmentsToGenerate = getLastInstallmentId();
+
+            MeetingBO meeting = getCustomer().getCustomerMeetingValue();
+
+            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+                    holidays);
+
+            List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
+                    startFromMeetingDate, scheduledEvent);
+            
             updateCustomerSchedule(nextInstallmentId, meetingDates);
         }
     }
@@ -455,14 +462,14 @@ public class CustomerAccountBO extends AccountBO {
         return customerSchedulePayments;
     }
 
-    private void updateCustomerSchedule(final Short nextInstallmentId, final List<Date> meetingDates) {
+    private void updateCustomerSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
         short installmentId = nextInstallmentId;
         for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
 
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
             if (accountActionDate != null) {
-                Date meetingDate = meetingDates.get(installmentId - 1); 
-                ((CustomerScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
+                DateTime meetingDate = meetingDates.get(installmentId - 1); 
+                ((CustomerScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.toDate().getTime()));
             }
             installmentId++;
         }

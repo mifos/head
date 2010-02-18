@@ -361,6 +361,7 @@ public class MeetingBO extends BusinessObject {
         return prevScheduleDate;
     }
 
+    // TODO - keithw - I think this method gets all meeting dates from (meetingStartDate) up to (endDate)
     public List<Date> getAllDates(final Date endDate) throws MeetingException {
         validateEndDate(endDate);
         List meetingDates = new ArrayList();
@@ -397,10 +398,6 @@ public class MeetingBO extends BusinessObject {
             meetingDate = getNextDate(meetingDate);
         }
         return meetingDates;
-    }
-
-    public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(final int occurrences) throws MeetingException {
-        return getAllDatesWithRepaymentIndepOfMeetingEnabled(occurrences, true);
     }
 
     public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(final int occurrences, final boolean adjustForHolidays)

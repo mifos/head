@@ -25,6 +25,7 @@ import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
+import org.mifos.application.meeting.business.RankOfDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
@@ -35,41 +36,54 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
  *
  */
 public class MeetingBuilder {
-    
+
     private MeetingType meetingType = MeetingType.CUSTOMER_MEETING;
     private RecurrenceType recurrenceType = RecurrenceType.WEEKLY;
     private Short recurAfter = Short.valueOf("1");
-    private WeekDay weekDay = dateTimeToWeekDay(new DateTime());
+    private WeekDay weekDay = WeekDay.getJodaWeekDay(new DateTime().getDayOfWeek());
+    private RankType weekRank = null;
+    private Short dayNumber = null;
     private Date startDate = new DateTime().toDate();
     private final String meetingLocation = "test-meeting-location";
-    
+
     public MeetingBO build() {
-        
+
         final MeetingBO meeting = new MeetingBO(meetingType, startDate, meetingLocation);
-        
         final MeetingDetailsEntity meetingDetailsEntity = new MeetingDetailsEntity(meeting, recurrenceType, recurAfter);
         final MeetingRecurrenceEntity meetingRecurrenceEntity = new MeetingRecurrenceEntity(weekDay,
                 meetingDetailsEntity);
+        meetingRecurrenceEntity.setDayNumber(dayNumber);
+
+        if (weekRank != null) {
+            RankOfDaysEntity rankOfDays = new RankOfDaysEntity(weekRank);
+            meetingRecurrenceEntity.setRankOfDays(rankOfDays);
+        }
+
         meetingDetailsEntity.setMeetingRecurrence(meetingRecurrenceEntity);
-        
+
         meeting.setMeetingDetails(meetingDetailsEntity);
-        
+
         return meeting;
     }
-    
-    public MeetingBO buildMonthlyFor(RankType rank, WeekDay weekDay) throws MeetingException {
-        return new MeetingBO(weekDay, rank, recurAfter, startDate, meetingType, meetingLocation);        
+
+    public MeetingBO buildMonthlyFor(final RankType rank, final WeekDay weekDay) throws MeetingException {
+        return new MeetingBO(weekDay, rank, recurAfter, startDate, meetingType, meetingLocation);
     }
 
-    public MeetingBO buildMonthlyForDayNumber(int dayNumber) throws MeetingException {
-        return new MeetingBO((short)dayNumber, recurAfter, startDate, meetingType, meetingLocation);        
+    public MeetingBO buildMonthlyForDayNumber(final int dayNumber) throws MeetingException {
+        return new MeetingBO((short) dayNumber, recurAfter, startDate, meetingType, meetingLocation);
     }
-    
+
+    public MeetingBuilder daily() {
+        this.recurrenceType = RecurrenceType.DAILY;
+        return this;
+    }
+
     public MeetingBuilder weekly() {
         this.recurrenceType = RecurrenceType.WEEKLY;
         return this;
     }
-    
+
     public MeetingBuilder monthly() {
         this.recurrenceType = RecurrenceType.MONTHLY;
         return this;
@@ -79,27 +93,37 @@ public class MeetingBuilder {
         this.recurAfter = recurrence.shortValue();
         return this;
     }
-    
+
+    public MeetingBuilder onWeek(final RankType withWeek) {
+        this.weekRank = withWeek;
+        return this;
+    }
+
+    public MeetingBuilder onDayOfMonth(final int withDayOfMonth) {
+        this.dayNumber = (short) withDayOfMonth;
+        return this;
+    }
+
     public MeetingBuilder occuringOnA(final WeekDay meetingDay) {
         this.weekDay = meetingDay;
         return this;
     }
-    
+
     public MeetingBuilder customerMeeting() {
         this.meetingType = MeetingType.CUSTOMER_MEETING;
         return this;
     }
-    
+
     public MeetingBuilder periodicFeeMeeting() {
         this.meetingType = MeetingType.PERIODIC_FEE;
         return this;
     }
-    
+
     public MeetingBuilder savingsInterestCalulationSchedule() {
         this.meetingType = MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD;
         return this;
     }
-    
+
     public MeetingBuilder savingsInterestPostingSchedule() {
         this.meetingType = MeetingType.SAVINGS_INTEREST_POSTING;
         return this;
@@ -107,7 +131,13 @@ public class MeetingBuilder {
 
     public MeetingBuilder startingToday() {
         this.startDate = new DateTime().toDate();
-        this.weekDay = dateTimeToWeekDay(new DateTime());
+        this.weekDay = WeekDay.getJodaWeekDay(new DateTime().getDayOfWeek());
+        return this;
+    }
+
+    public MeetingBuilder withStartDate(final DateTime withStartDate) {
+        this.startDate = withStartDate.toDate();
+        this.weekDay = WeekDay.getJodaWeekDay(withStartDate.getDayOfWeek());
         return this;
     }
 
@@ -115,15 +145,5 @@ public class MeetingBuilder {
         recurrenceType = meeting.getRecurrenceType();
         recurAfter = meeting.getRecurAfter();
         return this;
-    }
-    
-    private static WeekDay dateTimeToWeekDay(final DateTime dateTime) {
-        final int dayOfWeekUsingDateTimeApi = dateTime.getDayOfWeek();
-
-        if (dayOfWeekUsingDateTimeApi == 7) {
-            return WeekDay.SUNDAY;
-        }
-
-        return WeekDay.getWeekDay(dayOfWeekUsingDateTimeApi + 1);
     }
 }

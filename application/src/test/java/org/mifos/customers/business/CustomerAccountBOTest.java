@@ -75,10 +75,9 @@ public class CustomerAccountBOTest {
         // verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         
-        
         Short lastInstallment = Short.valueOf("1");
         DateTime lastInstallmentDate = new DateTime().withDayOfWeek(DayOfWeek.monday());
-        if (lastInstallmentDate.isBeforeNow()) {
+        if (lastInstallmentDate.isBeforeNow() || lastInstallmentDate.isEqualNow()) {
             lastInstallmentDate = lastInstallmentDate.plusWeeks(1);
         }
         

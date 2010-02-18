@@ -294,7 +294,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("15/11/2005");
         endDate = getDate("01/03/2006");
         meeting = createWeeklyMeeting(WeekDay.THURSDAY, ONE, startDate);
-        List list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(1);
+        List list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(1, true);
         List expectedList = createExpectedList("17/11/2005");
         matchDateLists(expectedList, list);
     }
@@ -304,7 +304,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         startDate = getDate("15/11/2005");
         endDate = getDate("15/10/2006");
         meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, ONE, startDate);
-        List list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(2);
+        List list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(2, true);
         List expectedList = createExpectedList("12/12/2005,09/01/2006");
         matchDateLists(expectedList, list);
     }

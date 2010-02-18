@@ -50,7 +50,7 @@ public class BasicHolidayStrategy implements DateAdjustmentStrategy {
 
         for (Holiday holiday : this.upcomingHolidays) {
             if (holiday.encloses(adjustedDate.toDate())) {
-                adjustedDate = holiday.adjust(adjustedDate, this.workingDays, this.scheduledEvent);
+                adjustedDate = holiday.adjust(this.workingDays, this.scheduledEvent);
             }
         }
 

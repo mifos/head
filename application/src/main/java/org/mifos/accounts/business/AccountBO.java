@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -55,13 +56,16 @@ import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -79,6 +83,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
 public class AccountBO extends BusinessObject {
 
@@ -1111,7 +1119,28 @@ public class AccountBO extends BusinessObject {
                     dueDates = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments
                             + installmentToSkip, adjustForHolidays);
                 } else {
-                    dueDates = meeting.getAllDates(noOfInstallments + installmentToSkip, adjustForHolidays);
+                    
+                    List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+                    List<Holiday> holidays = new ArrayList<Holiday>();
+                    
+                    if (adjustForHolidays) {
+                        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+                        holidays = holidayDao.findAllHolidaysThisYearAndNext();
+                    }
+                    
+                    final int occurrences = noOfInstallments + installmentToSkip;
+                    
+                    DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+                    ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+                    ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+                            holidays);
+
+                    List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences,
+                            startFromMeetingDate, scheduledEvent);
+                    dueDates = new ArrayList<Date>();
+                    for (DateTime installmentDate : installmentDates) {
+                        dueDates.add(installmentDate.toDate());
+                    }
                 }
 
                 return createInstallmentDates(installmentToSkip, dueDates);

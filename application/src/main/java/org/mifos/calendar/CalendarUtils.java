@@ -214,4 +214,25 @@ public class CalendarUtils {
 
         return scheduleDate;
     }
+
+    public static DateTime nearestDayOfWeekTo(final int dayOfWeek, final DateTime date) {
+        
+        DateTime withDayOfWeek = date.withDayOfWeek(dayOfWeek);
+        
+        if (date.getYear() == withDayOfWeek.getYear()) {
+        
+            if (date.getDayOfYear() > withDayOfWeek.getDayOfYear()) {
+                return withDayOfWeek.plusWeeks(1);
+            }
+            
+            return withDayOfWeek;
+        }
+        
+        // back a year
+        if (date.getYear() > withDayOfWeek.getYear()) {
+            return withDayOfWeek.plusWeeks(1);
+        }
+        
+        return withDayOfWeek;
+    }
 }

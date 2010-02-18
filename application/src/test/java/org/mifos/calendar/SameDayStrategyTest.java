@@ -18,19 +18,33 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.business;
+package org.mifos.calendar;
 
-import java.util.Date;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.mifos.schedule.ScheduledEvent;
+import org.junit.Before;
+import org.junit.Test;
 
-public interface Holiday {
+public class SameDayStrategyTest {
 
-    boolean encloses(Date date);
+    private SameDayStrategy workingDayStrategy;
 
-    DateTime adjust(List<Days> workingDays, ScheduledEvent scheduledEvent);
+    @Before
+    public void setupAndInjectDependencies() {
 
+        workingDayStrategy = new SameDayStrategy();
+    }
+    
+    @Test
+    public void returnsTheSameDatePassedInForAdjustment() {
+
+        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
+
+        // exercise test
+        DateTime adjustedDate = workingDayStrategy.adjust(firstOfNextMonth);
+
+        assertThat(adjustedDate, is(firstOfNextMonth));
+    }
 }

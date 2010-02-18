@@ -74,6 +74,6 @@ public class HolidayAdjustmentRuleFactoryTest {
         // exercise test
         DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(workingDays, scheduledEvent, holidayAdjustmentRule);
         
-        assertThat(adjustmentStrategy, is(instanceOf(NextWorkingDayStrategy.class)));
+        assertThat(adjustmentStrategy, is(instanceOf(SameDayStrategy.class)));
     }
 }

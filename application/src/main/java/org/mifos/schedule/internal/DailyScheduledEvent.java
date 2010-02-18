@@ -32,8 +32,8 @@ public class DailyScheduledEvent implements ScheduledEvent {
         this.every = every;
     }
 
-    public DateTime nextEventDateAfter(final DateTime startingDate) {
-        return startingDate.plusDays(every);
+    public DateTime nextEventDateAfter(final DateTime startDate) {
+        return CalendarUtils.getNextDateForDay(startDate, every);
     }
 
     public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {

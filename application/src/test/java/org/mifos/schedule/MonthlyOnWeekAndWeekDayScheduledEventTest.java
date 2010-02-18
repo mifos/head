@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.mifos.calendar.CalendarUtils;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.domain.builders.ScheduledEventBuilder;
 
@@ -17,12 +18,12 @@ public class MonthlyOnWeekAndWeekDayScheduledEventTest {
 
         scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
 
-        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).withDayOfWeek(DayOfWeek.monday())
-                .toDateMidnight().toDateTime();
+        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
+        DateTime firstMondayOfNextMonth = CalendarUtils.nearestDayOfWeekTo(DayOfWeek.monday(), firstOfNextMonth);
 
-        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstMondayOfNextMonth);
 
-        assertThat(result, is(firstOfNextMonth.plusDays(1)));
+        assertThat(result, is(firstMondayOfNextMonth.plusDays(1)));
     }
 
     @Test
@@ -30,12 +31,12 @@ public class MonthlyOnWeekAndWeekDayScheduledEventTest {
 
         scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(2).on(DayOfWeek.tuesday()).build();
 
-        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).withDayOfWeek(DayOfWeek.monday())
-                .toDateMidnight().toDateTime();
+        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
+        DateTime firstMondayOfNextMonth = CalendarUtils.nearestDayOfWeekTo(DayOfWeek.monday(), firstOfNextMonth);
 
-        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstMondayOfNextMonth);
 
-        assertThat(result, is(firstOfNextMonth.plusDays(1).plusWeeks(1)));
+        assertThat(result, is(firstMondayOfNextMonth.plusDays(1).plusWeeks(1)));
     }
 
     @Test

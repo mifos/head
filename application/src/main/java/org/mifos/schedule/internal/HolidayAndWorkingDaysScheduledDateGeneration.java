@@ -62,7 +62,7 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
 
             scheduledDates.add(ajustedForHolidays);
 
-            latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForHolidays);
+            latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
         }
 
         return scheduledDates;
