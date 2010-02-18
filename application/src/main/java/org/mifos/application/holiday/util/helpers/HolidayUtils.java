@@ -54,6 +54,23 @@ public class HolidayUtils {
         return FiscalCalendarRules.isWorkingDay(day);
     }
 
+
+    /**
+     * Find the holiday containing the given day.
+     * @param day the day to test
+     * @return the holiday containing the day, if any, otherwise null
+     */
+    @Deprecated
+    public static HolidayBO inHoliday (Calendar day) {
+        HolidayBO holiday;
+        try {
+            holiday = inHoliday(day, getAllHolidaysInCurrentAndNextYears(day.get(Calendar.YEAR)));
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
+       return holiday;
+    }
+
     static HolidayBO inHoliday(final Calendar pday, final List<HolidayBO> holidays) {
         Calendar day = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
         day.setTimeInMillis(0);
@@ -67,7 +84,7 @@ public class HolidayUtils {
     }
 
     /**
-     * @deprecated - please use {@link ScheduledDateGeneration} for generating dates that take into account working days and holidays.
+     * @deprecated - please use {@link ScheduleGenerationStrategy} for generating dates that take into account working days and holidays.
      */
     @Deprecated
     public static Calendar adjustDate(final Calendar day, final MeetingBO meeting) throws MeetingException {

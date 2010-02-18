@@ -20,6 +20,9 @@
 
 package org.mifos.application.holiday.business.service;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
@@ -29,11 +32,14 @@ import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
+import org.mifos.application.holiday.util.helpers.HolidayUtils;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class HolidayBusinessService implements BusinessService {
 
@@ -95,6 +101,60 @@ public class HolidayBusinessService implements BusinessService {
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
+    }
+
+    public HolidayBO getHolidayContaining (Date date) {
+        return HolidayUtils.inHoliday(DateUtils.getCalendarDate(date.getTime()));
+    }
+    
+    public List<HolidayBO> getAllPushOutHolidaysContaining (Date date) {
+        //TODO: implement this
+        return null;
+    }
+    
+    public HolidayBO findNonPushOutHolidayContaining (Date date) {
+        //TODO: implement
+        return null;
+    }
+
+    public boolean isWorkingDay(Date day) throws RuntimeException {
+        return FiscalCalendarRules.isWorkingDay(DateUtils.getCalendar(day));
+    }
+
+    public boolean isWorkingDay(Calendar day) throws RuntimeException {
+        return FiscalCalendarRules.isWorkingDay(day);
+    }
+    
+    public Date getNextWorkingDay(Date day) {
+        Calendar calendarDay = DateUtils.getCalendar(day);
+        do {
+            calendarDay.add(Calendar.DATE, 1);
+        } while (!isWorkingDay(calendarDay));
+        return calendarDay.getTime();
+    }
+
+    /**
+     * Get the first working day of the week that the given day is in. 
+     * 
+     * Precondition: The given day is a working day.
+     * 
+     * @return the given day, if it's the first working day of the week, otherwise 
+     * back up to the first working day of the week.
+     * @throws RunTimeException if the day is not a working day.
+     */
+    public Date getFirstWorkingDayOfWeekForDate (Date day) {
+        if (!isWorkingDay(day)) {
+            throw new RuntimeException("Day must be a working day");
+        }
+        final GregorianCalendar firstDateForWeek = new GregorianCalendar();
+        firstDateForWeek.setTime(day);
+        //back up to first non-working day
+        while (isWorkingDay (firstDateForWeek)) {
+            firstDateForWeek.add(Calendar.DAY_OF_WEEK, -1);
+        }
+        //then move forward to first working day
+        firstDateForWeek.add(Calendar.DAY_OF_WEEK, 1);
+        return firstDateForWeek.getTime();
     }
 
 }

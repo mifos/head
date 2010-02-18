@@ -39,12 +39,12 @@ public class MonthlyByWeekScheduleBuilder extends ScheduleBuilder {
     }
     
     public MonthlyByWeekScheduleBuilder weekOfMonth( RankType weekOfMonth) {
-        this.weekOfMonth =weekOfMonth;
+        this.weekOfMonth = weekOfMonth;
         return this;
     }
         
     @Override
-    protected final void setDayOfWeek() {
+    protected final void onDayOfWeek() {
         dayOfWeek = dateTimeToWeekDay(new DateTime(startDate));
     }
 

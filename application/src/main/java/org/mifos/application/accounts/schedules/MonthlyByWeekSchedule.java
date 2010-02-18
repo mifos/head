@@ -20,10 +20,34 @@
 
 package org.mifos.application.accounts.schedules;
 
+import java.util.Date;
+
+import org.mifos.application.meeting.util.helpers.WeekDay;
+
 /**
  * @author keith
  *
  */
-public class MonthlyByWeekSchedule extends Schedule {
+class MonthlyByWeekSchedule extends Schedule {
+    
+    private final Integer weekOfMonth;
+    private final WeekDay dayOfWeek;
+    
+    MonthlyByWeekSchedule(Date start, Date end, Short recurAfter, Integer numberOfOccurrences,
+                          Boolean adjustForHolidays, Integer weekOfMonth, WeekDay dayOfWeek) {
+        super(start, end, recurAfter, numberOfOccurrences, adjustForHolidays);
+        this.weekOfMonth = weekOfMonth;
+        this.dayOfWeek = dayOfWeek;
+    }
+    
+    @Override
+    protected Date getNextDate(Date startDate) {
+        return null;
+    }
 
+    @Override
+    protected Date getFirstDate(Date startDate) {
+        return null;
+    }
+ 
 }

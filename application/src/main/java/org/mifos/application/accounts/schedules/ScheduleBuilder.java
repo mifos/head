@@ -27,12 +27,67 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
 /**
- * Uses the Builder pattern to build a {@link Schedule}.
+ * Uses the Builder pattern to build a {@link Schedule}. This example builds a schedule occurring
+ * every other Monday starting on 2010-01-25 and continuing for 13 occurrences, without adjusting
+ * for holidays or repayment moratoria:
+ * <pre>
+ * Schedule schedule = new ScheduleBuilder()
+ *                        .weekly()
+ *                        .starting(DateUtils.getDate(2010,00,25)
+ *                        .every(2)
+ *                        .numberOfOccurrences(13)
+ *                        .notAdjustingForHolidays()
+ *                        .build();
+ * </pre>
+ * <h3>Defaults</h3>
+ * <ul>
+ *   <li>Whether to adjust for holidays defaults to true. To override, call <code>notAdjustedForHolidays()</code></li>
+ *   <li>For weekly schedules or monthly schedules meeting in a given week, the scheduled day of the week
+ *       defaults to that of the starting date. After either <code>weekly()</code> or 
+ *       <code>monthly</code> + <code>weekOfMonth()</code> have been specified, this can be overridden by
+ *       calling onDayOfWeek().</li>
+ * </ul>
+ * 
+ * <p>The following parameters must be specified unless described as optional:</p>
+ * <dl>
+ *   <dt>For all schedules:
+ *     <dd>
+ *       <ul>
+ *         <li>Exactly one of <code>weekly()</code> or <code>monthly()</code> (must be called first) </li>
+ *         <li><code>every(Int)</code></li>
+ *         <li><code>startingOn(Date)</code></li>
+ *         <li>Either <code>numberOfOccurrences(Short)</code> or <code>endingOn(Date) but not both</code></li>
+ *         <li><code>adjustedForHolidays()</code> or <code>notAdjustedForHolidays()</code> (optional. Default is to
+ *             adjust for holidays)
+ *       </ul>
+ *     </dd>
+ *   </dt>
+ *   <dt> For weekly schedules:
+ *     <dd>
+ *       <ul>
+ *         <li><code>onDayOfWeek(WeekDay)</code> (optional -- defaults to starting date's day of week)</li>
+ *       </ul>
+ *     </dd>
+ *   </dt>
+ *   <dt> For monthly schedules:
+ *     <dd>
+ *       <ul>
+ *         <li>Exactly one of <code>onDayOfMonth(Int)</code> or <code>onWeekOfMonth(Int)</code> (must be called second)</li>
+ *         <li>if <code>onWeekOfMonth()</code>, then <code>onDayOfWeek()</code> (optional -- defaults to the
+ *             starting date's day of week)</li>
+ *       </ul>
+ *     </dd>
+ *   </dt>
+ *   <dt> For daily schedules:
+ *     <dd> No additional information need be specified.</dd>
+ *   </dt>
+ * </dl>
+ *     
  * 
  * <p>Constraints:</p>
  * <ul>
- *   <li>One of methods daily(), weekly(), monthly() must be called first.</li>
- *   <li>Specifying inconsistent parameters raises IllegalArgumentException.</li>
+ *   <li>Specifying inconsistent parameters or specifying parameters not in the order
+ *       specified above raises an <code>IllegalArgumentException</code>.</li>
  * </ul>
  *
  */
@@ -46,7 +101,7 @@ public abstract class ScheduleBuilder {
     
     public abstract Schedule build();
     
-    protected abstract void setDayOfWeek();
+    protected abstract void onDayOfWeek();
     
     public ScheduleBuilder daily() {
         return new DailyScheduleBuilder();
@@ -82,7 +137,38 @@ public abstract class ScheduleBuilder {
             throw new IllegalArgumentException("Starting date was already set");
         }
         this.startDate = startDate;
-        setDayOfWeek();
+        return this;
+    }
+    
+    public ScheduleBuilder adjustingForHolidays() {
+        this.adjustForHolidays = true;
+        return this;
+    }
+    
+    public ScheduleBuilder notAdjustingForHolidays() {
+        this.adjustForHolidays = false;
+        return this;
+    }
+    
+    public ScheduleBuilder endingOn (Date day) {
+        if (null == day) {
+            throw new IllegalArgumentException("Ending date cannot be null.");
+        }
+        if ( !(null == startDate) && (day.compareTo(startDate) < 0) ) {
+            throw new IllegalArgumentException("Ending date cannot be earlier than the schedule's starting date");
+        }
+        this.endDate = day;
+        return this;
+    }
+    
+    public ScheduleBuilder numberOfOccurrences (Integer count) {
+        if (null == count) {
+            throw new IllegalArgumentException("The number of scheduled dates cannot be null.");
+        }
+        if (count < 0) {
+            throw new IllegalArgumentException("The number of scheduled dates cannot be negative.");
+        }
+        this.numberOfOccurrences = count;
         return this;
     }
     

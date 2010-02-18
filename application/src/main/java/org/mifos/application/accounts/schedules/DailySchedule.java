@@ -20,9 +20,28 @@
 
 package org.mifos.application.accounts.schedules;
 
+import java.util.Date;
+
 /**
  *
  */
-public class DailySchedule extends Schedule {
+class DailySchedule extends Schedule {
+    
+    public DailySchedule (Date start, Date end, Short recurAfter, Integer numberOfOccurrences, Boolean adjustForHolidays) {
+        super(start, end, recurAfter, numberOfOccurrences, adjustForHolidays);
+    }
+    
+    @Override
+    protected Date getNextDate(Date startDate) {
+        return null;
+    }
+
+    @Override
+    protected Date getFirstDate(Date startDate) {
+        return null;
+    }
+    
+
+
 
 }

@@ -36,7 +36,7 @@ public class MonthlyByDayScheduleBuilder extends ScheduleBuilder {
         return this;
     }
 
-    protected void setDayOfWeek() {
+    protected void onDayOfWeek() {
         //do nothing
     }
     @Override

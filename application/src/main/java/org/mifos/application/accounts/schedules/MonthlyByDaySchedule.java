@@ -20,9 +20,30 @@
 
 package org.mifos.application.accounts.schedules;
 
+import java.util.Date;
+
 /**
  *
  */
-public class MonthlyByDaySchedule {
+class MonthlyByDaySchedule extends Schedule{
+    
+    private final Integer dayOfMonth;
+    
+    MonthlyByDaySchedule (Date startDate, Date endDate, Short recurAfter, Integer numberOfOccurrences,
+                          Boolean adjustForHolidays, Integer dayOfMonth) {
+        super(startDate, endDate, recurAfter, numberOfOccurrences, adjustForHolidays);
+        this.dayOfMonth = dayOfMonth;
+    }
+    
+    @Override
+    protected Date getNextDate(Date startDate) {
+        return null;
+    }
+
+    @Override
+    protected Date getFirstDate(Date startDate) {
+        return null;
+    }
+ 
 
 }

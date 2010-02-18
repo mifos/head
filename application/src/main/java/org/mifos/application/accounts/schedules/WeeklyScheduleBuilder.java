@@ -26,18 +26,18 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 /**
  *
  */
-public class WeeklyScheduleBuilder extends ScheduleBuilder {
+class WeeklyScheduleBuilder extends ScheduleBuilder {
     
     private WeekDay dayOfWeek;
     
     @Override
     public Schedule build() {
         validateParameters();
-        return new WeeklySchedule(startDate, recurAfter, dayOfWeek, numberOfOccurrences);
+        return new WeeklySchedule(startDate, endDate, recurAfter, dayOfWeek, numberOfOccurrences, adjustForHolidays);
     }
     
     @Override
-    protected final void setDayOfWeek() {
+    protected final void onDayOfWeek() {
         dayOfWeek = dateTimeToWeekDay(new DateTime(startDate));
     }
 

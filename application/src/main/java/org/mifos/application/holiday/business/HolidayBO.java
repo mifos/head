@@ -214,6 +214,10 @@ public class HolidayBO extends BusinessObject implements Holiday {
     public Short getRepaymentRuleId() {
         return repaymentRuleEntity.getId();
     }
+    
+    public RepaymentRuleTypes getRepaymentRuleType() {
+        return RepaymentRuleTypes.fromOrd(repaymentRuleEntity.getId());
+    }
 
     private void validateFromDateAgainstCurrentDate(final Date fromDate) throws ApplicationException {
         if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {

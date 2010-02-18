@@ -29,7 +29,7 @@ public class DailyScheduleBuilder extends ScheduleBuilder {
         return null;
     }
     
-    protected void setDayOfWeek() {
+    protected void onDayOfWeek() {
         //do nothing -- day of week is not relevant to daily schedules
     }
 
