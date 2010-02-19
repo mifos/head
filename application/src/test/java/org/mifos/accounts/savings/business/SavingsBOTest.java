@@ -117,7 +117,7 @@ public class SavingsBOTest {
         // setup
         final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).asInActive().build();
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -137,7 +137,7 @@ public class SavingsBOTest {
         // setup
         final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).asInActive().build();
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -157,7 +157,7 @@ public class SavingsBOTest {
         // setup
         final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).asInActive().build();
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -177,9 +177,9 @@ public class SavingsBOTest {
         // setup
         final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).build();
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money savingsBalance = new Money(TestUtils.getCurrency(), "100.0");
+        final Money savingsBalance = new Money(TestUtils.RUPEE, "100.0");
 
         // stubbing
         when(accountPayment.getAmount()).thenReturn(amountToDeposit);
@@ -201,9 +201,9 @@ public class SavingsBOTest {
         // setup
         final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).withSavingsOfficer(savingsOfficer).build();
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money savingsBalance = new Money(TestUtils.getCurrency(), "100.0");
+        final Money savingsBalance = new Money(TestUtils.RUPEE, "100.0");
 
         // stubbing
         when(accountPayment.getAmount()).thenReturn(amountToDeposit);
@@ -250,7 +250,7 @@ public class SavingsBOTest {
         // setup
         final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).build();
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -270,7 +270,7 @@ public class SavingsBOTest {
         // setup
         final Money zero = new Money(defaultCurrency);
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).build();
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -301,7 +301,7 @@ public class SavingsBOTest {
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().completeGroup().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -330,7 +330,7 @@ public class SavingsBOTest {
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).mandatory().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         // stubbing
@@ -360,9 +360,9 @@ public class SavingsBOTest {
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).mandatory().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money excessDepositAmount = new Money(TestUtils.getCurrency(), "25.0");
+        final Money excessDepositAmount = new Money(TestUtils.RUPEE, "25.0");
         final Money expectedTotalBalance = amountToDeposit.add(zero);
 
         // stubbing
@@ -395,9 +395,9 @@ public class SavingsBOTest {
         savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().completeGroup().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
-        final Money amountToDeposit = new Money(TestUtils.getCurrency(), "100.0");
+        final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
-        final Money excessDepositAmount = new Money(TestUtils.getCurrency(), "25.0");
+        final Money excessDepositAmount = new Money(TestUtils.RUPEE, "25.0");
         final Money expectedTotalBalance = amountToDeposit.add(zero);
 
         // stubbing

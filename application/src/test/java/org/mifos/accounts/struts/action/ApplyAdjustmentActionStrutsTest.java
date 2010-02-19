@@ -102,7 +102,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestObjectFactory.getMoneyForMFICurrency(amount), null, loan.getPersonnel(), "receiptNum", Short
+                TestUtils.createMoney(amount), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
 
         loan.applyPaymentWithPersist(accountPaymentDataView);

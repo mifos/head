@@ -43,14 +43,14 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
     public void testGetPrincipalDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
         accountActionDate.setPrincipalPaid(new Money(getCurrency(), "10.0"));
-       Assert.assertEquals(TestUtils.makeMoney(90.0), accountActionDate.getPrincipalDue());
+       Assert.assertEquals(TestUtils.createMoney(90.0), accountActionDate.getPrincipalDue());
 
     }
 
     public void testGetInterestDue() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO.getAccountActionDates().toArray()[0];
         accountActionDate.setInterestPaid(new Money(getCurrency(), "2.0"));
-       Assert.assertEquals(TestUtils.makeMoney(10.0), accountActionDate.getInterestDue());
+       Assert.assertEquals(TestUtils.createMoney(10.0), accountActionDate.getInterestDue());
 
     }
 
@@ -60,7 +60,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setPenaltyPaid(new Money(getCurrency(), "5.0"));
         accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
         accountActionDate.setMiscPenaltyPaid(new Money(getCurrency(), "5.0"));
-       Assert.assertEquals(TestUtils.makeMoney(20.0), accountActionDate.getPenaltyDue());
+       Assert.assertEquals(TestUtils.createMoney(20.0), accountActionDate.getPenaltyDue());
 
     }
 
@@ -73,7 +73,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
         accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
         accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
-       Assert.assertEquals(TestUtils.makeMoney(140.0), accountActionDate.getTotalDue());
+       Assert.assertEquals(TestUtils.createMoney(140.0), accountActionDate.getTotalDue());
 
     }
 
@@ -86,7 +86,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
         accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
         accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
-       Assert.assertEquals(TestUtils.makeMoney(240.0), accountActionDate.getTotalDueWithFees());
+       Assert.assertEquals(TestUtils.createMoney(240.0), accountActionDate.getTotalDueWithFees());
 
     }
 
@@ -99,7 +99,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscPenalty(new Money(getCurrency(), "10.0"));
         accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
         accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
-       Assert.assertEquals(TestUtils.makeMoney(115.0), accountActionDate.getDueAmnts().getFeesOverdue());
+       Assert.assertEquals(TestUtils.createMoney(115.0), accountActionDate.getDueAmnts().getFeesOverdue());
 
     }
 
@@ -113,10 +113,10 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
         accountActionDate.setMiscFee(new Money(getCurrency(), "20.0"));
         accountActionDate.setMiscFeePaid(new Money(getCurrency(), "5.0"));
         OverDueAmounts totalDue = accountActionDate.getDueAmnts();
-       Assert.assertEquals(TestUtils.makeMoney(115.0), totalDue.getFeesOverdue());
-       Assert.assertEquals(TestUtils.makeMoney(90.0), totalDue.getPrincipalOverDue());
-       Assert.assertEquals(TestUtils.makeMoney(10.0), totalDue.getInterestOverdue());
-       Assert.assertEquals(TestUtils.makeMoney(25.0), totalDue.getPenaltyOverdue());
+       Assert.assertEquals(TestUtils.createMoney(115.0), totalDue.getFeesOverdue());
+       Assert.assertEquals(TestUtils.createMoney(90.0), totalDue.getPrincipalOverDue());
+       Assert.assertEquals(TestUtils.createMoney(10.0), totalDue.getInterestOverdue());
+       Assert.assertEquals(TestUtils.createMoney(25.0), totalDue.getPenaltyOverdue());
 
     }
 

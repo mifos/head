@@ -162,7 +162,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals("The size of the due insallments is ", dueActionDates.size(), 1);
 
         PaymentData accountPaymentDataView = TestObjectFactory.getCustomerAccountPaymentDataView(dueActionDates,
-                new Money(TestObjectFactory.getMFICurrency(), "100.0"), null, center.getPersonnel(), "3424324", Short
+                TestUtils.createMoney("100.0"), null, center.getPersonnel(), "3424324", Short
                         .valueOf("1"), transactionDate, transactionDate);
 
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -198,7 +198,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .getAccountId(), transactionDate);
         Assert.assertEquals("The size of the due insallments is ", dueActionDates.size(), 1);
         PaymentData accountPaymentDataView = TestObjectFactory.getCustomerAccountPaymentDataView(dueActionDates,
-                new Money(TestObjectFactory.getMFICurrency(), "100.0"), null, center.getPersonnel(), "3424324", Short
+                TestUtils.createMoney("100.0"), null, center.getPersonnel(), "3424324", Short
                         .valueOf("1"), transactionDate, transactionDate);
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         customerAccount = center.getCustomerAccount();
@@ -265,8 +265,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
             CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) customerAccountBO
                     .getAccountActionDate(custTrxn.getInstallmentId());
-            Assert.assertEquals("Misc Fee Adjusted", accntActionDate.getMiscFeePaid(), TestUtils.makeMoney());
-            Assert.assertEquals("Misc Penalty Adjusted", accntActionDate.getMiscPenaltyPaid(),TestUtils.makeMoney());
+            Assert.assertEquals("Misc Fee Adjusted", accntActionDate.getMiscFeePaid(), TestUtils.createMoney());
+            Assert.assertEquals("Misc Penalty Adjusted", accntActionDate.getMiscPenaltyPaid(),TestUtils.createMoney());
         }
         for (CustomerActivityEntity customerActivityEntity : customerAccountBO.getCustomerActivitDetails()) {
             Assert.assertEquals("Amnt Adjusted", customerActivityEntity.getDescription());
@@ -720,7 +720,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
                         .getAccountFeesActionDetails()) {
                     if (accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee")) {
-                        Assert.assertEquals(TestUtils.makeMoney("200"), accountFeesActionDetailEntity.getFeeAmount());
+                        Assert.assertEquals(TestUtils.createMoney("200"), accountFeesActionDetailEntity.getFeeAmount());
                     }
                 }
             }
@@ -918,8 +918,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         CustomerAccountBO customerAccount = center.getCustomerAccount();
         Assert.assertNotNull(customerAccount);
         Date transactionDate = incrementCurrentDate(14);
-        final Money paymentForThisInstallmentAndLastTwoInstallmentsInArrears = new Money(TestObjectFactory
-                .getMFICurrency(), "300.0");
+        final Money paymentForThisInstallmentAndLastTwoInstallmentsInArrears = TestUtils.createMoney("300.0");
         List<AccountActionDateEntity> dueActionDates = TestObjectFactory.getDueActionDatesForAccount(customerAccount
                 .getAccountId(), transactionDate);
         Assert.assertEquals("The size of the due insallments is ", dueActionDates.size(), 3);
@@ -1290,26 +1289,26 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         CustomerScheduleEntity accountAction = (CustomerScheduleEntity) customerAccountBO.getAccountActionDate(Short
                 .valueOf("1"));
-        accountAction.setMiscFeePaid(TestObjectFactory.getMoneyForMFICurrency(100));
-        accountAction.setMiscPenaltyPaid(TestObjectFactory.getMoneyForMFICurrency(100));
+        accountAction.setMiscFeePaid(TestUtils.createMoney(100));
+        accountAction.setMiscPenaltyPaid(TestUtils.createMoney(100));
         accountAction.setPaymentDate(currentDate);
         accountAction.setPaymentStatus(PaymentStatus.PAID);
 
         MasterPersistence masterPersistenceService = new MasterPersistence();
 
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO, TestObjectFactory
-                .getMoneyForMFICurrency(300), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(
-                System.currentTimeMillis()));
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO, 
+                TestUtils.createMoney(300), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), 
+                new Date(System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(), TestObjectFactory
-                        .getPersonnel(userContext.getId()), currentDate, TestObjectFactory.getMoneyForMFICurrency(300),
-                "payment done", null, TestObjectFactory.getMoneyForMFICurrency(100), TestObjectFactory
-                        .getMoneyForMFICurrency(100), masterPersistenceService);
+                        .getPersonnel(userContext.getId()), currentDate, TestUtils.createMoney(300),
+                "payment done", null, TestUtils.createMoney(100), TestUtils.createMoney(100), 
+                masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,
-                    TestObjectFactory.getMoneyForMFICurrency(100));
+                    TestUtils.createMoney(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
                     .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());
             accountTrxnEntity.addFeesTrxnDetail(feeTrxn);

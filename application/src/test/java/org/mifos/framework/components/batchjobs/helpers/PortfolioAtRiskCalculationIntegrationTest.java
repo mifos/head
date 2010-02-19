@@ -116,7 +116,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loandsdasd", "fsad", startDate, meeting, TestUtils.getCurrency());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loandsdasd", "fsad", startDate, meeting, TestUtils.RUPEE);
         account1 = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
         loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd", ApplicableTo.CLIENTS, startDate,

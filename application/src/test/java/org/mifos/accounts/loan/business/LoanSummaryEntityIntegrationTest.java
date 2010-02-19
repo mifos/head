@@ -31,6 +31,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -48,10 +49,10 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
     public void testDecreaseBy() {
         accountBO = getLoanAccount();
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
-        Money principal = TestObjectFactory.getMoneyForMFICurrency(100);
-        Money interest = TestObjectFactory.getMoneyForMFICurrency(10);
-        Money penalty = TestObjectFactory.getMoneyForMFICurrency(20);
-        Money fees = TestObjectFactory.getMoneyForMFICurrency(30);
+        Money principal = TestUtils.createMoney(100);
+        Money interest = TestUtils.createMoney(10);
+        Money penalty = TestUtils.createMoney(20);
+        Money fees = TestUtils.createMoney(30);
         Money originalPrincipal = loanSummaryEntity.getOriginalPrincipal();
         Money originalInterest = loanSummaryEntity.getOriginalInterest();
         Money originalFees = loanSummaryEntity.getOriginalFees();
@@ -66,10 +67,10 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
     public void testUpdatePaymentDetails() {
         accountBO = getLoanAccount();
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
-        Money principal = TestObjectFactory.getMoneyForMFICurrency(100);
-        Money interest = TestObjectFactory.getMoneyForMFICurrency(10);
-        Money penalty = TestObjectFactory.getMoneyForMFICurrency(20);
-        Money fees = TestObjectFactory.getMoneyForMFICurrency(30);
+        Money principal = TestUtils.createMoney(100);
+        Money interest = TestUtils.createMoney(10);
+        Money penalty = TestUtils.createMoney(20);
+        Money fees = TestUtils.createMoney(30);
         loanSummaryEntity.updatePaymentDetails(principal, interest, penalty, fees);
        Assert.assertEquals(loanSummaryEntity.getPrincipalPaid(), principal);
        Assert.assertEquals(loanSummaryEntity.getInterestPaid(), interest);

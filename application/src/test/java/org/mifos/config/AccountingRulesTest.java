@@ -228,7 +228,7 @@ public class AccountingRulesTest {
         Short digitsAfterDecimal = (short) digitsAfterDecimalInt;
         ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL,
                 digitsAfterDecimal);
-        assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple(Money.getDefaultCurrency()));
+        assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple(TestUtils.RUPEE));
     }
 
     @Test

@@ -58,8 +58,6 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         super();
     }
 
-    private static final double DELTA = 0.00000001;
-
     CustomerBO center = null;
 
     CustomerBO group = null;
@@ -108,7 +106,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
         trainingFee.setUserContext(TestUtils.makeUser());
-        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestUtils.createMoney("5"));
         trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
         trainingFee.save();
         TestObjectFactory.flushandCloseSession();
@@ -122,7 +120,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = installment.getAccountFeesAction(accountPeriodicFee
                 .getAccountFeeId());
-       Assert.assertEquals(TestUtils.makeMoney(5.0), accountFeesAction.getFeeAmount());
+       Assert.assertEquals(TestUtils.createMoney(5.0), accountFeesAction.getFeeAmount());
         StaticHibernateUtil.closeSession();
         center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
         group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
@@ -201,7 +199,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
         trainingFee.setUserContext(TestUtils.makeUserWithLocales());
         trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
-        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestUtils.createMoney("5"));
         trainingFee.updateStatus(FeeStatus.INACTIVE);
         trainingFee.update();
         TestObjectFactory.flushandCloseSession();
@@ -220,7 +218,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         AccountFeesEntity accountFee = center.getCustomerAccount().getAccountFees(trainingFee.getFeeId());
 
         Assert.assertNotNull(accountFee);
-       Assert.assertEquals(TestUtils.makeMoney(5.0), accountFee.getAccountFeeAmount());
+       Assert.assertEquals(TestUtils.createMoney(5.0), accountFee.getAccountFeeAmount());
     }
 
     public void testExecuteStatusInactiveToActive() throws Exception {
@@ -275,7 +273,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         trainingFee.setUserContext(TestUtils.makeUserWithLocales());
         trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
         trainingFee.updateStatus(FeeStatus.ACTIVE);
-        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestUtils.createMoney("5"));
         trainingFee.update();
         TestObjectFactory.flushandCloseSession();
         new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask()).execute(System.currentTimeMillis());
@@ -287,11 +285,11 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
         AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
                 .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
         Assert.assertNotNull(accountFeesAction);
-       Assert.assertEquals(TestUtils.makeMoney(5.0), accountFeesAction.getFeeAmount());
+       Assert.assertEquals(TestUtils.createMoney(5.0), accountFeesAction.getFeeAmount());
        Assert.assertEquals(2, ((CustomerScheduleEntity) installment).getAccountFeesActionDetails().size());
         AccountFeesEntity accountFee = center.getCustomerAccount().getAccountFees(trainingFee.getFeeId());
         Assert.assertNotNull(accountFee);
-       Assert.assertEquals(TestUtils.makeMoney(5.0), accountFee.getAccountFeeAmount());
+       Assert.assertEquals(TestUtils.createMoney(5.0), accountFee.getAccountFeeAmount());
     }
 
     public void testExecuteAmountUpdatedForMultipleAccount() throws Exception {
@@ -329,7 +327,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
         trainingFee.setUserContext(TestUtils.makeUser());
-        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestUtils.createMoney("5"));
         trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
         trainingFee.save();
         TestObjectFactory.flushandCloseSession();
@@ -341,13 +339,13 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
         AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
                 .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-       Assert.assertEquals(TestUtils.makeMoney(5.0), accountFeesAction.getFeeAmount());
+       Assert.assertEquals(TestUtils.createMoney(5.0), accountFeesAction.getFeeAmount());
 
         AccountActionDateEntity groupinstallment = group.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
 
         AccountFeesActionDetailEntity groupaccountFeesAction = ((CustomerScheduleEntity) groupinstallment)
                 .getAccountFeesAction(groupaccountPeriodicFee.getAccountFeeId());
-       Assert.assertEquals(TestUtils.makeMoney(5.0), groupaccountFeesAction.getFeeAmount());
+       Assert.assertEquals(TestUtils.createMoney(5.0), groupaccountFeesAction.getFeeAmount());
     }
 
     public void testBatchJobException() {

@@ -36,6 +36,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -83,8 +84,8 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
 
         List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();
         accountActionsToBeUpdated.add(account.getAccountActionDates().iterator().next());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accountActionsToBeUpdated, new Money(
-                TestObjectFactory.getMFICurrency(), "700.0"), null, account.getPersonnel(), "423423", Short
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accountActionsToBeUpdated, 
+                TestUtils.createMoney("700.0"), null, account.getPersonnel(), "423423", Short
                 .valueOf("1"), sampleDate, sampleDate);
         account.applyPaymentWithPersist(paymentData);
         StaticHibernateUtil.commitTransaction();

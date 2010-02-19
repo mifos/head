@@ -222,14 +222,14 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
 
-        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center), TestUtils.getCurrency());
+        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center), TestUtils.RUPEE);
         SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
         centerSavingsAccountView.setDepositAmountEntered("100");
         centerSavingsAccountView.setWithDrawalAmountEntered("10");
         bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
         bulkEntryParent.setCustomerAccountDetails(getCustomerAccountView(center));
 
-        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group), TestUtils.getCurrency());
+        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group), TestUtils.RUPEE);
         LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
         SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
         groupSavingsAccountView.setDepositAmountEntered("100");
@@ -238,7 +238,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
         bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client), TestUtils.getCurrency());
+        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client), TestUtils.RUPEE);
         LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
         clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
         SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);

@@ -179,7 +179,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
 
         SavingsAccountBuilder savingsAccountBuilder = new SavingsAccountBuilder().mandatory().completeGroup()
                 .withSavingsProduct(savingsProduct).withCustomer(customer).withRecommendedAmount(
-                        new Money(TestUtils.getCurrency(), amount));
+                        TestUtils.createMoney(amount));
         if (isVoluntary) {
             savingsAccountBuilder.voluntary();
         }

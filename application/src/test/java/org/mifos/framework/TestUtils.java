@@ -43,7 +43,6 @@ import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionC
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestUtils {
@@ -121,16 +120,21 @@ public class TestUtils {
         SAXReader reader = new SAXReader();
         reader.read(new StringReader(xmlDocument));
     }
-    
-    public static Money makeMoney(String value) {
-        return new Money(RUPEE, value);
+        
+    public static Money createMoney(String amount) {
+        return new Money(RUPEE, amount);
     }
     
-    public static Money makeMoney(Double value) {
-        return MoneyUtils.createMoney(RUPEE, value);
+    public static Money createMoney(Double amount) {
+        return new Money(RUPEE, BigDecimal.valueOf(amount));
     }
     
-    public static Money makeMoney() {
+    public static Money createMoney(int amount) {
+        // TODO Auto-generated method stub
+        return new Money(RUPEE, BigDecimal.valueOf(amount));
+    }
+    
+    public static Money createMoney() {
         return new Money(RUPEE);
     }
 
@@ -266,11 +270,4 @@ public class TestUtils {
         }
         return startDate;
     }
-    
-    public static MifosCurrency getCurrency() {
-        // TODO: will be replaced by a better way to get currency for integration tests
-        // NOTE: TestObjectFactory.getCurrency also exists
-        return Money.getDefaultCurrency();
-    }
-
 }

@@ -139,7 +139,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numInstallments);
 
         try {
-            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(TestUtils.getCurrency(), loan_amount),
+            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(TestUtils.RUPEE, loan_amount),
                     numInstallments, meetingDates.get(0), false, interestRate, (short) 0, null, feeViewList, null,
                     Double.valueOf(loan_amount), Double.valueOf(loan_amount), eligibleInstallmentRange.getMaxNoOfInstall(),
                     eligibleInstallmentRange.getMinNoOfInstall(), false, null);

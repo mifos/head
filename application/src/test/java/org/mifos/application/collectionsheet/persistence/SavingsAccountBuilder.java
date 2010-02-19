@@ -67,9 +67,9 @@ public class SavingsAccountBuilder {
 
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
-    private Money recommendedAmount = new Money(TestUtils.getCurrency(), "13.0");
+    private Money recommendedAmount = new Money(TestUtils.RUPEE, "13.0");
     private CustomerPersistence customerDao;
-    private Money savingsBalanceAmount = new Money(TestUtils.getCurrency(), "0.0");
+    private Money savingsBalanceAmount = new Money(TestUtils.RUPEE, "0.0");
     private SavingsTransactionActivityHelper savingsTransactionActivityHelper = new SavingsTransactionActivityHelperImpl();
     private SavingsPaymentStrategy savingsPaymentStrategy = new SavingsPaymentStrategyImpl(
             savingsTransactionActivityHelper);

@@ -175,8 +175,8 @@ public class SavingsTestHelper {
 
     public SavingsBO createSavingsAccount(SavingsOfferingBO savingsOffering, CustomerBO customer,
             AccountState accountState, UserContext userContext) throws Exception {
-        SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, accountState, new Money(TestUtils
-                .getCurrency(), "500.0"), null);
+        SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, accountState, 
+                TestUtils.createMoney( "500.0"), null);
         savings.save();
         return savings;
     }

@@ -105,8 +105,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
-        PaymentData firstPaymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-                .getMoneyForMFICurrency(88), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
+        PaymentData firstPaymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, 
+                TestUtils.createMoney(88), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
         loan.applyPaymentWithPersist(firstPaymentData);
 
@@ -213,8 +213,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         LoanBO loan = accountBO;
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-                .getMoneyForMFICurrency(700), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, 
+                TestUtils.createMoney(700), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
         loan.applyPaymentWithPersist(paymentData);
 
@@ -233,15 +233,15 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestObjectFactory.getMoneyForMFICurrency(216), null, loan.getPersonnel(), "receiptNum", Short
+                TestUtils.createMoney(216), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
         loan.applyPaymentWithPersist(accountPaymentDataView);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(TestUtils.makeUser());
-        loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, TestObjectFactory
-                .getMoneyForMFICurrency(600), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
+        loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, 
+                TestUtils.createMoney(600), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate));
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -269,7 +269,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestObjectFactory.getMoneyForMFICurrency(712), null, loan.getPersonnel(), "receiptNum", Short
+                TestUtils.createMoney(712), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
         loan.applyPaymentWithPersist(accountPaymentDataView);
         loan.setAccountState(new AccountStateEntity(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
@@ -291,7 +291,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestObjectFactory.getMoneyForMFICurrency(0), null, loan.getPersonnel(), "receiptNum", Short
+                TestUtils.createMoney(0), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
 
         loan.applyPaymentWithPersist(accountPaymentDataView);
@@ -304,8 +304,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         AccountPaymentEntity accntPmnt = payments.iterator().next();
         TestObjectFactory.flushandCloseSession();
 
-        Assert.assertEquals("Account payment retrieved should be zero with currency MFI currency", TestObjectFactory
-                .getMoneyForMFICurrency(0), accntPmnt.getAmount());
+        Assert.assertEquals("Account payment retrieved should be zero with currency MFI currency", 
+                TestUtils.createMoney(0), accntPmnt.getAmount());
     }
 
     @Test(dependsOnMethods = { "testRetrievalOfNullMonetaryValue" })
@@ -316,7 +316,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestObjectFactory.getMoneyForMFICurrency(100), null, loan.getPersonnel(), "receiptNum", Short
+                TestUtils.createMoney(100), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
         loan.applyPaymentWithPersist(accountPaymentDataView);
         TestObjectFactory.flushandCloseSession();
@@ -353,7 +353,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         accntActionDates.addAll(loan.getAccountActionDates());
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(Short.valueOf("2"));
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestObjectFactory.getMoneyForMFICurrency(100), null, personnel, "receiptNum", Short.valueOf("1"),
+                TestUtils.createMoney(100), null, personnel, "receiptNum", Short.valueOf("1"),
                 currentDate, currentDate);
         loan.applyPaymentWithPersist(accountPaymentDataView);
         TestObjectFactory.flushandCloseSession();
@@ -505,16 +505,16 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-                .getMoneyForMFICurrency(212), null, accountBO.getPersonnel(), "receiptNum", Short.valueOf("1"),
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, 
+                TestUtils.createMoney(212), null, accountBO.getPersonnel(), "receiptNum", Short.valueOf("1"),
                 currentDate, currentDate);
         accountBO.applyPaymentWithPersist(paymentData);
 
         StaticHibernateUtil.commitTransaction();
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
 
-        loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, TestObjectFactory
-                .getMoneyForMFICurrency(600), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
+        loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600), 
+                null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate));
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

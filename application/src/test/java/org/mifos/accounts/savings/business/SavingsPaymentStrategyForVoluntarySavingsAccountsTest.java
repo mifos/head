@@ -91,8 +91,8 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenNoUnpaidScheduledInstallmentsExistNoPaymentsAreMade() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList();
@@ -113,8 +113,8 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenNoUnpaidScheduledInstallmentsExistTheFullAmountOfTheDepositIsReturned() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList();
@@ -135,8 +135,8 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenUnpaidScheduledInstallmentsExistAllAreMarkedAsPaid() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
@@ -163,9 +163,9 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenUnpaidScheduledInstallmentsExistTheLastScheduledPaymentIsOnlyPaidOffTheRecommendedAmount() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
-        final Money recommendedDepositDue = new Money(TestUtils.getCurrency(), "36.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
+        final Money recommendedDepositDue = new Money(TestUtils.RUPEE, "36.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
@@ -184,7 +184,7 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
                 SavingsType.VOLUNTARY, balanceBeforeDeposit);
 
         // verification
-        assertThat(unpaidSaving1.getDepositPaid(), is(TestUtils.makeMoney()));
+        assertThat(unpaidSaving1.getDepositPaid(), is(TestUtils.createMoney()));
         assertThat(unpaidSaving2.getDepositPaid(), is(recommendedDepositDue));
     }
 
@@ -192,9 +192,9 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenUnpaidScheduledInstallmentsExistAnyExcessPaymentOverDepositDueShouldBeReturnedAsRemainingAmount() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
-        final Money recommendedDepositDue = new Money(TestUtils.getCurrency(), "36.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
+        final Money recommendedDepositDue = new Money(TestUtils.RUPEE, "36.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
@@ -220,8 +220,8 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenUnpaidScheduledInstallmentsExistTheLastScheduledPaymentDateIsUpdated() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
@@ -248,9 +248,9 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenUnpaidScheduledInstallmentsExistASavingsTrxnDetailIsCreatedWithLatestBalance() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
-        final Money recommendedDepositDue = new Money(TestUtils.getCurrency(), "36.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
+        final Money recommendedDepositDue = new Money(TestUtils.RUPEE, "36.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
@@ -278,9 +278,9 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
     public void whenUnpaidScheduledInstallmentsExistTheCreatedSavingsTrxnDetailIsAddedToAccountPaymentTrxns() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
-        final Money recommendedDepositDue = new Money(TestUtils.getCurrency(), "36.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
+        final Money recommendedDepositDue = new Money(TestUtils.RUPEE, "36.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(

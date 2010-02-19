@@ -57,6 +57,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -282,14 +283,13 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
             AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accntActionDate,
                     null, null, new Money(getCurrency(), "5"));
 
-            LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
-                    .getMoneyForMFICurrency(3));
+            LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestUtils.createMoney(3));
 
             accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
-            LoanBOTestUtils.modifyData(accntActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
-                    TestObjectFactory.getMoneyForMFICurrency(5), TestObjectFactory.getMoneyForMFICurrency(3),
-                    TestObjectFactory.getMoneyForMFICurrency(0), TestObjectFactory.getMoneyForMFICurrency(5),
-                    TestObjectFactory.getMoneyForMFICurrency(5), accntActionDate.getPrincipal(), accntActionDate
+            LoanBOTestUtils.modifyData(accntActionDate, TestUtils.createMoney(10),
+                    TestUtils.createMoney(5), TestUtils.createMoney(3),
+                    TestUtils.createMoney(0), TestUtils.createMoney(5),
+                    TestUtils.createMoney(5), accntActionDate.getPrincipal(), accntActionDate
                             .getPrincipalPaid(), accntActionDate.getInterest(), accntActionDate.getInterestPaid());
 
         }
@@ -307,17 +307,16 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
                     .currentTimeMillis()), PaymentStatus.UNPAID, new Money(getCurrency()), new Money(getCurrency()));
             AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accntActionDate,
                     null, null, new Money(getCurrency(), "5"));
-            LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
-                    .getMoneyForMFICurrency(3));
+            LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestUtils.createMoney(3));
 
             accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 
-            LoanBOTestUtils.modifyData(accntActionDate, TestObjectFactory.getMoneyForMFICurrency(10),
-                    TestObjectFactory.getMoneyForMFICurrency(5), TestObjectFactory.getMoneyForMFICurrency(3),
-                    TestObjectFactory.getMoneyForMFICurrency(0), TestObjectFactory.getMoneyForMFICurrency(5),
-                    TestObjectFactory.getMoneyForMFICurrency(4), TestObjectFactory.getMoneyForMFICurrency(10),
-                    TestObjectFactory.getMoneyForMFICurrency(5), TestObjectFactory.getMoneyForMFICurrency(2),
-                    TestObjectFactory.getMoneyForMFICurrency(1));
+            LoanBOTestUtils.modifyData(accntActionDate, TestUtils.createMoney(10),
+                    TestUtils.createMoney(5), TestUtils.createMoney(3),
+                    TestUtils.createMoney(0), TestUtils.createMoney(5),
+                    TestUtils.createMoney(4), TestUtils.createMoney(10),
+                    TestUtils.createMoney(5), TestUtils.createMoney(2),
+                    TestUtils.createMoney(1));
             accntActionDates.add(accntActionDate);
         }
         return accntActionDates;

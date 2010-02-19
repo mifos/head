@@ -92,8 +92,8 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
     public void whenNoUnpaidScheduledInstallmentsExistNoPaymentsAreMade() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList();
@@ -114,8 +114,8 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
     public void whenNoUnpaidScheduledInstallmentsExistTheFullAmountOfTheDepositIsReturned() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList();
@@ -136,14 +136,14 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
     public void whenUnpaidScheduledInstallmentsExistEarliestDueInstallmentsArePaidOffFirst() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "10.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "10.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "10.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "10.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "50.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "50.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -164,14 +164,14 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
     public void whenDepositAmountIsNotEnoughToPayOffAllScheduledPaymentsThenPayAsMuchAsPossibleOfEarliestScheduledPayments() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "30.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "30.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "10.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "10.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "50.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "50.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -186,21 +186,21 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
         // verification
         assertThat(unpaidSaving1.isPaid(), is(true));
         assertThat(unpaidSaving2.isPaid(), is(false));
-        assertThat(unpaidSaving2.getDepositPaid(), is(new Money(TestUtils.getCurrency(), "20.0")));
+        assertThat(unpaidSaving2.getDepositPaid(), is(new Money(TestUtils.RUPEE, "20.0")));
     }
     
     @Test
     public void whenDepositAmountIsInExcessOfTotalDepositDueAllScheduledPaymentsShouldBeMarkedAsPaid() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "80.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "80.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "10.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "10.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "50.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "50.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -221,14 +221,14 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
     public void whenDepositAmountIsInExcessOfTotalDepositDueTheExcessAmountIsReturnedInRemainingAmount() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "80.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "80.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "10.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "10.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "50.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "50.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -242,21 +242,21 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
                 SavingsType.MANDATORY, balanceBeforeDeposit);
 
         // verification
-        assertThat(remainingAmount, is(new Money(TestUtils.getCurrency(), "20.0")));
+        assertThat(remainingAmount, is(new Money(TestUtils.RUPEE, "20.0")));
     }
 
     @Test
     public void whenSomeDepositAmountIsPaidScheduledInstallmentsHaveTheirDateUpdated() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "100.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "10.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "10.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "10.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "10.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -278,14 +278,14 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
     public void whenAllDepositIsPaidOnInstallmentASavingsTrxnDetailIsCreatedWithLatestBalance() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "70.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "70.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "25.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "25.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "36.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "36.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -299,26 +299,26 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
 
         // verification
         verify(savingsTransactionActivityHelper, times(1)).createSavingsTrxnForDeposit(accountPayment,
-                new Money(TestUtils.getCurrency(), "25.0"), payingCustomer, unpaidSaving1,
-                balanceBeforeDeposit.add(new Money(TestUtils.getCurrency(), "25.0")));
+                new Money(TestUtils.RUPEE, "25.0"), payingCustomer, unpaidSaving1,
+                balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "25.0")));
 
         verify(savingsTransactionActivityHelper, times(1)).createSavingsTrxnForDeposit(accountPayment,
-                new Money(TestUtils.getCurrency(), "36.0"), payingCustomer, unpaidSaving2,
-                balanceBeforeDeposit.add(new Money(TestUtils.getCurrency(), "61.0")));
+                new Money(TestUtils.RUPEE, "36.0"), payingCustomer, unpaidSaving2,
+                balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "61.0")));
     }
 
     @Test
     public void whenSomeDepositIsPaidOnInstallmentASavingsTrxnDetailIsCreatedWithLatestBalance() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "60.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "60.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "25.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "25.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "36.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "36.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -332,26 +332,26 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
 
         // verification
         verify(savingsTransactionActivityHelper, times(1)).createSavingsTrxnForDeposit(accountPayment,
-                new Money(TestUtils.getCurrency(), "25.0"), payingCustomer, unpaidSaving1,
-                balanceBeforeDeposit.add(new Money(TestUtils.getCurrency(), "25.0")));
+                new Money(TestUtils.RUPEE, "25.0"), payingCustomer, unpaidSaving1,
+                balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "25.0")));
 
         verify(savingsTransactionActivityHelper, times(1)).createSavingsTrxnForDeposit(accountPayment,
-                new Money(TestUtils.getCurrency(), "35.0"), payingCustomer, unpaidSaving2,
-                balanceBeforeDeposit.add(new Money(TestUtils.getCurrency(), "60.0")));
+                new Money(TestUtils.RUPEE, "35.0"), payingCustomer, unpaidSaving2,
+                balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "60.0")));
     }
     
     @Test
     public void whenSomeDepositIsPaidOnInstallmentTheSavingsTrxnDetailCreatedIsAddedToAccountPaymentTrxnss() {
 
         // setup
-        final Money balanceBeforeDeposit = new Money(TestUtils.getCurrency(), "0.0");
-        final Money fullDepositAmount = new Money(TestUtils.getCurrency(), "65.0");
+        final Money balanceBeforeDeposit = new Money(TestUtils.RUPEE, "0.0");
+        final Money fullDepositAmount = new Money(TestUtils.RUPEE, "65.0");
         final Date dateOfDeposit = new DateTime().toDate();
 
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withInstallmentNumber(1).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "25.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "25.0")).build();
         final SavingsScheduleEntity unpaidSaving2 = new SavingsScheduleBuilder().withInstallmentNumber(2).withAccount(
-                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.getCurrency(), "40.0")).build();
+                savingsAccount).withCustomer(payingCustomer).withDepositDue(new Money(TestUtils.RUPEE, "40.0")).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1, unpaidSaving2);
 
@@ -359,12 +359,12 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
         when(accountPayment.getAmount()).thenReturn(fullDepositAmount);
         when(accountPayment.getPaymentDate()).thenReturn(dateOfDeposit);
         when(
-                savingsTransactionActivityHelper.createSavingsTrxnForDeposit(accountPayment, new Money(TestUtils.getCurrency(), "25.0"),
-                        payingCustomer, unpaidSaving1, balanceBeforeDeposit.add(new Money(TestUtils.getCurrency(), "25.0"))))
+                savingsTransactionActivityHelper.createSavingsTrxnForDeposit(accountPayment, new Money(TestUtils.RUPEE, "25.0"),
+                        payingCustomer, unpaidSaving1, balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "25.0"))))
                 .thenReturn(savingsTrxnDetail);
         when(
-                savingsTransactionActivityHelper.createSavingsTrxnForDeposit(accountPayment, new Money(TestUtils.getCurrency(), "40.0"),
-                        payingCustomer, unpaidSaving2, balanceBeforeDeposit.add(new Money(TestUtils.getCurrency(), "65.0"))))
+                savingsTransactionActivityHelper.createSavingsTrxnForDeposit(accountPayment, new Money(TestUtils.RUPEE, "40.0"),
+                        payingCustomer, unpaidSaving2, balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "65.0"))))
                 .thenReturn(savingsTrxnDetail);
         
         // exercise test

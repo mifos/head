@@ -52,6 +52,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -220,7 +221,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     }
 
     private PaymentData createPaymentViewObject(final AccountBO accountBO) {
-        PaymentData paymentData = PaymentData.createPaymentData(new Money(TestObjectFactory.getMFICurrency(), "212.0"),
+        PaymentData paymentData = PaymentData.createPaymentData(TestUtils.createMoney("212.0"),
                 accountBO.getPersonnel(), Short.valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
         paymentData.setReceiptNum("423423");

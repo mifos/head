@@ -193,10 +193,10 @@ public class SavingsIntCalcHelperIntegrationTest extends MifosIntegrationTestCas
        Assert.assertEquals(helper.getDate("31/05/2006"), savings1.getNextIntCalcDate());
 
         // using the old money class the result here was 15.4
-       Assert.assertEquals(TestUtils.makeMoney(15.387), savings1.getInterestToBePosted());
+       Assert.assertEquals(TestUtils.createMoney(15.387), savings1.getInterestToBePosted());
 
         // using the old money class the result here was 4.3
-       Assert.assertEquals(TestUtils.makeMoney(4.274), savings4.getInterestToBePosted());
+       Assert.assertEquals(TestUtils.createMoney(4.274), savings4.getInterestToBePosted());
        Assert.assertEquals(helper.getDate("31/05/2006"), savings4.getNextIntCalcDate());
         AccountingRules.setDigitsAfterDecimal(savedDigits);
 

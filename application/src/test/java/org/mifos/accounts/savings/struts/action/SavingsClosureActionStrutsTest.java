@@ -285,24 +285,24 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         SavingBOTestUtils.setActivationDate(savings, helper.getDate("20/05/2006"));
         PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-        AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, new Money(TestObjectFactory
-                .getMFICurrency(), "1000.0"), new Money(TestObjectFactory.getMFICurrency(), "1000.0"), helper
+        AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, 
+                TestUtils.createMoney( "1000.0"), TestUtils.createMoney("1000.0"), helper
                 .getDate("30/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
         AccountTestUtils.addAccountPayment(payment1, savings);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        Money balanceAmount = new Money(TestObjectFactory.getMFICurrency(), "1500.0");
-        AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings, new Money(TestObjectFactory
-                .getMFICurrency(), "500.0"), balanceAmount, helper.getDate("15/06/2006"),
+        Money balanceAmount = TestUtils.createMoney("1500.0");
+        AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings, 
+                TestUtils.createMoney("500.0"), balanceAmount, helper.getDate("15/06/2006"),
                 AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
         AccountTestUtils.addAccountPayment(payment2, savings);
         savings.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        Money interestAmount = new Money(TestObjectFactory.getMFICurrency(), "40");
+        Money interestAmount = TestUtils.createMoney("40");
         SavingBOTestUtils.setInterestToBePosted(savings, interestAmount);
         SavingBOTestUtils.setBalance(savings, balanceAmount);
         savings.update();

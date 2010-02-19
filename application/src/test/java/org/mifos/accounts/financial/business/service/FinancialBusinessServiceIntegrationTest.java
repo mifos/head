@@ -107,9 +107,9 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         Date currentDate = new Date(System.currentTimeMillis());
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestObjectFactory
-                .getMoneyForMFICurrency(630), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(
-                System.currentTimeMillis()));
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630), 
+                "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), 
+                new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
         accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
@@ -122,44 +122,44 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
         for (FinancialTransactionBO finTrxn : accountTrxnEntity.getFinancialTransactions()) {
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("1")) && finTrxn.isCreditEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("200"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("200"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("200"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("200"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("1")) && finTrxn.isDebitEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("200"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("200"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("200"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("200"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("2")) && finTrxn.isCreditEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("300"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("300"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("300"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("300"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("2")) && finTrxn.isDebitEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("300"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("300"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("300"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("300"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("41"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("3")) && finTrxn.isCreditEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("3")) && finTrxn.isDebitEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("50"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("4")) && finTrxn.isCreditEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("10"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("10"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("10"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("10"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("4")) && finTrxn.isDebitEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("10"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("10"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("10"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("10"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("50"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("6")) && finTrxn.isCreditEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("20"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("20"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("20"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("20"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("6")) && finTrxn.isDebitEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("20"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("20"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("20"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("20"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("42"));
             } else {
                 fail("There should not be any other entry");
@@ -176,14 +176,13 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), accountAction
                         .getActionDate(), TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
-                TestObjectFactory.getMoneyForMFICurrency(630), "test for loan adjustment", null, TestObjectFactory
-                        .getMoneyForMFICurrency(200), TestObjectFactory.getMoneyForMFICurrency(300), new Money(getCurrency()),
-                TestObjectFactory.getMoneyForMFICurrency(10), TestObjectFactory.getMoneyForMFICurrency(20), null,
+                TestUtils.createMoney(630), "test for loan adjustment", null, TestUtils.createMoney(200), 
+                TestUtils.createMoney(300), TestUtils.createMoney(),
+                TestUtils.createMoney(10), TestUtils.createMoney(20), null,
                 masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
-            LoanBOTestUtils.setFeeAmountPaid(accountFeesActionDetailEntity, TestObjectFactory
-                    .getMoneyForMFICurrency(100));
+            LoanBOTestUtils.setFeeAmountPaid(accountFeesActionDetailEntity, TestUtils.createMoney(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
                     .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());
             accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
@@ -247,12 +246,12 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                Assert.assertEquals(2, trxn.getFinancialTransactions().size());
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
                     if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19")) && finTrxn.isCreditEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
                     } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19")) && finTrxn.isDebitEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
                     } else {
                         fail("There should not be any other entry");
@@ -308,12 +307,12 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
                     if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21")) && finTrxn.isCreditEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
                     } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21")) && finTrxn.isDebitEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
                     } else {
                         fail("There should not be any other entry");
@@ -385,8 +384,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     public void testLoanWriteOffAccountingEntries() throws Exception {
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestObjectFactory
-                .getMoneyForMFICurrency(630), null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630),
+                null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
                 .currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
@@ -406,12 +405,12 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
        Assert.assertEquals(finTrxnSet.size(), 2);
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("22")) && finTrxn.isCreditEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("22")) && finTrxn.isDebitEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
             } else {
                 fail("There should not be any other entry"); 
@@ -423,8 +422,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     public void testLoanRescheduleAccountingEntries() throws Exception {
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestObjectFactory
-                .getMoneyForMFICurrency(630), null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630), 
+                null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
                 .currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
@@ -444,12 +443,12 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
        Assert.assertEquals(finTrxnSet.size(), 2);
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("23")) && finTrxn.isCreditEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("23")) && finTrxn.isDebitEntry()) {
-                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
-                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else {
                 fail("There should not be any other entry"); 

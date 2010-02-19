@@ -41,6 +41,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -133,8 +134,8 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         Date currentDate = new Date(System.currentTimeMillis());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-                .getMoneyForMFICurrency(200), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, 
+                TestUtils.createMoney(200), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
         loan.applyPaymentWithPersist(paymentData);
         StaticHibernateUtil.commitTransaction();

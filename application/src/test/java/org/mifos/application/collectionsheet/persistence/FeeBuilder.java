@@ -41,7 +41,7 @@ public class FeeBuilder {
     private final FeeFrequencyType feeFrequencyType = FeeFrequencyType.PERIODIC;
     private String name = "weekly-client-periodic-fee";
     private FeeCategory category = FeeCategory.CLIENT;
-    private Money feeAmount = new Money(TestUtils.getCurrency(), "12.5");
+    private Money feeAmount = new Money(TestUtils.RUPEE, "12.5");
     
     private final Date createdDate = new DateTime().minusDays(14).toDate();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
@@ -75,7 +75,7 @@ public class FeeBuilder {
     }
     
     public FeeBuilder withFeeAmount(final String withFeeAmount) {
-        this.feeAmount = new Money(TestUtils.getCurrency(), withFeeAmount);
+        this.feeAmount = new Money(TestUtils.RUPEE, withFeeAmount);
         return this;
     }
 

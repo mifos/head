@@ -40,6 +40,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -86,27 +87,24 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
 
         CustomerScheduleEntity accountAction = (CustomerScheduleEntity) customerAccountBO.getAccountActionDate(Short
                 .valueOf("1"));
-        CustomerAccountBOTestUtils.setMiscFeePaid(accountAction, TestObjectFactory.getMoneyForMFICurrency(100));
-        CustomerAccountBOTestUtils.setMiscPenaltyPaid(accountAction, TestObjectFactory
-                .getMoneyForMFICurrency(100));
+        CustomerAccountBOTestUtils.setMiscFeePaid(accountAction, TestUtils.createMoney(100));
+        CustomerAccountBOTestUtils.setMiscPenaltyPaid(accountAction, TestUtils.createMoney(100));
         CustomerAccountBOTestUtils.setPaymentDate(accountAction, currentDate);
         accountAction.setPaymentStatus(PaymentStatus.PAID);
 
         MasterPersistence masterPersistenceService = new MasterPersistence();
 
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO, TestObjectFactory
-                .getMoneyForMFICurrency(100), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(
-                System.currentTimeMillis()));
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO, TestUtils.createMoney(100), 
+                "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(),
-                TestObjectFactory.getPersonnel(userContext.getId()), currentDate, TestObjectFactory
-                        .getMoneyForMFICurrency(200), "payment done", null, TestObjectFactory
-                        .getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100),
+                TestObjectFactory.getPersonnel(userContext.getId()), currentDate, TestUtils.createMoney(200),
+                "payment done", null, TestUtils.createMoney(100), TestUtils.createMoney(100),
                         masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
-            accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(100));
+            accountFeesActionDetailEntity.setFeeAmountPaid(TestUtils.createMoney(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
                     .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());
             CustomerBOTestUtils.addFeesTrxnDetail(accountTrxnEntity, feeTrxn);

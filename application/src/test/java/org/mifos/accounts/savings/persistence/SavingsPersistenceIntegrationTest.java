@@ -266,7 +266,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
             savings.setUserContext(userContext);
             SavingsTrxnDetailEntity trxn = savingsPersistence.retrieveLastTransaction(savings.getAccountId(), helper
                     .getDate("12/03/2006"));
-            Assert.assertEquals(TestUtils.makeMoney("500"), trxn.getAmount());
+            Assert.assertEquals(TestUtils.createMoney("500"), trxn.getAmount());
             group = savings.getCustomer();
             center = group.getParentCustomer();
         } catch (Exception e) {

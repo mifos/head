@@ -467,7 +467,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");
@@ -629,7 +629,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");
@@ -1137,7 +1137,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");
@@ -1241,7 +1241,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("startDate", offSetCurrentDate(0, userContext.getPreferredLocale()));
         addRequestParameter("endDate", offSetCurrentDate(1, userContext.getPreferredLocale()));
         addRequestParameter("prdApplicableMaster", "1");
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("minLoanAmount", "2000");
         addRequestParameter("maxLoanAmount", "11000");
         addRequestParameter("defaultLoanAmount", "5000");
@@ -1296,6 +1296,6 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
                 LOAN_INSTALLMENT, MONDAY));
         return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
-                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1",TestUtils.getCurrency());
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency, "1", "1",TestUtils.RUPEE);
     }
 }

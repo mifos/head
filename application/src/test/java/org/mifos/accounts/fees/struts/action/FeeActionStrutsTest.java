@@ -267,7 +267,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
         addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY.getValue().toString());
         addRequestParameter("weekRecurAfter", "2");
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("rate", "10");
         addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());
         addRequestParameter("glCode", GLOCDE_ID);
@@ -287,7 +287,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("amount", "100");
         addRequestParameter("feeName", "Customer_One_time");
         addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME.getValue().toString());
@@ -323,7 +323,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("amount", "100");
         addRequestParameter("customerDefaultFee", "1");
         addRequestParameter("feeName", "Customer_One_time_Default_Fee");
@@ -362,7 +362,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("amount", "100");
         addRequestParameter("customerDefaultFee", "1");
         addRequestParameter("feeName", "Customer Periodic Fee");
@@ -404,7 +404,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
-        addRequestParameter("currencyId", Money.getDefaultCurrency().getCurrencyId().toString());
+        addRequestParameter("currencyId", TestUtils.RUPEE.getCurrencyId().toString());
         addRequestParameter("rate", "23");
         addRequestParameter("amount", "");
         addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());

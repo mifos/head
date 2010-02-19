@@ -131,7 +131,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestObjectFactory.getMoneyForMFICurrency(100), null, loan.getPersonnel(), "receiptNum", Short
+                TestUtils.createMoney(100), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
 
         loan.applyPaymentWithPersist(accountPaymentDataView);

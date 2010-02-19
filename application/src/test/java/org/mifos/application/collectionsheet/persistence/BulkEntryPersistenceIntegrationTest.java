@@ -41,7 +41,6 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCase {
@@ -105,12 +104,12 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(account.getAccountActionDates().iterator().next());
         Date currentDate = startDate;
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, new Money(
-                TestObjectFactory.getMFICurrency(), "100.0"), null, account.getPersonnel(), "423423", Short
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
+                TestUtils.createMoney("100.0"), null, account.getPersonnel(), "423423", Short
                 .valueOf("1"), currentDate, currentDate);
         try {
             account.applyPaymentWithPersist(paymentData);
-           Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.makeMoney("100.0"));
+           Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,13 +133,13 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(account.getAccountActionDates().iterator().next());
         Date currentDate = startDate;
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, new Money(
-                TestObjectFactory.getMFICurrency(), "100.0"), null, account.getPersonnel(), "423423", Short
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
+                TestUtils.createMoney("100.0"), null, account.getPersonnel(), "423423", Short
                 .valueOf("1"), currentDate, currentDate);
 
         account.applyPaymentWithPersist(paymentData);
         StaticHibernateUtil.commitTransaction();
-       Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.makeMoney("100.0"));
+       Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
     }
 
     public void testFailureApplyPayment() throws Exception {
@@ -161,8 +160,8 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         }
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(account.getAccountActionDates());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, new Money(
-                TestObjectFactory.getMFICurrency(), "3000.0"), null, account.getPersonnel(), "423423", Short
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, 
+                TestUtils.createMoney("3000.0"), null, account.getPersonnel(), "423423", Short
                 .valueOf("1"), startDate, startDate);
 
         try {

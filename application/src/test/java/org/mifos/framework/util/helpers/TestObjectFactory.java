@@ -591,7 +591,7 @@ public class TestObjectFactory {
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime,
             final MeetingBO meeting) {
         return TestObjectFactory.createLoanOffering(name, shortName, ApplicableTo.GROUPS, currentTime,
-                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting, "1", "1", TestUtils.getCurrency());
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting, "1", "1", TestUtils.RUPEE);
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime,
@@ -627,9 +627,8 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(
-                            TestUtils.getCurrency(), defLnAmnt.toString()), new Money(TestUtils.getCurrency(),
-                            defLnAmnt.toString()), new Money(TestUtils.getCurrency(), defLnAmnt.toString()),
+                    startDate, null, null, gracePeriodType, (short) 0, interestTypes,TestUtils.createMoney(defLnAmnt), 
+                    TestUtils.createMoney(defLnAmnt),  TestUtils.createMoney(defLnAmnt),
                     defIntRate, defIntRate, defIntRate, defInstallments, defInstallments, defInstallments, true,
                     interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
                     new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest);
@@ -651,7 +650,7 @@ public class TestObjectFactory {
             final String loanAmountCalcType, final String noOfInstallCalcType) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 defInstallments, interestType, interestDeductedAtDisbursement, principalDueInLastInstallment, meeting,
-                graceType, loanAmountCalcType, noOfInstallCalcType, TestUtils.getCurrency());
+                graceType, loanAmountCalcType, noOfInstallCalcType, TestUtils.RUPEE);
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
@@ -737,10 +736,9 @@ public class TestObjectFactory {
         funds.add(fundBO);
         LoanOfferingBO loanOfferingBO = new LoanOfferingBO(getContext(), "Loan Offering", "LOAP", productCategory,
                 prdApplicableMaster, DateUtils.getCurrentDateWithoutTimeStamp(), null, null, gracePeriodType,
-                (short) 2, interestTypes, new Money(TestUtils.getCurrency(), "1000"), new Money(
-                        TestUtils.getCurrency(), "3000"), new Money(TestUtils.getCurrency(), "2000.0"), 12.0, 2.0, 3.0,
-                (short) 20, (short) 11, (short) 17, false, false, false, funds, fees, frequency, principalglCodeEntity,
-                intglCodeEntity);
+                (short) 2, interestTypes, TestUtils.createMoney("1000"), TestUtils.createMoney("3000"), TestUtils
+                        .createMoney("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false, false,
+                false, funds, fees, frequency, principalglCodeEntity, intglCodeEntity);
         loanOfferingBO.save();
         return loanOfferingBO;
     }
@@ -826,9 +824,9 @@ public class TestObjectFactory {
         try {
             product = new SavingsOfferingBO(TestUtils.makeUserWithLocales(), name, shortName, productCategory,
                     prdApplicableMaster, startDate, null, null, amountUnit, savingsTypeEntity, intCalType,
-                    intCalcMeeting, intPostMeeting, new Money(TestUtils.getCurrency(), recommendedAmount.toString()),
-                    new Money(TestUtils.getCurrency(), maxAmtWithdrawl.toString()), new Money(TestUtils.getCurrency(),
-                            minAmtForInt.toString()), intRate, depglCodeEntity, intglCodeEntity);
+                    intCalcMeeting, intPostMeeting, TestUtils.createMoney(recommendedAmount), TestUtils
+                            .createMoney(maxAmtWithdrawl), TestUtils.createMoney(minAmtForInt), intRate,
+                    depglCodeEntity, intglCodeEntity);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         } catch (SystemException e) {
@@ -984,7 +982,7 @@ public class TestObjectFactory {
             GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
             MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(), MeetingType.PERIODIC_FEE);
             FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory),
-                    new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, getMoneyForMFICurrency(feeAmnt),
+                    new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, TestUtils.createMoney(feeAmnt),
                     false, meeting);
             return (FeeBO) addObject(testObjectPersistence.createFee(fee));
         } catch (Exception e) {
@@ -1061,7 +1059,7 @@ public class TestObjectFactory {
                 TestGeneralLedgerCode.FEES);
         try {
             FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory),
-                    new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), glCode, getMoneyForMFICurrency(feeAmnt),
+                    new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), glCode, TestUtils.createMoney(feeAmnt),
                     false, new FeePaymentEntity(feePayment));
             return (FeeBO) addObject(testObjectPersistence.createFee(fee));
         } catch (Exception e) {
@@ -1467,27 +1465,6 @@ public class TestObjectFactory {
         }
     }
 
-    // FIXME: rename to getRupees()?
-    public static MifosCurrency getMFICurrency() {
-        return testObjectPersistence.getCurrency();
-    }
-
-    // FIXME: rename to getRupees()?
-    public static MifosCurrency getCurrency() {
-        return testObjectPersistence.getCurrency();
-    }
-
-    /**
-     * Convenience method where the amount is in MFI currency, and is an integer.
-     */
-    public static Money getMoneyForMFICurrency(final int amount) {
-        return new Money(TestUtils.getCurrency(), String.valueOf(amount));
-    }
-
-    public static Money getMoneyForMFICurrency(final String amount) {
-        return new Money(testObjectPersistence.getCurrency(), amount);
-    }
-
     public static void updateObject(final PersistentObject obj) {
         testObjectPersistence.update(obj);
     }
@@ -1808,7 +1785,7 @@ public class TestObjectFactory {
 
     public static CustomerAccountView getCustomerAccountView(final CustomerBO customer) throws Exception {
         CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(),
-                getCurrency());
+                TestUtils.RUPEE);
         List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(customer.getCustomerAccount()
                 .getAccountId(), new java.sql.Date(System.currentTimeMillis()));
         customerAccountView.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
@@ -1919,7 +1896,7 @@ public class TestObjectFactory {
                             .getPrincipal(), actionDate.getPrincipalPaid(), actionDate.getInterest(), actionDate
                             .getInterestPaid(), actionDate.getMiscFee(), actionDate.getMiscFeePaid(), actionDate
                             .getPenalty(), actionDate.getPenaltyPaid(), actionDate.getMiscPenalty(), actionDate
-                            .getMiscPenaltyPaid(), getCurrency());
+                            .getMiscPenaltyPaid(), TestUtils.RUPEE);
             installmentView
                     .setCollectionSheetEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
             bulkEntryAccountActionView = installmentView;
@@ -1937,7 +1914,7 @@ public class TestObjectFactory {
                     actionDate.getAccount().getAccountId(), actionDate.getCustomer().getCustomerId(), actionDate
                             .getInstallmentId(), actionDate.getActionDateId(), actionDate.getActionDate(), actionDate
                             .getMiscFee(), actionDate.getMiscFeePaid(), actionDate.getMiscPenalty(), actionDate
-                            .getMiscPenaltyPaid(), getCurrency());
+                            .getMiscPenaltyPaid(), TestUtils.RUPEE);
             installmentView
                     .setCollectionSheetEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
             bulkEntryAccountActionView = installmentView;
