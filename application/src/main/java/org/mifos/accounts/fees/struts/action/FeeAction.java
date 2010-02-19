@@ -48,7 +48,6 @@ import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -119,7 +118,7 @@ public class FeeAction extends BaseAction {
         SessionUtils.setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled(), request);
         if (AccountingRules.isMultiCurrencyEnabled()) {
             Short currencyId = ((FeeActionForm) form).getCurrencyId();
-            String currencyCode = AccountingRules.getCurrencyByCurrencyId(currencyId).getCurrencyCode();
+            String currencyCode = getCurrency(currencyId).getCurrencyCode();
             request.getSession().setAttribute("currencyCode", currencyCode);
         }
         return mapping.findForward(ActionForwards.preview_success.toString());
@@ -310,17 +309,6 @@ public class FeeAction extends BaseAction {
                 actionForm.isCustomerDefaultFee(), feeFrequency);
     }
     
-    private MifosCurrency getCurrency(Short currencyId) {
-        MifosCurrency feeCurrency;
-        if (currencyId == null) {
-            // Currency is passed from Form only for Loan (Amount) Fees in multi-currency settings
-            feeCurrency = Money.getDefaultCurrency();
-        } else {
-            feeCurrency = AccountingRules.getCurrencyByCurrencyId(currencyId);
-        }
-        return feeCurrency;
-    }
-
     private List<GLCodeEntity> getGLCodes() throws SystemException, ApplicationException {
 
         return new FinancialBusinessService()

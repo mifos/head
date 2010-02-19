@@ -44,6 +44,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.business.service.FundBusinessService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -81,6 +82,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -146,7 +148,7 @@ public class LoanPrdAction extends BaseAction {
         if (AccountingRules.isMultiCurrencyEnabled()) {
             Short currencyId = ((LoanPrdActionForm) form).getCurrencyId();
             request.getSession().setAttribute("currencyCode",
-                    AccountingRules.getCurrencyByCurrencyId(currencyId).getCurrencyCode());
+                    getCurrency(currencyId).getCurrencyCode());
         }
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
@@ -205,7 +207,7 @@ public class LoanPrdAction extends BaseAction {
                         ProductDefinitionConstants.LOANPRICIPALGLCODELIST, loanPrdActionForm.getPrincipalGLCode()),
                 findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm
                         .getInterestGLCode()), loanPrdActionForm);
-        loanOffering.setCurrency(AccountingRules.getCurrencyByCurrencyId(loanPrdActionForm.getCurrencyId()));
+        loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
         loanOffering.save();
         request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID, loanOffering.getPrdOfferingId());
         request.setAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM, loanOffering

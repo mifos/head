@@ -50,10 +50,7 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.TOTAL_AMOUNT_OV
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEWINSTALLMENTDETAILS_SUCCESS;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_UPCOMING_INSTALLMENT_DETAILS;
-import static org.mifos.framework.http.request.RequestConstants.ACCOUNT_ID;
-import static org.mifos.framework.http.request.RequestConstants.CUSTOMER_ID;
-import static org.mifos.framework.http.request.RequestConstants.GLOBAL_ACCOUNT_NUM;
-import static org.mifos.framework.http.request.RequestConstants.PERSPECTIVE;
+import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
 import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.io.Serializable;
@@ -267,6 +264,10 @@ public class LoanAccountAction extends AccountAppAction {
     private final GlimLoanUpdater glimLoanUpdater;
     private LoanProductService loanProductService;
 
+    public static final String CUSTOMER_ID = "customerId";
+    public static final String ACCOUNT_ID = "accountId";
+    public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
+    
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
                 new FeeBusinessService(), new LoanPrdBusinessService(), new ClientBusinessService(),

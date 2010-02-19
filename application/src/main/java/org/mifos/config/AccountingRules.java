@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.util.helpers.Money;
 
@@ -108,8 +109,10 @@ public class AccountingRules {
             if(a.getCurrencyId().equals(currencyId)) {
                 return a;
             }
-        }
-        return null;
+        }        
+        throw new MifosRuntimeException("Unable to find currency with id: " + currencyId + 
+                ". You may be missing an entry for the currency with this id in " + 
+                ConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME + ".");
     }
 
     public static String getDefaultCurrencyCode() {

@@ -33,6 +33,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -41,7 +42,6 @@ import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.http.request.RequestConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;

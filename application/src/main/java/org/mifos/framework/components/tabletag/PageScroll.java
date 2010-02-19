@@ -23,7 +23,7 @@ package org.mifos.framework.components.tabletag;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.mifos.framework.http.request.RequestConstants;
+import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 
 /**

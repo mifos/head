@@ -40,10 +40,12 @@ import org.hibernate.HibernateException;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.LogUtils;
 import org.mifos.framework.business.service.BusinessService;
@@ -389,6 +391,17 @@ public abstract class BaseAction extends DispatchAction {
 
     protected String localizedMessageLookup(String key) {
         return MessageLookup.getInstance().lookup(key);
+    }
+
+    protected MifosCurrency getCurrency(Short currencyId) {
+        MifosCurrency currency;
+        if (currencyId == null) {
+            // Currency is passed from Form only for Loan (Amount) Fees in multi-currency settings
+            currency = Money.getDefaultCurrency();
+        } else {
+            currency = AccountingRules.getCurrencyByCurrencyId(currencyId);
+        }
+        return currency;
     }
     
     
