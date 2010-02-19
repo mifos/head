@@ -34,16 +34,16 @@ import org.mifos.framework.util.helpers.Money;
 public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
         GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getPrincipalGLcode();
 
         FinancialActionBO finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
-        addAccountEntryDetails(removeSign(loanTrxn.getPrincipalAmount()), finActionPrincipal,
+        addAccountEntryDetails(loanTrxn.getPrincipalAmount(), finActionPrincipal,
                 getGLcode(finActionPrincipal.getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
-        addAccountEntryDetails(removeSign(loanTrxn.getPrincipalAmount()), finActionPrincipal, glcodeCredit,
+        addAccountEntryDetails(loanTrxn.getPrincipalAmount(), finActionPrincipal, glcodeCredit,
                 FinancialConstants.DEBIT);
 
         LoanBO loan = (LoanBO) loanTrxn.getAccount();

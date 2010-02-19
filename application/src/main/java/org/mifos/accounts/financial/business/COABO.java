@@ -250,28 +250,38 @@ public class COABO extends BusinessObject {
         return applicableCOA;
 
     }
+    
+    /**
+     * convenience method gets the top-level accounting cateory
+     */
+    public GLCategoryType getTopLevelCategoryType() {
+        return this.getCOAHead().getCategoryType();
+    }
 
     @Override
-    public final boolean equals(final Object otherObject) {
-        if (!(otherObject instanceof COABO)) {
-            return false;
-        }
-
-        COABO other = (COABO) otherObject;
-        if (other.getAccountId().equals(this.accountId)) {
+    public boolean equals(Object obj) {
+        if (this == obj)
             return true;
-        }
-        return false;
+        if (obj == null)
+            return false;
+        // if (getClass().)
+        if (!(obj instanceof COABO))
+            return false;
+        COABO other = (COABO) obj;
+        if (this.accountId == null) {
+            if (other.accountId != null)
+                return false;
+        } else if (!this.accountId.equals(other.accountId))
+            return false;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        if (this.getAccountId() == null) {
-            return super.hashCode();
-        }
-
-        return this.getAccountId().hashCode();
-        
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.accountId == null) ? 0 : this.accountId.hashCode());
+        return result;
     }
 
     /**

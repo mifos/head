@@ -30,15 +30,15 @@ import org.mifos.framework.util.helpers.Money;
 public class PenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         Money amount = financialActivity.getMiscPenaltyAmount();
 
         FinancialActionBO finActionMiscPenalty = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
-        addAccountEntryDetails(removeSign(amount), finActionMiscPenalty, getGLcode(finActionMiscPenalty
+        addAccountEntryDetails(amount, finActionMiscPenalty, getGLcode(finActionMiscPenalty
                 .getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
-        addAccountEntryDetails(removeSign(amount), finActionMiscPenalty, getGLcode(finActionMiscPenalty
+        addAccountEntryDetails(amount, finActionMiscPenalty, getGLcode(finActionMiscPenalty
                 .getApplicableCreditCharts()), FinancialConstants.DEBIT);
 
     }

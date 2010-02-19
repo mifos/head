@@ -33,7 +33,7 @@ import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 
 public class FeesAccountingEntry extends BaseAccountingEntry {
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
         Set<FeesTrxnDetailEntity> feesTrxn = loanTrxn.getFeesTrxnDetails();
         Iterator<FeesTrxnDetailEntity> iterFees = feesTrxn.iterator();

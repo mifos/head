@@ -30,7 +30,7 @@ import org.mifos.framework.util.helpers.Money;
 public class PenaltyAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         Money amount = financialActivity.getMiscPenaltyAmount();
 
         FinancialActionBO finActionMiscPenalty = FinancialActionCache

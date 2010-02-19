@@ -34,27 +34,27 @@ import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 public class FeesAdjustmentAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
         Set<FeesTrxnDetailEntity> feesTrxn = loanTrxn.getFeesTrxnDetails();
         Iterator<FeesTrxnDetailEntity> iterFees = feesTrxn.iterator();
-        FinancialActionBO finActionFee = FinancialActionCache.getFinancialAction(FinancialActionConstants.FEEPOSTING);
+        FinancialActionBO finActionFee = getFinancialAction(FinancialActionConstants.FEEPOSTING);
         while (iterFees.hasNext()) {
             FeesTrxnDetailEntity feeTrxn = iterFees.next();
 
-            addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee, feeTrxn.getAccountFees().getFees()
+            addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee, feeTrxn.getAccountFees().getFees()
                     .getGlCode(), FinancialConstants.DEBIT);
 
-            addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee, getGLcode(finActionFee
+            addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee, getGLcode(finActionFee
                     .getApplicableDebitCharts()), FinancialConstants.CREDIT);
         }
         // For Misc Fee
         FinancialActionBO finActionMiscFee = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.MISCFEEPOSTING);
-        addAccountEntryDetails(removeSign(loanTrxn.getMiscFeeAmount()), finActionMiscFee, getGLcode(finActionMiscFee
+        addAccountEntryDetails(loanTrxn.getMiscFeeAmount(), finActionMiscFee, getGLcode(finActionMiscFee
                 .getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
-        addAccountEntryDetails(removeSign(loanTrxn.getMiscFeeAmount()), finActionMiscFee, getGLcode(finActionMiscFee
+        addAccountEntryDetails(loanTrxn.getMiscFeeAmount(), finActionMiscFee, getGLcode(finActionMiscFee
                 .getApplicableCreditCharts()), FinancialConstants.DEBIT);
 
     }

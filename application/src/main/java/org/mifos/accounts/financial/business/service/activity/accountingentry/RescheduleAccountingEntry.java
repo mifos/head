@@ -32,7 +32,7 @@ import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 public class RescheduleAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
 
         FinancialActionBO finActionReschedule = FinancialActionCache

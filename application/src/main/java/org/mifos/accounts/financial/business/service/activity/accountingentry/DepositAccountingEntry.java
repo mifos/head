@@ -22,7 +22,6 @@ package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.accounts.financial.business.FinancialActionBO;
 import org.mifos.accounts.financial.exceptions.FinancialException;
-import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -32,15 +31,15 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 public class DepositAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
         SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
         FinancialActionBO finActionDeposit = null;
         if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
-            finActionDeposit = FinancialActionCache.getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
+            finActionDeposit = getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
         }
         if (savings.getSavingsType().getId().equals(SavingsType.VOLUNTARY.getValue())) {
-            finActionDeposit = FinancialActionCache.getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT);
+            finActionDeposit = getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT);
         }
 
         addAccountEntryDetails(savingsTrxn.getDepositAmount(), finActionDeposit, getGLcode(finActionDeposit

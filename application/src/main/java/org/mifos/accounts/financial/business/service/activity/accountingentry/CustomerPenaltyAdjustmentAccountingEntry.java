@@ -30,15 +30,15 @@ import org.mifos.customers.business.CustomerTrxnDetailEntity;
 public class CustomerPenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity) financialActivity.getAccountTrxn();
         FinancialActionBO finActionMiscPenalty = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
 
-        addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()), finActionMiscPenalty,
+        addAccountEntryDetails(customertrxn.getMiscPenaltyAmount(), finActionMiscPenalty,
                 getGLcode(finActionMiscPenalty.getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
-        addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()), finActionMiscPenalty,
+        addAccountEntryDetails(customertrxn.getMiscPenaltyAmount(), finActionMiscPenalty,
                 getGLcode(finActionMiscPenalty.getApplicableCreditCharts()), FinancialConstants.DEBIT);
 
     }

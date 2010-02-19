@@ -23,7 +23,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,6 +48,7 @@ import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -57,7 +57,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * I test {@link InterestPostingAccountingEntry}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class InterestPostingAccountingEntryTest {
+public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestCase {
 
     private final String interestAmount = "10";
 
@@ -75,13 +75,7 @@ public class InterestPostingAccountingEntryTest {
 
     @Mock
     private PersonnelBO transactionCreator;
-
-    /*
-     * private GLCodeEntity glCodeLiability; private GLCodeEntity glCodeSavings;
-     * 
-     * private GLCodeEntity glCodeSavingsInterestPayable;
-     */
-
+    
     COABO coaLiability;
     COABO coaSavingsInterestPayable;
     COABO coaClientsSavings;
@@ -129,7 +123,7 @@ public class InterestPostingAccountingEntryTest {
         // setup
         DateMidnight savingsTrxnDetailActionDate = new DateMidnight(2009, 9, 9);
         DateMidnight savingsTrxnDetailCreationDate = new DateMidnight(2009, 1, 1);
-        MifosCurrency currency = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
+        MifosCurrency currency = TestUtils.RUPEE;
 
         // stubbing
         when(savingsTrxnDetail.getAccount()).thenReturn(savingsBO);
@@ -161,51 +155,41 @@ public class InterestPostingAccountingEntryTest {
         Collections.sort(transactions, new GLCodeComparator());
         Iterator<FinancialTransactionBO> it = transactions.iterator();
 
-        /*
-         * The first transaction reduces interest-payable liability by the amount of interest. Therefore the posted
-         * amount should be negative
-         */
+
         FinancialTransactionBO interestPostingTrans = it.next();
         assertThat(interestPostingTrans.getActionDate(), is(savingsTrxnDetailActionDate.toDate()));
         assertThat(interestPostingTrans.getPostedDate(), is(savingsTrxnDetailCreationDate.toDate()));
-        assertThat(interestPostingTrans.getPostedAmount(), is(getPostedAmount(new Money(currency, interestAmount),
-                GLCategoryType.LIABILITY, FinancialConstants.DEBIT)));
+        assertThat(interestPostingTrans.getPostedAmount(), is(new Money(currency, interestAmount)));
         assertThat(interestPostingTrans.getGlcode().getGlcode(), is(coaSavingsInterestPayable.getGlCode()));
         assertThat(interestPostingTrans.getDebitCreditFlag(), is(FinancialConstants.DEBIT.getValue()));
         assertThat(interestPostingTrans.getPostedBy(), is(transactionCreator));
 
-        /*
-         * The second transaction increases savings deposit, which in turn INCREASES the bank's liability. Therefore the
-         * posted amount should be positive
-         */
         FinancialTransactionBO savingsPostingTrans = it.next();
         assertThat(savingsPostingTrans.getActionDate(), is(savingsTrxnDetailActionDate.toDate()));
         assertThat(savingsPostingTrans.getPostedDate(), is(savingsTrxnDetailCreationDate.toDate()));
-        assertThat(savingsPostingTrans.getPostedAmount(), is(getPostedAmount(new Money(currency, interestAmount),
-                GLCategoryType.LIABILITY, FinancialConstants.CREDIT)));
+        assertThat(savingsPostingTrans.getPostedAmount(), is(new Money(currency, interestAmount)));
         assertThat(savingsPostingTrans.getGlcode().getGlcode(), is(coaClientsSavings.getGlCode()));
         assertThat(savingsPostingTrans.getDebitCreditFlag(), is(FinancialConstants.CREDIT.getValue()));
         assertThat(savingsPostingTrans.getPostedBy(), is(transactionCreator));
     }
-
-    private COABO makeCategory(Short categoryId, GLCategoryType categoryType, String glCode) {
+    
+    protected COABO makeCategory(Short categoryId, GLCategoryType categoryType, String glCode) {
         COABO category = new COABO(categoryId, categoryType.name(), new GLCodeEntity(categoryId, glCode));
         COAHierarchyEntity hierarchy = new COAHierarchyEntity(category, null);
         category.setCoaHierarchy(hierarchy);
         category.setCategoryType(categoryType);
         return category;
     }
-
+    
     /**
      * Establish child-parent relationship between two COABO instances.
      * 
      * <p>
-     * ASSUMPTION: the parentCoa's hiearchy has been created. In other words, build the hierarchy from top down.
+     * ASSUMPTION: the parentCoa's hierarchy has been created. In other words, build the hierarchy from top down.
      * 
-     * @throws RuntimeException
-     *             if parentCoa has no associated COAHierarchy.
+     * @throws RuntimeException  if parentCoa has no associated COAHierarchy.
      */
-    private COABO makeChildCoaboOf(COABO parentCoa, Short accountId, String accountName, String glCode) {
+    protected COABO makeChildCoaboOf(COABO parentCoa, Short accountId, String accountName, String glCode) {
         COAHierarchyEntity parentCoah = parentCoa.getCoaHierarchy();
         if (parentCoah == null) {
             throw new RuntimeException("ParentCoa.coaHierarchy has not been defined");
@@ -220,34 +204,9 @@ public class InterestPostingAccountingEntryTest {
      * Compare GLCodes lexicographically by GL Code string values
      * 
      */
-    public class GLCodeComparator implements Comparator<FinancialTransactionBO> {
+    protected class GLCodeComparator implements Comparator<FinancialTransactionBO> {
         public int compare(final FinancialTransactionBO tran1, final FinancialTransactionBO tran2) {
             return tran1.getGlcode().getGlcode().compareTo(tran2.getGlcode().getGlcode());
         }
     }
-
-    /**
-     * Apply posting rules that determine whether the amount to be posted should be negated. The posting rules are
-     * determined by the category of the GL entry and whether the transaction is a debit or credit:
-     * 
-     * <pre>
-     *        | Asset | Expenditure | Liability | Income |
-     * ---------------------------------------------------
-     * debit  | +     | +           | -         | -      |
-     * credit | -     | -           | +         | +      |
-     * </pre>
-     */
-    private Money getPostedAmount(Money transactionAmount, GLCategoryType category, FinancialConstants debitOrCredit) {
-        Money postedAmount = transactionAmount;
-        if (category.equals(GLCategoryType.ASSET) || category.equals(GLCategoryType.EXPENDITURE))
-            if (debitOrCredit.equals(FinancialConstants.CREDIT)) {
-                postedAmount = postedAmount.negate();
-            }
-        if (category.equals(GLCategoryType.LIABILITY) || category.equals(GLCategoryType.INCOME))
-            if (debitOrCredit.equals(FinancialConstants.DEBIT)) {
-                postedAmount = postedAmount.negate();
-            }
-        return postedAmount;
-    }
-
 }

@@ -35,15 +35,15 @@ import org.mifos.framework.util.helpers.Money;
 public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
         SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
         FinancialActionBO finActionWithrawal = null;
         if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
-            finActionWithrawal = FinancialActionCache.getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL);
+            finActionWithrawal = getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL);
         }
         if (savings.getSavingsType().getId().equals(SavingsType.VOLUNTARY.getValue())) {
-            finActionWithrawal = FinancialActionCache.getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL);
+            finActionWithrawal = getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL);
         }
 
         if (savings.getState() == AccountState.SAVINGS_CLOSED) {

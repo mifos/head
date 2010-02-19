@@ -44,6 +44,7 @@ import org.mifos.accounts.financial.business.service.activity.SavingsInterestPos
 import org.mifos.accounts.financial.business.service.activity.SavingsWithdrawalFinancialActivity;
 import org.mifos.accounts.financial.business.service.activity.WriteOffFinancialActivity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
+import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
@@ -55,6 +56,18 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
 public class FinancialBusinessService implements BusinessService {
+    
+    /**
+     * Added by Keith for testing
+     */
+    public COABO getGlAccount(String glcode) throws FinancialException {
+        return ChartOfAccountsCache.get(glcode);
+    }
+
+    public FinancialActionBO getFinancialAction(final FinancialActionConstants financialActionId)
+            throws FinancialException {
+        return FinancialActionCache.getFinancialAction(financialActionId);
+    }
 
     public FinancialBusinessService() {
         super();

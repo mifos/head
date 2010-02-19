@@ -23,7 +23,6 @@ package org.mifos.accounts.financial.business.service.activity.accountingentry;
 import org.mifos.accounts.financial.business.FinancialActionBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
-import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -32,9 +31,9 @@ import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 public class DisbursementAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
-        FinancialActionBO finloanDibursal = FinancialActionCache.getFinancialAction(FinancialActionConstants.DISBURSAL);
+        FinancialActionBO finloanDibursal = getFinancialAction(FinancialActionConstants.DISBURSAL);
         // debit take form the prd offering
 
         GLCodeEntity glcodeDebit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getPrincipalGLcode();

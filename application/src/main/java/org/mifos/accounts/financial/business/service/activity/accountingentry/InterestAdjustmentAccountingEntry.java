@@ -34,7 +34,7 @@ import org.mifos.framework.util.helpers.Money;
 public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
         LoanBO loan = (LoanBO) loanTrxn.getAccount();
         if (loan.isLegacyLoan()) {
@@ -50,10 +50,10 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 
         FinancialActionBO finActionInterest = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
-        addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest, getGLcode(finActionInterest
+        addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, getGLcode(finActionInterest
                 .getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
-        addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest, glcodeCredit,
+        addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, glcodeCredit,
                 FinancialConstants.DEBIT);
 
         // check if rounding is required
@@ -78,10 +78,10 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 
         FinancialActionBO finActionInterest = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
-        addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest, getGLcode(finActionInterest
+        addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, getGLcode(finActionInterest
                 .getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
-        addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest, glcodeCredit,
+        addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, glcodeCredit,
                 FinancialConstants.DEBIT);
         boolean isLastPayment = ((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
         if (!isLastPayment) {

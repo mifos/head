@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
@@ -34,17 +33,14 @@ import org.mifos.customers.business.CustomerTrxnDetailEntity;
 public class CustomerAccountFeesAccountingEntry extends BaseAccountingEntry {
 
     @Override
-    protected void getSpecificAccountActionEntry() throws FinancialException {
+    protected void applySpecificAccountActionEntry() throws FinancialException {
         CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity) financialActivity.getAccountTrxn();
-        Set<FeesTrxnDetailEntity> feesTrxn = customertrxn.getFeesTrxnDetails();
-        Iterator<FeesTrxnDetailEntity> iterFees = feesTrxn.iterator();
-        FinancialActionBO finActionFee = FinancialActionCache.getFinancialAction(FinancialActionConstants.FEEPOSTING);
-        while (iterFees.hasNext()) {
-            FeesTrxnDetailEntity feeTrxn = iterFees.next();
-
+        Set<FeesTrxnDetailEntity> feesTrxns = customertrxn.getFeesTrxnDetails();
+        FinancialActionBO finActionFee = getFinancialAction(FinancialActionConstants.FEEPOSTING);
+        
+        for (FeesTrxnDetailEntity feeTrxn: feesTrxns) {
             addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,
                     feeTrxn.getAccountFees().getFees().getGlCode(), FinancialConstants.CREDIT);
-
             addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee, getGLcode(finActionFee
                     .getApplicableDebitCharts()), FinancialConstants.DEBIT);
         }

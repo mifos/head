@@ -120,16 +120,51 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.updateObject(loan);
        Assert.assertEquals(accountTrxnEntity.getFinancialTransactions().size(), 10);
 
-        int countNegativeFinTrxn = 0;
         for (FinancialTransactionBO finTrxn : accountTrxnEntity.getFinancialTransactions()) {
-            if (finTrxn.getPostedAmount().isLessThanZero())
-                countNegativeFinTrxn++;
-            else
-               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount(), TestUtils.makeMoney(200.0));
+            if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("1")) && finTrxn.isCreditEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("200"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("200"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("1")) && finTrxn.isDebitEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("200"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("200"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("2")) && finTrxn.isCreditEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("300"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("300"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("2")) && finTrxn.isDebitEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("300"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("300"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("41"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("3")) && finTrxn.isCreditEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("3")) && finTrxn.isDebitEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("50"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("4")) && finTrxn.isCreditEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("10"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("10"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("4")) && finTrxn.isDebitEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("10"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("10"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("50"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("6")) && finTrxn.isCreditEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("20"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("20"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("6")) && finTrxn.isDebitEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("20"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("20"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("42"));
+            } else {
+                fail("There should not be any other entry");
+            }
         }
-       Assert.assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 9);
-       Assert.assertEquals("Positive finTrxn values count", accountTrxnEntity.getFinancialTransactions().size()
-                - countNegativeFinTrxn, 1);
     }
 
     private AccountTrxnEntity getAccountTrxnObj(AccountPaymentEntity accountPaymentEntity) throws Exception {
@@ -173,8 +208,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         SavingsPersistence savingsPersistence = new SavingsPersistence();
 
         PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-        Money depositAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.0");
-        Money balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "5000.0");
+        Money depositAmount = new Money(TestUtils.RUPEE, "1000.0");
+        Money balanceAmount = new Money(TestUtils.RUPEE, "5000.0");
         java.util.Date trxnDate = helper.getDate("20/05/2006");
 
         AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositAmount, balanceAmount,
@@ -209,19 +244,20 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
             if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
                Assert.assertTrue(true);
-               Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
-                int countNegativeFinTrxn = 0;
+               Assert.assertEquals(2, trxn.getFinancialTransactions().size());
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
-                    if (finTrxn.getPostedAmount().isLessThanZero()) {
-                        countNegativeFinTrxn++;
-                       Assert.assertEquals(TestUtils.makeMoney(1000.0), finTrxn.getPostedAmount().negate());
-                    } else
-                       Assert.assertTrue(false);
+                    if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19")) && finTrxn.isCreditEntry()) {
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19")) && finTrxn.isDebitEntry()) {
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
+                    } else {
+                        fail("There should not be any other entry");
+                    }
                 }
-
-               Assert.assertEquals("Negative finTrxn values count", 2, countNegativeFinTrxn);
-               Assert.assertEquals("Positive finTrxn values count", 0, accountTrxn.getFinancialTransactions().size()
-                        - countNegativeFinTrxn);
             }
         }
         group = savings.getCustomer();
@@ -270,19 +306,19 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
                Assert.assertTrue(true);
                Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
-                int countNegativeFinTrxn = 0;
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
-                    if (finTrxn.getPostedAmount().isLessThanZero()) {
-                        countNegativeFinTrxn++;
-                    } else
-                       Assert.assertEquals(TestUtils.makeMoney(1000.0), finTrxn.getPostedAmount());
-                   Assert.assertEquals("correction entry", finTrxn.getNotes());
+                    if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21")) && finTrxn.isCreditEntry()) {
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
+                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21")) && finTrxn.isDebitEntry()) {
+                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("1000"));
+                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+                    } else {
+                        fail("There should not be any other entry");
+                    }
                 }
-
-               Assert.assertEquals("Negative finTrxn values count", 0, countNegativeFinTrxn);
-               Assert.assertEquals("Positive finTrxn values count", 2, accountTrxn.getFinancialTransactions().size()
-                        - countNegativeFinTrxn);
-
             }
         }
         group = savings.getCustomer();
@@ -368,16 +404,20 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.updateObject(loan);
         Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity.getFinancialTransactions();
        Assert.assertEquals(finTrxnSet.size(), 2);
-        int countNegativeFinTrxn = 0;
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
-            if (finTrxn.getPostedAmount().isLessThanZero()) {
-               Assert.assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate(), TestUtils.makeMoney(100.0));
-                countNegativeFinTrxn++;
-            } else
-               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount(), TestUtils.makeMoney(100.0));
+            if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("22")) && finTrxn.isCreditEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("22")) && finTrxn.isDebitEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
+            } else {
+                fail("There should not be any other entry"); 
+            }
         }
-       Assert.assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
-       Assert.assertEquals("Positive finTrxn values count", finTrxnSet.size() - countNegativeFinTrxn, 1);
+            
     }
 
     public void testLoanRescheduleAccountingEntries() throws Exception {
@@ -402,16 +442,19 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.updateObject(loan);
         Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity.getFinancialTransactions();
        Assert.assertEquals(finTrxnSet.size(), 2);
-        int countNegativeFinTrxn = 0;
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
-            if (finTrxn.getPostedAmount().isLessThanZero()) {
-               Assert.assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate(), TestUtils.makeMoney(100.0));
-                countNegativeFinTrxn++;
-            } else
-               Assert.assertEquals("Positive finTrxn values", finTrxn.getPostedAmount(), TestUtils.makeMoney(100.0));
+            if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("23")) && finTrxn.isCreditEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
+            } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("23")) && finTrxn.isDebitEntry()) {
+                Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.makeMoney("100"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
+            } else {
+                fail("There should not be any other entry"); 
+            }
         }
-       Assert.assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
-       Assert.assertEquals("Positive finTrxn values count", finTrxnSet.size() - countNegativeFinTrxn, 1);
     }
 
 }

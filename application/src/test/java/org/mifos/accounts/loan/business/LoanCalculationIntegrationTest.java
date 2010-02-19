@@ -794,7 +794,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     // verify that 999 account transactions are logged after last payment is
     // made
-    public void testNegative999Account() throws NumberFormatException, PropertyNotFoundException, SystemException,
+    public void test999Account() throws NumberFormatException, PropertyNotFoundException, SystemException,
             ApplicationException, URISyntaxException {
         String dataFileName = "account999-test2.csv";
         runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
@@ -997,7 +997,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                    Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
                     Money postedAmount = financialTransaction.getPostedAmount();
                     Money expected999Account = testCaseData.getExpectedResult().getAccount999();
-                   Assert.assertEquals(postedAmount, expected999Account);
+                   Assert.assertEquals(removeSign(expected999Account), postedAmount);
                     if (expected999Account.isGreaterThanZero()) {
                        Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.CREDIT);
@@ -1044,12 +1044,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                    Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
                     Money postedAmount = financialTransaction.getPostedAmount();
                     Money expected999Account = testCaseData.getExpectedResult().getAccount999();
-                    if (!postedAmount.equals(expected999Account)) {
+                    if (!postedAmount.equals(removeSign(expected999Account))) {
                         System.out.println("File name: " + fileName + " posted amount: "
                                 + postedAmount + " expected amount: "
                                 + expected999Account);
                     }
-                   Assert.assertEquals(postedAmount, expected999Account);
+                   Assert.assertEquals(removeSign(expected999Account), postedAmount);
                     if (expected999Account.isGreaterThanZero()) {
                        Assert.assertEquals(FinancialConstants.fromValue(financialTransaction.getDebitCreditFlag()),
                                 FinancialConstants.CREDIT);
@@ -1063,6 +1063,19 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         }
         compare999Account(testCaseData.getExpectedResult().getAccount999(), calculatedResults.getAccount999(), fileName);
 
+    }
+    
+    /**
+     * Added as a fix for negative posted amounts stored in cvs for test
+     * Since the MIFOS-2474 no account transaction is records -ve amount
+     * @param amount
+     * @return
+     */
+    private Money removeSign(final Money amount) {
+        if (amount != null && amount.isLessThanZero()) {
+            return amount.negate();
+        }
+        return amount;
     }
 
     // verify that 999 account transactions are logged after last payment is
