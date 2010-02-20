@@ -51,8 +51,6 @@ public class MifosMasterTextTag extends BaseFieldTag {
      *            pageContext of the Tag
      * @param property
      *            property of the element
-     * @param value
-     *            type of the element
      * 
      */
     public MifosMasterTextTag(PageContext pageContext, String property, String type) {

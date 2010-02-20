@@ -28,8 +28,8 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
  * The purpose of this {@link MifosTask} is to execute the queries against the
  * database so that the collection sheet BIRT report that uses these queries
  * will be more efficient as the queries will be cached.
- * 
- * @see CollectionSheetReport.rptdesign
+ * <br>
+ * <b>see</b> CollectionSheetReport.rptdesign
  */
 public class CollectionSheetReportParameterCachingTask extends MifosTask {
 

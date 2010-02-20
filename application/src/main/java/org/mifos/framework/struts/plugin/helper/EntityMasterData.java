@@ -51,8 +51,6 @@ public final class EntityMasterData {
      * This method creates a map of entity master table as sets it into the
      * servletcontext so that it is available till the application is up.
      * 
-     * @param servlet
-     * @param config
      * @throws HibernateProcessException
      */
     public void init() throws HibernateProcessException {

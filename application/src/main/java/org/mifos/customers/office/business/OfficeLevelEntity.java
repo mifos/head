@@ -31,7 +31,7 @@ import org.mifos.framework.exceptions.PersistenceException;
  * As with the other *Entity classes, this one corresponds to
  * {@link OfficeLevel}. The extra complication is that with office levels, the
  * user can configure which are in use (for example, are there subregional
- * offices?). The {@link #configured} flag is set/clear for levels which
+ * offices?). The <b>configured</b> flag is set/clear for levels which
  * are/are-not in use.
  */
 public class OfficeLevelEntity extends MasterDataEntity {

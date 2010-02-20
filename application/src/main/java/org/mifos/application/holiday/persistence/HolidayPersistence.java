@@ -59,9 +59,7 @@ public class HolidayPersistence extends MasterPersistence {
      * 
      * Force a locale that works with pattern parsing.
      */
-    /**
-     * @deprecated use {@link HolidayDao#findAllHolidaysForYear}.
-     */
+    
     @Deprecated
     public List<HolidayBO> getHolidays(final int year) throws PersistenceException {
         SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd",new Locale("en","GB"));

@@ -112,7 +112,7 @@ public class CustomPropertiesHelper {
     
     /**
      * Sets Working days of the week.
-     * @param interest minimum interest rate.
+     * @param workingDays working days.
      */
     public void setWorkingDays(String workingDays) {
         selenium.open(UPDATE_PAGE + "?FiscalCalendarRules.WorkingDays=" + workingDays);

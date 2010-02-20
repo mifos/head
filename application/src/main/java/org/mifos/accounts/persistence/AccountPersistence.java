@@ -282,7 +282,7 @@ public class AccountPersistence extends Persistence {
     }
 
     /**
-     * This method is equivalent to {@link getAccountIdFromGlCode} and is only
+     * This method is equivalent to {@link AccountPersistence#getAccountIdFromGlCode(String)} and is only
      * for use during initialization as a workaround for avoiding dependencies
      * on auditing & string resolution during application startup. We should try
      * to refactor the startup code so that this method can be eliminated.
@@ -387,7 +387,7 @@ public class AccountPersistence extends Persistence {
     }
 
     /**
-     * @see {@link #addGeneralLedgerAccount(String, String, String, GLCategoryType)}
+     * @see #addGeneralLedgerAccount(String, String, String, GLCategoryType)
      */
     public COABO addGeneralLedgerAccount(String name, String glcode, Short parent_id, GLCategoryType categoryType) {
         Short id = getAccountIdFromGlCode(glcode);

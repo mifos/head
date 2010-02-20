@@ -91,8 +91,6 @@ public class Cache {
      * 
      * @param listObject
      *            object we are getting from user.
-     * @param key
-     *            key of the session.
      * @throws HibernateSearchException
      */
 

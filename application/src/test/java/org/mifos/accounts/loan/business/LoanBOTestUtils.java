@@ -70,7 +70,7 @@ public class LoanBOTestUtils {
     private static final double DEFAULT_LOAN_AMOUNT = 300.0;
     /**
      * Like
-     * {@link #createLoanAccountWithDisbursement(String, CustomerBO, AccountState, Date, LoanOfferingBO, int, Short)}
+     * <b>createLoanAccountWithDisbursement(String, CustomerBO, AccountState, Date, LoanOfferingBO, int, Short)</b>
      * but differs in various ways.
      * <p/>
      * TODO: This test code needs to be refactored! By creating the loan with a

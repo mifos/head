@@ -107,7 +107,7 @@ public class DatabaseTestUtils {
     /** 
      * given an XML string, returns an data set with [null] replaced by actual null objects.
      * @param xmlString
-     * @return
+     * @return IDataSet
      * @throws IOException
      * @throws DataSetException
      */
@@ -121,7 +121,7 @@ public class DatabaseTestUtils {
     /**
      * Given a data set, return a data set with [null] replaced by actual null objects
      * @param dataSet
-     * @return
+     * @return replacementDataSet
      */
     public ReplacementDataSet getDataSetWithNullsReplaced(IDataSet dataSet) {
         ReplacementDataSet replacementDataSet = new ReplacementDataSet(dataSet); 

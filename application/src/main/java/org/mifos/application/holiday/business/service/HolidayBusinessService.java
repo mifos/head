@@ -59,9 +59,6 @@ public class HolidayBusinessService implements BusinessService {
         }
     }
 
-    /**
-     * use {@link HolidayDao#findAllHolidaysForYear}
-     */
     @Deprecated
     public List<HolidayBO> getHolidays(final int year) throws ServiceException {
         // HolidayBO.isWorkingDay(Calendar.getInstance());
@@ -149,7 +146,6 @@ public class HolidayBusinessService implements BusinessService {
      * 
      * @return the given day, if it's the first working day of the week, otherwise 
      * back up to the first working day of the week.
-     * @throws RunTimeException if the day is not a working day.
      */
     public Date getFirstWorkingDayOfWeekForDate (Date day) {
         if (!isWorkingDay(day)) {

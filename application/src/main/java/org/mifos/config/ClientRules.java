@@ -211,8 +211,8 @@ public class ClientRules {
         return cfgValue;
     }
 
-    /**
-     * Fetches and populates {@link #nameSequence}.
+    /*
+     * Fetches and populates ClientRules#nameSequence.
      */
     public static String[] getNameSequence() {
         if (nameSequence == null) {
@@ -259,8 +259,8 @@ public class ClientRules {
 
     /**
      * Delegates to {@link #isValidNameSequence(String[])} to check that the
-     * configured nameSequence is valid. Automatically fetches and populates
-     * {@link #nameSequence} if necessary.
+     * configured <i>nameSequence</i> is valid. Automatically fetches and populates
+     * <i>nameSequence</i> if necessary.
      * <p>
      * A name sequence is the order in which client names are displayed.
      * Example: first name, then middle name, then last name.

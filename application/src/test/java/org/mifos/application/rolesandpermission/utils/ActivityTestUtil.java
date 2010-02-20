@@ -31,7 +31,7 @@ public class ActivityTestUtil {
     /**
      * This method creates a new activity entity with a given activity id
      * 
-     * @return
+     * @return activityEntity {@link ActivityEntity}
      * @throws PersistenceException
      */
     public static ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {

@@ -68,7 +68,7 @@ public class MoneyUtils {
 
     /**
      * @deprecated use {@link MoneyUtils#zero(MifosCurrency)}
-     * @return
+     * @return zero Money
      */
     @Deprecated
     public static Money zero() {
@@ -122,7 +122,6 @@ public class MoneyUtils {
     /**
      * Does the rounding based on <br />
      * {@link Money#round(Money, BigDecimal, RoundingMode)} with <br />
-     * {@link AccountingRules#getDigitsAfterDecimalMultiple()} (Default 0.1) <br />
      * {@link AccountingRules#getCurrencyRoundingMode()} (Default
      * {@link RoundingMode#HALF_UP}
      * 

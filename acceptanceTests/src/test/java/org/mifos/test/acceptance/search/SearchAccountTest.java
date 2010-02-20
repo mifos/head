@@ -66,7 +66,7 @@ public class SearchAccountTest extends SearchTestBase {
     }
     
     /**
-     * Enters an account number ({@link #ACCT_SEARCH_STRING}) in the search box
+     * Enters an account number <b>ACCT_SEARCH_STRING</b> in the search box
      * and verifies that the expected text with that account number
      * is present on the results page
      */

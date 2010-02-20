@@ -54,7 +54,6 @@ public class BaseAccountingEntryTestCase {
      *            a Mockito-mocked BaseFinancialActivity instance
      * @param expectedTransCount
      *            the size of the created list of FinancialTransactionBO instances
-     * @return
      */
     protected void executeBuildAccountingEntryForAction(BaseAccountingEntry accountingEntry,
             BaseFinancialActivity financialActivity) throws FinancialException {

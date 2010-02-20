@@ -33,7 +33,7 @@ import org.mifos.framework.business.View;
 public class CustomValueList extends View {
 
     /**
-     * entityId refers to the {@link LookUpEnity} represented by this list
+     * entityId refers to the {@link LookUpEntity} represented by this list
      */
     private Short entityId;
 
@@ -104,8 +104,7 @@ public class CustomValueList extends View {
     /**
      * Method which obtains a particular lookupValue for the given lookup id
      * 
-     * @param customValueListElements
-     *            The customValueListElements to set.
+     * @param lookUpId the lookup id.
      */
     public String getLookUpValueForId(int lookUpId) {
         String lookUpValue = "";

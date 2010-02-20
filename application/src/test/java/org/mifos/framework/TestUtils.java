@@ -73,7 +73,7 @@ public class TestUtils {
     }
 
     /**
-     * Also see {@link TestObjectFactory#getUserContext()} which should be
+     * Also see TestObjectFactory#getUserContext() which should be
      * slower (it involves several database accesses).
      */
     public static UserContext makeUser(int role) {
@@ -102,7 +102,7 @@ public class TestUtils {
 
     /**
      * Corresponds to the locale one gets from
-     * {@link TestObjectFactory#getUserContext()}.
+     *  TestObjectFactory#getUserContext()
      */
     public static Locale ukLocale() {
         return new Locale("EN", "GB");

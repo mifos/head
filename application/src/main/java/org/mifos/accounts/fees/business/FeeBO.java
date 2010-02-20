@@ -70,7 +70,7 @@ public abstract class FeeBO extends BusinessObject {
     }
 
     /**
-     * @param office2
+     * @param office
      * @param createdByUserId
      * @param createdDate
      * 

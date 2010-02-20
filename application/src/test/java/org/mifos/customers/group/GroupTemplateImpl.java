@@ -53,7 +53,7 @@ public class GroupTemplateImpl extends CustomerTemplateImpl implements GroupTemp
      * into uniqueness constraints. Plan on always rolling back the transaction.
      * 
      * @param parentCenterId
-     * @return
+     * @return groupTemplateImpl
      */
     public static GroupTemplateImpl createNonUniqueGroupTemplate(Integer parentCenterId) {
         return new GroupTemplateImpl(parentCenterId);

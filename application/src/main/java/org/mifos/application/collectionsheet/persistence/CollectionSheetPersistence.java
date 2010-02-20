@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.joda.time.LocalDate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -48,7 +49,7 @@ import org.mifos.framework.persistence.Persistence;
 /**
  * no longer used in relation to Collection sheet functionality
  * 
- * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated
 public class CollectionSheetPersistence extends Persistence {

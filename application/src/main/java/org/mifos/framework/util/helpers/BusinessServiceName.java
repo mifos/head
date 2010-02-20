@@ -34,17 +34,17 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 
 /**
- * This class is deprecated.
+ * This class is @deprecated.
  * 
  * Instead of calling
- * {@link ServiceFactory#getBusinessService(BusinessServiceName)}, just call the
+ * </b>ServiceFactory#getBusinessService(BusinessServiceName)</b>, just call the
  * constructor of the business service directly. for example, new
  * ConfigurationBusinessService();
  */
+@Deprecated
 public enum BusinessServiceName {
     Customer(CustomerBusinessService.class), MasterDataService(MasterDataService.class), ReportsService(
             ReportsBusinessService.class), FeesService(FeeBusinessService.class), Personnel(

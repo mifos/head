@@ -38,9 +38,6 @@ public class Parameters {
     /** Used to set the value of parameterName */
     private Param[] param;
 
-    /**
-     * @param args
-     */
     public Parameters() {
     }
 
@@ -62,16 +59,9 @@ public class Parameters {
     /**
      * Function to get the parameters.
      * 
-     * @param name
-     *            parameter name.
-     * @param label
-     *            parameter value.
-     * @param labelType
-     *            parameter value type.
      * @param obj
      * @return string string array of parameters.
      * @throws TableTagException
-     * @throws UnsupportedEncodingException
      */
     public String[] getParameters(PageContext pageContext, Param[] param, Object obj, Locale locale)
             throws TableTagException {

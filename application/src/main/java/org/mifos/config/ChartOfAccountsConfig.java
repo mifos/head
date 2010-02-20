@@ -54,7 +54,7 @@ import org.xml.sax.SAXException;
 /**
  * Encapsulates chart of accounts configuration.
  * <p>
- * Use {@link #load(String, String)} to get an instance of this class.
+ * Use {@link #load(String)} to get an instance of this class.
  */
 public class ChartOfAccountsConfig {
     // XML element names
@@ -124,7 +124,7 @@ public class ChartOfAccountsConfig {
      * anywhere in the application server classpath.
      * 
      * @return relative path to Chart of Accounts config file that the
-     *         {@link ResourceLoader} can use to derive the actual on-disk
+     *         {@link ClasspathResource} can use to derive the actual on-disk
      *         location.
      */
     public static String getCoaUri(Session session) {

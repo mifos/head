@@ -41,7 +41,7 @@ public class MifosPatternParser extends PatternParser {
     /**
      * Constructor: Passes the pattern string to the superclass PatternParser
      * 
-     * @param arg0
+     * @param pattern
      */
     public MifosPatternParser(String pattern) {
         super(pattern);

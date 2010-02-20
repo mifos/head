@@ -89,7 +89,7 @@ public class OfficeTemplateImpl implements OfficeTemplate {
      * into uniqueness constraints. Plan on always rolling back the transaction.
      * 
      * @param officeLevel
-     * @return
+     * @return officeTemplateImpl
      */
     public static OfficeTemplateImpl createNonUniqueOfficeTemplate(OfficeLevel officeLevel) {
         return new OfficeTemplateImpl(officeLevel);

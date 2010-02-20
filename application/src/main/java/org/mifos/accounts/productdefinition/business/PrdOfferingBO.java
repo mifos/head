@@ -110,8 +110,6 @@ public abstract class PrdOfferingBO extends BusinessObject {
      * TODO - keithw - work in progress -
      * 
      * Minimal legal constructor
-     * 
-     * @param productStatus
      */
     public PrdOfferingBO(final String name, final String shortName, final String globalProductNumber,
             final Date startDate, final ApplicableTo applicableToCustomer, final ProductCategoryBO category,

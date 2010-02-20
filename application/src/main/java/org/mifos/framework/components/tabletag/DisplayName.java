@@ -70,9 +70,6 @@ public class DisplayName {
         this.fragment = fragment;
     }
 
-    /**
-     * @param args
-     */
     public DisplayName() {
     }
 
@@ -80,10 +77,8 @@ public class DisplayName {
      * A helper method which gets the display name according to the label using
      * another helper method
      * 
-     * @param label
-     * @param labelType
      * @param obj
-     * @return
+     * @return displayNames
      * @throws TableTagException
      */
     public String[] getDisplayName(PageContext pageContext, Fragment[] fragment, Object obj, boolean span, Locale locale)

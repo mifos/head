@@ -41,7 +41,7 @@ public class ApplyChargeActionFormTest {
     }
     
     /**
-     * Test method for {@link org.mifos.accounts.struts.actionforms.ApplyChargeActionForm#validateAmount(org.apache.struts.action.ActionErrors, java.util.Locale)}.
+     * Test method for <b>ApplyChargeActionForm#validateAmount(ActionErrors, Locale)</b>.
      */
     @Test
     public void testValidateValidRate() {

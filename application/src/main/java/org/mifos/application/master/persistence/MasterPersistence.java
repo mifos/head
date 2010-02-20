@@ -229,7 +229,7 @@ public class MasterPersistence extends Persistence {
     /**
      * Update the String value of a LookUpValueLocaleEntity.
      * 
-     * @param id
+     * @param lookupValueEntityId
      *            - the database id of the LookUpValueLocaleEntity object
      *            representing a ValueListElement
      */

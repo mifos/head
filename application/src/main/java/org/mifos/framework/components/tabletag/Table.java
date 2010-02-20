@@ -114,7 +114,7 @@ public class Table {
      * Function to get the path
      * 
      * @param key
-     * @return
+     * @return path
      */
     public Path findPath(String key) {
         for (int i = 0; i < path.length; i++) {

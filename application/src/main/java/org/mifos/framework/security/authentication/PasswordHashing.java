@@ -62,7 +62,7 @@ public class PasswordHashing {
     }
 
     /**
-     * This function varifies a given password
+     * This function verifies a given password
      * 
      */
     public boolean verifyPassword(String password, byte[] encPassword) {
@@ -101,7 +101,7 @@ public class PasswordHashing {
      * 
      * @param encPassword
      * @param decPassword
-     * @return
+     * @return boolean compare result
      */
     public boolean compare(byte[] encPassword, byte[] decPassword) {
         if (Arrays.equals(encPassword, decPassword))
@@ -113,7 +113,7 @@ public class PasswordHashing {
     /**
      * This function generate and returns the random no of bytes
      * 
-     * @return
+     * @return randomBytes
      */
     public byte[] generateRandomBytes() {
         byte[] randomBytes = new byte[12];

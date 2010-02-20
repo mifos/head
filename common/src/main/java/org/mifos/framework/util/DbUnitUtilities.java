@@ -239,7 +239,7 @@ public class DbUnitUtilities {
      * Convenience method to get a DbUnit DataSet of only one table.
      * @param driverManagerDataSource
      * @param tableName
-     * @return
+     * @return IDataSet
      * @throws Exception
      * @throws Exception
      * @throws SQLException
@@ -254,7 +254,7 @@ public class DbUnitUtilities {
      * Returns a DbUnit DataSet for several tables.
      * @param driverManagerDataSource TODO
      * @param tableNames
-     * @return
+     * @return IDataSet
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception

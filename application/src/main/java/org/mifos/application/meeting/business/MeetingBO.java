@@ -550,7 +550,7 @@ public class MeetingBO extends BusinessObject {
      * for monthly on date return the next date falling on the same day. If date has passed, pass in the date of next
      * month, adjust to day number if day number exceed total number of days in month.
      * 
-     * @deprecated - Please use {@link CalendarUtils#getFirstDateForMonthOnDate)} or
+     * @deprecated - Please use {@link CalendarUtils#getFirstDateForMonthOnDate()} or
      *             {@link CalendarUtils#getFirstDayForMonthUsingWeekRankAndWeekday} instead. Also when generating
      *             schedules please use {@link ScheduledDateGeneration#generateScheduledDates}.
      */
@@ -622,7 +622,7 @@ public class MeetingBO extends BusinessObject {
      * for monthly is on date add the number of months after which meeting is to
      * recur, and then adjust the date for day on which meeting is to occur
      * 
-     * @deprecated - Please use {@link CalendarUtils#getNextDateForMonthOnDate)} or
+     * @deprecated - Please use {@link CalendarUtils#getNextDateForMonthOnDate()} or
      *             {@link CalendarUtils#getNextDayForMonthUsingWeekRankAndWeekday} instead.
      */
     @Deprecated

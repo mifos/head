@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -45,7 +46,7 @@ import org.mifos.framework.exceptions.SystemException;
 /**
  * @deprecated collection sheets not used as a domain concept.
  * 
- * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated
 public class CollectionSheetBO extends BusinessObject {

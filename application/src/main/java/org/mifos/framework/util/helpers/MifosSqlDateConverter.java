@@ -31,8 +31,7 @@ public class MifosSqlDateConverter implements Converter {
     private Locale locale = null;
 
     /**
-     * @param format
-     *            The format to set.
+     * @param locale locale.
      */
     public void setLocale(Locale locale) {
         this.locale = locale;

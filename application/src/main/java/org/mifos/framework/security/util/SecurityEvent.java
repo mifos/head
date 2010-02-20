@@ -38,7 +38,7 @@ public interface SecurityEvent {
     /**
      * Thsi function return the object which is being updated
      * 
-     * @return
+     * @return object
      */
     public Object getObject();
 

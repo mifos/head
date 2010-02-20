@@ -82,9 +82,6 @@ public class PPISurvey extends Survey {
      * implements a dispatch pattern so that a client will get the correct class
      * of survey without having to invoke instanceOf(). This method overrides
      * the superclass method to return
-     * <p>
-     * 
-     * @see {@link PpiSurvey.createInstance()}
      */
     @Override
     public SurveyInstance createSurveyInstance() {

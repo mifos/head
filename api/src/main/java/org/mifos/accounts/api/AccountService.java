@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * The Interface AccountService provides methods to make and support making
  * loan payments.  This interface is intended to be used by implementers of
- * the {@link TransactionImport} Interface.
+ * the <b>org.mifos.spi.TransactionImport</b> Interface.
  */
 public interface AccountService {
     

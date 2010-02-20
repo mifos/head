@@ -44,13 +44,6 @@ public class ResourceBundleFactory {
 
     /**
      * Function to obtain the resource bundle for an MfiLocale
-     * 
-     * @param loggerName
-     *            Name of the resource bundle
-     * @param mfiLocale
-     *            MFI Locale
-     * @param resourceBundle
-     *            Resource bundle for the MFILocale.
      */
     public static ResourceBundleFactory getInstance() {
 

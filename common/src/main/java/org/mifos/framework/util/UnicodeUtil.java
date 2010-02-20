@@ -144,7 +144,7 @@ public class UnicodeUtil {
         public static final int BOM_SIZE = 4;
 
         /**
-         * WARNING: {@link #read()} behaves differently after {@link #init()} is
+         * WARNING: {@link #read()} behaves differently after <b>init()</b> is
          * called!
          * 
          * @param fallbackEncoding

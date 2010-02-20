@@ -83,9 +83,6 @@ public class HolidayUtils {
         return null;
     }
 
-    /**
-     * @deprecated - please use {@link ScheduleGenerationStrategy} for generating dates that take into account working days and holidays.
-     */
     @Deprecated
     public static Calendar adjustDate(final Calendar day, final MeetingBO meeting) throws MeetingException {
         Calendar adjustedDate = isWorkingDay(day) ? day : getNextWorkingDay(day);

@@ -1152,7 +1152,7 @@ public class SavingsBO extends AccountBO {
     }
 
     /**
-     * @deprecated use {@link SavingsBO#withdraw(Money)} instead and use save
+     * @deprecated use {@link SavingsBO#withdraw(AccountPaymentEntity, CustomerBO)} instead and use save
      *             from DAO/Persistence for {@link SavingsBO}.
      */
     @Deprecated

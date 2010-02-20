@@ -130,7 +130,7 @@ public class AccountFeesEntity extends PersistentObject {
 
     /**
      * Low-level setting function. Methods like
-     * {@link #changeFeesStatus(Short, Date)} and others to be created better
+     * {@link #changeFeesStatus(FeeStatus, Date)} and others to be created better
      * express what kinds of actions take place.
      */
     public void setFeeStatus(final FeeStatus status) {

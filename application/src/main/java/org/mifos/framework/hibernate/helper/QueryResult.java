@@ -46,7 +46,7 @@ public interface QueryResult {
     /**
      * Set the query which will be used for query execution
      * 
-     * @param Query
+     * @param query Query
      */
     public void executeQuery(Query query) throws HibernateSearchException;
 

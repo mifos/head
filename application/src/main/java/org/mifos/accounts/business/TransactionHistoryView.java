@@ -184,14 +184,14 @@ public class TransactionHistoryView extends View implements Comparable<Transacti
         this.postedBy = postedBy;
     }
 
-    /**
+    /*
      * This is only written for test purposes. The idea is to guarantee the
      * order in which these objects can be organized in a list - first compare
      * by postedDates, if dates are equal - 'Credit' should come before 'Debit'.
      * There is no philosophical reasoning behind this ordering, just something
      * we can count on --> this should be changed to suite a production need if
      * one exists. The tests that rely on this ordering include:
-     * {@link SavingsActionStrutsTest#testSuccessfullGetTransactionHistory()}
+     * <b>SavingsActionStrutsTest#testSuccessfullGetTransactionHistory()</b>
      */
     public int compareTo(TransactionHistoryView o) {
         int dateCompare = this.getPostedDate().compareTo(o.getPostedDate());

@@ -34,7 +34,7 @@ public interface ScheduleService {
     /**
      * Build a schedule from the constraints encapsulated in a MeetingBO
      * @param meeting
-     * @return
+     * @return dates
      * @throws MeetingException
      */
     public List<Date> buildSchedule (MeetingBO meeting) throws MeetingException;

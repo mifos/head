@@ -33,9 +33,6 @@ import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-/**
- * Also see {@link AccountActionEntityTest}.
- */
 public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase {
 
     public AccountActionEntityIntegrationTest() throws Exception {

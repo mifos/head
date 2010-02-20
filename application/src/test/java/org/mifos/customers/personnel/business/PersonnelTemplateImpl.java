@@ -145,7 +145,7 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
      * into uniqueness constraints. Plan on always rolling back the transaction.
      * 
      * @param officeId
-     * @return
+     * @return personnelTemplateImpl
      */
     public static PersonnelTemplateImpl createNonUniquePersonnelTemplate(Short officeId) {
         return new PersonnelTemplateImpl(officeId);

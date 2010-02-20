@@ -51,7 +51,7 @@ public class Message {
      * 
      * @param str
      *            The statement to be logged
-     * @param loggerUser
+     * @param loggedUser
      *            UserId of the user logging the statement
      * @param userOffice
      *            OfficeId of the user logging the statement

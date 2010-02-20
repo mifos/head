@@ -28,7 +28,7 @@ import org.mifos.customers.personnel.business.PersonnelView;
 
 /**
  * An Assembler for building {@link CollectionSheetFormEnteredDataDto} from
- * {@link BulkEntryActionForm} and {@link CollectionSheetFormDto}.
+ * {@link BulkEntryActionForm}.
  */
 public class FormEnteredDataAssembler {
 

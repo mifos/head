@@ -38,10 +38,6 @@ public class IdGenerator {
      * 
      * @param officeGlobalNum
      *            Global customer number for the office of the customer
-     * @param customerLevelId
-     *            Level of the customer
-     * @param maxCustomerCount
-     *            Number of customers in that branch till now
      * @return The global customer number that is generated
      */
     public static String generateSystemId(String officeGlobalNum, int maxCustomerId) {
@@ -66,10 +62,6 @@ public class IdGenerator {
      * 
      * @param officeGlobalNum
      *            Global customer number for the office of the customer
-     * @param customerLevelId
-     *            Level of the customer
-     * @param maxCustomerCount
-     *            Number of customers in that branch till now
      * @return The global customer number that is generated
      */
     public static String generateSystemIdForCustomer(String officeGlobalNum, int maxCustomerId) {

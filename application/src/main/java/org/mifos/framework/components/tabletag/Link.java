@@ -45,7 +45,6 @@ public class Link {
      *            object got from the user
      * @return string string as a link.
      * @throws TableTagException
-     * @throws UnsupportedEncodingException
      */
     public static String getLink(PageContext pageContext, DisplayName displayname, String action, Parameters param,
             Object obj, Locale locale, String styleClass, boolean isFlowRequired) throws TableTagException {

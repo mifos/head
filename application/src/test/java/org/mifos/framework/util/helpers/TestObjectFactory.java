@@ -607,8 +607,6 @@ public class TestObjectFactory {
      *            - Interest Rate same would be set as min and max amounts
      * @param defInstallments
      *            Number of installments set as min and max amounts
-     * @param offeringStatusId
-     *            See {@link PrdStatus}.
      */
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
             final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
@@ -948,7 +946,7 @@ public class TestObjectFactory {
     /**
      * createPeriodicAmountFee.
      * 
-     * Changing {@link TestObjectFactory#getUserContext()} to {@link TestUtils#makeUserWithLocales()} caused a failure
+     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
      * in {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee} (and about 163 other tests).
      */
     public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
@@ -1039,7 +1037,7 @@ public class TestObjectFactory {
     /**
      * createOneTimeAmountFee.
      * 
-     * Changing {@link TestObjectFactory#getUserContext()} to {@link TestUtils#makeUserWithLocales()} caused a failure
+     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
      * in {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
     public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory,
@@ -1070,7 +1068,7 @@ public class TestObjectFactory {
     /**
      * createOneTimeRateFee.
      * 
-     * Changing {@link TestObjectFactory#getUserContext()} to {@link TestUtils#makeUserWithLocales()} caused a failure
+     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
      * in {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
     public static FeeBO createOneTimeRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,

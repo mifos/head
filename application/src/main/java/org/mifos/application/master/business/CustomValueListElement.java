@@ -39,7 +39,7 @@ public class CustomValueListElement extends View implements Serializable {
 
     /**
      * The id of an associated object linked to this list element. This only
-     * appears to be used with {@link CustomerAttendence} for use related to
+     * appears to be used with {@link CustomerAttendanceType} for use related to
      * bulk entry.
      */
     private Integer associatedId;

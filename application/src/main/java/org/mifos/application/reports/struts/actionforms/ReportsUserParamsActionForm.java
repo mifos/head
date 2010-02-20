@@ -92,7 +92,7 @@ public class ReportsUserParamsActionForm extends BaseActionForm {
      * 
      * @param mapping
      * @param request
-     * @return
+     * @return errors {@link ActionErrors}
      */
     public ActionErrors customValidate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();

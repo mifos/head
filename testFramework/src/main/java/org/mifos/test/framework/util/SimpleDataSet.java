@@ -75,9 +75,6 @@ public class SimpleDataSet {
      * table is cleared on insertion of the first row.
      * 
      * @param tableName  the table name that the data should be inserted into.
-     * @param columnAndValuePairs in the form of "name1=value", if none are given all
-     *                            the data in the table will be deleted. '=' characters
-     *                            are not allowed.
      */
     public void row(String tableName, String...columnAndValuePairs) {
         rows.add(new Row(tableName, columnAndValuePairs));

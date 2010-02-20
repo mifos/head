@@ -41,8 +41,7 @@ public class MenuBuilder {
      * Method to build menu respective to a locale only when it is not available
      * in menu repository. It then sets menu built for locale to the repository.
      * 
-     * @param lc
-     *            locale instance for which menu has to be built.
+     * @param pageCtx PageContext
      */
     public static void buildMenuForLocale(PageContext pageCtx) throws SystemException, JspException {
         MenuRepository menuRepository = MenuRepository.getInstance();

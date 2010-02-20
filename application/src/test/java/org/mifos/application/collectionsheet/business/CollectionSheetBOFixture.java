@@ -28,7 +28,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 /**
  * @deprecated not used
  * 
- * @see CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)
+ * <b>CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)</b>
  */
 @Deprecated
 public class CollectionSheetBOFixture {
