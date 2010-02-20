@@ -34,6 +34,7 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
 /**
@@ -109,6 +110,14 @@ public class HolidayPersistence extends MasterPersistence {
         parameters.put("THRU_DATE", holiday.getHolidayThruDate());
 
         return executeNamedQuery(NamedQueryConstants.ALL_SAVING_SCHEDULE, parameters);
+    }
+
+    public List<CustomerScheduleEntity> getAllCustomerSchedules(final HolidayBO holiday) throws PersistenceException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("FROM_DATE", holiday.getHolidayFromDate());
+        parameters.put("THRU_DATE", holiday.getHolidayThruDate());
+
+        return executeNamedQuery(NamedQueryConstants.ALL_CUSTOMER_SCHEDULE, parameters);
     }
 
     public int isValidHolidayState(final Short levelId, final Short stateId, final boolean isCustomer) throws PersistenceException {

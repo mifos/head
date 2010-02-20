@@ -67,12 +67,20 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
     }
 
+    /*
+     * FIXME: this should be a single transaction. Was this done with multiple transactions to work around a memory
+     * problem?
+     */
     private void handleHolidayApplication(HolidayBO holiday) throws Exception {
         HolidayUtils.rescheduleLoanRepaymentDates(holiday);
 
         StaticHibernateUtil.commitTransaction();
 
         HolidayUtils.rescheduleSavingDates(holiday);
+
+        StaticHibernateUtil.commitTransaction();
+
+        HolidayUtils.rescheduleCustomerDates(holiday);
 
         // Change flag for this holiday in the databese
         holiday.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());

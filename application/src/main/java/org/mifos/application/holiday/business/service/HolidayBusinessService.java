@@ -34,6 +34,7 @@ import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -90,6 +91,14 @@ public class HolidayBusinessService implements BusinessService {
     public List<SavingsScheduleEntity> getAllSavingSchedule(final HolidayBO holiday) throws ServiceException {
         try {
             return new HolidayPersistence().getAllSavingSchedules(holiday);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public List<CustomerScheduleEntity> getAllCustomerSchedule(HolidayBO holiday) throws ServiceException {
+        try {
+            return new HolidayPersistence().getAllCustomerSchedules(holiday);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }

@@ -6,6 +6,7 @@
 <hibernate-mapping>
 
 	<class name="org.mifos.customers.business.CustomerFeeScheduleEntity" table="CUSTOMER_FEE_SCHEDULE">
+		<!-- what is this ID for? -->
 		<id name="accountFeesActionDetailId" column="ACCOUNT_FEES_DETAIL_ID" type="integer" unsaved-value="null" access="field">
 			<generator class="native" />
 		</id>

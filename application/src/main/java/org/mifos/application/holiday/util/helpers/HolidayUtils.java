@@ -41,9 +41,9 @@ import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.schedule.ScheduledDateGeneration;
 
 /**
  * Helper methods related to holidays logic
@@ -155,6 +155,22 @@ public class HolidayUtils {
                 Date adjustedDate = HolidayUtils.adjustDate(getCalendar(savingScheduleEntity.getActionDate()),
                         loadedMeeting).getTime();
                 savingScheduleEntity.setActionDate(new java.sql.Date(adjustedDate.getTime()));
+            }
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        } catch (MeetingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void rescheduleCustomerDates(HolidayBO holiday) {
+        try {
+            List<CustomerScheduleEntity> customerSchedulesList = new HolidayBusinessService().getAllCustomerSchedule(holiday);
+            for (CustomerScheduleEntity customerSchedule : customerSchedulesList) {
+                MeetingBO loadedMeeting = customerSchedule.getCustomer().getCustomerMeeting().getMeeting();
+                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(customerSchedule.getActionDate()),
+                        loadedMeeting).getTime();
+                customerSchedule.setActionDate(new java.sql.Date(adjustedDate.getTime()));
             }
         } catch (ServiceException e) {
             throw new RuntimeException(e);
