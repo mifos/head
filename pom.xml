@@ -319,6 +319,7 @@
 	        <groupId>org.apache.maven.plugins</groupId>
 	        <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
+                 <additionalJOption>-J-Xmx256m</additionalJOption>
             	 <encoding>UTF-8</encoding>
             </configuration>
 	    </plugin>
