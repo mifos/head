@@ -25,25 +25,24 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
@@ -196,6 +195,14 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
         return this.center;
     }
 
+    public SavingsBO getCenterSavingsAccount() {
+        return this.centerSavingsAccount;
+    }
+
+    public SavingsBO getClientOfGroupCompleteGroupSavingsAccount() {
+        return this.clientOfGroupCompleteGroupSavingsAccount;
+    }
+    
     /**
      * clears persistent objects created by this class
      */

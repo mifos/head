@@ -25,13 +25,25 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest extends MifosIntegrationTestCase {
 
@@ -73,6 +85,49 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         assertThat(collectionSheet.getCollectionSheetCustomer().get(0).getCollectionSheetCustomerSaving().size(), is(1));
         assertThat(collectionSheet.getCollectionSheetCustomer().get(0).getIndividualSavingAccounts().size(), is(0));
 
+    }
+
+    public void testCollectionSheetRetrieveOnlyReturnsActiveAndInactiveSavingsAccounts() throws Exception {
+
+        AccountPersistence accountPersistence = new AccountPersistence();
+        UserContext userContext = TestUtils.makeUser();
+
+        collectionSheetRetrieveSavingsAccountsUtils.createSampleCenterHierarchy();
+
+        SavingsBO centerSavingsAccount = (SavingsBO) accountPersistence
+                .getAccount(collectionSheetRetrieveSavingsAccountsUtils.getCenterSavingsAccount().getAccountId());
+        centerSavingsAccount.setUserContext(userContext);
+        centerSavingsAccount.changeStatus(AccountState.SAVINGS_INACTIVE, Short.valueOf("1"),
+                "Make Center Savings Account Inactive");
+
+        SavingsBO clientSavings = (SavingsBO) accountPersistence.getAccount(collectionSheetRetrieveSavingsAccountsUtils
+                .getClientOfGroupCompleteGroupSavingsAccount().getAccountId());
+        AccountPaymentEntity payment = new AccountPaymentEntity(clientSavings, new Money(clientSavings.getCurrency()),
+                null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date());
+        AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(System.currentTimeMillis()),
+                "close client savings account", TestObjectFactory.getPersonnel(userContext.getId()), clientSavings);
+        clientSavings.setUserContext(userContext);
+        clientSavings.closeAccount(payment, notes, clientSavings.getCustomer());
+
+        StaticHibernateUtil.commitTransaction();
+
+        CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(
+                collectionSheetRetrieveSavingsAccountsUtils.getCenter().getCustomerId(), new LocalDate());
+
+        List<CollectionSheetCustomerDto> customers = collectionSheet.getCollectionSheetCustomer();
+
+        for (CollectionSheetCustomerDto customer : customers) {
+            for (CollectionSheetCustomerSavingDto customerSaving : customer.getCollectionSheetCustomerSaving()) {
+                Boolean accountIsActiveOrInactive = false;
+                AccountBO accountBO = accountPersistence.getAccount(customerSaving.getAccountId());
+                if ((accountBO.getState().equals(AccountState.SAVINGS_ACTIVE))
+                        || (accountBO.getState().equals(AccountState.SAVINGS_INACTIVE))) {
+                    accountIsActiveOrInactive = true;
+                }
+                assertTrue("Found Account State: " + accountBO.getState().toString()
+                        + " - Only Active and Inactive Savings Accounts are Allowed", accountIsActiveOrInactive);
+            }
+        }
     }
 
     public void testAllSavingsAccountsEntriesReturnedWithCorrectTotalDepositAmount() throws Exception {

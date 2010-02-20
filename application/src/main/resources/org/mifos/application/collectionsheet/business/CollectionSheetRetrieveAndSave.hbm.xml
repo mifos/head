@@ -513,6 +513,7 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
@@ -548,6 +549,7 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
@@ -582,6 +584,7 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
@@ -617,6 +620,7 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
@@ -647,6 +651,7 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
@@ -678,6 +683,7 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
@@ -708,6 +714,7 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
@@ -739,6 +746,7 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
+			and a.account_state_id in (16, 18)
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name

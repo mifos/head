@@ -24,15 +24,25 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.customers.client.business.AttendanceType;
+import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosIntegrationTestCase {
 
@@ -42,18 +52,22 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
     private SaveCollectionSheetStructureValidator savecollectionSheetStructureValidator;
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
+    private TestCollectionSheetRetrieveSavingsAccountsUtils collectionSheetRetrieveSavingsAccountsUtils;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
         saveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
         savecollectionSheetStructureValidator = new SaveCollectionSheetStructureValidator();
+        collectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();
     }
 
     @Override
     protected void tearDown() throws Exception {
         try {
             saveCollectionSheetUtils.clearObjects();
+            collectionSheetRetrieveSavingsAccountsUtils.clearObjects();
         } catch (Exception e) {
             TestDatabase.resetMySQLDatabase();
         }
@@ -179,6 +193,40 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
 
         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.INVALID_LOAN_ACCOUNT_STATUS);
 
+    }
+
+    public void testShouldGetINVALID_SAVINGS_ACCOUNT_STATUSIfSavingsAccountClosed() throws Exception {
+
+        LocalDate transactionDate = new LocalDate();
+
+        // create a center hierarchy with savings accounts
+        collectionSheetRetrieveSavingsAccountsUtils.createSampleCenterHierarchy();
+
+        // retrieve the collection sheet for today
+        CollectionSheetService collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+        CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(
+                collectionSheetRetrieveSavingsAccountsUtils.getCenter().getCustomerId(), transactionDate);
+
+        // assemble dto for saving collection sheet
+        SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetDto(
+                collectionSheet, transactionDate);
+
+        // close a savings account that is about to be saved
+        AccountPersistence accountPersistence = new AccountPersistence();
+        UserContext userContext = TestUtils.makeUser();
+
+        SavingsBO clientSavings = (SavingsBO) accountPersistence.getAccount(collectionSheetRetrieveSavingsAccountsUtils
+                .getClientOfGroupCompleteGroupSavingsAccount().getAccountId());
+        AccountPaymentEntity payment = new AccountPaymentEntity(clientSavings, new Money(clientSavings.getCurrency()),
+                null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date());
+        AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(System.currentTimeMillis()),
+                "close client savings account", TestObjectFactory.getPersonnel(userContext.getId()), clientSavings);
+        clientSavings.setUserContext(userContext);
+        clientSavings.closeAccount(payment, notes, clientSavings.getCustomer());
+        StaticHibernateUtil.commitTransaction();
+
+        // Save collection sheet and test for errors returned
+        verifyInvalidReason(saveCollectionSheet, InvalidSaveCollectionSheetReason.INVALID_SAVINGS_ACCOUNT_STATUS);
     }
 
     public void testShouldGetACCOUNT_DOESNT_BELONG_TO_CUSTOMERIfLoanAccountIdPlacedUnderGroup() throws Exception {

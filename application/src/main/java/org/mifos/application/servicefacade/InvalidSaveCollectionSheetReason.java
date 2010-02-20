@@ -26,7 +26,7 @@ package org.mifos.application.servicefacade;
  */
 public enum InvalidSaveCollectionSheetReason {
     
-    //errors check at constructor time
+    //errors checked at constructor time
     NO_TOP_CUSTOMER_PROVIDED,
     PAYMENT_TYPE_NULL,
     UNSUPPORTED_PAYMENT_TYPE,
@@ -68,6 +68,7 @@ public enum InvalidSaveCollectionSheetReason {
     ACCOUNT_NOT_A_CUSTOMER_ACCOUNT,
     ACCOUNT_NOT_A_LOAN_ACCOUNT,
     INVALID_LOAN_ACCOUNT_STATUS,
+    INVALID_SAVINGS_ACCOUNT_STATUS,
     ACCOUNT_NOT_A_SAVINGS_ACCOUNT,
     
     INVALID_CURRENCY, 

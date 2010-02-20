@@ -30,14 +30,14 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.config.AccountingRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.config.AccountingRules;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -58,6 +58,7 @@ public class SaveCollectionSheetStructureValidator {
     private List<String> validationErrorsExtended = new ArrayList<String>();
     private final List<CustomerStatus> validCustomerStatuses = new ArrayList<CustomerStatus>();
     private final List<AccountState> validLoanAccountStates = new ArrayList<AccountState>();
+    private final List<AccountState> validSavingsAccountStates = new ArrayList<AccountState>();
     private CustomerBO topCustomer;
     private List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers;
 
@@ -81,6 +82,9 @@ public class SaveCollectionSheetStructureValidator {
         validLoanAccountStates.add(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER);
         validLoanAccountStates.add(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
         validLoanAccountStates.add(AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
+
+        validSavingsAccountStates.add(AccountState.SAVINGS_INACTIVE);
+        validSavingsAccountStates.add(AccountState.SAVINGS_ACTIVE);
     }
 
     public void execute(SaveCollectionSheetDto saveCollectionSheet) throws SaveCollectionSheetException {
@@ -304,6 +308,13 @@ public class SaveCollectionSheetStructureValidator {
             if (!(account instanceof SavingsBO)) {
                 addValidationError(InvalidSaveCollectionSheetReason.ACCOUNT_NOT_A_SAVINGS_ACCOUNT, "Customer Id: "
                         + customerId + " Account Id: " + accountId);
+            } else {
+
+                if (!(validSavingsAccountStates.contains(account.getState()))) {
+                    addValidationError(InvalidSaveCollectionSheetReason.INVALID_SAVINGS_ACCOUNT_STATUS, "Customer Id: "
+                            + customerId + " Account Id: " + accountId + " Account Status: "
+                            + account.getState().toString());
+                }
             }
             return;
         }
