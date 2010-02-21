@@ -64,7 +64,7 @@ import org.mifos.framework.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 235;
+    public static final int APPLICATION_VERSION = 236;
     public static final int FIRST_NUMBERED_VERSION = 100;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
@@ -126,6 +126,7 @@ public class DatabaseVersionPersistence {
         register216(register);
         register(register, new Upgrade223());
         register(register, new Upgrade225());
+        register236(register);
         return Collections.unmodifiableMap(register);
     }
 
@@ -320,6 +321,11 @@ public class DatabaseVersionPersistence {
     private static void register216(Map<Integer, Upgrade> register) {
         register(register, new AddActivity(216, "Permissions-CanImportTransactions",
                 SecurityConstants.CAN_IMPORT_TRANSACTIONS, SecurityConstants.BULK));
+    }
+
+    private static void register236(Map<Integer, Upgrade> register) {
+        register(register, new AddActivity(236, "Permissions-CanShutdownMifos",
+                SecurityConstants.CAN_SHUTDOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION));
     }
 
     public DatabaseVersionPersistence() {

@@ -45,6 +45,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.LogUtils;
@@ -87,6 +88,9 @@ public abstract class BaseAction extends DispatchAction {
             HttpServletResponse response) throws Exception {
         if (MifosTask.isBatchJobRunning()) {
             return logout(mapping, request);
+        }
+        if (ShutdownManager.isShutdownDone()) {
+            return shutdown(mapping, request);
         }
         if (StaticHibernateUtil.isSessionOpen()) {
             logger.warn("Hibernate session is about to be reused for new action:" + getClass().getName());
@@ -347,6 +351,14 @@ public abstract class BaseAction extends DispatchAction {
         request.getSession(false).invalidate();
         ActionErrors error = new ActionErrors();
         error.add(LoginConstants.BATCH_JOB_RUNNING, new ActionMessage(LoginConstants.BATCH_JOB_RUNNING));
+        request.setAttribute(Globals.ERROR_KEY, error);
+        return mapping.findForward(ActionForwards.load_main_page.toString());
+    }
+
+    private ActionForward shutdown(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {
+        request.getSession(false).invalidate();
+        ActionErrors error = new ActionErrors();
+        error.add(LoginConstants.SHUTDOWN, new ActionMessage(LoginConstants.SHUTDOWN));
         request.setAttribute(Globals.ERROR_KEY, error);
         return mapping.findForward(ActionForwards.load_main_page.toString());
     }

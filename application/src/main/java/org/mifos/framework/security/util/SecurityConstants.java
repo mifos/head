@@ -489,4 +489,7 @@ public interface SecurityConstants {
     public final short CAN_VIEW_BRANCH_REPORT = 232;
     
     public final short CAN_IMPORT_TRANSACTIONS = 233;
+
+    /** Can shutdown Mifos */
+    public final short CAN_SHUTDOWN_MIFOS = 234;
 }

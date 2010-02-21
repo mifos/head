@@ -125,4 +125,5 @@ public interface FilePaths {
 
     public final String LOGIN_UI_PROPERTY_FILE = LOCALIZED_RESOURCE_PATH + "LoginUIResources";
 
+    public final String ADMIN_UI_PROPERTY_FILE = LOCALIZED_RESOURCE_PATH + "adminUIResources";
 }
