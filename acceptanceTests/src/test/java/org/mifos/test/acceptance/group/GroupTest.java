@@ -55,13 +55,13 @@ public class GroupTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(groups = {"smoke","group","acceptance","ui"})
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
     }
 
-    @AfterMethod
+    @AfterMethod(groups = {"smoke","group","acceptance","ui"})
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }

@@ -49,7 +49,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"holiday"})
+@Test(sequential=true, groups={"holiday","acceptance","ui"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
     
     private AppLauncher appLauncher;

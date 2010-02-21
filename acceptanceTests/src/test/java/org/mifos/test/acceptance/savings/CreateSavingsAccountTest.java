@@ -49,13 +49,13 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(groups = { "smoke", "savings", "acceptance", "ui" })
     public void setUp() throws Exception {
         super.setUp();
         savingsAccountHelper = new SavingsAccountHelper(selenium);
     }
 
-    @AfterMethod
+    @AfterMethod(groups = { "smoke", "savings", "acceptance", "ui" })
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
