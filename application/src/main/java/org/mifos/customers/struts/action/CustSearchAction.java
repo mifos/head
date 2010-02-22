@@ -31,20 +31,21 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.struts.actionforms.CustSearchActionForm;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.config.ClientRules;
+import org.mifos.customers.struts.actionforms.CustSearchActionForm;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerListDto;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -57,8 +58,8 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.SearchUtils;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustSearchAction extends SearchAction {
@@ -84,8 +85,8 @@ public class CustSearchAction extends SearchAction {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
 
         if (actionForm.getLoanOfficerId() != null) {
-            loadLoanOfficer(new PersonnelBusinessService().getPersonnel(getShortValue(actionForm.getLoanOfficerId())),
-                    request);
+            loadLoanOfficerCustomerList(new PersonnelBusinessService().getPersonnel(getShortValue(actionForm
+                    .getLoanOfficerId())), request);
         }
         String officeName = null;
         if (actionForm.getOfficeId() != null && !actionForm.getOfficeId().equals(""))
@@ -241,15 +242,37 @@ public class CustSearchAction extends SearchAction {
     private String loadMasterData(Short userId, HttpServletRequest request, CustSearchActionForm form) throws Exception {
         PersonnelBO personnel = new PersonnelBusinessService().getPersonnel(userId);
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, personnel.getOffice().getOfficeName(), request);
-        if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER)
+        if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
             return loadLoanOfficer(personnel, request);
-        else
-            return loadNonLoanOfficer(personnel, request, form);
+        }
+        return loadNonLoanOfficer(personnel, request, form);
 
     }
 
-    private String loadLoanOfficer(PersonnelBO personnel, HttpServletRequest request) throws Exception {
+    private String loadLoanOfficerCustomerList(PersonnelBO personnel, HttpServletRequest request) throws Exception {
 
+        List<CustomerListDto> customerList = null;
+
+        boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
+
+        if (isCenterHierarchyExist)
+            customerList = getCustomerBusinessService().getListOfActiveCentersUnderUser(personnel);
+        else
+            customerList = getCustomerBusinessService().getListOfGroupsUnderUser(personnel);
+        SessionUtils.setCollectionAttribute(CustomerSearchConstants.CUSTOMERLIST, customerList, request);
+        SessionUtils.setAttribute("GrpHierExists", isCenterHierarchyExist, request);
+        SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDLOANOFFICER,
+                request);
+
+        return CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS;
+    }
+
+    private String loadLoanOfficer(PersonnelBO personnel, HttpServletRequest request) throws Exception {
+        /*
+         * John W - this method is called by loadMasterData. loadMasterData is called by getHomePage, loadAllBranches
+         * and loadMainSearch (which in turn is called by getOfficeHomePage). I couldn't find out where in the user
+         * interface these public methods were used. I didn't delete because I wasn't sure.
+         */
         List<CustomerBO> customerList = null;
 
         boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();

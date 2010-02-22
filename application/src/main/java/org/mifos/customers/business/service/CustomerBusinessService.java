@@ -25,34 +25,34 @@ import static org.mifos.framework.util.helpers.NumberUtils.getPercentage;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.ValueListElement;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.core.CurrencyMismatchException;
 import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerPerformanceHistoryView;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterPerformanceHistory;
+import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.CustomerPictureEntity;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerListDto;
 import org.mifos.customers.util.helpers.CustomerRecentActivityView;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.ValueListElement;
-import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -151,7 +151,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent, Integer customerId)
-    throws ServiceException, InvalidDateException {
+            throws ServiceException, InvalidDateException {
         try {
             return new CustomerPersistence().numberOfMeetings(isPresent, customerId);
         } catch (PersistenceException e) {
@@ -171,7 +171,7 @@ public class CustomerBusinessService implements BusinessService {
             throw new ServiceException(e);
         }
         List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
-        .getCustomerActivitDetails();
+                .getCustomerActivitDetails();
         List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
 
         int count = 0;
@@ -186,7 +186,7 @@ public class CustomerBusinessService implements BusinessService {
     public List<CustomerRecentActivityView> getAllActivityView(String globalCustNum) throws ServiceException {
         CustomerBO customerBO = findBySystemId(globalCustNum);
         List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
-        .getCustomerActivitDetails();
+                .getCustomerActivitDetails();
         List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
         for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
             customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
@@ -195,7 +195,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public QueryResult search(String searchString, Short officeId, Short userId, Short userOfficeId)
-    throws ServiceException {
+            throws ServiceException {
 
         try {
             return new CustomerPersistence().search(searchString, officeId, userId, userOfficeId);
@@ -207,13 +207,13 @@ public class CustomerBusinessService implements BusinessService {
 
     protected String localizedMessageLookup(String key) {
         return MessageLookup.getInstance().lookup(key);
-    }    
+    }
+
     /**
-     * FIXME: THIS METHOD DOES NOT WORK. Specifically, the portfolioAtRisk
-     * calculation. Please see issue 2204.
+     * FIXME: THIS METHOD DOES NOT WORK. Specifically, the portfolioAtRisk calculation. Please see issue 2204.
      */
     public CenterPerformanceHistory getCenterPerformanceHistory(String searchId, Short officeId)
-    throws ServiceException {
+            throws ServiceException {
         Integer activeAndOnHoldGroupCount;
         Integer activeAndOnHoldClientCount;
         String totalSavings;
@@ -234,15 +234,15 @@ public class CustomerBusinessService implements BusinessService {
             totalSavings = localizedMessageLookup("errors.multipleCurrencies");
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
-        } 
-        
+        }
+
         try {
             totalLoan = customerPersistence.retrieveTotalLoan(searchId, officeId).toString();
         } catch (CurrencyMismatchException e) {
             totalLoan = localizedMessageLookup("errors.multipleCurrencies");
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
-        } 
+        }
 
         // ------------------------------------------------
         // FIXME - John W - Portfolio at Risk calculation commented out as its
@@ -270,6 +270,7 @@ public class CustomerBusinessService implements BusinessService {
         return new CenterPerformanceHistory(activeAndOnHoldGroupCount, activeAndOnHoldClientCount, totalLoan,
                 totalSavings, portfolioAtRisk);
     }
+
     public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId) throws ServiceException {
         try {
             return new CustomerPersistence().getStatusChecklist(statusId, customerLevelId);
@@ -428,7 +429,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public Integer getCustomerReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue)
-    throws ServiceException {
+            throws ServiceException {
         try {
             return customerPersistence.getCustomerReplacementsCountForOffice(office, fieldId, fieldValue);
         } catch (PersistenceException e) {
@@ -437,7 +438,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public Integer getCustomerVeryPoorReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue)
-    throws ServiceException {
+            throws ServiceException {
         try {
             return customerPersistence.getVeryPoorReplacementsCountForOffice(office, fieldId, fieldValue);
         } catch (PersistenceException e) {
@@ -446,7 +447,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public Integer getDormantClientsCountByLoanAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-    throws ServiceException {
+            throws ServiceException {
         try {
             return customerPersistence.getDormantClientsCountByLoanAccountForOffice(office, loanCyclePeriod);
         } catch (PersistenceException e) {
@@ -455,7 +456,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public Integer getDormantClientsCountBySavingAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-    throws ServiceException {
+            throws ServiceException {
         try {
             return customerPersistence.getDormantClientsCountBySavingAccountForOffice(office, loanCyclePeriod);
         } catch (PersistenceException e) {
@@ -464,7 +465,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public Integer getVeryPoorDormantClientsCountByLoanAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-    throws ServiceException {
+            throws ServiceException {
         try {
             return customerPersistence.getVeryPoorDormantClientsCountByLoanAccountForOffice(office, loanCyclePeriod);
         } catch (PersistenceException e) {
@@ -473,7 +474,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public Integer getVeryPoorDormantClientsCountBySavingAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-    throws ServiceException {
+            throws ServiceException {
         try {
             return customerPersistence.getVeryPoorDormantClientsCountBySavingAccountForOffice(office, loanCyclePeriod);
         } catch (PersistenceException e) {
@@ -505,7 +506,7 @@ public class CustomerBusinessService implements BusinessService {
 
         try {
             Integer veryPoorActiveOrHoldClientCountForOffice = customerPersistence
-            .getVeryPoorActiveOrHoldClientCountForOffice(office);
+                    .getVeryPoorActiveOrHoldClientCountForOffice(office);
             return getPercentage(veryPoorDropOutClientsCountForOffice, veryPoorDropOutClientsCountForOffice
                     + veryPoorActiveOrHoldClientCountForOffice);
         } catch (PersistenceException e) {
@@ -561,7 +562,6 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-
     private CustomerRecentActivityView getCustomerActivityView(CustomerActivityEntity customerActivityEntity) {
         CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView();
         customerRecentActivityView.setActivityDate(customerActivityEntity.getCreatedDate());
@@ -587,7 +587,7 @@ public class CustomerBusinessService implements BusinessService {
         for (AccountBO accountBO : accountList) {
             LoanBO loanBO = (LoanBO) accountBO;
             if (loanBO.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)) {
-                total = (total != null)?total.add(loanBO.getLoanAmount()):loanBO.getLoanAmount();
+                total = (total != null) ? total.add(loanBO.getLoanAmount()) : loanBO.getLoanAmount();
             }
         }
         return total;
@@ -613,7 +613,8 @@ public class CustomerBusinessService implements BusinessService {
         for (AccountBO account : accountList) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
                 LoanBO loan = (LoanBO) account;
-                amount = (amount != null)? amount.add(loan.getRemainingPrincipalAmount()): loan.getRemainingPrincipalAmount();
+                amount = (amount != null) ? amount.add(loan.getRemainingPrincipalAmount()) : loan
+                        .getRemainingPrincipalAmount();
             }
         }
         return amount;
@@ -628,5 +629,12 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
+    public List<CustomerListDto> getListOfActiveCentersUnderUser(PersonnelBO personnel) {
+            return new CustomerPersistence().getListOfActiveCentersUnderUser(personnel);
+    }
+
+    public List<CustomerListDto> getListOfGroupsUnderUser(PersonnelBO personnel) {
+            return new CustomerPersistence().getListOfGroupsUnderUser(personnel);
+    }
 
 }

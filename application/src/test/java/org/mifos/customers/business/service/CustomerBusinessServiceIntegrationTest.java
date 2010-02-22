@@ -69,6 +69,7 @@ import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerListDto;
 import org.mifos.customers.util.helpers.CustomerRecentActivityView;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
@@ -862,6 +863,23 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Assert.assertNotNull(customers);
         Assert.assertEquals(1, customers.size());
     }
+    
+    public void testGetListOfActiveCentersUnderUser() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
+        PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
+        List<CustomerListDto> customers = service.getListOfActiveCentersUnderUser(personnel);
+        Assert.assertNotNull(customers);
+        Assert.assertEquals(1, customers.size());
+        
+        center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "make center inactive");
+        center.update();
+        StaticHibernateUtil.commitTransaction();
+        
+        customers = service.getListOfActiveCentersUnderUser(personnel);
+        Assert.assertNotNull(customers);
+        Assert.assertEquals(0, customers.size());      
+    }
 
     public void testFailureGetActiveCentersUnderUser() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -888,6 +906,23 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Assert.assertEquals(1, customers.size());
     }
 
+    public void testGetListOfGroupsUnderUser() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
+        List<CustomerListDto> customers = service.getListOfGroupsUnderUser(personnel);
+        Assert.assertNotNull(customers);
+        Assert.assertEquals(1, customers.size());
+
+        group.changeStatus(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_LEFTPROGRAM, "make group closed");
+        group.update();
+        StaticHibernateUtil.commitTransaction();
+        
+        customers = service.getListOfGroupsUnderUser(personnel);
+        Assert.assertNotNull(customers);
+        Assert.assertEquals(0, customers.size());      
+    }
     public void testFailuregetGroupsUnderUser() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));

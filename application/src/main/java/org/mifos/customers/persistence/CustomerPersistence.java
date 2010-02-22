@@ -37,7 +37,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -46,9 +45,15 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.util.helpers.CheckListConstants;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.ClientRules;
+import org.mifos.core.CurrencyMismatchException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -57,21 +62,13 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.checklist.business.CustomerCheckListBO;
+import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.CustomerPictureEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.BasicGroupInfo;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerSearchConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.LoanCycleCounter;
-import org.mifos.customers.util.helpers.Param;
-import org.mifos.customers.util.helpers.QueryParamConstants;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -79,11 +76,15 @@ import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
-import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.config.AccountingRules;
-import org.mifos.config.ClientRules;
-import org.mifos.core.CurrencyMismatchException;
+import org.mifos.customers.util.helpers.ChildrenStateType;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerListDto;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.LoanCycleCounter;
+import org.mifos.customers.util.helpers.Param;
+import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -893,6 +894,7 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.CUSTOMER_ACCOUNT_ACTIONS_DATE, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     public List<CustomerBO> getActiveCentersUnderUser(final PersonnelBO personnel) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
@@ -902,6 +904,7 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.SEARCH_CENTERS_FOR_LOAN_OFFICER, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     public List<CustomerBO> getGroupsUnderUser(final PersonnelBO personnel) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
@@ -910,6 +913,7 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.SEARCH_GROUPS_FOR_LOAN_OFFICER, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     public List<CustomerBO> getCustomersByLevelId(final Short customerLevelId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("customerLevelId", customerLevelId);
@@ -1192,6 +1196,29 @@ public class CustomerPersistence extends Persistence {
         return (CollectionSheetCustomerDto) execUniqueResultNamedQueryWithResultTransformer(
                 "findCustomerWithNoAssocationsLoaded", queryParameters, CollectionSheetCustomerDto.class);
 
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CustomerListDto> getListOfActiveCentersUnderUser(PersonnelBO personnel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
+        queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
+        queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.CENTER.getValue());
+        queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE, CustomerStatus.CENTER_ACTIVE.getValue());
+
+        return executeNamedQueryWithResultTransformer(
+                "Customer.get_loanofficer_list_of_active_centers", queryParameters, CustomerListDto.class);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CustomerListDto> getListOfGroupsUnderUser(PersonnelBO personnel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
+        queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
+        queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.GROUP.getValue());
+        return executeNamedQueryWithResultTransformer(
+                "Customer.get_loanofficer_list_of_groups", queryParameters, CustomerListDto.class);
     }
     
 }
