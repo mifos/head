@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.schedule.ScheduledEvent;
 
 public interface Holiday {
@@ -32,5 +33,7 @@ public interface Holiday {
     boolean encloses(Date date);
 
     DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
+    
+    RepaymentRuleTypes getRepaymentRuleType();
 
 }

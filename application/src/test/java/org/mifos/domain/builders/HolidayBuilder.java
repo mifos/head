@@ -74,4 +74,9 @@ public class HolidayBuilder {
         repaymentRule = RepaymentRuleTypes.SAME_DAY;
         return this;
     }
+    
+    public HolidayBuilder withRepaymentMoratoriumRule() {
+        repaymentRule = RepaymentRuleTypes.REPAYMENT_MORATORIUM;
+        return this;
+    }
 }

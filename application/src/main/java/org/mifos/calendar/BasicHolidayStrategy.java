@@ -56,5 +56,11 @@ public class BasicHolidayStrategy implements DateAdjustmentStrategy {
 
         return adjustedDate;
     }
+    
+    @Override
+    public List<DateTime> adjust (List<DateTime> dates) {
+        //TODO KeithP implement this to default to just adjust the first date
+        return null;
+    }
 
 }

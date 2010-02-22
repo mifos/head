@@ -45,10 +45,10 @@ public enum RepaymentRuleTypes {
     }
     
     public static RepaymentRuleTypes fromOrd(int i) {
-        if (i < 0 || i >= RepaymentRuleTypes.values().length) {
+        if (i < 1 || i > RepaymentRuleTypes.values().length) {
             throw new IndexOutOfBoundsException("Invalid ordinal value for RepaymentRuleTypes");
         }
-        return RepaymentRuleTypes.values()[i];
+        return RepaymentRuleTypes.values()[i-1];
     }
 
 }

@@ -43,4 +43,9 @@ public class BasicWorkingDayStrategy implements DateAdjustmentStrategy {
 
         return ajustedDate;
     }
+    
+    public List<DateTime> adjust (List<DateTime> dates) {
+        //TODO keithp. Implement this to default to adjust just the first date
+        return null;
+    }
 }

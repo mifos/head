@@ -37,5 +37,10 @@ public class NextWorkingDayStrategy implements DateAdjustmentStrategy {
     public DateTime adjust(final DateTime startingFrom) {
         return WorkingDay.nextWorkingDay(startingFrom, this.workingDays);
     }
+    
+    public List<DateTime> adjust (List<DateTime> dates) {
+        //TODO keithp. Implement this to default to adjust just the first date
+        return null;
+    }
 
 }

@@ -1,5 +1,7 @@
 package org.mifos.calendar;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 public class SameDayStrategy implements DateAdjustmentStrategy {
@@ -13,6 +15,11 @@ public class SameDayStrategy implements DateAdjustmentStrategy {
     @Override
     public DateTime adjust(@SuppressWarnings("unused") final DateTime adjustTo) {
         return originalScheduledDate;
+    }
+    
+    public List<DateTime> adjust (List<DateTime> dates) {
+        //TODO keithp. Implement this to default to adjust just the first date
+        return null;
     }
 
 }
