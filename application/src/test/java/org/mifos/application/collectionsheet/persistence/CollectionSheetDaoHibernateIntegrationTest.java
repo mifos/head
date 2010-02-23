@@ -32,31 +32,30 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.accounts.savings.persistence.SavingsDao;
-import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
-import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -268,8 +267,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
 
         assertThat(loanFeesAgainstGroupAccountLoan.get(0).getCustomerId(), is(group.getCustomerId()));
         assertThat(loanFeesAgainstGroupAccountLoan.get(0).getAccountId(), is(loan.getAccountId()));
-        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountDue(), is(new BigDecimal("100.000")));
-        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountPaid(), is(new BigDecimal("0.000")));
+        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountDue(), is(new BigDecimal("100.0000")));
+        assertThat(loanFeesAgainstGroupAccountLoan.get(0).getFeeAmountPaid(), is(new BigDecimal("0.0000")));
         assertThat(loanFeesAgainstGroupAccountLoan.get(0).getTotalFeeAmountDue(), is(Double.valueOf("100.0")));
     }
 
@@ -293,8 +292,8 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         assertThat(accountCollections.size(), is(1));
         assertThat(accountCollections.get(0).getAccountId(), is(group.getCustomerAccount().getAccountId()));
         assertThat(accountCollections.get(0).getCustomerId(), is(group.getCustomerId()));
-        assertThat(accountCollections.get(0).getMiscFeesDue(), is(new BigDecimal("0.000")));
-        assertThat(accountCollections.get(0).getMiscFeesPaid(), is(new BigDecimal("0.000")));
+        assertThat(accountCollections.get(0).getMiscFeesDue(), is(new BigDecimal("0.0000")));
+        assertThat(accountCollections.get(0).getMiscFeesPaid(), is(new BigDecimal("0.0000")));
         assertThat(accountCollections.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
     }
 

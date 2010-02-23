@@ -35,6 +35,9 @@ import org.mifos.accounts.business.AddAccountAction;
 import org.mifos.accounts.business.AddAccountStateFlag;
 import org.mifos.accounts.business.AddFinancialAction;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
+import org.mifos.accounts.productdefinition.business.AddInterestCalcRule;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productsmix.persistence.Upgrade127;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
@@ -51,9 +54,7 @@ import org.mifos.application.master.persistence.Upgrade211;
 import org.mifos.application.master.persistence.Upgrade213;
 import org.mifos.application.master.persistence.Upgrade223;
 import org.mifos.application.master.persistence.Upgrade225;
-import org.mifos.accounts.productdefinition.business.AddInterestCalcRule;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productsmix.persistence.Upgrade127;
+import org.mifos.application.master.persistence.Upgrade237;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.persistence.AddReport;
 import org.mifos.application.util.helpers.EntityType;
@@ -64,7 +65,7 @@ import org.mifos.framework.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 236;
+    public static final int APPLICATION_VERSION = 237;
     public static final int FIRST_NUMBERED_VERSION = 100;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
@@ -127,6 +128,7 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade223());
         register(register, new Upgrade225());
         register236(register);
+        register(register, new Upgrade237());
         return Collections.unmodifiableMap(register);
     }
 

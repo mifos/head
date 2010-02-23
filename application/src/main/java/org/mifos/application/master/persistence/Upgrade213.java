@@ -32,7 +32,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.SqlUpgradeScriptFinder;
-import org.mifos.framework.util.StandardTestingService;
 
 /**
  * Upgrade213 is a conditional upgrade that creates 5 indexes
