@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-21 16:59+0200\n"
+"POT-Creation-Date: 2010-02-22 22:59+0200\n"
 "PO-Revision-Date: 2009-11-09 12:41+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -324,6 +324,18 @@ msgstr "felmérések"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
+msgstr ""
+
+#: admin.shutdown.link
+msgid "Shutdown Mifos"
+msgstr ""
+
+#: admin.shutdown.button.submit
+msgid "Start shutdown"
+msgstr ""
+
+#: admin.shutdown.button.cancel
+msgid "Cancel shutdown"
 msgstr ""
 
 #: admin.shutdown.welcome

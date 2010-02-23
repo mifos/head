@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="Shutdown" />
-		<html-el:form action="shutdownAction.do?method=load">
+		<html-el:form action="shutdownAction.do?method=shutdown">
 			<td align="left" valign="top" bgcolor="#FFFFFF"
 				style="padding-left:8px; padding-top:10px;">
 				<table width="95%">
@@ -40,6 +40,27 @@ explanation of the license and how it is applied.
                     <tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.status" bundle="adminUIResources" /></span></td>
 						<td><span class="fontnormal" id="shutdown.text.status"><c:out value="${sessionScope.shutdownManager.status}"/></span></td>
+					</tr>
+				</table>
+                <table width="98%" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="blueline">
+							&nbsp;
+						</td>
+					</tr>
+				</table>
+				<br>
+				<table width="98%" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td align="center">
+							<html-el:submit styleId="admin.shutdown.button.shutdown" property="submitButton" styleClass="buttn">
+								<mifos:mifoslabel name="admin.shutdown.button.submit" bundle="adminUIResources"/>
+							</html-el:submit>
+							&nbsp;
+								<html-el:button styleId="admin.shutdown.button.cancel" property="cancelButton" onclick="location.href='shutdownAction.do?method=cancelShutdown'" styleClass="cancelbuttn">
+								<mifos:mifoslabel name="admin.shutdown.button.cancel" bundle="adminUIResources"/>
+							</html-el:button>
+						</td>
 					</tr>
 				</table>
 			</td>
