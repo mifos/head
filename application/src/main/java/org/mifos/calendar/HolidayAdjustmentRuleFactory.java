@@ -44,7 +44,7 @@ public class HolidayAdjustmentRuleFactory {
             holidayAdjustmentStrategy = new SameDayStrategy(scheduledDay);
             break;
         case REPAYMENT_MORATORIUM:
-            holidayAdjustmentStrategy = new NextScheduledEventStrategy(scheduledEvent);
+            holidayAdjustmentStrategy = new NearestScheduledEventBeginningOnStrategy(scheduledEvent);
             break;
         default:
             throw new IllegalStateException("unknown holiday ajustment rule type.");

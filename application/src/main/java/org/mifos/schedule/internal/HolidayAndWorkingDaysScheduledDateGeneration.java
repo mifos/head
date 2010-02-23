@@ -36,10 +36,19 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
 
     private final List<Days> workingDays;
     private final List<Holiday> upcomingHolidays;
+    private final List<Holiday> upcomingMoratoria;
 
     public HolidayAndWorkingDaysScheduledDateGeneration(final List<Days> workingDays, final List<Holiday> upcomingHolidays) {
         this.workingDays = workingDays;
         this.upcomingHolidays = upcomingHolidays;
+        this.upcomingMoratoria = new ArrayList<Holiday>();
+    }
+
+    public HolidayAndWorkingDaysScheduledDateGeneration(final List<Days> workingDays,
+            final List<Holiday> upcomingHolidays, final List<Holiday> upcomingMoratoria) {
+        this.workingDays = workingDays;
+        this.upcomingHolidays = upcomingHolidays;
+        this.upcomingMoratoria = upcomingMoratoria;
     }
 
     @Override
@@ -59,10 +68,17 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
             DateAdjustmentStrategy holidayAjustment = new BasicHolidayStrategy(upcomingHolidays, workingDays,
                     scheduledEvent);
             DateTime ajustedForHolidays = holidayAjustment.adjust(ajustedForWorkingDay);
+            
+            DateAdjustmentStrategy moratoriumStrategy = new BasicMoratoriumStrategy(upcomingMoratoria, workingDays, scheduledEvent);
+            DateTime ajustedForMoratorium = moratoriumStrategy.adjust(ajustedForHolidays);
 
-            scheduledDates.add(ajustedForHolidays);
-
-            latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
+            scheduledDates.add(ajustedForMoratorium);
+            
+            if (ajustedForWorkingDay.isEqual(ajustedForHolidays)) {
+                latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForMoratorium);    
+            } else {
+                latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
+            }
         }
 
         return scheduledDates;

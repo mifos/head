@@ -25,17 +25,17 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.mifos.schedule.ScheduledEvent;
 
-public class NextScheduledEventStrategy implements DateAdjustmentStrategy {
+public class NearestScheduledEventBeginningOnStrategy implements DateAdjustmentStrategy {
 
     private final ScheduledEvent event;
 
-    public NextScheduledEventStrategy(final ScheduledEvent event) {
+    public NearestScheduledEventBeginningOnStrategy(final ScheduledEvent event) {
         this.event = event;
     }
 
     @Override
     public DateTime adjust(final DateTime startingFrom) {
-        return event.nextEventDateAfter(startingFrom);
+        return event.nearestMatchingDateBeginningAt(startingFrom);
     }
     
     public List<DateTime> adjust (final List<DateTime> dates) {
