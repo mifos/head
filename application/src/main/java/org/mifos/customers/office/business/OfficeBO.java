@@ -50,7 +50,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 
-public class OfficeBO extends BusinessObject implements Comparable {
+public class OfficeBO extends BusinessObject {
 
     private final Short officeId;
     private final Short operationMode;
@@ -603,12 +603,14 @@ public class OfficeBO extends BusinessObject implements Comparable {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        return officeId.equals(((OfficeBO) o).officeId);
-    }
+    public boolean equals(final Object obj) {
+       
+        OfficeBO otherOffice = (OfficeBO) obj;
+        if (this.officeId.equals(otherOffice.getOfficeId())) {
+            return true;
+        }
 
-    public int compareTo(final Object o) {
-        return officeId.compareTo(((OfficeBO) o).officeId);
+        return false;
     }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {

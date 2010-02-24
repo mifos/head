@@ -20,10 +20,10 @@
 
 package org.mifos.customers.office.struts.tag;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -31,6 +31,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.framework.security.util.UserContext;
@@ -125,7 +126,7 @@ public class OfficeListTag extends BodyTagSupport {
     }
 
     String getOfficeList(UserContext userContext, List<OfficeView> levels, OfficeBO loggedInOffice,
-            List<OfficeBO> branchParents, List<OfficeBO> officesTillBranchOffice) {
+            List<OfficeBO> branchParents, List<OfficeBO> officesTillBranchOffice) throws OfficeException {
         String termForBranch = "";
         String regional = "";
         String subregional = "";
@@ -153,7 +154,7 @@ public class OfficeListTag extends BodyTagSupport {
     }
 
     void getBranchOffices(XmlBuilder html, List<OfficeBO> officeList, UserContext userContext, OfficeBO loggedInOffice,
-            String branchName) {
+            String branchName) throws OfficeException {
         html.singleTag("br");
 
         html.startTag("span", "class", "fontnormalBold");
@@ -206,8 +207,9 @@ public class OfficeListTag extends BodyTagSupport {
         }
     }
 
-    private Set<OfficeBO> retrieveDataScopeBranches(Set<OfficeBO> branchOnlyChildren, OfficeBO loggedInOffice) {
-        Set<OfficeBO> dataScopeBranches = new TreeSet<OfficeBO>();
+    private Set<OfficeBO> retrieveDataScopeBranches(Set<OfficeBO> branchOnlyChildren, OfficeBO loggedInOffice)
+            throws OfficeException {
+        Set<OfficeBO> dataScopeBranches = new HashSet<OfficeBO>();
 
         if (branchOnlyChildren.size() > 0) {
             for (OfficeBO dataScopeBranch : branchOnlyChildren) {
@@ -236,7 +238,8 @@ public class OfficeListTag extends BodyTagSupport {
         return officeName.trim().replaceAll(" ", "%20");
     }
 
-    void getAboveBranches(XmlBuilder html, List<OfficeBO> officeList, String regional, String subregional, String area) {
+    void getAboveBranches(XmlBuilder html, List<OfficeBO> officeList, String regional, String subregional, String area)
+            throws OfficeException {
         if (null != officeList) {
 
             XmlBuilder regionalHtml = null;
