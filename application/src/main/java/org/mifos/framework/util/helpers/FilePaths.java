@@ -101,7 +101,7 @@ public interface FilePaths {
     public static String CUSTOMER_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "CustomerUIResources";
     // "org.mifos.accounts.util.resources.accountsUIResources"
     public static String ACCOUNTS_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "accountsUIResources";
-    // org.mifos.application.configuration.util.resources.ConfigurationUIResources
+    // org.mifos.config.util.resources.ConfigurationUIResources
     public static String CONFIGURATION_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "ConfigurationUIResources";
     // "org/mifos/application/holiday/util/resources/HolidayUIResources"
     public static String HOLIDAYSOURCEPATH = LOCALIZED_RESOURCE_PATH + "HolidayUIResources";

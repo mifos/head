@@ -32,7 +32,7 @@ import org.mifos.accounts.financial.business.FinancialActionBO;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.exceptions.FinancialExceptionConstants;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.ChartOfAccountsConfig;
 import org.mifos.config.GLAccount;
 import org.mifos.framework.components.logger.LoggerConstants;

@@ -43,7 +43,7 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.GLCategoryType;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.core.ClasspathResource;
 import org.w3c.dom.Document;

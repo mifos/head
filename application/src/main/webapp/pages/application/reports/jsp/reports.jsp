@@ -18,7 +18,7 @@ See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
 
-<%@ page import="org.mifos.framework.components.configuration.persistence.ConfigurationPersistence"%> 
+<%@ page import="org.mifos.config.persistence.ConfigurationPersistence"%> 
 <%@ page import="org.mifos.reports.business.ReportsBO"%> 
 <%
 	boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger(ConfigurationPersistence.CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN) == 0);

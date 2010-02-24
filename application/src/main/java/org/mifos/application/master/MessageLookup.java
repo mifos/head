@@ -24,10 +24,10 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
-import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.struts.action.LabelConfigurationAction;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;

@@ -80,7 +80,7 @@ import org.mifos.config.ConfigurationManager;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;

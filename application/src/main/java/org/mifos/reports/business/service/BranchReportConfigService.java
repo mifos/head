@@ -22,7 +22,7 @@ package org.mifos.reports.business.service;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.service.ConfigService;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.core.io.Resource;

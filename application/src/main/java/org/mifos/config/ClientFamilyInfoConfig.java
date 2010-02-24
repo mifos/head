@@ -20,7 +20,7 @@
 
 package org.mifos.config;
 
-import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.config.exceptions.ConfigurationException;
 
 public class ClientFamilyInfoConfig{
 

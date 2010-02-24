@@ -31,7 +31,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
 import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.business.Configuration;
 import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
 import org.mifos.config.Localization;

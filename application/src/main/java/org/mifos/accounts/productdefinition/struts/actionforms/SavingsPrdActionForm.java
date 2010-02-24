@@ -34,7 +34,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;

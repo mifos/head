@@ -59,7 +59,7 @@ public interface LoggerConstants {
      */
     String ACCOUNTSLOGGER = "org.mifos.accounts";
 
-    String CONFIGURATION_LOGGER = "org.mifos.framework.components.configuration";
+    String CONFIGURATION_LOGGER = "org.mifos.config";
 
     String FEESLOGGER = "org.mifos.accounts.fees";
 

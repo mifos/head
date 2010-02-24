@@ -23,7 +23,7 @@ package org.mifos.customers.center.business;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;

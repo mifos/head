@@ -47,7 +47,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;

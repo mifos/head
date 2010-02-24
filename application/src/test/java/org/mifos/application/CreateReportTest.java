@@ -22,14 +22,14 @@ package org.mifos.application;
 
 import static junitx.framework.StringAssert.assertContains;
 import static junitx.framework.StringAssert.assertNotContains;
-import static org.mifos.application.ui.DispatchTestUtil.dispatch;
-import static org.mifos.application.ui.DispatchTestUtil.getSuccessfulDocument;
-import static org.mifos.application.ui.DispatchTestUtil.makeRequest;
+import static org.mifos.reports.ui.DispatchTestUtil.dispatch;
+import static org.mifos.reports.ui.DispatchTestUtil.getSuccessfulDocument;
+import static org.mifos.reports.ui.DispatchTestUtil.makeRequest;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.mifos.application.ui.DispatchTestUtil;
-import org.mifos.application.ui.Dispatcher;
+import org.mifos.reports.ui.DispatchTestUtil;
+import org.mifos.reports.ui.Dispatcher;
 import org.testng.annotations.Test;
 
 import servletunit.HttpServletRequestSimulator;

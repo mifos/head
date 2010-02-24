@@ -31,7 +31,7 @@ import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;

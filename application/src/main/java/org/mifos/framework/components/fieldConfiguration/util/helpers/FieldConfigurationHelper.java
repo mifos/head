@@ -23,8 +23,8 @@ package org.mifos.framework.components.fieldConfiguration.util.helpers;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 

@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.mifos.core.MifosRuntimeException;
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 
 public class Localization {
 

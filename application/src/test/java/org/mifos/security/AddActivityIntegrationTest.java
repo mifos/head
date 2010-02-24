@@ -29,7 +29,7 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.accounts.business.AddAccountAction;
-import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;

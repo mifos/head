@@ -25,7 +25,7 @@ import junit.framework.Assert;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;

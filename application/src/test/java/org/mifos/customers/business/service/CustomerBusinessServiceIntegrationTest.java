@@ -87,7 +87,7 @@ import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;

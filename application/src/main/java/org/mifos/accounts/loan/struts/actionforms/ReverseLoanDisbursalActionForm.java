@@ -29,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;

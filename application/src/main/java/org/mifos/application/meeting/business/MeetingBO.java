@@ -38,7 +38,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;

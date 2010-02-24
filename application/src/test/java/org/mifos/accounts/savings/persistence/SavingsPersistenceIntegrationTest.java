@@ -56,7 +56,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;

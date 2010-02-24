@@ -74,7 +74,7 @@
 	<!-- pages/actions which don't go through struts -->
 	<servlet>
 	    <servlet-name>Dispatcher</servlet-name>
-	    <servlet-class>org.mifos.application.ui.Dispatcher</servlet-class>
+	    <servlet-class>org.mifos.reports.ui.Dispatcher</servlet-class>
 	</servlet>
 	<servlet-mapping>
 	    <servlet-name>Dispatcher</servlet-name>

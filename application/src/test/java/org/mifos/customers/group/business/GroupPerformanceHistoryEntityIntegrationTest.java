@@ -31,7 +31,7 @@ import java.util.Arrays;
 
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;

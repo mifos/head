@@ -27,7 +27,7 @@ import javax.servlet.UnavailableException;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;

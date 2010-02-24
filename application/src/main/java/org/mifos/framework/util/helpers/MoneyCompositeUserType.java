@@ -35,7 +35,7 @@ import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.business.Configuration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**

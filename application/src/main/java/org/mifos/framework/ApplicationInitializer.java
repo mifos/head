@@ -33,15 +33,15 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
-import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.config.business.Configuration;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;

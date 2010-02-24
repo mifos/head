@@ -18,7 +18,7 @@ See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
 <%@ page
-	import="org.mifos.framework.components.configuration.persistence.ConfigurationPersistence"%>
+	import="org.mifos.config.persistence.ConfigurationPersistence"%>
 <%@ page
 	import="org.mifos.accounts.loan.util.helpers.LoanConstants"%>
 

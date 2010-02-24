@@ -43,7 +43,7 @@ public class MifosValueList extends BodyTagSupport {
      * for Define Lookup Option form is lookupoptionsactionform as defined in
      * the struts-config.xml file <form-bean name="lookupoptionsactionform"
      * type=
-     * "org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm"
+     * "org.mifos.config.struts.actionform.LookupOptionsActionForm"
      * ></form-bean>
      */
     private String name;

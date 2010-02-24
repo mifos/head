@@ -23,7 +23,7 @@ package org.mifos.framework.struts.tags;
 import junit.framework.Assert;
 
 import org.apache.struts.util.MessageResources;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.FilePaths;

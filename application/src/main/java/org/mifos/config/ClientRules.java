@@ -24,9 +24,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
+import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;

@@ -22,7 +22,7 @@ package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
 import junit.framework.Assert;
 
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.MifosIntegrationTestCase;

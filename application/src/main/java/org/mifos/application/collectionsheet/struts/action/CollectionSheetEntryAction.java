@@ -57,7 +57,7 @@ import org.mifos.application.servicefacade.FormEnteredDataAssembler;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;

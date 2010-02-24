@@ -40,7 +40,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;

@@ -29,7 +29,7 @@ import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.master.MessageLookup;

@@ -24,7 +24,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
-import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;

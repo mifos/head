@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Locale;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.exceptions.InvalidDateException;

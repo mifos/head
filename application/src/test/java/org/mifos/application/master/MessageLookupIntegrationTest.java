@@ -24,8 +24,8 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.ConfigLocale;
 import org.mifos.config.Localization;

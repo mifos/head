@@ -1548,7 +1548,7 @@
     <tag>
         <name>CustomFieldCategoryList</name>
         <tagclass>
-            org.mifos.application.configuration.struts.tag.CustomFieldCategoryListTag
+            org.mifos.config.struts.tag.CustomFieldCategoryListTag
         </tagclass>
         <bodycontent>JSP</bodycontent>
 
@@ -1572,7 +1572,7 @@
     <tag>
         <name>CustomFieldsList</name>
         <tagclass>
-            org.mifos.application.configuration.struts.tag.CustomFieldsListTag
+            org.mifos.config.struts.tag.CustomFieldsListTag
         </tagclass>
         <bodycontent>empty</bodycontent>
 

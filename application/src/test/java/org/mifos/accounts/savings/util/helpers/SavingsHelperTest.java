@@ -38,8 +38,8 @@ import junit.framework.TestCase;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.configuration.business.SystemConfiguration;
+import org.mifos.config.business.Configuration;
+import org.mifos.config.business.SystemConfiguration;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mockito.Mockito;
 

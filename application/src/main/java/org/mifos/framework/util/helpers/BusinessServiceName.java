@@ -21,7 +21,7 @@
 package org.mifos.framework.util.helpers;
 
 import org.mifos.application.admin.business.service.AdminBusinessService;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.business.service.CenterBusinessService;
 import org.mifos.customers.client.business.service.ClientBusinessService;

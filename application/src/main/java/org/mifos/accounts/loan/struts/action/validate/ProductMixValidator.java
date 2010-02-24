@@ -31,7 +31,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.framework.exceptions.PersistenceException;

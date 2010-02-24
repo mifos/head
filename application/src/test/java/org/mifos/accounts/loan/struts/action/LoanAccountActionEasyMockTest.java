@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -51,7 +51,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 

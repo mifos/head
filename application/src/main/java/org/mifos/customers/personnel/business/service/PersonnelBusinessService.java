@@ -23,7 +23,7 @@ package org.mifos.customers.personnel.business.service;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
-import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.customers.office.business.OfficeBO;

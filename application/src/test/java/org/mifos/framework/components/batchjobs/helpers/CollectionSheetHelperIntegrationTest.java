@@ -50,7 +50,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
+import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

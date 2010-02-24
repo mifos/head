@@ -41,7 +41,7 @@ import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.checklist.util.helpers.CheckListMasterView;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.util.helpers.CustomerLevel;

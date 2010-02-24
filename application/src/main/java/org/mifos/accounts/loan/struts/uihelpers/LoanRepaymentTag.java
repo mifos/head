@@ -31,7 +31,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;

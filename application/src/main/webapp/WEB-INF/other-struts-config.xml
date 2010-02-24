@@ -43,13 +43,13 @@
         <form-bean name="personnelSettingsActionForm"
                    type="org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm"/>
         <form-bean name="labelconfigurationactionform"
-                   type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"/>
+                   type="org.mifos.config.struts.actionform.LabelConfigurationActionForm"/>
         <form-bean name="hiddenmandatoryconfigurationactionform"
-                   type="org.mifos.application.configuration.struts.actionform.HiddenMandatoryConfigurationActionForm"/>
+                   type="org.mifos.config.struts.actionform.HiddenMandatoryConfigurationActionForm"/>
         <form-bean name="lookupoptionsactionform"
-                   type="org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm"/>
+                   type="org.mifos.config.struts.actionform.LookupOptionsActionForm"/>
         <form-bean name="customfieldsactionform"
-                   type="org.mifos.application.configuration.struts.actionform.CustomFieldsActionForm"/>
+                   type="org.mifos.config.struts.actionform.CustomFieldsActionForm"/>
 
         <form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm"/>
 
@@ -351,7 +351,7 @@
         </action>
 
         <action path="/labelconfigurationaction"
-                type="org.mifos.application.configuration.struts.action.LabelConfigurationAction"
+                type="org.mifos.config.struts.action.LabelConfigurationAction"
                 name="labelconfigurationactionform" parameter="method"
                 input="/labelconfigurationaction.do?method=validate"
                 validate="true" scope="session">
@@ -363,7 +363,7 @@
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
         </action>
         <action path="/hiddenmandatoryconfigurationaction"
-                type="org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction"
+                type="org.mifos.config.struts.action.HiddenMandatoryConfigurationAction"
                 name="hiddenmandatoryconfigurationactionform" parameter="method"
                 input="/hiddenmandatoryconfigurationaction.do?method=validate"
                 validate="true" scope="session">
@@ -375,7 +375,7 @@
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
         </action>
         <action path="/lookupOptionsAction"
-                type="org.mifos.application.configuration.struts.action.LookupOptionsAction"
+                type="org.mifos.config.struts.action.LookupOptionsAction"
                 name="lookupoptionsactionform" parameter="method" input="/lookupOptionsAction.do?method=validate"
                 validate="true" scope="session">
             <forward name="load_success" path="/pages/application/configuration/jsp/definelookupoptions.jsp"/>
@@ -393,7 +393,7 @@
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
         </action>
         <action path="/customFieldsAction"
-                type="org.mifos.application.configuration.struts.action.CustomFieldsAction"
+                type="org.mifos.config.struts.action.CustomFieldsAction"
                 name="customfieldsactionform" parameter="method" input="/customFieldsAction.do?method=validate"
                 validate="true" scope="session">
             <forward name="load_success"

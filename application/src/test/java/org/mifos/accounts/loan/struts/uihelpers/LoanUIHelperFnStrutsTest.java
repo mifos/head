@@ -37,7 +37,7 @@ import junit.framework.Assert;
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;

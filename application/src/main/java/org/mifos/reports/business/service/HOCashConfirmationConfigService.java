@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.business.Configuration;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.springframework.core.io.Resource;
