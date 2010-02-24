@@ -602,15 +602,14 @@ public class OfficeBO extends BusinessObject {
         return offices;
     }
 
+    /* FIXME: we also need to implement hashCode() */
     @Override
-    public boolean equals(final Object obj) {
-       
-        OfficeBO otherOffice = (OfficeBO) obj;
-        if (this.officeId.equals(otherOffice.getOfficeId())) {
-            return true;
-        }
+    public boolean equals(final Object o) {
+        return officeId.equals(((OfficeBO) o).getOfficeId());
+    }
 
-        return false;
+    public int compareTo(final Object o) {
+        return officeId.compareTo(((OfficeBO) o).getOfficeId());
     }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {
