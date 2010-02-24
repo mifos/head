@@ -32,14 +32,17 @@ import org.mifos.calendar.DateAdjustmentStrategy;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 
-public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDateGeneration {
+public class MoratoriumExampleByKeithScheduledDateGeneration implements ScheduledDateGeneration {
 
     private final List<Days> workingDays;
     private final List<Holiday> upcomingHolidays;
+    private final List<Holiday> upcomingMoratoria;
 
-    public HolidayAndWorkingDaysScheduledDateGeneration(final List<Days> workingDays, final List<Holiday> upcomingHolidays) {
+    public MoratoriumExampleByKeithScheduledDateGeneration(final List<Days> workingDays,
+            final List<Holiday> upcomingHolidays, final List<Holiday> upcomingMoratoria) {
         this.workingDays = workingDays;
         this.upcomingHolidays = upcomingHolidays;
+        this.upcomingMoratoria = upcomingMoratoria;
     }
 
     @Override
@@ -60,9 +63,16 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
                     scheduledEvent);
             DateTime ajustedForHolidays = holidayAjustment.adjust(ajustedForWorkingDay);
             
-            scheduledDates.add(ajustedForHolidays);
+            DateAdjustmentStrategy moratoriumStrategy = new BasicMoratoriumStrategy(upcomingMoratoria, workingDays, scheduledEvent);
+            DateTime ajustedForMoratorium = moratoriumStrategy.adjust(ajustedForHolidays);
+
+            scheduledDates.add(ajustedForMoratorium);
             
-            latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
+            if (ajustedForWorkingDay.isEqual(ajustedForHolidays)) {
+                latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForMoratorium);    
+            } else {
+                latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
+            }
         }
 
         return scheduledDates;

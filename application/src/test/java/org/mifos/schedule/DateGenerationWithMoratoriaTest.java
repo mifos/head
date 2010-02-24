@@ -15,7 +15,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.domain.builders.ScheduledEventBuilder;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
+import org.mifos.schedule.internal.MoratoriumExampleByKeithScheduledDateGeneration;
 
 public class DateGenerationWithMoratoriaTest {
 
@@ -46,7 +46,7 @@ public class DateGenerationWithMoratoriaTest {
     public void shouldGenerateDatesAWeekApartOccurringOnSameDayOfWeek() {
 
         // setup
-        scheduledDateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays, moratoria);
+        scheduledDateGeneration = new MoratoriumExampleByKeithScheduledDateGeneration(workingDays, holidays, moratoria);
         
         // exercise test
         List<DateTime> scheduledDateResults = scheduledDateGeneration.generateScheduledDates(6, startSchedulesFrom, scheduledEvent);
@@ -67,7 +67,7 @@ public class DateGenerationWithMoratoriaTest {
         Holiday twoWeekMoratorium = new HolidayBuilder().from(firstExpectedScheduleDate.plusDays(13)).to(firstExpectedScheduleDate.plusDays(27)).withRepaymentMoratoriumRule().build();
         moratoria.add(twoWeekMoratorium);
         
-        scheduledDateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays, moratoria);
+        scheduledDateGeneration = new MoratoriumExampleByKeithScheduledDateGeneration(workingDays, holidays, moratoria);
         
         // exercise test
         List<DateTime> scheduledDateResults = scheduledDateGeneration.generateScheduledDates(6, startSchedulesFrom, scheduledEvent);
@@ -91,7 +91,7 @@ public class DateGenerationWithMoratoriaTest {
         Holiday threeDayHolidayNotCausingOverlapWithMoratorium = new HolidayBuilder().from(firstExpectedScheduleDate.plusDays(5)).to(firstExpectedScheduleDate.plusDays(8)).withNextWorkingDayRule().build();
         holidays.add(threeDayHolidayNotCausingOverlapWithMoratorium);
         
-        scheduledDateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays, moratoria);
+        scheduledDateGeneration = new MoratoriumExampleByKeithScheduledDateGeneration(workingDays, holidays, moratoria);
         
         // exercise test
         List<DateTime> scheduledDateResults = scheduledDateGeneration.generateScheduledDates(6, startSchedulesFrom, scheduledEvent);
@@ -115,7 +115,7 @@ public class DateGenerationWithMoratoriaTest {
         Holiday threeDayHolidayCausingOverlapWithMoratorium = new HolidayBuilder().from(firstExpectedScheduleDate.plusDays(5)).to(firstExpectedScheduleDate.plusDays(8)).withNextMeetingRule().build();
         holidays.add(threeDayHolidayCausingOverlapWithMoratorium);
         
-        scheduledDateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays, moratoria);
+        scheduledDateGeneration = new MoratoriumExampleByKeithScheduledDateGeneration(workingDays, holidays, moratoria);
         
         // exercise test
         List<DateTime> scheduledDateResults = scheduledDateGeneration.generateScheduledDates(6, startSchedulesFrom, scheduledEvent);
