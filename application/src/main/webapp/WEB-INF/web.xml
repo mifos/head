@@ -15,7 +15,7 @@
 	<filter>
 		<filter-name>loginfilter</filter-name>
 		<filter-class>
-			org.mifos.framework.security.util.LoginFilter
+			org.mifos.security.util.LoginFilter
 		</filter-class>
 	</filter>
 	<servlet-mapping>

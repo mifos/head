@@ -35,7 +35,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;

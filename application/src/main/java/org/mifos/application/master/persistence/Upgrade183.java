@@ -27,7 +27,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.persistence.Upgrade;
-import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
 public class Upgrade183 extends Upgrade {
 

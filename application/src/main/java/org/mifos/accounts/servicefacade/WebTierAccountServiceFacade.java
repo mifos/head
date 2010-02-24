@@ -34,8 +34,8 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.ActivityMapper;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
 /**

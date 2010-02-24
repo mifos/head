@@ -27,7 +27,7 @@ import junitx.framework.StringAssert;
 
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class CustomFieldCategoryListTagTest extends TestCase {

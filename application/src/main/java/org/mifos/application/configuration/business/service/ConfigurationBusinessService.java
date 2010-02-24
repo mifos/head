@@ -28,7 +28,7 @@ import org.mifos.framework.components.configuration.business.ConfigurationKeyVal
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class ConfigurationBusinessService implements BusinessService {
 

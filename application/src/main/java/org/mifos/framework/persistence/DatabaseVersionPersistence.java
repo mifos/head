@@ -60,8 +60,8 @@ import org.mifos.application.reports.persistence.AddReport;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.security.AddActivity;
-import org.mifos.framework.security.util.SecurityConstants;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 

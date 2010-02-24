@@ -32,7 +32,7 @@ import org.mifos.config.Localization;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
     public MessageLookupIntegrationTest() throws Exception {

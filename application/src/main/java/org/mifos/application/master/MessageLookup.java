@@ -38,7 +38,7 @@ import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;

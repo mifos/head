@@ -24,7 +24,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;

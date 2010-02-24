@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * Service facade for Collection Sheet functionality.

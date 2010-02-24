@@ -27,7 +27,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class CenterBusinessService implements BusinessService {
 

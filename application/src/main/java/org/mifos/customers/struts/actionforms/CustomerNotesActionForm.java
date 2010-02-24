@@ -32,8 +32,8 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class CustomerNotesActionForm extends ValidatorActionForm {

@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.util.helpers;
 
-import org.mifos.framework.security.util.ActivityMapper;
+import org.mifos.security.util.ActivityMapper;
 
 /**
  * For most purposes this is obsolete and should be replaced by

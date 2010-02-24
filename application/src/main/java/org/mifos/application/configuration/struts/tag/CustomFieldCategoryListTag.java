@@ -26,7 +26,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 

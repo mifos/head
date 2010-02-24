@@ -51,9 +51,9 @@ import org.mifos.framework.components.configuration.persistence.ConfigurationPer
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.ActionSecurity;
-import org.mifos.framework.security.util.SecurityConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;

@@ -28,9 +28,9 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
-import org.mifos.framework.security.util.SecurityConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
 public class ReportsActionStrutsTest extends MifosMockStrutsTestCase {

@@ -24,7 +24,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.exceptions.TableTagException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class TableTagExceptionTest extends TestCase {
 

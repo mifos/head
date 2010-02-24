@@ -20,7 +20,7 @@
 
 package org.mifos.framework.exceptions;
 
-import org.mifos.framework.security.util.SecurityConstants;
+import org.mifos.security.util.SecurityConstants;
 
 public class SecurityException extends ApplicationException {
 

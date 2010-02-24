@@ -32,7 +32,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 

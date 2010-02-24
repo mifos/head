@@ -31,7 +31,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 

@@ -50,7 +50,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * This class encapsulates all the business logic related to report module.

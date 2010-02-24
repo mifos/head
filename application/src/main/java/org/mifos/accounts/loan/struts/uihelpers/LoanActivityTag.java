@@ -32,7 +32,7 @@ import org.mifos.accounts.loan.business.LoanActivityView;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;

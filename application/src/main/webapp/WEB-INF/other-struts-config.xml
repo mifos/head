@@ -4,17 +4,17 @@
 <struts-config>
     <form-beans>
         <!-- Login Form -->
-        <form-bean name="loginActionForm" type="org.mifos.application.login.struts.actionforms.LoginActionForm"/>
+        <form-bean name="loginActionForm" type="org.mifos.security.login.struts.actionforms.LoginActionForm"/>
         <form-bean name="personnelNoteActionForm"
                    type="org.mifos.customers.personnel.struts.actionforms.PersonnelNoteActionForm"/>
         <!-- Person Action Form -->
         <form-bean name="personActionForm" type="org.mifos.customers.personnel.struts.actionforms.PersonActionForm"/>
         <!-- roles and permission -->
         <form-bean name="rolesandPermissionActionForm"
-                   type="org.mifos.application.rolesandpermission.struts.actionforms.RolesPermissionActionForm"/>
+                   type="org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionActionForm"/>
         <!-- roles and permission -->
         <form-bean name="rolesPermissionsActionForm"
-                   type="org.mifos.application.rolesandpermission.struts.actionforms.RolesPermissionsActionForm"/>
+                   type="org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionsActionForm"/>
         <!-- office form beans -->
         <form-bean name="offActionForm" type="org.mifos.customers.office.struts.actionforms.OffActionForm"/>
         <!-- meeting form -->
@@ -158,7 +158,7 @@
             <forward name="create_failure" path="/pages/application/personnel/jsp/previewpersonnelnotes.jsp"/>
         </action>
         <!--M2 Login Action -->
-        <action path="/loginAction" name="loginActionForm" type="org.mifos.application.login.struts.action.LoginAction"
+        <action path="/loginAction" name="loginActionForm" type="org.mifos.security.login.struts.action.LoginAction"
                 input="/loginAction.do?method=validate" parameter="method" validate="true" scope="session">
             <forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp"/>
             <forward name="login_success" path="/custSearchAction.do?method=getHomePage" redirect="true"/>
@@ -333,7 +333,7 @@
 
         <!-- role action -->
         <action path="/rolesPermission"
-                type="org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAction"
+                type="org.mifos.security.rolesandpermission.struts.action.RolesPermissionsAction"
                 name="rolesPermissionsActionForm" parameter="method"
                 input="/rolesPermission.do?method=validate"
                 validate="true" scope="session">

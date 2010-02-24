@@ -26,7 +26,7 @@ import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class RateFeeBO extends FeeBO {
 

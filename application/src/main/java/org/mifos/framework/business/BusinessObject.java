@@ -22,7 +22,7 @@ package org.mifos.framework.business;
 
 import java.util.Date;
 
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 
 public abstract class BusinessObject extends PersistentObject {

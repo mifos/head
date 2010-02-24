@@ -36,9 +36,9 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.security.authorization.HierarchyManager;
-import org.mifos.framework.security.util.OfficeCacheView;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.authorization.HierarchyManager;
+import org.mifos.security.util.OfficeCacheView;
+import org.mifos.security.util.UserContext;
 
 public class OfficePersistence extends Persistence {
 

@@ -36,8 +36,8 @@ import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.security.util.ActivityContext;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
 public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {

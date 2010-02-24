@@ -33,8 +33,8 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class EditCustomerStatusActionForm extends BaseActionForm {

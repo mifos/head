@@ -48,7 +48,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class ClientPersistence extends Persistence {
 

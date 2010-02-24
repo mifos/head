@@ -41,7 +41,7 @@
     </description>
     <name>getUserPreferredLocaleHelper</name>
     <function-class>org.mifos.framework.util.helpers.LabelTagUtils</function-class>
-    <function-signature>java.lang.String getUserPreferredLocaleHelper(org.mifos.framework.security.util.UserContext)</function-signature>
+    <function-signature>java.lang.String getUserPreferredLocaleHelper(org.mifos.security.util.UserContext)</function-signature>
     
   </function>
   

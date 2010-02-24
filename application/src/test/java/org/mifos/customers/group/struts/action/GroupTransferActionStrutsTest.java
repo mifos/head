@@ -46,7 +46,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;

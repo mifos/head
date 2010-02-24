@@ -37,11 +37,11 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.util.ActivityContext;
-import org.mifos.framework.security.util.ActivityMapper;
-import org.mifos.framework.security.util.SecurityConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
 

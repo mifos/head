@@ -51,9 +51,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.core.MifosRuntimeException;
 
 public class SavingsPrdActionForm extends BaseActionForm {

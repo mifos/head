@@ -162,8 +162,8 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
-import org.mifos.application.rolesandpermission.business.RoleBO;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.TestUtils;
@@ -176,9 +176,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
-import org.mifos.framework.security.authentication.EncryptionService;
-import org.mifos.framework.security.util.ActivityContext;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.authentication.EncryptionService;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * This class assumes that you are connected to the model database, which has master data in it and also you have some

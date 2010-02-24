@@ -35,7 +35,7 @@ import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {

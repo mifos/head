@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;

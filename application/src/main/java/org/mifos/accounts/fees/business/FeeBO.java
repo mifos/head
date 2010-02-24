@@ -42,7 +42,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public abstract class FeeBO extends BusinessObject {
 

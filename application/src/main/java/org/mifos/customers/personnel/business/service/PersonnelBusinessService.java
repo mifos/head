@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
-import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -32,15 +32,15 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.rolesandpermission.business.RoleBO;
-import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class PersonnelBusinessService implements BusinessService {
     private static final String BRANCH_MANAGER_ROLE_NAME_KEY = "RolesAndPermissions.BranchManager.RoleName";

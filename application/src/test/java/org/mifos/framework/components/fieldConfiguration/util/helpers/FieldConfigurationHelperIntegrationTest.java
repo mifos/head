@@ -24,10 +24,10 @@ import junit.framework.Assert;
 
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTestCase {
 

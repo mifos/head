@@ -20,7 +20,7 @@
 
 package org.mifos.application.importexport.servicefacade;
 
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public interface ImportTransactionsServiceFacade {
     

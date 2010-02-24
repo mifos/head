@@ -36,8 +36,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.ActionSecurity;
-import org.mifos.framework.security.util.SecurityConstants;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 
 /**

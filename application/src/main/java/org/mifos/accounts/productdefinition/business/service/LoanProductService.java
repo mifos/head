@@ -29,7 +29,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * LoanProductService is a service layer encapsulation of methods related to

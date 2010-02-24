@@ -46,7 +46,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.SearchUtils;
 
 /**

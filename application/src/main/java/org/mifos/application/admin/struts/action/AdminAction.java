@@ -30,8 +30,8 @@ import org.mifos.application.admin.business.service.AdminBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.ActionSecurity;
-import org.mifos.framework.security.util.SecurityConstants;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 
 public class AdminAction extends BaseAction {

@@ -26,7 +26,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.SearchUtils;
 
 import java.util.Set;

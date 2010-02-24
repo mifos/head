@@ -13,9 +13,9 @@
 
 		<mapping resource="org/mifos/customers/checklist/business/CheckListBO.hbm.xml" />
 		<mapping resource="org/mifos/customers/checklist/business/CheckListDetailEntity.hbm.xml" />
-		<mapping resource="org/mifos/framework/security/util/ActivityRoles.hbm.xml" />
-		<mapping resource="org/mifos/framework/security/util/officeSearch.hbm.xml" />
-		<mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />
+		<mapping resource="org/mifos/security/util/ActivityRoles.hbm.xml" />
+		<mapping resource="org/mifos/security/util/officeSearch.hbm.xml" />
+		<mapping resource="org/mifos/security/util/PersonalRoles.hbm.xml" />
 		<!-- Product Definition -->
 		<mapping resource="org/mifos/accounts/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
 		<!-- Product Mix -->
@@ -207,9 +207,9 @@
 		<mapping resource="org/mifos/customers/client/business/CustomerPictureEntity.hbm.xml" />
 		<mapping resource="org/mifos/customers/client/business/ClientInitialSavingsOfferingEntity.hbm.xml" />
 
-		<mapping resource="org/mifos/application/rolesandpermission/business/ActivityEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
+		<mapping resource="org/mifos/security/rolesandpermission/business/ActivityEntity.hbm.xml" />
+		<mapping resource="org/mifos/security/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
+		<mapping resource="org/mifos/security/rolesandpermission/business/RoleBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fund/business/FundBO.hbm.xml" />
 		<mapping class="org.mifos.application.master.business.FundCodeEntity" />
 

@@ -29,7 +29,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * This class has got helper functions which could be called from jsp as part of

@@ -28,7 +28,7 @@ public interface LoggerConstants {
     String ROOTLOGGER = "org.mifos";
     String FRAMEWORKLOGGER = "org.mifos.framework";
     String FRAMEWORK_STRUTS_LOGGER = "org.mifos.framework.struts";
-    String LOGINLOGGER = "org.mifos.application.login";
+    String LOGINLOGGER = "org.mifos.security.login";
 
     /** Product Definition logger name */
     String PRDDEFINITIONLOGGER = "org.mifos.accounts.productdefinition";

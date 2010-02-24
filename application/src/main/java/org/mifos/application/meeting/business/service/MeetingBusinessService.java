@@ -31,9 +31,9 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.ActivityMapper;
-import org.mifos.framework.security.util.SecurityConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
 public class MeetingBusinessService implements BusinessService {

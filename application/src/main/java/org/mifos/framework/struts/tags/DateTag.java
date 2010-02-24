@@ -29,9 +29,9 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.BaseInputTag;
-import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.LocalizationConverter;
 

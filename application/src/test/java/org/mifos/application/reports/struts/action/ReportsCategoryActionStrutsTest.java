@@ -24,8 +24,8 @@ import junit.framework.Assert;
 
 import org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
-import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.framework.MifosMockStrutsTestCase;
 
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {

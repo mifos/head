@@ -42,7 +42,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.security.authorization.HierarchyManager;
+import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCase {

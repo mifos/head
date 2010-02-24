@@ -44,7 +44,7 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 public class CenterPersistence extends Persistence {
     private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();

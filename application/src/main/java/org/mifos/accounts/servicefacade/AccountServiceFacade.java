@@ -23,7 +23,7 @@ package org.mifos.accounts.servicefacade;
 import org.mifos.accounts.api.AccountReferenceDto;
 import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * Interface for presentation layer to access accounts

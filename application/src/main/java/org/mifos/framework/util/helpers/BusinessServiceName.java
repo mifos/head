@@ -33,7 +33,7 @@ import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
-import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
+import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 
 /**

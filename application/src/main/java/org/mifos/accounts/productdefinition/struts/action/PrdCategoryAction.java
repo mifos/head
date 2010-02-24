@@ -37,9 +37,9 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConsta
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.security.util.ActionSecurity;
-import org.mifos.framework.security.util.SecurityConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;

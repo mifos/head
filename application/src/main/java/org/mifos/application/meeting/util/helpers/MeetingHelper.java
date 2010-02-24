@@ -24,7 +24,7 @@ import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SearchUtils;
 

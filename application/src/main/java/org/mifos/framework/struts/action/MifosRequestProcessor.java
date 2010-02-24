@@ -42,11 +42,11 @@ import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.util.ActivityContext;
-import org.mifos.framework.security.util.ActivityMapper;
-import org.mifos.framework.security.util.SecurityConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PreviousRequestValues;
 

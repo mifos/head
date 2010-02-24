@@ -26,7 +26,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.customers.office.business.OfficeBO;

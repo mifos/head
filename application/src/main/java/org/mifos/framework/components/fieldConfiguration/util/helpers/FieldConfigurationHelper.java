@@ -25,7 +25,7 @@ import java.util.PropertyResourceBundle;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class FieldConfigurationHelper {

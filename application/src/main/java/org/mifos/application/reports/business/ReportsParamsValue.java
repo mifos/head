@@ -21,7 +21,7 @@
 package org.mifos.application.reports.business;
 
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * This class encapsulates the Reports Parameters

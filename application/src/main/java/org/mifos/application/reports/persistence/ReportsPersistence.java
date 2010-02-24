@@ -43,7 +43,7 @@ import org.mifos.application.reports.business.ReportsParamsMapValue;
 import org.mifos.application.reports.business.ReportsParamsValue;
 import org.mifos.application.reports.exceptions.ReportException;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;

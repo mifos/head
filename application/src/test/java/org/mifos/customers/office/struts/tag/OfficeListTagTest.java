@@ -40,7 +40,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.testng.annotations.Test;

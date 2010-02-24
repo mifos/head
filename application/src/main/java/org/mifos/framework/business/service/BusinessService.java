@@ -21,7 +21,7 @@
 package org.mifos.framework.business.service;
 
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 
 /**
  * Use of this class is @deprecated.

@@ -31,8 +31,8 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConsta
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.security.util.UserContext;
-import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
+import org.mifos.security.login.util.helpers.LoginConstants;
 
 public class PrdConfActionForm extends BaseActionForm {
 

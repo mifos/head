@@ -20,7 +20,7 @@
 
 package org.mifos.customers.personnel.business;
 
-import org.mifos.application.rolesandpermission.business.RoleBO;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class PersonnelRoleEntity extends PersistentObject {

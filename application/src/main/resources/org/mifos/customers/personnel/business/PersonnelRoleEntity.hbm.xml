@@ -11,7 +11,7 @@
                 <generator class="native"/>
         </id>
      	<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.customers.personnel.business.PersonnelBO" access="field"/>
-        <many-to-one  name="role"  column="ROLE_ID" class="org.mifos.application.rolesandpermission.business.RoleBO" lazy="false" access="field"/>
+        <many-to-one  name="role"  column="ROLE_ID" class="org.mifos.security.rolesandpermission.business.RoleBO" lazy="false" access="field"/>
    </class>
    <query name="getPersonnelRoleCount">
    		<![CDATA[select count(*) from org.mifos.customers.personnel.business.PersonnelRoleEntity personnelRole where personnelRole.role.id=:roleId ]]>

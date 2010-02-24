@@ -22,7 +22,7 @@ package org.mifos.framework.components.configuration.business;
 
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.cache.Key;
-import org.mifos.framework.security.authorization.HierarchyManager;
+import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.Constants;
 
 public class BaseConfig {

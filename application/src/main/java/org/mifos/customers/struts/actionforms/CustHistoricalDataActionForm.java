@@ -34,8 +34,8 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class CustHistoricalDataActionForm extends BaseActionForm {

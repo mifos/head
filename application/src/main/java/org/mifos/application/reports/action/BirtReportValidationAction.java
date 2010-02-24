@@ -31,7 +31,7 @@ import org.mifos.application.reports.business.ReportParameterForm;
 import org.mifos.application.reports.business.validator.Errors;
 import org.mifos.application.reports.business.validator.ReportParameterValidator;
 import org.mifos.application.reports.business.validator.ReportParameterValidatorFactory;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 
 public class BirtReportValidationAction extends HttpServlet {

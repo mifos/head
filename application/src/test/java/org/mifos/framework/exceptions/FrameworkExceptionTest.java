@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.mifos.framework.security.util.SecurityConstants;
+import org.mifos.security.util.SecurityConstants;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})

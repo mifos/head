@@ -34,17 +34,17 @@ import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
-import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
-import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.security.AddActivity;
-import org.mifos.framework.security.util.SecurityConstants;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 @Ignore

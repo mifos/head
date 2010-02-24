@@ -12,7 +12,7 @@
   <uri>/activity</uri>
 	<tag>
 		<name>getActivitiesTag</name>
-		<tagclass>org.mifos.application.rolesandpermission.struts.tag.ActivityTag</tagclass>
+		<tagclass>org.mifos.security.rolesandpermission.struts.tag.ActivityTag</tagclass>
 		<bodycontent>JSP</bodycontent>
 	</tag>
  </taglib>

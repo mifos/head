@@ -30,7 +30,7 @@ import javax.servlet.jsp.PageContext;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
