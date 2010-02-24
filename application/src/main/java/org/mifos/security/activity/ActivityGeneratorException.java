@@ -20,7 +20,7 @@
 
 package org.mifos.security.activity;
 
-import org.mifos.application.reports.util.helpers.ReportsConstants;
+import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class ActivityGeneratorException extends ApplicationException {

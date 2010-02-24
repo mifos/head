@@ -5,7 +5,7 @@
     <form-beans>
          
         <!-- Birt Admin Documents action form  -->
-		<form-bean name="birtAdminDocumentUploadActionForm" type="org.mifos.application.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm" />
+		<form-bean name="birtAdminDocumentUploadActionForm" type="org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm" />
 		<!-- End Birt Admin Documents action form  -->
 		
     </form-beans>
@@ -13,7 +13,7 @@
     <action-mappings>
     	
 		    <!-- Birt Admin Documents Action -->
-		<action path="/birtAdminDocumentUploadAction" type="org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploadAction" 
+		<action path="/birtAdminDocumentUploadAction" type="org.mifos.reports.admindocuments.struts.action.BirtAdminDocumentUploadAction" 
 			name="birtAdminDocumentUploadActionForm" parameter="method" scope="session"
 			input="/birtAdminDocumentUploadAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/admindocument/jsp/birtAdminDocumentUpload.jsp" />

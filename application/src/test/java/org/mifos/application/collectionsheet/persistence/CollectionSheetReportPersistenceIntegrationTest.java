@@ -28,7 +28,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.reports.business.dto.CollectionSheetReportData;
+import org.mifos.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.DateUtils;
 

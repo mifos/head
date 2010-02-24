@@ -27,10 +27,10 @@ import junit.framework.Assert;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
-import org.mifos.application.branchreport.BranchReportBO;
-import org.mifos.application.branchreport.BranchReportBOFixture;
-import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
-import org.mifos.application.reports.business.service.BranchReportService;
+import org.mifos.reports.branchreport.BranchReportBO;
+import org.mifos.reports.branchreport.BranchReportBOFixture;
+import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
+import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;

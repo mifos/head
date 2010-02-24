@@ -73,7 +73,7 @@
             <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DS-OPEN");
 
 var userId = reportContext.getParameterValue("userId");
-reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
+reportsDataService = new Packages.org.mifos.reports.business.service.ReportsDataService();
 reportsDataService.initialize(userId);
 Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();]]></method>
             <method name="close"><![CDATA[reportsDataService = null;

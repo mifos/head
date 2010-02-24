@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<!-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+-->                            
+<hibernate-mapping>
+	<class
+		name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO" table="BATCH_BRANCH_CONFIRMATION_ISSUE">
+		<id name="id" access="field" column="ID">
+			<generator class="native" />
+		</id>
+		<property name="productOffering" column="PRODUCT_NAME"
+			access="field" />
+		<property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="ACTUAL_CURRENCY_ID"/>
+			<column name="ACTUAL"/>
+		</property>			
+		<many-to-one name="branchCashConfirmationReport"
+			column="BRANCH_CASH_CONFIRMATION_REPORT_ID" access="field"
+			class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
+		</many-to-one>
+    </class>
+    
+	<class
+		name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO" table="BATCH_BRANCH_CONFIRMATION_DISBURSEMENT">
+		<id name="id" access="field" column="ID">
+			<generator class="native" />
+		</id>
+		<property name="productOffering" column="PRODUCT_NAME"
+			access="field" />
+		<property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="ACTUAL_CURRENCY_ID"/>
+			<column name="ACTUAL"/>
+		</property>			
+		<many-to-one name="branchCashConfirmationReport"
+			column="BRANCH_CASH_CONFIRMATION_REPORT_ID" access="field"
+			class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
+		</many-to-one>
+    </class>    
+	
+	<sql-query name="branchCashConfirmationReport.getCenterIssues">	    
+		<load-collection alias="centerIssues"
+			role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.centerIssues" />
+		<![CDATA[ SELECT {centerIssues.*} FROM BATCH_BRANCH_CONFIRMATION_ISSUE as centerIssues, 
+			BATCH_BRANCH_CASH_CONFIRMATION_REPORT as report WHERE 
+			report.BRANCH_CASH_CONFIRMATION_REPORT_ID=centerIssues.BRANCH_CASH_CONFIRMATION_REPORT_ID
+			AND report.RUN_DATE=:RUN_DATE 
+			AND report.BRANCH_ID=:BRANCH_ID
+		]]>
+	</sql-query>
+
+	<sql-query name="branchCashConfirmationReport.getDisbursements">	    
+		<load-collection alias="disbursements"
+			role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.disbursements" />
+		<![CDATA[ SELECT {disbursements.*} FROM BATCH_BRANCH_CONFIRMATION_DISBURSEMENT as disbursements, 
+			BATCH_BRANCH_CASH_CONFIRMATION_REPORT as report WHERE 
+			report.BRANCH_CASH_CONFIRMATION_REPORT_ID=disbursements.BRANCH_CASH_CONFIRMATION_REPORT_ID
+			AND report.RUN_DATE=:RUN_DATE 
+			AND report.BRANCH_ID=:BRANCH_ID
+		]]>
+	</sql-query>
+</hibernate-mapping>

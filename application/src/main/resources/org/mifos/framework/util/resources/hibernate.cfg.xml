@@ -142,8 +142,8 @@
 		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetCustBO.hbm.xml" />
 		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetLnDetailsEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetSavingsDetailsEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/reports/ui/SelectionItem.hbm.xml" />
-		<!--<mapping resource="org/mifos/application/reports/ui/DateSelectionItem.hbm.xml" />-->
+		<mapping resource="org/mifos/reports/ui/SelectionItem.hbm.xml" />
+		<!--<mapping resource="org/mifos/reports/ui/DateSelectionItem.hbm.xml" />-->
 		<!-- Mapping files for Master Data -->
 		<mapping class="org.mifos.application.master.business.MifosCurrency" />
 		<mapping class="org.mifos.application.master.business.CountryEntity" />
@@ -170,14 +170,14 @@
 		<mapping resource="org/mifos/accounts/business/AccountFlagMapping.hbm.xml" />
 
 		<!-- Mapping files for Reports -->
-		<mapping resource="org/mifos/application/reports/business/ReportsBO.hbm.xml" />
-		<mapping resource="org/mifos/application/reports/business/ReportsCategoryBO.hbm.xml" />
-		<mapping resource="org/mifos/application/reports/business/ReportsParams.hbm.xml" />
-		<mapping resource="org/mifos/application/reports/business/ReportsParamsValue.hbm.xml" />
-		<mapping resource="org/mifos/application/reports/business/ReportsDataSource.hbm.xml" />
-		<mapping class="org.mifos.application.reports.business.ReportsParamsMapValue" />
-		<mapping resource="org/mifos/application/reports/business/ReportsParamsMap.hbm.xml" />
-		<mapping resource="org/mifos/application/reports/business/ReportsJasperMap.hbm.xml" />
+		<mapping resource="org/mifos/reports/business/ReportsBO.hbm.xml" />
+		<mapping resource="org/mifos/reports/business/ReportsCategoryBO.hbm.xml" />
+		<mapping resource="org/mifos/reports/business/ReportsParams.hbm.xml" />
+		<mapping resource="org/mifos/reports/business/ReportsParamsValue.hbm.xml" />
+		<mapping resource="org/mifos/reports/business/ReportsDataSource.hbm.xml" />
+		<mapping class="org.mifos.reports.business.ReportsParamsMapValue" />
+		<mapping resource="org/mifos/reports/business/ReportsParamsMap.hbm.xml" />
+		<mapping resource="org/mifos/reports/business/ReportsJasperMap.hbm.xml" />
 		<!-- End mapping files for reports -->
 		
 		<mapping resource="org/mifos/customers/client/business/ClientAttendance.hbm.xml" />
@@ -230,23 +230,23 @@
 		<mapping resource="org/mifos/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />		 
 		
 		<!-- Administratives Documents  -->
-		<mapping resource="org/mifos/application/admindocuments/business/AdminDocAccStateMix.hbm.xml" />
-		<mapping resource="org/mifos/application/admindocuments/business/AdminDocument.hbm.xml" />
+		<mapping resource="org/mifos/reports/admindocuments/business/AdminDocAccStateMix.hbm.xml" />
+		<mapping resource="org/mifos/reports/admindocuments/business/AdminDocument.hbm.xml" />
 		<!--  -->
 		
 		<!-- Branch Report -->
-		<mapping resource="org/mifos/application/branchreport/BranchReportBO.hbm.xml" />				
-		<mapping resource="org/mifos/application/branchreport/BranchReportClientSummaryBO.hbm.xml" />		
-		<mapping resource="org/mifos/application/branchreport/BranchReportLoanArrearsAgingBO.hbm.xml" />		
-		<mapping resource="org/mifos/application/branchreport/BranchReportStaffSummaryBO.hbm.xml" />		
-		<mapping resource="org/mifos/application/branchreport/BranchReportStaffingLevelSummaryBO.hbm.xml" />		
-		<mapping resource="org/mifos/application/branchreport/BranchReportLoanDetailsBO.hbm.xml" />		
-		<mapping resource="org/mifos/application/branchreport/BranchReportLoanArrearsProfileBO.hbm.xml" />	
+		<mapping resource="org/mifos/reports/branchreport/BranchReportBO.hbm.xml" />				
+		<mapping resource="org/mifos/reports/branchreport/BranchReportClientSummaryBO.hbm.xml" />		
+		<mapping resource="org/mifos/reports/branchreport/BranchReportLoanArrearsAgingBO.hbm.xml" />		
+		<mapping resource="org/mifos/reports/branchreport/BranchReportStaffSummaryBO.hbm.xml" />		
+		<mapping resource="org/mifos/reports/branchreport/BranchReportStaffingLevelSummaryBO.hbm.xml" />		
+		<mapping resource="org/mifos/reports/branchreport/BranchReportLoanDetailsBO.hbm.xml" />		
+		<mapping resource="org/mifos/reports/branchreport/BranchReportLoanArrearsProfileBO.hbm.xml" />	
 		
 		<!--  Branch Cash Confirmation Report -->	
-		<mapping resource="org/mifos/application/cashconfirmationreport/BranchCashConfirmationReportBO.hbm.xml" />	
-		<mapping resource="org/mifos/application/cashconfirmationreport/BranchCashConfirmationCenterRecoveryBO.hbm.xml" />	
-		<mapping resource="org/mifos/application/cashconfirmationreport/BranchCashConfirmationInfoBO.hbm.xml" />	
+		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationReportBO.hbm.xml" />	
+		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationCenterRecoveryBO.hbm.xml" />	
+		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationInfoBO.hbm.xml" />	
 		
 	</session-factory>
 

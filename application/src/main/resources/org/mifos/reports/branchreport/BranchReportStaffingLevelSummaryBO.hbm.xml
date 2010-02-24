@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<!-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+-->                            
+<hibernate-mapping>
+	<class
+		name="org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO"
+		table="BATCH_STAFFING_LEVEL_SUMMARY">
+		<id name="staffingLevelSummaryId" column="STAFFING_LEVEL_SUMMARY_ID"
+			type="integer" access="field">
+			<generator class="native" />
+		</id>
+		<property name="roleId" column="ROLE_ID" type="integer" access="field" />
+		<property name="roleName" column="ROLE_NAME" type="string" access="field" />
+		<property name="personnelCount" column="PERSONNEL_COUNT" type="integer" access="field" />		 
+		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
+			class="org.mifos.reports.branchreport.BranchReportBO">
+		</many-to-one>		
+	</class>
+	
+	<sql-query
+		name="branchReport.getBranchReportStaffingLevelSummaryForDateAndBranch">
+		<load-collection alias="staffingLevelSummaries"
+			role="org.mifos.reports.branchreport.BranchReportBO.staffingLevelSummaries" />
+		<![CDATA[ SELECT {staffingLevelSummaries.*} FROM BATCH_STAFFING_LEVEL_SUMMARY as staffingLevelSummaries, 
+			BATCH_BRANCH_REPORT as branchReport WHERE 
+			branchReport.BRANCH_REPORT_ID=staffingLevelSummaries.BRANCH_REPORT_ID 
+			AND branchReport.RUN_DATE=:RUN_DATE 
+			AND branchReport.BRANCH_ID=:BRANCH_ID
+		]]>
+	</sql-query>	
+
+	<sql-query name="branchReport.extractStaffingLevelSummaryForBranch">
+	    <return-scalar column="roleId" type="integer"/> 	    
+	    <return-scalar column="roleName" type="string"/> 	    
+		<return-scalar column="personnelCount" type="integer"/>
+		<![CDATA[select r.role_id as roleId, role_name as roleName, count(office_personnel_role.personnel_id) as personnelCount 
+				from role r inner join 
+				    (select p.personnel_id, prole.role_id 
+				     from personnel p, personnel_role prole 
+				     where p.personnel_id = prole.personnel_id
+				     and p.office_id=:officeId
+				     and p.personnel_status = 1
+				     ) as office_personnel_role
+				on r.role_id = office_personnel_role.role_id
+				group by r.role_id
+		]]>
+	</sql-query>		
+	<sql-query name="branchReport.extractTotalStaffingLevelSummaryForBranch">
+	    <return-scalar column="roleId" type="integer"/> 	    
+	    <return-scalar column="roleName" type="string"/> 	    
+		<return-scalar column="personnelCount" type="integer"/>
+		<![CDATA[select :TOTAL_STAFF_ROLE_ID as roleId, :TOTAL_STAFF_ROLE_NAME as roleName, 
+					count(distinct prole.personnel_id) as personnelCount 
+				    from role r,personnel_role prole, personnel p where prole.personnel_id=p.personnel_id
+				    and prole.role_id=r.role_id
+				    and p.office_id=:officeId
+				    and p.personnel_status=1
+		]]>
+	</sql-query>		
+</hibernate-mapping>

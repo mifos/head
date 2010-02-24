@@ -67,7 +67,7 @@ NA_ID = new Packages.java.lang.Integer(-3);
 userId = params["userId"];
 try {
 	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
-    reportParameterService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCascadingReportParameterService();
+    reportParameterService = Packages.org.mifos.reports.business.service.ReportServiceFactory.getCascadingReportParameterService();
 } catch (e) {
 	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
 }]]></method>
@@ -4019,7 +4019,7 @@ if(Total.row()==0)
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(1)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(1)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="731"/>
@@ -4046,7 +4046,7 @@ if(Total.row()==0)
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(2)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(2)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="710"/>
@@ -4073,7 +4073,7 @@ if(Total.row()==0)
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(3)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(3)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="704"/>
@@ -4100,7 +4100,7 @@ if(Total.row()==0)
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(4)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(4)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="717"/>
@@ -4127,7 +4127,7 @@ if(Total.row()==0)
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(5)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(5)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="738"/>
@@ -4155,7 +4155,7 @@ if(Total.row()==0)
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(6)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getCashConfirmationConfigService().displaySignatureColumn(6)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="724"/>

@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.reports.business.dto.CollectionSheetReportData;
+import org.mifos.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 

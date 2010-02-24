@@ -6,7 +6,7 @@
 	<display-name>Mifos Web Application</display-name>
 	<servlet>
 		<servlet-name>reportTemplateDownload</servlet-name>
-		<servlet-class>org.mifos.application.reports.servlet.ReportTemplateDownloadServlet</servlet-class>
+		<servlet-class>org.mifos.reports.servlet.ReportTemplateDownloadServlet</servlet-class>
 	</servlet>
 	<filter>
         <filter-name>DatabaseVersionFilter</filter-name>
@@ -64,7 +64,7 @@
 	<!-- Birt Reports Validation Flow Servlet -->
 	<servlet>
 	    <servlet-name>BirtReportValidationController</servlet-name>
-	    <servlet-class>org.mifos.application.reports.action.BirtReportValidationAction</servlet-class>
+	    <servlet-class>org.mifos.reports.action.BirtReportValidationAction</servlet-class>
 	</servlet>
 	<servlet-mapping>
 	    <servlet-name>BirtReportValidationController</servlet-name>

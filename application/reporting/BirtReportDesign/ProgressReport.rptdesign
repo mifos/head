@@ -56,7 +56,7 @@
             <method name="open"><![CDATA[try {
 	logger = Packages.java.util.logging.Logger.getLogger("");
 	branchReportService = new 
-			Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getLoggingEnabledBranchReportService(params["userId"]);
+			Packages.org.mifos.reports.business.service.ReportServiceFactory.getLoggingEnabledBranchReportService(params["userId"]);
 } catch (e) {
 	logger.info("MCSReport: Ds-open: exception : BranchReportDataSource: "+e);
 }]]></method>
@@ -350,7 +350,7 @@
             <method name="open"><![CDATA[branchReportClientSummaries = branchReportService.getClientSummaryInfo(params["branchId"],params["branchReportDate"]);
 hasBranchReportRead = false;]]></method>
             <method name="fetch"><![CDATA[if(hasBranchReportRead) return false;
-branchReportExtractor = new Packages.org.mifos.application.branchreport.helper.BranchReportClientSummaryBatchBOExtractor(branchReportClientSummaries);
+branchReportExtractor = new Packages.org.mifos.reports.branchreport.helper.BranchReportClientSummaryBatchBOExtractor(branchReportClientSummaries);
 
 row["center_count"]=branchReportExtractor.getCenterSummary().getTotal();
 row["group_count"] = branchReportExtractor.getGroupSummary().getTotal();

@@ -139,7 +139,7 @@ explanation of the license and how it is applied.
 													if(o!=null && o.length>0)
 													{
 													for(int j=0;j<o.length;j++){
-														org.mifos.application.reports.business.ReportsParamQuery rpq = (org.mifos.application.reports.business.ReportsParamQuery) o[j]; %>
+														org.mifos.reports.business.ReportsParamQuery rpq = (org.mifos.reports.business.ReportsParamQuery) o[j]; %>
 														<option value='<%=rpq.getValue1()%>'><%=rpq.getValue2()%></option>
 													<%}
 													}else{%>

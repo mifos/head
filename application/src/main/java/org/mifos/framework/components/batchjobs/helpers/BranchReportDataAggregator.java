@@ -22,7 +22,7 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.List;
 
-import org.mifos.application.branchreport.BranchReportClientSummaryBO;
+import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.exceptions.ServiceException;
 

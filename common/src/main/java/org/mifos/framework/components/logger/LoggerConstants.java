@@ -82,7 +82,7 @@ public interface LoggerConstants {
 
     String CUSTOMERLOGGER = "org.mifos.customers.business.CustomerBO";
 
-    String REPORTSLOGGER = "org.mifos.application.reports";
+    String REPORTSLOGGER = "org.mifos.reports";
 
     String BATCH_JOBS = "org.mifos.framework.components.batchjobs";
 

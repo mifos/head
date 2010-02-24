@@ -25,11 +25,11 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.application.branchreport.BranchReportBO;
-import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
+import org.mifos.reports.branchreport.BranchReportBO;
+import org.mifos.reports.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.reports.business.service.BranchReportConfigService;
-import org.mifos.application.reports.business.service.BranchReportService;
+import org.mifos.reports.business.service.BranchReportConfigService;
+import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.configuration.business.Configuration;

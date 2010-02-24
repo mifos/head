@@ -20,11 +20,11 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.application.branchreport.BranchReportBO;
-import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;
-import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.application.reports.business.service.BranchReportConfigService;
-import org.mifos.application.reports.business.service.IBranchReportService;
+import org.mifos.reports.branchreport.BranchReportBO;
+import org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO;
+import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
+import org.mifos.reports.business.service.BranchReportConfigService;
+import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;
 

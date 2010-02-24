@@ -146,7 +146,7 @@ NA_ID = new Packages.java.lang.Integer(-3);
 userId = params["userId"];
 try {
 	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
-    reportParameterService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCascadingReportParameterService();
+    reportParameterService = Packages.org.mifos.reports.business.service.ReportServiceFactory.getCascadingReportParameterService();
 } catch (e) {
 	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
 }]]></method>

@@ -53,8 +53,8 @@
             <method name="open"><![CDATA[try {
 	logger = Packages.java.util.logging.Logger.getLogger("");
 	branchCashConfirmationService = new 
-			Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getBranchCashConfirmationReportService(params["userId"]);
-    configService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService();
+			Packages.org.mifos.reports.business.service.ReportServiceFactory.getBranchCashConfirmationReportService(params["userId"]);
+    configService = Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService();
     formatCurrency = function(amount) {
 	    return Packages.org.mifos.framework.util.helpers.MoneyFactory.createMoney(configService.getCurrency(), 
 	    			new Packages.java.math.BigDecimal(amount==null?0:amount)).toString();
@@ -1469,7 +1469,7 @@
                         <list-property name="visibility">
                             <structure>
                                 <property name="format">all</property>
-                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn()</expression>
+                                <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn()</expression>
                             </structure>
                         </list-property>
                         <column id="563"/>
@@ -1487,7 +1487,7 @@
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(1)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(1)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="604"/>
@@ -1514,7 +1514,7 @@
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(2)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(2)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="610"/>
@@ -1541,7 +1541,7 @@
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(3)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(3)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="617"/>
@@ -1568,7 +1568,7 @@
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(3)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(3)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="624"/>
@@ -1595,7 +1595,7 @@
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(5)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(5)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="638"/>
@@ -1623,7 +1623,7 @@
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
-                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(6)</expression>
+                                            <expression name="valueExpr">!Packages.org.mifos.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(6)</expression>
                                         </structure>
                                     </list-property>
                                     <column id="631"/>

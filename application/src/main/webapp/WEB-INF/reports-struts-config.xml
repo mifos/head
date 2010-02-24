@@ -4,33 +4,33 @@
 <struts-config>
     <form-beans>
         <!-- Reports action form  -->
-        <form-bean name="reportsActionForm" type="org.mifos.application.reports.struts.actionforms.ReportsActionForm"/>
+        <form-bean name="reportsActionForm" type="org.mifos.reports.struts.actionforms.ReportsActionForm"/>
         <!-- Birt Reports action form  -->
         <form-bean name="birtReportsUploadActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm"/>
         <!-- Reports -->
         <form-bean name="reportsParamsActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.ReportsParamsActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.ReportsParamsActionForm"/>
 
         <form-bean name="reportsUserParamsActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.ReportsUserParamsActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.ReportsUserParamsActionForm"/>
 
         <form-bean name="reportsDataSourceActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.ReportsDataSourceActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.ReportsDataSourceActionForm"/>
         <form-bean name="reportsParamsMapActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.ReportsParamsMapActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.ReportsParamsMapActionForm"/>
         <form-bean name="reportsUploadActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.ReportsUploadActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.ReportsUploadActionForm"/>
         <form-bean name="viewReportsActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.ReportsActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.ReportsActionForm"/>
         <form-bean name="reportsCategoryActionForm"
-                   type="org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm"/>
+                   type="org.mifos.reports.struts.actionforms.ReportsCategoryActionForm"/>
         <!-- End reports -->
     </form-beans>
 
     <action-mappings>
         <!--  Reports Action -->
-        <action path="/reportsAction" type="org.mifos.application.reports.struts.action.ReportsAction"
+        <action path="/reportsAction" type="org.mifos.reports.struts.action.ReportsAction"
                 name="reportsActionForm" parameter="method" scope="session" input="/reportsAction.do?method=validate"
                 validate="false">
             <forward name="load_success" path="/pages/application/reports/jsp/reports.jsp"/>
@@ -52,7 +52,7 @@
 
         <!-- Birt Reports Action -->
         <action path="/birtReportsUploadAction"
-                type="org.mifos.application.reports.struts.action.BirtReportsUploadAction"
+                type="org.mifos.reports.struts.action.BirtReportsUploadAction"
                 name="birtReportsUploadActionForm" parameter="method" scope="session"
                 input="/birtReportsUploadAction.do?method=validate" validate="true">
             <forward name="load_success" path="/pages/application/reports/jsp/birtReportUpload.jsp"/>
@@ -70,7 +70,7 @@
         <!-- Birt Reports Action end-->
 
         <!-- Reports Catetory Action-->
-        <action path="/reportsCategoryAction" type="org.mifos.application.reports.struts.action.ReportsCategoryAction"
+        <action path="/reportsCategoryAction" type="org.mifos.reports.struts.action.ReportsCategoryAction"
                 name="reportsCategoryActionForm" parameter="method" scope="session"
                 input="/reportsCategoryAction.do?method=validate" validate="true">
             <forward name="load_success" path="/pages/application/reports/jsp/defineNewReportsCategory.jsp"/>
@@ -90,7 +90,7 @@
 
         <!--  Reports Params Action -->
         <action path="/reportsParamsAction"
-                type="org.mifos.application.reports.struts.action.ReportsParamsAction"
+                type="org.mifos.reports.struts.action.ReportsParamsAction"
                 name="reportsParamsActionForm" parameter="method" scope="session"
                 input="/reportsParamsAction.do?method=validate"
                 validate="false">
@@ -107,7 +107,7 @@
 
         <!--  Reports DataSource Action -->
         <action path="/reportsDataSourceAction"
-                type="org.mifos.application.reports.struts.action.ReportsDataSourceAction"
+                type="org.mifos.reports.struts.action.ReportsDataSourceAction"
                 name="reportsDataSourceActionForm" parameter="method" scope="session"
                 input="/reportsDataSourceAction.do?method=validate"
                 validate="false">
@@ -124,7 +124,7 @@
 
         <!--  Reports Params Map Action -->
         <action path="/reportsParamsMapAction"
-                type="org.mifos.application.reports.struts.action.ReportsParamsMapAction"
+                type="org.mifos.reports.struts.action.ReportsParamsMapAction"
                 name="reportsParamsMapActionForm" parameter="method" scope="session"
                 input="/reportsParamsMapAction.do?method=validate"
                 validate="false">
@@ -137,7 +137,7 @@
 
         <!--  ReportsUploadAction -->
         <action path="/reportsUploadAction"
-                type="org.mifos.application.reports.struts.action.ReportsUploadAction"
+                type="org.mifos.reports.struts.action.ReportsUploadAction"
                 name="reportsUploadActionForm" parameter="method" scope="session"
                 input="/reportsUploadAction.do?method=validate"
                 validate="false">
@@ -149,7 +149,7 @@
 
         <!--ReportsUserParamsAction-->
         <action path="/reportsUserParamsAction"
-                type="org.mifos.application.reports.struts.action.ReportsUserParamsAction"
+                type="org.mifos.reports.struts.action.ReportsUserParamsAction"
                 name="reportsUserParamsActionForm" parameter="method" scope="session"
                 input="/reportsUserParamsAction.do?method=validate"
                 validate="false">

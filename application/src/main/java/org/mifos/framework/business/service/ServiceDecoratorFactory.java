@@ -22,9 +22,9 @@ package org.mifos.framework.business.service;
 
 import java.lang.reflect.Proxy;
 
-import org.mifos.application.reports.business.service.IBranchCashConfirmationReportService;
-import org.mifos.application.reports.business.service.IBranchReportService;
-import org.mifos.application.reports.business.service.ICollectionSheetReportService;
+import org.mifos.reports.business.service.IBranchCashConfirmationReportService;
+import org.mifos.reports.business.service.IBranchReportService;
+import org.mifos.reports.business.service.ICollectionSheetReportService;
 import org.mifos.framework.components.logger.ServiceLogger;
 
 public class ServiceDecoratorFactory {

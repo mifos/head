@@ -24,9 +24,9 @@ import java.util.List;
 
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.application.reports.business.service.CascadingReportParameterService;
-import org.mifos.application.reports.business.service.ReportServiceFactory;
-import org.mifos.application.reports.ui.SelectionItem;
+import org.mifos.reports.business.service.CascadingReportParameterService;
+import org.mifos.reports.business.service.ReportServiceFactory;
+import org.mifos.reports.ui.SelectionItem;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;

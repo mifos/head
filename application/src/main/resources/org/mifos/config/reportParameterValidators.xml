@@ -24,7 +24,7 @@ explanation of the license and how it is applied.
 	classpath:xsd/spring-beans-3.0.xsd">
 	<import resource="reportServices.xml" />
 	<bean
-		class="org.mifos.application.reports.business.validator.CollectionSheetReportParamValidator">
+		class="org.mifos.reports.business.validator.CollectionSheetReportParamValidator">
 		<constructor-arg>
 			<list>
 				<value>report/BatchCollectionSheetReport.rptdesign</value>
@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 	</bean>
 
 	<bean
-		class="org.mifos.application.reports.business.validator.DetailedAgingPortfolioReportParamValidator">
+		class="org.mifos.reports.business.validator.DetailedAgingPortfolioReportParamValidator">
 		<constructor-arg>
 			<list>
 				<value>report/DetailedAgingPortfolioAtRisk.rptdesign</value>
@@ -43,7 +43,7 @@ explanation of the license and how it is applied.
 	</bean>
 
 	<bean
-		class="org.mifos.application.reports.business.validator.BranchReportParamValidator">
+		class="org.mifos.reports.business.validator.BranchReportParamValidator">
 		<constructor-arg>
 			<list>
 				<value>report/ProgressReport.rptdesign</value>
@@ -53,7 +53,7 @@ explanation of the license and how it is applied.
 	</bean>
 
 	<bean
-		class="org.mifos.application.reports.business.validator.BranchCashConfirmationReportParamValidator">
+		class="org.mifos.reports.business.validator.BranchCashConfirmationReportParamValidator">
 		<constructor-arg>
 			<list>
 				<value>
@@ -65,7 +65,7 @@ explanation of the license and how it is applied.
 	</bean>
 	
 	<bean
-		class="org.mifos.application.reports.business.validator.SqlCollectionSheetReportParamValidator">
+		class="org.mifos.reports.business.validator.SqlCollectionSheetReportParamValidator">
 		<constructor-arg>
 			<list>
 				<value>report/CollectionSheetReport.rptdesign</value>
@@ -74,7 +74,7 @@ explanation of the license and how it is applied.
 	</bean>	
 	
 	<bean
-		class="org.mifos.application.reports.business.validator.JdbcBranchCashConfirmationReportParamValidator">
+		class="org.mifos.reports.business.validator.JdbcBranchCashConfirmationReportParamValidator">
 		<constructor-arg>
 			<list>
 				<value>report/BranchCashConfirmationReport.rptdesign</value>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO" 
+    	table="ADMIN_DOCUMENT_ACC_STATE_MIX">
+    	
+        <id name="adminDocAccStateMixId" column="ADMIN_DOC_ACC_STATE_MIX_ID" type="short" access="field">
+            <generator class="native"/>
+        </id>
+  
+  		<version name="versionNo" column="VERSION_NO" unsaved-value="null" />
+
+  		<property name="createdDate" column="CREATED_DATE" update="false" />
+		<property name="createdBy" column="CREATED_BY" update="false" />
+		<property name="updatedDate" column="UPDATED_DATE" />
+		<property name="updatedBy" column="UPDATED_BY" />
+  
+      	<many-to-one name="adminDocumentID" 
+    		column="ADMIN_DOCUMENT_ID"
+    		class="org.mifos.reports.admindocuments.business.AdminDocumentBO" 
+    		/>   
+    		
+      	<many-to-one name="accountStateID" 
+    		column="ACCOUNT_STATE_ID" 
+    		class="org.mifos.accounts.business.AccountStateEntity" 
+    		/>   
+ 	
+    </class>
+  
+	<query name="admindocument.getMixByAdministrativeDocument">
+		<![CDATA[ from  AdminDocAccStateMixBO admindocmix where admindocmix.adminDocumentID.admindocId =:admindocId ]]>
+	</query>
+	
+	<query name="admindocument.getAllMixedAdministrativeDocument">
+		<![CDATA[ from  AdminDocAccStateMixBO admindocmix order by admindocmix.adminDocumentID.admindocId ]]>
+	</query>
+	
+	
+       
+</hibernate-mapping>

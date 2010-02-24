@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.admin.business.service.SystemInfoService;
 import org.mifos.application.admin.system.SystemInfo;
-import org.mifos.application.reports.struts.action.BirtReportsUploadAction;
+import org.mifos.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.Localization;
 import org.mifos.framework.business.service.BusinessService;
