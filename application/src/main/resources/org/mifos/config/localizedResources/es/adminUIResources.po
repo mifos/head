@@ -330,7 +330,7 @@ msgid "Shutdown Information"
 msgstr ""
 
 #: admin.shutdown.link
-msgid "Shutdown Mifos"
+msgid "Shutdown"
 msgstr ""
 
 #: admin.shutdown.button.submit
