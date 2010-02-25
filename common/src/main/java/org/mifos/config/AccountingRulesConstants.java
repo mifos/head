@@ -29,9 +29,7 @@ public class AccountingRulesConstants {
     public static final String AMOUNT_TO_BE_ROUNDED_TO = "AccountingRules.AmountToBeRoundedTo";
     public static final String CURRENCY_CODE = "AccountingRules.CurrencyCode";
     public static final String ADDITIONAL_CURRENCY_CODES = "AccountingRules.AdditionalCurrencyCodes";
-    public static final String DIGITS_BEFORE_DECIMAL = "AccountingRules.DigitsBeforeDecimal";
     public static final String DIGITS_AFTER_DECIMAL_FOR_INTEREST = "AccountingRules.DigitsAfterDecimalForInterest";
-    public static final String DIGITS_BEFORE_DECIMAL_FOR_INTEREST = "AccountingRules.DigitsBeforeDecimalForInterest";
     public static final String MAX_INTEREST = "AccountingRules.MaxInterest";
     public static final String MIN_INTEREST = "AccountingRules.MinInterest";
     public static final String INITIAL_ROUNDING_MODE = "AccountingRules.InitialRoundingMode";
