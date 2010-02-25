@@ -175,14 +175,13 @@ public class StandardTestingService implements TestingService {
     public void reinitializeCaches() {
         if (TestMode.MAIN == getTestMode()) {
             throw new RuntimeException("only allowed during testing");
-        } else {
-            try {
-                HierarchyManager.getInstance().init();
-                AuthorizationManager.getInstance().init();
-                AccountingRules.init();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        }
+        try {
+            HierarchyManager.getInstance().init();
+            AuthorizationManager.getInstance().init();
+            AccountingRules.init();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
     
