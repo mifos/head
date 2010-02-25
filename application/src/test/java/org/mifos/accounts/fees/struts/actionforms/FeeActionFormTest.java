@@ -70,7 +70,7 @@ public class FeeActionFormTest {
 
     @Test
     public void testIsAmountValidWithTooLargeANumber() {
-        form.setAmount("12345678.5");
+        form.setAmount("123456789111111.5");
         Assert.assertFalse(isAmountValid(form));
     }
 

@@ -44,6 +44,28 @@ public class AccountingRules {
     private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
     private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
 
+    /**
+     * An internal property which represents the digits before decimal of an amount that can be entered through
+     * any User Interface, due to <b>MySQL DECIMAL(21,4)</b> for amount field in database we can store a value of up to 17
+     * digits, but some of them are totals. 
+     * <br /><br />
+     * To make sure that totals will not overflow we have allowed 14 as the limit.
+     * 
+     * for details see http://mifosforge.jira.com/browse/MIFOS-1537
+     */
+    private static final Short digitsBeforeDecimalForAmount = 14;
+    
+    /**
+     * An internal property which represents the digits before decimal of an interest that can be entered through
+     * any User Interface, due to <b>MySQL DECIMAL(13,10)</b> for interest field in database we can store a value of up to 13
+     * digits, but some of them are totals. 
+     * <br /><br />
+     * To make sure that totals will not overflow we have allowed 10 as the limit.
+     * 
+     * for details see http://mifosforge.jira.com/browse/MIFOS-1537
+     */
+    private static final Short digitsBeforeDecimalForInterest = 10;
+
     // FIXME: we should use a standard caching mechanism rather than ad hoc caches like 
     // this.  Also, we need to consider if this should be thread safe since this initial
     // implementation is not thread safe for initialization.  Re-initialization should 
@@ -152,30 +174,12 @@ public class AccountingRules {
                 getDigitsAfterDecimal());
     }
 
-    /**
-     * Broken. See <a href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
-     * 1537</a>
-     */
     public static Short getDigitsBeforeDecimal() {
-        Short digits;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        // default from applicationConfiguration.default.properties revision
-        // 14052
-        digits = configMgr.getShort(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL, (short) 7);
-        return digits;
+        return digitsBeforeDecimalForAmount;
     }
 
-    /**
-     * Broken. See <a href="http://mifosforge.jira.com/browse/MIFOS-1537">issue
-     * 1537</a>
-     */
     public static Short getDigitsBeforeDecimalForInterest() {
-        Short digits;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        // default from applicationConfiguration.default.properties revision
-        // 14052
-        digits = configMgr.getShort(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL_FOR_INTEREST, (short) 10);
-        return digits;
+        return digitsBeforeDecimalForInterest;
     }
 
     public static Short getDigitsAfterDecimalForInterest() {
@@ -341,15 +345,6 @@ public class AccountingRules {
 
     public static void setDigitsAfterDecimal(Short value) {
         ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, value);
-    }
-
-    public static void setDigitsBeforeDecimal(Short value) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL, value);
-    }
-
-    public static void setDigitsBeforeDecimalForInterest(Short value) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL_FOR_INTEREST,
-                value);
     }
 
     public static void setDigitsAfterDecimalForInterest(Short value) {

@@ -127,11 +127,8 @@ public class LocalizationConverterTest extends TestCase {
         String doubleValueString = "2.5";
         Double dValue = 2.5;
         Short digitsAfterForMoneySaved = AccountingRules.getDigitsAfterDecimal();
-        Short digitsBeforeForMoneySaved = AccountingRules.getDigitsBeforeDecimal();
         Short digitsAfterForMoney = 1;
-        Short digitsBeforeForMoney = 7;
         AccountingRules.setDigitsAfterDecimal(digitsAfterForMoney);
-        AccountingRules.setDigitsBeforeDecimal(digitsBeforeForMoney);
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         DoubleConversionResult result = converter.parseDoubleForMoney(doubleValueString);
@@ -144,19 +141,18 @@ public class LocalizationConverterTest extends TestCase {
             doubleValueString = "2a59";
             result = converter.parseDoubleForMoney(doubleValueString);
             Assert.assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);
-            doubleValueString = "123456789.59";
+            doubleValueString = "123456789111111.59";
             result = converter.parseDoubleForMoney(doubleValueString);
             Assert.assertEquals(result.getErrors().get(0),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY);
             Assert.assertEquals(result.getErrors().get(1),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY);
-            doubleValueString = "222222222.5";
+            doubleValueString = "222222222111111.5";
             result = converter.parseDoubleForMoney(doubleValueString);
             Assert.assertEquals(result.getErrors().get(0),
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY);
         }
         AccountingRules.setDigitsAfterDecimal(digitsAfterForMoneySaved);
-        AccountingRules.setDigitsBeforeDecimal(digitsBeforeForMoneySaved);
         converter.setCurrentLocale(locale);
 
     }
@@ -165,12 +161,8 @@ public class LocalizationConverterTest extends TestCase {
         String doubleValueString = "222.59562";
         Double dValue = 222.59562;
         Short digitsAfterForInterestSaved = AccountingRules.getDigitsAfterDecimalForInterest();
-        Short digitsBeforeForInterestSaved = AccountingRules.getDigitsBeforeDecimalForInterest();
         Short digitsAfterForInterest = 5;
-        Short digitsBeforeForInterest = 10;
-
         AccountingRules.setDigitsAfterDecimalForInterest(digitsAfterForInterest);
-        AccountingRules.setDigitsBeforeDecimalForInterest(digitsBeforeForInterest);
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         DoubleConversionResult result = converter.parseDoubleForInterest(doubleValueString);
@@ -193,7 +185,6 @@ public class LocalizationConverterTest extends TestCase {
                     ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST);
         }
         AccountingRules.setDigitsAfterDecimalForInterest(digitsAfterForInterestSaved);
-        AccountingRules.setDigitsBeforeDecimalForInterest(digitsBeforeForInterestSaved);
         converter.setCurrentLocale(locale);
 
     }

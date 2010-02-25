@@ -32,10 +32,10 @@ import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.security.util.UserContext;
 
 public class BaseActionFormTest extends TestCase {
     BaseActionForm baseActionForm = new BaseActionForm();
@@ -119,7 +119,7 @@ public class BaseActionFormTest extends TestCase {
         result = baseActionForm.parseDoubleForMoney(doubleStr);
         Assert.assertEquals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, result
                 .getErrors().get(0));
-        doubleStr = "222222222222.4";
+        doubleStr = "222222222222222.4";
         result = baseActionForm.parseDoubleForMoney(doubleStr);
         Assert.assertEquals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY, result
                 .getErrors().get(0));

@@ -28,20 +28,20 @@ import junit.framework.Assert;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.ApplicableCharge;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -152,7 +152,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/applyChargeAction.do");
         addRequestParameter("method", "update");
         addRequestParameter("chargeType", FEE_ID + ":" + IS_NOT_RATE_TYPE);
-        addRequestParameter("charge", "12345678.21");
+        addRequestParameter("charge", "123456789111111.21");
         addRequestParameter("accountId", accountBO.getAccountId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
