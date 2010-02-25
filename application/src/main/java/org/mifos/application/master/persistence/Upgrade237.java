@@ -22,6 +22,7 @@ package org.mifos.application.master.persistence;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.framework.persistence.SqlUpgrade;
@@ -49,10 +50,14 @@ public class Upgrade237 extends Upgrade {
     /*
      * Skip this upgrade for GK as they are going to upgrade this manually in multiple steps
      */
-    private boolean alreadyUpgraded(Connection connection) {
-        //TODO implement skip condition
-        return false;
+    private static boolean alreadyUpgraded(Connection connection) throws SQLException {
+        ResultSet rs = connection.createStatement().executeQuery("DESCRIBE FEES");
+        Boolean skipUpdate = Boolean.FALSE;
+        while (rs.next()) {
+            if (rs.getString(1).equals("FEE_AMOUNT") && rs.getString(2).equals("decimal(21,4)")) {
+                skipUpdate = Boolean.TRUE;
+            }
+        }
+        return skipUpdate;
     }
-
-  
 }
