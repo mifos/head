@@ -83,6 +83,10 @@ import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.ViewInstallmentDetails;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.service.FeeBusinessService;
+import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.persistence.FundPersistence;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -91,27 +95,18 @@ import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.LoanAmountOption;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.service.LoanProductService;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
-import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
-import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
-import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
-import org.mifos.config.business.service.ConfigurationBusinessService;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
-import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.persistence.FundPersistence;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
@@ -131,31 +126,33 @@ import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.accounts.productdefinition.business.LoanAmountOption;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
-import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.accounts.productdefinition.business.service.LoanProductService;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanServiceFacade;
-import org.mifos.customers.surveys.business.SurveyInstance;
-import org.mifos.customers.surveys.helpers.SurveyState;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.service.ClientBusinessService;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.helpers.SurveyState;
+import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
-import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -165,18 +162,21 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.authorization.AuthorizationManager;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
+import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 
 /**
  * Creation and management of loan accounts.
@@ -388,7 +388,6 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-
         // loan fees
         loanActionForm.setAdditionalFees(new ArrayList<FeeView>()); // clear cached additional fees (MIFOS-2547)
         List<FeeView> additionalFees = new ArrayList<FeeView>();
@@ -413,6 +412,9 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setGracePeriodDuration(getStringValue(loanOffering.getGracePeriodDuration()));
         loanActionForm.setDisbursementDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
                 SessionUtils.getAttribute(PROPOSED_DISBURSAL_DATE, request).toString()));
+        // clean up the cached externalId from previous loan creation
+        // if required loanActionForm.clear() will be created
+        loanActionForm.setExternalId(null);
         // end of setDateIntoForm
 
         loadMasterData(request);
