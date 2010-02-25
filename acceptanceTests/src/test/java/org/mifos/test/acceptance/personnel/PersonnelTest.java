@@ -44,7 +44,7 @@ import org.testng.annotations.Test;
 import org.testng.Assert;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","personnel","acceptance","ui"})
+@Test(sequential = true, groups = {"personnel","acceptance","ui"})
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -59,7 +59,7 @@ public class PersonnelTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
@@ -71,6 +71,7 @@ public class PersonnelTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
@@ -108,6 +109,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(sequential = true, groups = {"personnel","acceptance","ui"})
     public void changePasswordTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         

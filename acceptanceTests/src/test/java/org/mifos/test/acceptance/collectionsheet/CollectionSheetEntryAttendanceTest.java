@@ -46,7 +46,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","collectionsheet","acceptance","ui"})
+@Test(sequential = true, groups = {"collectionsheet","acceptance","ui"})
 public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
     private static final int ATTENDANCE_P = CollectionSheetEntryEnterDataPage.ATTENDANCE_P;
@@ -73,6 +73,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @Test(sequential = true, groups = {"smoke"})
     public void defaultAdminUserEntersAttendanceData() throws Exception {
         enterAndVerifyBasicAttendanceData();
     }

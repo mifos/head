@@ -39,7 +39,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "smoke", "collectionsheet", "acceptance", "ui" })
+@Test(sequential = true, groups = { "collectionsheet", "acceptance", "ui" })
 public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
 
     String collectionSheetAccountError = "The following accounts have not been updated due to simultaneous updates/insufficient balance/invalid disbursement date/invalid repayment";

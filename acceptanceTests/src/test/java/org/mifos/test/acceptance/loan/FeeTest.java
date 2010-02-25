@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class FeeTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -52,7 +52,7 @@ public class FeeTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         
@@ -68,6 +68,7 @@ public class FeeTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
     
+    @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applyFee() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);

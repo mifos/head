@@ -42,7 +42,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","client","acceptance","ui"})
+@Test(sequential = true, groups = {"client","acceptance","ui"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -57,7 +57,7 @@ public class ClientTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
@@ -111,6 +111,7 @@ public class ClientTest extends UiTestCaseBase {
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups = {"smoke"})
     public void createClientWithCorrectAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
                 "acceptance_small_003_dbunit.xml.zip",

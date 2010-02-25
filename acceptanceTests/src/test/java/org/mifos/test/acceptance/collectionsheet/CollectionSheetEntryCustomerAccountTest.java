@@ -45,7 +45,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","collectionsheet","acceptance","ui"})
+@Test(sequential = true, groups = {"collectionsheet","acceptance","ui"})
 public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     public static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
@@ -74,7 +74,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -90,9 +90,8 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         
     }
   
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    
-    @Test(invocationCount=1)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception  
+    @Test(sequential = true, groups = {"smoke"})
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
             SubmitFormParameters formParameters = getFormParametersForTestOffice();   

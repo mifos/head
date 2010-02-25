@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","savingsproduct","acceptance"})
+@Test(sequential=true, groups={"savingsproduct","acceptance"})
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class DefineNewSavingsProductTest extends UiTestCaseBase {
     
