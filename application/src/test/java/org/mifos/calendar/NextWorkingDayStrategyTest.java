@@ -47,7 +47,7 @@ public class NextWorkingDayStrategyTest {
     }
     
     @Test
-    public void whenADateFallsOnAWorkingDayItShouldBeAdjustedToNextWorkingDay() {
+    public void whenADateFallsOnAWorkingDayItShouldBeAdjustedToSameDay() {
 
         DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
         DateTime firstTuesdayOfNextMonth = firstOfNextMonth.withDayOfWeek(DayOfWeek.tuesday());
@@ -55,7 +55,7 @@ public class NextWorkingDayStrategyTest {
         // exercise test
         DateTime adjustedDate = workingDayStrategy.adjust(firstTuesdayOfNextMonth);
 
-        assertThat(adjustedDate, is(firstTuesdayOfNextMonth.plusDays(1)));
+        assertThat(adjustedDate, is(firstTuesdayOfNextMonth));
     }
 
     @Test

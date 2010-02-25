@@ -60,6 +60,11 @@ public class HolidayBuilder {
         return this;
     }
     
+    public HolidayBuilder withRepaymentRule (RepaymentRuleTypes rule) {
+        this.repaymentRule = rule;
+        return this;
+    }
+    
     public HolidayBuilder withNextMeetingRule() {
         repaymentRule = RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT;
         return this;

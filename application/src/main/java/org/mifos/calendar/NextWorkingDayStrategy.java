@@ -35,7 +35,7 @@ public class NextWorkingDayStrategy implements DateAdjustmentStrategy {
 
     @Override
     public DateTime adjust(final DateTime startingFrom) {
-        return WorkingDay.nextWorkingDay(startingFrom, this.workingDays);
+        return WorkingDay.nearestWorkingDayOnOrAfter(startingFrom, this.workingDays);
     }
     
     public List<DateTime> adjust (List<DateTime> dates) {

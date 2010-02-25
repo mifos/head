@@ -59,14 +59,14 @@ public class HolidayAdjustmentRuleFactoryTest {
     }
     
     @Test
-    public void factoryShouldReturnNextScheduledEventStrategy() {
+    public void factoryShouldReturnNearestScheduledEventBeginningOnStrategy() {
 
         RepaymentRuleTypes holidayAdjustmentRule = RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT;
 
         // exercise test
         DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
         
-        assertThat(adjustmentStrategy, is(instanceOf(NextScheduledEventStrategy.class)));
+        assertThat(adjustmentStrategy, is(instanceOf(NearestScheduledEventBeginningOnStrategy.class)));
     }
     
     @Test

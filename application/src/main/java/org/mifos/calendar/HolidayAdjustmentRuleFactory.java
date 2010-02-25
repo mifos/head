@@ -38,7 +38,7 @@ public class HolidayAdjustmentRuleFactory {
             holidayAdjustmentStrategy = new NextWorkingDayStrategy(workingDays);
             break;
         case NEXT_MEETING_OR_REPAYMENT:
-            holidayAdjustmentStrategy = new NextScheduledEventStrategy(scheduledEvent);
+            holidayAdjustmentStrategy = new NearestScheduledEventBeginningOnStrategy(scheduledEvent);
             break;
         case SAME_DAY:
             holidayAdjustmentStrategy = new SameDayStrategy(scheduledDay);

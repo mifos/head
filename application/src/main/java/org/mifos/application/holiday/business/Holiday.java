@@ -35,5 +35,9 @@ public interface Holiday {
     DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
     
     RepaymentRuleTypes getRepaymentRuleType();
+    
+    DateTime getFromDate();
+    
+    DateTime getThruDate();
 
 }

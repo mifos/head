@@ -108,8 +108,17 @@ public class HolidayBO extends BusinessObject implements Holiday {
         return this.repaymentRuleEntity;
     }
 
+    @Override
+    public DateTime getFromDate() {
+        return new DateTime(getHolidayFromDate());
+    }
+    
     public Date getHolidayFromDate() {
         return this.holidayPK.getHolidayFromDate();
+    }
+    
+    public DateTime getThruDate() {
+        return new DateTime(getHolidayThruDate());
     }
 
     public Date getHolidayThruDate() {
@@ -232,6 +241,7 @@ public class HolidayBO extends BusinessObject implements Holiday {
         }
     }
 
+    @Override
     public boolean encloses(final Date date) {
         return date.compareTo(getDateWithoutTimeStamp(getHolidayFromDate().getTime())) >= 0
                 && date.compareTo(getDateWithoutTimeStamp(getHolidayThruDate().getTime())) <= 0;
@@ -243,7 +253,7 @@ public class HolidayBO extends BusinessObject implements Holiday {
         DateAdjustmentStrategy dateAdjustment = HolidayAdjustmentRuleFactory.createStrategy(scheduledDay, workingDays,
                 scheduledEvent, RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId()));
 
-        DateTime dayAfterEndOfHoliday = new DateTime(this.getHolidayThruDate());
+        DateTime dayAfterEndOfHoliday = new DateTime(this.getHolidayThruDate()).plusDays(1);
         
         return dateAdjustment.adjust(dayAfterEndOfHoliday);
     }

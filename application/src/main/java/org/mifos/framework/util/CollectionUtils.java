@@ -129,4 +129,17 @@ public class CollectionUtils {
         }
         return result;
     }
+        
+    public static <T> List<T> makeList (T first, List<T> rest) {
+
+        if (rest == null) {
+            throw new IllegalArgumentException("rest cannot be null");
+        }
+        
+        List<T> newList = new ArrayList<T>();
+        newList.add(first);
+        newList.addAll(rest);
+        return newList;
+    }
+
 }

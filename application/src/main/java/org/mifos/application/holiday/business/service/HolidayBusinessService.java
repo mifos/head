@@ -33,6 +33,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
+import org.mifos.calendar.MoratoriumSwitch;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.business.BusinessObject;
@@ -40,7 +41,9 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
+import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Predicate;
 
 public class HolidayBusinessService implements BusinessService {
 
@@ -71,12 +74,27 @@ public class HolidayBusinessService implements BusinessService {
 
     public List<RepaymentRuleEntity> getRepaymentRuleTypes() throws ServiceException {
         try {
-            return new HolidayPersistence().getRepaymentRuleTypes();
+            List<RepaymentRuleEntity> rules =  new HolidayPersistence().getRepaymentRuleTypes();
+            if ( MoratoriumSwitch.IS_ON ) {
+                return rules;
+            }
+            // remove Repayment Moratorium rule
+            return (List<RepaymentRuleEntity>) CollectionUtils.select(rules, isNotRepaymentMoratoriumRule());
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
+        } catch (Exception e) { //declared by Predicate.evaluate()
+            throw new ServiceException(e);
         }
     }
 
+    private Predicate<RepaymentRuleEntity> isNotRepaymentMoratoriumRule() {
+        return new Predicate<RepaymentRuleEntity>() {
+            public boolean evaluate (RepaymentRuleEntity rule) {
+                return rule.getId() < 4;
+            }
+        };
+    }
+    
     public List<LoanScheduleEntity> getAllLoanSchedule(final HolidayBO holiday) throws ServiceException {
         try {
             return new HolidayPersistence().getAllLoanSchedules(holiday);

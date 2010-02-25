@@ -32,7 +32,7 @@ import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 
 /**
- * @author keith
+ *
  *
  */
 public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements ScheduledDateGeneration {

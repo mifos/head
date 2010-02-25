@@ -6,7 +6,11 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.business.HolidayPK;
+import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.schedule.ScheduledEvent;
 
 public class MoratoriumStrategy implements DateAdjustmentStrategy {
@@ -48,6 +52,7 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
            DateTime firstDate = dates.get(0);
            if ( isEnclosedByAHolidayWithRepaymentRule(firstDate, RepaymentRuleTypes.REPAYMENT_MORATORIUM) ) {
                adjustedDates = adjust (shiftSchedulePastMoratorium(dates));
+          /*
            } else if ( isEnclosedByAHolidayWithRepaymentRule(firstDate, RepaymentRuleTypes.SAME_DAY)) {
                int countDatesEnclosedBySameDayHoliday = countDatesEnclosedByHoliday(dates, getHolidayEnclosing(firstDate));
                adjustedDates = joinLists (first(countDatesEnclosedBySameDayHoliday, dates),
@@ -56,6 +61,9 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
                List<DateTime> datesShiftedPastHoliday = shiftDatesInNonMoratoriumHoliday(dates);
                adjustedDates = adjust (joinLists (datesShiftedPastHoliday,
                                                   allButFirst (datesShiftedPastHoliday.size(), dates)));
+           */
+           } else if (isEnclosedByAHoliday(firstDate)) { //enclosed by a non-moratorium holiday
+               adjustedDates = makeList(shiftDatePastNonMoratoriumHoliday(firstDate), adjust (rest(dates)));
            } else {
                adjustedDates = makeList (firstDate, adjust (rest (dates)));
            }
@@ -63,7 +71,7 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
         return adjustedDates;
     }
      
-    List<DateTime> shiftSchedulePastMoratorium (List<DateTime> dates) {
+    private List<DateTime> shiftSchedulePastMoratorium (List<DateTime> dates) {
    
         assert (dates != null) && isEnclosedByAHolidayWithRepaymentRule(dates.get(0), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
         
@@ -75,7 +83,7 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
             
     }
     
-    List<DateTime> shiftByOneWeek(List<DateTime>dates) {
+    private List<DateTime> shiftByOneWeek(List<DateTime>dates) {
         
         List<DateTime> pushedOutSchedule = new ArrayList<DateTime>();
         for (DateTime date: dates) {
@@ -85,7 +93,7 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
         
     }
     
-    List<DateTime> shiftByOneScheduledEventRecurrence (List<DateTime> dates) {
+    private List<DateTime> shiftByOneScheduledEventRecurrence (List<DateTime> dates) {
         
         assert dates != null;
         
@@ -100,6 +108,11 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
      * Given that the first date in the list falls in a non-Moratorium holiday,
      * return the list of dates that fall in the holiday, but shifted out of the holiday
      * using the holiday's repayment rule.
+     * TODO keithp: once dates are shifted past all non-moratorium holidays, then check whether
+     * any fall in a moratorium period. If they do, push them past the moratorium, but do not
+     * push out future dates.
+     * TODO keithp: if shifting a date does not change the date (e.g. same day holiday), then
+     * we're done with it, so move to the next date.
      */
     private List<DateTime> shiftDatesInNonMoratoriumHoliday (List<DateTime> dates) {
         
@@ -116,7 +129,58 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
             }
         }
         return shiftedDatesInHoliday;
+    }
+    
+    /**
+     * Given that the date is in a non-moratorium holiday, shift it past the holiday until either it is no longer
+     * in a holiday or moratorium, or until it no longer moves (e.g., lands in a same-day holiday).
+     * 
+     * <p> If the date shifts into a moratorium period, then shift it out using the RepaymentRuleType of
+     * the most recent non-moratorium holiday that the date was shifted out of. For example, if shifting
+     * the date out of a next-working-day holiday lands it in a moratorium period, then use the
+     * next-working-day repayment rule to shift it past the moratorium period.</p>
+     * 
+     * @param date the DateTime to be shifted
+     * @return the shifted date
+     */
+    private DateTime shiftDatePastNonMoratoriumHoliday (DateTime date) {
+
+        assert date != null;
+        assert isEnclosedByAHoliday(date);
+        assert ! isEnclosedByAHolidayWithRepaymentRule(date, RepaymentRuleTypes.REPAYMENT_MORATORIUM);
         
+        Holiday currentlyEnclosingHoliday = getHolidayEnclosing(date);
+        RepaymentRuleTypes mostRecentNonMoratoriumRepaymentRule 
+                                = currentlyEnclosingHoliday.getRepaymentRuleType(); //never REPAYMENT_MORATORIUM
+        DateTime previousDate = null;
+        DateTime adjustedDate = date;
+        
+        do {
+            previousDate = adjustedDate;
+            if (currentlyEnclosingHoliday.getRepaymentRuleType() == RepaymentRuleTypes.REPAYMENT_MORATORIUM) {
+                adjustedDate = buildHolidayFromCurrentHolidayWithRepaymentRule (currentlyEnclosingHoliday, 
+                                                              mostRecentNonMoratoriumRepaymentRule)
+                                    .adjust(previousDate, workingDays, scheduledEvent);
+            } else {
+                adjustedDate = currentlyEnclosingHoliday.adjust(previousDate, workingDays, scheduledEvent);
+                mostRecentNonMoratoriumRepaymentRule = currentlyEnclosingHoliday.getRepaymentRuleType();
+            }
+            if (isEnclosedByAHoliday(adjustedDate)) {
+                currentlyEnclosingHoliday = getHolidayEnclosing(adjustedDate);
+            }
+        } while (isEnclosedByAHoliday(adjustedDate) && (! adjustedDate.equals(previousDate)));
+
+        return adjustedDate;
+    }
+    
+    private Holiday buildHolidayFromCurrentHolidayWithRepaymentRule (Holiday originalHoliday, RepaymentRuleTypes rule) {
+        HolidayPK holidayPK = new HolidayPK((short)1, originalHoliday.getFromDate().toDate());
+        RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity(rule.getValue(), "lookup.value.key");
+        try {
+            return new HolidayBO(holidayPK, originalHoliday.getThruDate().toDate(), "temporaryHoliday", repaymentRuleEntity);
+        } catch (ApplicationException e) {
+            throw new IllegalStateException("Could not create temporary holiday", e);
+        }
     }
     
     private List<Holiday> getNonMoratoriumHolidays () {

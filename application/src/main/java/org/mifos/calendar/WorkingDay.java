@@ -51,4 +51,17 @@ public class WorkingDay {
         return nextWorkingDay;
     }
 
+    public static DateTime nearestWorkingDayOnOrAfter(final DateTime day, final List<Days> workingDays) {
+
+        if (workingDays == null || workingDays.isEmpty()) {
+            throw new IllegalStateException("workingDays cannot be null or empty");
+        }
+
+        DateTime nextWorkingDay = day;
+        while ( isNotWorkingDay(nextWorkingDay, workingDays)) {
+            nextWorkingDay = nextWorkingDay.plusDays(1);
+        }
+        return nextWorkingDay;
+    }
+
 }
