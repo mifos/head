@@ -26,7 +26,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.calendar.DateAdjustmentStrategy;
+import org.mifos.calendar.ListOfDatesAdjustmentStrategy;
 import org.mifos.calendar.MoratoriumStrategy;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
@@ -63,8 +63,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
     private List<DateTime> adjustDatesForHolidays 
                     (final List<DateTime> dates, List<Holiday> upcomingHolidays, final ScheduledEvent scheduledEvent) {
         
-        DateAdjustmentStrategy adjustmentStrategy = new MoratoriumStrategy(upcomingHolidays, workingDays, scheduledEvent);
+        ListOfDatesAdjustmentStrategy adjustmentStrategy = new MoratoriumStrategy(upcomingHolidays, workingDays, scheduledEvent);
         return adjustmentStrategy.adjust(dates);
     }
-
 }

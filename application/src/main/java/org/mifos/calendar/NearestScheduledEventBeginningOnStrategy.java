@@ -20,8 +20,6 @@
 
 package org.mifos.calendar;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.mifos.schedule.ScheduledEvent;
 
@@ -36,10 +34,5 @@ public class NearestScheduledEventBeginningOnStrategy implements DateAdjustmentS
     @Override
     public DateTime adjust(final DateTime startingFrom) {
         return event.nearestMatchingDateBeginningAt(startingFrom);
-    }
-    
-    public List<DateTime> adjust (final List<DateTime> dates) {
-        //TODO keithp. Implement this to default to adjust just the first date
-        return null;
     }
 }

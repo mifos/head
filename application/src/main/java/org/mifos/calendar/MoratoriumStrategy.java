@@ -13,7 +13,7 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.schedule.ScheduledEvent;
 
-public class MoratoriumStrategy implements DateAdjustmentStrategy {
+public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
 
     /**
      * should be ordered by date ascending to avoid problems with overlapping holidays
@@ -30,13 +30,8 @@ public class MoratoriumStrategy implements DateAdjustmentStrategy {
         this.workingDays = workingDays;
         this.scheduledEvent = scheduledEvent;
     }
-
-    @Override
-    public DateTime adjust(DateTime startingFrom) {
-        assert false : "Should not use this interface method when adjusting for moratorium periods.";
-        return null;
-    }
     
+    @Override
     public List<DateTime> adjust (List<DateTime> dates) {
 
         assert dates != null;

@@ -34,11 +34,4 @@ public class BasicMoratoriumStrategy implements DateAdjustmentStrategy {
 
         return adjustedDate;
     }
-
-    @Override
-    public List<DateTime> adjust(final List<DateTime> dates) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

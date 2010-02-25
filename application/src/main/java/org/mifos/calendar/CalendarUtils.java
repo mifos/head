@@ -20,8 +20,11 @@
 
 package org.mifos.calendar;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.util.helpers.RankType;
@@ -234,5 +237,16 @@ public class CalendarUtils {
         }
         
         return withDayOfWeek;
+    }
+
+    public static List<DateTime> convertListOfDatesToDateTimes(final List<Date> meetingDates) {
+        
+        List<DateTime> convertedDates = new ArrayList<DateTime>();
+        
+        for (Date meeting : meetingDates) {
+            convertedDates.add(new DateTime(meeting));
+        }
+        
+        return convertedDates;
     }
 }
