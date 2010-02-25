@@ -173,9 +173,6 @@ public class StandardTestingService implements TestingService {
      */
     @Override
     public void reinitializeCaches() {
-        if (TestMode.MAIN == getTestMode()) {
-            throw new RuntimeException("only allowed during testing");
-        }
         try {
             HierarchyManager.getInstance().init();
             AuthorizationManager.getInstance().init();
