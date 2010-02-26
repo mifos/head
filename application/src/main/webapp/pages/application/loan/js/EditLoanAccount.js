@@ -101,10 +101,20 @@ function CalculateTotalLoanAmount(length){
 	var totalLoanAmount = document.getElementById("sumLoanAmount");
 	totalLoanAmount.value = "0.0";
 	for(var i=0;i<length;i++)	{		
-		var curAmountValue = parseInt(curForm.elements["clientDetails["+i+"].loanAmount"].value);
+		var curAmountValue = parseFloat(curForm.elements["clientDetails["+i+"].loanAmount"].value);
 		if ((curForm.elements["clients["+i+"]"].checked==true) && (!isNaN(curAmountValue)))
 		{
-		    totalLoanAmount.value = parseInt(totalLoanAmount.value) + curAmountValue;
+			curAmountValue += parseFloat(totalLoanAmount.value);
+		    totalLoanAmount.value = round(curAmountValue);
 		}
 	}
+}
+
+/* float is an approximate representation of a real number.
+ * Simple addition of float like 1.44 + 1.34 will result 2.7800000000000002
+ * http://en.wikipedia.org/wiki/Floating_point
+ * this is workaround so that 1.44 + 1.34 with this method will give 2.78
+ */
+function round(n){
+	return Math.round(n*10000000000000)/10000000000000;
 }
