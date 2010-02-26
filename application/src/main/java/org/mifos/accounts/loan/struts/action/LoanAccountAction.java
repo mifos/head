@@ -1100,7 +1100,7 @@ public class LoanAccountAction extends AccountAppAction {
 
         individualLoan.setParentAccount(loan);
 
-        if (null != loanAccountDetail.getBusinessActivity()) {
+        if (!StringUtils.isBlank(loanAccountDetail.getBusinessActivity())) {
             individualLoan.setBusinessActivityId(Integer.valueOf(loanAccountDetail.getBusinessActivity()));
         }
 

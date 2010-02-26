@@ -33,6 +33,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
+import org.apache.commons.lang.StringUtils;
 
 public class GlimLoanUpdater {
 
@@ -48,8 +49,9 @@ public class GlimLoanUpdater {
 
         individualLoan.setParentAccount(loan);
 
-        if (null != loanAccountDetail.getBusinessActivity())
+        if (!StringUtils.isBlank(loanAccountDetail.getBusinessActivity())) {
             individualLoan.setBusinessActivityId(Integer.valueOf(loanAccountDetail.getBusinessActivity()));
+        }
 
         individualLoan.save();
     }
