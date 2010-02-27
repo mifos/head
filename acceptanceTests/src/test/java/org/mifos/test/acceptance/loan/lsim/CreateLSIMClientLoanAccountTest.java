@@ -64,7 +64,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
  
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
