@@ -72,6 +72,10 @@ public class ShutdownManager implements Serializable {
         return shutdownTime != null && shutdownTime <= System.currentTimeMillis();
     }
 
+    public static boolean isInShutdownCountdownNotificationThreshold() {
+        return shutdownTime != null && shutdownTime <= System.currentTimeMillis() + getShutdownCountdownNotificationThreshold();
+    }
+
     public static void scheduleShutdown(long shutdownTimeout) {
         if (shutdownTime != null) {
             return;
@@ -84,8 +88,8 @@ public class ShutdownManager implements Serializable {
         shutdownTime = null;
     }
 
-    public static long getShutdownTimeout() {
-        return ConfigurationManager.getInstance().getLong("GeneralConfig.ShutdownTimeout", 600) * 1000;
+    public static long getShutdownCountdownNotificationThreshold() {
+        return ConfigurationManager.getInstance().getLong("GeneralConfig.ShutdownCountdownNotificationThreshold", 1800) * 1000;
     }
 
     public static ShutdownManager getInstance(Locale locale) {

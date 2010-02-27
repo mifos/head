@@ -38,6 +38,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -96,6 +97,14 @@ public class LoginAction extends BaseAction {
         loginLogger.debug("Using Thread: " + Thread.currentThread().getName());
         loginLogger.debug("Is Session Open?: " + StaticHibernateUtil.isSessionOpen());
         loginLogger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
+
+        if (ShutdownManager.isInShutdownCountdownNotificationThreshold()) {
+            request.getSession(false).invalidate();
+            ActionErrors error = new ActionErrors();
+            error.add(LoginConstants.SHUTDOWN, new ActionMessage(LoginConstants.SHUTDOWN));
+            request.setAttribute(Globals.ERROR_KEY, error);
+            return mapping.findForward(ActionForwards.load_main_page.toString());
+        }
 
         LoginActionForm loginActionForm = (LoginActionForm) form;
         String userName = loginActionForm.getUserName();
