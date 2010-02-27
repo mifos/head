@@ -29,6 +29,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.admin.business.service.ShutdownService;
+import org.mifos.application.admin.struts.actionforms.ShutdownActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForm;
@@ -36,16 +37,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ShutdownAction extends BaseAction {
+    private static final String DEFAULT_SHUTDOWN_TIMEOUT = "600"; // 10 minutes
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                               HttpServletResponse response) throws Exception {
+        ShutdownActionForm shutdownForm = (ShutdownActionForm) form;
+        if (shutdownForm.getShutdownTimeout() == null) {
+            shutdownForm.setShutdownTimeout(DEFAULT_SHUTDOWN_TIMEOUT);
+        }
         SessionUtils.setAttribute("shutdownManager", ShutdownManager.getInstance(getUserContext(request).getCurrentLocale()), request.getSession());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     public ActionForward shutdown(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                   HttpServletResponse response) throws Exception {
-        ShutdownManager.scheduleShutdown();
+        ShutdownActionForm shutdownForm = (ShutdownActionForm) form;
+        ShutdownManager.scheduleShutdown(Long.parseLong(shutdownForm.getShutdownTimeout()) * 1000);
         return load(mapping, form, request, response);
     }
 

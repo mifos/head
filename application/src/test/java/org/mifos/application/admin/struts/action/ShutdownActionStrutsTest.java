@@ -68,6 +68,7 @@ public class ShutdownActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/shutdownAction.do");
         addRequestParameter("method", "shutdown");
+        addRequestParameter("shutdownTimeout", "600");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         performNoErrors();
         verifyForwardPath("/pages/application/admin/jsp/shutdown.jsp");

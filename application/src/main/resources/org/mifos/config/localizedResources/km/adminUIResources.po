@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-22 23:00+0200\n"
+"POT-Creation-Date: 2010-02-27 16:36+0200\n"
 "PO-Revision-Date: 2009-09-08 20:51-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -355,6 +355,10 @@ msgstr ""
 msgid "In progress (shutting down in {0} hours, {1} minutes, {2} seconds)"
 msgstr ""
 
+#: admin.shutdown.timeout
+msgid "Schedule in"
+msgstr ""
+
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
 msgstr ""
@@ -551,6 +555,10 @@ msgid ""
 msgstr ""
 "អ្នកពុំមានសិទ្ធិដើម្បីធ្វើសកម្មភាពនេះទេ។​ទាក់ទងទៅអ្នកគ្រប់គ្រងប្រព័ន្ធដើម្បី"
 "អោយគេផ្តល់សិទ្ធិគ្រប់គ្រាន់​​ហើយសាកល្បងម្តងទៀត"
+
+#: error.shutdown.timeout.invalid
+msgid "Please type valid shutdown timeout (in seconds)."
+msgstr ""
 
 #: errors.prefix
 msgid "<li>"

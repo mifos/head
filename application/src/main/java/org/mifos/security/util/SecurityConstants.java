@@ -59,6 +59,8 @@ public interface SecurityConstants {
 
     public final String KEY_ACTIVITY_NOT_ALLOWED = "error.activity.not.allowed";
 
+    public final String KEY_SHUTDOWN_TIMEOUT_INVALID = "error.shutdown.timeout.invalid";
+
     // activity related mappeings
     public final short VIEW = 0;
 

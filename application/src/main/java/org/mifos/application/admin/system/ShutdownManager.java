@@ -72,12 +72,12 @@ public class ShutdownManager implements Serializable {
         return shutdownTime != null && shutdownTime <= System.currentTimeMillis();
     }
 
-    public static void scheduleShutdown() {
+    public static void scheduleShutdown(long shutdownTimeout) {
         if (shutdownTime != null) {
             return;
         }
-        shutdownTime = System.currentTimeMillis() + getShutdownTimeout();
-        logger.warn(computeInterval(getShutdownTimeout()));
+        shutdownTime = System.currentTimeMillis() + shutdownTimeout;
+        logger.warn(computeInterval(shutdownTimeout));
     }
 
     public static void cancelShutdown() {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-22 22:59+0200\n"
+"POT-Creation-Date: 2010-02-27 16:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -356,6 +356,10 @@ msgstr ""
 msgid "In progress (shutting down in {0} hours, {1} minutes, {2} seconds)"
 msgstr ""
 
+#: admin.shutdown.timeout
+msgid "Schedule in"
+msgstr ""
+
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
 msgstr "Version de la base de donnée MIFOS"
@@ -555,6 +559,10 @@ msgstr ""
 "Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre "
 "administrateur système pour t'accorder les permissions requises et essayer "
 "encore."
+
+#: error.shutdown.timeout.invalid
+msgid "Please type valid shutdown timeout (in seconds)."
+msgstr ""
 
 #: errors.prefix
 msgid "<li>"

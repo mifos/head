@@ -41,6 +41,10 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.status" bundle="adminUIResources" /></span></td>
 						<td><span class="fontnormal" id="shutdown.text.status"><c:out value="${sessionScope.shutdownManager.status}"/></span></td>
 					</tr>
+                    <tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.timeout" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal" id="shutdown.text.timeout"><mifos:mifosnumbertext name="shutdownActionForm" property="shutdownTimeout" /></span></td>
+					</tr>
 				</table>
                 <table width="98%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
