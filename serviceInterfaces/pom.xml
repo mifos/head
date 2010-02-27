@@ -25,6 +25,10 @@
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
         </dependency>      
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <defaultGoal>jar</defaultGoal>

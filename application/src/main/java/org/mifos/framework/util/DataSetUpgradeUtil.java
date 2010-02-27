@@ -166,7 +166,7 @@ public class DataSetUpgradeUtil {
 
         System.setProperty(TestingService.TEST_MODE_SYSTEM_PROPERTY,"acceptance");
         ApplicationInitializer applicationInitializer = new ApplicationInitializer();
-        applicationInitializer.init();
+        applicationInitializer.init(null);
         System.out.println(" upgrade done!");
 
     }

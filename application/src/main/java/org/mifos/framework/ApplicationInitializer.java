@@ -119,10 +119,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     private static DatabaseError databaseError = new DatabaseError();
 
     public void contextInitialized(ServletContextEvent ctx) {
-        init();
+        init(ctx);
     }
 
-    public void init() {
+    public void init(ServletContextEvent ctx) {
         try {
             synchronized (ApplicationInitializer.class) {
                 initializeHibernate();
@@ -187,7 +187,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     FinancialInitializer.initialize();
                     EntityMasterData.getInstance().init();
                     initializeEntityMaster();
-                    (new MifosScheduler()).registerTasks();
+                    final MifosScheduler mifosScheduler = new MifosScheduler();
+                    mifosScheduler.registerTasks();
+                    
+                    if (null != ctx) {
+                        ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
+                    }
 
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
@@ -356,7 +361,16 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     public void contextDestroyed(ServletContextEvent ctx) {
-
+        LOG.info("shutting down scheduler");
+        MifosScheduler mifosScheduler = null;
+        if (null != ctx) {
+            mifosScheduler = (MifosScheduler) ctx.getServletContext().getAttribute(MifosScheduler.class.getName());
+        }
+        if (null != mifosScheduler) {
+            ctx.getServletContext().removeAttribute(MifosScheduler.class.getName());
+            mifosScheduler.shutdown();
+            mifosScheduler = null;
+        }
     }
 
     public void requestDestroyed(ServletRequestEvent event) {

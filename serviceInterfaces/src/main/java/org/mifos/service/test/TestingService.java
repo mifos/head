@@ -20,11 +20,16 @@
 
 package org.mifos.service.test;
 
+import javax.servlet.ServletContext;
+
 import org.mifos.core.MifosException;
 
 /**
+ * Describes available instrumentation while acceptance tests are running. 
+ * <p>
  * Acceptance tests control the application via the user interface and verify
- * results by looking at the user interface or the database.
+ * results by looking at the user interface or the database. Acceptance tests
+ * may reach into a running Mifos instance via this interface. 
  * <p>
  * Integration tests are also fairly "end-to-end", but they mostly avoid the
  * user interface and reach into the API much more than acceptance tests. Many
@@ -45,4 +50,6 @@ public interface TestingService {
     void setMaximumAgeForNewClient(int age);
     void setAreFamilyDetailsRequired(boolean flag);
     void setMaximumNumberOfFamilyMembers(int number);
+    void runIndividualBatchJob(String jobName, ServletContext servletContext);
+    void runAllBatchJobs(ServletContext servletContext);
 }

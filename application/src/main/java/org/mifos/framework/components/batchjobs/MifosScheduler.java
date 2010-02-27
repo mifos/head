@@ -43,11 +43,11 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 
-public class MifosScheduler extends Timer {
+public class MifosScheduler {
 
     private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
     Timer timer = null;
-    List<String> taskNames = new ArrayList<String>();
+    ArrayList<MifosTask> tasks = new ArrayList<MifosTask>();
     private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
     private ConfigurationLocator configurationLocator;
 
@@ -62,7 +62,14 @@ public class MifosScheduler extends Timer {
      */
     public void schedule(MifosTask task, Date initial, long delay) {
         timer.schedule(task, initial, delay);
-        taskNames.add(task.name);
+        tasks.add(task);
+    }
+    
+    public void shutdown() {
+        if (null != timer) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     /**
@@ -118,7 +125,7 @@ public class MifosScheduler extends Timer {
      */
     public void schedule(MifosTask task, Date initial) {
         timer.schedule(task, initial);
-        taskNames.add(task.name);
+        tasks.add(task);
     }
 
     /**
@@ -139,7 +146,19 @@ public class MifosScheduler extends Timer {
     }
 
     public List<String> getTaskNames() {
+        List<String> taskNames = new ArrayList<String>();
+        for (MifosTask task : tasks) {
+            taskNames.add(task.name);
+        }
         return taskNames;
+    }
+    
+    public void runAllTasks() {
+        /* should this method only exist in BatchJobController? */
+        /* BatchJobController could probably figure this out on its own... */
+        for (MifosTask task : tasks) {
+            task.run();
+        }
     }
 
     private InputSource getTaskConfigurationInputSource() throws FileNotFoundException, IOException {
@@ -158,6 +177,10 @@ public class MifosScheduler extends Timer {
 
     public void setConfigurationLocator(ConfigurationLocator configurationLocator) {
         this.configurationLocator = configurationLocator;
+    }
+
+    public List<MifosTask> getTasks() {
+        return tasks;
     }
 
 }

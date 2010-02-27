@@ -26,9 +26,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
+
+import javax.servlet.ServletContext;
 
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
@@ -38,6 +41,8 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.components.batchjobs.MifosScheduler;
+import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
@@ -244,4 +249,36 @@ public class StandardTestingService implements TestingService {
     public void setMaximumNumberOfFamilyMembers(int number) {
         ClientRules.setMaximumNumberOfFamilyMembers(number);
     }
+
+    @Override
+    public void runAllBatchJobs(final ServletContext ctx) {
+        LOG.info("running all batch jobs");
+        MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
+        mifosScheduler.runAllTasks();
+    }
+
+    @Override
+    public void runIndividualBatchJob(final String requestedJob, final ServletContext ctx) {
+        LOG.info("running batch job with name like: " + requestedJob + "*");
+        boolean jobFound = false;
+        final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
+        OUTER:
+        for (String taskName : mifosScheduler.getTaskNames()) {
+            if (taskName.startsWith(requestedJob)) {
+                final List<MifosTask> tasks = mifosScheduler.getTasks();
+                for (MifosTask task : tasks) {
+                    if (taskName.equals(task.name)) {
+                        jobFound = true;
+                        task.run();
+                        break OUTER;
+                    }
+                }
+                throw new MifosRuntimeException("task names and active tasks do not match!");
+            }
+        }
+        if (!jobFound) {
+            throw new IllegalArgumentException(requestedJob + " is unknown and will not be executed.");
+        }
+    }
+    
 }
