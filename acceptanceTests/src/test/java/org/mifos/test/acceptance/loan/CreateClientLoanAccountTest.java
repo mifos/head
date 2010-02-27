@@ -58,7 +58,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper = new LoanTestHelper(selenium);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }

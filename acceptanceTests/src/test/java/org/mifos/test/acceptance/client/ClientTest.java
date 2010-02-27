@@ -64,7 +64,7 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper = new CustomPropertiesHelper(selenium);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }

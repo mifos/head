@@ -67,7 +67,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
     
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
