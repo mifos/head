@@ -53,12 +53,16 @@ public class ShutdownAction extends BaseAction {
                                   HttpServletResponse response) throws Exception {
         ShutdownActionForm shutdownForm = (ShutdownActionForm) form;
         ShutdownManager.scheduleShutdown(Long.parseLong(shutdownForm.getShutdownTimeout()) * 1000);
+        if (ShutdownManager.isInShutdownCountdownNotificationThreshold()) {
+            SessionUtils.setAttribute("shutdownIsImminent", true, request.getSession());
+        }
         return load(mapping, form, request, response);
     }
 
     public ActionForward cancelShutdown(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                 HttpServletResponse response) throws Exception {
         ShutdownManager.cancelShutdown();
+        SessionUtils.setAttribute("shutdownIsImminent", false, request.getSession());
         return load(mapping, form, request, response);
     }
 

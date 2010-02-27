@@ -92,6 +92,12 @@ public abstract class BaseAction extends DispatchAction {
         if (ShutdownManager.isShutdownDone()) {
             return shutdown(mapping, request);
         }
+        if (ShutdownManager.isInShutdownCountdownNotificationThreshold()) {
+            SessionUtils.setAttribute("shutdownIsImminent", true, request.getSession());
+        }
+        else {
+            SessionUtils.setAttribute("shutdownIsImminent", false, request.getSession());
+        }
         if (StaticHibernateUtil.isSessionOpen()) {
             logger.warn("Hibernate session is about to be reused for new action:" + getClass().getName());
         }

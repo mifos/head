@@ -41,6 +41,9 @@ explanation of the license and how it is applied.
           <td class="taborange"><a id="header.link.admin" href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}" class="tabfontwhite"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
         </tr>
       </table>
+        <c:if test="${sessionScope.shutdownIsImminent == true}">
+            <span class="fontnormalRedBold"><mifos:mifoslabel name="admin.shutdown.status.imminent" bundle="adminUIResources" /></span>
+        </c:if>
     </td>
   </tr>
   <tr>

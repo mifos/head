@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-27 16:36+0200\n"
+"POT-Creation-Date: 2010-02-27 18:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -354,6 +354,10 @@ msgstr ""
 
 #: admin.shutdown.status.inprogress
 msgid "In progress (shutting down in {0} hours, {1} minutes, {2} seconds)"
+msgstr ""
+
+#: admin.shutdown.status.imminent
+msgid "System shutdown is imminent. Please complete current work and log out."
 msgstr ""
 
 #: admin.shutdown.timeout
