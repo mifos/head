@@ -77,7 +77,7 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
 
         // There should not be any UnappliedHolidays
         Assert.assertNotNull(holidays);
-       Assert.assertEquals(holidays.size(), 0);
+        Assert.assertEquals(holidays.size(), 0);
 
         TestObjectFactory.cleanUpHolidays(holidays);
         holidayEntity = null;
@@ -103,7 +103,7 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
 
         // There should not be any UnappliedHolidays
         Assert.assertNotNull(holidays);
-       Assert.assertEquals(holidays.size(), 0);
+        Assert.assertEquals(holidays.size(), 0);
 
         TestObjectFactory.cleanUpHolidays(holidays);
         holidayEntity = null;
