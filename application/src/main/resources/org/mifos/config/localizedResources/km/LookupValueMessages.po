@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-21 16:59+0200\n"
+"POT-Creation-Date: 2010-03-01 10:42-0500\n"
 "PO-Revision-Date: 2009-09-15 20:48-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.3.0\n"
+"X-Generator: Translate Toolkit 1.5.3\n"
 "X-Accelerator-Marker: &\n"
 
 #. # Key value pairs in this file are for LOOKUP_VALUE entries
@@ -383,7 +383,7 @@ msgstr "ពេលវេលាសងត្រឡប់"
 
 #: FeePayment-TimeOfFirstLoanRepayment
 #, fuzzy
-msgid "Time of First Loan Repayment"
+msgid "Time of First Loan Repayment "
 msgstr "ពេលវេលាសងរំលោះនៃកំចីយដំបូង"
 
 #: FeePayment-Upfront
@@ -777,12 +777,12 @@ msgstr "អាចរៀបចំរបាយការណ៍"
 
 #: Permissions-CanApplyChargesToLoans
 #, fuzzy
-msgid "Can apply charges to loans"
+msgid "Can apply charges to loans "
 msgstr "អាចអនុវត្តិការយកសេវាទៅលើកំចី"
 
 #: Permissions-CanApproveLoansInBulk
 #, fuzzy
-msgid "Can approve loans in bulk"
+msgid "Can approve loans in bulk "
 msgstr "អាចសំរេចកំចីនៅក្នុងលក្ខណះរួម"
 
 #: Permissions-CanBlacklistSavingsAccount
@@ -1206,7 +1206,7 @@ msgstr "អាចអនុវត្តិការយកសេវាទៅលើ
 
 #: Permissions-Centers-CanCreateNewCenter
 #, fuzzy
-msgid "Can create new Center"
+msgid "Can create new Center "
 msgstr "អាចបង្កើតមជ្ឈមណ្ឌលថ្មី"
 
 #: Permissions-Centers-CanEditCenterStatus
@@ -1219,9 +1219,9 @@ msgid "Can edit fee amount attached to the account"
 msgstr "អាចកែចំនួនថ្លៃសេវាដែលភ្ជាប់ទៅនឹងគណនី"
 
 #: Permissions-Centers-CanEditMeetingSchedule
-msgctxt "Permissions-Centers-CanEditMeetingSchedule"
-msgid "Can edit meeting schedule"
-msgstr "អាចកែកាលវិភាគនៃអង្គប្រជុំ"
+#, fuzzy
+msgid "Can edit meeting schedule "
+msgstr "អាចកែតំរូវកាលវិភាគនៃអង្គប្រជុំ"
 
 #: Permissions-Centers-CanMakeAdjustmentEntriesToCenterAccount
 msgid "Can make adjustment entries to Center account"
@@ -1233,7 +1233,7 @@ msgstr "អាចធ្វើការសងទៅក្នុងគណនីរ
 
 #: Permissions-Centers-CanModifyCenterInformation
 #, fuzzy
-msgid "Can modify Center information"
+msgid "Can modify Center information "
 msgstr "អាចកែតំរូវពត៍មានរបស់មជ្ឈមណ្ឌល"
 
 #: Permissions-Centers-CanRemoveFeeTypesFromCenterAccount
@@ -1771,6 +1771,10 @@ msgstr "អង្គប្រជុំបន្ទាប់/សងរំលោ�
 msgid "Next Working Day"
 msgstr "ថ្ងៃធ្វើការបន្ទាប់"
 
+#: RepaymentRule-RepaymentMoratorium
+msgid "Moratorium"
+msgstr ""
+
 #: RepaymentRule-SameDay
 msgid "Same Day"
 msgstr "ថ្ងៃដដែល"
@@ -1896,7 +1900,3 @@ msgstr "អនុវត្តិទៅលើគណនីដែលមានរួ
 #: feeUpdationType-AppliesToFutureAccounts
 msgid "Applies to future accounts"
 msgstr "អនុវត្តិទៅលើគណនីនាពេលអនាគត"
-
-#, fuzzy
-#~ msgid "Can edit meeting schedule "
-#~ msgstr "អាចកែតំរូវកាលវិភាគនៃអង្គប្រជុំ"

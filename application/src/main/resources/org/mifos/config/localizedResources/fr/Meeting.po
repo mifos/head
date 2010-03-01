@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-20 20:32-0700\n"
+"POT-Creation-Date: 2010-03-01 10:41-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.2.1\n"
+"X-Generator: Translate Toolkit 1.5.3\n"
 "X-Accelerator-Marker: &\n"
 
 #: error.activity.not.allowed
@@ -152,12 +152,12 @@ msgstr "du chaque"
 
 #: meeting.labelPlaceOfMeeting
 #, fuzzy
-msgid "Location of meeting\\:"
+msgid "Location of meeting:"
 msgstr "Endroit de la réunion\\:"
 
 #: meeting.labelRecurDays
 #, fuzzy
-msgid "If days, specify the recurrence\\:"
+msgid "If days, specify the recurrence:"
 msgstr "Si quotidien, indiquer la répétition \\:"
 
 #: meeting.labelRecurEvery
@@ -166,17 +166,17 @@ msgstr "Se reproduit chaque"
 
 #: meeting.labelRecurMonths
 #, fuzzy
-msgid "If months, select between the following\\:"
+msgid "If months, select between the following:"
 msgstr "Si mensuel, sélectionner le suivan\\:"
 
 #: meeting.labelRecurWeeks
 #, fuzzy
-msgid "If weeks, specify the following\\:"
+msgid "If weeks, specify the following:"
 msgstr "Si hebdomadaire, indiquer le suivant\\:"
 
 #: meeting.labelRepaymentDay
 #, fuzzy
-msgid "Repayment day\\:"
+msgid "Repayment day:"
 msgstr "Jour de remboursement\\:"
 
 #: meeting.labelThe
@@ -189,7 +189,7 @@ msgstr "Semaine"
 
 #: meeting.labelmeetingschedule&groupMembership
 #, fuzzy
-msgid "Meeting schedule & Group Membership\\:"
+msgid "Meeting schedule & Group Membership:"
 msgstr "Programme de réunion et appartenance au groupe"
 
 #: meeting.monthDay.number

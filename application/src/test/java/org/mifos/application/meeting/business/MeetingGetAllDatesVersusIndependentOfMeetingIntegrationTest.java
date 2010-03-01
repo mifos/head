@@ -12,9 +12,9 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTestCase;
 
-public class MeetingGetAllDatesVersusIndependentOfMeetingTest extends MifosIntegrationTestCase {
+public class MeetingGetAllDatesVersusIndependentOfMeetingIntegrationTest extends MifosIntegrationTestCase {
 
-    public MeetingGetAllDatesVersusIndependentOfMeetingTest() throws Exception {
+    public MeetingGetAllDatesVersusIndependentOfMeetingIntegrationTest() throws Exception {
         super();
     }
 

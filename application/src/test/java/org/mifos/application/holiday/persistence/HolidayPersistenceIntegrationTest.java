@@ -80,7 +80,7 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void testGetRepaymentRuleTypes() throws Exception {
         List<RepaymentRuleEntity> repaymentRules = new HolidayPersistence().getRepaymentRuleTypes();
         Assert.assertNotNull(repaymentRules);
-       Assert.assertEquals(3, repaymentRules.size());
+       Assert.assertEquals(4, repaymentRules.size());
     }
 
     public void testGetUnAppliedHolidaysAgainstAppliedOnes() throws Exception {
