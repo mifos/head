@@ -136,13 +136,14 @@ public class CalendarUtilsTest {
     @Test
     public void shouldRollDateForwardToNearestMonthGivenWeekAndWeekDayHaveBeenPassedInCurrentMonth() {
 
-        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
-        DateTime firstThursdayOfNextMonth = firstOfNextMonth.withDayOfWeek(DayOfWeek.thursday());
+        DateTime firstOfMarch2010 = new DateTime().withYear(2010).withMonthOfYear(3).withDayOfMonth(1).toDateMidnight().toDateTime();
+        DateTime startingFromfirstThursdayOfNextMonth = firstOfMarch2010.withDayOfWeek(DayOfWeek.thursday());
 
         // exercise test
-        DateTime adjustedDate = CalendarUtils.getFirstDayForMonthUsingWeekRankAndWeekday(firstThursdayOfNextMonth, 1, DayOfWeek.wednesday());
+        DateTime adjustedDate = CalendarUtils.getFirstDayForMonthUsingWeekRankAndWeekday(startingFromfirstThursdayOfNextMonth, 1, DayOfWeek.wednesday());
 
-        assertThat(adjustedDate, is(firstWednesdayOfTwoMonthsAway()));
+        DateTime expectedAdjustedDate = new DateTime().withYear(2010).withMonthOfYear(4).withDayOfMonth(7).toDateMidnight().toDateTime();
+        assertThat(adjustedDate, is(expectedAdjustedDate));
     }
     
     @Test
