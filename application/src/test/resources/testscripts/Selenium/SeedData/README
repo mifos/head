@@ -1,6 +1,0 @@
-SeedData.html
-    * selenese script for Selenium IDE
-    * Populates an empty dev instance with a group, center, client, loan, etc.
-      Works well against local Mifos instance (baseURL set to something like
-      http://localhost:8080). Needs some modification before it will work
-      against the test server.
