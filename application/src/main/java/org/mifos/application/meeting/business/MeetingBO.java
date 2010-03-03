@@ -850,6 +850,13 @@ public class MeetingBO extends BusinessObject {
         return meetingDetails.getRecurAfter();
     }
 
+    /*
+     * Get the start date of the "interval" surrounding a given date 
+     * For example assume March 1 is a Monday and that weeks are defined to start on 
+     * Monday.  If this is a weekly meeting on a Wednesday then the "interval" 
+     * for Wednesday March 10 is the week from Monday March 8 to Sunday March 14,
+     * and this method would return March 8.  
+     */    
     public DateTime startDateForMeetingInterval(DateTime dateTime) {
         DateTime startOfMeetingInterval = dateTime;
         if (isWeekly()) {

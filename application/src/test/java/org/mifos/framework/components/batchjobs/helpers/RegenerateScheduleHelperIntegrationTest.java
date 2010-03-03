@@ -137,7 +137,6 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
     }
     
     private void validateSchedules(List<DateTime> expectedMeetingDates) {
-        center = TestObjectFactory.getCenter(center.getCustomerId());
         int count = 0;
         for (AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
             if (count < expectedMeetingDates.size()) {
@@ -154,7 +153,6 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
     }
 
     private void validateSchedulesWithSavings(List<DateTime> expectedMeetingDates, CustomerBO client, SavingsBO savings) {
-        //center = TestObjectFactory.getCenter(center.getCustomerId());
         int count = 0;
         for (AccountActionDateEntity actionDateEntity : client.getCustomerAccount().getAccountActionDates()) {
             if (count < expectedMeetingDates.size()) {

@@ -41,6 +41,7 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -1911,20 +1912,38 @@ public class SavingsBO extends AccountBO {
 
     private void updateSavingsSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates,
             final List<CustomerBO> children) {
-        for (int count = 0; count <= meetingDates.size(); count++) {
-            short installmentId = (short) (nextInstallmentId + count);
+        short installmentId = nextInstallmentId;
+
+        for (int count = 0; count < meetingDates.size(); count++) {
             for (CustomerBO customer : children) {
                 AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId, customer
                         .getCustomerId());
+
                 if (accountActionDate != null) {
-                    DateTime meetingDate = meetingDates.get(installmentId - 1);
-                    ((SavingsScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.toDate().getTime()));
+                    Date meetingDate = meetingDates.get(count).toDate();
+                    ((SavingsScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
                 }
             }
+            installmentId++;
         }
     }
 
     private void updateSavingsSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
+        short installmentId = nextInstallmentId;
+
+        for (int count = 0; count < meetingDates.size(); count++) {
+            AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+
+            if (accountActionDate != null) {
+                Date meetingDate = meetingDates.get(count).toDate();
+                ((SavingsScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
+            }
+            installmentId++;
+        }
+
+    }
+
+    private void updateSavingsSchedule_old(final Short nextInstallmentId, final List<DateTime> meetingDates) {
         short installmentId = nextInstallmentId;
         for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
@@ -1938,7 +1957,7 @@ public class SavingsBO extends AccountBO {
         }
 
     }
-
+    
     public Money getTotalPaymentDue(final Integer customerId) {
         return isMandatory() ? getTotalPaymentDueForManAccount(customerId)
                 : getTotalPaymentDueForVolAccount(customerId);

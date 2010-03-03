@@ -57,9 +57,12 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
 import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
@@ -75,6 +78,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     protected SavingsBO savingsBO;
     protected CustomerBO center;
     protected CustomerBO group;
+    protected ClientBO client;
     protected AccountPersistence accountPersistence;
 
     @Override
@@ -87,6 +91,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         try {
             TestObjectFactory.cleanUp(savingsBO);
             TestObjectFactory.cleanUp(accountBO);
+            TestObjectFactory.cleanUp(client);
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
 
@@ -113,12 +118,11 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     public SavingsBO createSavingsAccount(MeetingBO meeting) throws Exception {
         MeetingBO meetingIntCalc = meeting;
         MeetingBO meetingIntPost = meeting;        
-        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.GROUPS, 
+        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.CLIENTS, 
                 new DateTime().toDate(), PrdStatus.LOAN_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 24.0, 200.0,
                 200.0, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
-        //SavingsBO savings = TestObjectFactory.createSavingsAccount("1234", group, AccountState.SAVINGS_ACTIVE, new DateTime().toDate(),
-        //            savingsOffering, TestUtils.makeUser());
-        SavingsBO savings = new SavingsBO(TestUtils.makeUser(), savingsOffering, group, AccountState.SAVINGS_ACTIVE,
+        client = TestObjectFactory.createClient("client", CustomerStatus.CLIENT_ACTIVE, group);
+        SavingsBO savings = new SavingsBO(TestUtils.makeUser(), savingsOffering, client, AccountState.SAVINGS_ACTIVE,
                 savingsOffering.getRecommendedAmount(), null);     
         savings.save();
         StaticHibernateUtil.commitTransaction();
@@ -126,9 +130,9 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     }
 
     /*
-     * original schedule dates: 5/23, 5/30, 6/6, 6/13, 6,20
+     * original schedule dates: 5/23, 5/30, 6/6, 6/13, 6/20, 6/27
      */
-    public void testHandleChangeInMeetingSchedule1() throws Exception {
+    public void testChangeMeetingInFirstWeekOfSchedule() throws Exception {
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,28).toDateTime());
@@ -138,15 +142,16 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,25).toDateTime());
         
         DateTime startDate = new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime();
-        DateTime testDate = new DateMidnight(2008, DateTimeConstants.MAY, 25).toDateTime();
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.MAY, 25).toDateTime();
         MeetingBO meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
         MeetingBO newMeeting = TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.WEDNESDAY);
         
-        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, testDate);
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
     }   
 
-    public void testHandleChangeInMeetingSchedule2() throws Exception {
+
+    public void testChangeMeetingInSecondWeekOfSchedule() throws Exception {
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,30).toDateTime());
@@ -156,14 +161,14 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,25).toDateTime());
 
         DateTime startDate = new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime();
-        DateTime testDate = new DateMidnight(2008, DateTimeConstants.MAY, 26).toDateTime(); 
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.MAY, 26).toDateTime(); 
         MeetingBO meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
         MeetingBO newMeeting = TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.WEDNESDAY);
-        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, testDate);
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
     }   
     
-    public void testHandleChangeInMeetingSchedule3() throws Exception {
+    public void testChangeMeetingInSecondWeekOfScheduleOnOldMeetingDay() throws Exception {
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,30).toDateTime());
@@ -171,17 +176,38 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,11).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,18).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,25).toDateTime());
-
+        
         DateTime startDate = new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime();
-        DateTime testDate = new DateMidnight(2008, DateTimeConstants.MAY, 30).toDateTime(); 
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.MAY, 30).toDateTime();
         MeetingBO meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
         MeetingBO newMeeting = TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.WEDNESDAY);
-        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, testDate);
+        
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
+        validateSchedules(expectedMeetingDates);
+    }   
+        
+    
+    // a change in the last week of a schedule should not change the schedule
+    public void testChangeMeetingInLastWeekOfSchedule() throws Exception {
+        List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,30).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,6).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,13).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,20).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,27).toDateTime());
+
+        DateTime startDate = new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime();
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.JUNE, 25).toDateTime(); 
+        MeetingBO meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
+        MeetingBO newMeeting = TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.WEDNESDAY);
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
 
     }   
 
-    public void testHandleChangeInMeetingSchedule3WithCancelledLoan() throws Exception {
+    // for closed and canceled accounts, we expect no change to the schedule
+    public void testChangeMeetingScheduleForClosedAndCancelledAccounts() throws Exception {
 
         List<DateTime> expectedUnchangedMeetingDates = new ArrayList<DateTime>();
         expectedUnchangedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime());
@@ -192,15 +218,15 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         expectedUnchangedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,27).toDateTime());
 
         DateTime startDate = new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime();
-        DateTime testDate = new DateMidnight(2008, DateTimeConstants.MAY, 30).toDateTime(); 
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.MAY, 30).toDateTime(); 
         MeetingBO meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
         MeetingBO newMeeting = TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.WEDNESDAY);
-        testChangeInMeetingScheduleForDates(meeting, meeting, newMeeting, startDate, testDate, true);
+        testChangeInMeetingScheduleForDates(meeting, meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged, true);
         validateSchedulesForClosedAndCancelled(expectedUnchangedMeetingDates, expectedUnchangedMeetingDates);
 
     } 
-    
-    public void testHandleChangeInMeetingSchedule4() throws Exception {
+
+    public void testChangeBiWeeklyMeetingSchedule() throws Exception {
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,4).toDateTime());
@@ -209,14 +235,14 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JULY,16).toDateTime());
 
         DateTime startDate = new DateMidnight(2008,DateTimeConstants.MAY,23).toDateTime();
-        DateTime testDate = new DateMidnight(2008, DateTimeConstants.MAY, 30).toDateTime(); 
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.MAY, 30).toDateTime(); 
         MeetingBO meeting = setupWeeklyMeeting(startDate, TestObjectFactory.EVERY_SECOND_WEEK);
         MeetingBO newMeeting = TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY, TestObjectFactory.EVERY_SECOND_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.WEDNESDAY);
-        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, testDate);
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
     }   
 
-    public void testHandleChangeInMeetingSchedule5() throws Exception {
+    public void testChangeMonthlyMeetingScheduleOnADateInFirstMonthBeforeMeetingDate() throws Exception {
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.APRIL,9).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,9).toDateTime());
@@ -225,15 +251,15 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.AUGUST,20).toDateTime());
 
         DateTime startDate = new DateMidnight(2008,DateTimeConstants.APRIL,9).toDateTime();
-        DateTime testDate = new DateMidnight(2008, DateTimeConstants.MAY, 3).toDateTime(); 
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.MAY, 3).toDateTime(); 
         MeetingBO meeting = setupMonthlyMeeting(startDate, 1, 9);
         MeetingBO newMeeting = TestObjectFactory.createMeeting(new MeetingBuilder().monthly().every(1).buildMonthlyForDayNumber(20));
  
-        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, testDate);
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
     }      
 
-    public void testHandleChangeInMeetingSchedule6() throws Exception {
+    public void testChangeMonthlyMeetingScheduleOnADateInFirstMonthAfterMeetingDate() throws Exception {
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.APRIL,9).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,9).toDateTime());
@@ -242,14 +268,30 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.AUGUST,20).toDateTime());
 
         DateTime startDate = new DateMidnight(2008,DateTimeConstants.APRIL,9).toDateTime();
-        DateTime testDate = new DateMidnight(2008, DateTimeConstants.MAY, 31).toDateTime(); 
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.MAY, 31).toDateTime(); 
         MeetingBO meeting = setupMonthlyMeeting(startDate, 1, 9);
         MeetingBO newMeeting = TestObjectFactory.createMeeting(new MeetingBuilder().monthly().every(1).buildMonthlyForDayNumber(20));
  
-        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, testDate);
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
     }   
     
+    public void testChangeMonthlyMeetingScheduleOnADateInSecondMonth() throws Exception {
+        List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.APRIL,9).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.MAY,9).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JUNE,9).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.JULY,20).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2008,DateTimeConstants.AUGUST,20).toDateTime());
+
+        DateTime startDate = new DateMidnight(2008,DateTimeConstants.APRIL,9).toDateTime();
+        DateTime dateWhenMeetingWillBeChanged = new DateMidnight(2008, DateTimeConstants.JUNE, 1).toDateTime(); 
+        MeetingBO meeting = setupMonthlyMeeting(startDate, 1, 9);
+        MeetingBO newMeeting = TestObjectFactory.createMeeting(new MeetingBuilder().monthly().every(1).buildMonthlyForDayNumber(20));
+ 
+        testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
+        validateSchedules(expectedMeetingDates);
+    }   
     private MeetingBO setupWeeklyMeeting(DateTime startDate, short recurEvery) {
         new DateTimeService().setCurrentDateTime(startDate);
         return TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, recurEvery,
@@ -264,27 +306,28 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     }
 
     protected void testChangeInMeetingScheduleForDates(MeetingBO meeting, MeetingBO newMeeting, DateTime startDate, 
-            DateTime testDate) throws Exception {
-        testChangeInMeetingScheduleForDates(meeting, meeting, newMeeting, startDate, testDate, false);
+            DateTime dateWhenMeetingWillBeChanged) throws Exception {
+        testChangeInMeetingScheduleForDates(meeting, meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged, false);
     }
     
-    protected void testChangeInMeetingScheduleForDates(MeetingBO customerMeeting, MeetingBO loanMeeting, MeetingBO newMeeting, DateTime startDate, DateTime testDate,
-            boolean useCloxedAndCancelled) throws Exception {
-        System.out.println("Start: " + startDate.toLocalDate() + ", Test: " + testDate.toLocalDate());
+    protected void testChangeInMeetingScheduleForDates(MeetingBO customerMeeting, MeetingBO loanMeeting, MeetingBO newMeeting, DateTime startDate, DateTime dateWhenMeetingWillBeChanged,
+            boolean useClosedAndCancelled) throws Exception {
+        log("Start: " + startDate.toLocalDate() + ", Test: " + dateWhenMeetingWillBeChanged.toLocalDate());
         accountBO = createLoanAccount(customerMeeting, loanMeeting);
         savingsBO = createSavingsAccount(customerMeeting);
         
         // center initially set up with meeting today
         center = TestObjectFactory.getCenter(center.getCustomerId());
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-        if (useCloxedAndCancelled) {
+        if (useClosedAndCancelled) {
             accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
+            savingsBO.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "");
             CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
             CustomerBOTestUtils.setCustomerStatus(group, customerStatusEntity);           
             StaticHibernateUtil.commitTransaction();
         }
 
-        new DateTimeService().setCurrentDateTime(testDate);      
+        new DateTimeService().setCurrentDateTime(dateWhenMeetingWillBeChanged);      
         center.updateMeeting(newMeeting);
         
         TestObjectFactory.updateObject(center);
@@ -293,6 +336,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         List<Holiday> holidays = new ArrayList<Holiday>();        
         center.getCustomerAccount().handleChangeInMeetingSchedule(workingDays, holidays);
         accountBO.handleChangeInMeetingSchedule(workingDays, holidays);
+        savingsBO.handleChangeInMeetingSchedule(workingDays, holidays);
         
         StaticHibernateUtil.getTransaction().commit();
         StaticHibernateUtil.closeSession();
@@ -314,7 +358,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             }
             ++count;
         }
-        System.out.println("---");
+        log("---");
         count = 0;
         for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
             if (count < expectedLoanMeetingDates.size()) {
@@ -322,7 +366,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             }
             ++count;
         }
-        System.out.println("+++");
+        log("+++");
         count = 0;
         for (AccountActionDateEntity actionDateEntity : savingsBO.getAccountActionDates()) {
             if (count < expectedLoanMeetingDates.size()) {
@@ -330,7 +374,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             }
             ++count;
         }
-        System.out.println("===");
+        log("===");
     }  
     
     private void validateSchedules(List<DateTime> expectedMeetingDates, List<DateTime> expectedLoanMeetingDates) {
@@ -344,7 +388,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             }
             ++count;
         }
-        System.out.println("---");
+        log("---");
         count = 0;
         for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
             if (count < expectedLoanMeetingDates.size()) {
@@ -352,7 +396,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             }
             ++count;
         }
-        System.out.println("+++");
+        log("+++");
         count = 0;
         for (AccountActionDateEntity actionDateEntity : savingsBO.getAccountActionDates()) {
             if (count < expectedLoanMeetingDates.size()) {
@@ -360,14 +404,17 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             }
             ++count;
         }
-        System.out.println("===");
+        log("===");
     }   
     
     private void checkScheduleDates(final DateTime expectedMeetingDate,
             final AccountActionDateEntity actionDateEntity) {
-        System.out.println(new java.sql.Date(expectedMeetingDate.getMillis()) + ":" + actionDateEntity.getActionDate());
+        log(new java.sql.Date(expectedMeetingDate.getMillis()) + ":" + actionDateEntity.getActionDate());
 
         Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(expectedMeetingDate.toDate()), DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
     }
-    
+ 
+    private void log(String message) {
+        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(message);        
+    }
 }

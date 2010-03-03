@@ -569,9 +569,20 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
+    /*
+     * Find the first installment which has an enclosing "interval" such 
+     * that the entire interval is after the current date.  For example
+     * assume March 1 is a Monday and that weeks are defined to start on 
+     * Monday.  If the meeting is a weekly meeting on a Wednesday 
+     * then the "interval" for the meeting of Wednesday March 10 is Monday
+     * March 8 to Sunday March 14.  If the current date was March 7, then 
+     * we would return the installment for March 10 since the 3/8-14 interval
+     * is after the 7th.  But if today were the 8th, then we would return 
+     * the following installment.
+     */
     private AccountActionDateEntity findInstallmentToUpdate() {
-        List<AccountActionDateEntity> dueInstallments = getAllInstallments();
-        if (dueInstallments.size() == 0) {
+        List<AccountActionDateEntity> allInstallments = getAllInstallments();
+        if (allInstallments.size() == 0) {
             return null;
         }
 
@@ -579,10 +590,18 @@ public class AccountBO extends BusinessObject {
         MeetingBO meeting = getMeetingForAccount();
         
         int installmentIndex = 0;
-        AccountActionDateEntity installment = dueInstallments.get(installmentIndex);
+        AccountActionDateEntity installment = allInstallments.get(installmentIndex);
+        // keep looking at the next installment as long as the current date falls on or 
+        // after (!before) the start of the current installment
         while(installment != null && !currentDateTime.isBefore(meeting.startDateForMeetingInterval(                
                 new DateTime(installment.getActionDate())))) {
-            installment = dueInstallments.get(++installmentIndex);
+            ++installmentIndex;
+            // if we've iterated over all the installments, then just return null
+            if (installmentIndex == allInstallments.size()) {
+                installment = null;
+            } else {
+                installment = allInstallments.get(installmentIndex);
+            }
         }
         return installment;        
     }
