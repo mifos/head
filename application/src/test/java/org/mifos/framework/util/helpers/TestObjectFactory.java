@@ -176,6 +176,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.authentication.EncryptionService;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
@@ -473,7 +474,7 @@ public class TestObjectFactory {
                     .valueOf("1"), Short.valueOf("41"));
             client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(), status, null,
                     null, null, null, getFees(), null, systemUser, new OfficePersistence()
-                            .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new Date(), null, null, null,
+                            .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService().getCurrentJavaDateTime(), null, null, null,
                     YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView, null);
             new ClientPersistence().saveClient(client);
             StaticHibernateUtil.commitTransaction();
@@ -978,7 +979,7 @@ public class TestObjectFactory {
             final UserContext userContext) {
         try {
             GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
-            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(), MeetingType.PERIODIC_FEE);
+            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService().getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
             FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, TestUtils.createMoney(feeAmnt),
                     false, meeting);
@@ -996,7 +997,7 @@ public class TestObjectFactory {
             final Short recurAfter) {
 
         try {
-            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(), MeetingType.PERIODIC_FEE);
+            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService().getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
             return createPeriodicRateFee(feeName, feeCategory, rate, feeFormula, meetingFrequency, recurAfter,
                     TestUtils.makeUserWithLocales(), meeting);
         } catch (Exception e) {
@@ -1009,7 +1010,7 @@ public class TestObjectFactory {
             final Short recurAfter, final UserContext userContext, final MeetingBO meeting) {
 
         try {
-            MeetingBO newMeeting = new MeetingBO(meetingFrequency, recurAfter, new Date(), MeetingType.PERIODIC_FEE);
+            MeetingBO newMeeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService().getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
             // GLCodeEntity glCode =
             // ChartOfAccountsCache.get("31301").getAssociatedGlcode();
             GLCodeEntity glCode = new GLCodeEntity((short) 1, "31301");
@@ -1100,7 +1101,7 @@ public class TestObjectFactory {
         MeetingBO meeting;
         try {
             meeting = new MeetingBO(WeekDay.getWeekDay((short) calendar.get(Calendar.DAY_OF_WEEK)), recurAfter,
-                    new Date(), CUSTOMER_MEETING, "meetingPlace");
+                    new DateTimeService().getCurrentJavaDateTime(), CUSTOMER_MEETING, "meetingPlace");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1124,7 +1125,7 @@ public class TestObjectFactory {
             final MeetingType meetingType, final WeekDay weekday) {
         MeetingBO meeting;
         try {
-            meeting = new MeetingBO(frequency, recurAfter, new Date(), meetingType);
+            meeting = new MeetingBO(frequency, recurAfter, new DateTimeService().getCurrentJavaDateTime(), meetingType);
             meeting.setMeetingPlace("Loan Meeting Place");
         } catch (Exception e) {
             throw new RuntimeException(e);
