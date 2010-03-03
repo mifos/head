@@ -84,14 +84,14 @@ public class ConfigurationInitializer {
 
     private void setFiscalStartOfWeek(Map<Key, Object> officeConfigMap) throws SystemException, ApplicationException {
 
-        Short id = FiscalCalendarRules.getStartOfWeek();
+        Short id = new FiscalCalendarRules().getStartOfWeek();
         officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.FISCAL_START_OF_WEEK), id);
     }
 
     private void setWeekOffList(Map<Key, Object> officeConfigMap) throws SystemException, ApplicationException {
 
         // get weekday off (not working day)
-        List<Short> weekOffList = FiscalCalendarRules.getWeekDayOffList();
+        List<Short> weekOffList = new FiscalCalendarRules().getWeekDayOffList();
         if (weekOffList != null)
             officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.WEEK_OFF_LIST), weekOffList);
     }

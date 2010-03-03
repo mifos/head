@@ -33,7 +33,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.exceptions.AccountException;
@@ -75,6 +77,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -547,18 +550,11 @@ public class AccountBO extends BusinessObject {
         buildFinancialEntries(new HashSet(reversedTrxns));
     }
 
-    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
-        
-        AccountActionDateEntity nextInstallmentOnOrAfterToday = getDetailsOfNextInstallment();
-        Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        
-        if (nextInstallmentOnOrAfterToday != null) {
-            short nextInstallmentId = nextInstallmentOnOrAfterToday.getInstallmentId();
-            if (nextInstallmentOnOrAfterToday.getActionDate().compareTo(currentDate) == 0) {
-                nextInstallmentId += 1;
-            }
-            
-            regenerateFutureInstallments(nextInstallmentId, workingDays, holidays);
+    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {       
+        // find the installment to update               
+        AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
+        if (nextInstallment != null) {
+            regenerateFutureInstallments(nextInstallment, workingDays, holidays);
             try {
                 getAccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {
@@ -567,6 +563,28 @@ public class AccountBO extends BusinessObject {
         } else {
             resetUpdatedFlag();
         }
+    }
+  
+    protected MeetingBO getMeetingForAccount() {
+        return null;
+    }
+
+    private AccountActionDateEntity findInstallmentToUpdate() {
+        List<AccountActionDateEntity> dueInstallments = getAllInstallments();
+        if (dueInstallments.size() == 0) {
+            return null;
+        }
+
+        DateTime currentDateTime = new DateMidnight().toDateTime();
+        MeetingBO meeting = getMeetingForAccount();
+        
+        int installmentIndex = 0;
+        AccountActionDateEntity installment = dueInstallments.get(installmentIndex);
+        while(installment != null && !currentDateTime.isBefore(meeting.startDateForMeetingInterval(                
+                new DateTime(installment.getActionDate())))) {
+            installment = dueInstallments.get(++installmentIndex);
+        }
+        return installment;        
     }
 
     protected void resetUpdatedFlag() throws AccountException {
@@ -1120,7 +1138,7 @@ public class AccountBO extends BusinessObject {
                             + installmentToSkip, adjustForHolidays);
                 } else {
                     
-                    List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+                    List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
                     List<Holiday> holidays = new ArrayList<Holiday>();
                     
                     if (adjustForHolidays) {
@@ -1367,7 +1385,7 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    protected void regenerateFutureInstallments(final Short nextIntallmentId, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
     }
 
     protected List<InstallmentDate> getInstallmentDates(final MeetingBO Meeting, final Integer installmentSkipToStartRepayment)

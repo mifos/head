@@ -38,7 +38,7 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyTest 
 
         meeting = new MeetingBuilder().weekly().occuringOnA(WeekDay.WEDNESDAY).withStartDate(meetingStartDate).build();
 
-        workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> holidays = new ArrayList<Holiday>();
 
         scheduledDateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays);

@@ -219,10 +219,10 @@ public class StandardTestingService implements TestingService {
     public void setFiscalCalendarRules(String workingDays, String scheduleTypeForMeetingOnHoliday)
             throws MifosException {
         if (isSet(workingDays)) {
-            FiscalCalendarRules.setWorkingDays(workingDays);
+            new FiscalCalendarRules().setWorkingDays(workingDays);
         }
         if (isSet(scheduleTypeForMeetingOnHoliday)) {
-            FiscalCalendarRules.setScheduleTypeForMeetingOnHoliday(scheduleTypeForMeetingOnHoliday);
+            new FiscalCalendarRules().setScheduleTypeForMeetingOnHoliday(scheduleTypeForMeetingOnHoliday);
         }
     }
     

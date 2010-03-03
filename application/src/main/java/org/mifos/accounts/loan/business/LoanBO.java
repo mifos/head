@@ -1623,7 +1623,7 @@ public class LoanBO extends AccountBO {
      * regenerate installments starting from nextInstallmentId
      */
     @Override
-    protected void regenerateFutureInstallments(final Short nextInstallmentId, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
         if (!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
                 && !this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
@@ -1634,7 +1634,9 @@ public class LoanBO extends AccountBO {
             MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
                     getLoanMeeting().getMeetingStartDate());
 
-            DateTime startFromMeetingDate = new DateTime(getLoanMeeting().getMeetingStartDate());
+            //DateTime startFromMeetingDate = new DateTime(getLoanMeeting().getMeetingStartDate());
+            DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(new DateTime(nextInstallment.getActionDate()));
+
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
                     holidays);
@@ -1642,18 +1644,18 @@ public class LoanBO extends AccountBO {
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
                     startFromMeetingDate, scheduledEvent);
 
-            updateLoanSchedule(nextInstallmentId, meetingDates);
+            updateLoanSchedule(nextInstallment.getInstallmentId(), meetingDates);
         }
     }
 
     private void updateLoanSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
         short installmentId = nextInstallmentId;
 
-        for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
+        for (int count = 0; count < meetingDates.size(); count++) {
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 
             if (accountActionDate != null) {
-                Date meetingDate = meetingDates.get(installmentId - 1).toDate();
+                Date meetingDate = meetingDates.get(count).toDate();
                 ((LoanScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
             }
             installmentId++;
@@ -3959,4 +3961,8 @@ public class LoanBO extends AccountBO {
         return getLoanOffering().getCurrency();
     }
 
+    @Override
+    public MeetingBO getMeetingForAccount() {
+        return getLoanMeeting();
+    }    
 }

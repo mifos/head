@@ -27,7 +27,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.MeetingTemplate;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
@@ -38,6 +40,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
@@ -72,6 +75,32 @@ public class MeetingBO extends BusinessObject {
      */
     private final GregorianCalendar gc = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
     
+    private FiscalCalendarRules fiscalCalendarRules = null;
+        
+    private MasterPersistence masterPersistence = null;
+    
+    public FiscalCalendarRules getFiscalCalendarRules() {
+        if (fiscalCalendarRules == null) {
+            fiscalCalendarRules = new FiscalCalendarRules();
+        }
+        return this.fiscalCalendarRules;
+    }
+
+    public void setFiscalCalendarRules(FiscalCalendarRules fiscalCalendarRules) {
+        this.fiscalCalendarRules = fiscalCalendarRules;
+    }
+    
+    public MasterPersistence getMasterPersistence() {
+        if (masterPersistence == null) {
+            masterPersistence = new MasterPersistence();            
+        }
+        return this.masterPersistence;
+    }
+
+    public void setMasterPersistence(MasterPersistence masterPersistence) {
+        this.masterPersistence = masterPersistence;
+    }
+
     /**
      * default constructor for hibernate
      */
@@ -101,7 +130,12 @@ public class MeetingBO extends BusinessObject {
 
     public MeetingBO(final WeekDay weekDay, final RankType rank, final Short recurAfter, final Date startDate, final MeetingType meetingType,
             final String meetingPlace) throws MeetingException {
-        this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, startDate, meetingType, meetingPlace);
+        this(weekDay, rank, recurAfter, startDate, meetingType, meetingPlace, new MasterPersistence());
+    }
+
+    public MeetingBO(final WeekDay weekDay, final RankType rank, final Short recurAfter, final Date startDate, final MeetingType meetingType,
+            final String meetingPlace, final MasterPersistence masterPersistence) throws MeetingException {
+        this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, startDate, meetingType, meetingPlace, masterPersistence);
     }
 
     public MeetingBO(final Short dayNumber, final Short recurAfter, final Date startDate, final MeetingType meetingType, final String meetingPlace)
@@ -122,6 +156,11 @@ public class MeetingBO extends BusinessObject {
 
     private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank, final Short recurAfter,
             final Date startDate, final MeetingType meetingType, final String meetingPlace) throws MeetingException {
+        this(recurrenceType, dayNumber, weekDay, rank, recurAfter, startDate, meetingType, meetingPlace, new MasterPersistence());
+    }    
+    private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank, final Short recurAfter,
+            final Date startDate, final MeetingType meetingType, final String meetingPlace, final MasterPersistence masterPersistence) throws MeetingException {
+        setMasterPersistence(masterPersistence);
         this.validateFields(recurrenceType, startDate, meetingType, meetingPlace);
         this.meetingDetails = new MeetingDetailsEntity(new RecurrenceTypeEntity(recurrenceType), dayNumber, weekDay,
                 rank, recurAfter, this);
@@ -809,6 +848,39 @@ public class MeetingBO extends BusinessObject {
 
     public Short getRecurAfter() {
         return meetingDetails.getRecurAfter();
+    }
+
+    public DateTime startDateForMeetingInterval(DateTime dateTime) {
+        DateTime startOfMeetingInterval = dateTime;
+        if (isWeekly()) {
+            int weekDay = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(getFiscalCalendarRules().getStartOfWeekWeekDay().getValue());
+            while (startOfMeetingInterval.getDayOfWeek() != weekDay) {
+                startOfMeetingInterval = startOfMeetingInterval.minusDays(1);
+            }
+        } else if (isMonthly()) {
+            int dayOfMonth = dateTime.getDayOfMonth();
+            startOfMeetingInterval = startOfMeetingInterval.minusDays(dayOfMonth - 1);
+        } else {
+            // for days we return the same day
+            startOfMeetingInterval =  dateTime;
+        }       
+        return startOfMeetingInterval;
+    }
+    
+    public boolean queryDateIsInMeetingIntervalForFixedDate(DateTime queryDate, DateTime fixedDate) {
+        DateTime startOfMeetingInterval = startDateForMeetingInterval(fixedDate);
+        DateTime endOfMeetingInterval;
+        if (isWeekly()) {
+            endOfMeetingInterval = startOfMeetingInterval.plusWeeks(getRecurAfter());                   
+        } else if (isMonthly()) {
+            endOfMeetingInterval = startOfMeetingInterval.plusMonths(getRecurAfter());
+        } else {
+            // we don't handle meeting intervals in days
+            return false;
+        }
+        return (queryDate.isEqual(startOfMeetingInterval.getMillis()) || 
+                queryDate.isAfter(startOfMeetingInterval.getMillis())) &&
+                queryDate.isBefore(endOfMeetingInterval.getMillis());
     }
 
 }

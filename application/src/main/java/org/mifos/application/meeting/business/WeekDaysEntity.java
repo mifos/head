@@ -44,11 +44,11 @@ public class WeekDaysEntity extends MasterDataEntity {
     }
 
     public boolean isWorkingDay() {
-        return FiscalCalendarRules.isWorkingDay(getId());
+        return new FiscalCalendarRules().isWorkingDay(getId());
     }
 
     public boolean isStartOfFiscalWeek() {
-        return FiscalCalendarRules.isStartOfFiscalWeek(getId());
+        return new FiscalCalendarRules().isStartOfFiscalWeek(getId());
     }
 
     public Short getStartOfWeek() {

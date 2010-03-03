@@ -1843,7 +1843,7 @@ public class LoanAccountAction extends AccountAppAction {
 
             // FIXME - keithw - prevent real domain objects from being pushed up
             // to presentation
-            storeCollectionOnSessionForUseInJspPage(request, MeetingConstants.WEEKDAYSLIST, FiscalCalendarRules
+            storeCollectionOnSessionForUseInJspPage(request, MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules()
                     .getWorkingDays());
 
             try {

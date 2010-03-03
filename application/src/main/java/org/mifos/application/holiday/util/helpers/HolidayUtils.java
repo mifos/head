@@ -51,7 +51,7 @@ import org.mifos.framework.util.DateTimeService;
 public class HolidayUtils {
 
     public static boolean isWorkingDay(final Calendar day) throws RuntimeException {
-        return FiscalCalendarRules.isWorkingDay(day);
+        return new FiscalCalendarRules().isWorkingDay(day);
     }
 
 

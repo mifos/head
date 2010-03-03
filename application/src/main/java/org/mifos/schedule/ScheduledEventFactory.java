@@ -64,7 +64,7 @@ public class ScheduledEventFactory {
         int every = meeting.getRecurAfter();
         int dayOfWeek = 0;
         if (meeting.getMeetingDetails().getWeekDay() != null) {
-            dayOfWeek = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(meeting.getMeetingDetails().getWeekDay().getValue()).getDays();
+            dayOfWeek = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(meeting.getMeetingDetails().getWeekDay().getValue());
         }
             
         int dayOfMonth = 0;

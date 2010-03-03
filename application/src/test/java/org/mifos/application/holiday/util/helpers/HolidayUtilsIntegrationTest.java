@@ -135,20 +135,20 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         toggleFirstDayOnOff(Short.valueOf("0"));
         // ///////////////////
         configMgr = ConfigurationManager.getInstance();
-        savedConfigWorkingDays = configMgr.getProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays).toString();
+        savedConfigWorkingDays = configMgr.getProperty(new FiscalCalendarRules().FiscalCalendarRulesWorkingDays).toString();
         savedConfigWorkingDays = savedConfigWorkingDays.replace("[", "");
         savedConfigWorkingDays = savedConfigWorkingDays.replace("]", "");
         setNewWorkingDays(sundayExcludedWorkingDays);
     }
 
     private void setSavedConfig() {
-        configMgr.setProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays, savedConfigWorkingDays);
-        FiscalCalendarRules.reloadConfigWorkingDays();
+        configMgr.setProperty(new FiscalCalendarRules().FiscalCalendarRulesWorkingDays, savedConfigWorkingDays);
+        new FiscalCalendarRules().reloadConfigWorkingDays();
     }
 
     private void setNewWorkingDays(String newWorkingDays) {
-        configMgr.setProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays, newWorkingDays);
-        FiscalCalendarRules.reloadConfigWorkingDays();
+        configMgr.setProperty(new FiscalCalendarRules().FiscalCalendarRulesWorkingDays, newWorkingDays);
+        new FiscalCalendarRules().reloadConfigWorkingDays();
     }
 
     @Override

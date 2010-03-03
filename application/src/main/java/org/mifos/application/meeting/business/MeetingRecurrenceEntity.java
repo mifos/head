@@ -70,16 +70,17 @@ public class MeetingRecurrenceEntity extends PersistentObject {
         this.detailsId = null;
     }
 
-    public MeetingRecurrenceEntity(final Short dayNumber, final WeekDay weekDay, final RankType rank, final MeetingDetailsEntity meetingDetails)
+    public MeetingRecurrenceEntity(final Short dayNumber, final WeekDay weekDay, final RankType rank, final MeetingDetailsEntity meetingDetails,
+            final MasterPersistence masterPersistence)
             throws MeetingException {
         validateFields(dayNumber, weekDay, rank);
         if (dayNumber != null) {
             this.dayNumber = dayNumber;
         } else {
             try {
-                this.weekDay = (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(weekDay.getValue(),
+                this.weekDay = (WeekDaysEntity) masterPersistence.retrieveMasterEntity(weekDay.getValue(),
                         WeekDaysEntity.class, null);
-                this.rankOfDays = (RankOfDaysEntity) new MasterPersistence().retrieveMasterEntity(rank.getValue(),
+                this.rankOfDays = (RankOfDaysEntity) masterPersistence.retrieveMasterEntity(rank.getValue(),
                         RankOfDaysEntity.class, null);
             } catch (PersistenceException pe) {
                 throw new MeetingException(pe);

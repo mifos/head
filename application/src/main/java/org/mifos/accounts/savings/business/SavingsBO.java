@@ -207,7 +207,7 @@ public class SavingsBO extends AccountBO {
 
         setSavingsPerformance(createSavingsPerformance());
         try {
-            List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
             setValuesForActiveState(workingDays, holidays);
         } catch (AccountException e) {
@@ -232,7 +232,7 @@ public class SavingsBO extends AccountBO {
         // saved in approved state
         if (isActive()) {
             // FIXME - keithw - pass in this info to method
-            List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
             setValuesForActiveState(workingDays, holidays);
         }
@@ -1224,7 +1224,7 @@ public class SavingsBO extends AccountBO {
     protected void activationDateHelper(final Short newStatusId) throws AccountException {
         
         // FIXME - keithw - pass in this info to method
-        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> holidays = new ArrayList<Holiday>();
         
         if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
@@ -1875,13 +1875,15 @@ public class SavingsBO extends AccountBO {
     }
 
     @Override
-    protected void regenerateFutureInstallments(final Short nextInstallmentId, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
         
         if (!this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CANCEL)
                 && !this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED)) {
         
             MeetingBO customerMeeting  = getCustomer().getCustomerMeetingValue();
-            DateTime startFromMeetingDate = new DateTime(customerMeeting.getMeetingStartDate());
+//            DateTime startFromMeetingDate = new DateTime(customerMeeting.getMeetingStartDate());
+            DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(new DateTime(nextInstallment.getActionDate()));
+            
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
                     holidays);
@@ -1893,7 +1895,7 @@ public class SavingsBO extends AccountBO {
             if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                     || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
                     && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                updateSavingsSchedule(nextInstallmentId, meetingDates);
+                updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates);
             } else {
                 List<CustomerBO> children;
                 try {
@@ -1901,7 +1903,7 @@ public class SavingsBO extends AccountBO {
                 } catch (CustomerException ce) {
                     throw new AccountException(ce);
                 }
-                updateSavingsSchedule(nextInstallmentId, meetingDates, children);
+                updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
             }
         }
 
@@ -2098,5 +2100,10 @@ public class SavingsBO extends AccountBO {
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return (PaymentTypeEntity)getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
-    }    
+    }
+    
+    @Override
+    public MeetingBO getMeetingForAccount() {
+        return getCustomer().getCustomerMeetingValue();
+    }        
 }

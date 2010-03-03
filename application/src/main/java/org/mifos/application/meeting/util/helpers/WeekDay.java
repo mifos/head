@@ -20,6 +20,7 @@
 
 package org.mifos.application.meeting.util.helpers;
 
+import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.calendar.DayOfWeek;
@@ -56,17 +57,17 @@ public enum WeekDay implements LocalizedTextLookup {
      * Shift Tuesday=3 to joda time equivalent Tuesday=2
      * etc.
      */
-    public static Days getJodaDayOfWeekThatMatchesMifosWeekDay(final int mifosWeekDayValue) {
+    public static int getJodaDayOfWeekThatMatchesMifosWeekDay(final int mifosWeekDayValue) {
         
         if (WeekDay.SUNDAY.getValue().equals((short)mifosWeekDayValue)) {
-            return DayOfWeek.sundayAsDay();
+            return DateTimeConstants.SUNDAY;
         }
         
         if (WeekDay.SATURDAY.getValue().equals((short)mifosWeekDayValue)) {
-            return DayOfWeek.saturdayAsDay();
+            return DateTimeConstants.SATURDAY;
         }
         
-        return Days.days((mifosWeekDayValue%7)-1);
+        return (mifosWeekDayValue%7)-1;
     }
     
     public static WeekDay getWeekDay(final int value) {

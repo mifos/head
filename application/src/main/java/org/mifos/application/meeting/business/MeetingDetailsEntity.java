@@ -70,7 +70,7 @@ public class MeetingDetailsEntity extends PersistentObject {
         if (recurrenceType.isWeekly()) {
             this.meetingRecurrence = new MeetingRecurrenceEntity(weekDay, this);
         } else if (recurrenceType.isMonthly()) {
-            this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this);
+            this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this, meeting.getMasterPersistence());
         } else {
             this.meetingRecurrence = new MeetingRecurrenceEntity(this);
         }

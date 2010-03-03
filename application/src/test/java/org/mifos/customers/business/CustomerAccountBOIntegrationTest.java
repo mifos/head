@@ -99,7 +99,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     private UserContext userContext;
     
-    private List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+    private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
     private List<Holiday> holidays = new ArrayList<Holiday>();
 
     @Override
@@ -131,7 +131,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 (short) lastInstallmentId);
         
 
-        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> holidays = new ArrayList<Holiday>();
         
         // exercise test
@@ -515,8 +515,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         java.util.Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getDetailsOfNextInstallment();
-        short nextInstallmentId = 0;
+        AccountActionDateEntity nextInstallment = center.getCustomerAccount().getDetailsOfNextInstallment();
+/*        short nextInstallmentId = 0;
         if (accountActionDateEntity != null) {
             if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
                 nextInstallmentId = (short) (accountActionDateEntity.getInstallmentId().intValue() + 1);
@@ -524,14 +524,15 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 nextInstallmentId = (short) accountActionDateEntity.getInstallmentId().intValue();
             }
         }
+*/        
         MeetingBO meeting = center.getCustomerMeeting().getMeeting();
         meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-        meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
+        meeting.setMeetingStartDate(nextInstallment.getActionDate());
         List<java.util.Date> meetingDates = null;
 
         meetingDates = meeting.getAllDates((short) 10);
         meetingDates.remove(0);
-        center.getCustomerAccount().regenerateFutureInstallments(nextInstallmentId, workingDays, holidays);
+        center.getCustomerAccount().regenerateFutureInstallments(nextInstallment, workingDays, holidays);
         TestObjectFactory.updateObject(center);
 
         StaticHibernateUtil.commitTransaction();
@@ -544,69 +545,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
                 Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),
                         DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
-            }
-        }
-    }
-
-    public void testRegenerateFutureInstallmentsForGroup() throws Exception {
-        createInitialObjects();
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        MeetingBO meeting = center.getCustomerMeeting().getMeeting();
-        meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-
-        List<java.util.Date> meetingDates = meeting.getAllDates((short) 10);
-        meetingDates.remove(0);
-        group.getCustomerAccount().regenerateFutureInstallments((short) 2, workingDays, holidays);
-        TestObjectFactory.updateObject(center);
-        TestObjectFactory.updateObject(group);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        for (AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),
-                        DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
-            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),
-                        DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
-            }
-        }
-    }
-
-    public void testRegenerateFutureInstallmentsWithAccountClosed() throws ApplicationException, SystemException {
-        createInitialObjects();
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        Date installment2ndDate = null;
-        Date installment3ndDate = null;
-        for (AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                installment2ndDate = actionDateEntity.getActionDate();
-            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
-                installment3ndDate = actionDateEntity.getActionDate();
-            }
-        }
-        MeetingBO meeting = center.getCustomerMeeting().getMeeting();
-        meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-        CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
-        CustomerBOTestUtils.setCustomerStatus(group, customerStatusEntity);
-        group.getCustomerAccount().regenerateFutureInstallments((short) 2, workingDays, holidays);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-
-        for (AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(installment2ndDate.getTime()), DateUtils
-                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
-            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(installment3ndDate.getTime()), DateUtils
-                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
         }
     }

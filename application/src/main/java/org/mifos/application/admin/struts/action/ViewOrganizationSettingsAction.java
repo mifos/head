@@ -89,10 +89,10 @@ public class ViewOrganizationSettingsAction extends BaseAction {
 
         fiscalRules.setProperty("workingDays", getWorkingDays());
         fiscalRules
-                .setProperty("allowCalDefForNextYear", FiscalCalendarRules.getDaysForCalendarDefinition().toString());
-        fiscalRules.setProperty("startOfWeek", WeekDay.getWeekDay(FiscalCalendarRules.getStartOfWeek()).getName());
+                .setProperty("allowCalDefForNextYear", new FiscalCalendarRules().getDaysForCalendarDefinition().toString());
+        fiscalRules.setProperty("startOfWeek", WeekDay.getWeekDay(new FiscalCalendarRules().getStartOfWeek()).getName());
         fiscalRules.setProperty("offDays", getOffDays());
-        fiscalRules.setProperty("holidayMeeting", FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday());
+        fiscalRules.setProperty("holidayMeeting", new FiscalCalendarRules().getScheduleTypeForMeetingOnHoliday());
 
         return fiscalRules;
     }
@@ -194,7 +194,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     }
 
     private String getWorkingDays() {
-        List<WeekDay> workDaysList = FiscalCalendarRules.getWorkingDays();
+        List<WeekDay> workDaysList = new FiscalCalendarRules().getWorkingDays();
         List<String> workDayNames = new ArrayList<String>();
         for (WeekDay workDay : workDaysList) {
             workDayNames.add(workDay.getName());
@@ -203,7 +203,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     }
 
     private String getWeekDays() {
-        List<WeekDay> weekDaysList = FiscalCalendarRules.getWeekDaysList();
+        List<WeekDay> weekDaysList = new FiscalCalendarRules().getWeekDaysList();
         List<String> weekDayNames = new ArrayList<String>();
         for (WeekDay weekDay : weekDaysList)
             weekDayNames.add(weekDay.getName());
@@ -211,7 +211,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     }
 
     private String getOffDays() {
-        List<Short> offDaysList = FiscalCalendarRules.getWeekDayOffList();
+        List<Short> offDaysList = new FiscalCalendarRules().getWeekDayOffList();
         List<String> offDayNames = new ArrayList<String>();
         for (Short offDayNum : offDaysList)
             offDayNames.add(WeekDay.getWeekDay(offDayNum).getName());

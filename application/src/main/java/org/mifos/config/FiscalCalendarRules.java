@@ -32,9 +32,9 @@ public class FiscalCalendarRules {
     public static final String FiscalCalendarRulesWorkingDays = "FiscalCalendarRules.WorkingDays";
     public static final String FiscalCalendarRulesScheduleTypeForMeetingOnHoliday = "FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday";
     public static final String FiscalCalendarRulesDaysForCalendarDefinition = "FiscalCalendarRules.DaysForCalendarDefinition";
-    private static String[] configWorkingDays = getConfiguredWorkingDays();
+    private String[] configWorkingDays = getConfiguredWorkingDays();
 
-    private static String[] getConfiguredWorkingDays() {
+    private String[] getConfiguredWorkingDays() {
         String[] workingDays = null;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         if (configMgr.containsKey(FiscalCalendarRulesWorkingDays)) {
@@ -46,7 +46,7 @@ public class FiscalCalendarRules {
         return workingDays;
     }
 
-    public static void reloadConfigWorkingDays() {
+    public void reloadConfigWorkingDays() {
         configWorkingDays = getConfiguredWorkingDays();
     }
 
@@ -62,7 +62,7 @@ public class FiscalCalendarRules {
 
     }
 
-    public static List<WeekDay> getWeekDaysList() {
+    public List<WeekDay> getWeekDaysList() {
         WeekDay[] weekDays = WeekDay.values();
         List<WeekDay> list = new ArrayList();
         for (int i = 0; i < weekDays.length; i++)
@@ -70,7 +70,7 @@ public class FiscalCalendarRules {
         return list;
     }
 
-    public static List<WeekDay> getWorkingDays() {
+    public List<WeekDay> getWorkingDays() {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         List<WeekDay> workingDays = new ArrayList(); // returned working days
@@ -80,7 +80,7 @@ public class FiscalCalendarRules {
         return workingDays;
     }
 
-    public static List<Short> getWeekDayOffList() {
+    public List<Short> getWeekDayOffList() {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         List<Short> offDays = new ArrayList(); // returned off days
@@ -91,20 +91,20 @@ public class FiscalCalendarRules {
         return offDays;
     }
 
-    private static boolean isWorkingDay(final WeekDay weekDay) {
+    private boolean isWorkingDay(final WeekDay weekDay) {
         for (int i = 0; i < configWorkingDays.length; i++)
             if (configWorkingDays[i].toUpperCase().equals(weekDay.name().toUpperCase()))
                 return true;
         return false;
     }
 
-    public static boolean isWorkingDay(final Calendar day) {
+    public boolean isWorkingDay(final Calendar day) {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         return isWorkingDay(WeekDay.getWeekDay(day.get(Calendar.DAY_OF_WEEK)));
     }
 
-    public static boolean isWorkingDay(final Short dayOfWeek) {
+    public boolean isWorkingDay(final Short dayOfWeek) {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         WeekDay weekDay = WeekDay.getWeekDay(dayOfWeek);
@@ -112,7 +112,7 @@ public class FiscalCalendarRules {
 
     }
 
-    public static boolean isStartOfFiscalWeek(final Short dayOfWeek) {
+    public boolean isStartOfFiscalWeek(final Short dayOfWeek) {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         Short startOfWeekDay = getStartOfWeek();
@@ -120,14 +120,19 @@ public class FiscalCalendarRules {
 
     }
 
-    public static Short getStartOfWeek() {
+    public Short getStartOfWeek() {
+        return getStartOfWeekWeekDay().getValue();
+    }
+
+    public WeekDay getStartOfWeekWeekDay() {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         WeekDay startOfWeek = findWeekDay(configWorkingDays[0]);
-        return startOfWeek.getValue();
+        return startOfWeek;
     }
 
-    public static String getScheduleTypeForMeetingOnHoliday() {
+    
+    public String getScheduleTypeForMeetingOnHoliday() {
         String scheduleType = null;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday))
@@ -137,7 +142,7 @@ public class FiscalCalendarRules {
         return scheduleType;
     }
 
-    public static Short getDaysForCalendarDefinition() {
+    public Short getDaysForCalendarDefinition() {
         Short days = null;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         if (configMgr.containsKey(FiscalCalendarRulesDaysForCalendarDefinition))
@@ -147,23 +152,23 @@ public class FiscalCalendarRules {
         return days;
     }
 
-    public static void setWorkingDays(final String workingDays) {
+    public void setWorkingDays(final String workingDays) {
         ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesWorkingDays, workingDays);
         reloadConfigWorkingDays();
     }
 
-    public static void setScheduleTypeForMeetingOnHoliday(final String scheduleTypeForMeetingOnHoliday) {
+    public void setScheduleTypeForMeetingOnHoliday(final String scheduleTypeForMeetingOnHoliday) {
         ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday, scheduleTypeForMeetingOnHoliday);
     }
 
-    public static List<Days> getWorkingDaysAsJodaTimeDays() {
+    public List<Days> getWorkingDaysAsJodaTimeDays() {
         
         List<Days> jodaWorkingDays = new ArrayList<Days>();
         
         List<WeekDay> workingDaysAsWeekDays = getWorkingDays();
         for (WeekDay weekDay : workingDaysAsWeekDays) {
             
-            Days jodaWeekDay = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(weekDay.getValue());
+            Days jodaWeekDay =  Days.days(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(weekDay.getValue()));
             
             jodaWorkingDays.add(jodaWeekDay);
         }

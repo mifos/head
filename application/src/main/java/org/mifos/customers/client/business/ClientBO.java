@@ -237,7 +237,7 @@ public class ClientBO extends CustomerBO {
             createAccountsForClient();
             
             // FIXME - keithw - pass in this info to method
-            List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
             createDepositSchedule(workingDays, holidays);
         }
@@ -497,7 +497,7 @@ public class ClientBO extends CustomerBO {
             createAccountsForClient();
             getSavingsPersistence().persistSavingAccounts(this);
             
-            List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
             createDepositSchedule(workingDays, holidays);
         }

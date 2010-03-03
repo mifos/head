@@ -885,7 +885,7 @@ public class TestObjectFactory {
         SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, state, savingsOffering
                 .getRecommendedAmount(), getCustomFieldView());
         savings.save();
-        SavingBOTestUtils.setActivationDate(savings, new Date(System.currentTimeMillis()));
+        SavingBOTestUtils.setActivationDate(savings, new DateTimeService().getCurrentJavaDateTime());
         StaticHibernateUtil.commitTransaction();
         return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
     }

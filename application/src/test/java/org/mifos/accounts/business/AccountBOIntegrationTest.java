@@ -74,7 +74,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
     
-    private final List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+    private final List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
     private final List<Holiday> holidays = new ArrayList<Holiday>();
 
     /**

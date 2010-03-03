@@ -91,7 +91,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
         List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
         
-        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         
         try {
             StaticHibernateUtil.getSessionTL();

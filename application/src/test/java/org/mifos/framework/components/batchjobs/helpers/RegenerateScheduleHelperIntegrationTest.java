@@ -29,6 +29,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WE
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -36,6 +37,9 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -75,6 +79,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -122,11 +127,66 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         regenerateScheduleHelper = null;
         StaticHibernateUtil.closeSession();
         super.tearDown();
+        new DateTimeService().resetToCurrentSystemDateTime();         
     }
 
+    private MeetingBO setupWeeklyMeeting(DateTime startDate, short recurEvery) {
+        new DateTimeService().setCurrentDateTime(startDate);
+        return TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, recurEvery,
+                CUSTOMER_MEETING));        
+    }
+    
+    private void validateSchedules(List<DateTime> expectedMeetingDates) {
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        int count = 0;
+        for (AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
+            if (count < expectedMeetingDates.size()) {
+                checkScheduleDates(expectedMeetingDates.get(count), actionDateEntity);
+            }
+            ++count;
+        }
+        for (AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()) {
+            if (count < expectedMeetingDates.size()) {
+                checkScheduleDates(expectedMeetingDates.get(count), actionDateEntity);
+            }
+            ++count;
+        }    
+    }
+
+    private void validateSchedulesWithSavings(List<DateTime> expectedMeetingDates, CustomerBO client, SavingsBO savings) {
+        //center = TestObjectFactory.getCenter(center.getCustomerId());
+        int count = 0;
+        for (AccountActionDateEntity actionDateEntity : client.getCustomerAccount().getAccountActionDates()) {
+            if (count < expectedMeetingDates.size()) {
+                checkScheduleDates(expectedMeetingDates.get(count), actionDateEntity);
+            }
+            ++count;
+        }
+        for (AccountActionDateEntity actionDateEntity : savings.getAccountActionDates()) {
+            if (count < expectedMeetingDates.size()) {
+                checkScheduleDates(expectedMeetingDates.get(count), actionDateEntity);
+            }
+            ++count;
+        }    
+    }    
+    private void checkScheduleDates(final DateTime expectedMeetingDate,
+            final AccountActionDateEntity actionDateEntity) {
+        System.out.println(new java.sql.Date(expectedMeetingDate.getMillis()) + ":" + actionDateEntity.getActionDate());
+
+        Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(expectedMeetingDate.toDate()), DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
+    }
+    
     public void testExcuteWithCustomerAccounts() throws NumberFormatException, SystemException, ApplicationException {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING));
+        DateTime startDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,10).toDateTime();
+        DateTime testDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,12).toDateTime();
+        MeetingBO meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
+        
+        List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,10).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,17).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.MARCH,3).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.MARCH,17).toDateTime());
+        
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         CenterBO center1 = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test1", meeting);
@@ -134,15 +194,16 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
         ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
+        
+        new DateTimeService().setCurrentDateTime(testDate);   
         center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("2"));
         CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
-        List<java.util.Date> meetingDates = center.getCustomerMeeting().getMeeting().getAllDates((short) 10);
-        meetingDates.remove(0);
         TestObjectFactory.updateObject(center);
         TestObjectFactory.flushandCloseSession();
 
-        regenerateScheduleHelper.execute(System.currentTimeMillis());
+        int dummy = 0;
+        regenerateScheduleHelper.execute(dummy);
         StaticHibernateUtil.closeSession();
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -153,6 +214,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
         client3 = TestObjectFactory.getClient(client3.getCustomerId());
 
+        validateSchedules(expectedMeetingDates);
+        /*
         for (AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
             if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
@@ -171,7 +234,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
                 Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
                             .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
             }
-        }
+        }*/
        Assert.assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
         TestObjectFactory.cleanUp(client3);
         TestObjectFactory.cleanUp(client2);
@@ -432,9 +495,16 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
 
     public void testCustomerMeetingChangeUpdatesAllInstallmentsForSavingsAndCustomerAccountsOfAClient()
             throws BatchJobException {
-
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY, Short
-                .valueOf("1"), MeetingType.CUSTOMER_MEETING, WeekDay.THURSDAY));
+        // original schedule 2/11,2/18,2/25,3/4
+        DateTime startDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,11).toDateTime();
+        DateTime testDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,20).toDateTime();
+        meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
+        
+        List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,11).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,18).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,27).toDateTime());
+        expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.MARCH,6).toDateTime());
 
         SavingsTestHelper helper = new SavingsTestHelper();
         SavingsOfferingBO nonIndividualSavingsOffering = helper.createSavingsOffering("Client Saving Product", "nisp");
@@ -450,7 +520,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         // move weekly center meeting
         MeetingBO newMeeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY,
                 Short.valueOf("1"), MeetingType.CUSTOMER_MEETING, WeekDay.SATURDAY));
-
+        new DateTimeService().setCurrentDateTime(testDate);   
+        
         CustomerBOTestUtils.setUpdatedMeeting(center.getCustomerMeeting(), newMeeting);
         CustomerBOTestUtils.setUpdatedMeeting(group.getCustomerMeeting(), newMeeting);
         CustomerBOTestUtils.setUpdatedMeeting(client.getCustomerMeeting(), newMeeting);
@@ -459,7 +530,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         TestObjectFactory.updateObject(client);
         TestObjectFactory.flushandCloseSession();
         
-        regenerateScheduleHelper.execute(System.currentTimeMillis());
+        int dummy = 0;
+        regenerateScheduleHelper.execute(dummy);
         StaticHibernateUtil.closeSession();
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -467,8 +539,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         client = TestObjectFactory.getClient(client.getCustomerId());
         meeting = TestObjectFactory.getObject(MeetingBO.class, meeting.getMeetingId());
 
-        verifyEachAccount(client, meeting);
-        
+        validateSchedulesWithSavings(expectedMeetingDates, client, nonIndividualSavingsAccount);        
     }
 
     private void verifyEachAccount(final CustomerBO verifyCustomer, final MeetingBO verifyMeeting) {

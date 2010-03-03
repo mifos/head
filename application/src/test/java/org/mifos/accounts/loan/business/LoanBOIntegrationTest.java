@@ -180,7 +180,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private LoanDao loanDao;
     
-    private List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+    private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
     private List<Holiday> holidays = new ArrayList<Holiday>();
 
     @Override
@@ -2282,120 +2282,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 loanActivityEntity.getFeeOutstanding());
     }
 
-    public void testRegenerateFutureInstallments() throws Exception {
-        accountBO = getLoanAccount();
-        accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-        AccountActionDateEntity accountActionDateEntity = accountBO.getDetailsOfNextInstallment();
-        MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting().getMeeting();
-        meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(WeekDay.THURSDAY);
-        meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
-        List<java.util.Date> meetingDates = meeting.getAllDates(6);
-        ((LoanBO) accountBO).regenerateFutureInstallments(Short.valueOf("3"), workingDays, holidays);
-        ((LoanBO) accountBO).update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
-
-        // Change this to more clearly separate what we are testing for from the
-        // machinery needed to get that data?
-
-        for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId() < 3) {
-                Assert.assertEquals(DateUtils.getCurrentPlusWeeksDateWithoutTimeStamp(actionDateEntity
-                        .getInstallmentId() - 1), DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
-            } else {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(actionDateEntity
-                        .getInstallmentId() - 1)), DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
-            }
-        }
-    }
-
-    /*
-     * This test was failing if run on a Saturday because it used meetings based
-     * on the current system time. By ensuring the meetings occur on a Monday
-     * the problem is resolved.
-     */
-    public void testRegenerateFutureWhenDayScheduleChanges() throws Exception {
-        // create customers with meetings on Monday
-        MeetingBO customerMeeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING, WeekDay.MONDAY));
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", customerMeeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
-                CustomerStatus.GROUP_ACTIVE, center);
-
-        MeetingBO loanOfferingMeeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY,
-                EVERY_SECOND_WEEK, CUSTOMER_MEETING, WeekDay.MONDAY));
-
-        Date startDate = TestUtils.generateNearestMondayOnOrAfterToday();
-
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, loanOfferingMeeting);
-        accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-        TestObjectFactory.flushandCloseSession();
-        accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-        AccountActionDateEntity accountActionDateEntity = accountBO.getDetailsOfNextInstallment();
-        MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting().getMeeting();
-
-        MeetingRecurrenceEntity recurrence = meeting.getMeetingDetails().getMeetingRecurrence();
-        recurrence.setWeekDay(recurrence.getWeekDayValue().next());
-
-        meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
-        ((LoanBO) accountBO).regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId() + 1), workingDays, holidays);
-        ((LoanBO) accountBO).update();
-        StaticHibernateUtil.commitTransaction();
-        TestObjectFactory.flushandCloseSession();
-        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
-        Assert.assertEquals(Short.valueOf("1"), accountBO.getCustomer().getCustomerMeeting().getMeeting()
-                .getMeetingDetails().getRecurAfter());
-        Assert.assertEquals(Short.valueOf("2"), ((LoanBO) accountBO).getLoanOffering().getLoanOfferingMeeting()
-                .getMeeting().getMeetingDetails().getRecurAfter());
-        for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId() == 1) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(startDate), DateUtils
-                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
-            }
-        }
-    }
-
-    public void testRegenerateFutureInstallmentsWithCancelState() throws Exception {
-        accountBO = getLoanAccount();
-        TestObjectFactory.flushandCloseSession();
-        accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-        java.sql.Date intallment2ndDate = null;
-        java.sql.Date intallment3ndDate = null;
-        for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                intallment2ndDate = actionDateEntity.getActionDate();
-            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
-                intallment3ndDate = actionDateEntity.getActionDate();
-            }
-        }
-        AccountActionDateEntity accountActionDateEntity = accountBO.getDetailsOfNextInstallment();
-        MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting().getMeeting();
-        meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-        meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
-        accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
-        ((LoanBO) accountBO).regenerateFutureInstallments((short) (accountActionDateEntity.getInstallmentId()
-                .intValue() + 1), workingDays, holidays);
-        StaticHibernateUtil.commitTransaction();
-        TestObjectFactory.flushandCloseSession();
-        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
-
-        // Change this to more clearly separate what we are testing for from the
-        // machinery needed to get that data?
-
-        for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(intallment2ndDate.getTime()), DateUtils
-                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
-            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(intallment3ndDate.getTime()), DateUtils
-                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
-            }
-        }
-    }
 
     public void testHasPortfolioAtRisk() {
         accountBO = getLoanAccount();

@@ -54,7 +54,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
         accountList = new ArrayList<Integer>();
         
         List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         
         List<Integer> customerIds;
         try {

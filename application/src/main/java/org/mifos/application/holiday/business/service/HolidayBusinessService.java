@@ -142,11 +142,11 @@ public class HolidayBusinessService implements BusinessService {
     }
 
     public boolean isWorkingDay(Date day) throws RuntimeException {
-        return FiscalCalendarRules.isWorkingDay(DateUtils.getCalendar(day));
+        return new FiscalCalendarRules().isWorkingDay(DateUtils.getCalendar(day));
     }
 
     public boolean isWorkingDay(Calendar day) throws RuntimeException {
-        return FiscalCalendarRules.isWorkingDay(day);
+        return new FiscalCalendarRules().isWorkingDay(day);
     }
     
     public Date getNextWorkingDay(Date day) {

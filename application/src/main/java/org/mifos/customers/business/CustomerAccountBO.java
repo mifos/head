@@ -421,7 +421,7 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     @Override
-    protected void regenerateFutureInstallments(final Short nextInstallmentId, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
         if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
                 && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
 
@@ -434,9 +434,9 @@ public class CustomerAccountBO extends AccountBO {
             
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
-            MeetingBO meeting = getCustomer().getCustomerMeetingValue();
-
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+            MeetingBO meeting = getMeetingForAccount();
+            DateTime startFromMeetingDate = meeting.startDateForMeetingInterval(new DateTime(nextInstallment.getActionDate()));
+                        
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
                     holidays);
@@ -444,7 +444,7 @@ public class CustomerAccountBO extends AccountBO {
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
                     startFromMeetingDate, scheduledEvent);
             
-            updateCustomerSchedule(nextInstallmentId, meetingDates);
+            updateCustomerSchedule(nextInstallment.getInstallmentId(), meetingDates);
         }
     }
 
@@ -464,11 +464,11 @@ public class CustomerAccountBO extends AccountBO {
 
     private void updateCustomerSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
         short installmentId = nextInstallmentId;
-        for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
+        for (int count = 0; count < meetingDates.size(); count++) {
 
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
             if (accountActionDate != null) {
-                DateTime meetingDate = meetingDates.get(installmentId - 1); 
+                DateTime meetingDate = meetingDates.get(count); 
                 ((CustomerScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.toDate().getTime()));
             }
             installmentId++;
@@ -919,4 +919,9 @@ public class CustomerAccountBO extends AccountBO {
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return (PaymentTypeEntity)getFeePersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }    
+    
+    @Override
+    public MeetingBO getMeetingForAccount() {
+        return getCustomer().getCustomerMeetingValue();
+    }
 }

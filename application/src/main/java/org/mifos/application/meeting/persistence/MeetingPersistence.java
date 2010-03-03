@@ -46,7 +46,7 @@ public class MeetingPersistence extends Persistence {
     }
 
     public List<WeekDay> getWorkingDays() {
-        return FiscalCalendarRules.getWorkingDays();
+        return new FiscalCalendarRules().getWorkingDays();
     }
 
     public MeetingBO getMeeting(Integer meetingId) throws PersistenceException {

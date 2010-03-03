@@ -59,8 +59,8 @@ public class FiscalCalendarRulesTest {
     }
 
     private void setNewWorkingDays(final String newWorkingDays) {
-        configMgr.setProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays, newWorkingDays);
-        FiscalCalendarRules.reloadConfigWorkingDays();
+        configMgr.setProperty(new FiscalCalendarRules().FiscalCalendarRulesWorkingDays, newWorkingDays);
+        new FiscalCalendarRules().reloadConfigWorkingDays();
     }
     
     @Test
@@ -71,7 +71,7 @@ public class FiscalCalendarRulesTest {
         setNewWorkingDays(configWorkingDays);
         
         // exercise test
-        List<Days> workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
 
         assertThat(workingDays, hasItem(DayOfWeek.mondayAsDay()));
         assertThat(workingDays, hasItem(DayOfWeek.wednesdayAsDay()));
@@ -83,14 +83,14 @@ public class FiscalCalendarRulesTest {
     public void testGetWorkingDays() {
         String configWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY";
         setNewWorkingDays(configWorkingDays);
-        List<WeekDay> workingDays = FiscalCalendarRules.getWorkingDays();
+        List<WeekDay> workingDays = new FiscalCalendarRules().getWorkingDays();
        Assert.assertEquals(workingDays.size(), 6);
         WeekDay[] weekDays = WeekDay.values();
         for (int i = 0; i < workingDays.size(); i++)
         Assert.assertEquals(workingDays.get(i).toString(), weekDays[i + 1].name());
         configWorkingDays = "TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
-        workingDays = FiscalCalendarRules.getWorkingDays();
+        workingDays = new FiscalCalendarRules().getWorkingDays();
        Assert.assertEquals(workingDays.size(), 4);
         for (int i = 0; i < workingDays.size(); i++)
         Assert.assertEquals(workingDays.get(i).toString().toUpperCase(), weekDays[i + 2].name().toUpperCase());
@@ -98,7 +98,7 @@ public class FiscalCalendarRulesTest {
 
     @Test
     public void testGetWeekDaysList() {
-        List<WeekDay> weekDaysFromFiscalCalendarRules = FiscalCalendarRules.getWeekDaysList();
+        List<WeekDay> weekDaysFromFiscalCalendarRules = new FiscalCalendarRules().getWeekDaysList();
         WeekDay[] weekDays = WeekDay.values();
         for (int i = 0; i < weekDays.length; i++)
            Assert.assertEquals(weekDaysFromFiscalCalendarRules.get(i).toString(), weekDays[i].name());
@@ -108,7 +108,7 @@ public class FiscalCalendarRulesTest {
     public void testGetWeekDayOffList() {
         String configWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
-        List<Short> list = FiscalCalendarRules.getWeekDayOffList();
+        List<Short> list = new FiscalCalendarRules().getWeekDayOffList();
        Assert.assertEquals(list.size(), 2);
         Short dayOff = 1;
        Assert.assertEquals(list.get(0), dayOff);
@@ -153,31 +153,31 @@ public class FiscalCalendarRulesTest {
 
         }
 
-       Assert.assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(new FiscalCalendarRules().isWorkingDay(calendar));
         calendar.add(Calendar.DAY_OF_WEEK, 1); // Friday
-       Assert.assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(new FiscalCalendarRules().isWorkingDay(calendar));
         calendar.add(Calendar.DAY_OF_WEEK, 1); // Sat
-       Assert.assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(!new FiscalCalendarRules().isWorkingDay(calendar));
         calendar.add(Calendar.DAY_OF_WEEK, 1); // Sunday
-       Assert.assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
+       Assert.assertTrue(!new FiscalCalendarRules().isWorkingDay(calendar));
     }
 
     @Test
     public void testGetStartOfWeek() {
-        Short startOfWeekDay = FiscalCalendarRules.getStartOfWeek();
+        Short startOfWeekDay = new FiscalCalendarRules().getStartOfWeek();
         Short start = 2;
        Assert.assertEquals(startOfWeekDay, start);
     }
 
     @Test
     public void testGetScheduleTypeForMeetingOnHoliday() {
-        String scheduleType = FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday();
+        String scheduleType = new FiscalCalendarRules().getScheduleTypeForMeetingOnHoliday();
        Assert.assertEquals(scheduleType.toUpperCase(), "same_day".toUpperCase());
     }
 
     @Test
     public void testGetDaysForCalDefinition() {
-        Short days = FiscalCalendarRules.getDaysForCalendarDefinition();
+        Short days = new FiscalCalendarRules().getDaysForCalendarDefinition();
        Assert.assertEquals(days.shortValue(), 30);
     }
 

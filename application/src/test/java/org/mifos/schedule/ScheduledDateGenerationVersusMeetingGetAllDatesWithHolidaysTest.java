@@ -73,7 +73,7 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
         holidayDao = new HolidayDaoHibernate(genericDao);
         meeting = new MeetingBuilder().weekly().withStartDate(meetingStartDate).build();
 
-        workingDays = FiscalCalendarRules.getWorkingDaysAsJodaTimeDays();
+        workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         scheduledDateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays);
     }
 
