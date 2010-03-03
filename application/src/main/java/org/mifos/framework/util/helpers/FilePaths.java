@@ -26,12 +26,10 @@ package org.mifos.framework.util.helpers;
  * an file should get the relative path from this file.
  */
 public interface FilePaths {
-    public static final String INITIALIZATIONFILE = "org/mifos/framework/util/resources/Initialization.xml";
-    public static final String DEPENDENCYFILE = "org/mifos/framework/util/resources/Dependency.xml";
     public static final String LOG_CONFIGURATION_FILE = "loggerconfiguration.xml";
     public static final String MENUPATH = "org/mifos/framework/util/resources/menuresources/menu.xml";
     public static final String MENUSCHEMA = "org/mifos/framework/util/resources/menuresources/menu.xsd";
-    public static final String JAXBPACKAGEPATH = "org.mifos.framework.util.jaxb.";
+
     /**
      * Default database settings for production/deployment/runtime.
      */
