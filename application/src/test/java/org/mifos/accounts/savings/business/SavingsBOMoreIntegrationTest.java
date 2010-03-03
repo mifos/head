@@ -53,7 +53,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
     public SavingsBOMoreIntegrationTest() throws Exception {
         super();
-        TestDatabase.resetMySQLDatabase();
     }
 
     private CenterBO center;
