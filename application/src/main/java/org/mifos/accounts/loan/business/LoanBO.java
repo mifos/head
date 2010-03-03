@@ -37,6 +37,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -1634,8 +1635,8 @@ public class LoanBO extends AccountBO {
             MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
                     getLoanMeeting().getMeetingStartDate());
 
-            //DateTime startFromMeetingDate = new DateTime(getLoanMeeting().getMeetingStartDate());
-            DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(new DateTime(nextInstallment.getActionDate()));
+            DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(
+                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();            
 
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
@@ -1644,23 +1645,8 @@ public class LoanBO extends AccountBO {
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
                     startFromMeetingDate, scheduledEvent);
 
-            updateLoanSchedule(nextInstallment.getInstallmentId(), meetingDates);
+            updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
         }
-    }
-
-    private void updateLoanSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
-        short installmentId = nextInstallmentId;
-
-        for (int count = 0; count < meetingDates.size(); count++) {
-            AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
-
-            if (accountActionDate != null) {
-                Date meetingDate = meetingDates.get(count).toDate();
-                ((LoanScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
-            }
-            installmentId++;
-        }
-
     }
 
     protected final void applyRounding() throws AccountException {

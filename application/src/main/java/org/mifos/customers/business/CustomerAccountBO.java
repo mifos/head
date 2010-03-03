@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -435,7 +436,8 @@ public class CustomerAccountBO extends AccountBO {
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
             MeetingBO meeting = getMeetingForAccount();
-            DateTime startFromMeetingDate = meeting.startDateForMeetingInterval(new DateTime(nextInstallment.getActionDate()));
+            DateTime startFromMeetingDate = meeting.startDateForMeetingInterval(
+                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
                         
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
@@ -444,7 +446,7 @@ public class CustomerAccountBO extends AccountBO {
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
                     startFromMeetingDate, scheduledEvent);
             
-            updateCustomerSchedule(nextInstallment.getInstallmentId(), meetingDates);
+            updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
         }
     }
 
@@ -460,19 +462,6 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         return customerSchedulePayments;
-    }
-
-    private void updateCustomerSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
-        short installmentId = nextInstallmentId;
-        for (int count = 0; count < meetingDates.size(); count++) {
-
-            AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
-            if (accountActionDate != null) {
-                DateTime meetingDate = meetingDates.get(count); 
-                ((CustomerScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.toDate().getTime()));
-            }
-            installmentId++;
-        }
     }
 
     @Override

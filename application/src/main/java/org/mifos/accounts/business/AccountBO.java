@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -586,15 +587,15 @@ public class AccountBO extends BusinessObject {
             return null;
         }
 
-        DateTime currentDateTime = new DateMidnight().toDateTime();
+        LocalDate currentDate = new LocalDate();
         MeetingBO meeting = getMeetingForAccount();
         
         int installmentIndex = 0;
         AccountActionDateEntity installment = allInstallments.get(installmentIndex);
         // keep looking at the next installment as long as the current date falls on or 
         // after (!before) the start of the current installment
-        while(installment != null && !currentDateTime.isBefore(meeting.startDateForMeetingInterval(                
-                new DateTime(installment.getActionDate())))) {
+        while(installment != null && !currentDate.isBefore(meeting.startDateForMeetingInterval(                
+                new LocalDate(installment.getActionDate().getTime())))) {
             ++installmentIndex;
             // if we've iterated over all the installments, then just return null
             if (installmentIndex == allInstallments.size()) {
@@ -1656,5 +1657,17 @@ public class AccountBO extends BusinessObject {
      */
     public boolean paymentAmountIsValid(final Money amount) {
         return true;
+    }
+    
+    protected void updateSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
+        short installmentId = nextInstallmentId;
+        for (int count = 0; count < meetingDates.size(); count++) {
+            AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+            if (accountActionDate != null) {
+                DateTime meetingDate = meetingDates.get(count); 
+                accountActionDate.setActionDate(new java.sql.Date(meetingDate.toDate().getTime()));
+            }
+            installmentId++;
+        }
     }    
 }

@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.MeetingTemplate;
@@ -857,26 +858,26 @@ public class MeetingBO extends BusinessObject {
      * for Wednesday March 10 is the week from Monday March 8 to Sunday March 14,
      * and this method would return March 8.  
      */    
-    public DateTime startDateForMeetingInterval(DateTime dateTime) {
-        DateTime startOfMeetingInterval = dateTime;
+    public LocalDate startDateForMeetingInterval(LocalDate date) {
+        LocalDate startOfMeetingInterval = date;
         if (isWeekly()) {
             int weekDay = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(getFiscalCalendarRules().getStartOfWeekWeekDay().getValue());
             while (startOfMeetingInterval.getDayOfWeek() != weekDay) {
                 startOfMeetingInterval = startOfMeetingInterval.minusDays(1);
             }
         } else if (isMonthly()) {
-            int dayOfMonth = dateTime.getDayOfMonth();
+            int dayOfMonth = date.getDayOfMonth();
             startOfMeetingInterval = startOfMeetingInterval.minusDays(dayOfMonth - 1);
         } else {
             // for days we return the same day
-            startOfMeetingInterval =  dateTime;
+            startOfMeetingInterval =  date;
         }       
         return startOfMeetingInterval;
     }
     
-    public boolean queryDateIsInMeetingIntervalForFixedDate(DateTime queryDate, DateTime fixedDate) {
-        DateTime startOfMeetingInterval = startDateForMeetingInterval(fixedDate);
-        DateTime endOfMeetingInterval;
+    public boolean queryDateIsInMeetingIntervalForFixedDate(LocalDate queryDate, LocalDate fixedDate) {
+        LocalDate startOfMeetingInterval = startDateForMeetingInterval(fixedDate);
+        LocalDate endOfMeetingInterval;
         if (isWeekly()) {
             endOfMeetingInterval = startOfMeetingInterval.plusWeeks(getRecurAfter());                   
         } else if (isMonthly()) {
@@ -885,9 +886,9 @@ public class MeetingBO extends BusinessObject {
             // we don't handle meeting intervals in days
             return false;
         }
-        return (queryDate.isEqual(startOfMeetingInterval.getMillis()) || 
-                queryDate.isAfter(startOfMeetingInterval.getMillis())) &&
-                queryDate.isBefore(endOfMeetingInterval.getMillis());
+        return (queryDate.isEqual(startOfMeetingInterval) || 
+                queryDate.isAfter(startOfMeetingInterval)) &&
+                queryDate.isBefore(endOfMeetingInterval);
     }
 
 }

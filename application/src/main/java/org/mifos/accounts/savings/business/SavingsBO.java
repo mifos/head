@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -1882,8 +1883,8 @@ public class SavingsBO extends AccountBO {
                 && !this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED)) {
         
             MeetingBO customerMeeting  = getCustomer().getCustomerMeetingValue();
-//            DateTime startFromMeetingDate = new DateTime(customerMeeting.getMeetingStartDate());
-            DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(new DateTime(nextInstallment.getActionDate()));
+            DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
+                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();            
             
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
@@ -1896,7 +1897,7 @@ public class SavingsBO extends AccountBO {
             if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                     || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
                     && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates);
+                updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
             } else {
                 List<CustomerBO> children;
                 try {
@@ -1926,36 +1927,6 @@ public class SavingsBO extends AccountBO {
             }
             installmentId++;
         }
-    }
-
-    private void updateSavingsSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
-        short installmentId = nextInstallmentId;
-
-        for (int count = 0; count < meetingDates.size(); count++) {
-            AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
-
-            if (accountActionDate != null) {
-                Date meetingDate = meetingDates.get(count).toDate();
-                ((SavingsScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
-            }
-            installmentId++;
-        }
-
-    }
-
-    private void updateSavingsSchedule_old(final Short nextInstallmentId, final List<DateTime> meetingDates) {
-        short installmentId = nextInstallmentId;
-        for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
-            AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
-
-            if (accountActionDate != null) {
-                DateTime meetingDate = meetingDates.get(installmentId - 1);
-                ((SavingsScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.toDate()
-                        .getTime()));
-            }
-            installmentId++;
-        }
-
     }
     
     public Money getTotalPaymentDue(final Integer customerId) {

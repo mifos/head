@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -32,11 +33,11 @@ public class MeetingBOTest {
         MeetingBO meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.THURSDAY).build();
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
-        DateTime paymentDate = new DateMidnight(2010, 2, 4).toDateTime();
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 1, 31).toDateTime(), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 1).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 7).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 8).toDateTime(), paymentDate), is(false));                       
+        LocalDate paymentDate = new LocalDate(2010, 2, 4);
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 7), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 8), paymentDate), is(false));                       
     }
 
     
@@ -46,11 +47,11 @@ public class MeetingBOTest {
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
 
-        DateTime paymentDate = new DateMidnight(2010, 2, 4).toDateTime();
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 1, 31).toDateTime(), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 1).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 14).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 15).toDateTime(), paymentDate), is(false));                       
+        LocalDate paymentDate = new LocalDate(2010, 2, 4);
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 14), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 15), paymentDate), is(false));                       
     }
     
     @Test
@@ -58,11 +59,11 @@ public class MeetingBOTest {
         MeetingBO meeting = new MeetingBuilder().monthly().every(1).buildMonthlyForDayNumber(20);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
-        DateTime paymentDate = new DateMidnight(2010, 2, 3).toDateTime();
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 1, 31).toDateTime(), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 1).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 28).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 3, 1).toDateTime(), paymentDate), is(false));                       
+        LocalDate paymentDate = new LocalDate(2010, 2, 3);
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 28), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 1), paymentDate), is(false));                       
     }
     
     @Test
@@ -70,11 +71,11 @@ public class MeetingBOTest {
         MeetingBO meeting = new MeetingBuilder().monthly().every(2).buildMonthlyForDayNumber(20);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
-        DateTime paymentDate = new DateMidnight(2010, 2, 3).toDateTime();
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 1, 31).toDateTime(), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 1).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 3, 31).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 4, 1).toDateTime(), paymentDate), is(false));                       
+        LocalDate paymentDate = new LocalDate(2010, 2, 3);
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 31), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 4, 1), paymentDate), is(false));                       
     }
 
     
@@ -87,11 +88,11 @@ public class MeetingBOTest {
         MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(1).buildMonthlyFor(RankType.THIRD, WeekDay.FRIDAY);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
-        DateTime paymentDate = new DateMidnight(2010, 2, 19).toDateTime();
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 1, 31).toDateTime(), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 1).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 28).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 3, 1).toDateTime(), paymentDate), is(false));                       
+        LocalDate paymentDate = new LocalDate(2010, 2, 19);
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 28), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 1), paymentDate), is(false));                       
     }
     
     @Test
@@ -103,10 +104,10 @@ public class MeetingBOTest {
         MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(2).buildMonthlyFor(RankType.THIRD, WeekDay.FRIDAY);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
-        DateTime paymentDate = new DateMidnight(2010, 2, 19).toDateTime();
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 1, 31).toDateTime(), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 2, 1).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 3, 31).toDateTime(), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new DateMidnight(2010, 4, 1).toDateTime(), paymentDate), is(false));                       
+        LocalDate paymentDate = new LocalDate(2010, 2, 19);
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 31), paymentDate), is(true));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 4, 1), paymentDate), is(false));                       
     }    
 }
