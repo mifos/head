@@ -26,7 +26,9 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * I am responsible for returning the total principal for a given {@link InterestCalculationPeriodDetail}.
+ * @deprecated - no longer needed. delete
  */
+@Deprecated
 public class TotalPrincipalForPeriodCalculationStrategy implements PrincipalCalculationStrategy {
 
     @Override

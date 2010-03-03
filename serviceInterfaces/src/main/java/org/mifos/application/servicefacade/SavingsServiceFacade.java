@@ -38,6 +38,8 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
+    void batchRecalculateInterestToBePostedForSavingsAccount(LocalDate dateBatchJobIsScheduled);
+
     void batchPostInterestToSavingsAccount(LocalDate dateOfBatchJob);
 
     void calculateInterestForPostingInterval(Long savingsId, Interval postingInterval);

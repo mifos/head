@@ -43,8 +43,7 @@ public class InterestCalculationPeriodDetail {
      * period.
      */
     public static InterestCalculationPeriodDetail populatePeriodDetailBasedOnInterestCalculationInterval(
-            InterestCalculationInterval interval, List<EndOfDayDetail> allEndOfDayDetailsForAccount,
-            Money balanceBeforeInterval) {
+            InterestCalculationInterval interval, List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money balanceBeforeInterval) {
 
         Money balance = balanceBeforeInterval;
 
@@ -83,5 +82,25 @@ public class InterestCalculationPeriodDetail {
 
     public Money zeroAmount() {
         return Money.zero(this.balanceBeforeInterval.getCurrency());
+    }
+
+    public Money sumOfPrincipal() {
+        Money principalForPeriod = zeroAmount();
+
+        for (EndOfDayDetail daysDetail : this.dailyDetails) {
+            principalForPeriod = principalForPeriod.add(daysDetail.getResultantAmountForDay());
+        }
+
+        return principalForPeriod;
+    }
+
+    public Money sumOfInterest() {
+        Money interestForPeriod = zeroAmount();
+
+        for (EndOfDayDetail daysDetail : this.dailyDetails) {
+            interestForPeriod = interestForPeriod.add(daysDetail.getInterest());
+        }
+
+        return interestForPeriod;
     }
 }

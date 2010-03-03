@@ -20,32 +20,12 @@
 
 package org.mifos.accounts.savings.interest;
 
-import org.joda.time.LocalDate;
+import java.util.List;
+
 import org.mifos.framework.util.helpers.Money;
 
-public class EndOfDayDetail {
+public interface NonCompoundingInterestCalculator {
 
-    private final LocalDate date;
-    private final Money deposits;
-    private final Money withdrawals;
-    private final Money interest;
+    List<InterestCalculationPeriodResult> calculateDetails(InterestCalculationInterval calculationPeriod, Money totalBalanceBeforeCalculationPeriod, List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod);
 
-    public EndOfDayDetail(LocalDate date, Money deposits, Money withdrawals, Money interest) {
-        this.date = date;
-        this.deposits = deposits;
-        this.withdrawals = withdrawals;
-        this.interest = interest;
-    }
-
-    public LocalDate getDate() {
-        return this.date;
-    }
-
-    public Money getResultantAmountForDay() {
-        return this.deposits.subtract(this.withdrawals).add(this.interest);
-    }
-
-    public Money getInterest() {
-        return this.interest;
-    }
 }

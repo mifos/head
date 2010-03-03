@@ -30,13 +30,17 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.interest.CompoundingInterestCalculator;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationInterval;
 import org.mifos.accounts.savings.interest.InterestCalculationIntervalHelper;
+import org.mifos.accounts.savings.interest.InterestCalculationPeriodCalculator;
 import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationPeriodResult;
 import org.mifos.accounts.savings.interest.InterestCalculator;
+import org.mifos.accounts.savings.interest.InterestPostingPeriodCalculator;
 import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
+import org.mifos.accounts.savings.interest.NonCompoundingInterestCalculator;
 import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
 import org.mifos.accounts.savings.interest.SavingsInterestDetail;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
@@ -45,6 +49,7 @@ import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -195,6 +200,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
+    /**
+     * deprecated for now. Would prefer to use the {@link SavingsServiceFacade#batchRecalculateInterestToBePostedForSavingsAccount(LocalDate)} approach.
+     */
+    @Deprecated
     @Override
     public void batchPostInterestToSavingsAccount(LocalDate dateBatchJobIsScheduled) {
 
@@ -219,9 +228,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 // FIXME - keithw - the more I look at the use of Interval within InterestCalculationInterval it seems redundant as contains
                 // method of interval is not 'inclusive' of end datetime and we really want to use LocalDate anyway.
                 Interval postingInterval = new InterestCalculationInterval(startDate, interestPostingDate).getInterval();
-                // FIXME - keithw - comment out for now to spike a entire account approach to interest posting (and as such interest calaculation).
-//                calculateInterestForPostingInterval(Long.valueOf(savingsId), postingInterval);
-                List<InterestPostingPeriodResult> postingResults = recalculateInterestAndPosting(savingsAccount, interestPostingDate, postingSchedule);
+                calculateInterestForPostingInterval(Long.valueOf(savingsId), postingInterval);
 
                 boolean interestPosted = savingsAccount.postInterest(postingSchedule);
 
@@ -236,56 +243,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 this.transactionHelper.closeSession();
             }
         }
-    }
-
-    private List<InterestPostingPeriodResult> recalculateInterestAndPosting(SavingsBO savingsAccount, LocalDate interestPostingDate, InterestScheduledEvent postingSchedule) {
-        List<InterestPostingPeriodResult> allInterestPostings = new ArrayList<InterestPostingPeriodResult>();
-
-        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsAccount.getAccountId()));
-        if (!allEndOfDayDetailsForAccount.isEmpty()) {
-            LocalDate firstAccountActivityDate = allEndOfDayDetailsForAccount.get(0).getDate();
-            List<InterestCalculationInterval> allPossiblePostingPeriods = interestCalculationIntervalHelper.determineAllPossiblePeriods(firstAccountActivityDate, postingSchedule, interestPostingDate);
-
-            Money zero = Money.zero(savingsAccount.getCurrency());
-            Money periodAccountBalance = zero;
-
-            for (InterestCalculationInterval postingPeriod : allPossiblePostingPeriods) {
-                InterestPostingPeriodResult postingPeriodResult = calculateInterestForPosting(postingPeriod, allEndOfDayDetailsForAccount, periodAccountBalance, savingsAccount);
-                allInterestPostings.add(postingPeriodResult);
-                periodAccountBalance = periodAccountBalance.add(postingPeriodResult.getPeriodBalance());
-            }
-        }
-
-        return allInterestPostings;
-    }
-
-    private InterestPostingPeriodResult calculateInterestForPosting(InterestCalculationInterval postingPeriod,
-            List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money periodAccountBalace, SavingsBO savingsAccount) {
-
-        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResult();
-        if (!allEndOfDayDetailsForAccount.isEmpty()) {
-            InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
-
-            int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
-            SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(), accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
-            InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
-
-            InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
-
-            Money totalBalanceBeforeInterestCalculation = periodAccountBalace;
-            List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossiblePeriods(postingPeriod.getStartDate(), interestCalculationEvent, postingPeriod.getEndDate());
-            for (InterestCalculationInterval interval : allPossible) {
-
-                InterestCalculationPeriodDetail interestCalculationPeriodDetail = InterestCalculationPeriodDetail.populatePeriodDetailBasedOnInterestCalculationInterval(interval, allEndOfDayDetailsForAccount, totalBalanceBeforeInterestCalculation);
-
-                InterestCalculationPeriodResult calculationPeriodResult = interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
-
-                totalBalanceBeforeInterestCalculation = totalBalanceBeforeInterestCalculation.add(calculationPeriodResult.getTotalPrincipal());
-                interestPostingPeriodResult.add(calculationPeriodResult);
-            }
-            interestPostingPeriodResult.setPeriodBalance(totalBalanceBeforeInterestCalculation);
-        }
-        return interestPostingPeriodResult;
     }
 
     @Override
@@ -373,5 +330,71 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void setSavingsInterestScheduledEventFactory(
             SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory) {
         this.savingsInterestScheduledEventFactory = savingsInterestScheduledEventFactory;
+    }
+
+    /**
+     * This methods recalculates the interest for each posting period since activity began on the savings account.
+     *
+     * If any interest calculation is different the value of previously posted interest, an interest posting is done with the difference.
+     */
+    public void batchRecalculateInterestToBePostedForSavingsAccount(LocalDate dateBatchJobIsScheduled) {
+
+        List<Integer> accountIds = this.savingsDao.retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateBatchJobIsScheduled);
+        for (Integer savingsId : accountIds) {
+
+            SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
+            LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
+
+            InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+            MifosCurrency currencyInUse = savingsAccount.getCurrency();
+
+            NonCompoundingInterestCalculator interestCalculationPeriodCalculator = wireupInterestCalculationPeriodCalculator(savingsAccount, interestCalculationEvent);
+
+            InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+            CompoundingInterestCalculator compoundingInterestCalculator = new InterestPostingPeriodCalculator(interestCalculationPeriodCalculator, currencyInUse);
+
+            List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsAccount.getAccountId()));
+
+            boolean interestPosted = false;
+            if (!allEndOfDayDetailsForAccount.isEmpty()) {
+                LocalDate firstAccountActivityDate = allEndOfDayDetailsForAccount.get(0).getDate();
+
+                List<InterestCalculationInterval> allPossiblePostingPeriods = interestCalculationIntervalHelper.determineAllPossiblePeriods(firstAccountActivityDate, postingSchedule, interestPostingDate);
+
+                List<InterestPostingPeriodResult> postingResults = compoundingInterestCalculator.calculatePostingPeriodDetails(allEndOfDayDetailsForAccount, allPossiblePostingPeriods);
+                for (InterestPostingPeriodResult interestPostingPeriodResult : postingResults) {
+                    if (interestPostingPeriodResult.isTotalCalculatedInterestIsDifferent()) {
+                        interestPosted = true;
+                        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult);
+                    }
+                }
+            }
+
+            try {
+                this.transactionHelper.startTransaction();
+
+                if (interestPosted) {
+                    this.savingsDao.save(savingsAccount);
+                }
+                this.transactionHelper.commitTransaction();
+            } catch (Exception e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new BusinessRuleException(savingsId.toString(), e);
+            } finally {
+                this.transactionHelper.closeSession();
+            }
+        }
+    }
+
+    private NonCompoundingInterestCalculator wireupInterestCalculationPeriodCalculator(SavingsBO savingsAccount,
+            InterestScheduledEvent interestCalculationEvent) {
+        InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
+
+        int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
+        SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(), accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
+        InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
+
+        NonCompoundingInterestCalculator interestCalculationPeriodCalculator = new InterestCalculationPeriodCalculator(interestCalculator, interestCalculationEvent, interestCalculationIntervalHelper);
+        return interestCalculationPeriodCalculator;
     }
 }

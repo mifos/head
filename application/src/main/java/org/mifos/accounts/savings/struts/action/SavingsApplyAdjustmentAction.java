@@ -166,7 +166,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         try {
             this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
 
-            this.savingsServiceFacade.batchPostInterestToSavingsAccount(new LocalDate());
+            this.savingsServiceFacade.batchRecalculateInterestToBePostedForSavingsAccount(new LocalDate());
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {

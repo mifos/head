@@ -29,18 +29,14 @@ public class InterestPostingPeriodResult {
 
     private Money periodBalance;
     private List<InterestCalculationPeriodResult> interestCalulcationResults = new ArrayList<InterestCalculationPeriodResult>();
+    private final InterestCalculationInterval postingPeriod;
+
+    public InterestPostingPeriodResult(InterestCalculationInterval postingPeriod) {
+        this.postingPeriod = postingPeriod;
+    }
 
     public void add(InterestCalculationPeriodResult interestCalculationPeriodResult) {
         this.interestCalulcationResults.add(interestCalculationPeriodResult);
-    }
-
-    public Money getPeriodInterest(Money zero) {
-        Money balance = zero;
-        for (InterestCalculationPeriodResult result : interestCalulcationResults) {
-            balance = balance.add(result.getTotalPrincipal());
-        }
-
-        return balance;
     }
 
     public Money getPeriodBalance() {
@@ -49,5 +45,45 @@ public class InterestPostingPeriodResult {
 
     public void setPeriodBalance(Money periodBalance) {
         this.periodBalance = periodBalance;
+    }
+
+    public InterestCalculationInterval getPostingPeriod() {
+        return this.postingPeriod;
+    }
+
+    public Money getPeriodInterest() {
+        Money balance = Money.zero();
+        for (InterestCalculationPeriodResult result : interestCalulcationResults) {
+            balance = balance.add(result.getInterest());
+        }
+
+        return balance;
+    }
+
+    public boolean isTotalCalculatedInterestIsDifferent() {
+        return getPeriodInterest().isLessThan(getPreviousPeriodInterest()) || getPeriodInterest().isGreaterThan(getPreviousPeriodInterest());
+    }
+
+    public Money getDifferenceInInterest() {
+        return getPeriodInterest().subtract(getPreviousPeriodInterest());
+    }
+
+    private Money getPreviousPeriodInterest() {
+        Money balance = Money.zero();
+        for (InterestCalculationPeriodResult result : interestCalulcationResults) {
+            balance = balance.add(result.getPreviousTotalInterestForPeriod());
+        }
+
+        return balance;
+
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(postingPeriod)
+                                  .append(" end balance: ").append(periodBalance)
+                                  .append(" calculated interest: ").append(getPeriodInterest())
+                                  .append(" previous interest: ").append(getPreviousPeriodInterest())
+                                  .toString();
     }
 }
