@@ -21,17 +21,16 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -115,7 +114,7 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         // ////////////////
     }
 
-    public void testRecurringFeeScheduleIsAdjusted() throws Exception {
+    public void testRecurringFeeScheduleIsAdjustedForNewHoliday() throws Exception {
         // create center (includes recurring fee)
         StaticHibernateUtil.startTransaction();
         final List<FeeView> feeView = new ArrayList<FeeView>();
@@ -135,9 +134,7 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         final HolidayPK holidayPK = new HolidayPK((short) 1, holidayStartDate);
         final RepaymentRuleEntity entity = new HolidayPersistence()
                 .getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY.getValue());
-        final Date holidayEndDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
-                .withDayOfMonth(8).toDate();
-        holidayEntity = new HolidayBO(holidayPK, holidayEndDate, "Test Holiday", entity);
+        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
         // Disable date Validation because startDate is less than today
         holidayEntity.setValidationEnabled(false);
         holidayEntity.save();
@@ -145,9 +142,8 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         StaticHibernateUtil.closeSession();
 
         Set<AccountActionDateEntity> accountActionDates = center.getCustomerAccount().getAccountActionDates();
-        Assert.assertEquals("Customer schedule unadjusted",
-                DateUtils.truncate(holidayStartDate, Calendar.DAY_OF_MONTH), DateUtils.truncate(accountActionDates
-                        .toArray(new AccountActionDateEntity[] {})[1].getActionDate(), Calendar.DAY_OF_MONTH));
+        Assert.assertEquals("Customer schedule unadjusted", LocalDate.fromDateFields(holidayStartDate), LocalDate
+                .fromDateFields(accountActionDates.toArray(new AccountActionDateEntity[] {})[1].getActionDate()));
 
         // run the batch job
         StaticHibernateUtil.startTransaction();
@@ -157,10 +153,8 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         // make sure schedule changed
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         accountActionDates = center.getCustomerAccount().getAccountActionDates();
-        final Date displacedPaybackDate = new DateTime(holidayEndDate.getTime()).withDayOfMonth(9).toDate();
-        Assert
-                .assertEquals("customer schedule adjusted", DateUtils.truncate(displacedPaybackDate,
-                        Calendar.DAY_OF_MONTH), DateUtils.truncate(accountActionDates
-                        .toArray(new AccountActionDateEntity[] {})[1].getActionDate(), Calendar.DAY_OF_MONTH));
+        final Date displacedPaybackDate = new DateTime(holidayStartDate.getTime()).withDayOfMonth(9).toDate();
+        Assert.assertEquals("customer schedule adjusted", LocalDate.fromDateFields(displacedPaybackDate), LocalDate
+                .fromDateFields(accountActionDates.toArray(new AccountActionDateEntity[] {})[1].getActionDate()));
     }
 }
