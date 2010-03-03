@@ -26,6 +26,9 @@ import java.util.List;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ * I am responsible for working out how much interest should be applied to a given calculation period.
+ */
 public class InterestCalculationPeriodCalculator implements NonCompoundingInterestCalculator {
 
     private final InterestCalculator interestCalculator;
@@ -40,6 +43,12 @@ public class InterestCalculationPeriodCalculator implements NonCompoundingIntere
         this.interestCalculationIntervalHelper = interestCalculationIntervalHelper;
     }
 
+    /**
+     * I do this by determining all legal 'calculation periods' within a given {@link InterestCalculationInterval} time period.
+     *
+     * For each 'interest calculation period' derived, I create a {@link InterestCalculationPeriodDetail} which will hold all the information
+     * necessary for the {@link InterestCalculator} to return a {@link InterestCalculationPeriodResult}.
+     */
     @Override
     public List<InterestCalculationPeriodResult> calculateDetails(InterestCalculationInterval calculationPeriod,
             Money totalBalanceBeforeCalculationPeriod, List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod) {

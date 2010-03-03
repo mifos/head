@@ -343,6 +343,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         for (Integer savingsId : accountIds) {
 
             SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
+
+            // FIXME - I don't we can assume that the 'posting date' from the savings account is always correct.
+            // FIXME - we could implement a check here and if wrong, simply update next interest posting date with nearest valid posting date
             LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
 
             InterestScheduledEvent interestCalculationEvent = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
@@ -357,10 +360,14 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             boolean interestPosted = false;
             if (!allEndOfDayDetailsForAccount.isEmpty()) {
-                LocalDate firstAccountActivityDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
+                // NOTE - edge case of first account activity being start of interval is handled when determining all possible posting periods.
+                //        after this we can let the rest of the code assume valid 'posting period date ranges' are being passed around.
+                LocalDate firstAccountActivityDate = allEndOfDayDetailsForAccount.get(0).getDate();
                 List<InterestCalculationInterval> allPossiblePostingPeriods = interestCalculationIntervalHelper.determineAllPossiblePeriods(firstAccountActivityDate, postingSchedule, interestPostingDate);
 
+                // NOTE - results for each posting period are generated. Details of interest and balance at end of period are provided
+                //
                 List<InterestPostingPeriodResult> postingResults = compoundingInterestCalculator.calculatePostingPeriodDetails(allEndOfDayDetailsForAccount, allPossiblePostingPeriods);
                 for (InterestPostingPeriodResult interestPostingPeriodResult : postingResults) {
                     if (interestPostingPeriodResult.isTotalCalculatedInterestIsDifferent()) {

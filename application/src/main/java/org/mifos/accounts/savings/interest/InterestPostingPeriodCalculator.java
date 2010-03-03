@@ -26,6 +26,12 @@ import java.util.List;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ * I am responsible for implementing interest compounding for savings.
+ *
+ * This occurs when posting interest to savings account. This calculator handles this 'posting' inline so it may calculate posting periods
+ * that occur after it.
+ */
 public class InterestPostingPeriodCalculator implements CompoundingInterestCalculator {
 
     private final MifosCurrency currency;
@@ -66,15 +72,16 @@ public class InterestPostingPeriodCalculator implements CompoundingInterestCalcu
 
         InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResult(postingPeriod);
 
-        Money totalBalanceBeforeInterestCalculation = periodAccountBalace;
+        Money interestCalculationRunningBalance = periodAccountBalace;
 
-        List<InterestCalculationPeriodResult> calculationPeriodResults = this.interestCalculationPeriodCalculator.calculateDetails(postingPeriod, totalBalanceBeforeInterestCalculation, endOfDayDetailsForPostingPeriod);
+        List<InterestCalculationPeriodResult> calculationPeriodResults = this.interestCalculationPeriodCalculator.calculateDetails(postingPeriod, interestCalculationRunningBalance, endOfDayDetailsForPostingPeriod);
         for (InterestCalculationPeriodResult interestCalculationPeriodResult : calculationPeriodResults) {
             interestPostingPeriodResult.add(interestCalculationPeriodResult);
-            totalBalanceBeforeInterestCalculation = totalBalanceBeforeInterestCalculation.add(interestCalculationPeriodResult.getTotalPrincipal());
+            interestCalculationRunningBalance = interestCalculationRunningBalance.add(interestCalculationPeriodResult.getTotalPrincipal());
         }
 
-        interestPostingPeriodResult.setPeriodBalance(totalBalanceBeforeInterestCalculation);
+        // NOTE - end of period balance is always set in result.
+        interestPostingPeriodResult.setPeriodBalance(interestCalculationRunningBalance);
 
         return interestPostingPeriodResult;
     }
