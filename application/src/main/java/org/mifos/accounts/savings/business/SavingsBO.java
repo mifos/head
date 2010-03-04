@@ -519,7 +519,7 @@ public class SavingsBO extends AccountBO {
     }
 
     public void postInterest() throws AccountException {
-        if (getInterestToBePosted() != null && getInterestToBePosted().isGreaterThanZero()) {
+        if (getInterestToBePosted() != null && getInterestToBePosted().isGreaterThanOrEqualZero()) {
             Money interestPosted = getInterestToBePosted();
             setSavingsBalance(getSavingsBalance().add(interestPosted));
             setInterestToBePosted(new Money(getCurrency()));
