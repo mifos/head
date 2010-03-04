@@ -31,7 +31,7 @@ public class TableTagExceptionTest extends TestCase {
     public void testTableTagException() throws Exception {
         try {
             UserContext userContext = new UserContext();
-            Text.getImage(this, "name");
+            Text.getImage(this, "name", userContext.getPreferredLocale());
             Assert.fail();
         } catch (TableTagException tte) {
            Assert.assertEquals("exception.framework.TableTagException", tte.getKey());

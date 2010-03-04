@@ -93,13 +93,10 @@ public class TableTagTest extends TestCase {
 
     public void testGetSingleFileFailure() throws Exception {
         try {
-            Locale locale = Localization.getInstance().getMainLocale();
             new TableTag("single").getSingleFile();
-            Assert.fail();
-        } catch (MissingResourceException e) {
-           Assert.assertTrue(true);
+            fail();
         } catch (JspException e) {
-            Assert.fail();
+            assertTrue(true);
         }
     }
 
@@ -135,15 +132,15 @@ public class TableTagTest extends TestCase {
         CustomerSearch customerSearch = new CustomerSearch();
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;PartialApplication</span>",
-                Text.getImage(customerSearch, "1"));
+                Text.getImage(customerSearch, "1", locale));
         customerSearch.setCustomerType(Short.valueOf("4"));
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Pending Approval</span>",
-                Text.getImage(customerSearch, "2"));
+                Text.getImage(customerSearch, "2", locale));
         customerSearch.setCustomerType(Short.valueOf("6"));
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Partial Application</span>",
-                Text.getImage(customerSearch, "13"));
+                Text.getImage(customerSearch, "13", locale));
     }
 
     public void testTableTagParser() throws Exception {
@@ -267,7 +264,7 @@ public class TableTagTest extends TestCase {
     public void testTableTagException() throws Exception {
         try {
             Locale locale = Localization.getInstance().getMainLocale();
-            Text.getImage(this, "name");
+            Text.getImage(this, "name", locale);
             Assert.fail();
         } catch (TableTagException tte) {
            Assert.assertEquals("exception.framework.TableTagException", tte.getKey());

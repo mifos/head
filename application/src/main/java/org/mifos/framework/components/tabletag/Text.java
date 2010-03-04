@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.servlet.jsp.PageContext;
 
@@ -53,7 +54,7 @@ public class Text {
             Locale locale) throws TableTagException {
         if (null != image && image.equals("true")) {
             String name = displayname.getDisplayName(pageContext, displayname.getFragment(), obj, image, locale);
-            return getImage(obj, name);
+            return getImage(obj, name, locale);
         }
 
         // Used to get the string array of display name
@@ -84,7 +85,7 @@ public class Text {
     }
 
     // to get Image
-    static String getImage(Object obj, String name) throws TableTagException {
+    static String getImage(Object obj, String name, Locale locale) throws TableTagException {
         StringBuilder stringbuilder = new StringBuilder();
         Method method = null;
         Object customerType = null;
@@ -103,18 +104,19 @@ public class Text {
             throw new TableTagException(ite);
         }
 
-        Properties resource = getNonLocalizedFileLookupDatabase();
+        Properties filePaths = getNonLocalizedFileLookupDatabase();
+        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
         if (customerType != null && (customerType.toString().equals("4") || customerType.toString().equals("5"))) {
-            textValue = resource.getProperty("loanaccount_stateid_" + name);
-            imagePath = resource.getProperty("loanaccount_imageid_" + name);
+            textValue = resource.getString("loanaccount_stateid_" + name);
+            imagePath = filePaths.getProperty("loanaccount_imageid_" + name);
         } else if (customerType != null
                 && (customerType.toString().equals("6") || customerType.toString().equals("7") || customerType
                         .toString().equals("8"))) {
-            textValue = resource.getProperty("savings_stateid_" + name);
-            imagePath = resource.getProperty("savings_imageid_" + name);
+            textValue = resource.getString("savings_stateid_" + name);
+            imagePath = filePaths.getProperty("savings_imageid_" + name);
         } else {
-            textValue = resource.getProperty("value_" + name);
-            imagePath = resource.getProperty("image_" + name);
+            textValue = resource.getString("value_" + name);
+            imagePath = filePaths.getProperty("image_" + name);
         }
         stringbuilder.append("<span class=\"fontnormal\">").append("&nbsp;").append("<img src=").append(imagePath)
                 .append(" width=\"8\" height=\"9\">").append("</span>").append("<span class=\"fontnormal\">").append(
