@@ -42,7 +42,6 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -701,7 +700,7 @@ public class SavingsBO extends AccountBO {
         AccountPaymentEntity interestPayment = helper
                 .createAccountPayment(this, interestAmt, paymentType, loggedInUser);
 
-        interestPayment.addAccountTrxn(helper.createAccountPaymentTrxn(interestPayment, interestAmt,
+        interestPayment.addAccountTrxn(helper.createAccountPaymentTrxn(interestPayment, getSavingsBalance(),
                 AccountActionTypes.SAVINGS_INTEREST_POSTING, customer, loggedInUser, getSavingsPersistence(),
                 postingDate));
 
