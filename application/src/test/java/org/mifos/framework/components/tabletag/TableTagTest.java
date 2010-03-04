@@ -94,7 +94,7 @@ public class TableTagTest extends TestCase {
     public void testGetSingleFileFailure() throws Exception {
         try {
             Locale locale = Localization.getInstance().getMainLocale();
-            new TableTag("single").getSingleFile(locale);
+            new TableTag("single").getSingleFile();
             Assert.fail();
         } catch (MissingResourceException e) {
            Assert.assertTrue(true);
@@ -107,7 +107,7 @@ public class TableTagTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         TableTag tableTag = new TableTag("single");
         tableTag.setName("viewUsers");
-       Assert.assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml", tableTag.getSingleFile(locale));
+       Assert.assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml", tableTag.getSingleFile());
     }
 
     public void testParser() throws Exception {
@@ -135,15 +135,15 @@ public class TableTagTest extends TestCase {
         CustomerSearch customerSearch = new CustomerSearch();
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;PartialApplication</span>",
-                Text.getImage(customerSearch, "1", locale));
+                Text.getImage(customerSearch, "1"));
         customerSearch.setCustomerType(Short.valueOf("4"));
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Pending Approval</span>",
-                Text.getImage(customerSearch, "2", locale));
+                Text.getImage(customerSearch, "2"));
         customerSearch.setCustomerType(Short.valueOf("6"));
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Partial Application</span>",
-                Text.getImage(customerSearch, "13", locale));
+                Text.getImage(customerSearch, "13"));
     }
 
     public void testTableTagParser() throws Exception {
@@ -267,7 +267,7 @@ public class TableTagTest extends TestCase {
     public void testTableTagException() throws Exception {
         try {
             Locale locale = Localization.getInstance().getMainLocale();
-            Text.getImage(this, "name", locale);
+            Text.getImage(this, "name");
             Assert.fail();
         } catch (TableTagException tte) {
            Assert.assertEquals("exception.framework.TableTagException", tte.getKey());

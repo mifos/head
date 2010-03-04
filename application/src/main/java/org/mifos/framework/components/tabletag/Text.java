@@ -20,15 +20,18 @@
 
 package org.mifos.framework.components.tabletag;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.Properties;
 
 import javax.servlet.jsp.PageContext;
 
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * This class renders text if display name is text only.
@@ -50,7 +53,7 @@ public class Text {
             Locale locale) throws TableTagException {
         if (null != image && image.equals("true")) {
             String name = displayname.getDisplayName(pageContext, displayname.getFragment(), obj, image, locale);
-            return getImage(obj, name, locale);
+            return getImage(obj, name);
         }
 
         // Used to get the string array of display name
@@ -64,8 +67,24 @@ public class Text {
         return getDisplayText(name, bold);
     }
 
+    private static Properties nonLocalizedFileLookupDatabase = null;
+
+    private static Properties getNonLocalizedFileLookupDatabase() throws TableTagException {
+        Properties resource = null;
+        if (null == nonLocalizedFileLookupDatabase) {
+            ClassPathResource fileLookupDatabase = new ClassPathResource(FilePaths.TABLE_TAG_PATH_DATABASE);
+            resource = new Properties();
+            try {
+                resource.load(fileLookupDatabase.getInputStream());
+            } catch (IOException e) {
+                throw new TableTagException(e);
+            }
+        }
+        return resource;
+    }
+
     // to get Image
-    static String getImage(Object obj, String name, Locale locale) throws TableTagException {
+    static String getImage(Object obj, String name) throws TableTagException {
         StringBuilder stringbuilder = new StringBuilder();
         Method method = null;
         Object customerType = null;
@@ -84,18 +103,18 @@ public class Text {
             throw new TableTagException(ite);
         }
 
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
+        Properties resource = getNonLocalizedFileLookupDatabase();
         if (customerType != null && (customerType.toString().equals("4") || customerType.toString().equals("5"))) {
-            textValue = resource.getString("loanaccount_stateid_" + name);
-            imagePath = resource.getString("loanaccount_imageid_" + name);
+            textValue = resource.getProperty("loanaccount_stateid_" + name);
+            imagePath = resource.getProperty("loanaccount_imageid_" + name);
         } else if (customerType != null
                 && (customerType.toString().equals("6") || customerType.toString().equals("7") || customerType
                         .toString().equals("8"))) {
-            textValue = resource.getString("savings_stateid_" + name);
-            imagePath = resource.getString("savings_imageid_" + name);
+            textValue = resource.getProperty("savings_stateid_" + name);
+            imagePath = resource.getProperty("savings_imageid_" + name);
         } else {
-            textValue = resource.getString("value_" + name);
-            imagePath = resource.getString("image_" + name);
+            textValue = resource.getProperty("value_" + name);
+            imagePath = resource.getProperty("image_" + name);
         }
         stringbuilder.append("<span class=\"fontnormal\">").append("&nbsp;").append("<img src=").append(imagePath)
                 .append(" width=\"8\" height=\"9\">").append("</span>").append("<span class=\"fontnormal\">").append(

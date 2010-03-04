@@ -105,6 +105,7 @@ public interface FilePaths {
     public static String HOLIDAYSOURCEPATH = LOCALIZED_RESOURCE_PATH + "HolidayUIResources";
     // "org.mifos.framework.components.tabletag.Resources"
     public static final String TABLE_TAG_PROPERTIESFILE = LOCALIZED_RESOURCE_PATH + "Resources";
+    public static final String TABLE_TAG_PATH_DATABASE = "/org/mifos/config/tableTagPathDatabase.properties";
     // "org.mifos.application.meeting.util.resources.Meeting"
     public final String MEETING_RESOURCE = LOCALIZED_RESOURCE_PATH + "Meeting";
     // "org/mifos/customers/office/util/resources/OfficeUIResources"

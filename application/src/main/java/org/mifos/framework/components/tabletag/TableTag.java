@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.config.Localization;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.TableTagException;
@@ -50,6 +52,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FileCacheRep;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /**
  * This class renders the table list.
@@ -332,17 +336,33 @@ public class TableTag extends BodyTagSupport {
                     "<table width=\"400\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
         }
     }
+    
+    private Properties nonLocalizedFileLookupDatabase = null;
 
     /**
      * Function to get single xml file.
      */
-    String getSingleFile(Locale locale) throws JspException {
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
-        String xmlPath = resource.getString(name + "_xml");
+    String getSingleFile() throws JspException {
+        Properties resource = getNonLocalizedFileLookupDatabase();
+        String xmlPath = resource.getProperty(name + "_xml");
         if (xmlPath != null) {
             return xmlPath;
-        } else
-            throw new JspException(resource.getString(TableTagConstants.NOXMLFILE_ERROR));
+        }
+        throw new JspException(resource.getProperty(TableTagConstants.NOXMLFILE_ERROR));
+    }
+
+    private Properties getNonLocalizedFileLookupDatabase() {
+        Properties resource = null;
+        if (null == nonLocalizedFileLookupDatabase) {
+            ClassPathResource fileLookupDatabase = new ClassPathResource(FilePaths.TABLE_TAG_PATH_DATABASE);
+            resource = new Properties();
+            try {
+                resource.load(fileLookupDatabase.getInputStream());
+            } catch (IOException e) {
+                throw new MifosRuntimeException(e);
+            }
+        }
+        return resource;
     }
 
     /**
@@ -415,7 +435,7 @@ public class TableTag extends BodyTagSupport {
 
     private void getSingleData(List list, Locale locale, Integer currentValue) throws TableTagParseException,
             TableTagException, JspException, IOException, PageExpiredException {
-        String xmlFilePath = getSingleFile(locale);
+        String xmlFilePath = getSingleFile();
         Table table = helperCache(xmlFilePath, name);
         ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
         if (table != null) {
@@ -461,7 +481,7 @@ public class TableTag extends BodyTagSupport {
 
     private Table helperMultipleData(Object object, Locale locale) throws TableTagTypeParserException,
             TableTagParseException, TableTagException, JspException {
-        Files file = TypeParser.getInstance().parser(getSingleFile(locale));
+        Files file = TypeParser.getInstance().parser(getSingleFile());
         FileName[] fileName = file.getFileName();
         String str = (String) TableTagUtils.getInstance().helper(pageContext, "type", "method", object, locale);
         for (int i = 0; i < fileName.length; i++) {
