@@ -346,13 +346,8 @@ msgstr "Empréstimo Agrícola"
 
 # Need clarification on "INR"
 #: accounts.allowed_amount
-<<<<<<< .mine
-#, fuzzy
-msgid "(Allowed Amount\\: INR"
-=======
 msgid "(Allowed Amount: INR "
->>>>>>> .r16875
-msgstr "(Valor Autorizado\\: INR"
+msgstr "(Valor Autorizado: INR"
 
 #: accounts.allowed_interest
 msgid "(Allowed Interest Rate Amount "
