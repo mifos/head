@@ -697,12 +697,7 @@ msgstr "Empréstimo para Educação"
 
 # Pls clarify context. "Enter a..." can mean a male thing (... um ...) or a female thing (... uma ...)
 #: accounts.enter_client_details1
-<<<<<<< .mine
-#, fuzzy
-msgid "Enter a"
-=======
 msgid "Enter a "
->>>>>>> .r16875
 msgstr "Digite um/uma"
 
 #: accounts.enter_client_details2
