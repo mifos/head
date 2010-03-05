@@ -267,12 +267,8 @@ msgstr "Seleccione o cliente"
 
 # Translation depends on gender. Ex: "cancelling a client" (cancelar UM cliente) is different from "cancelling a status" (cancelar UMA situação).
 #: accounts.SelectExplaination1
-<<<<<<< .mine
 #, fuzzy
 msgid "When cancelling a"
-=======
-msgid "When cancelling a "
->>>>>>> .r16875
 msgstr "Quando cancelar um/uma"
 
 #: accounts.SelectExplaination2
