@@ -2272,22 +2272,8 @@ msgstr "avec les suivants IDs ont été crée"
 msgid "Yes"
 msgstr "Oui"
 
-#~ msgctxt "accounts.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "a"
-#~ msgstr "un"
 
-#~ msgid "APR"
-#~ msgstr "APR"
 
-#~ msgctxt "loan.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "A new"
-#~ msgstr "Un nouveau"
 
-#~ msgid "Ins \\#"
-#~ msgstr "Numéro de remboursement"

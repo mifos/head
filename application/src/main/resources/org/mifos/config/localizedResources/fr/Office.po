@@ -543,10 +543,4 @@ msgstr "Veuiller indiquer un acronyme de bureau."
 msgid "Mifos"
 msgstr "Mifos"
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Champ personnalisé\\:"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Champ personnalisé\\:"

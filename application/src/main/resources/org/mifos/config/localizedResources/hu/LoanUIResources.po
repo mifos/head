@@ -2270,22 +2270,8 @@ msgstr "az alábbi azonosítókkal létrehozásra kerültek"
 msgid "Yes"
 msgstr "Igen"
 
-#~ msgctxt "accounts.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "a"
-#~ msgstr "egy"
 
-#~ msgid "APR"
-#~ msgstr "APR"
 
-#~ msgctxt "loan.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "A new"
-#~ msgstr "Az új"
 
-#~ msgid "Ins \\#"
-#~ msgstr "Törlesztések száma"

@@ -609,10 +609,4 @@ msgctxt "exception.framework.fieldConfiguration.mandatory"
 msgid "Please specify {0}."
 msgstr "Por favor, especifique {0}."
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Campo personalizado\\:"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Campo personalizado\\:"

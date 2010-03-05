@@ -674,17 +674,6 @@ msgstr "Összes fizetett összeg"
 msgid "Total number of payments"
 msgstr "Fizetési tranzakciók száma összesen"
 
-#~ msgctxt "Customer.Note"
-#~ msgid "Note\\:"
-#~ msgstr "Megjegyzés\\:"
 
-#~ msgctxt "Customer.note"
-#~ msgid "Note\\:"
-#~ msgstr "Megjegyzés\\:"
 
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgctxt "label.note"
-#~ msgid "Note\\:"
-#~ msgstr "Megjegyzés\\:"

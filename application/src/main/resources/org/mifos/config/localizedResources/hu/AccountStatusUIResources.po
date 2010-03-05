@@ -140,5 +140,3 @@ msgstr "Típus"
 msgid "7 results in All branches found for Loans in Pending approval"
 msgstr "7 találat a jóváhagyásra váró státuszú hitelekre az összes fiókban"
 
-#~ msgid "\\: ID"
-#~ msgstr "\\: azonosító"

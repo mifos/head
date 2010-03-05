@@ -2228,23 +2228,9 @@ msgstr "خلق مع الأرقام التالي "
 msgid "Yes"
 msgstr "نعم"
 
-#~ msgctxt "accounts.colon"
-#~ msgid "\\:"
-#~ msgstr "/:"
 
-#~ msgid "a"
-#~ msgstr "واحد"
 
-#~ msgid "APR"
-#~ msgstr "الفائدة السنوية"
 
-#~ msgctxt "loan.colon"
-#~ msgid "\\:"
-#~ msgstr "/:"
 
-#~ msgid "A new"
-#~ msgstr "جديد"
 
 #, fuzzy
-#~ msgid "Ins \\#"
-#~ msgstr "Meaning unclear"

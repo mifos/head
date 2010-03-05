@@ -884,5 +884,3 @@ msgstr "Megjegyzés\\:"
 msgid "Status:"
 msgstr "Státusz\\:"
 
-#~ msgid "Select"
-#~ msgstr "Kiválasztás"

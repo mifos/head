@@ -1501,13 +1501,5 @@ msgstr "គ្មាន"
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "ការចាត់តាំងទេ។​សូមចុចបញ្ជូនដើម្បីសំរេចអនុញ្ញាត្តិប្រឡោះចំហរ"
 
-#~ msgctxt "Group.grouptrainedon"
-#~ msgid "Trained on\\:"
-#~ msgstr "បានបណ្តុះបណ្តាលលើ\\:"
 
-#~ msgid "s\\:"
-#~ msgstr "s\\:"
 
-#~ msgctxt "Group.trainedon"
-#~ msgid "Trained on\\:"
-#~ msgstr "បានបណ្តុះបណ្តាលលើ\\:"

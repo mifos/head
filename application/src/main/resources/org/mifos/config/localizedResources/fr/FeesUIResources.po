@@ -734,54 +734,16 @@ msgctxt "meeting.labelWeeks"
 msgid "week(s) "
 msgstr "semaine(s)"
 
-#~ msgctxt "Fees.amount"
-#~ msgid "Amount\\:"
-#~ msgstr "Montant\\:"
 
-#~ msgctxt "Fees.defaultFees"
-#~ msgid "Default fees\\:"
-#~ msgstr "Frais par défaut\\:"
 
-#~ msgctxt "Fees.defaultfees"
-#~ msgid "Default fees\\:"
-#~ msgstr "Frais par défaut\\:"
 
-#~ msgctxt "Fees.enteramount"
-#~ msgid "Amount\\:"
-#~ msgstr "Montant\\:"
 
-#~ msgctxt "Fees.frequency"
-#~ msgid "Frequency\\:"
-#~ msgstr "Fréquence\\:"
 
-#~ msgctxt "Fees.labelRecurMonths"
-#~ msgid "If months, specify the following\\:"
-#~ msgstr "Si mensuel, indiquer le suivant\\:"
 
-#~ msgctxt "Fees.labelRecurWeeks"
-#~ msgid "If weeks, specify the following\\:"
-#~ msgstr "Si quotidien,, indiquer le suivant\\:"
 
-#~ msgctxt "Fees.labelWeeks"
-#~ msgid "week(s)"
-#~ msgstr "semaine(s)"
 
 #, fuzzy
-#~ msgid "Fee Name"
-#~ msgstr "Nom de frais\\:"
 
-#~ msgctxt "meeting.frequency"
-#~ msgid "Frequency\\:"
-#~ msgstr "Fréquence\\:"
 
-#~ msgctxt "meeting.labelRecurMonths"
-#~ msgid "If months, specify the following\\:"
-#~ msgstr "Si mensuel, indiquer le suivant\\:"
 
-#~ msgctxt "meeting.labelRecurWeeks"
-#~ msgid "If weeks, specify the following\\:"
-#~ msgstr "Si quotidien,, indiquer le suivant\\:"
 
-#~ msgctxt "meeting.labelWeeks"
-#~ msgid "week(s)"
-#~ msgstr "semaine(s)"

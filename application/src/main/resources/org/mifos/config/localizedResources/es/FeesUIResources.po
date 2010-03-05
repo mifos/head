@@ -731,54 +731,16 @@ msgctxt "meeting.labelWeeks"
 msgid "week(s) "
 msgstr "semana(s)"
 
-#~ msgctxt "Fees.amount"
-#~ msgid "Amount\\:"
-#~ msgstr "Importe\\:"
 
-#~ msgctxt "Fees.defaultFees"
-#~ msgid "Default fees\\:"
-#~ msgstr "Comisiones por defecto\\:"
 
-#~ msgctxt "Fees.defaultfees"
-#~ msgid "Default fees\\:"
-#~ msgstr "Comisiones por defecto\\:"
 
-#~ msgctxt "Fees.enteramount"
-#~ msgid "Amount\\:"
-#~ msgstr "Importe\\:"
 
-#~ msgctxt "Fees.frequency"
-#~ msgid "Frequency\\:"
-#~ msgstr "Frecuencia\\:"
 
-#~ msgctxt "Fees.labelRecurMonths"
-#~ msgid "If months, specify the following\\:"
-#~ msgstr "Si fueran meses, especifique lo siguiente\\:"
 
-#~ msgctxt "Fees.labelRecurWeeks"
-#~ msgid "If weeks, specify the following\\:"
-#~ msgstr "Si fueran semanas, especifique lo siguiente\\:"
 
-#~ msgctxt "Fees.labelWeeks"
-#~ msgid "week(s)"
-#~ msgstr "semana(s)"
 
 #, fuzzy
-#~ msgid "Fee Name"
-#~ msgstr "Nombre de la comisión\\:"
 
-#~ msgctxt "meeting.frequency"
-#~ msgid "Frequency\\:"
-#~ msgstr "Frecuencia\\:"
 
-#~ msgctxt "meeting.labelRecurMonths"
-#~ msgid "If months, specify the following\\:"
-#~ msgstr "Si fueran meses, especifique lo siguiente\\:"
 
-#~ msgctxt "meeting.labelRecurWeeks"
-#~ msgid "If weeks, specify the following\\:"
-#~ msgstr "Si fueran semanas, especifique lo siguiente\\:"
 
-#~ msgctxt "meeting.labelWeeks"
-#~ msgid "week(s)"
-#~ msgstr "semana(s)"

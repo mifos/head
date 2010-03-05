@@ -1663,35 +1663,11 @@ msgstr ""
 msgid "Edit account status"
 msgstr "Számla státusz szerkesztése"
 
-#~ msgctxt "Account.Note"
-#~ msgid "Note\\:"
-#~ msgstr "Megjegyzés\\:"
 
-#~ msgctxt "PaymentID"
-#~ msgid "Payment ID\\#"
-#~ msgstr "Fizetési tranzakció azonosító"
 
-#~ msgctxt "TransactionID"
-#~ msgid "Transaction ID\\#"
-#~ msgstr "Tranzakció azonosító szám"
 
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "Ins \\#"
-#~ msgstr "Törlesztések száma"
 
-#~ msgctxt "accounts.note"
-#~ msgid "Note\\:"
-#~ msgstr "Megjegyzés\\:"
 
-#~ msgid "or"
-#~ msgstr "vagy"
 
-#~ msgctxt "accounts.payment_id"
-#~ msgid "Payment ID\\#"
-#~ msgstr "Fizetési tranzakció azonosító"
 
-#~ msgctxt "accounts.transaction_id"
-#~ msgid "Transaction ID\\#"
-#~ msgstr "Tranzakció azonosító szám"

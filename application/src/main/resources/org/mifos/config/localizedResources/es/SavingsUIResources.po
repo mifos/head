@@ -890,8 +890,4 @@ msgstr "Nota\\:"
 msgid "Status:"
 msgstr "Estado\\:"
 
-#~ msgid "Select"
-#~ msgstr "Seleccionar"
 
-#~ msgid "on"
-#~ msgstr "sobre"

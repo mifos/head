@@ -1131,19 +1131,7 @@ msgstr "សកម្មភាពនេះគឺមិនអនុញ្ញាត
 msgid "<li>Please specify value for {0}.</li>"
 msgstr "សូមកំនត់តម្លៃសម្រាប់ {0}"
 
-#~ msgid "Apply adjustment"
-#~ msgstr "យល់ព្រមលើការកែតម្រូវ"
 
-#~ msgid "Apply payment"
-#~ msgstr "យល់ព្រមលើការបង់ប្រាក់"
 
-#~ msgid "\\:"
-#~ msgstr "\\៖"
 
-#~ msgctxt "Center.GroupsLink1"
-#~ msgid "Click on a"
-#~ msgstr "ចុចលើ"
 
-#~ msgctxt "Center.clickInstruction"
-#~ msgid "Click on a"
-#~ msgstr "ចុចលើ"

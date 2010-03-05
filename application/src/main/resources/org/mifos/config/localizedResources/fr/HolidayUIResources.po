@@ -619,10 +619,4 @@ msgstr "Veuiller indiquer un acronyme de jour férié."
 msgid "Mifos"
 msgstr "Mifos"
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Champ personnalisé\\:"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Champ personnalisé\\:"

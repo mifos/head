@@ -593,10 +593,4 @@ msgstr "សូមបញ្ជាក់ឈ្មោះជាអក្សរកា
 msgid "Mifos"
 msgstr "ម៉ាយហ្វូស"
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "ប្រឡោះសំរាប់ប្រពៃណីយទំនៀមទំលាប់"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "ប្រឡោះសំរាប់ប្រពៃណីយទំនៀមទំលាប់"

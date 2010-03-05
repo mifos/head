@@ -2226,19 +2226,7 @@ msgstr "ជាមួយនិងលេខកូដទាំងនេះដែល
 msgid "Yes"
 msgstr "បាទ​ឬចាស"
 
-#~ msgctxt "accounts.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "a"
-#~ msgstr "មួយ"
 
-#~ msgid "APR"
-#~ msgstr "សំរេច"
 
-#~ msgctxt "loan.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "A new"
-#~ msgstr "ថ្មីមួយ"

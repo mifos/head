@@ -877,8 +877,4 @@ msgstr "កំនត់ចំនាំ"
 msgid "Status:"
 msgstr "លក្ខ័ណ"
 
-#~ msgid "Select"
-#~ msgstr "ជ្រើសរើស"
 
-#~ msgid "on"
-#~ msgstr "លើ់"

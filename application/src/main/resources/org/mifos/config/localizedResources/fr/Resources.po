@@ -229,177 +229,49 @@ msgctxt "value_9"
 msgid "Active"
 msgstr "Actif"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/accountNote.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/accountNote.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/accountNotes.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/accountNotes.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/accounts.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/accounts.xml"
 
-#~ msgid "center.jsp"
-#~ msgstr "center.jsp"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/center.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/center.xml"
 
-#~ msgid "client.jsp"
-#~ msgstr "client.jsp"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/client.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/client.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/customerNote.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/customerNote.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/type.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/type.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/groupAddClient.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/groupAddClient.xml"
 
-#~ msgid ""
-#~ "org/mifos/framework/util/resources/tabletag/groupSearch_clientCreate.xml"
-#~ msgstr ""
-#~ "org/mifos/framework/util/resources/tabletag/groupSearch_clientCreate.xml"
 
-#~ msgid ""
-#~ "org/mifos/framework/util/resources/tabletag/groupSearch_clientTransfer.xml"
-#~ msgstr ""
-#~ "org/mifos/framework/util/resources/tabletag/groupSearch_clientTransfer.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/groupTransfer.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/groupTransfer.xml"
 
-#~ msgctxt "image_1"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "image_10"
-#~ msgid "pages/framework/images/status_closedred.gif"
-#~ msgstr "pages/framework/images/status_closedred.gif"
 
-#~ msgctxt "image_11"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "image_12"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "image_13"
-#~ msgid "pages/framework/images/status_activegreen.gif"
-#~ msgstr "pages/framework/images/status_activegreen.gif"
 
-#~ msgctxt "image_14"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "image_2"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "image_3"
-#~ msgid "pages/framework/images/status_activegreen.gif"
-#~ msgstr "pages/framework/images/status_activegreen.gif"
 
-#~ msgctxt "image_4"
-#~ msgid "pages/framework/images/status_closedred.gif"
-#~ msgstr "pages/framework/images/status_closedred.gif"
 
-#~ msgctxt "image_5"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "image_6"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "image_7"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "image_8"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "image_9"
-#~ msgid "pages/framework/images/status_activegreen.gif"
-#~ msgstr "pages/framework/images/status_activegreen.gif"
 
-#~ msgctxt "loanaccount_imageid_1"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "loanaccount_imageid_10"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "loanaccount_imageid_2"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "loanaccount_imageid_3"
-#~ msgid "pages/framework/images/status_activegreen.gif"
-#~ msgstr "pages/framework/images/status_activegreen.gif"
 
-#~ msgctxt "loanaccount_imageid_4"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "loanaccount_imageid_5"
-#~ msgid "pages/framework/images/status_activegreen.gif"
-#~ msgstr "pages/framework/images/status_activegreen.gif"
 
-#~ msgctxt "loanaccount_imageid_6"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "loanaccount_imageid_7"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "loanaccount_imageid_8"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "loanaccount_imageid_9"
-#~ msgid "pages/framework/images/status_closedred.gif"
-#~ msgstr "pages/framework/images/status_closedred.gif"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/notes.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/notes.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/personnelNotes.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/personnelNotes.xml"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/savingsAccount.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/savingsAccount.xml"
 
-#~ msgctxt "savings_imageid_13"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "savings_imageid_14"
-#~ msgid "pages/framework/images/status_yellow.gif"
-#~ msgstr "pages/framework/images/status_yellow.gif"
 
-#~ msgctxt "savings_imageid_15"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "savings_imageid_16"
-#~ msgid "pages/framework/images/status_activegreen.gif"
-#~ msgstr "pages/framework/images/status_activegreen.gif"
 
-#~ msgctxt "savings_imageid_17"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgctxt "savings_imageid_18"
-#~ msgid "pages/framework/images/status_closedblack.gif"
-#~ msgstr "pages/framework/images/status_closedblack.gif"
 
-#~ msgid "org/mifos/framework/util/resources/tabletag/viewUsers.xml"
-#~ msgstr "org/mifos/framework/util/resources/tabletag/viewUsers.xml"

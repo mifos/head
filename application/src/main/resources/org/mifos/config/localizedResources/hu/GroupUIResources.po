@@ -1530,13 +1530,5 @@ msgstr "nem rendelkezik számára kijelölt"
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "vel. Kattintson a Mégsem gombra, ha jóvá akarja hagyni az üres"
 
-#~ msgctxt "Group.grouptrainedon"
-#~ msgid "Trained on\\:"
-#~ msgstr "Képzés ideje\\:"
 
-#~ msgid "s\\:"
-#~ msgstr "k\\:"
 
-#~ msgctxt "Group.trainedon"
-#~ msgid "Trained on\\:"
-#~ msgstr "Képzés ideje\\:"

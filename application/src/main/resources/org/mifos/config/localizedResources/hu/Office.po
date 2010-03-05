@@ -532,10 +532,4 @@ msgstr "Adja meg az Iroda rövid elnevezését."
 msgid "Mifos"
 msgstr "Mifos"
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Egyedi mező\\:"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Egyedi mező\\:"

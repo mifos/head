@@ -671,17 +671,6 @@ msgstr "Importe pagado total"
 msgid "Total number of payments"
 msgstr "Número total de pagos"
 
-#~ msgctxt "Customer.Note"
-#~ msgid "Note\\:"
-#~ msgstr "Nota\\:"
 
-#~ msgctxt "Customer.note"
-#~ msgid "Note\\:"
-#~ msgstr "Nota\\:"
 
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgctxt "label.note"
-#~ msgid "Note\\:"
-#~ msgstr "Nota\\:"

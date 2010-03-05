@@ -605,10 +605,4 @@ msgctxt "exception.framework.fieldConfiguration.mandatory"
 msgid "Please specify {0}."
 msgstr "Veuiller indiquer {0}."
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Champ personnalisé\\:"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Champ personnalisé\\:"

@@ -1552,13 +1552,5 @@ msgstr "n'a pas"
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "s assigné à lui. Cliquer sur Valider pour approuver le vide"
 
-#~ msgctxt "Group.grouptrainedon"
-#~ msgid "Trained on\\:"
-#~ msgstr "Formé en"
 
-#~ msgid "s\\:"
-#~ msgstr "s\\:"
 
-#~ msgctxt "Group.trainedon"
-#~ msgid "Trained on\\:"
-#~ msgstr "Formé en"

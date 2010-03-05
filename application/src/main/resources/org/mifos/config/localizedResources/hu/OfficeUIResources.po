@@ -594,10 +594,4 @@ msgctxt "exception.framework.fieldConfiguration.mandatory"
 msgid "Please specify {0}."
 msgstr "Adja meg a(z) {0}t."
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Egyedi mező\\:"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Egyedi mező\\:"

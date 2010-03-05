@@ -726,54 +726,16 @@ msgctxt "meeting.labelWeeks"
 msgid "week(s) "
 msgstr "សប្តាហ៍ "
 
-#~ msgctxt "Fees.amount"
-#~ msgid "Amount\\:"
-#~ msgstr "ចំនួនសរុប\\៖"
 
-#~ msgctxt "Fees.defaultFees"
-#~ msgid "Default fees\\:"
-#~ msgstr "ប្រាក់ឈ្នួលដែលកំនត់ស្រេច"
 
-#~ msgctxt "Fees.defaultfees"
-#~ msgid "Default fees\\:"
-#~ msgstr "ប្រាក់ឈ្នួលដែលកំនត់ស្រេច"
 
-#~ msgctxt "Fees.enteramount"
-#~ msgid "Amount\\:"
-#~ msgstr "ចំនួនសរុប\\៖"
 
-#~ msgctxt "Fees.frequency"
-#~ msgid "Frequency\\:"
-#~ msgstr "ញឹកញ៉ាប់"
 
-#~ msgctxt "Fees.labelRecurMonths"
-#~ msgid "If months, specify the following\\:"
-#~ msgstr "ប្រសិនបើជាខែ កំនត់ដូចតទៅ\\៖"
 
-#~ msgctxt "Fees.labelRecurWeeks"
-#~ msgid "If weeks, specify the following\\:"
-#~ msgstr "ប្រសិនបើសប្តាហ៍ កំនត់ដូចតទៅ\\៖"
 
-#~ msgctxt "Fees.labelWeeks"
-#~ msgid "week(s)"
-#~ msgstr "សប្តាហ៍ "
 
 #, fuzzy
-#~ msgid "Fee Name"
-#~ msgstr "ឈ្មោះប្រាក់ឈ្នួល"
 
-#~ msgctxt "meeting.frequency"
-#~ msgid "Frequency\\:"
-#~ msgstr "ញឹកញ៉ាប់"
 
-#~ msgctxt "meeting.labelRecurMonths"
-#~ msgid "If months, specify the following\\:"
-#~ msgstr "ប្រសិនបើជាខែ កំនត់ដូចតទៅ\\៖"
 
-#~ msgctxt "meeting.labelRecurWeeks"
-#~ msgid "If weeks, specify the following\\:"
-#~ msgstr "ប្រសិនបើសប្តាហ៍ កំនត់ដូចតទៅ\\៖"
 
-#~ msgctxt "meeting.labelWeeks"
-#~ msgid "week(s)"
-#~ msgstr "សប្តាហ៍ "

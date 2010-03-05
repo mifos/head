@@ -1637,10 +1637,4 @@ msgstr ""
 msgid "Edit account status"
 msgstr ""
 
-#~ msgctxt "Account.Note"
-#~ msgid "Note\\:"
-#~ msgstr "Kidokezo:"
 
-#~ msgctxt "accounts.note"
-#~ msgid "Note\\:"
-#~ msgstr "Kidokezo:"

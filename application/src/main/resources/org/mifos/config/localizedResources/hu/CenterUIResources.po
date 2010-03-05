@@ -1145,19 +1145,7 @@ msgstr "Ez a művelet nem megengedett."
 msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>Adja meg a(z) {0} értékét.</li>"
 
-#~ msgid "Apply adjustment"
-#~ msgstr "Korrekció alkalmazása"
 
-#~ msgid "Apply payment"
-#~ msgstr "Fizetési tranzakció alkalmazása"
 
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgctxt "Center.GroupsLink1"
-#~ msgid "Click on a"
-#~ msgstr "Kattintson a(z)"
 
-#~ msgctxt "Center.clickInstruction"
-#~ msgid "Click on a"
-#~ msgstr "Kattintson a(z)"

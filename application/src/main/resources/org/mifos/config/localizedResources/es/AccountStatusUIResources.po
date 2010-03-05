@@ -146,5 +146,3 @@ msgstr ""
 "de aprobar"
 
 # If ID means identity, then Identidad, if it means Identification, then Identificación
-#~ msgid "\\: ID"
-#~ msgstr "\\: ID"

@@ -663,17 +663,6 @@ msgstr "ចំនួនសងសរុប"
 msgid "Total number of payments"
 msgstr "ចំនួនដងនៃការសង"
 
-#~ msgctxt "Customer.Note"
-#~ msgid "Note\\:"
-#~ msgstr "កំនត់ត្រា\\៖"
 
-#~ msgctxt "Customer.note"
-#~ msgid "Note\\:"
-#~ msgstr "កំនត់ត្រា\\៖"
 
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgctxt "label.note"
-#~ msgid "Note\\:"
-#~ msgstr "កំនត់ត្រា\\៖"

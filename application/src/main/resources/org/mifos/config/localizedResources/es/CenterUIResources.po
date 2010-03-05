@@ -1157,19 +1157,7 @@ msgstr "Esta acción no está permitida."
 msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>Por favor especifique un valor para {0}.</li>"
 
-#~ msgid "Apply adjustment"
-#~ msgstr "Aplicar ajuste"
 
-#~ msgid "Apply payment"
-#~ msgstr "Aplicar pago"
 
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgctxt "Center.GroupsLink1"
-#~ msgid "Click on a"
-#~ msgstr "Pulsar en un"
 
-#~ msgctxt "Center.clickInstruction"
-#~ msgid "Click on a"
-#~ msgstr "Pulsar en un"

@@ -2317,25 +2317,11 @@ msgstr "con los siguientes DNI han sido creados"
 msgid "Yes"
 msgstr "Sí"
 
-#~ msgctxt "accounts.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
 # could be "una, unos o unas"
-#~ msgid "a"
-#~ msgstr "un "
 
 # Tasa Anual Equivalente
-#~ msgid "APR"
-#~ msgstr "TAE"
 
-#~ msgctxt "loan.colon"
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "A new"
-#~ msgstr "Un nuevo"
 
 #, fuzzy
-#~ msgid "Ins \\#"
-#~ msgstr "Ins\\#"

@@ -143,5 +143,3 @@ msgstr ""
 "7 résultats trouvés dans toutes les antennes pour les prêts en attente "
 "d'approbation"
 
-#~ msgid "\\: ID"
-#~ msgstr "\\: ID"

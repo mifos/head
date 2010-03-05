@@ -547,10 +547,4 @@ msgstr "Por favor, especifique un nombre corto para la Oficina."
 msgid "Mifos"
 msgstr "Mifos"
 
-#~ msgctxt "cf.lookUpEntity.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Campo personalizado\\:"
 
-#~ msgctxt "cfdef.entityId"
-#~ msgid "Custom field\\:"
-#~ msgstr "Campo personalizado\\:"

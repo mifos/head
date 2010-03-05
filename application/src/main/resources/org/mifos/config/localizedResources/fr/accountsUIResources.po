@@ -1771,35 +1771,11 @@ msgstr ""
 msgid "Edit account status"
 msgstr "Edit statut le de compte"
 
-#~ msgctxt "Account.Note"
-#~ msgid "Note\\:"
-#~ msgstr "Note\\:"
 
-#~ msgctxt "PaymentID"
-#~ msgid "Payment ID\\#"
-#~ msgstr "ID Paiment \\#"
 
-#~ msgctxt "TransactionID"
-#~ msgid "Transaction ID\\#"
-#~ msgstr "ID Transaction \\#"
 
-#~ msgid "\\:"
-#~ msgstr "\\:"
 
-#~ msgid "Ins \\#"
-#~ msgstr "Ins \\#"
 
-#~ msgctxt "accounts.note"
-#~ msgid "Note\\:"
-#~ msgstr "Note\\:"
 
-#~ msgid "or"
-#~ msgstr "ou"
 
-#~ msgctxt "accounts.payment_id"
-#~ msgid "Payment ID\\#"
-#~ msgstr "ID Paiment \\#"
 
-#~ msgctxt "accounts.transaction_id"
-#~ msgid "Transaction ID\\#"
-#~ msgstr "ID Transaction \\#"

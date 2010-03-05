@@ -1581,26 +1581,8 @@ msgstr ""
 msgid "Edit account status"
 msgstr ""
 
-#~ msgctxt "Account.Note"
-#~ msgid "Note\\:"
-#~ msgstr "通知\\:"
 
-#~ msgctxt "PaymentID"
-#~ msgid "Payment ID\\#"
-#~ msgstr "付款ID号\\#"
 
-#~ msgctxt "TransactionID"
-#~ msgid "Transaction ID\\#"
-#~ msgstr "交易ID号\\#"
 
-#~ msgctxt "accounts.note"
-#~ msgid "Note\\:"
-#~ msgstr "通知\\:"
 
-#~ msgctxt "accounts.payment_id"
-#~ msgid "Payment ID\\#"
-#~ msgstr "付款ID号\\#"
 
-#~ msgctxt "accounts.transaction_id"
-#~ msgid "Transaction ID\\#"
-#~ msgstr "交易ID号\\#"
