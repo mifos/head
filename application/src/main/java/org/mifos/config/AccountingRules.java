@@ -38,11 +38,11 @@ public class AccountingRules {
     // match these values
     // if any of these configured entries are not defined in the application
     // config file they will get these values
-    private static final BigDecimal defaultInitialRoundOffMultiple = new BigDecimal("1");
-    private static final BigDecimal defaultFinalRoundOffMultiple = new BigDecimal("1");
-    private static final RoundingMode defaultInitialRoundingMode = RoundingMode.HALF_UP;
-    private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
-    private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
+    private static final BigDecimal DEFAULT_INITIAL_ROUNDOFF_MULTIPLE = new BigDecimal("1");
+    private static final BigDecimal DEFAULT_FINAL_ROUNDOFF_MULTIPLE = new BigDecimal("1");
+    private static final RoundingMode DEFAULT_INITIAL_ROUNDING_MODE = RoundingMode.HALF_UP;
+    private static final RoundingMode DEFAULT_FINAL_ROUNDING_MODE = RoundingMode.CEILING;
+    private static final RoundingMode DEFAULT_CURRENCY_ROUNDING_MODE = RoundingMode.HALF_UP;
 
     /**
      * An internal property which represents the digits before decimal of an amount that can be entered through
@@ -53,7 +53,7 @@ public class AccountingRules {
      * 
      * for details see http://mifosforge.jira.com/browse/MIFOS-1537
      */
-    private static final Short digitsBeforeDecimalForAmount = 14;
+    private static final Short DIGITS_BEFORE_DECIMAL_FOR_AMOUNT = 14;
     
     /**
      * An internal property which represents the digits before decimal of an interest that can be entered through
@@ -64,7 +64,7 @@ public class AccountingRules {
      * 
      * for details see http://mifosforge.jira.com/browse/MIFOS-1537
      */
-    private static final Short digitsBeforeDecimalForInterest = 10;
+    private static final Short DIGITS_BEFORE_DECIMAL_FOR_INTEREST = 10;
 
     // FIXME: we should use a standard caching mechanism rather than ad hoc caches like 
     // this.  Also, we need to consider if this should be thread safe since this initial
@@ -175,11 +175,11 @@ public class AccountingRules {
     }
 
     public static Short getDigitsBeforeDecimal() {
-        return digitsBeforeDecimalForAmount;
+        return DIGITS_BEFORE_DECIMAL_FOR_AMOUNT;
     }
 
     public static Short getDigitsBeforeDecimalForInterest() {
-        return digitsBeforeDecimalForInterest;
+        return DIGITS_BEFORE_DECIMAL_FOR_INTEREST;
     }
 
     public static Short getDigitsAfterDecimalForInterest() {
@@ -251,7 +251,7 @@ public class AccountingRules {
     public static RoundingMode getInitialRoundingMode() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.INITIAL_ROUNDING_MODE);
-        return getRoundingModeFromString(modeStr, "InitialRoundingMode", defaultInitialRoundingMode);
+        return getRoundingModeFromString(modeStr, "InitialRoundingMode", DEFAULT_INITIAL_ROUNDING_MODE);
     }
 
     private static RoundingMode getRoundingModeFromString(String modeStr, String type, RoundingMode defaultRoundingMode) {
@@ -275,7 +275,7 @@ public class AccountingRules {
     public static RoundingMode getFinalRoundingMode() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.FINAL_ROUNDING_MODE);
-        return getRoundingModeFromString(modeStr, "FinalRoundingMode", defaultFinalRoundingMode);
+        return getRoundingModeFromString(modeStr, "FinalRoundingMode", DEFAULT_FINAL_ROUNDING_MODE);
     }
 
     private static BigDecimal getRoundOffMultipleFromString(String roundOffStr, BigDecimal defaultRoundOffMultiple) {
@@ -288,7 +288,7 @@ public class AccountingRules {
     public static BigDecimal getInitialRoundOffMultiple() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE);
-        return getRoundOffMultipleFromString(modeStr, defaultInitialRoundOffMultiple);
+        return getRoundOffMultipleFromString(modeStr, DEFAULT_INITIAL_ROUNDOFF_MULTIPLE);
     }
 
     public static BigDecimal getInitialRoundOffMultiple(final MifosCurrency currency) {
@@ -301,13 +301,13 @@ public class AccountingRules {
         }
         String modeStr = ConfigurationManager.getInstance().getString(
                 AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE + "." + code);
-        return getRoundOffMultipleFromString(modeStr, defaultInitialRoundOffMultiple);
+        return getRoundOffMultipleFromString(modeStr, DEFAULT_INITIAL_ROUNDOFF_MULTIPLE);
     }
 
     public static BigDecimal getFinalRoundOffMultiple() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE);
-        return getRoundOffMultipleFromString(modeStr, defaultFinalRoundOffMultiple);
+        return getRoundOffMultipleFromString(modeStr, DEFAULT_FINAL_ROUNDOFF_MULTIPLE);
     }
     
     public static BigDecimal getFinalRoundOffMultiple(final MifosCurrency currency) {
@@ -320,13 +320,13 @@ public class AccountingRules {
         }
         String modeStr = ConfigurationManager.getInstance().getString(
                 AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE + "." + code);
-        return getRoundOffMultipleFromString(modeStr, defaultFinalRoundOffMultiple);
+        return getRoundOffMultipleFromString(modeStr, DEFAULT_FINAL_ROUNDOFF_MULTIPLE);
     }
 
     public static RoundingMode getCurrencyRoundingMode() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
-        return getRoundingModeFromString(modeStr, "CurrencyRoundingMode", defaultCurrencyRoundingMode);
+        return getRoundingModeFromString(modeStr, "CurrencyRoundingMode", DEFAULT_CURRENCY_ROUNDING_MODE);
     }
 
     /*
