@@ -44,25 +44,21 @@ import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 import org.testng.annotations.Test;
 
 @Test(groups = { "integration" }, dependsOnGroups = { "productMixTestSuite" })
@@ -73,9 +69,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     }
 
     private static final double DELTA = 0.00000001;
-    
-    private final List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-    private final List<Holiday> holidays = new ArrayList<Holiday>();
 
     /**
      * The name of this test, and some now-gone (and broken) exception-catching
@@ -397,38 +390,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     }
 
-    @Test(dependsOnMethods = { "testIsTrxnDateValid" })
-    public void testHandleChangeInMeetingSchedule() throws ApplicationException, SystemException {
-        TestObjectFactory.flushandCloseSession();
-        // center initially set up with meeting today
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-        MeetingBO meeting = center.getCustomerMeeting().getMeeting();
-
-        // change meeting weekday to thursday
-        meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
-                (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
-                        WeekDaysEntity.class, null));
-        List<java.util.Date> meetingDates = meeting.getAllDates(accountBO.getApplicableIdsForFutureInstallments()
-                .size() + 1);
-        TestObjectFactory.updateObject(center);
-
-        center.getCustomerAccount().handleChangeInMeetingSchedule(workingDays, holidays);
-        accountBO.handleChangeInMeetingSchedule(workingDays, holidays);
-        
-        StaticHibernateUtil.getTransaction().commit();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-
-        for (AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
-            checkScheduleDates(meetingDates, actionDateEntity);
-        }
-        for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            checkScheduleDates(meetingDates, actionDateEntity);
-        }
-    }
-
     @Test(dependsOnMethods = { "testHandleChangeInMeetingSchedule" })
     public void testDeleteFutureInstallments() throws HibernateException, SystemException, AccountException {
         TestObjectFactory.flushandCloseSession();
@@ -579,21 +540,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         }
         installmentIdList.add(account.getDetailsOfNextInstallment().getInstallmentId());
         return installmentIdList;
-    }
-
-    private void checkScheduleDates(final List<java.util.Date> meetingDates,
-            final AccountActionDateEntity actionDateEntity) {
-        // first installment should remain today, ie meeting unchanged
-        if (actionDateEntity.getInstallmentId() == 1) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
-                    .getCurrentDateWithoutTimeStamp());
-        } else if (actionDateEntity.getInstallmentId() == 2) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
-                    .getDateWithoutTimeStamp(meetingDates.get(1)));
-        } else if (actionDateEntity.getInstallmentId() == 3) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
-                    .getDateWithoutTimeStamp(meetingDates.get(2)));
-        }
     }
 
     private void disburseLoan(final LoanBO loan, final Date startDate) throws Exception {

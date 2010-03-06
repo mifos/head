@@ -58,6 +58,7 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.TestUtils;
 import org.mifos.config.business.Configuration;
 import org.mifos.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -144,8 +145,9 @@ public class SavingsTestHelper {
             Short intGLCode) {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        return TestObjectFactory.createSavingsProduct(offeringName, shortName, ApplicableTo.GROUPS, new Date(System
-                .currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 24.0,
+        return TestObjectFactory.createSavingsProduct(offeringName, shortName, ApplicableTo.GROUPS, 
+                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.SAVINGS_ACTIVE, 300.0, 
+                RecommendedAmountUnit.PER_INDIVIDUAL, 24.0,
                 200.0, 200.0, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost,
                 depGLCode, intGLCode);
     }
@@ -154,8 +156,9 @@ public class SavingsTestHelper {
             SavingsType savingsType) {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        return TestObjectFactory.createSavingsProduct(offeringName, ApplicableTo.GROUPS, new Date(System
-                .currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 24.0,
+        return TestObjectFactory.createSavingsProduct(offeringName, ApplicableTo.GROUPS, 
+                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.SAVINGS_ACTIVE, 300.0, 
+                RecommendedAmountUnit.PER_INDIVIDUAL, 24.0,
                 200.0, 200.0, savingsType, interestCalcType, meetingIntCalc, meetingIntPost);
     }
 
