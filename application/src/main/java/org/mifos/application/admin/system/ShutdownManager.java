@@ -26,14 +26,20 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collection;
 
 
 public class ShutdownManager implements Serializable {
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER);
     private static Long shutdownTime;
+    private static Map<String, HttpSession> activeSessions = new HashMap<String, HttpSession>();
 
     private Locale locale;
 
@@ -105,5 +111,18 @@ public class ShutdownManager implements Serializable {
         seconds = l / 1000;
         l %= 1000;
         return String.format("Mifos will be shutting down in %d hours, %d minutes, %d seconds.", hours, minutes, seconds);
+    }
+
+    public static synchronized void sessionCreated(HttpSessionEvent httpSessionEvent) {
+        HttpSession session = httpSessionEvent.getSession();
+        activeSessions.put(session.getId(), session);
+    }
+
+    public static synchronized void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
+        activeSessions.remove(httpSessionEvent.getSession().getId());
+    }
+
+    public static Collection<HttpSession> getActiveSessions() {
+        return activeSessions.values();
     }
 }

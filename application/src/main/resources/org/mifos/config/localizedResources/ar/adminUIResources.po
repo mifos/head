@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:22-0700\n"
+"POT-Creation-Date: 2010-03-07 10:47+0200\n"
 "PO-Revision-Date: 2009-09-03 15:20-0700\n"
 "Last-Translator: Ryan Sturgill <sturgillr@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -341,6 +341,10 @@ msgstr ""
 
 #: admin.shutdown.welcome
 msgid "Welcome to the Mifos shutdown management area."
+msgstr ""
+
+#: admin.shutdown.users
+msgid "Logged users"
 msgstr ""
 
 #: admin.shutdown.status

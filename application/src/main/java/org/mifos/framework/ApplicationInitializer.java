@@ -31,6 +31,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpSessionListener;
+import javax.servlet.http.HttpSessionEvent;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.config.business.MifosConfiguration;
@@ -61,12 +63,13 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.application.admin.system.ShutdownManager;
 
 /**
  * This class should prepare all the sub-systems that are required by the app.
  * Cleanup should also happen here when the application is shutdown.
  */
-public class ApplicationInitializer implements ServletContextListener, ServletRequestListener {
+public class ApplicationInitializer implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
     private static MifosLogger LOG = null;
 
@@ -379,6 +382,16 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
     public void requestInitialized(ServletRequestEvent event) {
 
+    }
+
+    @Override
+    public void sessionCreated(HttpSessionEvent httpSessionEvent) {
+        ShutdownManager.sessionCreated(httpSessionEvent);
+    }
+
+    @Override
+    public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
+        ShutdownManager.sessionDestroyed(httpSessionEvent);
     }
 
 }

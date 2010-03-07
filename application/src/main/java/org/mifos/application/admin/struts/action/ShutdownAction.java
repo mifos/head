@@ -26,15 +26,31 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.admin.system.PersonnelInfo;
 import org.mifos.application.admin.business.service.ShutdownService;
 import org.mifos.application.admin.struts.actionforms.ShutdownActionForm;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForm;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ShutdownAction extends BaseAction {
     private static final String DEFAULT_SHUTDOWN_TIMEOUT = "600"; // 10 minutes
@@ -45,8 +61,37 @@ public class ShutdownAction extends BaseAction {
         if (shutdownForm.getShutdownTimeout() == null) {
             shutdownForm.setShutdownTimeout(DEFAULT_SHUTDOWN_TIMEOUT);
         }
-        SessionUtils.setAttribute("shutdownManager", ShutdownManager.getInstance(getUserContext(request).getCurrentLocale()), request.getSession());
+        Locale locale = getUserContext(request).getCurrentLocale();
+        SessionUtils.setAttribute("shutdownManager", ShutdownManager.getInstance(locale), request.getSession());
+        Collection<HttpSession> sessions = ShutdownManager.getActiveSessions();
+        List<PersonnelInfo> loggedUsers = new ArrayList<PersonnelInfo>();
+        PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
+        for (HttpSession session : sessions) {
+            UserContext userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
+            if (userContext == null) {
+                continue;
+            }
+            PersonnelBO personnel = personnelBusinessService.getPersonnel(userContext.getId());
+            String offices = generateOfficeChain(personnel.getOffice());
+            String names = personnel.getPersonnelDetails().getName().getFirstName() + " " +
+                    personnel.getPersonnelDetails().getName().getLastName();
+            DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed().withLocale(locale);
+            String activityTime = formatter.print(session.getLastAccessedTime());
+            ActivityContext activityContext = (ActivityContext) session.getAttribute(LoginConstants.ACTIVITYCONTEXT);
+            String activityDesc = "[" + activityContext.getLastForward().getName() + "] " +
+                    activityContext.getLastForward().getPath();
+            loggedUsers.add(new PersonnelInfo(offices, names, activityTime, activityDesc));
+        }
+        Collections.sort(loggedUsers);
+        SessionUtils.setCollectionAttribute("loggedUsers", loggedUsers, request.getSession());
         return mapping.findForward(ActionForwards.load_success.toString());
+    }
+
+    private String generateOfficeChain(OfficeBO office) {
+        if (office.getParentOffice() != null) {
+            return generateOfficeChain(office.getParentOffice()) + " / " + office.getOfficeName();
+        }
+        return office.getOfficeName();
     }
 
     public ActionForward shutdown(ActionMapping mapping, ActionForm form, HttpServletRequest request,

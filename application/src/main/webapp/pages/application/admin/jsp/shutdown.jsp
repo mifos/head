@@ -19,7 +19,6 @@ See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
 
-<%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
@@ -46,6 +45,38 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal" id="shutdown.text.timeout"><mifos:mifosnumbertext name="shutdownActionForm" property="shutdownTimeout" /></span></td>
 					</tr>
 				</table>
+				<br>
+                <span class="headingorange"><mifos:mifoslabel name="admin.shutdown.users" bundle="adminUIResources" /></span>
+                <table width="95%">
+                    <c:forEach var="user" varStatus="loopStatus1" items="${sessionScope.loggedUsers}">
+                        <tr>
+                            <td valign="top" class="drawtablerow">
+                                <span class="fontnormalbold">
+                                    <c:out value="${loopStatus1.index + 1}." />
+                                </span>
+                            </td>
+                            <td valign="top" class="drawtablerow">
+                                <span class="fontnormal">
+                                    <c:out value="${user.offices} / " />
+                                </span>
+                                <span class="fontnormalbold">
+                                    <c:out value="${user.names}" />
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">
+                                <span class="fontnormalbold">
+                                    <c:out value="${user.activityTime}" />
+                                </span>
+                                <span class="fontnormal">
+                                    <c:out value="${user.activityContext}" />
+                                </span>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
                 <table width="98%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td class="blueline">
