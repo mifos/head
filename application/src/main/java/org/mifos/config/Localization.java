@@ -20,15 +20,15 @@
 
 package org.mifos.config;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.mifos.core.MifosRuntimeException;
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 
 public class Localization {
 

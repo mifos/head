@@ -35,8 +35,8 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
 

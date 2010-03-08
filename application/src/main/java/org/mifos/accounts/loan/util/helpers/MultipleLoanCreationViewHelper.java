@@ -20,14 +20,14 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
-import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
 import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.framework.util.helpers.Money;
 
 public class MultipleLoanCreationViewHelper {

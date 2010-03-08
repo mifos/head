@@ -28,8 +28,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 
 public class PersonnelNoteActionForm extends ValidatorActionForm {
     private String personnelId;

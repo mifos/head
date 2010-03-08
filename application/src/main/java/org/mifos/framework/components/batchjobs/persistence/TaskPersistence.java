@@ -20,16 +20,16 @@
 
 package org.mifos.framework.components.batchjobs.persistence;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
+
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
 
 public class TaskPersistence extends Persistence {
 

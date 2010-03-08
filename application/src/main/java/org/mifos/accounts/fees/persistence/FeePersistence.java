@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -32,6 +31,7 @@ import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;

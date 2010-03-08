@@ -30,14 +30,14 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.accounts.loan.business.LoanActivityView;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.security.util.UserContext;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
+import org.mifos.security.util.UserContext;
 
 public class LoanActivityTag extends BodyTagSupport {
     Locale locale = null;

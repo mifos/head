@@ -42,13 +42,13 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.EventManger;
 import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
 

@@ -28,14 +28,14 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.UserContext;
 
 public class RoleBO extends BusinessObject {

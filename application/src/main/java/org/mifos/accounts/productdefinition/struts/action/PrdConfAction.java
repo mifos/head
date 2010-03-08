@@ -38,11 +38,11 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.SecurityConstants;
 
 public class PrdConfAction extends BaseAction {
 

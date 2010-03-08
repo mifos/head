@@ -29,11 +29,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.accounts.business.AddAccountAction;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -41,11 +39,13 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 

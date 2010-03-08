@@ -26,20 +26,20 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.apache.commons.collections.Predicate;
-import org.mifos.reports.branchreport.BranchReportBO;
-import org.mifos.reports.branchreport.BranchReportBOFixture;
-import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
-import org.mifos.reports.branchreport.helper.BranchReportClientSummaryBatchBOExtractor;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
-import org.mifos.reports.business.service.BranchReportConfigService;
-import org.mifos.reports.business.service.BranchReportService;
-import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.reports.branchreport.BranchReportBO;
+import org.mifos.reports.branchreport.BranchReportBOFixture;
+import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
+import org.mifos.reports.branchreport.helper.BranchReportClientSummaryBatchBOExtractor;
+import org.mifos.reports.business.service.BranchReportConfigService;
+import org.mifos.reports.business.service.BranchReportService;
+import org.mifos.reports.business.service.IBranchReportService;
 import org.springframework.core.io.Resource;
 
 public class BranchReportClientSummaryHelperIntegrationTest extends MifosIntegrationTestCase {

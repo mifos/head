@@ -22,11 +22,11 @@ package org.mifos.framework.spring;
 
 import java.util.ArrayList;
 
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.core.ClasspathResource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

@@ -32,35 +32,34 @@ import junit.framework.Assert;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.loan.business.LoanArrearsAgingEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.config.business.Configuration;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.config.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestCase {
     public LoanArrearsAgingHelperIntegrationTest() throws Exception {

@@ -31,6 +31,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.mifos.config.GeneralConfig;
+import org.mifos.core.ClasspathResource;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.ppi.business.PPILikelihood;
 import org.mifos.customers.ppi.business.PPISurvey;
@@ -38,8 +40,6 @@ import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.SurveyQuestion;
 import org.mifos.customers.surveys.helpers.AnswerType;
-import org.mifos.config.GeneralConfig;
-import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.ValidationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

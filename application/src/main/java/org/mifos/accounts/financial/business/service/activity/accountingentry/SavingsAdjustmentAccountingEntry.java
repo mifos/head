@@ -24,11 +24,11 @@ import org.mifos.accounts.financial.business.FinancialActionBO;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 
 /**
  * Create accounting entries for an adjustment to a deposit or withdrawal on a savings account.

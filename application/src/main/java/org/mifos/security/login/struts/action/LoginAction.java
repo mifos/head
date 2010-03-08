@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -32,13 +33,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.security.login.struts.actionforms.LoginActionForm;
-import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -47,10 +46,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -58,7 +53,12 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import javax.servlet.http.*;
+import org.mifos.security.login.struts.actionforms.LoginActionForm;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 
 public class LoginAction extends BaseAction {
 

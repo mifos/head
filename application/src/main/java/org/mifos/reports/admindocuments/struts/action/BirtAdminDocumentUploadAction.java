@@ -41,36 +41,33 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.ConfigurationManager;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
-import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
-import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
-
 import org.mifos.reports.business.service.ReportsBusinessService;
-
-import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
-
-import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.config.ConfigurationManager;
 
 public class BirtAdminDocumentUploadAction extends BaseAction {
 

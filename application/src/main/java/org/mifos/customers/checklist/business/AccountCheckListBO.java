@@ -23,10 +23,10 @@ package org.mifos.customers.checklist.business;
 import java.util.List;
 
 import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.customers.checklist.exceptions.CheckListException;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class AccountCheckListBO extends CheckListBO {

@@ -20,8 +20,8 @@
 
 package org.mifos.framework.persistence;
 
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ThreadLocalOpener implements SessionOpener {
 

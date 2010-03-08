@@ -24,14 +24,14 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.framework.util.CollectionUtils.asList;
+import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 import static org.mifos.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.NA_BRANCH_OFFICE_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.NA_CENTER_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.NA_LOAN_OFFICER_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.SELECT_BRANCH_OFFICE_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.SELECT_LOAN_OFFICER_SELECTION_ITEM;
-import static org.mifos.framework.util.CollectionUtils.asList;
-import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +42,12 @@ import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelFixture;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.reports.ui.DateSelectionItem;
-import org.mifos.reports.ui.SelectionItem;
-import org.mifos.reports.ui.SelectionItemFixture;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.reports.ui.DateSelectionItem;
+import org.mifos.reports.ui.SelectionItem;
+import org.mifos.reports.ui.SelectionItemFixture;
 
 public class CascadingReportParameterServiceIntegrationTest extends AbstractCollectionSheetIntegrationTestCase {
     public CascadingReportParameterServiceIntegrationTest() throws Exception {

@@ -20,12 +20,11 @@
 
 package org.mifos.test.acceptance.framework.login;
 
+import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
-
-import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.MifosPage;
 
 /**
  * Encapsulates the GUI based actions that can

@@ -20,34 +20,17 @@
 
 package org.mifos.customers.client.business.service;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.ValueListElement;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.application.servicefacade.LoanServiceFacade;
-import org.mifos.application.servicefacade.LoanServiceFacadeWebTier;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;

@@ -24,9 +24,9 @@ import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import static org.mifos.reports.ui.SelectionItem.SELECT_BRANCH_OFFICE_SELECTION_ITEM;
 
-import org.mifos.reports.util.helpers.ReportValidationConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.reports.util.helpers.ReportValidationConstants;
 
 public class BranchReportParameterFormTest extends AbstractReportParametersTest {
 

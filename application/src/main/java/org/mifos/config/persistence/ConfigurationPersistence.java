@@ -27,15 +27,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.business.ConfigurationKeyValueInteger;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 

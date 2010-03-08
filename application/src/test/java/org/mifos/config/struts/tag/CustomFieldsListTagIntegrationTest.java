@@ -29,8 +29,8 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
+import org.mifos.security.util.UserContext;
 
 public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase {
 

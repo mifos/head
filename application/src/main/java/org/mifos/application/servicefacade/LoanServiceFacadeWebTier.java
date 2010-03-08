@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.application.master.business.ValueListElement;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.application.master.business.ValueListElement;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 
 /**
  * Implementation of {@link LoanServiceFacade} for web application usage.

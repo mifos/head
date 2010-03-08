@@ -20,11 +20,11 @@
 
 package org.mifos.accounts.util.helpers;
 
+import java.util.Date;
+
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.customers.personnel.business.PersonnelBO;
-
-import java.util.Date;
 
 public interface PaymentDataTemplate {
     public Money getTotalAmount();

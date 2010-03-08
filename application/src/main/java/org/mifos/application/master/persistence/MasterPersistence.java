@@ -29,7 +29,6 @@ import java.util.Set;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
@@ -42,12 +41,13 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.SearchUtils;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
 /**
  * This class is mostly used to look up instances of (a subclass of)

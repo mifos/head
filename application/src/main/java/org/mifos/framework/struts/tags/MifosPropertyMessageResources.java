@@ -27,10 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
-import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.BundleKey;
 import org.mifos.framework.util.helpers.MifosSelectHelper;
 

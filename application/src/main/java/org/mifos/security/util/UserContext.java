@@ -27,9 +27,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.config.Localization;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.config.Localization;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 
 /**
  * Information about a user, including ID's of their roles.

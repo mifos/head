@@ -30,25 +30,25 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase {
     public AbstractLoanActionTestCase() throws Exception {

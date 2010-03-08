@@ -20,9 +20,9 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 
 /**
  * For most purposes, should be replaced by {@link CustomerStatusFlag}.

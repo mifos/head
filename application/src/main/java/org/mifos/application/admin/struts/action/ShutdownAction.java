@@ -20,37 +20,38 @@
 
 package org.mifos.application.admin.struts.action;
 
-import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.admin.system.ShutdownManager;
-import org.mifos.application.admin.system.PersonnelInfo;
-import org.mifos.application.admin.business.service.ShutdownService;
-import org.mifos.application.admin.struts.actionforms.ShutdownActionForm;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.office.business.OfficeBO;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForm;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.mifos.application.admin.business.service.ShutdownService;
+import org.mifos.application.admin.struts.actionforms.ShutdownActionForm;
+import org.mifos.application.admin.system.PersonnelInfo;
+import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 
 public class ShutdownAction extends BaseAction {
     private static final String DEFAULT_SHUTDOWN_TIMEOUT = "600"; // 10 minutes

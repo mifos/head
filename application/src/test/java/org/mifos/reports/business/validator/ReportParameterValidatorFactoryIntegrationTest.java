@@ -22,8 +22,8 @@ package org.mifos.reports.business.validator;
 
 import junit.framework.Assert;
 
-import org.mifos.reports.business.ReportParameterForm;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.reports.business.ReportParameterForm;
 
 public class ReportParameterValidatorFactoryIntegrationTest extends MifosIntegrationTestCase {
 

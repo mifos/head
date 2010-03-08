@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 

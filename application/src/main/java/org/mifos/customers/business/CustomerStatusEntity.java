@@ -23,9 +23,9 @@ package org.mifos.customers.business;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.util.helpers.CustomerStatus;
 
 /**
  * Should be replaced by {@link CustomerStatus}.

@@ -24,14 +24,14 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.CustomerTemplateImpl;
 import org.mifos.customers.client.business.ClientDetailView;
 import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.NameType;
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientTemplateImpl extends CustomerTemplateImpl implements ClientTemplate {

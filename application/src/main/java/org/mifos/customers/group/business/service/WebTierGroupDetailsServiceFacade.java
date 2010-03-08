@@ -20,16 +20,14 @@
 
 package org.mifos.customers.group.business.service;
 
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.Money;
 
 /**
  *

@@ -31,10 +31,10 @@ import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
@@ -61,11 +61,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.Money;
 
 public class CustomerBusinessService implements BusinessService {
 

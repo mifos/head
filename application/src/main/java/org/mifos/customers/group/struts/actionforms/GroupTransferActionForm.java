@@ -26,8 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 

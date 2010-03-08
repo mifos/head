@@ -23,12 +23,12 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.TestUtils;
 
 /**

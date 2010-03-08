@@ -22,8 +22,8 @@ package org.mifos.accounts.savings.business;
 import java.util.List;
 
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
 
 /**

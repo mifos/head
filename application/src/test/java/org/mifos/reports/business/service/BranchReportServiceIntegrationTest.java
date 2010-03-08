@@ -25,12 +25,12 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.framework.util.AssertionUtils.assertSameCollections;
 import static org.mifos.reports.branchreport.BranchReportBOFixture.createBranchReportClientSummaryBO;
 import static org.mifos.reports.branchreport.BranchReportBOFixture.createBranchReportWithStaffSummary;
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.ACTIVE_BORROWERS_COUNT;
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.ACTIVE_CLIENTS_COUNT;
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.CENTER_COUNT;
-import static org.mifos.framework.util.AssertionUtils.assertSameCollections;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,6 +41,14 @@ import junit.framework.Assert;
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficecFixture;
+import org.mifos.customers.office.business.service.OfficeBusinessService;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportBOFixture;
 import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
@@ -49,16 +57,8 @@ import org.mifos.reports.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.reports.branchreport.persistence.BranchReportPersistence;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficecFixture;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.reports.util.helpers.ReportUtils;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 

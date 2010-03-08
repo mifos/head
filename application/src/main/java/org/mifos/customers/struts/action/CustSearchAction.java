@@ -50,17 +50,17 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.authorization.AuthorizationManager;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 
 public class CustSearchAction extends SearchAction {
 

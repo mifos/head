@@ -20,8 +20,8 @@
 
 package org.mifos.framework.hibernate.helper;
 
-import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
 
 /**
  * This is the interface that is returned on a search operation. Search would

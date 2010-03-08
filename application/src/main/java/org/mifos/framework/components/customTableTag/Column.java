@@ -27,12 +27,12 @@ import java.util.Locale;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.LabelTagUtils;
+import org.mifos.security.util.UserContext;
 
 public class Column {
 

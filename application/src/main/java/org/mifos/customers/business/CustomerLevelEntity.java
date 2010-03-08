@@ -20,12 +20,12 @@
 
 package org.mifos.customers.business;
 
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 
 /**
  * This class represents customer level e.g client,center etc. Most code will

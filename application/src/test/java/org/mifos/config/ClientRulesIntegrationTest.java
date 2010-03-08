@@ -22,9 +22,9 @@ package org.mifos.config;
 
 import junit.framework.Assert;
 
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.config.business.ConfigurationKeyValueInteger;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.Constants;
 import org.testng.annotations.Test;
 

@@ -20,11 +20,12 @@
 
 package org.mifos.customers.client.business;
 
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 import static org.mifos.customers.client.business.LoanCounter.TRANSFORM_LOAN_COUNTER_TO_LOAN_CYCLE;
 import static org.mifos.framework.util.CollectionUtils.find;
 import static org.mifos.framework.util.CollectionUtils.select;
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,14 +33,13 @@ import java.util.Set;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.customers.business.CustomerPerformanceHistory;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.business.CustomerPerformanceHistory;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
-import java.math.BigDecimal;
 
 public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 

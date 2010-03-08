@@ -24,19 +24,19 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.accounts.savings.business.SavingBOTestUtils;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

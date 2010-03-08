@@ -22,6 +22,7 @@ package org.mifos.application.master.business;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,8 +30,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class denotes the currency object. It contains information such as the

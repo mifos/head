@@ -41,6 +41,14 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.config.AccountingRules;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.CollectionUtils;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportBOFixture;
 import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
@@ -48,16 +56,7 @@ import org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO;
 import org.mifos.reports.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.reports.business.service.BranchReportIntegrationTestCase;
-import org.mifos.config.AccountingRules;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.CollectionUtils;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 
 public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
 

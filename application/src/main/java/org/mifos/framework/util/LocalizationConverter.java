@@ -33,7 +33,6 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.Money;
 
 public class LocalizationConverter {
     private DecimalFormat currentDecimalFormat;

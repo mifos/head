@@ -20,8 +20,8 @@
 
 package org.mifos.accounts.struts.actionforms;
 
-import java.util.ResourceBundle;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,10 +30,10 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.util.helpers.Constants;
+import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class NotesActionForm extends BaseActionForm {

@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;

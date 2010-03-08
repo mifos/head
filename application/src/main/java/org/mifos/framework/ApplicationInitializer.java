@@ -31,19 +31,20 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionListener;
 import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.config.business.MifosConfiguration;
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.config.business.Configuration;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
-import org.mifos.config.business.Configuration;
-import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -55,15 +56,14 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.security.authorization.AuthorizationManager;
-import org.mifos.security.authorization.HierarchyManager;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.authorization.HierarchyManager;
+import org.mifos.security.util.ActivityMapper;
 
 /**
  * This class should prepare all the sub-systems that are required by the app.

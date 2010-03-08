@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.framework.admin;
 
 import java.util.Locale;
 
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

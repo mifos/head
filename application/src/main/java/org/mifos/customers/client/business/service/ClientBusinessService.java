@@ -22,11 +22,11 @@ package org.mifos.customers.client.business.service;
 
 import java.util.List;
 
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;

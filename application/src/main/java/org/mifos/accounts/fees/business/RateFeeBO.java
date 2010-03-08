@@ -20,11 +20,11 @@
 
 package org.mifos.accounts.fees.business;
 
-import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.security.util.UserContext;
 

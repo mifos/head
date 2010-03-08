@@ -1,8 +1,8 @@
 package org.mifos.test.acceptance.framework.client;
 
-import org.mifos.test.acceptance.framework.MifosPage;
-
 import junit.framework.Assert;
+
+import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 

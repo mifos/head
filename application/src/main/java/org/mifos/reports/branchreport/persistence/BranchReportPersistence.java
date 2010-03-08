@@ -20,6 +20,7 @@
 
 package org.mifos.reports.branchreport.persistence;
 
+import static org.apache.commons.lang.math.NumberUtils.INTEGER_ZERO;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_CLIENT_SUMMARY_PAR;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_LOANS_AND_OUTSTANDING_AMOUNTS_AT_RISK;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_LOANS_IN_ARREARS;
@@ -40,8 +41,6 @@ import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_LOAN_A
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_LOAN_DETAILS_FOR_DATE_AND_BRANCH;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_STAFFING_LEVEL_SUMMARY_FOR_DATE_AND_BRANCH;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_STAFF_SUMMARY_FOR_DATE_AND_BRANCH;
-import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_ID;
-import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME;
 import static org.mifos.customers.util.helpers.CustomerLevel.CLIENT;
 import static org.mifos.customers.util.helpers.CustomerSearchConstants.OFFICEID;
 import static org.mifos.customers.util.helpers.QueryParamConstants.BRANCH_ID;
@@ -57,7 +56,8 @@ import static org.mifos.customers.util.helpers.QueryParamConstants.TOTAL_STAFF_R
 import static org.mifos.customers.util.helpers.QueryParamConstants.TOTAL_STAFF_ROLE_NAME_PARAM;
 import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
-import static org.apache.commons.lang.math.NumberUtils.INTEGER_ZERO;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_ID;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -68,8 +68,14 @@ import java.util.Map;
 
 import org.apache.commons.collections.Closure;
 import org.hibernate.Query;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.util.helpers.QueryParamConstants;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO;
@@ -78,13 +84,6 @@ import org.mifos.reports.branchreport.BranchReportLoanDetailsBO;
 import org.mifos.reports.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.customers.util.helpers.QueryParamConstants;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.NumberUtils;
 
 // Takes care of classes BranchReportBatchBO, BranchReportClientSummaryBatchBO, BranchReportLoanArrearsAgingBatchBO
 public class BranchReportPersistence extends Persistence {

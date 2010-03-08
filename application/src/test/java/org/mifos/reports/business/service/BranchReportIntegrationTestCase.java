@@ -24,11 +24,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.config.business.Configuration;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
+import org.mifos.reports.util.helpers.ReportsConstants;
 
 public class BranchReportIntegrationTestCase extends MifosIntegrationTestCase {
 

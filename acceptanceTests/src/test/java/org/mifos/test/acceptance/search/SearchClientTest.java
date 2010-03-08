@@ -21,11 +21,10 @@
 package org.mifos.test.acceptance.search;
 
 import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.UiTestCaseBase;
-
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;

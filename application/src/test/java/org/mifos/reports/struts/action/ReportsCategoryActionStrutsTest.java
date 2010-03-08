@@ -22,11 +22,11 @@ package org.mifos.reports.struts.action;
 
 import junit.framework.Assert;
 
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
-import org.mifos.framework.MifosMockStrutsTestCase;
 
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     public ReportsCategoryActionStrutsTest() throws Exception {

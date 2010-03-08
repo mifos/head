@@ -29,8 +29,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.mifos.config.Localization;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.security.util.UserContext;
 
 /**
  * Custom tag for input fields of type "img". The tag selects properties file

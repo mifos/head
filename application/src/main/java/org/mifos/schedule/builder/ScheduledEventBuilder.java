@@ -20,15 +20,10 @@
 
 package org.mifos.schedule.builder;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
-import org.mifos.application.accounts.schedules.Schedule;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.internal.MonthlyOnDateScheduledEvent;
-import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
 
 /**
  * Uses the Builder pattern to build a {@link ScheduledEvent}.

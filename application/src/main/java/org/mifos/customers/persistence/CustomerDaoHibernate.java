@@ -22,8 +22,8 @@ package org.mifos.customers.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 

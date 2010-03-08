@@ -24,10 +24,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
-import org.mifos.config.struts.action.LabelConfigurationAction;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -36,10 +32,14 @@ import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.struts.action.LabelConfigurationAction;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.security.util.UserContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 

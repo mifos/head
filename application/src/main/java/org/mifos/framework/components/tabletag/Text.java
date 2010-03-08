@@ -29,7 +29,6 @@ import java.util.ResourceBundle;
 
 import javax.servlet.jsp.PageContext;
 
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;

@@ -34,12 +34,12 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.Observer;
 import org.mifos.security.util.OfficeCacheView;
 import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityEvent;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
 
 public class HierarchyManager implements Observer {
     private static Map<Short, OfficeCacheView> hierarchyMap;

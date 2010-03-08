@@ -20,11 +20,11 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.mifos.config.GeneralConfig;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.ppi.business.PPISurvey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.business.SurveyResponse;
-import org.mifos.config.GeneralConfig;
 
 public class PPICalculator {
 

@@ -25,13 +25,13 @@ import java.io.ByteArrayInputStream;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.mifos.config.GeneralConfig;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.ppi.business.PPISurvey;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.config.GeneralConfig;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})

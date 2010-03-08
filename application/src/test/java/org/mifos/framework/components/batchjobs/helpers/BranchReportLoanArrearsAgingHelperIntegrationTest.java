@@ -37,20 +37,20 @@ import junit.framework.Assert;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.mifos.config.AccountingRules;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficecFixture;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportBOFixture;
 import org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO;
 import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.reports.business.service.BranchReportConfigService;
 import org.mifos.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;
-import org.mifos.config.AccountingRules;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 
 public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchReportIntegrationTestCase {
     public BranchReportLoanArrearsAgingHelperIntegrationTest() throws Exception {

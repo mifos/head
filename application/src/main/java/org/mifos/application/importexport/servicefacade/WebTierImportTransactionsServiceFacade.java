@@ -23,7 +23,6 @@ package org.mifos.application.importexport.servicefacade;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.business.service.ImportedFilesService;
 import org.mifos.application.importexport.business.service.StandardImportedFilesService;
-import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.components.logger.MifosLogManager;

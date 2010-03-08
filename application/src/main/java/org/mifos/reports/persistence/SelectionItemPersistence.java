@@ -31,16 +31,16 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
-import org.mifos.reports.ui.DateSelectionItem;
-import org.mifos.reports.ui.SelectionItem;
+import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.reports.ui.DateSelectionItem;
+import org.mifos.reports.ui.SelectionItem;
 
 public class SelectionItemPersistence extends Persistence {
     public List<SelectionItem> getActiveBranchesUnderUser(String officeSearchId) throws PersistenceException {

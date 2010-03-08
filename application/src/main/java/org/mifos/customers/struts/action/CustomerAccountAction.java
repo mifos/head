@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.struts.action.AccountAppAction;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
@@ -36,14 +37,13 @@ import org.mifos.customers.struts.actionforms.CustomerAccountActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerRecentActivityView;
-import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.SecurityConstants;
 
 public class CustomerAccountAction extends AccountAppAction {
     public CustomerAccountAction() throws Exception {

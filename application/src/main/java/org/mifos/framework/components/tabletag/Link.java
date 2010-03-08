@@ -20,7 +20,6 @@
 
 package org.mifos.framework.components.tabletag;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import javax.servlet.jsp.PageContext;

@@ -20,8 +20,8 @@
 
 package org.mifos.accounts.struts.actionforms;
 
-import java.util.ResourceBundle;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 

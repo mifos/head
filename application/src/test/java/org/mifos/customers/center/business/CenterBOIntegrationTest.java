@@ -27,21 +27,12 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.customers.center.persistence.CenterPersistence;
-import org.mifos.customers.center.util.helpers.CenterSearchResults;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -49,12 +40,21 @@ import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.center.persistence.CenterPersistence;
+import org.mifos.customers.center.util.helpers.CenterSearchResults;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -62,9 +62,9 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 

@@ -22,10 +22,10 @@ package org.mifos.customers.center;
 
 import java.util.Date;
 
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.CustomerTemplateImpl;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.meeting.business.MeetingBO;
 
 public class CenterTemplateImpl extends CustomerTemplateImpl implements CenterTemplate {
     private CustomerLevel customerLevel;

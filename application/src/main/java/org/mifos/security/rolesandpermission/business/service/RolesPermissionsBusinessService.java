@@ -22,13 +22,13 @@ package org.mifos.security.rolesandpermission.business.service;
 
 import java.util.List;
 
-import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.util.UserContext;
 
 public class RolesPermissionsBusinessService implements BusinessService {

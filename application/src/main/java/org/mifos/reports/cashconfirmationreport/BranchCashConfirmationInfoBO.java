@@ -28,7 +28,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
-import org.mifos.framework.util.helpers.MoneyUtils;
 
 public abstract class BranchCashConfirmationInfoBO extends BranchCashConfirmationSubReport {
     private Integer id;

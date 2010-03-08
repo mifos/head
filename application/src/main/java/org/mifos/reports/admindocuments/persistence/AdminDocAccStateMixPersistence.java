@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 
 public class AdminDocAccStateMixPersistence extends Persistence {
 

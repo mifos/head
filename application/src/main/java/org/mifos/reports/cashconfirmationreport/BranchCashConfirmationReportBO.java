@@ -27,7 +27,6 @@ import java.util.Set;
 
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
-import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
 import org.mifos.framework.business.BusinessObject;
 
 public class BranchCashConfirmationReportBO extends BusinessObject {

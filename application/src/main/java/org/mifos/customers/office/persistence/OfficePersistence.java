@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeTemplate;
 import org.mifos.customers.office.business.OfficeView;
@@ -33,6 +32,7 @@ import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;

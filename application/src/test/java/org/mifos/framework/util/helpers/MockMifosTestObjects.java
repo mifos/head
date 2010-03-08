@@ -28,6 +28,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -37,17 +43,11 @@ import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
 
 public class MockMifosTestObjects {

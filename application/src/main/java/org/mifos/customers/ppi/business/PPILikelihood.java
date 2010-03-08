@@ -47,9 +47,9 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.math.IntRange;
 import org.apache.commons.lang.math.Range;
+import org.mifos.config.GeneralConfig;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.config.GeneralConfig;
 
 public class PPILikelihood implements Serializable {
     private int likelihoodId;

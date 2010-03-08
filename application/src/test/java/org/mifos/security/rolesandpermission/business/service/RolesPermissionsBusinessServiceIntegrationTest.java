@@ -22,12 +22,12 @@ package org.mifos.security.rolesandpermission.business.service;
 
 import junit.framework.Assert;
 
-import org.mifos.security.rolesandpermission.RoleTestUtil;
-import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.rolesandpermission.RoleTestUtil;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 

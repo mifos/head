@@ -20,10 +20,10 @@
 
 package org.mifos.test.acceptance.search;
 
+import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-import org.mifos.test.acceptance.framework.AppLauncher;
 
 public class SearchTestBase extends UiTestCaseBase {
     public SearchResultsPage searchFor( AppLauncher appLauncher, String s )

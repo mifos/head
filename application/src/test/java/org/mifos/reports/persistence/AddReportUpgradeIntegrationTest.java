@@ -26,9 +26,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.mifos.reports.business.ReportsBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.reports.business.ReportsBO;
 
 public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
 

@@ -35,15 +35,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String input;

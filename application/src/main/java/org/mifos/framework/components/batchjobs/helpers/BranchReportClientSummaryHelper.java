@@ -20,13 +20,13 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.reports.business.service.BranchReportConfigService;
-import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.reports.branchreport.BranchReportBO;
+import org.mifos.reports.business.service.BranchReportConfigService;
+import org.mifos.reports.business.service.IBranchReportService;
 
 public class BranchReportClientSummaryHelper {
     private CustomerBusinessService customerBusinessService;

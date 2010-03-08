@@ -22,10 +22,10 @@ package org.mifos.framework.business.service;
 
 import java.lang.reflect.Proxy;
 
+import org.mifos.framework.components.logger.ServiceLogger;
 import org.mifos.reports.business.service.IBranchCashConfirmationReportService;
 import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.reports.business.service.ICollectionSheetReportService;
-import org.mifos.framework.components.logger.ServiceLogger;
 
 public class ServiceDecoratorFactory {
     private static Object newInstance(Object obj, ServiceLogger logger) {

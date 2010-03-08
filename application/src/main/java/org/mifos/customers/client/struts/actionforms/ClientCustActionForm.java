@@ -38,6 +38,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.client.business.ClientDetailView;
@@ -47,24 +52,19 @@ import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.Methods;
-import org.mifos.config.ClientRules;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 
 public class ClientCustActionForm extends CustomerActionForm {
 

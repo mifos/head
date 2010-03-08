@@ -25,9 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.security.login.util.helpers.LoginConstants;
 
 public class LoginActionForm extends BaseActionForm {
 

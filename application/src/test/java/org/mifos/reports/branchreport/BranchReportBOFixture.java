@@ -20,8 +20,8 @@
 
 package org.mifos.reports.branchreport;
 
-import static org.mifos.reports.business.service.BranchReportIntegrationTestCase.DEFAULT_CURRENCY;
 import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
+import static org.mifos.reports.business.service.BranchReportIntegrationTestCase.DEFAULT_CURRENCY;
 
 import java.math.BigDecimal;
 import java.util.Date;

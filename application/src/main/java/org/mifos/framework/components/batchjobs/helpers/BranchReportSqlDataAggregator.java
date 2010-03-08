@@ -26,17 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
-import org.mifos.reports.branchreport.persistence.BranchReportSqlPersistence;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.reports.business.service.BranchReportConfigService;
-import org.mifos.reports.business.service.IBranchReportService;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
+import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
+import org.mifos.reports.branchreport.persistence.BranchReportSqlPersistence;
+import org.mifos.reports.business.service.BranchReportConfigService;
+import org.mifos.reports.business.service.IBranchReportService;
 
 public class BranchReportSqlDataAggregator implements BranchReportDataAggregator {
 

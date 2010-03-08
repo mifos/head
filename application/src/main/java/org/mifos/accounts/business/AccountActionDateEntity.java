@@ -23,8 +23,8 @@ package org.mifos.accounts.business;
 import java.sql.Date;
 
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.business.PersistentObject;
 
 public abstract class AccountActionDateEntity extends PersistentObject implements Comparable<AccountActionDateEntity> {

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.mifos.config.GeneralConfig;
 import org.mifos.customers.ppi.helpers.Country;
 import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.Survey;
@@ -32,7 +33,6 @@ import org.mifos.customers.surveys.business.SurveyQuestion;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.config.GeneralConfig;
 
 public class PPISurvey extends Survey {
 

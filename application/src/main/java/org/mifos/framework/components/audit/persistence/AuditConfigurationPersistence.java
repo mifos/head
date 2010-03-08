@@ -26,13 +26,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
+import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
-import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 

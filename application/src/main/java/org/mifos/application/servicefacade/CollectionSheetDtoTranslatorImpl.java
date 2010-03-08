@@ -35,12 +35,12 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.framework.util.helpers.Money;
 
 import edu.emory.mathcs.backport.java.util.Collections;

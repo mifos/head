@@ -20,9 +20,10 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
@@ -31,8 +32,8 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConsta
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.security.util.UserContext;
 import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 
 public class PrdConfActionForm extends BaseActionForm {
 

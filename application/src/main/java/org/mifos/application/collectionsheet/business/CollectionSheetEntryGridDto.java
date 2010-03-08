@@ -26,10 +26,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomValueListElement;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
+import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.personnel.business.PersonnelView;
 
 /**
  *

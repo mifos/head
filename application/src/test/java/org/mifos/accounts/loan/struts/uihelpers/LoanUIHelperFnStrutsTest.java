@@ -37,16 +37,15 @@ import junit.framework.Assert;
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 

@@ -30,20 +30,20 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.authorization.HierarchyManager;
 
 public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 

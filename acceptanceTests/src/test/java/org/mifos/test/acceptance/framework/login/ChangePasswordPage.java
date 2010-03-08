@@ -20,8 +20,8 @@
 
 package org.mifos.test.acceptance.framework.login;
 
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 

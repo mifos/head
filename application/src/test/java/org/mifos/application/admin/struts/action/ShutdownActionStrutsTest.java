@@ -20,6 +20,9 @@
 
 package org.mifos.application.admin.struts.action;
 
+import junit.framework.Assert;
+
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -27,8 +30,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-import org.mifos.application.admin.system.ShutdownManager;
-import junit.framework.Assert;
 
 
 public class ShutdownActionStrutsTest extends MifosMockStrutsTestCase {

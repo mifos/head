@@ -33,27 +33,27 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.config.business.service.ConfigurationBusinessService;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.accounts.productdefinition.business.service.LoanProductService;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.security.util.UserContext;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
 
 /*
  * This is a stand alone unit test class which uses Easymock to

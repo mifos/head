@@ -22,17 +22,17 @@ package org.mifos.application.master.business.service;
 
 import java.util.List;
 
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;

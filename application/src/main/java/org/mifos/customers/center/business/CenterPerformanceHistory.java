@@ -22,8 +22,6 @@ package org.mifos.customers.center.business;
 
 import java.io.Serializable;
 
-import org.mifos.framework.util.helpers.Money;
-
 public class CenterPerformanceHistory implements Serializable {
 
     private final Integer numberOfGroups;

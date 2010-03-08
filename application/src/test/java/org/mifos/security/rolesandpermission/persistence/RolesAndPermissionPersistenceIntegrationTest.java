@@ -24,10 +24,10 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.framework.MifosIntegrationTestCase;
 
 public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrationTestCase {
 

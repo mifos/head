@@ -22,10 +22,10 @@ package org.mifos.accounts.productsmix.persistence;
 
 import junit.framework.Assert;
 
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.util.ProductMixTestHelper;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

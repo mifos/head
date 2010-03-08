@@ -31,6 +31,12 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.service.OfficeBusinessService;
+import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO;
@@ -38,15 +44,9 @@ import org.mifos.reports.branchreport.BranchReportLoanArrearsProfileBO;
 import org.mifos.reports.branchreport.BranchReportLoanDetailsBO;
 import org.mifos.reports.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;
-import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTestCase {
 

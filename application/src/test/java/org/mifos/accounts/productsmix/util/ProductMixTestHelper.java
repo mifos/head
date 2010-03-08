@@ -22,13 +22,13 @@ package org.mifos.accounts.productsmix.util;
 
 import java.util.Date;
 
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

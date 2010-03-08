@@ -20,15 +20,12 @@
 
 package org.mifos.customers.center.business.service;
 
+import org.mifos.application.master.MessageLookup;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.CenterPerformanceHistory;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.core.CurrencyMismatchException;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.Money;
 
 /**
  *

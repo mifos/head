@@ -24,13 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.SessionUtils;
 

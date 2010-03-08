@@ -23,14 +23,15 @@ package org.mifos.accounts.loan.struts.uihelpers;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Locale;
+
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.util.UserContext;
 
 /**
  * This class has got helper functions which could be called from jsp as part of

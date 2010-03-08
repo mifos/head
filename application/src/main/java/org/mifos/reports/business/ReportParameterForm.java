@@ -20,8 +20,8 @@
 
 package org.mifos.reports.business;
 
-import org.mifos.reports.business.validator.Errors;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
+import org.mifos.reports.business.validator.Errors;
 
 public interface ReportParameterForm {
     public void validate(Errors errors);

@@ -25,11 +25,11 @@ import junit.framework.Assert;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ReportSecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
 
 public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
 

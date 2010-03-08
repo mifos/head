@@ -23,18 +23,18 @@ package org.mifos.config.struts.action;
 import junit.framework.Assert;
 
 import org.mifos.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
-import org.mifos.config.struts.actionform.HiddenMandatoryConfigurationActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.struts.actionform.HiddenMandatoryConfigurationActionForm;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrutsTestCase {
 

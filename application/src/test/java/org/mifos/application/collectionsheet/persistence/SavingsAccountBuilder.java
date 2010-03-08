@@ -26,6 +26,11 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsPaymentStrategy;
 import org.mifos.accounts.savings.business.SavingsPaymentStrategyImpl;
@@ -34,15 +39,10 @@ import org.mifos.accounts.savings.business.SavingsTransactionActivityHelper;
 import org.mifos.accounts.savings.business.SavingsTransactionActivityHelperImpl;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 

@@ -21,6 +21,7 @@
 package org.mifos.customers.checklist.util.helpers;
 
 import java.io.Serializable;
+
 import org.mifos.application.master.MessageLookup;
 
 public class CheckListMasterView implements Serializable {

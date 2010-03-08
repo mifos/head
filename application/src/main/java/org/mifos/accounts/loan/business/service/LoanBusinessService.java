@@ -23,7 +23,6 @@ package org.mifos.accounts.loan.business.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -38,8 +37,8 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
 
 public class LoanBusinessService implements BusinessService {
 

@@ -24,12 +24,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.reports.business.service.BranchReportConfigService;
 import org.mifos.reports.business.service.IBranchReportService;
-import org.mifos.framework.exceptions.ServiceException;
 
 public class BranchReportPersistenceDataAggregator implements BranchReportDataAggregator {
 

@@ -25,18 +25,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.LocalizationConverter;
 
 public class CenterCustActionForm extends CustomerActionForm {
 

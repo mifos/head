@@ -26,8 +26,8 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.joda.time.LocalDate;
-import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 

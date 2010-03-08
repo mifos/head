@@ -28,14 +28,14 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.security.rolesandpermission.RoleTestUtil;
-import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.rolesandpermission.RoleTestUtil;
+import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 
 public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
 

@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class DefineLabelsPage extends MifosPage {

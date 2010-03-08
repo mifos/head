@@ -23,8 +23,6 @@ package org.mifos.accounts.productdefinition.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import org.mifos.application.NamedQueryConstants;
-import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -34,6 +32,8 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;

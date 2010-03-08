@@ -20,6 +20,8 @@
 
 package org.mifos.reports.business.service;
 
+import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
+import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 import static org.mifos.reports.ui.DateSelectionItem.NA_MEETING_DATE;
 import static org.mifos.reports.ui.SelectionItem.ALL_CENTER_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
@@ -29,8 +31,6 @@ import static org.mifos.reports.ui.SelectionItem.NA_LOAN_OFFICER_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.SELECT_BRANCH_OFFICE_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.SELECT_CENTER_SELECTION_ITEM;
 import static org.mifos.reports.ui.SelectionItem.SELECT_LOAN_OFFICER_SELECTION_ITEM;
-import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
-import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +39,11 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.reports.ui.DateSelectionItem;
-import org.mifos.reports.ui.SelectionItem;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.reports.ui.DateSelectionItem;
+import org.mifos.reports.ui.SelectionItem;
 
 public class CascadingReportParameterService {
 

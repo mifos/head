@@ -20,13 +20,13 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.application.master.MessageLookup;
 
 public class ProductTypeEntity extends BusinessObject {
 

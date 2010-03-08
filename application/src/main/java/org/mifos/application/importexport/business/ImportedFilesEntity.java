@@ -20,7 +20,6 @@
 
 package org.mifos.application.importexport.business;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.mifos.customers.personnel.business.PersonnelBO;

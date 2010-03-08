@@ -20,11 +20,11 @@
 
 package org.mifos.config.struts.tag;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-
-import java.util.ResourceBundle;
-import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
@@ -35,11 +35,11 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.security.util.UserContext;
 
 public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
     private String actionName;

@@ -28,9 +28,9 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.reports.util.helpers.ReportsConstants;
 
 public class ReportsCategoryActionForm extends ValidatorActionForm {
 

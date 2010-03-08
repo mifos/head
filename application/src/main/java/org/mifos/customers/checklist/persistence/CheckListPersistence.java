@@ -25,15 +25,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListMasterView;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
-import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class CheckListPersistence extends MasterPersistence {

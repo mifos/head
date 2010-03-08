@@ -30,14 +30,14 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

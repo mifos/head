@@ -20,9 +20,9 @@
 
 package org.mifos.customers.ppi.business;
 
+import org.mifos.config.GeneralConfig;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.business.SurveyResponse;
-import org.mifos.config.GeneralConfig;
 
 public class PPISurveyInstance extends SurveyInstance {
 

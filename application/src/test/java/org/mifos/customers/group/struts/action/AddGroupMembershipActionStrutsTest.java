@@ -25,6 +25,11 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailView;
@@ -32,26 +37,21 @@ import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase {
 

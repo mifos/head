@@ -28,6 +28,7 @@ import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.joda.time.DateMidnight;
+import org.mifos.config.GeneralConfig;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -42,7 +43,6 @@ import org.mifos.customers.surveys.business.SurveyQuestion;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.config.GeneralConfig;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ValidationException;

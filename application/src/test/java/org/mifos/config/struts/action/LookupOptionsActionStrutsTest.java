@@ -25,26 +25,26 @@ import java.util.ResourceBundle;
 
 import junit.framework.Assert;
 
-import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.struts.actionform.LookupOptionsActionForm;
-import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.config.util.helpers.LookupOptionData;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.struts.actionform.LookupOptionsActionForm;
+import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.config.util.helpers.LookupOptionData;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosValueList;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 

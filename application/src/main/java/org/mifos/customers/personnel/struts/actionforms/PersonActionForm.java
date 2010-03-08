@@ -36,19 +36,16 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
@@ -56,6 +53,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.util.UserContext;
 
 public class PersonActionForm extends BaseActionForm {
 

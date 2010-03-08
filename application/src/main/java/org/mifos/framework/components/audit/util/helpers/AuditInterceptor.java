@@ -32,8 +32,8 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.security.util.UserContext;
 
 /*
  * For Hibernate 3.2.2 or so, we'd just extend EmptyInterceptor.

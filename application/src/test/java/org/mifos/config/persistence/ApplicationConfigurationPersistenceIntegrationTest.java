@@ -26,7 +26,6 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.MifosIntegrationTestCase;

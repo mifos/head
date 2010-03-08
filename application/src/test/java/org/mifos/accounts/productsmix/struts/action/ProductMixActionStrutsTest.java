@@ -30,7 +30,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -48,16 +47,17 @@ import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
 import org.mifos.accounts.productsmix.struts.actionforms.ProductMixActionForm;
 import org.mifos.accounts.productsmix.util.ProductMixTestHelper;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.UserContext;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})

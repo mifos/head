@@ -25,7 +25,6 @@ import static junitx.framework.StringAssert.assertNotContains;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import java.util.Locale;
-import java.util.MissingResourceException;
 
 import javax.servlet.jsp.JspException;
 
@@ -34,9 +33,9 @@ import junit.framework.TestCase;
 
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
+import org.mifos.config.Localization;
 import org.mifos.customers.business.CustomerSearch;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
-import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.util.helpers.SearchObject;

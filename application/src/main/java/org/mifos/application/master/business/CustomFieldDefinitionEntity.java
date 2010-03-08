@@ -20,17 +20,16 @@
 
 package org.mifos.application.master.business;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.SearchUtils;
-
-import java.util.Set;
-import java.util.HashSet;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
 /**
  * Represents a named custom field of a given type {@link CustomFieldType}

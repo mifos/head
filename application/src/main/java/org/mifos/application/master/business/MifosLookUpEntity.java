@@ -35,8 +35,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
-
 /**
  * {@link MifosLookUpEntity} and {@link LookUpEntity} were redundant classes.
  * {@link LookUpEntity} usage has now been replaced by this class.

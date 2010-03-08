@@ -27,6 +27,12 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.meeting.MeetingTemplateImpl;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.customers.center.CenterTemplate;
 import org.mifos.customers.center.CenterTemplateImpl;
 import org.mifos.customers.center.business.CenterBO;
@@ -39,28 +45,22 @@ import org.mifos.customers.group.GroupTemplate;
 import org.mifos.customers.group.GroupTemplateImpl;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.meeting.MeetingTemplateImpl;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeTemplate;
 import org.mifos.customers.office.business.OfficeTemplateImpl;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public ClientPersistenceIntegrationTest() throws Exception {

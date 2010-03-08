@@ -20,13 +20,12 @@
 
 package org.mifos.accounts.struts.actionforms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
 import org.apache.struts.action.ActionErrors;
 import org.junit.Test;
-import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.framework.TestUtils;
 
 public class ApplyChargeActionFormTest {

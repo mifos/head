@@ -31,15 +31,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionsActionForm;
 import org.mifos.security.rolesandpermission.util.helpers.RoleTempleteBuilder;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
 
 public class ActivityTag extends TagSupport {
 

@@ -20,20 +20,21 @@
 
 package org.mifos.application.admin.system;
 
-import org.mifos.config.ConfigurationManager;
-import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.util.helpers.FilePaths;
-
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+
+import org.mifos.config.ConfigurationManager;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.util.helpers.FilePaths;
 
 
 public class ShutdownManager implements Serializable {

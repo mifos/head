@@ -20,10 +20,10 @@
 
 package org.mifos.reports.business.service;
 
-import static org.mifos.reports.ui.SelectionItem.ALL_CENTER_SELECTION_ITEM;
-import static org.mifos.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
 import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
 import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
+import static org.mifos.reports.ui.SelectionItem.ALL_CENTER_SELECTION_ITEM;
+import static org.mifos.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -32,16 +32,16 @@ import java.util.List;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.customers.personnel.business.CustomerFixture;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelFixture;
-import org.mifos.reports.ui.SelectionItem;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
+import org.mifos.reports.ui.SelectionItem;
 
 public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegrationTestCase {
 

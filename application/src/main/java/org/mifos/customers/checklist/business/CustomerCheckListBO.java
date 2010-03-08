@@ -22,11 +22,11 @@ package org.mifos.customers.checklist.business;
 
 import java.util.List;
 
+import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.exceptions.CheckListException;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class CustomerCheckListBO extends CheckListBO {

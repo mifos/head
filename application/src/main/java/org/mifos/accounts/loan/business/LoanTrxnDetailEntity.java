@@ -20,13 +20,11 @@
 
 package org.mifos.accounts.loan.business;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -42,7 +40,6 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
 

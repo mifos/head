@@ -25,7 +25,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHierarchyEntity;
@@ -37,26 +42,21 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
 
 /**
  * This class denotes the Group (row in customer table) object and all

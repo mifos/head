@@ -29,8 +29,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -39,6 +37,8 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;

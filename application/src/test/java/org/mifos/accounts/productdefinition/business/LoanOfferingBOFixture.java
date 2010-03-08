@@ -27,10 +27,10 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
 
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanOfferingBOFixture {

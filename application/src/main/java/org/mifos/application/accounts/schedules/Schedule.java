@@ -21,15 +21,12 @@
 package org.mifos.application.accounts.schedules;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 
 /**
  * Encapsulates a regularly scheduled event. Events having regular schedules include

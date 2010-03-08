@@ -27,8 +27,8 @@ import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.View;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.security.util.UserContext;
 
 public class FeeView extends View {
     private String feeId;

@@ -27,10 +27,10 @@ import junit.framework.TestCase;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.config.ClientRules;
 import org.mifos.config.business.ConfigurationKeyValueInteger;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.testng.annotations.Test;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })

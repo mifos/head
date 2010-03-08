@@ -24,6 +24,14 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -31,16 +39,8 @@ import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersist
 import org.mifos.security.rolesandpermission.struts.action.RolesPermissionsAction;
 import org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionsActionForm;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 

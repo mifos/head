@@ -26,8 +26,8 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 

@@ -23,9 +23,9 @@ package org.mifos.security.rolesandpermission.utils;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
 
 public class ActivityTestUtil {
     /**

@@ -39,16 +39,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.accounts.financial.business.GLCodeEntity;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.application.master.business.InterestTypesEntity;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
@@ -56,14 +50,20 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.master.business.InterestTypesEntity;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
+import org.mifos.security.util.UserContext;
 
 /**
  * A loan product is a set of rules (interest rate, number of installments,

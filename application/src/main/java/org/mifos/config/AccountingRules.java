@@ -28,8 +28,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.util.helpers.Money;
 
 public class AccountingRules {

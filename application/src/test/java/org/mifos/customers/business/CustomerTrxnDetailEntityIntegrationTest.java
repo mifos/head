@@ -39,9 +39,9 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.MockMifosTestObjects;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 

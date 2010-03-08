@@ -33,8 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
-import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.DateTimeService;

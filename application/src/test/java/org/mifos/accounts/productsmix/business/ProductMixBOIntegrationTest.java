@@ -22,9 +22,9 @@ package org.mifos.accounts.productsmix.business;
 
 import junit.framework.Assert;
 
-import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

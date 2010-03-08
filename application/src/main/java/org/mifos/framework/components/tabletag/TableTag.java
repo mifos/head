@@ -35,7 +35,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -44,16 +43,16 @@ import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FileCacheRep;
-import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 /**
  * This class renders the table list.

@@ -22,8 +22,8 @@ package org.mifos.reports.business.validator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.mifos.reports.business.ReportParameterForm;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
+import org.mifos.reports.business.ReportParameterForm;
 
 public interface ReportParameterValidator<T extends ReportParameterForm> {
     public void validate(T target, Errors errors);

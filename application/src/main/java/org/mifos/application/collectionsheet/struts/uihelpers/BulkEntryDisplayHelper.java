@@ -26,23 +26,23 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.customers.util.helpers.CustomerAccountView;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
-import org.mifos.security.util.UserContext;
+import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
 
 public class BulkEntryDisplayHelper {
 

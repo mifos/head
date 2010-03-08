@@ -32,14 +32,14 @@ import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
-import org.mifos.customers.client.persistence.ClientPersistence;
-import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerDaoHibernate;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerDaoHibernate;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 
 /**

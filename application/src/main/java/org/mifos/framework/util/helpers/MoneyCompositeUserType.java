@@ -29,14 +29,12 @@ import java.sql.Types;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.Configuration;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * This class denotes a composite user type that has been created for the Money

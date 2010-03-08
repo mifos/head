@@ -22,8 +22,8 @@ package org.mifos.customers.business;
 
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.personnel.business.PersonnelBO;
 
 public class CustomerBOTestUtils {
 

@@ -22,17 +22,17 @@ package org.mifos.customers.struts.action;
 
 import junit.framework.Assert;
 
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
 

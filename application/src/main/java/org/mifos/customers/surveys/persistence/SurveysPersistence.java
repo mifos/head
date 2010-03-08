@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.business.Question;

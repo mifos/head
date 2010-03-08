@@ -24,9 +24,9 @@ import org.mifos.accounts.financial.business.FinancialActionBO;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 
 public class InterestPostingAccountingEntry extends BaseAccountingEntry {
 

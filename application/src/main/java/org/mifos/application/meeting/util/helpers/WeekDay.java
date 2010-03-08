@@ -21,9 +21,7 @@
 package org.mifos.application.meeting.util.helpers;
 
 import org.joda.time.DateTimeConstants;
-import org.joda.time.Days;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.calendar.DayOfWeek;
 import org.mifos.config.LocalizedTextLookup;
 
 public enum WeekDay implements LocalizedTextLookup {

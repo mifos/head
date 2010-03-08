@@ -22,9 +22,9 @@ package org.mifos.customers;
 
 import java.util.List;
 
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
 
 public interface CustomerTemplate {

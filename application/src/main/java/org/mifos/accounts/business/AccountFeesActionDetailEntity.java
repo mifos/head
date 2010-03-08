@@ -20,8 +20,8 @@
 
 package org.mifos.accounts.business;
 
-import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 

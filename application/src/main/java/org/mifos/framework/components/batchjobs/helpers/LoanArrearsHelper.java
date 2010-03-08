@@ -26,15 +26,15 @@ import java.util.List;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.config.GeneralConfig;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.config.GeneralConfig;
 
 public class LoanArrearsHelper extends TaskHelper {
 

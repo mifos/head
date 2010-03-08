@@ -22,8 +22,8 @@ package org.mifos.customers.personnel.business;
 
 import java.util.Date;
 
-import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.application.util.helpers.Status;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.DateTimeService;
 

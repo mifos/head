@@ -23,15 +23,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.mifos.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 

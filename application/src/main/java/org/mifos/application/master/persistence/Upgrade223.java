@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import org.mifos.framework.persistence.Upgrade;
 
 public class Upgrade223 extends Upgrade {

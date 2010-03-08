@@ -26,7 +26,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.customers.office.business.OfficeBO;
@@ -40,6 +39,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.login.util.helpers.LoginConstants;
 
 public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 

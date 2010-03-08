@@ -22,9 +22,9 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.List;
 
-import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 
 public interface BranchReportDataAggregator {
     public List<BranchReportClientSummaryBO> fetchClientSummaries(OfficeBO branchOffice) throws ServiceException;

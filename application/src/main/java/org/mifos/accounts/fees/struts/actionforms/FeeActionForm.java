@@ -21,6 +21,7 @@
 package org.mifos.accounts.fees.struts.actionforms;
 
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +40,6 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.Money;
 
 public class FeeActionForm extends BaseActionForm {
     private String feeId;

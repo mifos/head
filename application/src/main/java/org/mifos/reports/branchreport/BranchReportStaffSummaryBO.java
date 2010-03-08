@@ -20,8 +20,8 @@
 
 package org.mifos.reports.branchreport;
 
-import static org.mifos.reports.util.helpers.ReportUtils.toDisplayDate;
 import static org.mifos.framework.util.helpers.MoneyUtils.getMoneyAmount;
+import static org.mifos.reports.util.helpers.ReportUtils.toDisplayDate;
 
 import java.math.BigDecimal;
 import java.util.Date;

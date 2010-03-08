@@ -20,11 +20,11 @@
 
 package org.mifos.test.acceptance.framework.center;
 
-import com.thoughtworks.selenium.Selenium;
-
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class CreateMeetingPage extends MifosPage {
 

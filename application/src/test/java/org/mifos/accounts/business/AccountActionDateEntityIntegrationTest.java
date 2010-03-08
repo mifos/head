@@ -28,14 +28,14 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.mifos.accounts.AccountIntegrationTestCase;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.customers.business.CustomerAccountBOTestUtils;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.customers.business.CustomerAccountBOTestUtils;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;

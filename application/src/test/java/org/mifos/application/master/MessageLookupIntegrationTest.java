@@ -24,11 +24,11 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
-import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.ConfigLocale;
 import org.mifos.config.Localization;
+import org.mifos.config.business.MifosConfiguration;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;

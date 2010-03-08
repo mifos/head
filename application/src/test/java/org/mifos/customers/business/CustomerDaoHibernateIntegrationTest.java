@@ -26,6 +26,7 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 
 import java.util.List;
 
+import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -33,12 +34,11 @@ import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 

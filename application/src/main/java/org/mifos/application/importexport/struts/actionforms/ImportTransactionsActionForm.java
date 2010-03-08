@@ -20,8 +20,6 @@
 
 package org.mifos.application.importexport.struts.actionforms;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;

@@ -22,7 +22,6 @@ package org.mifos.accounts.productdefinition.business.service;
 
 import java.util.List;
 
-import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -30,6 +29,7 @@ import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;

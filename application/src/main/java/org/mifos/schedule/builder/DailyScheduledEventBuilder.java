@@ -20,7 +20,6 @@
 
 package org.mifos.schedule.builder;
 
-import org.mifos.application.accounts.schedules.Schedule;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.internal.DailyScheduledEvent;
 

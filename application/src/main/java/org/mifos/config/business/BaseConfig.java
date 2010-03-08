@@ -22,8 +22,8 @@ package org.mifos.config.business;
 
 import org.mifos.config.cache.CacheRepository;
 import org.mifos.config.cache.Key;
-import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.security.authorization.HierarchyManager;
 
 public class BaseConfig {
 

@@ -31,16 +31,14 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.exception.ConstraintViolationException;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.config.Localization;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
@@ -49,8 +47,8 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
-import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.config.Localization;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -58,10 +56,12 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.util.UserContext;
 
 public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 

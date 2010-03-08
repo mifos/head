@@ -23,9 +23,9 @@ package org.mifos.accounts.business;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
-import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.LocalizedTextLookup;
 

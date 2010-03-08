@@ -26,10 +26,10 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.mifos.accounts.savings.struts.action.SavingsAction;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.struts.action.SavingsAction;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.EnumsNotLoadedException;

@@ -21,8 +21,8 @@ package org.mifos.accounts.loan.struts.action;
 
 import java.util.List;
 
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.application.master.business.ValueListElement;
+import org.mifos.customers.client.business.ClientBO;
 
 /**
  *

@@ -25,8 +25,8 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class SecurityHelperIntegrationTest extends MifosIntegrationTestCase {
 

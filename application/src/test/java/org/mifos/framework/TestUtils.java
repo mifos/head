@@ -39,11 +39,11 @@ import org.joda.time.DateTimeConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.security.util.UserContext;
 
 public class TestUtils {
 

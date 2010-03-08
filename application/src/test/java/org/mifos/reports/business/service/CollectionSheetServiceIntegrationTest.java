@@ -40,10 +40,10 @@ import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.reports.business.dto.CollectionSheetReportData;
 
 public class CollectionSheetServiceIntegrationTest extends AbstractCollectionSheetIntegrationTestCase {
     public CollectionSheetServiceIntegrationTest() throws Exception {

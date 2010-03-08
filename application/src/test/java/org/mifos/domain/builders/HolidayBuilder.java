@@ -21,7 +21,6 @@
 package org.mifos.domain.builders;
 
 import org.joda.time.DateTime;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;

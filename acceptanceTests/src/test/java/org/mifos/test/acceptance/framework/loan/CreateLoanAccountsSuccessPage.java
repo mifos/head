@@ -23,10 +23,10 @@ package org.mifos.test.acceptance.framework.loan;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
-
-import junit.framework.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 

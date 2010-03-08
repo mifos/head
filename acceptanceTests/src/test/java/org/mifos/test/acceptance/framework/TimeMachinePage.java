@@ -20,9 +20,9 @@
 
 package org.mifos.test.acceptance.framework;
 
-import org.joda.time.DateTime;
-
 import junit.framework.Assert;
+
+import org.joda.time.DateTime;
 
 import com.thoughtworks.selenium.Selenium;
 

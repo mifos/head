@@ -32,11 +32,11 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
-import org.mifos.reports.persistence.SelectionItemPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
+import org.mifos.reports.persistence.SelectionItemPersistence;
 
 public class SelectionItemIntegrationTest extends MifosIntegrationTestCase {
     public SelectionItemIntegrationTest() throws Exception {

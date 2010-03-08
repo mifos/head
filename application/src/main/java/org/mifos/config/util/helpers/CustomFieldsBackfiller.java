@@ -23,24 +23,24 @@ package org.mifos.config.util.helpers;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Query;
 
 /**
  * Handle business logic related to backfilling existing clients, groups, etc.

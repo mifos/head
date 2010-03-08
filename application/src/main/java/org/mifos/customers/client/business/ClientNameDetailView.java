@@ -20,11 +20,11 @@
 
 package org.mifos.customers.client.business;
 
+import org.mifos.config.ClientRules;
+import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.config.ClientRules;
 import org.mifos.framework.business.util.Name;
-import org.mifos.config.util.helpers.ConfigConstants;
 
 public class ClientNameDetailView {
 

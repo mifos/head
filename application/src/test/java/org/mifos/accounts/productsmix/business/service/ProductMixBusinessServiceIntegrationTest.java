@@ -32,9 +32,6 @@ import java.sql.Date;
 
 import junit.framework.Assert;
 
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -42,6 +39,9 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;

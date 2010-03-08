@@ -26,10 +26,10 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RoleTempleteBuilder;
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.util.ActivityChangeEvent;
 import org.mifos.security.util.RoleChangeEvent;
 

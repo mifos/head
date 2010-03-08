@@ -35,6 +35,10 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
@@ -44,19 +48,15 @@ import org.mifos.application.collectionsheet.business.CollectionSheetLoanDetails
 import org.mifos.application.collectionsheet.business.CollectionSheetSavingDetailsEntityFixture;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.personnel.business.CustomerFixture;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
-import org.mifos.reports.business.dto.CollectionSheetReportDTO;
-import org.mifos.reports.business.dto.CollectionSheetReportData;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.reports.business.dto.CollectionSheetReportDTO;
+import org.mifos.reports.business.dto.CollectionSheetReportData;
 
 public class CollectionSheetReportServiceIntegrationTest extends AbstractCollectionSheetIntegrationTestCase {
 

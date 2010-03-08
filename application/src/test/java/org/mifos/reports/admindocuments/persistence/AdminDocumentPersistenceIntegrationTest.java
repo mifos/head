@@ -23,9 +23,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 
 public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTestCase {
 

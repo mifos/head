@@ -26,6 +26,7 @@ import static org.mifos.reports.util.helpers.ReportsConstants.NOT_APPLICABLE_DIS
 import static org.mifos.reports.util.helpers.ReportsConstants.NOT_APPLICABLE_ID;
 import static org.mifos.reports.util.helpers.ReportsConstants.SELECT_DISPLAY_NAME;
 import static org.mifos.reports.util.helpers.ReportsConstants.SELECT_ID;
+
 import java.io.Serializable;
 
 public class SelectionItem implements Serializable {

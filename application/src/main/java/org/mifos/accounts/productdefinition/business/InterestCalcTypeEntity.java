@@ -20,8 +20,8 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.master.business.MasterDataEntity;
 
 public class InterestCalcTypeEntity extends MasterDataEntity {
 

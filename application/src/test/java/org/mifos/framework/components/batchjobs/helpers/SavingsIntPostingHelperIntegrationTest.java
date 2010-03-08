@@ -32,30 +32,30 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.savings.business.SavingBOTestUtils;
-import org.mifos.accounts.savings.business.SavingsActivityEntity;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.accounts.savings.business.SavingsActivityEntity;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.config.business.Configuration;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.config.business.Configuration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 
 public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTestCase {
     public SavingsIntPostingHelperIntegrationTest() throws Exception {

@@ -23,20 +23,20 @@ package org.mifos.accounts.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountReferenceDto;
 import org.mifos.accounts.api.UserReferenceDto;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
 
 /**
  * Concrete implementation of service to manipulate accounts

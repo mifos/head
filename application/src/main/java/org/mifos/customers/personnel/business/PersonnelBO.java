@@ -28,8 +28,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -41,7 +39,7 @@ import org.mifos.customers.personnel.util.helpers.LockStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
-import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -51,11 +49,13 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.security.authentication.EncryptionService;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.authentication.EncryptionService;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.util.UserContext;
 
 public class PersonnelBO extends BusinessObject {
 

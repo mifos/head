@@ -10,8 +10,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mifos.calendar.DayOfWeek;
-import org.mifos.calendar.WorkingDay;
 
 public class WorkingDayTest {
 

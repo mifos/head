@@ -25,29 +25,29 @@ import java.util.List;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.util.UserContext;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.

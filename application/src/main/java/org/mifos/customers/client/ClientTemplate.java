@@ -24,10 +24,10 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.customers.CustomerTemplate;
 import org.mifos.customers.client.business.ClientDetailView;
 import org.mifos.customers.client.business.ClientNameDetailView;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 
 public interface ClientTemplate extends CustomerTemplate {
     public Date getMfiJoiningDate();

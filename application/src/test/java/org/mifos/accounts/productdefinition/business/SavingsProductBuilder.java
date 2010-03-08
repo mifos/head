@@ -23,13 +23,13 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;

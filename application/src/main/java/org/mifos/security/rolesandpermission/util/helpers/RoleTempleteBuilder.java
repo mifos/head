@@ -29,9 +29,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
 
 /**
  * This class build the templete for the activities in the system so that user

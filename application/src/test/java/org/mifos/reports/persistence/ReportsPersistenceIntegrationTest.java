@@ -28,14 +28,14 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
 import org.mifos.reports.business.ReportsDataSource;
 import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.business.ReportsParams;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase {
 

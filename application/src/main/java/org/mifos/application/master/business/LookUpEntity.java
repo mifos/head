@@ -22,6 +22,7 @@ package org.mifos.application.master.business;
 
 import java.io.Serializable;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;

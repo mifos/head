@@ -28,6 +28,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.service.OfficeBusinessService;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.CollectionUtils;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO;
@@ -37,16 +45,8 @@ import org.mifos.reports.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.reports.branchreport.persistence.BranchReportPersistence;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.reports.util.helpers.ReportUtils;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.CollectionUtils;
 
 public class BranchReportService implements IBranchReportService {
 

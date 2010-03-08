@@ -27,10 +27,10 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.config.FiscalCalendarRules;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 
 public class MeetingPersistence extends Persistence {
 

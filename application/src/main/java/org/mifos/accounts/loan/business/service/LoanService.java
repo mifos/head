@@ -23,27 +23,25 @@ package org.mifos.accounts.loan.business.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.FormUtils;
-import org.mifos.framework.util.helpers.Money;
 
 /**
  * LoanService encapsulates high level operations on loans including loan

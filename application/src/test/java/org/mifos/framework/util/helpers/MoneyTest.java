@@ -30,7 +30,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;

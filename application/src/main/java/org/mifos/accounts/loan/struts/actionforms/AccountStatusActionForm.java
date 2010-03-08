@@ -23,6 +23,7 @@ package org.mifos.accounts.loan.struts.actionforms;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +34,6 @@ import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
-import java.util.ResourceBundle;
 
 public class AccountStatusActionForm extends BaseActionForm {
     private String personnelId;
