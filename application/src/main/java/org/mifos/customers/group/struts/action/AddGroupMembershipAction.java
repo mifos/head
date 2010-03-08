@@ -99,7 +99,6 @@ public class AddGroupMembershipAction extends BaseAction {
     @CloseSession
     public ActionForward updateParent(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        logger.debug("In AddGroupMembershipAction ::updateParent  method ");
         AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
         GroupBO addToGroup = (GroupBO) getCustomerBusinessService().getCustomer(actionForm.getParentGroupIdValue());
         if (!addToGroup.isActive()) {
@@ -121,7 +120,6 @@ public class AddGroupMembershipAction extends BaseAction {
         clientInSession = null;
         addToGroup = null;
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
-        logger.debug("In AddGroupMembershipAction ::updateParent  method ");
 
         return mapping.findForward(ActionForwards.view_client_details_page.toString());
     }
