@@ -71,7 +71,7 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         holidays = new HolidayPersistence().getUnAppliedHolidays();
         Assert.assertEquals(0, holidays.size());
         TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUpHolidays(holidays);
+        TestObjectFactory.deleteHoliday(holidayEntity);
         applyHolidayChangesHelper = null;
         holidayEntity = null;
         StaticHibernateUtil.closeSession();
