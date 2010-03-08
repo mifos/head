@@ -31,11 +31,9 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.struts.actionforms.AddGroupMembershipForm;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -101,15 +99,12 @@ public class AddGroupMembershipAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
         GroupBO addToGroup = (GroupBO) getCustomerBusinessService().getCustomer(actionForm.getParentGroupIdValue());
-        if (!addToGroup.isActive()) {
-            throw new CustomerException(CustomerConstants.CLIENT_CANT_BE_ADDED_TO_INACTIVE_GROUP);
-        }
         addToGroup.setUserContext(getUserContext(request));
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
         checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
 
-        client.validateBeforeAddingClientToGroup();
+        client.validateBeforeAddingClientToGroup(addToGroup);
 
         client.setVersionNo(clientInSession.getVersionNo());
         client.setUserContext(getUserContext(request));

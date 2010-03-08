@@ -1013,12 +1013,15 @@ public class ClientBO extends CustomerBO {
 
     }
 
-    public void validateBeforeAddingClientToGroup() throws CustomerException {
+    public void validateBeforeAddingClientToGroup(GroupBO targetGroup) throws CustomerException {
         if (isClientCancelledOrClosed()) {
             throw new CustomerException(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION);
         }
         if (isAnyLoanAccountOpen()) {
             throw new CustomerException(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION);
+        }
+        if (isGroupStatusLower(getStatus(), targetGroup.getStatus())) {
+            throw new CustomerException(CustomerConstants.TARGET_GROUP_STATUS_LOWER_THAN_CLIENT);
         }
     }
 

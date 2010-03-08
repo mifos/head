@@ -180,8 +180,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
         client = TestObjectFactory.createClient("clientname", weeklyMeeting, CustomerStatus.CLIENT_CANCELLED);
+        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         try {
-            client.validateBeforeAddingClientToGroup();
+            client.validateBeforeAddingClientToGroup(group1);
+
         } catch (CustomerException expected) {
            Assert.assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
            Assert.assertTrue(true);
@@ -194,12 +196,13 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
         client = TestObjectFactory.createClient("clientname", weeklyMeeting, CustomerStatus.CLIENT_CANCELLED);
-
+        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         try {
-            client.validateBeforeAddingClientToGroup();
+            client.validateBeforeAddingClientToGroup(group1);
             Assert.fail();
         } catch (CustomerException expected) {
-            assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
+            // FIXME: so, what is really expected?
+            assertEquals(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
            Assert.assertTrue(true);
         }
 
