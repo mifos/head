@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util;
 
 import java.io.File;
@@ -86,7 +86,7 @@ public class ConfigurationLocator {
         String envPropertyDirectory = configurationLocatorHelper.getEnvironmentProperty(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
         String homeDirectory = getHomeProperty();
         String userConfigDirectory = homeDirectory + '/' + MIFOS_USER_CONFIG_DIRECTORY_NAME;
-        
+
         return new String[] { systemPropertyDirectory, envPropertyDirectory, userConfigDirectory };
     }
 
@@ -100,7 +100,7 @@ public class ConfigurationLocator {
         }
         return CURRENT_WORKING_DIRECTORY_PATH;
     }
-    
+
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})
     private File getConfigurationFile(String filename) throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
@@ -117,7 +117,7 @@ public class ConfigurationLocator {
     private String getHomeProperty() {
         return configurationLocatorHelper.getHomeProperty(HOME_PROPERTY_NAME);
     }
-    
+
     private boolean directoryExists(String directory) {
         return StringUtils.isNotBlank(directory) && (getFileObject(directory)).exists();
     }

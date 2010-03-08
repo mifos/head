@@ -234,7 +234,7 @@ public class MifosMasterTag extends BodyTagSupport {
 
     /**
      * Render the beginning of the master tag.
-     * 
+     *
      * @exception JspException
      *                if a JSP exception has occurred
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
@@ -267,7 +267,7 @@ public class MifosMasterTag extends BodyTagSupport {
     /**
      * Save any body content of this tag, which will generally be the option(s)
      * representing the values displayed to the user.
-     * 
+     *
      * @exception JspException
      *                if a JSP exception has occurred
      * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
@@ -286,7 +286,7 @@ public class MifosMasterTag extends BodyTagSupport {
 
     /**
      * Render the end of this tag.
-     * 
+     *
      * @exception JspException
      *                if a JSP exception has occurred
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
@@ -342,7 +342,7 @@ public class MifosMasterTag extends BodyTagSupport {
 
     /**
      * render the source of the script file
-     * 
+     *
      */
     protected String getJavaScriptSource() {
         StringBuffer result = new StringBuffer();
@@ -355,7 +355,7 @@ public class MifosMasterTag extends BodyTagSupport {
 
     /**
      * Render the span to display tooltip
-     * 
+     *
      */
     protected String getSpan() {
         StringBuffer result = new StringBuffer();

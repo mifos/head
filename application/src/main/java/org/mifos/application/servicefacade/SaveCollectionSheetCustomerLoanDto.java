@@ -71,7 +71,7 @@ public class SaveCollectionSheetCustomerLoanDto {
     private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
     private final Integer zeroInteger = 0;
     private final Short zeroShort = Short.valueOf("0");
-  
+
     private void validateInput(Integer accountId, Short currencyId, BigDecimal totalLoanPayment,
             BigDecimal totalDisbursement) {
 

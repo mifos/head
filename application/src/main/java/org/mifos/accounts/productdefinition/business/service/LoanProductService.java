@@ -72,17 +72,17 @@ public class LoanProductService implements Service {
     /*
      * For a given loan product, return the default fees associated with the
      * loan product and any additional fees that could be applied to it.
-     * 
+     *
      * @param loanProductId the loan product id
-     * 
+     *
      * @param userContext the user context to use when constructing FeeViews
-     * 
+     *
      * @param defaultFees the default fees list to populate
-     * 
+     *
      * @param additionalFees the additional fees list to populate
-     * 
+     *
      * @return the default and additional fees
-     * 
+     *
      * @throws ServiceException the service exception
      */
     public void getDefaultAndAdditionalFees(Short loanProductId, UserContext userContext, List<FeeView> defaultFees,

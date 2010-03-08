@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class AppInfoController extends AbstractController {
         	modelAndView.addObject("status", status);
         	return modelAndView;
 	}
-	
+
 	public ApplicationInformationDto getAppInfo() {
 		return applicationInformationDto;
 	}
@@ -56,5 +56,5 @@ public class AppInfoController extends AbstractController {
 	public void setAppInfo(ApplicationInformationDto applicationInformationDto) {
 		this.applicationInformationDto = applicationInformationDto;
 	}
-    
+
 }

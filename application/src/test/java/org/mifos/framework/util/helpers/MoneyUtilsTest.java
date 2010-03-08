@@ -33,7 +33,7 @@ import org.testng.Assert;
 public class MoneyUtilsTest {
 
     private static ConfigurationManager configMgr;
-    
+
     @BeforeClass
     public static void init() {
         configMgr = ConfigurationManager.getInstance();
@@ -44,13 +44,13 @@ public class MoneyUtilsTest {
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, RoundingMode.CEILING.toString());
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, "1");
     }
-    
+
     @AfterClass
     public static void destroy() {
         configMgr.clear();
     }
 
-    
+
     @Test
     public void testCreatMoneyWithBigDecimal() {
         Money m = MoneyUtils.createMoney(TestUtils.EURO, new BigDecimal("2.0"));

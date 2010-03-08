@@ -148,5 +148,5 @@ public class SaveCollectionSheetCustomerAccountDtoTest {
         assertThat(InvalidSaveCollectionSheetReasons.contains(InvalidSaveCollectionSheetReason.TOTALCUSTOMERACCOUNTCOLLECTIONFEE_NEGATIVE), is(true));
     }
 
-    
+
 }

@@ -219,7 +219,7 @@ public class ClientCustAction extends CustAction {
         }
         return mapping.findForward(ActionForwards.next_success.toString());
     }
-    
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward familyInfoNext(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -234,11 +234,11 @@ public class ClientCustAction extends CustAction {
             HttpServletResponse response)throws Exception {
         ClientCustActionForm actionForm=(ClientCustActionForm)form;
         if(actionForm.getFamilyNames().size()< ClientRules.getMaximumNumberOfFamilyMembers()){
-            actionForm.addFamilyMember();  
+            actionForm.addFamilyMember();
         }
         return mapping.findForward(ActionForwards.addFamilyRow_success.toString());
     }
-    
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward deleteFamilyRow(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response)throws Exception {
@@ -248,8 +248,8 @@ public class ClientCustAction extends CustAction {
         }
         return mapping.findForward(ActionForwards.addFamilyRow_success.toString());
     }
-    
-   
+
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward editAddFamilyRow(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response)throws Exception {
@@ -259,7 +259,7 @@ public class ClientCustAction extends CustAction {
         }
         return mapping.findForward(ActionForwards.editAddFamilyRow_success.toString());
     }
-    
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward editDeleteFamilyRow(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response)throws Exception {
@@ -269,7 +269,7 @@ public class ClientCustAction extends CustAction {
         }
         return mapping.findForward(ActionForwards.editAddFamilyRow_success.toString());
     }
-    
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -294,7 +294,7 @@ public class ClientCustAction extends CustAction {
         checkForGovtIdAndDisplayNameDobDuplicacy(request, actionForm);
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
-    
+
 
     private void checkForGovtIdAndDisplayNameDobDuplicacy(HttpServletRequest request, ClientCustActionForm actionForm)
             throws PersistenceException, PageExpiredException, InvalidDateException {
@@ -330,7 +330,7 @@ public class ClientCustAction extends CustAction {
             forward = ActionForwards.cancelEdit_success.toString();
         return mapping.findForward(forward);
     }
-    
+
     public ActionForward editPreviewEditFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.editPreviewEditFamilyInfo_success.toString());
@@ -386,7 +386,7 @@ public class ClientCustAction extends CustAction {
                         .retrieveMasterEntities(MasterConstants.POVERTY_STATUS, getUserContext(request).getLocaleId()),
                         request);
     }
-    
+
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward retrievePictureOnPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -440,13 +440,13 @@ public class ClientCustAction extends CustAction {
         return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
 
     }
-    
+
     @TransactionDemarcate(joinToken=true)
     public ActionForward prevFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse httpservletresponse) throws Exception {
         return mapping.findForward(ActionForwards.prevFamilyInfo_success.toString());
     }
-    
+
     @TransactionDemarcate(joinToken=true)
     public ActionForward prevFamilyInfoNext(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse httpservletresponse) throws Exception {
@@ -525,7 +525,7 @@ public class ClientCustAction extends CustAction {
                         actionForm.getGroupFlagValue(), actionForm.getClientName(),  null, actionForm
                                 .getClientDetailView(), actionForm.getCustomerPicture());
                 client.setFamilyAndNameDetailSets( actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-                
+
             } else {
                 client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(),
                         actionForm.getStatusValue(), actionForm.getExternalId(), DateUtils
@@ -539,12 +539,12 @@ public class ClientCustAction extends CustAction {
                         actionForm.getGroupFlagValue(), actionForm.getClientName(), actionForm.getSpouseName(), actionForm
                                 .getClientDetailView(), actionForm.getCustomerPicture());
             }
-            
+
         } else {
             CustomerBO parentCustomer = getCustomerBusinessService().getCustomer(
                     actionForm.getParentGroup().getCustomerId());
             parentCustomer.setVersionNo(actionForm.getParentGroup().getVersionNo());
-            
+
             if(ClientRules.isFamilyDetailsRequired()){
                 actionForm.setFamilyDateOfBirth();
                 actionForm.constructFamilyDetails();
@@ -572,7 +572,7 @@ public class ClientCustAction extends CustAction {
                         actionForm.getClientName(), actionForm.getSpouseName(), actionForm.getClientDetailView(),
                         actionForm.getCustomerPicture());
             }
-            
+
         }
         new CustomerPersistence().saveCustomer(client);
         actionForm.setCustomerId(client.getCustomerId().toString());
@@ -596,7 +596,7 @@ public class ClientCustAction extends CustAction {
         }
         return selectedOfferings;
     }
-    
+
     private void doCleanUp(ClientCustActionForm actionForm, HttpServletRequest request) {
         clearActionForm(actionForm);
     }
@@ -635,7 +635,7 @@ public class ClientCustAction extends CustAction {
         actionForm.setParentGroup(null);
         actionForm.setClientName(new ClientNameDetailView());
         actionForm.setSpouseName(new ClientNameDetailView());
-        actionForm.setClientDetailView(new ClientDetailView()); 
+        actionForm.setClientDetailView(new ClientDetailView());
         actionForm.setNextOrPreview("next");
         for (int i = 0; i < actionForm.getSelectedOfferings().size(); i++)
             actionForm.getSelectedOfferings().set(i, null);
@@ -663,7 +663,7 @@ public class ClientCustAction extends CustAction {
         String globalCustNum = actionForm.getGlobalCustNum();
         // We would like to move away from sending business objects to the jsp page
         // instead, load data into a data transfer object.
-        // Whatever is needed on the jsp page and is coming from the clientBO 
+        // Whatever is needed on the jsp page and is coming from the clientBO
         // should be moved over to the Dto so that we can stop passing a business
         // object like clientBo to the jsp page.
         ClientInformationDto clientInformationDto = new WebTierClientDetailsServiceFacade().getClientInformationDto(globalCustNum, CustomerLevel.CLIENT.getValue());
@@ -673,13 +673,13 @@ public class ClientCustAction extends CustAction {
         clientBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         for (CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags())
             custFlag.getStatusFlag().setLocaleId(getUserContext(request).getLocaleId());
-        
+
         SessionUtils.removeAttribute("clientDetailsDto", request);
         SessionUtils.setAttribute("clientDetailsDto", clientInformationDto, request);
-        
+
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
-        
+
         request.getSession().setAttribute(Constants.BUSINESS_KEY, clientBO);
         request.removeAttribute(ClientConstants.AGE);
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(), request);
@@ -769,7 +769,7 @@ public class ClientCustAction extends CustAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws ApplicationException, InvalidDateException {
-        
+
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
         checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
@@ -777,7 +777,7 @@ public class ClientCustAction extends CustAction {
         clientInSession = null;
         client.setUserContext(getUserContext(request));
         setInitialObjectForAuditLogging(client);
-        
+
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         client.updateAddress(actionForm.getAddress());
         convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(), getUserContext(request)
@@ -790,7 +790,7 @@ public class ClientCustAction extends CustAction {
         if(!ClientRules.isFamilyDetailsRequired()){
             client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
         }
-            
+
         client.setFirstName(actionForm.getClientName().getFirstName());
         client.setLastName(actionForm.getClientName().getLastName());
         client.setSecondLastName(actionForm.getClientName().getSecondLastName());
@@ -804,8 +804,8 @@ public class ClientCustAction extends CustAction {
 
         return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
     }
-    
-    
+
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward editFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -815,7 +815,7 @@ public class ClientCustAction extends CustAction {
         ClientBO clientBO = (ClientBO) getCustomerBusinessService().findBySystemId(client.getGlobalCustNum(),
                 CustomerLevel.CLIENT.getValue());
         client = null;
-        
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
         SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, getCustomerBusinessService()
                 .retrieveMasterEntities(MasterConstants.LIVING_STATUS, getUserContext(request).getLocaleId()), request);
@@ -827,7 +827,7 @@ public class ClientCustAction extends CustAction {
         setValuesForFamilyEditInActionForm(actionForm, request);
         return mapping.findForward(ActionForwards.editFamilyInfo_success.toString());
     }
-    
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewEditFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse httpservletresponse) throws Exception {
@@ -836,7 +836,7 @@ public class ClientCustAction extends CustAction {
         actionForm.constructFamilyDetails();
         return mapping.findForward(ActionForwards.previewEditFamilyInfo_success.toString());
     }
-    
+
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updateFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -854,7 +854,7 @@ public class ClientCustAction extends CustAction {
        // client.updateFamilyInfo(actionForm.getRelativePrimaryKey(),actionForm.getFamilyNames(),actionForm.getFamilyDetails());
         client.updateFamilyInfo(actionForm.getFamilyPrimaryKey(),actionForm.getFamilyNames(),actionForm.getFamilyDetails());
         client.setUserContext(getUserContext(request));
-        return mapping.findForward(ActionForwards.updateFamilyInfo_success.toString()); 
+        return mapping.findForward(ActionForwards.updateFamilyInfo_success.toString());
     }
     @TransactionDemarcate(joinToken = true)
     public ActionForward editMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -941,7 +941,7 @@ public class ClientCustAction extends CustAction {
         actionForm.setGovernmentId(client.getGovernmentId());
         actionForm.setDateOfBirth(DateUtils.makeDateAsSentFromBrowser(client.getDateOfBirth()));
     }
-    
+
     /*
      * This is for populating each list for family in the action form ,
      *  Equivalent to writing data into each column of the jsp
@@ -950,7 +950,7 @@ public class ClientCustAction extends CustAction {
         ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         actionForm.initializeFamilyMember();
         int familyMemberCount=0;
-        for (ClientNameDetailEntity clientNameDetailEntity : client.getNameDetailSet()) {  
+        for (ClientNameDetailEntity clientNameDetailEntity : client.getNameDetailSet()) {
             if (clientNameDetailEntity.getNameType().shortValue() != ClientConstants.CLIENT_NAME_TYPE) {
                 ClientNameDetailView nameView=createNameViewObject(clientNameDetailEntity);
                 actionForm.addFamilyMember();
@@ -958,7 +958,7 @@ public class ClientCustAction extends CustAction {
                 actionForm.setFamilyFirstName(familyMemberCount, nameView.getFirstName());
                 actionForm.setFamilyMiddleName(familyMemberCount, nameView.getMiddleName());
                 actionForm.setFamilyLastName(familyMemberCount, nameView.getLastName());
-                actionForm.setFamilyRelationship(familyMemberCount,nameView.getNameType());       
+                actionForm.setFamilyRelationship(familyMemberCount,nameView.getNameType());
                 for(ClientFamilyDetailEntity clientFamilyDetailEntity : client.getFamilyDetailSet()){
                     if(clientNameDetailEntity.getCustomerNameId()==clientFamilyDetailEntity.getClientName().getCustomerNameId()){
                         Calendar cal = Calendar.getInstance();
@@ -971,9 +971,9 @@ public class ClientCustAction extends CustAction {
                             actionForm.setFamilyDateOfBirthMM(familyMemberCount,String.valueOf(cal.get(Calendar.MONTH)+1));
                             actionForm.setFamilyDateOfBirthYY(familyMemberCount,String.valueOf(cal.get(Calendar.YEAR)));
                         }
-                        
+
                         actionForm.setFamilyGender(familyMemberCount,clientFamilyDetailEntity.getGender());
-                        actionForm.setFamilyLivingStatus(familyMemberCount,clientFamilyDetailEntity.getLivingStatus());    
+                        actionForm.setFamilyLivingStatus(familyMemberCount,clientFamilyDetailEntity.getLivingStatus());
                     }
                 }
                 familyMemberCount++;

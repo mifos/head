@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.search;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -41,14 +41,14 @@ public class SearchResultsPage extends MifosPage {
     public SearchResultsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public SearchResultsPage verifyPage() {
         verifyPage("MainSearchResults");
         return this;
     }
-    
+
     /**
-     * A search result link must be explicitly clicked to land on the "view group details" page. 
+     * A search result link must be explicitly clicked to land on the "view group details" page.
      * @param locator Selenium locator indicating search result leading to "view group details" page.
      */
     public GroupViewDetailsPage navigateToGroupViewDetailsPage(String locator) {
@@ -56,13 +56,13 @@ public class SearchResultsPage extends MifosPage {
         waitForPageToLoad();
         return new GroupViewDetailsPage(selenium);
     }
-    
+
     public CenterViewDetailsPage navigateToCenterViewDetailsPage(String locator) {
         selenium.click(locator);
         waitForPageToLoad();
         return new CenterViewDetailsPage(selenium);
     }
-    
+
     public ClientViewDetailsPage navigateToClientViewDetailsPage(String locator) {
         selenium.click(locator);
         waitForPageToLoad();
@@ -75,14 +75,14 @@ public class SearchResultsPage extends MifosPage {
       waitForPageToLoad();
       return new LoanAccountPage(selenium);
     }
-    
+
     public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String savingsId){
         String xpath = "//a[contains(@href,'<savingsId>')]";
         selenium.click(xpath.replace("<savingsId>", savingsId));
         waitForPageToLoad();
         return new SavingsAccountDetailPage(selenium);
       }
-      
+
     public int countSearchResults() {
         // Get first bit of orange text on search results page,
         // which should look like "11 results for"
@@ -93,7 +93,7 @@ public class SearchResultsPage extends MifosPage {
             resultCount = Integer.parseInt(heading.substring(0, heading.indexOf(' ')));
         } catch (Exception e) {
             // failed to retrieve result
-            resultCount = 0; 
+            resultCount = 0;
         }
         return resultCount;
     }

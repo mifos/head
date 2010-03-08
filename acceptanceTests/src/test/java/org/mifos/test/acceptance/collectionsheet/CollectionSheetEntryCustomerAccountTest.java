@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.collectionsheet;
 
 import org.dbunit.DatabaseUnitException;
@@ -59,7 +59,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     public static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
     public static final String LOAN_ACTIVITY_DETAILS = "LOAN_ACTIVITY_DETAILS";
     public static final String ACCOUNT_STATUS_CHANGE_HISTORY = "ACCOUNT_STATUS_CHANGE_HISTORY";
-    
+
 
     private static final double[] BASIC_CUSTOMER_ACCT_VALUES = new double[] {  17.0, 77.0, 123.0, 217.0, 44.0 };
     private static final double[] FIRST_PARTIAL_CUSTOMER_ACCT_VALUES = new double[] { 17.0, 0.0, 123.0, 0.0, 44.0 };
@@ -71,7 +71,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
@@ -81,20 +81,20 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009,2,23,1,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
-    
+
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
          new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
-        
+
     }
-  
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception  
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @Test(sequential = true, groups = {"smoke"})
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
-            SubmitFormParameters formParameters = getFormParametersForTestOffice();   
+            SubmitFormParameters formParameters = getFormParametersForTestOffice();
             initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
             enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
             verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
@@ -147,18 +147,18 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     }
 
     private CollectionSheetEntryConfirmationPage enterAndSubmitCustomerAccountData(SubmitFormParameters formParameters, double[] customerAcctValues) {
-        CollectionSheetEntrySelectPage selectPage = 
+        CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
 
         enterFirstGroupCustomerAccountValues(enterDataPage, customerAcctValues);
         enterGenericCustomerAccountValues(enterDataPage);
-        
-        CollectionSheetEntryPreviewDataPage previewPage = 
+
+        CollectionSheetEntryPreviewDataPage previewPage =
             enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
         previewPage.verifyPage(formParameters);
-        CollectionSheetEntryConfirmationPage confirmationPage = 
+        CollectionSheetEntryConfirmationPage confirmationPage =
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
         return confirmationPage;
@@ -167,7 +167,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     private CollectionSheetEntryEnterDataPage selectCenterAndContinue(SubmitFormParameters formParameters,
             CollectionSheetEntrySelectPage selectPage) {
-        CollectionSheetEntryEnterDataPage enterDataPage = 
+        CollectionSheetEntryEnterDataPage enterDataPage =
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterDataPage.verifyPage();
         return enterDataPage;
@@ -180,7 +180,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         enterDataPage.enterAccountValue(0,1,183.0);
         enterDataPage.enterDepositAccountValue(0,2,0.0);
         enterDataPage.enterCustomerAccountValue(0, 6, customerAcctValues[0]);
-        
+
         enterDataPage.enterAccountValue(1,0,0.0);
         enterDataPage.enterAccountValue(1,1,183.0);
         enterDataPage.enterDepositAccountValue(1,2,0.0);
@@ -198,7 +198,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
         enterDataPage.enterCustomerAccountValue(4, 6, customerAcctValues[4]);
     }
-    
+
     private void enterGenericCustomerAccountValues(CollectionSheetEntryEnterDataPage enterDataPage) {
 
         // second Group's information...
@@ -206,7 +206,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         enterDataPage.enterAccountValue(5,1,183.0);
         enterDataPage.enterDepositAccountValue(5,2,0.0);
         enterDataPage.enterCustomerAccountValue(5, 6, 0.0);
-   
+
         enterDataPage.enterAccountValue(6,0,0.0);
         enterDataPage.enterAccountValue(6,1,183.0);
         enterDataPage.enterDepositAccountValue(6,2,0.0);
@@ -229,7 +229,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         enterDataPage.enterAccountValue(10,1,183.0);
         enterDataPage.enterDepositAccountValue(10,2,0.0);
         enterDataPage.enterCustomerAccountValue(10, 6, 0.0);
-   
+
         enterDataPage.enterAccountValue(11,0,0.0);
         enterDataPage.enterAccountValue(11,1,183.0);
         enterDataPage.enterDepositAccountValue(11,2,0.0);
@@ -250,7 +250,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         // center charges
         enterDataPage.enterCustomerAccountValue(15, 6, 234.0);
     }
- 
+
     private SubmitFormParameters getFormParametersForTestOffice() {
         SubmitFormParameters formParameters = new SubmitFormParameters();
       formParameters.setBranch("MyOffice1233265929385");
@@ -265,11 +265,11 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     private void verifyCollectionSheetData(String filename) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(filename);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { FEE_TRXN_DETAIL,
-                                   ACCOUNT_TRXN, 
-                                   LOAN_TRXN_DETAIL, 
-                                   ACCOUNT_PAYMENT, 
-                                   LOAN_SUMMARY, 
-                                   LOAN_SCHEDULE, 
+                                   ACCOUNT_TRXN,
+                                   LOAN_TRXN_DETAIL,
+                                   ACCOUNT_PAYMENT,
+                                   LOAN_SUMMARY,
+                                   LOAN_SCHEDULE,
                                    LOAN_ACTIVITY_DETAILS,
                                    ACCOUNT_STATUS_CHANGE_HISTORY,
                                    FINANCIAL_TRXN,
@@ -281,7 +281,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     private void verifyTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
             throws DataSetException, DatabaseUnitException {
-        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};  
+        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};
         dbUnitUtilities.verifyTableWithSort(orderFinTrxnByColumns,CollectionSheetEntryCustomerAccountTest.FINANCIAL_TRXN, expectedDataSet, databaseDataSet );
         String [] orderFeeTrxnByColumns = new String[]{"fee_trxn_detail_id","account_trxn_id", "account_fee_id"};
         dbUnitUtilities.verifyTableWithSort(orderFeeTrxnByColumns,CollectionSheetEntryCustomerAccountTest.FEE_TRXN_DETAIL, expectedDataSet, databaseDataSet );

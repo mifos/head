@@ -45,7 +45,7 @@ public class AddActivity extends Upgrade {
     /**
      * Define an activity and one name for it. If you want to give it names in
      * multiple locales, this upgrade can not yet do that.
-     * 
+     *
      * @param higherVersion
      *            db version after the new activity is added
      * @param newActivityId

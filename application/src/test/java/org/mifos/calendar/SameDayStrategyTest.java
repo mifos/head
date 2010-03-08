@@ -29,13 +29,13 @@ import org.junit.Test;
 public class SameDayStrategyTest {
 
     private SameDayStrategy workingDayStrategy;
-    
+
     @Test
     public void returnsTheSameDatePassedInForAdjustment() {
 
         DateTime originalScheduleDate = new DateTime();
         workingDayStrategy = new SameDayStrategy(originalScheduleDate);
-        
+
         DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
 
         // exercise test

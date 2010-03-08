@@ -53,7 +53,7 @@ import org.mifos.framework.util.helpers.SearchUtils;
  * This class is mostly used to look up instances of (a subclass of)
  * {@link MasterDataEntity} in the database. Most of what is here can better be
  * accomplished by enums and by {@link MessageLookup}.
- * 
+ *
  * Test cases: {@link MasterPersistenceIntegrationTest}
  */
 public class MasterPersistence extends Persistence {
@@ -108,7 +108,7 @@ public class MasterPersistence extends Persistence {
             queryEntity.setString("entityType", entityName);
 
             CustomValueList entity = (CustomValueList) queryEntity.uniqueResult();
-            
+
             List<CustomValueListElement> listElements = getCustomValueListElements(entityName, classPath, column,
                     session);
             entity.setCustomValueListElements(listElements);
@@ -203,7 +203,7 @@ public class MasterPersistence extends Persistence {
 
     /*
      * @param entityId - the primary key of a LookUpValueEntity
-     * 
+     *
      * @param localeId - a locale primary key which we now ignore
      */
     public String retrieveMasterEntities(final Integer entityId, final Short localeId) throws PersistenceException {
@@ -228,7 +228,7 @@ public class MasterPersistence extends Persistence {
 
     /**
      * Update the String value of a LookUpValueLocaleEntity.
-     * 
+     *
      * @param lookupValueEntityId
      *            - the database id of the LookUpValueLocaleEntity object
      *            representing a ValueListElement
@@ -262,7 +262,7 @@ public class MasterPersistence extends Persistence {
 
     /**
      * Create a new list element for a single locale.
-     * 
+     *
      * It would be nicer for this to operate on objects rather than ids, but it
      * is a first step that works.
      */
@@ -292,7 +292,7 @@ public class MasterPersistence extends Persistence {
      * associated LookUpValueLocaleEntity objects. The primary purpose is for
      * test script cleanup, since deletion of LookUpValueEntity elements is not
      * allowed in the main app.
-     * 
+     *
      * It would be nicer for this to operate on objects rather than ids, but it
      * is a first step that works.
      */

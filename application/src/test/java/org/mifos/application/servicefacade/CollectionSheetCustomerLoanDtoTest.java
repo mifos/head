@@ -40,11 +40,11 @@ public class CollectionSheetCustomerLoanDtoTest {
 
         // exercise test
         final Double totalRepayment = customerLoanDto.getTotalRepaymentDue();
-        
+
         // verification
         assertThat(totalRepayment, is(Double.valueOf("0.0")));
     }
-    
+
     @Test
     public void shouldHaveATotalRepaymentOfZeroWhenFeesPenaltiesInterestAndPrincipalDueAreNull() {
         // setup
@@ -66,7 +66,7 @@ public class CollectionSheetCustomerLoanDtoTest {
         // verification
         assertThat(totalRepayment, is(Double.valueOf("0.0")));
     }
-    
+
     @Test
     public void shouldHaveATotalRepaymentSummingAllFeesPenaltiesInterestAndPrincipalDueAreNull() {
         // setup
@@ -101,7 +101,7 @@ public class CollectionSheetCustomerLoanDtoTest {
         // verification
         assertThat(totalDisbursement, is(Double.valueOf("0.0")));
     }
-    
+
     @Test
     public void shouldHaveAmountDueAtDisbursementOfZeroAfterConstruction() {
         // setup

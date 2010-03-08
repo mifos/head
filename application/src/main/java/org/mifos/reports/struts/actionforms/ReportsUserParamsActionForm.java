@@ -44,7 +44,7 @@ public class ReportsUserParamsActionForm extends BaseActionForm {
 
     /**
      * The reset method is used to reset all the values to null.
-     * 
+     *
      * @see org.apache.struts.validator.ValidatorForm#reset(org.apache.struts.action.ActionMapping,
      *      javax.servlet.http.HttpServletRequest)
      */
@@ -89,7 +89,7 @@ public class ReportsUserParamsActionForm extends BaseActionForm {
 
     /**
      * This method is to skip validation for load method
-     * 
+     *
      * @param mapping
      * @param request
      * @return errors {@link ActionErrors}

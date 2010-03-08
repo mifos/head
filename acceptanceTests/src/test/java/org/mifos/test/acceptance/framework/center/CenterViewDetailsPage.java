@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -33,7 +33,7 @@ public class CenterViewDetailsPage extends MifosPage {
     public CenterViewDetailsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public String getCenterName() {
         return selenium.getText("viewCenterDetails.text.displayName");
     }
@@ -41,7 +41,7 @@ public class CenterViewDetailsPage extends MifosPage {
     public String getStatus() {
         return selenium.getText("viewCenterDetails.text.status");
     }
-    
+
     public String getLoanOfficer() {
         return selenium.getText("viewCenterDetails.text.loanOfficer");
     }
@@ -57,7 +57,7 @@ public class CenterViewDetailsPage extends MifosPage {
         verifyPage("CenterDetails");
         return this;
     }
-    
+
     public ClosedAccountsPage navigateToClosedAccountsPage() {
         selenium.click("viewCenterDetails.link.viewAllClosedAccounts");
         waitForPageToLoad();

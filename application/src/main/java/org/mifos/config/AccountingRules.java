@@ -47,34 +47,34 @@ public class AccountingRules {
     /**
      * An internal property which represents the digits before decimal of an amount that can be entered through
      * any User Interface, due to <b>MySQL DECIMAL(21,4)</b> for amount field in database we can store a value of up to 17
-     * digits, but some of them are totals. 
+     * digits, but some of them are totals.
      * <br /><br />
      * To make sure that totals will not overflow we have allowed 14 as the limit.
-     * 
+     *
      * for details see http://mifosforge.jira.com/browse/MIFOS-1537
      */
     private static final Short DIGITS_BEFORE_DECIMAL_FOR_AMOUNT = 14;
-    
+
     /**
      * An internal property which represents the digits before decimal of an interest that can be entered through
      * any User Interface, due to <b>MySQL DECIMAL(13,10)</b> for interest field in database we can store a value of up to 13
-     * digits, but some of them are totals. 
+     * digits, but some of them are totals.
      * <br /><br />
      * To make sure that totals will not overflow we have allowed 10 as the limit.
-     * 
+     *
      * for details see http://mifosforge.jira.com/browse/MIFOS-1537
      */
     private static final Short DIGITS_BEFORE_DECIMAL_FOR_INTEREST = 10;
 
-    // FIXME: we should use a standard caching mechanism rather than ad hoc caches like 
+    // FIXME: we should use a standard caching mechanism rather than ad hoc caches like
     // this.  Also, we need to consider if this should be thread safe since this initial
-    // implementation is not thread safe for initialization.  Re-initialization should 
-    // only happen for test cases, so that most likely is okay.  Adding some 
+    // implementation is not thread safe for initialization.  Re-initialization should
+    // only happen for test cases, so that most likely is okay.  Adding some
     // synchronization could make it thread safe, but this will be accessed every time
     // a non-default currency is read from the database, so care needs to be taken
     // regarding performance.
     private static final LinkedList<MifosCurrency> currencies = new LinkedList<MifosCurrency>();
-    
+
     /*
      * Allow for reloading the currencies if the configuration has been changed during testing.
      */
@@ -82,11 +82,11 @@ public class AccountingRules {
         currencies.clear();
         getCurrencies();
     }
-    
+
     public static MifosCurrency getMifosCurrency(ConfigurationPersistence configurationPersistence) {
         return getMifosCurrency(getDefaultCurrencyCode(),configurationPersistence);
     }
-    
+
     public static MifosCurrency getMifosCurrency(String currencyCode,ConfigurationPersistence configurationPersistence) {
         MifosCurrency currency = configurationPersistence.getCurrency(currencyCode);
         if (currency == null)
@@ -97,12 +97,12 @@ public class AccountingRules {
         return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(),
                 amountToBeRoundedTo, currencyCode);
     }
-    
+
     /**
-     * 
+     *
      * Gets the List of currencies configured to use in Mifos,
      * the first element will be the default currency.
-     * 
+     *
      * @return List of currencies
      */
     public static  LinkedList<MifosCurrency> getCurrencies() {
@@ -115,11 +115,11 @@ public class AccountingRules {
         }
         return currencies;
     }
-    
+
     /**
-     * Gets the currency by currency id from the list of currencies configured to used in Mifos 
+     * Gets the currency by currency id from the list of currencies configured to used in Mifos
      * {@link AccountingRules#getCurrencies()}
-     * 
+     *
      * @param currencyId
      * @return {@link MifosCurrency}
      */
@@ -131,9 +131,9 @@ public class AccountingRules {
             if(a.getCurrencyId().equals(currencyId)) {
                 return a;
             }
-        }        
-        throw new MifosRuntimeException("Unable to find currency with id: " + currencyId + 
-                ". You may be missing an entry for the currency with this id in " + 
+        }
+        throw new MifosRuntimeException("Unable to find currency with id: " + currencyId +
+                ". You may be missing an entry for the currency with this id in " +
                 ConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME + ".");
     }
 
@@ -309,7 +309,7 @@ public class AccountingRules {
         String modeStr = configMgr.getString(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE);
         return getRoundOffMultipleFromString(modeStr, DEFAULT_FINAL_ROUNDOFF_MULTIPLE);
     }
-    
+
     public static BigDecimal getFinalRoundOffMultiple(final MifosCurrency currency) {
         final String code = currency.getCurrencyCode();
         if (getDefaultCurrencyCode().equals(code)) {

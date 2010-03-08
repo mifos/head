@@ -42,11 +42,11 @@ public class HolidayAdjustmentRuleFactoryTest {
 
     @Mock
     private ScheduledEvent scheduledEvent;
-    
+
     private List<Days> workingDays;
-    
+
     private final DateTime originalScheduledDate = new DateTime();
-    
+
     @Test
     public void factoryShouldReturnNextWorkingDayStrategy() {
 
@@ -54,10 +54,10 @@ public class HolidayAdjustmentRuleFactoryTest {
 
         // exercise test
         DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
-        
+
         assertThat(adjustmentStrategy, is(instanceOf(NextWorkingDayStrategy.class)));
     }
-    
+
     @Test
     public void factoryShouldReturnNearestScheduledEventBeginningOnStrategy() {
 
@@ -65,10 +65,10 @@ public class HolidayAdjustmentRuleFactoryTest {
 
         // exercise test
         DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
-        
+
         assertThat(adjustmentStrategy, is(instanceOf(NearestScheduledEventBeginningOnStrategy.class)));
     }
-    
+
     @Test
     public void factoryShouldReturnNextWorkingDayStrategyForSameDayRule() {
 
@@ -76,10 +76,10 @@ public class HolidayAdjustmentRuleFactoryTest {
 
         // exercise test
         DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
-        
+
         assertThat(adjustmentStrategy, is(instanceOf(SameDayStrategy.class)));
     }
-    
+
     @Test
     public void givenRepaymentMoratoriumRuleFactoryShouldReturnNearestNearestScheduledEventBeginningOnStrategy() {
 
@@ -87,7 +87,7 @@ public class HolidayAdjustmentRuleFactoryTest {
 
         // exercise test
         DateAdjustmentStrategy adjustmentStrategy  = holidayAdjustmentRuleFactory.createStrategy(originalScheduledDate, workingDays, scheduledEvent, holidayAdjustmentRule);
-        
+
         assertThat(adjustmentStrategy, is(instanceOf(NearestScheduledEventBeginningOnStrategy.class)));
     }
 }

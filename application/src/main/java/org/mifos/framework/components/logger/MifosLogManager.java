@@ -56,7 +56,7 @@ public class MifosLogManager {
      * from the loggerconfiguration.xml A root logger instance is also created
      * and the resource bundle for the locale of the MFI is associated with the
      * logger
-     * 
+     *
      * @param fileName
      *            The loggerconfiguration xml file
      * @throws LoggerConfigurationException
@@ -88,7 +88,7 @@ public class MifosLogManager {
 
     /**
      * Function to obtain an instance of the mifos logger.
-     * 
+     *
      * @param name
      *            The name the logger will be associated with
      */
@@ -100,7 +100,7 @@ public class MifosLogManager {
      * Function to obtain an instance of the mifos logger. This calls a helper
      * method to create the logger A resource bundle can aslo be associated with
      * this logger
-     * 
+     *
      * @param name
      *            The name the logger will be associated with
      * @param resourceBundleName
@@ -117,7 +117,7 @@ public class MifosLogManager {
      * present it is retrieved from the logger repository, else it is created
      * and added to the repository. A resource bundle can also be associated
      * with this logger
-     * 
+     *
      * @param name
      *            The name the logger will be associated with
      * @param resourceBundleName
@@ -131,7 +131,7 @@ public class MifosLogManager {
         MifosLogger logger;
         //initialize loggerRepositor if not initialized
         configureLogging();
-        
+
         // checks to see if the logger repository already contains an instance
         // of the logger.
         // If it does that instance is returned

@@ -87,7 +87,7 @@ public class SavingsAccountBuilder {
 
         return savingsBO;
     }
-    
+
     public SavingsAccountBuilder withSavingsProduct(final SavingsOfferingBO withSavingsProduct) {
         this.savingsProduct = withSavingsProduct;
         return this;

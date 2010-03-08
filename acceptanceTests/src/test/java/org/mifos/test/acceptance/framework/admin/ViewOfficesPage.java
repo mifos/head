@@ -29,7 +29,7 @@ public class ViewOfficesPage extends MifosPage {
     public ViewOfficesPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public ViewOfficesPage verifyPage() {
         verifyPage("viewOffices");
         return this;
@@ -38,7 +38,7 @@ public class ViewOfficesPage extends MifosPage {
     public void verifyOfficeList(String[] expectedData) {
         for (int i = 0; i < expectedData.length; i++) {
             String expectedOfficeLink = expectedData[i];
-            Assert.assertTrue(selenium.isTextPresent(expectedOfficeLink), "Expected link: " + expectedOfficeLink);     
+            Assert.assertTrue(selenium.isTextPresent(expectedOfficeLink), "Expected link: " + expectedOfficeLink);
         }
 
     }

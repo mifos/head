@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.office;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -30,27 +30,27 @@ public class OfficeViewDetailsPage extends MifosPage {
     public OfficeViewDetailsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         verifyPage("viewOfficeDetails");
     }
-    
+
     public String getOfficeName() {
         return selenium.getText("viewOfficeDetails.text.officeName");
     }
 
     public String getShortName() {
         return selenium.getText("viewOfficeDetails.text.shortName");
-    }    
-    
+    }
+
     public String getOfficeType() {
         return selenium.getText("viewOfficeDetails.text.officeLevel");
     }
-    
+
     public AdminPage navigateToAdminPage() {
         selenium.click("viewOfficeDetails.link.admin");
         waitForPageToLoad();
-        return new AdminPage(selenium);     
-    }    
-        
+        return new AdminPage(selenium);
+    }
+
 }

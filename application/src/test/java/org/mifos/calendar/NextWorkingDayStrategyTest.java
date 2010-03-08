@@ -42,10 +42,10 @@ public class NextWorkingDayStrategyTest {
 
         workingDays = Arrays.asList(DayOfWeek.mondayAsDay(), DayOfWeek.tuesdayAsDay(), DayOfWeek.wednesdayAsDay(),
                 DayOfWeek.thursdayAsDay(), DayOfWeek.fridayAsDay());
-        
+
         workingDayStrategy = new NextWorkingDayStrategy(workingDays);
     }
-    
+
     @Test
     public void whenADateFallsOnAWorkingDayItShouldBeAdjustedToSameDay() {
 

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -29,7 +29,7 @@ public class CreateCenterChooseOfficePage extends MifosPage {
     public CreateCenterChooseOfficePage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public CreateCenterEnterDataPage selectOffice(String officeName) {
         selenium.click("link=" + officeName);
         waitForPageToLoad();

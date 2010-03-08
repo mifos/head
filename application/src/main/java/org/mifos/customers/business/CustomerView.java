@@ -78,7 +78,7 @@ public class CustomerView extends View {
     /**
      * This constructor is called when instantiating the object from the query
      * Retrieve Customer Master and CustomerUtilDAO.
-     * 
+     *
      * @param customerId
      * @param displayName
      * @param globalCustNum

@@ -79,7 +79,7 @@ public class SavingsWithdrawalTest {
 
     @Mock
     private SavingsTrxnDetailEntity savingsTrxnDetail;
-    
+
     @Mock
     private SavingsActivityEntity savingsActivityDetail;
 
@@ -185,7 +185,7 @@ public class SavingsWithdrawalTest {
         // verification
         assertThat(savingsAccount.getSavingsPerformance().getTotalWithdrawals(),is(amountToWithdraw));
     }
-    
+
     @Test
     public void whenSingleWithdrawalThenOneSavingsActivityIsCreated() throws AccountException {
 

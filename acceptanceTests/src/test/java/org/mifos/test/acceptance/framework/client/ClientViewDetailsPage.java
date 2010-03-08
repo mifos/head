@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -34,35 +34,35 @@ public class ClientViewDetailsPage extends MifosPage {
     public ClientViewDetailsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         verifyPage("ViewClientDetails");
     }
-    
+
     public String getHeading() {
         return selenium.getText("viewClientDetails.heading");
     }
-    
+
     public String getStatus() {
         return selenium.getText("viewClientDetails.text.status");
     }
-    
+
     public String getDateOfBirth() {
         return selenium.getText("viewClientDetails.text.dateOfBirth");
-    }    
+    }
 
     public String getSpouseFatherName() {
         return selenium.getText("viewClientDetails.text.spouseFatherName");
-    } 
-    
+    }
+
     public String getPovertyStatus() {
         return selenium.getText("viewClientDetails.text.povertyStatus");
-    }     
-    
+    }
+
     public String getHandicapped() {
         return selenium.getText("viewClientDetails.text.handicapped");
-    }     
-    
+    }
+
     public String getNotes() {
         return selenium.getText("viewClientDetails.text.notes");
     }
@@ -70,62 +70,62 @@ public class ClientViewDetailsPage extends MifosPage {
     public void verifyName(String fullName) {
         Assert.assertTrue(getHeading().contains(fullName));
     }
-            
+
     public void verifyStatus(String status) {
-        Assert.assertEquals(getStatus(), status);    
-    }   
-    
+        Assert.assertEquals(getStatus(), status);
+    }
+
     public void verifyDateOfBirth(String dd, String mm, String yyyy) {
       String dateOfBirth = getDateOfBirth();
       Assert.assertTrue(dateOfBirth.contains(dd));
       Assert.assertTrue(dateOfBirth.contains(mm));
-      Assert.assertTrue(dateOfBirth.contains(yyyy));      
-    }    
+      Assert.assertTrue(dateOfBirth.contains(yyyy));
+    }
 
     public void verifySpouseFather(String spouseFatherName) {
-        Assert.assertEquals(getSpouseFatherName(), spouseFatherName); 
-    }    
+        Assert.assertEquals(getSpouseFatherName(), spouseFatherName);
+    }
 
     public void verifyPovertyStatus(String povertyStatus) {
-        Assert.assertEquals(getPovertyStatus(), povertyStatus);      
-    }    
+        Assert.assertEquals(getPovertyStatus(), povertyStatus);
+    }
 
     public void verifyHandicapped(String handicapped) {
-        Assert.assertEquals(getHandicapped(), handicapped);    
+        Assert.assertEquals(getHandicapped(), handicapped);
     }
-    
+
     public void verifyNotes(String notes) {
-        Assert.assertTrue(getNotes().contains(notes));    
-    }       
-    
+        Assert.assertTrue(getNotes().contains(notes));
+    }
+
     public ClientsAndAccountsHomepage navigateToClientsAndAccountsHomepage() {
         selenium.click("header.link.clientsAndAccounts");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
-    }    
+    }
 
     public CustomerChangeStatusPage navigateToCustomerChangeStatusPage() {
         selenium.click("viewClientDetails.link.editStatus");
         waitForPageToLoad();
         return new CustomerChangeStatusPage(selenium);
-    }    
-    
+    }
+
     public ClientEditMFIPage navigateToEditMFIPage() {
         selenium.click("viewClientDetails.link.editMfiInformation");
         waitForPageToLoad();
         return new ClientEditMFIPage(selenium);
     }
-    
+
     public ClientNotesPage navigateToNotesPage(){
         selenium.click("viewClientDetails.link.notesLink");
         waitForPageToLoad();
         return new ClientNotesPage(selenium);
     }
-    
+
     public void verifyTextOnPage(String text){
         Assert.assertTrue(selenium.isTextPresent(text));
     }
-    
+
     public ClientNotesPage navigateToAllNotesPage() {
         selenium.click("viewClientDetails.link.seeAllNotes");
         waitForPageToLoad();
@@ -137,7 +137,7 @@ public class ClientViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ClosedAccountsPage(selenium);
     }
-    
+
     public ClientEditFamilyPage editFamilyInformation() {
         selenium.click("viewClientDetails.link.editFamilyInformation");
         waitForPageToLoad();
@@ -149,6 +149,6 @@ public class ClientViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new AttachSurveyPage(selenium);
     }
-    
-    
-}    
+
+
+}

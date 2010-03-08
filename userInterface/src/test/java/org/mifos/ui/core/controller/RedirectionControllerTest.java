@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.ui.core.controller;
 
 import java.io.IOException;
@@ -33,16 +33,16 @@ import org.testng.annotations.Test;
 
 @Test(groups = { "unit" })
 public class RedirectionControllerTest {
-	
+
 	public void testHandleRequest() throws ServletException, IOException {
-    	
+
     	String expectedPageToRedirectTo = "foopage";
         RedirectionController controller = new RedirectionController();
         controller.setViewToRedirectTo(expectedPageToRedirectTo);
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         MockHttpServletResponse mockResponse = new MockHttpServletResponse();
         ModelAndView modelAndView = controller.handleRequest(mockRequest, mockResponse);
-        
+
         Assert.assertEquals(expectedPageToRedirectTo, modelAndView.getViewName());
         Assert.assertNotNull(modelAndView.getModel());
         Map<String, Object> modelMap = (Map<String, Object>) modelAndView.getModel().get("model");

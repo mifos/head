@@ -25,7 +25,7 @@ import org.mifos.customers.office.business.OfficeBO;
  *
  */
 public class OfficeBuilder {
-    
+
     private String name;
     private String globalOfficeNum;
 

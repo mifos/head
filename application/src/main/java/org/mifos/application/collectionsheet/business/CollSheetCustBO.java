@@ -38,7 +38,7 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * @deprecated collection sheets not used as a domain concept.
- * 
+ *
  * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated
@@ -97,7 +97,7 @@ public class CollSheetCustBO extends BusinessObject {
     public CollSheetCustBO(MifosCurrency currency) {
         this(null, null, null, null, null, null, currency);
     }
-    
+
     /**
      * default constructor for hibernate usage
      */
@@ -126,7 +126,7 @@ public class CollSheetCustBO extends BusinessObject {
             final String searchId, final Short loanOfficerId) {
         initFields(custId, custDisplayName, custLevel, custOfficeId, searchId, loanOfficerId, Money.getDefaultCurrency());
     }
-    
+
     public MifosCurrency getCurrency() {
         return collectiveLoanAmntDue.getCurrency();
     }
@@ -217,7 +217,7 @@ public class CollSheetCustBO extends BusinessObject {
      * returns true if both custId and collectionSheet.collSheetDate is equal to
      * the corresponding properties of the passed object else it calls
      * super.equals();
-     * 
+     *
      * @param obj
      *            - Object to be compared for equality.
      */

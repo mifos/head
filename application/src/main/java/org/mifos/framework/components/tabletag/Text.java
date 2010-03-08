@@ -41,7 +41,7 @@ public class Text {
 
     /**
      * Function to get the display name as text.
-     * 
+     *
      * @param displayname
      *            name to be displayed.
      * @param image

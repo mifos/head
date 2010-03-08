@@ -322,7 +322,7 @@ public class CenterCustAction extends CustAction {
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory.getInstance()
                 .getBusinessService(BusinessServiceName.Customer));
-        
+
         String globalCustNum = actionForm.getGlobalCustNum();
         CenterBO centerBO = (CenterBO) customerBusinessService.findBySystemId(globalCustNum,
                 CustomerLevel.CENTER.getValue());
@@ -333,13 +333,13 @@ public class CenterCustAction extends CustAction {
 
         // We would like to move away from sending business objects to the jsp page
         // instead, load data into a data transfer object.
-        // Whatever is needed on the jsp page and is coming from the clientBO 
+        // Whatever is needed on the jsp page and is coming from the clientBO
         // should be moved over to the Dto so that we can stop passing a business
         // object like centerBo to the jsp page.
         CenterInformationDto centerInformationDto = new WebTierCenterDetailsServiceFacade().getCenterInformationDto(globalCustNum, CustomerLevel.CENTER.getValue());
-        
+
         SessionUtils.removeAttribute("centerDetailsDto", request);
-        SessionUtils.setAttribute("centerDetailsDto", centerInformationDto, request);               
+        SessionUtils.setAttribute("centerDetailsDto", centerInformationDto, request);
 
         // set localeId in center saving accounts
 

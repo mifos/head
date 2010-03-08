@@ -28,7 +28,7 @@ public class MenuItem {
      * displayName is the display name for MenuItem.
      */
     private String displayName[];
-    
+
     /**
      * linkId is the id attribute for the link tag that will
      * be displayed by this menu item.
@@ -43,7 +43,7 @@ public class MenuItem {
 
     /**
      * Method to get the value of linkValue member variable.
-     * 
+     *
      * @return String that holds linkValue.
      */
     public String getLinkValue() {
@@ -52,17 +52,17 @@ public class MenuItem {
 
     /**
      * Method to set the value of linkValue member variable.
-     * 
+     *
      * @param linkValue
      *            is the link for this menuitem.
      */
     public void setLinkValue(String linkValue) {
         this.linkValue = linkValue;
     }
-    
+
     /**
      * Method to get the value of linkId member variable.
-     * 
+     *
      * @return String that holds linkId.
      */
     public String getLinkId() {
@@ -71,7 +71,7 @@ public class MenuItem {
 
     /**
      * Method to set the value of linkId member variable.
-     * 
+     *
      * @param linkId
      *            is the id for the link for this menuitem.
      */
@@ -82,7 +82,7 @@ public class MenuItem {
     /**
      * Method to get the value of displayName member variable. If it is crude
      * menu displayName length will be >=1 otherwise it will be 1 only.
-     * 
+     *
      * @return an array of String holding displayNames.
      */
     public String[] getDisplayName() {
@@ -92,7 +92,7 @@ public class MenuItem {
     /**
      * Method to set the value of displayName member variable. If it is crude
      * menu displayName length will be >=1 otherwise it will be 1 only.
-     * 
+     *
      * @param displayName
      *            an array of displaynames.
      */

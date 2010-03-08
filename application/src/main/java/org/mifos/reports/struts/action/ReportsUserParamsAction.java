@@ -149,7 +149,7 @@ public class ReportsUserParamsAction extends BaseAction {
             filename = file.getAbsolutePath();
         }
         else {
-            filename = "adminReport/" + filename; 
+            filename = "adminReport/" + filename;
         }
         if (filename.endsWith(".rptdesign")) {
             request.setAttribute("reportFile", filename);

@@ -85,7 +85,7 @@ public class ClientBO extends CustomerBO {
     private CustomerPictureEntity customerPicture;
 
     private final Set<ClientNameDetailEntity> nameDetailSet;
-    
+
     private Set<ClientFamilyDetailEntity> familyDetailSet;
 
     private final Set<ClientAttendanceBO> clientAttendances;
@@ -112,14 +112,14 @@ public class ClientBO extends CustomerBO {
 
     /*
      * Injected Persistence classes
-     * 
+     *
      * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     * 
+     *
      * The Persistence classes below are used by this class and can be injected
      * via a setter for testing purposes. In order for this mechanism to work
      * correctly, the getter must be used to access them because the getter will
      * initialize the Persistence class if it has not been injected.
-     * 
+     *
      * Long term these references to Persistence classes should probably be
      * eliminated.
      */
@@ -138,7 +138,7 @@ public class ClientBO extends CustomerBO {
     public void setOfficePersistence(final OfficePersistence officePersistence) {
         this.officePersistence = officePersistence;
     }
-    
+
     /**
      * default cosntructor for hibernate
      */
@@ -153,7 +153,7 @@ public class ClientBO extends CustomerBO {
 
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal legal constructor
      */
     public ClientBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
@@ -235,7 +235,7 @@ public class ClientBO extends CustomerBO {
             validateFieldsForActiveClient(loanOfficer, meeting);
             this.setCustomerActivationDate(this.getCreatedDate());
             createAccountsForClient();
-            
+
             // FIXME - keithw - pass in this info to method
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
@@ -243,18 +243,18 @@ public class ClientBO extends CustomerBO {
         }
         generateSearchId();
     }
-    
+
     public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView, final List<ClientFamilyDetailView> familyDetailView) {
         Iterator iterator2=familyDetailView.iterator();
         familyDetailSet=new HashSet<ClientFamilyDetailEntity>();
-        for (Iterator iterator = familyNameDetailView.iterator(); iterator.hasNext();) { 
+        for (Iterator iterator = familyNameDetailView.iterator(); iterator.hasNext();) {
             ClientNameDetailView clientNameDetailView2 = (ClientNameDetailView) iterator.next();
             ClientFamilyDetailView clientFamilyDetailView2= (ClientFamilyDetailView) iterator2.next();
             ClientNameDetailEntity nameEntity=new ClientNameDetailEntity(this, null,clientNameDetailView2);
             this.addNameDetailSet(nameEntity);
-            this.addFamilyDetailSet(new ClientFamilyDetailEntity(this,nameEntity, clientFamilyDetailView2));   
-        } 
-        
+            this.addFamilyDetailSet(new ClientFamilyDetailEntity(this,nameEntity, clientFamilyDetailView2));
+        }
+
     }
     public Set<ClientNameDetailEntity> getNameDetailSet() {
         return nameDetailSet;
@@ -333,7 +333,7 @@ public class ClientBO extends CustomerBO {
      * attachPpiSurvey is implemented. Poverty likelihood should be set based on
      * the results of a PPI survey and should not be over-writable in order to
      * maintain the integrity of this data.
-     * 
+     *
      * The method is included here in order to test hibernate mappings through
      * customerDetail.
      */
@@ -496,7 +496,7 @@ public class ClientBO extends CustomerBO {
             this.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
             createAccountsForClient();
             getSavingsPersistence().persistSavingAccounts(this);
-            
+
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
             createDepositSchedule(workingDays, holidays);
@@ -510,40 +510,40 @@ public class ClientBO extends CustomerBO {
         setDateOfBirth(dateOfBirth);
 
         super.update();
-    }   
-  
+    }
+
     /**
      * This method is called for client family and name details update
      */
-     public void updateFamilyInfo(final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) throws PersistenceException {                 
-         
+     public void updateFamilyInfo(final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) throws PersistenceException {
+
          updateFamilyAndNameDetails(primaryKeys,clientNameDetailView,clientFamilyDetailView);
          deleteFamilyAndNameDetails(primaryKeys);
          insertFamilyAndNameDetails(primaryKeys,clientNameDetailView,clientFamilyDetailView);
-         
-         new CustomerPersistence().createOrUpdate(this);  
+
+         new CustomerPersistence().createOrUpdate(this);
      }
-     
+
      /**
       * This method return boolean value
-      * 
+      *
       * @param clientNameId
       * @param primaryKeys
       * @return
       */
-     private boolean isKeyExists(final int clientNameId, final List<Integer> primaryKeys){         
+     private boolean isKeyExists(final int clientNameId, final List<Integer> primaryKeys){
          boolean keyFound = false;
          for(int i=0;i<primaryKeys.size();i++){
              if(primaryKeys.get(i)!=null && primaryKeys.get(i)==clientNameId){
                  keyFound = true;
              }
-         }      
+         }
          return keyFound;
      }
-     
+
      /**
       * This method is used to update the Client Family and Name Details
-      *  
+      *
       * @param primaryKeys
       * @param clientNameDetailView
       * @param clientFamilyDetailView
@@ -554,26 +554,26 @@ public class ClientBO extends CustomerBO {
             if(primaryKeys.get(key)!=null){
               //update name details
                 for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet){
-                    if(clientNameDetailEntity.getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){                        
+                    if(clientNameDetailEntity.getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){
                         clientNameDetailEntity.updateNameDetails(clientNameDetailView.get(key));
-                    }// if clientNameDetailEntity.getCustomerNameId()                 
+                    }// if clientNameDetailEntity.getCustomerNameId()
                 }//inner for clientNameDetailEntity
-                
-                //update family details 
-                for (ClientFamilyDetailEntity clientFamilyDetailEntity  : familyDetailSet){                
+
+                //update family details
+                for (ClientFamilyDetailEntity clientFamilyDetailEntity  : familyDetailSet){
                     if(clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){
                         clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailView.get(key));
-                    }// if clientFamilyDetailEntity   
-                }//end of for clientFamilyDetailEntity                 
+                    }// if clientFamilyDetailEntity
+                }//end of for clientFamilyDetailEntity
             }// end of if
-        }//End of for 
+        }//End of for
      }
-    
+
      /**
      *  This method is used to delete the Client Family and Name Details
-     *   
+     *
      * @param primaryKeys
-     * @throws PersistenceException 
+     * @throws PersistenceException
      */
      public void deleteFamilyAndNameDetails(final List<Integer> primaryKeys) throws PersistenceException{
          // check for the primary  if that is null crate the data
@@ -592,23 +592,23 @@ public class ClientBO extends CustomerBO {
                  if(!isKeyExists(clientNameDetailEntity.getCustomerNameId(),primaryKeys)){
                      deleteNameDetailEntity.add(clientNameDetailEntity);
                  }
-             }         
-         }         
+             }
+         }
          //Delete ClientFamilyDetailEntity
          for(int i=0;i<deleteFamilyDetailEntity.size();i++){
              familyDetailSet.remove(deleteFamilyDetailEntity.get(i));
-            getCustomerPersistence().delete(deleteFamilyDetailEntity.get(i));            
+            getCustomerPersistence().delete(deleteFamilyDetailEntity.get(i));
          }
        //Delete ClientNameDetailEntity
          for(int i=0;i<deleteNameDetailEntity.size();i++){
              nameDetailSet.remove(deleteNameDetailEntity.get(i));
-             getCustomerPersistence().delete(deleteNameDetailEntity.get(i));           
+             getCustomerPersistence().delete(deleteNameDetailEntity.get(i));
          }
      }
-     
+
      /**
       * This method is used to insert the Client Family and Name Details
-      * 
+      *
       * @param primaryKeys
       * @param clientNameDetailView
       * @param clientFamilyDetailView
@@ -616,14 +616,14 @@ public class ClientBO extends CustomerBO {
      public void insertFamilyAndNameDetails(final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) {
        //INSERT data
          for(int i=0;i<primaryKeys.size();i++){
-             if(primaryKeys.get(i)==null){                 
+             if(primaryKeys.get(i)==null){
                  ClientNameDetailEntity nameDetail=new ClientNameDetailEntity(this,null,clientNameDetailView.get(i));
                  nameDetailSet.add(nameDetail);
                  familyDetailSet.add(new ClientFamilyDetailEntity(this,nameDetail,clientFamilyDetailView.get(i)));
              }
          }
      }
-     
+
      public void updateMfiInfo(final PersonnelBO personnel) throws CustomerException {
         if (isActive() || isOnHold()) {
             validateLO(personnel);

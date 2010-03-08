@@ -31,7 +31,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "FUND_CODE")
 public class FundCodeEntity implements Serializable {
-    
+
     private Short fundCodeId;
 
     private String fundCodeValue;

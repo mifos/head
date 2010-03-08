@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.collectionsheet;
 
 import java.io.UnsupportedEncodingException;
@@ -47,20 +47,20 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"collectionsheet","acceptance","ui"})
 public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
-    
+
     private static final String VALID_RECEIPT_DAY = "4";
 
     private static final String VALID_TRANSACTION_DAY = "7";
 
     @Autowired
     private DriverManagerDataSource dataSource;
-    
+
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
 
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
@@ -71,41 +71,41 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
-        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();       
+        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
-  
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoReceipt() throws Exception {
         SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidReceiptDay();
         SubmitFormParameters validFormParameters = getFormParameters();
         checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters);
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoTransation() throws Exception {
         SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidTransactionDay();
         SubmitFormParameters validFormParameters = getFormParameters();
         checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters);
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters, 
+    private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters,
             SubmitFormParameters validFormParameters) throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
-        CollectionSheetEntrySelectPage selectPage = 
+        CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
-        
+
         boolean onlyTypeIfFieldIsEmpty = true;
         boolean waitForPageToLoad = true;
         selectPage.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(invalidFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         CollectionSheetEntrySelectPage collectionSheetEntrySelectPageWithError = new CollectionSheetEntrySelectPage(selenium);
         collectionSheetEntrySelectPageWithError.verifyPage();
         Assert.assertTrue(collectionSheetEntrySelectPageWithError.isErrorMessageDisplayed());
-        
+
         onlyTypeIfFieldIsEmpty = false;
         waitForPageToLoad = false;
-        CollectionSheetEntryEnterDataPage enterDataPage = 
+        CollectionSheetEntryEnterDataPage enterDataPage =
             collectionSheetEntrySelectPageWithError.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(validFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         enterDataPage.verifyPage();
     }
@@ -114,7 +114,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     public void checkThatPreviewEditButtonWorks() throws Exception {
         SubmitFormParameters formParameters = getFormParameters();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
-        CollectionSheetEntrySelectPage selectPage = 
+        CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
@@ -129,7 +129,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         String invalidReceiptDay = "4.";
         return getFormParameters(invalidReceiptDay, VALID_TRANSACTION_DAY);
     }
-    
+
     private SubmitFormParameters getFormParametersWithInvalidTransactionDay() {
         String invalidTransactionDay = "7.";
         return getFormParameters(VALID_RECEIPT_DAY, invalidTransactionDay);

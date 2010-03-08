@@ -122,7 +122,7 @@ public class LoanPrdBusinessService implements BusinessService {
     /**
      * @deprecated use
      *             {@link LoanServiceFacade#loadActiveProductsApplicableForCustomer(CustomerBO)}
-     *             
+     *
      */
     @Deprecated
     public List<LoanOfferingBO> getApplicablePrdOfferings(final CustomerLevelEntity customerLevel) throws ServiceException {

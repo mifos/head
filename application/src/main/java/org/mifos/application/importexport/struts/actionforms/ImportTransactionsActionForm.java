@@ -43,7 +43,7 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
  * on the underlying implementation of multipart request handling. The default
  * implementation that struts uses is
  * org.apache.struts.upload.CommonsMultipartRequestHandler.
- * 
+ *
  */
 public class ImportTransactionsActionForm extends BaseActionForm {
 
@@ -104,7 +104,7 @@ public class ImportTransactionsActionForm extends BaseActionForm {
         if((importPluginName != null) && (importPluginName.length() < 1)){
             errors.add("importPluginName", new ActionMessage("errors.importexport.mandatory_selectbox"));
         }
-        
+
         // has the maximum length been exceeded?
         Boolean maxLengthExceeded = (Boolean) request.getAttribute(MultipartRequestHandler.ATTRIBUTE_MAX_LENGTH_EXCEEDED);
 
@@ -113,12 +113,12 @@ public class ImportTransactionsActionForm extends BaseActionForm {
         } else if((importTransactionsFile != null) && (importTransactionsFile.getFileName().length() < 1)){
             errors.add("importTransactionsFile", new ActionMessage("errors.importexport.mandatory_file"));
         }
-        
+
 
         ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacade();
         try {
-            
-            if (importTransactionsFile.getFileName() != null 
+
+            if (importTransactionsFile.getFileName() != null
                     && importedFilesServiceFacade.isAlreadyImported(importTransactionsFile.getFileName())) {
                 errors.add("importTransactionsFile", new ActionMessage("errors.importexport.already_submitted"));
             }
@@ -126,7 +126,7 @@ public class ImportTransactionsActionForm extends BaseActionForm {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return errors;
 
     }

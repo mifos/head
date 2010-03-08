@@ -32,7 +32,7 @@ public class MifosTagUtils {
      * Filter the specified string for characters that are sensitive to HTML/XML
      * interpreters, returning the string with these characters replaced by the
      * corresponding character entities.
-     * 
+     *
      * @param input
      *            The string to be filtered and returned
      */

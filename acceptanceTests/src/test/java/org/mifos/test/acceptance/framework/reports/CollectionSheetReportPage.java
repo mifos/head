@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.reports;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -34,8 +34,8 @@ public class CollectionSheetReportPage extends MifosPage {
     public CollectionSheetReportPage(Selenium selenium) {
         super(selenium);
     }
-        
-    
+
+
     public CollectionSheetReportPage verifyPage() {
         Assert.assertTrue(selenium.isTextPresent("Collection Sheet Report"));
         return this;

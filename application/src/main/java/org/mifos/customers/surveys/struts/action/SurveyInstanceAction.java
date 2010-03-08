@@ -360,7 +360,7 @@ public class SurveyInstanceAction extends BaseAction {
 
     /**
      * Returns a PersonnelBO corresponding to the given value.
-     * 
+     *
      * @param input
      *            a String representing either of user-name, display name, or
      *            global personnel number

@@ -47,7 +47,7 @@ public class RawSelect {
 
     /**
      * Constructor for the raw Select
-     * 
+     *
      */
     public RawSelect() {
         name = null;
@@ -59,7 +59,7 @@ public class RawSelect {
 
     /**
      * Function get the multiple
-     * 
+     *
      * @return Returns the multiple.
      */
     public String getMultiple() {
@@ -68,7 +68,7 @@ public class RawSelect {
 
     /**
      * Function set the multiple
-     * 
+     *
      * @param multiple
      *            The multiple to set.
      */
@@ -78,7 +78,7 @@ public class RawSelect {
 
     /**
      * Function get the name
-     * 
+     *
      * @return Returns the name.
      */
     public String getName() {
@@ -87,7 +87,7 @@ public class RawSelect {
 
     /**
      * Function set the name
-     * 
+     *
      * @param name
      *            The name to set.
      */
@@ -97,7 +97,7 @@ public class RawSelect {
 
     /**
      * Function get the size
-     * 
+     *
      * @return Returns the size.
      */
     public String getSize() {
@@ -106,7 +106,7 @@ public class RawSelect {
 
     /**
      * Function set the size
-     * 
+     *
      * @param size
      *            The size to set.
      */
@@ -116,7 +116,7 @@ public class RawSelect {
 
     /**
      * This funtion Returns the HTML representation of the button
-     * 
+     *
      * @return String String representation of the button
      */
 
@@ -154,12 +154,12 @@ public class RawSelect {
     /*
      * Helper function to append the string representaion of attributes to
      * string buffer results
-     * 
+     *
      * @param handlers: String buffer to hold string representation of
      * attributes
-     * 
+     *
      * @param name: name of the attribute
-     * 
+     *
      * @param value: value of attribute
      */
 
@@ -175,7 +175,7 @@ public class RawSelect {
 
     /**
      * Function For getting the style of Select
-     * 
+     *
      * @return Returns the style.
      */
     public String getStyle() {
@@ -184,7 +184,7 @@ public class RawSelect {
 
     /**
      * Function For setting the style of Select
-     * 
+     *
      * @param style
      *            The style to set.
      */

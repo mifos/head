@@ -52,11 +52,11 @@ public class FeesTrxnDetailEntity extends PersistentObject {
     public Integer getFeesTrxnId() {
         return feesTrxnId;
     }
-    
+
     public AccountTrxnEntity getAccountTrxn() {
         return accountTrxn;
     }
-    
+
     public void setAccountTrxn(final AccountTrxnEntity accountTrxn) {
         this.accountTrxn = accountTrxn;
     }

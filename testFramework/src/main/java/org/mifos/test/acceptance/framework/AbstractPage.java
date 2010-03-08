@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework;
 
 import org.testng.Assert;
@@ -39,15 +39,15 @@ public class AbstractPage {
 	public AbstractPage() {
 		// do nothing
 	}
-	
+
 	public AbstractPage(Selenium selenium) {
 		this.selenium = selenium;
 	}
-	
+
 	protected void waitForPageToLoad() {
 		selenium.waitForPageToLoad(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
 	}
-	
+
 	final public void setSelenium(Selenium selenium) {
 		this.selenium = selenium;
 	}

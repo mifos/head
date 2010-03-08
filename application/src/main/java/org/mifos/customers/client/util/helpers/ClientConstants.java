@@ -38,7 +38,7 @@ public interface ClientConstants {
 
     public static final Short CLIENT_NAME_TYPE = NameType.CLIENT.getValue();
     public static final Short SPOUSE_NAME_TYPE = NameType.SPOUSE.getValue();
-        
+
     public static final String CLIENTVO = "clientVO";
     /** Request parameter names */
     public static final String SALUTATION_ENTITY = "salutationEntity";
@@ -63,7 +63,7 @@ public interface ClientConstants {
     public static final String CITIZENSHIP_ENTITY_NAME = "citizenshipEntityName";
     public static final String ETHINICITY_ENTITY_NAME = "ethinicityEntityName";
     public static final String EDUCATION_LEVEL_ENTITY_NAME = "educationLevelEntityName";
-    
+
     /** Request parameter names for the dropdown values */
     public static final String SALUTATION_VALUE = "salutationValue";
     public static final String GENDER_VALUE = "genderValue";
@@ -195,5 +195,5 @@ public interface ClientConstants {
     public static final String CUSTOMERLOANACCOUNTSINUSE = "customerLoanAccountsInUse";
     public static final String CUSTOMERSAVINGSACCOUNTSINUSE = "customerSavingsAccountsInUse";
 
-    
+
 }

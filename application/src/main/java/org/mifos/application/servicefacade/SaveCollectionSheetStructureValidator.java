@@ -44,7 +44,7 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * Validates customer and account structure for SaveCollectionSheetDto.
- * 
+ *
  * Note: Accounts with only Zero amount(s) are ignored and not validated (or processed by the save collection sheet
  * functionality)
  */
@@ -220,7 +220,7 @@ public class SaveCollectionSheetStructureValidator {
             SaveCollectionSheetCustomerAccountDto saveCollectionSheetCustomerAccount) {
 
         if (null != saveCollectionSheetCustomerAccount) {
-            
+
             if (saveCollectionSheetCustomerAccount.getTotalCustomerAccountCollectionFee().compareTo(BigDecimal.ZERO) > 0) {
                 validateAccount(customerId, saveCollectionSheetCustomerAccount.getAccountId(),
                         saveCollectionSheetCustomerAccount.getCurrencyId(), ValidationAccountTypes.CUSTOMER);

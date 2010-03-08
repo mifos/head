@@ -40,7 +40,7 @@ public class SaveCollectionSheetCustomerSavingDtoTest {
     private Short validCurrencyId = Short.valueOf("2");
     private BigDecimal validAmount = new BigDecimal(95777.88);
     private BigDecimal invalidAmount = new BigDecimal(-34.4);
-    
+
 
     @Test
     public void shouldBeSuccessfulObjectCreationWithValidInput() {
@@ -165,5 +165,5 @@ public class SaveCollectionSheetCustomerSavingDtoTest {
         assertThat(InvalidSaveCollectionSheetReasons.contains(InvalidSaveCollectionSheetReason.TOTALWITHDRAWAL_NEGATIVE), is(true));
     }
 
-    
+
 }

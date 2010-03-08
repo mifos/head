@@ -46,7 +46,7 @@ public class MenuRepository {
 
     /**
      * Method to get MenuRepository instance
-     * 
+     *
      * @return singleton instance of menu repository
      */
     static public MenuRepository getInstance() {
@@ -63,7 +63,7 @@ public class MenuRepository {
 
     /**
      * Method to set the value of crudeMenuList member variable.
-     * 
+     *
      * @param crudeMenuList
      *            is an array of crude Menu objects.
      */
@@ -73,7 +73,7 @@ public class MenuRepository {
 
     /**
      * Method to get the value of crudeMenuList member variable.
-     * 
+     *
      * @return an array of crude Menu objects.
      */
     public Menu[] getCrudeMenu() {
@@ -82,7 +82,7 @@ public class MenuRepository {
 
     /**
      * Method to get crude menu for a given topTabName.
-     * 
+     *
      * @param menuTabName
      *            is the topMenuTab name whose left menu is to be obtained.
      * @return crude Menu object for a topMenuTab
@@ -97,7 +97,7 @@ public class MenuRepository {
 
     /**
      * Method to get menu objects for a given locale
-     * 
+     *
      * @param lc
      *            is locale for which menu is to be find in repository.
      * @return array of locale specific Menu objects.
@@ -110,7 +110,7 @@ public class MenuRepository {
 
     /**
      * Method to check whether menu exists for a given locale
-     * 
+     *
      * @param lc
      *            is locale for which menu is to be find in repository.
      * @return true if menu found, otherwise false
@@ -123,7 +123,7 @@ public class MenuRepository {
 
     /**
      * Method to set menus for a given locale
-     * 
+     *
      * @param localeMenu
      *            is an array of menus for a locale
      * @param lc
@@ -135,7 +135,7 @@ public class MenuRepository {
 
     /**
      * Method to get the menu for a given locale and topMenuTab
-     * 
+     *
      * @param topTabName
      *            is the name of top menu tab.
      * @param lc

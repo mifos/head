@@ -43,10 +43,10 @@ public class SearchCenterTest extends SearchTestBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
-    
+
+
     private static String dataFileName = "acceptance_small_003_dbunit.xml.zip";
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -59,26 +59,26 @@ public class SearchCenterTest extends SearchTestBase {
     public void tearDown() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchCentersTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
-                dataSource, selenium);    
-        
-        SearchResultsPage page = searchFor( appLauncher, "MyCenter"); 
+                dataSource, selenium);
+
+        SearchResultsPage page = searchFor( appLauncher, "MyCenter");
         int count = page.countSearchResults();
         Assert.assertEquals( count, 5 );
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchCenterSpecificTest()  throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
-                dataSource, selenium);    
-        
+                dataSource, selenium);
+
         SearchResultsPage page = searchFor( appLauncher, "MyCenter1232993841778");
         int count = page.countSearchResults();
         Assert.assertEquals( count, 1 );
-    }    
+    }
 }

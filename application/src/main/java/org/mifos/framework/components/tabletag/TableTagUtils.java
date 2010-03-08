@@ -53,7 +53,7 @@ public class TableTagUtils {
 
     /**
      * Function to get the label.
-     * 
+     *
      * @param label
      *            label to be displayed.
      * @param labelType

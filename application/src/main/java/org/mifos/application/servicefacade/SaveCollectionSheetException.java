@@ -37,7 +37,7 @@ public class SaveCollectionSheetException extends Exception {
         this.invalidSaveCollectionSheetReasons = invalidSaveCollectionSheetReasons;
         this.invalidSaveCollectionSheetReasonsExtended = null;
     }
-    
+
     public List<InvalidSaveCollectionSheetReason> getInvalidSaveCollectionSheetReasons() {
         return this.invalidSaveCollectionSheetReasons;
     }
@@ -58,7 +58,7 @@ public class SaveCollectionSheetException extends Exception {
 
             return builder.toString();
         }
-        
+
         if (invalidSaveCollectionSheetReasons != null) {
             final StringBuilder builder = new StringBuilder();
             final String newline = System.getProperty("line.separator");

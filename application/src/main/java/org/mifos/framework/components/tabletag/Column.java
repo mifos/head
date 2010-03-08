@@ -236,7 +236,7 @@ public class Column {
 
     /**
      * Function to get the column
-     * 
+     *
      * @param obj
      *            Object from the user.
      * @return Column string.
@@ -265,7 +265,7 @@ public class Column {
 
     /**
      * Function to get label according to label type
-     * 
+     *
      * @param stringColumn
      * @param obj
      * @throws TableTagException
@@ -283,7 +283,7 @@ public class Column {
 
     /**
      * Function to get column value as a link or text.
-     * 
+     *
      * @param obj
      * @return
      * @throws TableTagException

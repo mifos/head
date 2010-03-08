@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -38,30 +38,30 @@ public class CreateClientEnterMfiDataPage extends MifosPage {
 	public CreateClientEnterMfiDataPage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
- 
+
         String loanOfficerId;
         MeetingParameters meeting;
-        
+
         public String getLoanOfficerId() {
             return this.loanOfficerId;
         }
-        
+
         public void setLoanOfficerId(String loanOfficerId) {
             this.loanOfficerId = loanOfficerId;
         }
-        
+
         public MeetingParameters getMeeting() {
             return this.meeting;
         }
-        
+
         public void setMeeting(MeetingParameters meeting) {
             this.meeting = meeting;
         }
     }
- 
+
     public CreateClientPreviewDataPage submitAndGotoCreateClientPreviewDataPage(SubmitFormParameters parameters) {
         selectIfNotEmpty("loanOfficerId", parameters.getLoanOfficerId());
         navigateToCreateMeetingPage().submitAndGotoCreateClientEnterMfiDataPage(parameters.getMeeting());
@@ -69,7 +69,7 @@ public class CreateClientEnterMfiDataPage extends MifosPage {
         waitForPageToLoad();
         return new CreateClientPreviewDataPage(selenium);
     }
-    
+
     public CreateMeetingPage navigateToCreateMeetingPage()
     {
         selenium.click("create_ClientMfiInfo.link.meetingSchedule");

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.office;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -29,7 +29,7 @@ public class CreateOfficeEnterDataPage extends MifosPage {
 	public CreateOfficeEnterDataPage() {
 		super();
 	}
-	
+
     public void verifyPage() {
         verifyPage("CreateNewOffice");
     }
@@ -40,7 +40,7 @@ public class CreateOfficeEnterDataPage extends MifosPage {
 	public CreateOfficeEnterDataPage(Selenium selenium) {
 		super(selenium);
 	}
-    
+
     public CreateOfficePreviewDataPage submitAndGotoCreateOfficePreviewDataPage(OfficeParameters parameters) {
         typeTextIfNotEmpty("CreateNewOffice.input.officeName", parameters.getOfficeName());
         typeTextIfNotEmpty("CreateNewOffice.input.shortName", parameters.getShortName());

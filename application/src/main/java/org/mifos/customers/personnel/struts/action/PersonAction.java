@@ -363,7 +363,7 @@ public class PersonAction extends SearchAction {
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, masterPersistence.retrieveMasterEntities(
                 MasterConstants.LANGUAGE, userContext.getLocaleId()), request);
-        
+
         SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST, ((PersonnelBusinessService) getService())
                 .getRoles(), request);
 

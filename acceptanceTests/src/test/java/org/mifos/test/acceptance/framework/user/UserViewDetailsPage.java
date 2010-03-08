@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.user;
 
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -41,25 +41,25 @@ public class UserViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new EditUserDataPage(selenium);
     }
-    
+
     public ClientsAndAccountsHomepage navigateToClientsAndAccountsHomepage() {
         selenium.click("header.link.clientsAndAccounts");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
-    }    
+    }
 
     public String getFullName() {
         return selenium.getText("personneldetails.text.fullName");
     }
-    
+
     public String getEmail() {
         return selenium.getText("personneldetails.text.email");
-    }    
-    
+    }
+
     public String getStatus() {
         return selenium.getText("personneldetails.text.status");
     }
-    
+
     public void verifyModifiedNameAndEmail(CreateUserParameters formParameters) {
         Assert.assertTrue(getFullName().contains(
                 formParameters.getFirstName() + " " + formParameters.getLastName()));

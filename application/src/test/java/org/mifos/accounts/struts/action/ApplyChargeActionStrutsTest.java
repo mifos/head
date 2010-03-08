@@ -62,18 +62,18 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
     private MeetingBO meeting;
 
     private String flowKey;
-    
+
     // for constructing the ChargeType member
     private static final String FEE_ID = "-1";
     private static final String IS_RATE_TYPE = "1";
     private static final String IS_NOT_RATE_TYPE = "0";
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
-        
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -144,7 +144,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
 
     }
-    
+
     public void testUpdateFailureDueToInvalidChargeAmount() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();

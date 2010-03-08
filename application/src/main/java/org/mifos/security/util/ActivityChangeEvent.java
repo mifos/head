@@ -36,7 +36,7 @@ public class ActivityChangeEvent implements SecurityEvent {
 
     /**
      * This Function returns the object
-     * 
+     *
      * @return Returns the object.
      */
     public Object getObject() {
@@ -45,7 +45,7 @@ public class ActivityChangeEvent implements SecurityEvent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mifos.security.Util.SecurityEvent#getEventType()
      */
     public String getEventType() {

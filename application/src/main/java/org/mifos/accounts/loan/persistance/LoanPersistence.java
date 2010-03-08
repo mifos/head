@@ -98,7 +98,7 @@ public class LoanPersistence extends Persistence {
                 queryParameters);
         return queryResult == null ? null : (LoanBO) queryResult;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<LoanBO> findIndividualLoans(final String accountId) throws PersistenceException {
         Map<String, Integer> queryParameters = new HashMap<String, Integer>();
@@ -308,7 +308,7 @@ public class LoanPersistence extends Persistence {
         }
 
     }
-    
+
     public void save(final List<LoanBO> loans) {
         Session session = getHibernateUtil().getSessionTL();
         for (LoanBO loan : loans) {
@@ -324,7 +324,7 @@ public class LoanPersistence extends Persistence {
         return queryResult;
 
     }
-    
+
     private StringBuilder loanQueryString(final Short branchId, final Short loanOfficerId, final Short loanProductId,
             final String goodAccountIdQueryString) {
 

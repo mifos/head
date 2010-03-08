@@ -39,7 +39,7 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private UserContext userContext;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
@@ -66,7 +66,7 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("reportId", "1");
         actionPerform();
         verifyForwardPath("/pages/application/reports/jsp/birtReport.jsp");
-        // FIXME This test leave CUSTOMER table in dirty state 
+        // FIXME This test leave CUSTOMER table in dirty state
         TestDatabase.resetMySQLDatabase();
     }
 

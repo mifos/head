@@ -289,17 +289,17 @@ public class ClientRules {
         if ((getMaximumAgeForNewClient() == 0) && (getMinimumAgeForNewClient() == 0)) {
             setAgeCheckEnabled(false);
         } else {
-            setAgeCheckEnabled(true);           
+            setAgeCheckEnabled(true);
         }
     }
-    
+
     public static int getMinimumAgeForNewClient() {
         return minimumAgeForNewClient;
     }
 
     public static void setMinimumAgeForNewClient(int minimumAgeForNewClient) {
         ClientRules.minimumAgeForNewClient = minimumAgeForNewClient;
-        updateAgeCheckEnabled();        
+        updateAgeCheckEnabled();
     }
 
     public static int getMaximumAgeForNewClient() {
@@ -308,7 +308,7 @@ public class ClientRules {
 
     public static void setMaximumAgeForNewClient(int maximumAgeForNewClient) {
         ClientRules.maximumAgeForNewClient = maximumAgeForNewClient;
-        updateAgeCheckEnabled();        
+        updateAgeCheckEnabled();
     }
 
     public static boolean isAgeCheckEnabled() {
@@ -361,7 +361,7 @@ public class ClientRules {
         return maximumAge;
 
     }
-    
+
     public static void intializeFamilyConfig() throws ConfigurationException {
                  setFamilyDetailsRequired(ClientFamilyInfoConfig.getAreFamilyDetailsRequired());
                  setMaximumNumberOfFamilyMembers(ClientFamilyInfoConfig.getMaximumNumberOfFamilyMembers());

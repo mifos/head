@@ -109,7 +109,7 @@ public abstract class AccountActionDateEntity extends PersistentObject implement
     public int compareDate(final java.util.Date date) {
         return getActionDate().compareTo(date);
     }
-    
+
     public boolean isPaid() {
         return getPaymentStatusAsEnum() == PaymentStatus.PAID;
     }
@@ -117,8 +117,8 @@ public abstract class AccountActionDateEntity extends PersistentObject implement
     public int compareTo(final AccountActionDateEntity obj) {
         return this.getInstallmentId().compareTo(obj.getInstallmentId());
     }
-    
+
     protected MifosCurrency getCurrency() {
         return getAccount().getCurrency();
-    }    
+    }
 }

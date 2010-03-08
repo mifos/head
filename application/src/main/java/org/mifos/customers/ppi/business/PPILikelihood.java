@@ -24,7 +24,7 @@ package org.mifos.customers.ppi.business;
  * This class holds the likelihood (probability) percentages for a given PPI survey's likelihood chart
  * and for a given score on that survey.
  * <p>
- * For each possible score on the survey, a PPI scorecard lists four likelihood 
+ * For each possible score on the survey, a PPI scorecard lists four likelihood
  * percent probabilities relative to a fixed poverty line:
  * <ul>
  * <li> the likelihood of being in the bottom half of those below the poverty line
@@ -66,7 +66,7 @@ public class PPILikelihood implements Serializable {
     /**
      * Constructs an instance from the first two likelihood percentages for a
      * score range.
-     * 
+     *
      * @throws org.mifos.framework.exceptions.ValidationException
      *             if one of the class's invariants are violated, so that the
      *             object cannot be constructed in a valid state.

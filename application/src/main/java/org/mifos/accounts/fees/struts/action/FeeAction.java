@@ -136,7 +136,7 @@ public class FeeAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         FeeActionForm actionForm = (FeeActionForm) form;
         FeeBO fee = createFee(actionForm, request);
-        
+
         fee.save();
         actionForm.setFeeId(fee.getFeeId().toString());
         return mapping.findForward(ActionForwards.create_success.toString());
@@ -254,7 +254,7 @@ public class FeeAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancelEdit_success.toString());
     }
-    
+
     private FeeBO createFee(FeeActionForm actionForm, HttpServletRequest request) throws ApplicationException {
 
         CategoryTypeEntity feeCategory = (CategoryTypeEntity) findMasterEntity(request, FeeConstants.CATEGORYLIST,
@@ -305,10 +305,10 @@ public class FeeAction extends BaseAction {
                     actionForm.getRateValue(), feeFormula, actionForm.isCustomerDefaultFee(), feeFrequency);
         }
         return new AmountFeeBO(userContext, actionForm.getFeeName(), feeCategory, feeFrequencyType, glCode,
-                new Money(getCurrency(actionForm.getCurrencyId()), actionForm.getAmount()), 
+                new Money(getCurrency(actionForm.getCurrencyId()), actionForm.getAmount()),
                 actionForm.isCustomerDefaultFee(), feeFrequency);
     }
-    
+
     private List<GLCodeEntity> getGLCodes() throws SystemException, ApplicationException {
 
         return new FinancialBusinessService()

@@ -101,18 +101,18 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
     /*
      * public List accountIdSearch(String searchString,Short officeId) throws
      * SystemException { this.searchString = searchString;
-     * 
+     *
      * try{ Session session=null; session= QuerySession.getSession(); Query
      * query=null; if( officeId.shortValue()==0) {
      * query=session.getNamedQuery(NamedQueryConstants
      * .ACCOUNT_ID_SEARCH_NOOFFICEID);
      * query.setString("SEARCH_STRING",searchString); } else {
-     * 
+     *
      * query=session.getNamedQuery(NamedQueryConstants.ACCOUNT_ID_SEARCH);
      * query.setString("SEARCH_STRING",searchString);
      * query.setShort("OFFICEID",officeId); }
-     * 
-     * 
+     *
+     *
      * list=query.list(); this.queryInputs.setTypes(query.getReturnTypes());
      * dtoBuilder.setInputs(queryInputs); QuerySession.closeSession(session); }
      * catch(HibernateProcessException hpe) { throw new SystemException(); }

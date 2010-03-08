@@ -40,12 +40,12 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     private static final short FLAG_FEET_TOO_BIG = 12;
 
     private Session session;
-    
+
     @Override
     public void setUp() {
         session = StaticHibernateUtil.getSessionTL();
     }
-    
+
     @Override
     public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();

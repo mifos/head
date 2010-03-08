@@ -53,7 +53,7 @@ public class ViewReportsTest extends UiTestCaseBase {
     public void verifyReportTemplatesExist(){
         ViewReportsPage viewReportPage = loadAndNavigateToReportsPage();
         viewReportPage.verifyPage();
-             
+
         String[] expectedData = new String[]{
                 "Client Detail",
                 "Collection Sheet Report",
@@ -66,18 +66,18 @@ public class ViewReportsTest extends UiTestCaseBase {
                 "Branch Progress Report",
                 "Miscellaneous"
         };
-        
+
         viewReportPage.verifyReportCategories(expectedData);
-        
+
     }
-    
+
     private ViewReportsPage loadAndNavigateToReportsPage() {
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewReportsPage page = adminPage.navigateToViewReportsPage();
         page.verifyPage();
         return page;
     }
-    
+
     private AdminPage loginAndGoToAdminPage() {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();

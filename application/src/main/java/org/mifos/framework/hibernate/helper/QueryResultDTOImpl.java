@@ -55,7 +55,7 @@ public class QueryResultDTOImpl implements QueryResult {
 
     /**
      * Set the query which will be used for query execution
-     * 
+     *
      */
     public void executeQuery(Query query) throws HibernateSearchException {
         if (query == null)
@@ -70,7 +70,7 @@ public class QueryResultDTOImpl implements QueryResult {
 
     /**
      * Return the Session used for query
-     * 
+     *
      */
     public Session getSession() throws HibernateProcessException {
         hibernateSession = QuerySession.openSession();
@@ -79,7 +79,7 @@ public class QueryResultDTOImpl implements QueryResult {
 
     /**
      * Set the query inputs which will be used for query execution
-     * 
+     *
      */
     public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException {
         if (queryInputs == null)
@@ -96,7 +96,7 @@ public class QueryResultDTOImpl implements QueryResult {
     /**
      * Returns the requested set of search result objects based on the
      * pagination at the front end.
-     * 
+     *
      */
     public List get(int position, int noOfObjects) throws HibernateSearchException {
         List returnList = new ArrayList();
@@ -129,7 +129,7 @@ public class QueryResultDTOImpl implements QueryResult {
 
     /**
      * Returns the records valid for the query
-     * 
+     *
      */
     public int getSize() throws HibernateSearchException {
         int lastRowNumber = 0;

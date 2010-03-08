@@ -31,18 +31,18 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class HolidayBuilder {
-    
+
     private DateTime from;
     private DateTime to;
     private RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
-    
+
     private final Short officeId = Short.valueOf("1");
 
     public Holiday build() {
-        
+
         HolidayPK holidayPK = new HolidayPK(officeId, from.toDate());
         RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity(repaymentRule.getValue(), "lookup.value.key");
-        
+
         try {
             return new HolidayBO(holidayPK, to.toDate(), "builderCreatedHoliday", repaymentRuleEntity);
         } catch (ApplicationException e) {
@@ -59,27 +59,27 @@ public class HolidayBuilder {
         this.to = withTo;
         return this;
     }
-    
+
     public HolidayBuilder withRepaymentRule (RepaymentRuleTypes rule) {
         this.repaymentRule = rule;
         return this;
     }
-    
+
     public HolidayBuilder withNextMeetingRule() {
         repaymentRule = RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT;
         return this;
     }
-    
+
     public HolidayBuilder withNextWorkingDayRule() {
         repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
         return this;
     }
-    
+
     public HolidayBuilder withSameDayAsRule() {
         repaymentRule = RepaymentRuleTypes.SAME_DAY;
         return this;
     }
-    
+
     public HolidayBuilder withRepaymentMoratoriumRule() {
         repaymentRule = RepaymentRuleTypes.REPAYMENT_MORATORIUM;
         return this;

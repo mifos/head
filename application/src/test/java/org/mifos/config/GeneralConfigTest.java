@@ -82,7 +82,7 @@ public class GeneralConfigTest extends TestCase {
         configMgr.setProperty(GeneralConfig.RecordCommittingSizeForBatchJobs, configuredValue);
 
     }
-    
+
     public void testGetOutputIntervalForBatchJobs() {
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -95,7 +95,7 @@ public class GeneralConfigTest extends TestCase {
        Assert.assertEquals(defaultValue, expectedDefaultValue);
         // save it back
         configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, configuredValue);
-        
+
     }
 
 }

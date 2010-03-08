@@ -43,7 +43,7 @@ public class BranchReportIntegrationTestCase extends MifosIntegrationTestCase {
     public BranchReportIntegrationTestCase() throws Exception {
         super();
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

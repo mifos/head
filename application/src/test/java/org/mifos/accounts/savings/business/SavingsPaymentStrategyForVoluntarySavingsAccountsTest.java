@@ -73,7 +73,7 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
 
     @Mock
     private SavingsTrxnDetailEntity savingsTrxnDetail;
-    
+
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
         defaultCurrency = TestUtils.RUPEE;
@@ -242,7 +242,7 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
         // verification
         assertThat(unpaidSaving2.getPaymentDate(), is(dateOfDeposit));
     }
-    
+
 
     @Test
     public void whenUnpaidScheduledInstallmentsExistASavingsTrxnDetailIsCreatedWithLatestBalance() {
@@ -273,7 +273,7 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
                 recommendedDepositDue, payingCustomer, unpaidSaving2,
                 balanceBeforeDeposit.add(recommendedDepositDue));
     }
-    
+
     @Test
     public void whenUnpaidScheduledInstallmentsExistTheCreatedSavingsTrxnDetailIsAddedToAccountPaymentTrxns() {
 
@@ -296,7 +296,7 @@ public class SavingsPaymentStrategyForVoluntarySavingsAccountsTest {
         when(savingsTransactionActivityHelper.createSavingsTrxnForDeposit(accountPayment, recommendedDepositDue,
                 payingCustomer, unpaidSaving2, balanceBeforeDeposit.add(recommendedDepositDue)))
                 .thenReturn(savingsTrxnDetail);
-        
+
         // exercise test
         paymentStrategy.makeScheduledPayments(accountPayment, unpaidDepositsForPayingCustomer, payingCustomer,
                 SavingsType.VOLUNTARY, balanceBeforeDeposit);

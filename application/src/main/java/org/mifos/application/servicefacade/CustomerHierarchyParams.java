@@ -57,13 +57,13 @@ public class CustomerHierarchyParams {
     public LocalDate getTransactionDate() {
         return this.transactionDate;
     }
-    
+
     @Override
     public boolean equals(final Object obj) {
         CustomerHierarchyParams rhs = (CustomerHierarchyParams) obj;
         return EqualsBuilder.reflectionEquals(this, rhs);
     }
-    
+
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);

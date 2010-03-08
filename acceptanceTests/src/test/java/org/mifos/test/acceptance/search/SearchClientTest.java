@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.search;
 
 import org.mifos.framework.util.DbUnitUtilities;
@@ -48,11 +48,11 @@ public class SearchClientTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
 
     private AppLauncher appLauncher;
-    
+
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -73,29 +73,29 @@ public class SearchClientTest extends UiTestCaseBase {
         int numResults = searchForClient("Stu123");
         Assert.assertEquals( numResults, 38 );
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchSingleClientTest() throws Exception {
         int numResults = searchForClient("Stu1232993852651 Client1232993852651");
         Assert.assertEquals( numResults, 1 );
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchNonExistentClientTest() throws Exception {
         int numResults = searchForClient("zzz");
         Assert.assertEquals( numResults, 0 );
 
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private int searchForClient(String clientName) throws Exception {
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         SearchResultsPage searchResultsPage = homePage.search(clientName);
         searchResultsPage.verifyPage();
-     
+
         int numResults = searchResultsPage.countSearchResults();
-        
+
         return numResults;
      }
 }

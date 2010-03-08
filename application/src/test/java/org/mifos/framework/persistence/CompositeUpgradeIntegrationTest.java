@@ -39,17 +39,17 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Connection connection;
-    
+
     @Override
     public void setUp() {
         connection = StaticHibernateUtil.getSessionTL().connection();
     }
-    
+
     @Override
     public void tearDown() throws Exception {
         databaseWithVersion();
     }
-    
+
     public void testBasics() throws Exception {
         databaseWithVersion();
         DummyUpgrade upgradeOne = new DummyUpgrade(DatabaseVersionPersistence.APPLICATION_VERSION+1);
@@ -93,7 +93,7 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection).read());
     }
 
-    
+
     private void databaseWithVersion() throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute("truncate table DATABASE_VERSION");

@@ -55,11 +55,11 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyTest 
         assertThat(meetingDates.get(0), is(feb17th2010.toDate()));
         assertThat(scheduledDates.get(0), is(feb17th2010));
     }
-    
+
     public void testShouldReturnNearestMatchingDateToDateGivenAsMeetingDate() throws Exception {
 
         DateTime feb16 = feb17th2010.minusDays(1);
-        
+
         meeting.setStartDate(feb16.toDate());
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
 
@@ -70,11 +70,11 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyTest 
         assertThat(meetingDates.get(0), is(feb17th2010.toDate()));
         assertThat(scheduledDates.get(0), is(feb17th2010));
     }
-    
+
     public void testShouldReturnNearestMatchingDateToDateGivenAsMeetingDateWhenDateGivenIsJustPastDayOfWeek() throws Exception {
 
         DateTime feb18 = feb17th2010.plusDays(1);
-        
+
         meeting.setStartDate(feb18.toDate());
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
 
@@ -85,7 +85,7 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyTest 
         assertThat(meetingDates.get(0), is(feb17th2010.plusWeeks(1).toDate()));
         assertThat(scheduledDates.get(0), is(feb17th2010.plusWeeks(1)));
     }
-    
+
     public void testShouldReturnListOfDatesMatchingSchedule() throws Exception {
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
@@ -96,16 +96,16 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyTest 
 
         assertThat(meetingDates.get(0), is(feb17th2010.toDate()));
         assertThat(scheduledDates.get(0), is(feb17th2010));
-        
+
         assertThat(meetingDates.get(1), is(feb17th2010.plusWeeks(1).toDate()));
         assertThat(scheduledDates.get(1), is(feb17th2010.plusWeeks(1)));
-        
+
         assertThat(meetingDates.get(2), is(feb17th2010.plusWeeks(2).toDate()));
         assertThat(scheduledDates.get(2), is(feb17th2010.plusWeeks(2)));
-        
+
         assertThat(meetingDates.get(3), is(feb17th2010.plusWeeks(3).toDate()));
         assertThat(scheduledDates.get(3), is(feb17th2010.plusWeeks(3)));
-        
+
         assertThat(meetingDates.get(4), is(feb17th2010.plusWeeks(4).toDate()));
         assertThat(scheduledDates.get(4), is(feb17th2010.plusWeeks(4)));
     }

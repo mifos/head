@@ -23,7 +23,7 @@ package org.mifos.accounts.savings.util.helpers;
 public class SavingsConstants {
     // constants used at jsps
     public static final String AMOUNT = "Amount";
-        
+
     public static final String SAVINGS_PRD_OFFERINGS = "savingsPrdOfferings";
 
     public static final String CREATE_SAVINGS_ACCOUNT = "createSavingsAccount";
@@ -90,9 +90,9 @@ public class SavingsConstants {
     public static final String RECOMMENDED_AMOUNT = "Recommended amount for deposit";
 
     public static final String MANDATORY_AMOUNT = "Mandatory amount for deposit";
-    
+
     public static final String MANDATORY_AMOUNT_FOR_DEPOSIT_KEY = "Savings.mandatoryAmountForDeposit";
-    
+
     public static final String RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY = "Savings.recommendedAmountForDeposit";
 
     // error messages

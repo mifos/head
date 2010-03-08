@@ -89,7 +89,7 @@ public class Table {
 
     /**
      * Function to get a complete row.
-     * 
+     *
      * @param obj
      * @return string a complete row.
      * @throws TableTagException
@@ -112,7 +112,7 @@ public class Table {
 
     /**
      * Function to get the path
-     * 
+     *
      * @param key
      * @return path
      */

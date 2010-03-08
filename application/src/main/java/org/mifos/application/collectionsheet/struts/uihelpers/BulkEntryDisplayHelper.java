@@ -164,24 +164,24 @@ public class BulkEntryDisplayHelper {
         final int totalProductsSize = 2 * (loanProducts.size() + savingsProducts.size());
         final Double[] centerTotals = new Double[(totalProductsSize + 1)];
         Double[] groupTotals = new Double[(totalProductsSize + 1)];
-        
+
         final MifosCurrency currency = centerEntry.getCurrency();
         final ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
                 .getPreferredLocale());
         final String accountLabel = resources.getString(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
-        
+
         final List<CollectionSheetEntryView> groupEntries = centerEntry.getCollectionSheetEntryChildren();
 
         for (CollectionSheetEntryView groupEntry : groupEntries) {
-            
+
             groupTotals = new Double[(totalProductsSize + 1)];
             int groupInitialAccNum = rowIndex;
-            
+
             final List<CollectionSheetEntryView> clientEntries = groupEntry.getCollectionSheetEntryChildren();
             final int clientCount = clientEntries.size();
             final String groupName = groupEntry.getCustomerDetail().getDisplayName();
             buildGroupName(builder, groupName, totalProductsSize + 1);
-            
+
             for (CollectionSheetEntryView clientEntry : clientEntries) {
                 final int levelId = 1;
                 buildCompleteRow(clientEntry, loanProducts, savingsProducts, clientCount, groupInitialAccNum, rowIndex,
@@ -192,7 +192,7 @@ public class BulkEntryDisplayHelper {
                 BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
                 rowIndex++;
             }
-            
+
             final int levelId = 2;
             final String groupLabel = getLabel(ConfigurationConstants.GROUP, userContext);
             final String formattedGroupAccountStr = accountLabel.format(accountLabel, groupLabel);
@@ -206,7 +206,7 @@ public class BulkEntryDisplayHelper {
                     .size(), savingsProducts.size());
 
         }
-        
+
         final int levelId = 3;
         final String center = getLabel(ConfigurationConstants.CENTER, userContext);
         final String formattedCenterAccountStr = accountLabel.format(accountLabel, center);

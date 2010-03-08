@@ -57,7 +57,7 @@ public class ClientDetailEntity extends PersistentObject {
 
     /**
      * Create a new instance based on a view.
-     * 
+     *
      */
     public ClientDetailEntity(ClientBO client, ClientDetailView view) {
         super();

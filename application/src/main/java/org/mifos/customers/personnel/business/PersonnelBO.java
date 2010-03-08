@@ -65,7 +65,7 @@ public class PersonnelBO extends BusinessObject {
     static {
         ALL_PERSONNEL.setDisplayName("ALL");
     }
-    
+
     private final Short personnelId;
 
     private PersonnelLevelEntity level;

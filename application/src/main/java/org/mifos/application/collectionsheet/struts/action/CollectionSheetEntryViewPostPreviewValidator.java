@@ -41,7 +41,7 @@ public class CollectionSheetEntryViewPostPreviewValidator {
 
     public ActionErrors validate(final CollectionSheetEntryView collectionSheetEntry, final ActionErrors errors,
             final Locale locale) {
-        
+
         // FIXME - keithw - simplify and unit test validation
         return validatePopulatedData(collectionSheetEntry, errors, locale);
     }
@@ -137,7 +137,7 @@ public class CollectionSheetEntryViewPostPreviewValidator {
         }
         return errors;
     }
-    
+
     public static Double getDoubleValue(final String str) {
         return StringUtils.isNotBlank(str) ? new LocalizationConverter()
                 .getDoubleValueForCurrentLocale(str) : null;

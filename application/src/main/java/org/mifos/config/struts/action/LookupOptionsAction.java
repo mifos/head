@@ -193,7 +193,7 @@ public class LookupOptionsAction extends BaseAction {
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY)
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE)
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE)
-                || configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED) 
+                || configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED)
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)
                 || configurationEntity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)
                 );
@@ -402,9 +402,9 @@ public class LookupOptionsAction extends BaseAction {
             masterPersistence.updateValueListElementForLocale(data.getLookupId(), data.getLookupValue());
         } else {
             LookUpValueEntity newLookupValue =  masterPersistence.addValueListElementForLocale(
-                    DynamicLookUpValueCreationTypes.LookUpOption, data.getValueListId(), 
+                    DynamicLookUpValueCreationTypes.LookUpOption, data.getValueListId(),
                     data.getLookupValue());
-            
+
             /*
              * Add a special case for payment types since we not only need to create a new
              * lookup value but also a new PaymentTypeEntity when adding an entry
@@ -413,7 +413,7 @@ public class LookupOptionsAction extends BaseAction {
                 PaymentTypeEntity newPaymentType = new PaymentTypeEntity(newLookupValue);
                 new MasterPersistence().createOrUpdate(newPaymentType);
             }
-            
+
         }
     }
 

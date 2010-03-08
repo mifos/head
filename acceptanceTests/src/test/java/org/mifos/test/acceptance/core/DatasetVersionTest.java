@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -58,12 +58,12 @@ public class DatasetVersionTest extends UiTestCaseBase {
                 this.prefix = prefix;
                 this.ext = ext;
             }
-            
+
             public boolean accept(@SuppressWarnings("unused") File dir, String name){
                 boolean validFile = false;
                 if (name.startsWith(prefix) && name.endsWith(ext) ){
                     validFile = true;
-                }    
+                }
                 return validFile;
             }
         }
@@ -73,7 +73,7 @@ public class DatasetVersionTest extends UiTestCaseBase {
         File f = new File("target/test-classes/dataSets");
         FileExtensionFilter filter = new FileExtensionFilter("", "dbunit.xml.zip");
         File[] acceptList = f.listFiles(filter);
-        
+
         for(int j=0; j<acceptList.length; j++) {
             verifyDatabaseVersion(acceptList[j].getName());
         }
@@ -82,12 +82,12 @@ public class DatasetVersionTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyDatabaseVersion(String acceptanceDataSetFile) throws Exception {
         String[] tablesToValidate = { "DATABASE_VERSION" };
-        
+
         IDataSet acceptanceDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(acceptanceDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-        
+
         //compare acceptance data set version to db version on running application
-        dbUnitUtilities.verifyTables(tablesToValidate, acceptanceDataSet, databaseDataSet);     
-        
+        dbUnitUtilities.verifyTables(tablesToValidate, acceptanceDataSet, databaseDataSet);
+
     }
 }

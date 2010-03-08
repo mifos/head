@@ -85,7 +85,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
     }
 
     /*
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerLoanDto>> findAllLoanRepaymentsForCustomerHierarchy(

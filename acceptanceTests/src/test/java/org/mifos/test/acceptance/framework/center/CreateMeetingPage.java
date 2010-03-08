@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.center;
 
 import com.thoughtworks.selenium.Selenium;
@@ -32,11 +32,11 @@ public class CreateMeetingPage extends MifosPage {
 		super();
 	}
 
-	
+
 	public CreateMeetingPage(Selenium selenium) {
 		super(selenium);
 	}
-    
+
     public CreateCenterEnterDataPage submitAndGotoCreateCenterEnterDataPage(MeetingParameters parameters) {
         selectValueIfNotZero("weekDay", parameters.getWeekDay());
         typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
@@ -45,7 +45,7 @@ public class CreateMeetingPage extends MifosPage {
         waitForPageToLoad();
         return new CreateCenterEnterDataPage(selenium);
     }
-    
+
     public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage(MeetingParameters parameters) {
         selectValueIfNotZero("weekDay", parameters.getWeekDay());
         typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
@@ -54,7 +54,7 @@ public class CreateMeetingPage extends MifosPage {
         waitForPageToLoad();
         return new CreateClientEnterMfiDataPage(selenium);
     }
-    
+
     public void verifyWorkingDays(String workingDays)
     {
         String workingDaysInWeekFromPage[] =  selenium.getSelectOptions("createmeeting.input.dayOfWeek");

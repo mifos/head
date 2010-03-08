@@ -65,7 +65,7 @@ public class RawButton {
 
     /**
      * Function get the ondblclick
-     * 
+     *
      * @return Returns the ondblclick.
      */
     public String getOndblclick() {
@@ -74,7 +74,7 @@ public class RawButton {
 
     /**
      * Function set the ondblclick
-     * 
+     *
      * @param ondblclick
      *            The ondblclick to set.
      */
@@ -84,7 +84,7 @@ public class RawButton {
 
     /**
      * Function get the style
-     * 
+     *
      * @return Returns the style.
      */
     public String getStyle() {
@@ -93,7 +93,7 @@ public class RawButton {
 
     /**
      * Function set the style
-     * 
+     *
      * @param style
      *            The style to set.
      */
@@ -103,7 +103,7 @@ public class RawButton {
 
     /**
      * Function get the title
-     * 
+     *
      * @return Returns the title.
      */
     public String getTitle() {
@@ -112,7 +112,7 @@ public class RawButton {
 
     /**
      * Function set the title
-     * 
+     *
      * @param title
      *            The title to set.
      */
@@ -122,7 +122,7 @@ public class RawButton {
 
     /**
      * Function get the type
-     * 
+     *
      * @return Returns the type.
      */
     public String getType() {
@@ -131,7 +131,7 @@ public class RawButton {
 
     /**
      * Function set the type
-     * 
+     *
      * @param type
      *            The type to set.
      */
@@ -141,7 +141,7 @@ public class RawButton {
 
     /**
      * Function get the value
-     * 
+     *
      * @return Returns the value.
      */
     public String getValue() {
@@ -150,7 +150,7 @@ public class RawButton {
 
     /**
      * Function set the value
-     * 
+     *
      * @param value
      *            The value to set.
      */
@@ -185,12 +185,12 @@ public class RawButton {
     /*
      * Helper function to append the string representaion of attributes to
      * string buffer results
-     * 
+     *
      * @param handlers: String buffer to hold string representation of
      * attributes
-     * 
+     *
      * @param name: name of the attribute
-     * 
+     *
      * @param value: value of attribute
      */
 
@@ -206,7 +206,7 @@ public class RawButton {
 
     /**
      * Function get the disabled
-     * 
+     *
      * @return Returns the disabled.
      */
     public String getDisabled() {
@@ -215,7 +215,7 @@ public class RawButton {
 
     /**
      * Function set the disabled
-     * 
+     *
      * @param disabled
      *            The disabled to set.
      */
@@ -225,7 +225,7 @@ public class RawButton {
 
     /**
      * Function get the id
-     * 
+     *
      * @return Returns the id.
      */
     public String getId() {
@@ -234,7 +234,7 @@ public class RawButton {
 
     /**
      * Function set the id
-     * 
+     *
      * @param id
      *            The id to set.
      */
@@ -244,7 +244,7 @@ public class RawButton {
 
     /**
      * Function get the name
-     * 
+     *
      * @return Returns the name.
      */
     public String getName() {
@@ -253,7 +253,7 @@ public class RawButton {
 
     /**
      * Function set the name
-     * 
+     *
      * @param name
      *            The name to set.
      */
@@ -263,7 +263,7 @@ public class RawButton {
 
     /**
      * Function get the onclick
-     * 
+     *
      * @return Returns the onclick.
      */
     public String getOnclick() {
@@ -272,7 +272,7 @@ public class RawButton {
 
     /**
      * Function set the onclick
-     * 
+     *
      * @param onclick
      *            The onclick to set.
      */

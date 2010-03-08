@@ -81,8 +81,8 @@ public interface Constants {
     public static final String USER_CONTEXT_KEY = "UserContext";
     public static final String ACTIVITYCONTEXT = "ActivityContext";
     public static final String BUSINESS_KEY = "BusinessKey";
-    
-    public static final String ACCOUNT_TYPE = "AccountType";    
+
+    public static final String ACCOUNT_TYPE = "AccountType";
     public static final String ACCOUNT_VERSION = "AccountVersion";
     public static final String ACCOUNT_ID = "AccountId";
 
@@ -99,7 +99,7 @@ public interface Constants {
      * value - it is to turn off caching in the browser (why not just use the
      * various "don't cache" headers?) See
      * http://wiki.java.net/bin/view/Javatools/BackButton
-     * 
+     *
      * A related machanism is {@link TransactionDemarcate}.
      */
     public static final String RANDOMNUM = "randomNUm";

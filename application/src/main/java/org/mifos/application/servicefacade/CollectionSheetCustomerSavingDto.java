@@ -78,7 +78,7 @@ public class CollectionSheetCustomerSavingDto {
     public void setCurrencyId(final Short currencyId) {
         this.currencyId = currencyId;
     }
-    
+
     public Short getRecommendedAmountUnitId() {
         return this.recommendedAmountUnitId;
     }

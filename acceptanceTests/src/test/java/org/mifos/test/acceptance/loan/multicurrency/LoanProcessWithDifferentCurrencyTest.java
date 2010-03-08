@@ -93,10 +93,10 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     public void createLoanProductThenAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
                 "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml.zip", dataSource, selenium);
-        
+
         createWeeklyLoanProduct();
         createLoanAccountOfDifferentCurrency("Client-1-USD");
-        
+
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
                 "LoanProcessWithDifferentCurrencyTest_002_dbunit.xml.zip", dataSource, selenium);
 
@@ -182,7 +182,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         formParameters.setCurrencyId(Short.valueOf("1"));
         return formParameters;
     }
-    
+
     private void applyPayment(String loanAccountId) {
         PaymentParameters paymentParameters = new PaymentParameters();
         paymentParameters.setAmount("1018"); // interest + principal
@@ -190,7 +190,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         paymentParameters.setTransactionDateMM("02");
         paymentParameters.setTransactionDateYYYY("2010");
         paymentParameters.setPaymentType(PaymentParameters.CASH);
-        
+
         loanTestHelper.applyPayment(loanAccountId, paymentParameters);
     }
 

@@ -45,7 +45,7 @@ public class OfficeChangeEvent implements SecurityEvent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mifos.security.util.SecurityEvent#getEventType()
      */
     public String getEventType() {
@@ -54,7 +54,7 @@ public class OfficeChangeEvent implements SecurityEvent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mifos.security.util.SecurityEvent#getObject()
      */
     public Object getObject() {

@@ -76,7 +76,7 @@ public class SavingsBOTest {
 
     @Mock
     private PersonnelBO savingsOfficer;
-    
+
     @Mock
     private PersonnelBO createdByUser;
 
@@ -91,10 +91,10 @@ public class SavingsBOTest {
 
     @Mock
     private SavingsActivityEntity savingsActivity;
-    
+
     @Mock
     private SavingsActivityEntity secondSavingsActivity;
-    
+
     @Mock
     private SavingsTrxnDetailEntity savingsTrxnDetail;
 
@@ -212,7 +212,7 @@ public class SavingsBOTest {
         when(
                 savingsTransactionActivityHelper.createSavingsActivityForDeposit(createdByUser, amountToDeposit,
                         savingsBalance, dateOfDeposit, savingsAccount)).thenReturn(savingsActivity);
-        
+
         when(secondAccountPayment.getAmount()).thenReturn(amountToDeposit);
         when(secondAccountPayment.getPaymentDate()).thenReturn(dateOfDeposit);
         when(
@@ -379,7 +379,7 @@ public class SavingsBOTest {
         verify(this.savingsTransactionActivityHelper).createSavingsTrxnForDeposit(accountPayment, excessDepositAmount,
                 payingCustomer, null, expectedTotalBalance);
     }
-    
+
     @Test
     public void overpayingMandatoryOrVoluntaryDepositAmountResultsInASavingsTrxnDetailForExcessAmountToBeAddedToAccountPaymentTransactions()
             throws AccountException {

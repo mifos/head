@@ -192,7 +192,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     initializeEntityMaster();
                     final MifosScheduler mifosScheduler = new MifosScheduler();
                     mifosScheduler.registerTasks();
-                    
+
                     if (null != ctx) {
                         ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
                     }
@@ -204,7 +204,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 }
             }
         } catch (Exception e) {
-            String errMsgStart = "unable to start Mifos web application"; 
+            String errMsgStart = "unable to start Mifos web application";
             if (null == LOG) {
                 System.err.println(errMsgStart + " and logger is not available!");
                 e.printStackTrace();
@@ -332,7 +332,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     /**
      * This function initialize and bring up the authorization and
      * authentication services
-     * 
+     *
      * @throws AppNotConfiguredException
      *             - IF there is any failures during init
      */

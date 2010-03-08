@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -35,7 +35,7 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
         Assert.assertEquals(selenium.getText("CreateMultipleLoanAccountsSearchResults.clientName." + clientNumber), expectedClientName);
         selenium.check("CreateMultipleLoanAccountsSearchResults.checkbox." + clientNumber);
     }
-    
+
     public void updateLoanPurposeForClient(int clientNumber, String loanPurpose){
         selenium.select("clientDetails[" + clientNumber + "].businessActivity", loanPurpose);
     }
@@ -51,7 +51,7 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
         waitForPageToLoad();
         return new CreateLoanAccountsSuccessPage(selenium);
     }
-    
+
     public void verifyPage() {
         this.verifyPage("CreateMultipleLoanAccountsSearchResults");
     }

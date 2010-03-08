@@ -31,7 +31,7 @@ public interface ClientAttendanceDao extends DataAccessObject {
 
     public List<ClientAttendanceBO> findClientAttendance(Short branchId, String searchId, LocalDate meetingDate)
             throws PersistenceException;
-    
+
     public void save(List<ClientAttendanceBO> clientAttendances);
 
 }

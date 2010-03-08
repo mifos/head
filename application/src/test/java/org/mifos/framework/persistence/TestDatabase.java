@@ -51,7 +51,7 @@ public class TestDatabase {
     /**
      * Create a database and upgrade it to the first database version with a
      * number. Should be run on an empty database (no tables).
-     * 
+     *
      * @throws IOException
      */
     public static void upgradeToFirstNumberedVersion(Connection connection) throws SQLException, IOException {
@@ -86,13 +86,13 @@ public class TestDatabase {
         // called.
         FinancialInitializer.initialize();
     }
-    
+
     public static void createMySQLTestDatabase() throws Exception {
         dropMySQLDatabase();
         createLatestSchema();
         insertTestData();
     }
-    
+
     public static void createLatestSchema() throws Exception {
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
@@ -100,7 +100,7 @@ public class TestDatabase {
         connection.commit();
         connection.close();
     }
-    
+
     public static void insertTestData() throws Exception {
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
@@ -110,7 +110,7 @@ public class TestDatabase {
         connection.commit();
         connection.close();
     }
-    
+
     /*public static void createNotMappedTables() throws Exception {
         Connection connection = getJDBCConnection();
         String sql = "CREATE TABLE if not exists DATABASE_VERSION ( DATABASE_VERSION INTEGER ) ENGINE=InnoDB CHARACTER SET utf8";
@@ -119,7 +119,7 @@ public class TestDatabase {
         connection.createStatement().execute(sql);
         connection.close();
     }*/
-    
+
     public static void dropMySQLDatabase() throws Exception {
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
@@ -127,7 +127,7 @@ public class TestDatabase {
         connection.commit();
         connection.close();
     }
-    
+
     public static void truncateMySQLDatabase() throws Exception {
         Connection connection = getJDBCConnection();
         connection.setAutoCommit(false);
@@ -138,7 +138,7 @@ public class TestDatabase {
 
     /**
      * MySQL specific schema dump generation
-     * 
+     *
      * @return database structure as String dump
      * @throws Exception
      */
@@ -184,7 +184,7 @@ public class TestDatabase {
         final String param = "&sessionVariables=FOREIGN_KEY_CHECKS=0";
         final String user = databaseSettings.getProperty("hibernate.connection.username");
         final String password = databaseSettings.getProperty("hibernate.connection.password");
-        
+
         return DriverManager.getConnection(url + param, user, password);
     }
 }

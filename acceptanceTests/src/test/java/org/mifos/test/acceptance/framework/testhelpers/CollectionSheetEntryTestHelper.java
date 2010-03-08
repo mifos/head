@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -39,11 +39,11 @@ import com.thoughtworks.selenium.Selenium;
 public class CollectionSheetEntryTestHelper {
 
      private final Selenium selenium;
-    
+
     public CollectionSheetEntryTestHelper(Selenium selenium) {
         this.selenium = selenium;
     }
-    
+
     public CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
@@ -52,7 +52,7 @@ public class CollectionSheetEntryTestHelper {
     }
 
     public CollectionSheetEntryConfirmationPage submitDefaultCollectionSheetEntryData(SubmitFormParameters formParameters) {
-        CollectionSheetEntrySelectPage selectPage = 
+        CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
@@ -62,10 +62,10 @@ public class CollectionSheetEntryTestHelper {
         confirmationPage.verifyPage();
         return confirmationPage;
     }
- 
+
     public CollectionSheetEntryEnterDataPage selectCenterAndContinue(SubmitFormParameters formParameters,
             CollectionSheetEntrySelectPage selectPage) {
-        CollectionSheetEntryEnterDataPage enterDataPage = 
+        CollectionSheetEntryEnterDataPage enterDataPage =
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterDataPage.verifyPage();
         return enterDataPage;

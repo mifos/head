@@ -37,7 +37,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which returns the centerName
-     * 
+     *
      * @return Returns the centerName.
      */
     public String getCenterName() {
@@ -46,7 +46,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which sets the centerName
-     * 
+     *
      * @param centerName
      *            The centerName to set.
      */
@@ -56,7 +56,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which returns the officeName
-     * 
+     *
      * @return Returns the officeName.
      */
     public String getOfficeName() {
@@ -65,7 +65,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which sets the officeName
-     * 
+     *
      * @param officeName
      *            The officeName to set.
      */
@@ -75,7 +75,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which returns the groupId
-     * 
+     *
      * @return Returns the groupId.
      */
     public int getGroupId() {
@@ -84,7 +84,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which sets the groupId
-     * 
+     *
      * @param groupId
      *            The groupId to set.
      */
@@ -94,7 +94,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which returns the groupName
-     * 
+     *
      * @return Returns the groupName.
      */
     public String getGroupName() {
@@ -103,7 +103,7 @@ public class GroupSearchResults implements Serializable {
 
     /**
      * Method which sets the groupName
-     * 
+     *
      * @param groupName
      *            The groupName to set.
      */

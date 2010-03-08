@@ -115,7 +115,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * Function get the name of XML and JSP file
-     * 
+     *
      * @return Returns the name.
      */
     public String getName() {
@@ -336,7 +336,7 @@ public class TableTag extends BodyTagSupport {
                     "<table width=\"400\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
         }
     }
-    
+
     private Properties nonLocalizedFileLookupDatabase = null;
 
     /**
@@ -393,7 +393,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * A helper method to get table object
-     * 
+     *
      * @param xmlFilePath
      *            path of the xml file.
      * @param name
@@ -628,7 +628,7 @@ public class TableTag extends BodyTagSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
      */
     @Override

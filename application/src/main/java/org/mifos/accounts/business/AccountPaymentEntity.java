@@ -39,13 +39,13 @@ import org.mifos.framework.util.helpers.Money;
 
 /*
  * Seems to be used to record information about a payment.
- * 
+ *
  * Has some duplicate information that is contained in {@link AccountTrxnEntity}
  */
 public class AccountPaymentEntity extends PersistentObject {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-    
+
     private final Integer paymentId = null;
 
     private final AccountBO account;
@@ -67,7 +67,7 @@ public class AccountPaymentEntity extends PersistentObject {
     private Money amount;
 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
-    
+
     private PersonnelBO createdByUser;
 
     private String comment;
@@ -144,7 +144,7 @@ public class AccountPaymentEntity extends PersistentObject {
     public void addAccountTrxn(final AccountTrxnEntity accountTrxn) {
         accountTrxns.add(accountTrxn);
     }
-    
+
     public PersonnelBO getCreatedByUser() {
         return this.createdByUser;
     }
@@ -201,7 +201,7 @@ public class AccountPaymentEntity extends PersistentObject {
     public String getComment() {
         return comment;
     }
-    
+
     public void setComment(String comment) {
         this.comment = comment;
     }

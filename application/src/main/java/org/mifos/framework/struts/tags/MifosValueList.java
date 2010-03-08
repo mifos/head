@@ -145,7 +145,7 @@ public class MifosValueList extends BodyTagSupport {
 
     /**
      * Function to render the tag in jsp
-     * 
+     *
      * @throws JspException
      */
     @Override
@@ -230,7 +230,7 @@ public class MifosValueList extends BodyTagSupport {
     /**
      * Map a CustomValueListElement to a String of the form:
      * "CustomValueListId;CustomValueListValue;original"
-     * 
+     *
      */
     private static String mapCustomValueListElementToString(CustomValueListElement element) {
         Integer id = element.getLookUpId();

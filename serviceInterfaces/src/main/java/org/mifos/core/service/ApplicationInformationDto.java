@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.core.service;
 
 public class ApplicationInformationDto {
@@ -25,7 +25,7 @@ public class ApplicationInformationDto {
 	private String svnRevision;
 	private String buildTag;
 	private String buildId;
-	
+
 	public String getBuildId() {
 		return buildId;
 	}
@@ -44,5 +44,5 @@ public class ApplicationInformationDto {
 	public void setBuildTag(String buildNumber) {
 		this.buildTag = buildNumber;
 	}
-	
+
 }

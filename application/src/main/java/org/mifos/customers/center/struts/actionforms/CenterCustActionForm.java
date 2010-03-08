@@ -90,7 +90,7 @@ public class CenterCustActionForm extends CustomerActionForm {
 
     /*
      * Validation is done in the order that the fields appear on the UI.
-     * 
+     *
      * @see
      * org.mifos.customers.struts.actionforms.CustomerActionForm#
      * validateFields(javax.servlet.http.HttpServletRequest, java.lang.String)

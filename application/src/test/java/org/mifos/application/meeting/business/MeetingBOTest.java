@@ -24,7 +24,7 @@ public class MeetingBOTest {
 
     @Mock
     FiscalCalendarRules fiscalCalendarRules;
-    
+
     @Mock
     MasterPersistence masterPersistence;
 
@@ -34,13 +34,13 @@ public class MeetingBOTest {
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 4);
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 7), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 8), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 7), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 8), paymentDate), is(false));
     }
 
-    
+
     @Test
     public void testBiWeeklyMeetingInterval() {
         MeetingBO meeting = new MeetingBuilder().weekly().every(2).occuringOnA(WeekDay.THURSDAY).build();
@@ -48,37 +48,37 @@ public class MeetingBOTest {
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
 
         LocalDate paymentDate = new LocalDate(2010, 2, 4);
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 14), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 15), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 14), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 15), paymentDate), is(false));
     }
-    
+
     @Test
     public void testMonthlyOnDayOfMonthMeetingInterval() throws MeetingException {
         MeetingBO meeting = new MeetingBuilder().monthly().every(1).buildMonthlyForDayNumber(20);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 3);
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 28), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 1), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 28), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 1), paymentDate), is(false));
     }
-    
+
     @Test
     public void testBiMonthlyOnDayOfMonthMeetingInterval() throws MeetingException {
         MeetingBO meeting = new MeetingBuilder().monthly().every(2).buildMonthlyForDayNumber(20);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 3);
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 31), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 4, 1), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 31), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 4, 1), paymentDate), is(false));
     }
 
-    
+
     @Test
     public void testMonthlyMeetingInterval() throws MeetingException, PersistenceException {
         when(masterPersistence.retrieveMasterEntity(WeekDay.FRIDAY.getValue(),WeekDaysEntity.class, null)).thenReturn(
@@ -89,12 +89,12 @@ public class MeetingBOTest {
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 19);
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 28), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 1), paymentDate), is(false));                       
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 28), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 1), paymentDate), is(false));
     }
-    
+
     @Test
     public void testBiMonthlyMeetingInterval() throws MeetingException, PersistenceException {
         when(masterPersistence.retrieveMasterEntity(WeekDay.FRIDAY.getValue(),WeekDaysEntity.class, null)).thenReturn(
@@ -105,9 +105,9 @@ public class MeetingBOTest {
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 19);
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 31), paymentDate), is(true));                       
-        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 4, 1), paymentDate), is(false));                       
-    }    
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 1, 31), paymentDate), is(false));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 2, 1), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 3, 31), paymentDate), is(true));
+        assertThat(meeting.queryDateIsInMeetingIntervalForFixedDate(new LocalDate(2010, 4, 1), paymentDate), is(false));
+    }
 }

@@ -25,7 +25,7 @@ import org.mifos.application.servicefacade.CollectionSheetService;
 
 /**
  * @deprecated collection sheets not used as a domain concept.
- * 
+ *
  * <b>CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)</b>
  */
 @Deprecated

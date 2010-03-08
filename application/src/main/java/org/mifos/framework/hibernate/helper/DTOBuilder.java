@@ -47,7 +47,7 @@ public class DTOBuilder {
 
     /**
      * Set the query inputs to build the DTO
-     * 
+     *
      * @param queryInputs
      */
     public void setInputs(QueryInputs queryInputs) {
@@ -59,7 +59,7 @@ public class DTOBuilder {
 
     /**
      * Build the DTO object based on the query output and query results
-     * 
+     *
      * @param dtoData
      * @return Object
      */

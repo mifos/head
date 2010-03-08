@@ -245,8 +245,8 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
             for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
                 LoanDto loanDto = loanService.createLoan(userContext, centerId, loanProductId, clientDetail
                         .getClientId(), accountState, clientDetail.getLoanAmount(), clientDetail
-                        //FIXME: Loan are created using double, the better way to do this would be to 
-                        // make those double argument as Money or BigDecimal. this workaround is added 
+                        //FIXME: Loan are created using double, the better way to do this would be to
+                        // make those double argument as Money or BigDecimal. this workaround is added
                         // to fix MIFOS-2698
                         .getDefaultNoOfInstall(), clientDetail.getMaxLoanAmount().getAmountDoubleValue()
                         , clientDetail.getMinLoanAmount().getAmountDoubleValue(),

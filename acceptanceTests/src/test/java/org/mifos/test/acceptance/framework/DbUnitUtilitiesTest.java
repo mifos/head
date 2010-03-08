@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class DbUnitUtilitiesTest {
 
     /**
      * Test for successful loading from a directory which includes spaces in its name.
-     * 
+     *
      */
 	public void testGetDataSetFromFile() throws DataSetException, IOException, URISyntaxException {
 	    DbUnitUtilities utilities = new DbUnitUtilities();

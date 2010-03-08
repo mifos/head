@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -33,13 +33,13 @@ public class CreateCenterEnterDataPage extends MifosPage {
 	public CreateCenterEnterDataPage(Selenium selenium) {
 		super(selenium);
 	}
-    
+
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
         String centerName;
         String loanOfficer;
         MeetingParameters meeting;
-        
+
         public String getCenterName() {
             return this.centerName;
         }
@@ -47,22 +47,22 @@ public class CreateCenterEnterDataPage extends MifosPage {
         public void setCenterName(String centerName) {
             this.centerName = centerName;
         }
-        
+
         public String getLoanOfficer() {
             return this.loanOfficer;
         }
-        
+
         public void setLoanOfficer(String loanOfficer) {
             this.loanOfficer = loanOfficer;
         }
-        
+
         public MeetingParameters getMeeting() {
             return this.meeting;
         }
 
         public void setMeeting(MeetingParameters meeting) {
             this.meeting = meeting;
-        }        
+        }
     }
 
     public CreateMeetingPage navigateToCreateMeetingPage(){
@@ -82,5 +82,5 @@ public class CreateCenterEnterDataPage extends MifosPage {
         selenium.click("createnewcenter.button.preview");
         waitForPageToLoad();
         return new CreateCenterPreviewDataPage(selenium);
-    }    
+    }
 }

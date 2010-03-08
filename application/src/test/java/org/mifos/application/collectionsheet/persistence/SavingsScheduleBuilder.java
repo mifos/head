@@ -33,7 +33,7 @@ import org.mifos.framework.util.helpers.Money;
  *
  */
 public class SavingsScheduleBuilder {
-    
+
     private AccountBO account;
     private CustomerBO customer;
     private Short installmentNumber = Short.valueOf("1");
@@ -45,10 +45,10 @@ public class SavingsScheduleBuilder {
 
         final SavingsScheduleEntity savingsScheduleEntity = new SavingsScheduleEntity(account, customer,
                 installmentNumber, new java.sql.Date(actionDate.getTime()), paymentStatus, depositDue);
-        
+
         return savingsScheduleEntity;
     }
-    
+
     public SavingsScheduleBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
         return this;

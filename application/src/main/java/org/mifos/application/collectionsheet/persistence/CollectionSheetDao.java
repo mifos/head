@@ -59,7 +59,7 @@ public interface CollectionSheetDao {
 
     Map<Integer, List<CollectionSheetCustomerSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
-    
+
     List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(CustomerHierarchyParams customerHierarchyParams);
 
 }

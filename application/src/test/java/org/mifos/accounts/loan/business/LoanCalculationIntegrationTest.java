@@ -94,7 +94,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 /*
  * LoanCalculationTest is a starting point for defining and exploring
  * expected behavior for different loan payment calculations.
- * 
+ *
  */
 public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
@@ -1064,7 +1064,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         compare999Account(testCaseData.getExpectedResult().getAccount999(), calculatedResults.getAccount999(), fileName);
 
     }
-    
+
     /**
      * Added as a fix for negative posted amounts stored in cvs for test
      * Since the MIFOS-2474 no account transaction is records -ve amount
@@ -1782,7 +1782,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                  * GraceType.GRACEONALLREPAYMENTS; else if
                  * (token.toUpperCase().equals("PRINCIPAL")) type =
                  * GraceType.PRINCIPALONLYGRACE; else type = GraceType.NONE;
-                 * 
+                 *
                  * config.setGracePeriodType(type); } else if
                  * (paramType.indexOf(gracePeriod)>= 0) { if
                  * (config.getGracePeriodType() != GraceType.NONE)

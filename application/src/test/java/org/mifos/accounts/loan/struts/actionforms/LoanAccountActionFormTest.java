@@ -324,7 +324,7 @@ public class LoanAccountActionFormTest extends TestCase {
         Assert.assertEquals("No Error was expected",0, errors.size());
         AccountingRules.setDigitsAfterDecimal(saveDigitsAfterDecimal);
     }
-    
+
     private ArrayList <FeeView> createDefaultFees() {
         AmountFeeBO amountFee = createMock(AmountFeeBO.class);
         expect(amountFee.getFeeId()).andReturn(Short.valueOf("1"));
@@ -333,7 +333,7 @@ public class LoanAccountActionFormTest extends TestCase {
         expect(amountFee.getFeeAmount()).andReturn(new Money(TestUtils.RUPEE,"5000.0")).times(2);
         expect(amountFee.isPeriodic()).andReturn(false).times(2);
         replay(amountFee);
-        
+
         RateFeeBO rateFee = createMock(RateFeeBO.class);
         expect(rateFee.getFeeId()).andReturn(Short.valueOf("1"));
         expect(rateFee.getFeeType()).andReturn(RateAmountFlag.RATE).times(2);
@@ -342,7 +342,7 @@ public class LoanAccountActionFormTest extends TestCase {
         expect(rateFee.getFeeFormula()).andReturn(createFeeFormulaEntityMock());
         expect(rateFee.isPeriodic()).andReturn(false).times(2);
         replay(rateFee);
-        
+
         UserContext userContext = createMock(UserContext.class);
         expect(userContext.getLocaleId()).andReturn(Short.valueOf("1")).times(2);
         replay(userContext);
@@ -351,7 +351,7 @@ public class LoanAccountActionFormTest extends TestCase {
         defaultFees.add(new FeeView(userContext, rateFee));
         return defaultFees;
     }
-    
+
     private FeeFormulaEntity createFeeFormulaEntityMock() {
         FeeFormulaEntity feeFormulaEntity = createMock(FeeFormulaEntity.class);
         expect(feeFormulaEntity.getFormulaString()).andReturn("FormulaString");

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.login;
 
 import org.testng.Assert;
@@ -29,12 +29,12 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 /**
  * Encapsulates the GUI based actions that can
- * be done from the Login page and the page 
+ * be done from the Login page and the page
  * that will be navigated to.
  *
  */
 public class LoginPage extends MifosPage {
-	
+
 	private static final String DEFAULT_PASSWORD = "testmifos";
     private static final String DEFAULT_USERNAME = "mifos";
     private static final String USERNAME_INPUT_ID	= "login.input.username";
@@ -49,15 +49,15 @@ public class LoginPage extends MifosPage {
 	public LoginPage() {
 		super();
 	}
-	
+
 	public LoginPage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
     public HomePage loginSuccessfullyUsingDefaultCredentials() {
         return loginSuccessfulAs(DEFAULT_USERNAME, DEFAULT_PASSWORD);
     }
-    
+
 	public HomePage loginSuccessfulAs(String userName, String password) {
 		selenium.open("loginAction.do?method=load");
 		selenium.type(USERNAME_INPUT_ID, userName);
@@ -66,7 +66,7 @@ public class LoginPage extends MifosPage {
 		waitForPageToLoad();
 		return new HomePage(selenium);
 	}
-	
+
     public ChangePasswordPage loginAndGoToChangePasswordPageAs(String userName, String password) {
         selenium.open("loginAction.do?method=load");
         selenium.type(USERNAME_INPUT_ID, userName);
@@ -74,8 +74,8 @@ public class LoginPage extends MifosPage {
         selenium.click(LOGIN_BUTTON_ID);
         waitForPageToLoad();
         return new ChangePasswordPage(selenium);
-    }	
-	
+    }
+
 	public LoginPage loginFailedAs(String userName, String password) {
 		selenium.open("loginAction.do?method=load");
 		selenium.type(USERNAME_INPUT_ID, userName);

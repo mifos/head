@@ -71,7 +71,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     private CustomerBO parentGroup;
 
     private String groupFlag;
-    
+
     private List<FamilyDetailDTO> familyDetailBean=new ArrayList<FamilyDetailDTO>();
 
     public List<FamilyDetailDTO> getFamilyDetailBean() {
@@ -79,7 +79,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
 
-    public void setFamilyDetailBean(List<FamilyDetailDTO> familyDetailBean) {        
+    public void setFamilyDetailBean(List<FamilyDetailDTO> familyDetailBean) {
         this.familyDetailBean = familyDetailBean;
     }
 
@@ -100,11 +100,11 @@ public class ClientCustActionForm extends CustomerActionForm {
     private String dateOfBirthYY;
 
     private String nextOrPreview;
-    
+
     private String editFamily;
 
     private String gotErrorInPage;
-    
+
     private String deleteThisRow;
 
     public String getDeleteThisRow() {
@@ -143,11 +143,11 @@ public class ClientCustActionForm extends CustomerActionForm {
     private int age;
 
     private List<Short> selectedOfferings;
-    
+
     private List familyNames;
-    
-    private List familyDetails;  
-   
+
+    private List familyDetails;
+
 
     public List<ClientFamilyDetailView> getFamilyDetails() {
         return this.familyDetails;
@@ -162,9 +162,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyNames(List familyNames) {
         this.familyNames = familyNames;
     }
-    
+
     private int[] relativePrimaryKey=new int[ClientRules.getMaximumNumberOfFamilyMembers()];
-    
+
     public int[] getRelativePrimaryKey() {
         return this.relativePrimaryKey;
     }
@@ -180,7 +180,7 @@ public class ClientCustActionForm extends CustomerActionForm {
      *  Please note i have added display name into family detail view so that i can iterate over only one collection
      *  when i do preview of this page.
      */
-  
+
     public void constructFamilyDetails() {
         this.familyDetails=new ArrayList<ClientFamilyDetailView>();
         this.familyNames=new ArrayList<ClientNameDetailView>();
@@ -192,18 +192,18 @@ public class ClientCustActionForm extends CustomerActionForm {
             familyNames.setNameType(getFamilyRelationship(row));
             familyNames.setDisplayName(new StringBuilder(getFamilyFirstName(row)+getFamilyLastName(row)));
             ClientFamilyDetailView familyDetails=null;
-            
+
             try {
                 if(getFamilyDateOfBirth(row)!=null){
                     familyDetails = new ClientFamilyDetailView(getFamilyRelationship(row),getFamilyGender(row),
                             getFamilyLivingStatus(row),DateUtils.getDateAsSentFromBrowser(getFamilyDateOfBirth(row)));
-                    familyDetails.setDisplayName(familyNames.getDisplayName());  
+                    familyDetails.setDisplayName(familyNames.getDisplayName());
                 } else {
                     familyDetails = new ClientFamilyDetailView(getFamilyRelationship(row),getFamilyGender(row),
                             getFamilyLivingStatus(row),null);
-                    familyDetails.setDisplayName(familyNames.getDisplayName());  
+                    familyDetails.setDisplayName(familyNames.getDisplayName());
                 }
-                
+
             } catch (InvalidDateException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -212,7 +212,7 @@ public class ClientCustActionForm extends CustomerActionForm {
             this.familyDetails.add(familyDetails);
         }
     }
-    
+
     public String removeSpaces(String s) {
         StringTokenizer st = new StringTokenizer(s," ",false);
         String t="";
@@ -231,7 +231,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
         for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++)
             selectedOfferings.add(null);
-        
+
         initializeFamilyMember();
         addFamilyMember();
     }
@@ -344,7 +344,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         if (i < ClientConstants.MAX_OFFERINGS_SIZE)
             selectedOfferings.set(i, value);
     }
-    
+
 
     @Override
     protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
@@ -413,8 +413,8 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
         return errors;
     }
-    
-    
+
+
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
         if (picture != null) {
             String fileName = picture.getFileName();
@@ -434,7 +434,7 @@ public class ClientCustActionForm extends CustomerActionForm {
             }
         }
     }
-    
+
     private void validateGender(ActionErrors errors, ResourceBundle resources) {
         if (clientDetailView.getGender() == null)
             errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
@@ -560,7 +560,7 @@ public class ClientCustActionForm extends CustomerActionForm {
                 break;
         }
     }
-    
+
     public void validateNumberOfFamilyMembers(ActionErrors errors) {
         if(familyFirstName.size()==ClientRules.getMaximumNumberOfFamilyMembers()){
             errors.add(ClientConstants.INVALID_NUMBER_OF_FAMILY_MEMBERS, new ActionMessage(ClientConstants.INVALID_NUMBER_OF_FAMILY_MEMBERS,
@@ -580,9 +580,9 @@ public class ClientCustActionForm extends CustomerActionForm {
            }
        }
     }
-    public void validateFamilyDateOfBirths(ActionErrors errors) { 
-       //Setting date of births for family members before validating it. 
-       setFamilyDateOfBirth(); 
+    public void validateFamilyDateOfBirths(ActionErrors errors) {
+       //Setting date of births for family members before validating it.
+       setFamilyDateOfBirth();
        for(int row=0;row<familyDateOfBirth.size();row++){
            if (StringUtils.isBlank(familyDateOfBirth.get(row))) {
                     errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
@@ -604,11 +604,11 @@ public class ClientCustActionForm extends CustomerActionForm {
                     }
                 } catch (InvalidDateException e) {
                     errors.add(ClientConstants.INVALID_FAMILY_DOB_EXCPETION, new ActionMessage(ClientConstants.INVALID_FAMILY_DOB_EXCPETION, row+1));
-                }    
+                }
             }
         }
      }
- 
+
     public void validateFamilyGender(ActionErrors errors) {
         for(int row=0;row<familyGender.size();row++) {
             if(familyGender.get(row) == null) {
@@ -617,16 +617,16 @@ public class ClientCustActionForm extends CustomerActionForm {
             }
         }
     }
-    
+
     public void validateFamilyRelationship(ActionErrors errors) {
         for(int row=0;row<familyRelationship.size();row++){
             if(familyRelationship.get(row)==null) {
-                errors.add(ClientConstants.INVALID_FAMILY_RELATIONSHIP, new ActionMessage(ClientConstants.INVALID_FAMILY_RELATIONSHIP));           
+                errors.add(ClientConstants.INVALID_FAMILY_RELATIONSHIP, new ActionMessage(ClientConstants.INVALID_FAMILY_RELATIONSHIP));
                 break;
             }
         }
     }
-    
+
     public void validateFamilyLivingStatus(ActionErrors errors) {
         for(int row=0;row<familyLivingStatus.size();row++){
             if(familyLivingStatus.get(row)==null) {
@@ -651,7 +651,7 @@ public class ClientCustActionForm extends CustomerActionForm {
          }
         if(spouseCount>1) {
             errors.add(ClientConstants.INVALID_NUMBER_OF_SPOUSES,new ActionMessage(ClientConstants.INVALID_NUMBER_OF_SPOUSES));
-        } 
+        }
         if(fatherCount>1) {
             errors.add(ClientConstants.INVALID_NUMBER_OF_FATHERS,new ActionMessage(ClientConstants.INVALID_NUMBER_OF_FATHERS));
        }
@@ -684,7 +684,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         } else {
             return null;
         }
-        
+
     }
     public void setDateOfBirth(String receiptDate) throws InvalidDateException {
         if (StringUtils.isBlank(receiptDate)) {
@@ -734,39 +734,39 @@ public class ClientCustActionForm extends CustomerActionForm {
             return false;
         }
     }
-    
-    private List<Short> familyRelationship; 
+
+    private List<Short> familyRelationship;
     private List<String> familyFirstName;
     private List<String> familyMiddleName;
     private List<String> familyLastName;
     private List<String> familyDateOfBirthDD;
     private List<String> familyDateOfBirthMM;
     private List<String> familyDateOfBirthYY;
-    private List<Short> familyGender; 
+    private List<Short> familyGender;
     private List<Short> familyLivingStatus;
     private List<Integer> familyPrimaryKey;
-    
+
     //FirstName
     public List<String> getFamilyFirstName() {
         return this.familyFirstName;
     }
     public void setFamilyFirstName(List<String> familyFirstName) {
         this.familyFirstName = familyFirstName;
-    }    
+    }
 
     public String getFamilyFirstName(int forMember) {
         return familyFirstName.get(forMember);
     }
 
-    public void setFamilyFirstName(int forMember, String value) { 
+    public void setFamilyFirstName(int forMember, String value) {
         if(forMember<familyFirstName.size())
-            familyFirstName.set(forMember, value);       
+            familyFirstName.set(forMember, value);
     }
-    
+
     //RelationShip
     public List<Short> getFamilyRelationship() {
         return this.familyRelationship;
-    }    
+    }
 
     public void setFamilyRelationship(List<Short> familyRelationship) {
         this.familyRelationship = familyRelationship;
@@ -775,34 +775,34 @@ public class ClientCustActionForm extends CustomerActionForm {
         return familyRelationship.get(forMember);
     }
 
-    public void setFamilyRelationship(int forMember, Short value) {   
+    public void setFamilyRelationship(int forMember, Short value) {
         if(forMember<familyRelationship.size())
-            familyRelationship.set(forMember, value);       
+            familyRelationship.set(forMember, value);
     }
-    
+
     //  MiddleName
     public List<String> getFamilyMiddleName() {
         return this.familyMiddleName;
     }
-    
+
     public void setFamilyMiddleName(List<String> familyMiddleName) {
         this.familyMiddleName = familyMiddleName;
     }
-    
+
     public String getFamilyMiddleName(int forMember) {
         return familyMiddleName.get(forMember);
     }
 
     public void setFamilyMiddleName(int forMember, String value) {
         if(forMember<familyMiddleName.size())
-            familyMiddleName.set(forMember, value);       
+            familyMiddleName.set(forMember, value);
     }
-    
+
 //LastName
     public List<String> getFamilyLastName() {
         return this.familyLastName;
     }
-    
+
     public void setFamilyLastName(List<String> familyLastName) {
         this.familyLastName = familyLastName;
     }
@@ -810,9 +810,9 @@ public class ClientCustActionForm extends CustomerActionForm {
         return familyLastName.get(forMember);
     }
 
-    public void setFamilyLastName(int forMember, String value) {  
+    public void setFamilyLastName(int forMember, String value) {
         if(forMember<familyLastName.size())
-            familyLastName.set(forMember, value);      
+            familyLastName.set(forMember, value);
     }
 
 //DOB-DD
@@ -826,9 +826,9 @@ public class ClientCustActionForm extends CustomerActionForm {
         return familyDateOfBirthDD.get(forMember);
     }
 
-    public void setFamilyDateOfBirthDD(int forMember, String value) {    
+    public void setFamilyDateOfBirthDD(int forMember, String value) {
         if(forMember<familyDateOfBirthDD.size())
-            familyDateOfBirthDD.set(forMember, value);        
+            familyDateOfBirthDD.set(forMember, value);
     }
   //DOB-MM
     public List<String> getFamilyDateOfBirthMM() {
@@ -841,9 +841,9 @@ public class ClientCustActionForm extends CustomerActionForm {
         return familyDateOfBirthMM.get(forMember);
     }
 
-    public void setFamilyDateOfBirthMM(int forMember, String value) {      
+    public void setFamilyDateOfBirthMM(int forMember, String value) {
         if(forMember<familyDateOfBirthMM.size())
-            familyDateOfBirthMM.set(forMember, value);       
+            familyDateOfBirthMM.set(forMember, value);
     }
 //DOB-YY
     public List<String> getFamilyDateOfBirthYY() {
@@ -858,9 +858,9 @@ public class ClientCustActionForm extends CustomerActionForm {
         return familyDateOfBirthYY.get(forMember);
     }
 
-    public void setFamilyDateOfBirthYY(int forMember, String value) {  
+    public void setFamilyDateOfBirthYY(int forMember, String value) {
         if(forMember<familyDateOfBirthYY.size())
-            familyDateOfBirthYY.set(forMember, value);       
+            familyDateOfBirthYY.set(forMember, value);
     }
    //Gender
     public List<Short> getFamilyGender() {
@@ -875,13 +875,13 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public void setFamilyGender(int forMember, Short value) {
         if(forMember<familyGender.size())
-            familyGender.set(forMember, value);          
+            familyGender.set(forMember, value);
     }
-    
+
 //Living Status
     public List<Short> getFamilyLivingStatus() {
         return this.familyLivingStatus;
-    }   
+    }
     public void setFamilyLivingStatus(List<Short> familyLivingStatus) {
         this.familyLivingStatus = familyLivingStatus;
     }
@@ -890,7 +890,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         return familyLivingStatus.get(forMember);
     }
 
-    public void setFamilyLivingStatus(int forMember, Short value) {   
+    public void setFamilyLivingStatus(int forMember, Short value) {
         if(forMember<familyLivingStatus.size())
             familyLivingStatus.set(forMember, value);
     }
@@ -903,47 +903,47 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyPrimaryKey(List<Integer> familyPrimaryKey) {
         this.familyPrimaryKey = familyPrimaryKey;
     }
-    
+
     public Integer getFamilyPrimaryKey(int forMember) {
         return familyPrimaryKey.get(forMember);
     }
-    
+
     public void setFamilyPrimaryKey(int forMember, Integer value) {
         familyPrimaryKey.set(forMember, value);
     }
 
-    public void initializeFamilyMember(){       
+    public void initializeFamilyMember(){
         //relationship
         familyRelationship = new ArrayList<Short>();
-        
+
         //fistName
         familyFirstName = new ArrayList<String>();
-        
+
         //middleName
         familyMiddleName = new ArrayList<String>();
-        
+
         //lastName
         familyLastName = new ArrayList<String>();
-        
+
         //DOB-DD
         familyDateOfBirthDD = new ArrayList<String>();
-        
+
         //DOB-MM
         familyDateOfBirthMM = new ArrayList<String>();
-        
+
         //DOB-YY
         familyDateOfBirthYY = new ArrayList<String>();
-       
+
         //Gender
         familyGender = new ArrayList<Short>();
-        
+
         //LivingStatus
         familyLivingStatus = new ArrayList<Short>();
-        
+
         //Primary keys
         familyPrimaryKey=new ArrayList<Integer>();
     }
-    
+
     public void addFamilyMember() {
         familyPrimaryKey.add(null);
         familyRelationship.add(null);
@@ -956,7 +956,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         familyGender.add(null);
         familyLivingStatus.add(null);
     }
-    
+
     public void removeFamilyMember(int member){
         familyPrimaryKey.remove(member);
         familyRelationship.remove(member);
@@ -969,11 +969,11 @@ public class ClientCustActionForm extends CustomerActionForm {
         familyGender.remove(member);
         familyLivingStatus.remove(member);
     }
-    
+
     public int getFamilySize() {
         return familyFirstName.size()-1;
     }
-    
+
     List<String> familyDateOfBirth;
 
     public List<String> getFamilyDateOfBirth() {
@@ -989,7 +989,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setFamilyDateOfBirth() {
         this.familyDateOfBirth=new ArrayList<String>();
         for(int forMember=0;forMember<familyDateOfBirthDD.size();forMember++) {
-            this.familyDateOfBirth.add(getDateOfBirth(getFamilyDateOfBirthDD(forMember), getFamilyDateOfBirthMM(forMember),  getFamilyDateOfBirthYY(forMember)));           
+            this.familyDateOfBirth.add(getDateOfBirth(getFamilyDateOfBirthDD(forMember), getFamilyDateOfBirthMM(forMember),  getFamilyDateOfBirthYY(forMember)));
         }
     }
 

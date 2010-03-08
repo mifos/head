@@ -68,12 +68,12 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
 
     private String flowKey;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
-        
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -231,12 +231,12 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
 
         MasterPersistence masterPersistenceService = new MasterPersistence();
 
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO, TestUtils.createMoney(100), 
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO, TestUtils.createMoney(100),
                 "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(),
-                TestObjectFactory.getPersonnel(userContext.getId()), currentDate, TestUtils.createMoney(200), 
+                TestObjectFactory.getPersonnel(userContext.getId()), currentDate, TestUtils.createMoney(200),
                 "payment done", null, TestUtils.createMoney(100), TestUtils.createMoney(100),
                         masterPersistenceService);
 

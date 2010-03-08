@@ -29,11 +29,11 @@ public class ClientSearchResultsPage extends MifosPage {
     public ClientSearchResultsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         this.verifyPage("MainSearchResults");
     }
-    
+
     public ClientViewDetailsPage navigateToSearchResult(String linkText) {
         selenium.click("link=" + linkText);
         waitForPageToLoad();

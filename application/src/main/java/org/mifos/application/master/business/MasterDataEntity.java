@@ -28,7 +28,7 @@ import org.mifos.framework.business.PersistentObject;
 /**
  * Subclasses of this class provide access to the database tables which
  * correspond to enum-like classes.
- * 
+ *
  * The replacement for a subclass of this class generally will be an enum. We
  * generally expect to move looking up messages from the database for
  * localization (language and MFI) to {@link MessageLookup}.
@@ -49,9 +49,9 @@ public abstract class MasterDataEntity extends PersistentObject {
         this.lookUpValue = lookUpValueEntity;
     }
 
-    public MasterDataEntity() {        
+    public MasterDataEntity() {
     }
-    
+
     public MasterDataEntity(Short id) {
         this.id = id;
     }

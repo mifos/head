@@ -52,7 +52,7 @@ public class MenuParser {
 
     /**
      * Method to parse xml and return crude menu
-     * 
+     *
      * @return array of crude Menu objects
      */
     public static Menu[] parse() throws SystemException {
@@ -94,7 +94,7 @@ public class MenuParser {
 
     /**
      * Method to build crude MenuGroup objects for a given top-menu-tab
-     * 
+     *
      * @param leftMenu
      *            is the root node for a top-menu-tab
      * @return array of MenuGroup objects
@@ -112,7 +112,7 @@ public class MenuParser {
 
     /**
      * Method to build crude MenuItem objects for a MenuGroup
-     * 
+     *
      * @param menuGroup
      *            is the root node for MenuGroup.
      * @return array of MenuItem objects
@@ -163,7 +163,7 @@ public class MenuParser {
 
     /**
      * Method to get all keys for a displayname of a given node
-     * 
+     *
      * @param node
      *            is the element whose display name is to be obtained
      * @return array of keys respective to display name
@@ -181,7 +181,7 @@ public class MenuParser {
 
     /**
      * Method to get link value for a menu item
-     * 
+     *
      * @param node
      *            is the menu item whose link is to be obtained
      * @return link as string

@@ -35,16 +35,16 @@ import org.mifos.framework.TestUtils;
  *
  */
 public class CustomerAccountBuilder {
-    
+
     private CustomerAccountBO customerAccount;
     private CustomerBO customer;
     private OfficeBO office;
     private PersonnelBO loanOfficer;
     private final Set<AmountFeeBO> accountFees = new HashSet<AmountFeeBO>();
-    
+
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
-    
+
     public CustomerAccountBO buildForUnitTests() {
 
         customerAccount = new CustomerAccountBO(customer, accountFees, office, loanOfficer, createdDate,
@@ -53,17 +53,17 @@ public class CustomerAccountBuilder {
     }
 
     public CustomerAccountBO buildForIntegrationTests() {
-        
+
         customerAccount = new CustomerAccountBO(customer, accountFees, office, loanOfficer, createdDate,
                 createdByUserId, true);
         return customerAccount;
     }
-    
+
     public CustomerAccountBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
         return this;
     }
-    
+
     public CustomerAccountBuilder withFee(final AmountFeeBO withFee) {
         accountFees.add(withFee);
         return this;

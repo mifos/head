@@ -66,5 +66,5 @@ public class JdbcBranchCashConfirmationReportParameterFormTest extends TestCase 
     private String getErrorCode(Errors errors, String fieldName) {
         return errors.getFieldError(fieldName).getErrorCode();
     }
-    
+
 }

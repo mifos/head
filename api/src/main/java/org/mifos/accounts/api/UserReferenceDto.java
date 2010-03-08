@@ -22,18 +22,18 @@ package org.mifos.accounts.api;
 
 
 /**
- * The Class UserReferenceDto is a Data Transfer Object to hold 
- * a reference to a Mifos user. A Mifos user is currently represented as 
+ * The Class UserReferenceDto is a Data Transfer Object to hold
+ * a reference to a Mifos user. A Mifos user is currently represented as
  * a PersonnelBO.
  */
 public class UserReferenceDto {
-    
+
     /** The user id. */
     private final short userId;
 
     /**
      * Instantiates a new user reference dto.
-     * 
+     *
      * @param userId the user id
      */
     public UserReferenceDto(short userId) {
@@ -42,7 +42,7 @@ public class UserReferenceDto {
 
     /**
      * Gets the user id.
-     * 
+     *
      * @return the user id
      */
     public short getUserId() {

@@ -241,7 +241,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     public void testSaveLoanArrearsBOWithLargeValueForAmountOutstanding() throws Exception {
         BranchReportLoanArrearsAgingBO branchReportLoanArrearsAgingBO = new BranchReportLoanArrearsAgingBO(
                 LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Integer.valueOf(1), Integer.valueOf(2),
-                createMoney(TestUtils.RUPEE, 15724323.10), createMoney(TestUtils.RUPEE,1283439.70), 
+                createMoney(TestUtils.RUPEE, 15724323.10), createMoney(TestUtils.RUPEE,1283439.70),
                 createMoney(TestUtils.RUPEE, 459625.70));
         BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(null, Short.valueOf("2"), DateUtils
                 .currentDate());

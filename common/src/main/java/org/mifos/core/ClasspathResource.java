@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.core;
 
 import java.io.BufferedReader;
@@ -30,8 +30,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
- * Load resources from the classpath. 
- * 
+ * Load resources from the classpath.
+ *
  */
 
 public class ClasspathResource {
@@ -39,10 +39,10 @@ public class ClasspathResource {
     public static ClasspathResource getInstance(String path) {
         return new ClasspathResource(path);
     }
-    
+
     /**
      * Returns the URI for the file name specified.
-     * It tries to load the file using the class loader and then 
+     * It tries to load the file using the class loader and then
      * returns the URI corresponding to the file.
      *
      * Returns null if the file is not found (or, perhaps, if we aren't
@@ -60,7 +60,7 @@ public class ClasspathResource {
         if(null!= url){
             // Encoding spaces in URL in order to fix issue 1759 (https://mifos.dev.java.net/issues/show_bug.cgi?id=1759)
             String encodedURL = url.toString().replaceAll(" ", "%20");
-            uri = new URI(encodedURL);          
+            uri = new URI(encodedURL);
         }
 
         return uri;
@@ -79,19 +79,19 @@ public class ClasspathResource {
             throw new MifosRuntimeException(e);
         }
     }
-    
+
     protected String path;
 
     public ClasspathResource(String path) {
         super();
         this.path = path;
     }
-    
+
     public URL getUrl(String name) {
         String resourcePath = this.path + name;
         return ClasspathResource.class.getResource(resourcePath);
     }
-    
+
     public InputStream getAsStream(String name) throws IOException {
         return getUrl(name).openStream();
     }

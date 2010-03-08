@@ -33,14 +33,14 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 public class CollectionSheetEntryViewTranslator {
 
     public CollectionSheetEntryDecomposedView toDecomposedView(final CollectionSheetEntryView collectionSheetEntryView) {
-        
+
         final List<LoanAccountsProductView> loanAccountViews = new ArrayList<LoanAccountsProductView>();
         final List<CustomerAccountView> customerAccountViews = new ArrayList<CustomerAccountView>();
         final List<CollectionSheetEntryView> parentCollectionSheetEntryViews = new ArrayList<CollectionSheetEntryView>();
-        
+
         recursivelyCreateListOfViews(collectionSheetEntryView, loanAccountViews, customerAccountViews,
                 parentCollectionSheetEntryViews);
-        
+
         return new CollectionSheetEntryDecomposedView(loanAccountViews, customerAccountViews,
                 parentCollectionSheetEntryViews);
     }
@@ -51,13 +51,13 @@ public class CollectionSheetEntryViewTranslator {
 
         final List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
         final Short levelId = parent.getCustomerDetail().getCustomerLevelId();
-        
+
         if (null != children) {
             for (CollectionSheetEntryView child : children) {
                 recursivelyCreateListOfViews(child, loanAccountViewsForCenter, customerAccountViews, parentCollectionSheetEntryViews);
             }
         }
-       
+
         parentCollectionSheetEntryViews.add(parent);
         if (!levelId.equals(CustomerLevel.CENTER.getValue())) {
             loanAccountViewsForCenter.addAll(parent.getLoanAccountDetails());

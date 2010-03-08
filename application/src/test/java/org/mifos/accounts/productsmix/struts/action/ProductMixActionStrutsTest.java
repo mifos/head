@@ -315,9 +315,9 @@ public class ProductMixActionStrutsTest extends MifosMockStrutsTestCase {
          * List<PrdOfferingBO> productMixList = (List<PrdOfferingBO>)
          * SessionUtils .getAttribute(ProductDefinitionConstants.PRODUCTMIXLIST,
          * request);
-         * 
+         *
          * Assert.assertNotNull(productMixList);
-         * 
+         *
          *Assert.assertTrue(1 == productMixList.size());
          */
         verifyNoActionErrors();

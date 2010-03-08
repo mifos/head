@@ -98,7 +98,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     private CustomerBO client;
 
     private UserContext userContext;
-    
+
     private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
     private List<Holiday> holidays = new ArrayList<Holiday>();
 
@@ -121,7 +121,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         super.tearDown();
     }
-    
+
     public void testGenerateMeetingsForNextSet() throws Exception {
         createInitialObjects();
         TestObjectFactory.flushandCloseSession();
@@ -129,14 +129,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         int lastInstallmentId = center.getCustomerAccount().getAccountActionDates().size();
         AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getAccountActionDate(
                 (short) lastInstallmentId);
-        
+
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> holidays = new ArrayList<Holiday>();
-        
+
         // exercise test
         center.getCustomerAccount().generateNextSetOfMeetingDates(workingDays, holidays);
-        
+
         MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
         meetingBO.setMeetingStartDate(accountActionDateEntity.getActionDate());
         List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfYearAfterNextYear().getTime());
@@ -318,7 +318,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccount = center.getCustomerAccount();
         customerAccount.applyPaymentWithPersist(accountPaymentDataView);
         StaticHibernateUtil.commitTransaction();
-        
+
         Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
         for (CustomerActivityEntity activity : customerAccount.getCustomerActivitDetails()) {
             Assert.assertEquals(transactionDate, activity.getCreatedDate());
@@ -524,7 +524,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 nextInstallmentId = (short) accountActionDateEntity.getInstallmentId().intValue();
             }
         }
-*/        
+*/
         MeetingBO meeting = center.getCustomerMeeting().getMeeting();
         meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
         meeting.setMeetingStartDate(nextInstallment.getActionDate());
@@ -962,7 +962,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testAccountExceptionThrownForAPaymentWithNoOutstandingCustomerAccountInstallments() throws Exception {
         createCenter();
-        verifyExpectedMessageThrown(center, new Money(getCurrency(), "8.54"), -2, 
+        verifyExpectedMessageThrown(center, new Money(getCurrency(), "8.54"), -2,
                 "Trying to pay account charges before the due date.");
     }
 
@@ -984,7 +984,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
-    
+
     private void verifyExpectedMessageThrown(final CustomerBO customer, final Money paymentAmount,
             final Integer numberOfDaysForward, final String expectedErrorMessage) throws Exception {
         CustomerAccountBO customerAccount = customer.getCustomerAccount();
@@ -1003,7 +1003,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
-    
+
     public void testTrxnDetailEntityObjectsForMultipleInstallmentsWhenOnlyCustomerAccountFeesAreDue() throws Exception {
         createCenter();
         CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -1234,14 +1234,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         MasterPersistence masterPersistenceService = new MasterPersistence();
 
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO, 
-                TestUtils.createMoney(300), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), 
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO,
+                TestUtils.createMoney(300), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")),
                 new Date(System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(), TestObjectFactory
                         .getPersonnel(userContext.getId()), currentDate, TestUtils.createMoney(300),
-                "payment done", null, TestUtils.createMoney(100), TestUtils.createMoney(100), 
+                "payment done", null, TestUtils.createMoney(100), TestUtils.createMoney(100),
                 masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.loanproduct;
 
 
@@ -35,7 +35,7 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
     public DefineNewLoanProductPreviewPage(Selenium selenium) {
         super(selenium);
     }
- 
+
     public void verifyPage() {
         this.verifyPage("CreateLoanProductPreview");
     }
@@ -45,7 +45,7 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
         waitForPageToLoad();
         return new DefineNewLoanProductConfirmationPage(selenium);
      }
-    
+
     public void verifyErrorInForm(String error)
     {
         Assert.assertTrue(selenium.isTextPresent(error));

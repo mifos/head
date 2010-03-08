@@ -34,7 +34,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 public class QueryFactory {
     /**
      * Return the QueryResult which will be used for query execution
-     * 
+     *
      * @param searchName
      * @return QueryResult
      */

@@ -265,7 +265,7 @@ public class SavingsAction extends AccountAppAction {
         convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
         SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer, AccountState
-                .fromShort(getShortValue(savingsActionForm.getStateSelected())), 
+                .fromShort(getShortValue(savingsActionForm.getStateSelected())),
                 new Money(savingsOfferingBO.getCurrency(), savingsActionForm
                 .getRecommendedAmount()), customFields);
         saving.save();

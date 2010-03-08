@@ -64,7 +64,7 @@ public class MifosScheduler {
         timer.schedule(task, initial, delay);
         tasks.add(task);
     }
-    
+
     public void shutdown() {
         if (null != timer) {
             timer.cancel();
@@ -119,7 +119,7 @@ public class MifosScheduler {
      * Change in center meeting schedule which needs to change all inherited
      * meetings as well as reschedule loans, these tasks typically require a few
      * input params as well.
-     * 
+     *
      * @deprecated YAGNI. Not currently used, and not known to be necessary. No
      *             replacement has been identified.
      */
@@ -152,7 +152,7 @@ public class MifosScheduler {
         }
         return taskNames;
     }
-    
+
     public void runAllTasks() {
         /* should this method only exist in BatchJobController? */
         /* BatchJobController could probably figure this out on its own... */

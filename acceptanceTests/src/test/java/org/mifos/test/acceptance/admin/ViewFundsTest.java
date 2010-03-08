@@ -46,10 +46,10 @@ public class ViewFundsTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
-    
+
+
     private static String dataFileName = "acceptance_small_003_dbunit.xml.zip";
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -68,23 +68,23 @@ public class ViewFundsTest extends UiTestCaseBase {
         ViewFundsPage viewFundsPage = adminPage.navigateToViewFundsPage();
         viewFundsPage.verifyPage();
     }
-    
-    
+
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void verifyViewFundsTableContentsTest() throws Exception {        
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+    public void verifyViewFundsTableContentsTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                                            dataFileName,
-                                           dataSource, selenium);        
+                                           dataSource, selenium);
 
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewFundsPage viewFundsPage = adminPage.navigateToViewFundsPage();
-        
+
         String[] expectedFundNames = new String[]{
                 "Non Donor",
                 "Funding Org A",
                 "Funding Org B",
                 "Funding Org C",
-                "Funding Org D"               
+                "Funding Org D"
         };
 
         String[] expectedFundCodes = new String[]{
@@ -98,7 +98,7 @@ public class ViewFundsTest extends UiTestCaseBase {
         viewFundsPage.verifyFundName(expectedFundNames);
         viewFundsPage.verifyFundCode(expectedFundCodes);
     }
-  
+
 
     private AdminPage loginAndGoToAdminPage() {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();

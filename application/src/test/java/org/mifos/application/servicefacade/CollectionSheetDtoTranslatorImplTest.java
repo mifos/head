@@ -55,7 +55,7 @@ public class CollectionSheetDtoTranslatorImplTest {
 
     private static final Short defaultCurrencyId = Short.valueOf("2");
     private static MifosCurrency defaultCurrency;
-    
+
     // class under test
     private CollectionSheetDtoTranslator collectionSheetDtoTranslator;
 

@@ -28,11 +28,11 @@ public class ClientEditMFIPreviewPage extends MifosPage {
     public ClientEditMFIPreviewPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         this.verifyPage("PreviewEditClientMfiInfo");
     }
-    
+
     public ClientViewDetailsPage submit() {
         selenium.click("preview_EditClientMfiInfo.button.submit");
         waitForPageToLoad();

@@ -113,7 +113,7 @@ public class CustomerAccountBO extends AccountBO {
 
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal legal constructor
      */
     public CustomerAccountBO(final CustomerBO customer, final Set<AmountFeeBO> accountFees, final OfficeBO office,
@@ -240,7 +240,7 @@ public class CustomerAccountBO extends AccountBO {
             Money customerScheduleAmountPaid = new Money(totalPaid.getCurrency(), "0.0");
             customerScheduleAmountPaid = customerScheduleAmountPaid.add(customerSchedule.getMiscFeePaid());
             customerScheduleAmountPaid = customerScheduleAmountPaid.add(customerSchedule.getMiscPenaltyPaid());
-            
+
             final CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity(accountPayment,
                     AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT, customerSchedule.getInstallmentId(),
                     customerSchedule.getActionDate(), paymentData.getPersonnel(), paymentData.getTransactionDate(),
@@ -432,20 +432,20 @@ public class CustomerAccountBO extends AccountBO {
             } catch (CustomerException ce) {
                 throw new AccountException(ce);
             }
-            
+
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
             MeetingBO meeting = getMeetingForAccount();
             DateTime startFromMeetingDate = meeting.startDateForMeetingInterval(
                     new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
-                        
+
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
                     holidays);
 
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
                     startFromMeetingDate, scheduledEvent);
-            
+
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
         }
     }
@@ -475,25 +475,25 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     public void generateNextSetOfMeetingDates(final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) {
-        
-        Short lastInstallmentId = Short.valueOf("0"); 
+
+        Short lastInstallmentId = Short.valueOf("0");
         if (getLastInstallmentId() != null) {
             lastInstallmentId = getLastInstallmentId();
         }
-            
+
         AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
         MeetingBO meeting = getCustomer().getCustomerMeetingValue();
-        
+
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         Date lastInstallmentDate = new Date();
         if (lastInstallment != null) {
             lastInstallmentDate = lastInstallment.getActionDate();
         }
-        
+
         DateTime startFromDayAfterLastKnownSchedule = new DateTime(lastInstallmentDate).toDateMidnight().toDateTime().plusDays(1);
         ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, orderedUpcomingHolidays);
         List<DateTime> scheduledDates = scheduleGenerationStrategy.generateScheduledDates(10, startFromDayAfterLastKnownSchedule, scheduledEvent);
-        
+
         int count = 1;
         for (DateTime installmentDate : scheduledDates) {
             CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(this, getCustomer(), Short
@@ -907,8 +907,8 @@ public class CustomerAccountBO extends AccountBO {
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return (PaymentTypeEntity)getFeePersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
-    }    
-    
+    }
+
     @Override
     public MeetingBO getMeetingForAccount() {
         return getCustomer().getCustomerMeetingValue();

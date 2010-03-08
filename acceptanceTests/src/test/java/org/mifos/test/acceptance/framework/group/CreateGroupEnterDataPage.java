@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.mifos.test.acceptance.framework.group;
 
@@ -22,18 +22,18 @@ public class CreateGroupEnterDataPage extends MifosPage {
 	public CreateGroupEnterDataPage(Selenium selenium) {
 		super(selenium);
 	}
-    
+
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
         String centerName;
         String loanOfficer;
         MeetingParameters meeting;
-        
+
         public String getCenterName() {
             return this.centerName;
         }
 
-        
+
         public String getLoanOfficer() {
             return this.loanOfficer;
         }
@@ -42,20 +42,20 @@ public class CreateGroupEnterDataPage extends MifosPage {
         public void setCenterName(String centerName) {
             this.centerName = centerName;
         }
-        
+
         public void setLoanOfficer(String loanOfficer) {
             this.loanOfficer = loanOfficer;
         }
-        
+
         public MeetingParameters getMeeting() {
             return this.meeting;
         }
 
         public void setMeeting(MeetingParameters meeting) {
             this.meeting = meeting;
-        }        
+        }
     }
-    
+
     public CreateCenterPreviewDataPage submitAndGotoCreateGroupPreviewDataPage(SubmitFormParameters parameters) {
         typeTextIfNotEmpty("createnewcenter.input.name", parameters.getCenterName());
         selectIfNotEmpty("loanOfficerId", parameters.getLoanOfficer());
@@ -66,5 +66,5 @@ public class CreateGroupEnterDataPage extends MifosPage {
         selenium.click("createnewcenter.button.preview");
         waitForPageToLoad();
         return new CreateCenterPreviewDataPage(selenium);
-    }    
+    }
 }

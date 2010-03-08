@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.login;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -30,51 +30,51 @@ public class ChangePasswordPage extends MifosPage {
     public ChangePasswordPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         this.verifyPage("changePassword");
-    }   
-    
+    }
+
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
- 
+
         String oldPassword;
         String newPassword;
         String confirmPassword;
-        
+
         public String getOldPassword() {
             return this.oldPassword;
         }
-        
+
         public void setOldPassword(String oldPassword) {
             this.oldPassword = oldPassword;
         }
-        
+
         public String getNewPassword() {
             return this.newPassword;
         }
-        
+
         public void setNewPassword(String newPassword) {
             this.newPassword = newPassword;
         }
-        
+
         public String getConfirmPassword() {
             return this.confirmPassword;
         }
-        
+
         public void setConfirmPassword(String confirmPassword) {
             this.confirmPassword = confirmPassword;
         }
 
-    }   
-    
+    }
+
     public HomePage submitAndGotoHomePage(SubmitFormParameters parameters) {
         typeTextIfNotEmpty("changePassword.input.oldPassword", parameters.getOldPassword());
         typeTextIfNotEmpty("changePassword.input.newPassword", parameters.getNewPassword());
-        typeTextIfNotEmpty("changePassword.input.confirmPassword", parameters.getConfirmPassword());        
+        typeTextIfNotEmpty("changePassword.input.confirmPassword", parameters.getConfirmPassword());
 
         selenium.click("changePassword.button.submit");
         waitForPageToLoad();
         return new HomePage(selenium);
-    }      
+    }
 }

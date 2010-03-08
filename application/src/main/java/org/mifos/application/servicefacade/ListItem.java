@@ -41,7 +41,7 @@ public class ListItem<T> implements Serializable {
     public String getDisplayValue() {
         return this.displayValue;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object obj) {
@@ -49,12 +49,12 @@ public class ListItem<T> implements Serializable {
 
         return (item.id.equals(this.id) && item.displayValue.equals(this.displayValue));
     }
-    
+
     @Override
     public int hashCode() {
         return id.hashCode() * displayValue.hashCode();
     }
-    
+
     @Override
     public String toString() {
         return "Item: id: " + this.id + " displayValue: " + this.displayValue;

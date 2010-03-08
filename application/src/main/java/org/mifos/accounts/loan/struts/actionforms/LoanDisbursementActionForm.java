@@ -76,7 +76,7 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
         double doubleValue = (StringUtils.isNotBlank(value) && !value.trim().equals(".")) ? Double.parseDouble(value) : 0.0;
         return doubleValue > 0.0;
     }
-    
+
     public String getPaymentModeOfPayment() {
         return paymentModeOfPayment;
     }
@@ -90,13 +90,13 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
     }
 
     public boolean getLoanAmountGreaterThanZero() {
-        return isValueGreaterThanZero(getLoanAmount());        
+        return isValueGreaterThanZero(getLoanAmount());
     }
 
     public boolean getPaymentAmountGreaterThanZero() {
-        return isValueGreaterThanZero(getAmount());        
+        return isValueGreaterThanZero(getAmount());
     }
-    
+
     public void setLoanAmount(String loanAmount) {
         this.loanAmount = loanAmount;
     }

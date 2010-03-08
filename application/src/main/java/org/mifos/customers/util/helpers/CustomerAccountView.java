@@ -40,7 +40,7 @@ public class CustomerAccountView extends View {
     private boolean isValidCustomerAccountAmountEntered;
 
     private final Integer customerId;
-    
+
     private final MifosCurrency currency;
 
     public CustomerAccountView(Integer accountId, MifosCurrency currency) {
@@ -51,7 +51,7 @@ public class CustomerAccountView extends View {
         isValidCustomerAccountAmountEntered = true;
         this.currency = currency;
     }
-    
+
     public CustomerAccountView(final Integer accountId, final Integer customerId, MifosCurrency currency) {
         this.accountId = accountId;
         this.customerId = customerId;

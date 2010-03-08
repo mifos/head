@@ -45,7 +45,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * The reason is that TestCaseInitializer (a) runs too soon (it is more graceful
  * for a long delay to happen in setUp), and (b) initializes too much (most
  * tests don't need everything which is there).
- * 
+ *
  * This base class initializes the database and various other things and so any
  * class derived from this is an integration test. If a test is not an
  * integration test and does not need the database, then it should not derive

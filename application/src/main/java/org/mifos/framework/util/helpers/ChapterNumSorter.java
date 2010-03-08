@@ -52,7 +52,7 @@ public class ChapterNumSorter {
      * <li>1.15.3</li>
      * <li>2</li>
      * </ul>
-     * 
+     *
      * <p>
      * {@link String}s are parsed one at a time by
      * {@link ChapterNum#fromString(String)}.

@@ -53,7 +53,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * for the next date but lets say due to some reason this gets delayed and runs
  * after 0:00 hrs in which it would generate collection sheet data for the next
  * day and todays data would be lost.
- * 
+ *
  * @deprecated this batch job is no longer invoked on task.xml
  */
 @Deprecated

@@ -30,15 +30,15 @@ public class UndoLoanDisbursalPreviewPage extends MifosPage {
         super(selenium);
         this.selenium = selenium;
     }
-    
+
     public void verifyPage() {
         this.verifyPage("UndoLoanDisbursalPreview");
-    }    
+    }
 
     public AdminPage submitAndNavigateToAdminPage() {
         selenium.click("undoloandisbursalpreview.button.submit");
         waitForPageToLoad();
-        
+
         return new AdminPage(selenium);
     }
 }

@@ -40,7 +40,7 @@ import org.mifos.framework.business.PersistentObject;
  * specifies lazy=false so that hibernate doesn't initialize a proxy
  */
 @NamedQueries(
- {         
+ {
   @NamedQuery(
     name="getCurrency",
     query="from MifosCurrency currency where currency.currencyCode = :currencyCode"
@@ -106,7 +106,7 @@ public final class MifosCurrency implements Serializable {
     private void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
     }
-    
+
     @Column(name = "ROUNDING_AMOUNT")
     public BigDecimal getRoundingAmount() {
         return roundingAmount;

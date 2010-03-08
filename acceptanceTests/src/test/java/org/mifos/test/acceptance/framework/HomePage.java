@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -29,7 +29,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Encapsulates the GUI based actions that can
- * be done from the Home page and the page 
+ * be done from the Home page and the page
  * that will be navigated to.
  *
  */
@@ -53,28 +53,28 @@ public class HomePage extends MifosPage {
 		waitForPageToLoad();
 		return new ClientsAndAccountsHomepage(selenium);
 	}
-	
+
 	public AdminPage navigateToAdminPage() {
         selenium.click("homeheader.link.admin");
         waitForPageToLoad();
-        return new AdminPage(selenium);	    
+        return new AdminPage(selenium);
 	}
-	
+
     public String getWelcome() {
         return selenium.getText("home.text.welcome");
     }
-    
+
     public SearchResultsPage search(String searchFor) {
         selenium.type("home.input.search", searchFor);
         selenium.click("home.button.search");
         waitForPageToLoad();
-        return new SearchResultsPage(selenium); 
+        return new SearchResultsPage(selenium);
     }
 
     public CreateGroupSearchPage navigateToCreateNewGroupSearchPage() {
         selenium.click("menu.link.label.createnew.group");
         waitForPageToLoad();
-        return new CreateGroupSearchPage(selenium);        
+        return new CreateGroupSearchPage(selenium);
     }
 
     public ReportsPage navigateToReportsPage() {
@@ -82,5 +82,5 @@ public class HomePage extends MifosPage {
         waitForPageToLoad();
         return new ReportsPage(selenium);
     }
-      
+
 }

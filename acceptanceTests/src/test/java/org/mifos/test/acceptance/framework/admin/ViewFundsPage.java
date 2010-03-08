@@ -28,23 +28,23 @@ public class ViewFundsPage extends MifosPage{
     public ViewFundsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public ViewFundsPage verifyPage() {
         verifyPage("viewFunds");
         return this;
     }
-     
+
     public void verifyFundName(String[] expectedData) {
-       
+
         for (int i = 0; i < expectedData.length; i++) {
             String expectedCellData = expectedData[i];
             String actualCellData = selenium.getTable("fundDisplayTable."+(i+1)+".0");
             Assert.assertEquals(actualCellData, expectedCellData);
         }
     }
-    
+
     public void verifyFundCode(String[] expectedData) {
-        
+
         for (int i = 0; i < expectedData.length; i++) {
             String expectedCellData = expectedData[i];
             String actualCellData = selenium.getTable("fundDisplayTable."+(i+1)+".1");

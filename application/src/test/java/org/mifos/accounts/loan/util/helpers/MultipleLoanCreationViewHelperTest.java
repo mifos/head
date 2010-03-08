@@ -49,17 +49,17 @@ public class MultipleLoanCreationViewHelperTest {
 
     @Mock
     private LoanOfferingInstallmentRange installmentOption;
-    
+
     @Before
     public void setUp(){
         multipleLoanCreationViewHelper = new MultipleLoanCreationViewHelper(client,loanAmountOption,installmentOption,TestUtils.RUPEE);
     }
-    
+
     @After
-    public void tearDownUp(){ 
+    public void tearDownUp(){
         multipleLoanCreationViewHelper = null;
     }
-    
+
     @Test
     public void testLoanAmountAndMaxMinRangeWithDigitAfterDecimalIsZero() {
         Short savedDigitAfterDecimal = AccountingRules.getDigitsAfterDecimal();
@@ -67,13 +67,13 @@ public class MultipleLoanCreationViewHelperTest {
         when(loanAmountOption.getDefaultLoanAmount()).thenReturn(5000.0);
         when(loanAmountOption.getMaxLoanAmount()).thenReturn(10000.0);
         when(loanAmountOption.getMinLoanAmount()).thenReturn(1000.0);
-        
+
         Assert.assertEquals("5000", multipleLoanCreationViewHelper.getDefaultLoanAmount().toString());
         Assert.assertEquals("10000", multipleLoanCreationViewHelper.getMaxLoanAmount().toString());
         Assert.assertEquals("1000", multipleLoanCreationViewHelper.getMinLoanAmount().toString());
         AccountingRules.setDigitsAfterDecimal(savedDigitAfterDecimal);
     }
-    
+
     @Test
     public void testLoanAmountAndMaxMinRangeWithDigitAfterDecimalIsOne() {
         Short savedDigitAfterDecimal = AccountingRules.getDigitsAfterDecimal();
@@ -81,13 +81,13 @@ public class MultipleLoanCreationViewHelperTest {
         when(loanAmountOption.getDefaultLoanAmount()).thenReturn(5000.0);
         when(loanAmountOption.getMaxLoanAmount()).thenReturn(10000.0);
         when(loanAmountOption.getMinLoanAmount()).thenReturn(1000.0);
-        
+
         Assert.assertEquals("5000.0", multipleLoanCreationViewHelper.getDefaultLoanAmount().toString());
         Assert.assertEquals("10000.0", multipleLoanCreationViewHelper.getMaxLoanAmount().toString());
         Assert.assertEquals("1000.0", multipleLoanCreationViewHelper.getMinLoanAmount().toString());
         AccountingRules.setDigitsAfterDecimal(savedDigitAfterDecimal);
     }
-    
+
     @Test
     public void testLoanAmountAndMaxMinRangeWithDigitAfterDecimalIsTwo() {
         Short savedDigitAfterDecimal = AccountingRules.getDigitsAfterDecimal();
@@ -95,7 +95,7 @@ public class MultipleLoanCreationViewHelperTest {
         when(loanAmountOption.getDefaultLoanAmount()).thenReturn(5000.0);
         when(loanAmountOption.getMaxLoanAmount()).thenReturn(10000.0);
         when(loanAmountOption.getMinLoanAmount()).thenReturn(1000.0);
-        
+
         Assert.assertEquals("5000.00", multipleLoanCreationViewHelper.getDefaultLoanAmount().toString());
         Assert.assertEquals("10000.00", multipleLoanCreationViewHelper.getMaxLoanAmount().toString());
         Assert.assertEquals("1000.00", multipleLoanCreationViewHelper.getMinLoanAmount().toString());

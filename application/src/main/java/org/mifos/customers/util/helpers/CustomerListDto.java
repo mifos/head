@@ -29,8 +29,8 @@ public class CustomerListDto implements DataTransferObject{
     private String displayName;
     private String searchId;
     private String globalCustNum;
-    
-        
+
+
     public CustomerListDto() {
         // Default empty constructor for hibernate
     }

@@ -84,12 +84,12 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private SavingsOfferingBO savingsOffering2;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
-        
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -521,14 +521,14 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
     /*
      * TODO: financial_calculation_fixme issues of significant digits for
      * savings account values
-     * 
+     *
      * public void testSuccessfulGetTransactionHistory() throws Exception {
      * createInitialObjects(); Date currentDate = new
      * Date(System.currentTimeMillis()); savingsOffering =
      * TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
      * savings = createSavingsAccount("000X00000000019", savingsOffering,
      * AccountState.SAVINGS_ACTIVE); savingsOffering = null;
-     * 
+     *
      * Money enteredAmount = new Money(TestObjectFactory.getMFICurrency(),
      * "100.0"); PaymentData paymentData =
      * PaymentData.createPaymentData(enteredAmount, savings .getPersonnel(),
@@ -538,19 +538,19 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
      * Date(curTime)); paymentData.setReceiptNum("34244");
      * AccountActionDateEntity accountActionDate = savings
      * .getAccountActionDate(Short.valueOf("1"));
-     * 
+     *
      * SavingsPaymentData savingsPaymentData = new
      * SavingsPaymentData(accountActionDate);
      * paymentData.addAccountPaymentData(savingsPaymentData);
-     * 
+     *
      * savings.applyPaymentWithPersist(paymentData);
      * StaticHibernateUtil.commitTransaction();
      * StaticHibernateUtil.closeSession();
-     * 
+     *
      * savings = new SavingsPersistence().findById(savings.getAccountId());
      * savings.setUserContext(userContext);
      * SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-     * 
+     *
      * setRequestPathInfo("/savingsAction.do"); addRequestParameter("method",
      * "getTransactionHistory"); addRequestParameter("globalAccountNum",
      * savings.getGlobalAccountNum()); actionPerform();

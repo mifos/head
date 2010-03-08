@@ -94,7 +94,7 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
                 .getCollectionSheetEntryAccountFeeActions();
         if (collectionSheetEntryAccountFeeActionViews != null && collectionSheetEntryAccountFeeActionViews.size() > 0) {
             for (CollectionSheetEntryAccountFeeActionView accountFeesActionDetailEntity : collectionSheetEntryAccountFeeActionViews) {
-               
+
                 if (accountFeesActionDetailEntity.getFeeAmount() != null
                         && accountFeesActionDetailEntity.getFeeAmount().isNonZero()) {
                     feesPaid.put(accountFeesActionDetailEntity.getFeeId(), accountFeesActionDetailEntity

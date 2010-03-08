@@ -176,7 +176,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
         AccountBO clientAccount1;
         AccountBO clientAccount2;
-        
+
         try {
             MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
             center = createCenter("new_center");
@@ -190,21 +190,21 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                         AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
                 fail("didn't get the expected CurrencyMismatchException");
-            } catch (CurrencyMismatchException e) {            
+            } catch (CurrencyMismatchException e) {
                 // if we got here then we got the exception we were expecting
                 assertNotNull(e);
             } catch (Exception e) {
-                fail("didn't get the expected CurrencyMismatchException");            
+                fail("didn't get the expected CurrencyMismatchException");
             }
         } finally {
-            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);            
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
         }
-                
+
         TestObjectFactory.cleanUp(clientAccount1);
         TestObjectFactory.cleanUp(clientAccount2);
-        
+
     }
-    
+
     /*
      * When trying to sum amounts across loans with different currencies, we should get an exception
      */
@@ -215,7 +215,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         GroupBO group1;
         AccountBO account1;
         AccountBO account2;
-        
+
         try {
             CustomerPersistence customerPersistence = new CustomerPersistence();
             meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -229,21 +229,21 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
                         AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
                 fail("didn't get the expected CurrencyMismatchException");
-            } catch (CurrencyMismatchException e) {            
+            } catch (CurrencyMismatchException e) {
                 // if we got here then we got the exception we were expecting
                 assertNotNull(e);
             } catch (Exception e) {
-                fail("didn't get the expected CurrencyMismatchException");            
+                fail("didn't get the expected CurrencyMismatchException");
             }
         } finally {
-            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);            
+            configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
         }
 
         TestObjectFactory.cleanUp(account1);
         TestObjectFactory.cleanUp(account2);
         TestObjectFactory.cleanUp(group1);
     }
-    
+
     public void testGetTotalAmountForGroup() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -1088,15 +1088,15 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertNotNull(center);
         Assert.assertEquals(1, center.size());
     }
-    
+
     public void testFindCustomerWithNoAssocationsLoadedReturnsActiveCenter() throws Exception {
 
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_WEEK, CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Active Center", meeting);
-        
+
         verifyCustomerLoaded(center.getCustomerId(), center.getDisplayName());
-        
+
     }
 
     public void testFindCustomerWithNoAssocationsLoadedDoesntReturnInactiveCenter() throws Exception {
@@ -1111,7 +1111,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
         verifyCustomerNotLoaded(center.getCustomerId(), center.getDisplayName());
     }
-    
+
 
     public void testFindCustomerWithNoAssocationsLoadedReturnsActiveGroup() throws Exception {
 
@@ -1145,7 +1145,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
         verifyCustomerNotLoaded(group.getCustomerId(), group.getDisplayName());
     }
-    
+
     public void testFindCustomerWithNoAssocationsLoadedReturnsActiveClient() throws Exception {
 
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -1157,7 +1157,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
         verifyCustomerLoaded(client.getCustomerId(), client.getDisplayName());
     }
-    
+
     public void testFindCustomerWithNoAssocationsLoadedReturnsHoldClient() throws Exception {
 
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -1169,7 +1169,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
         verifyCustomerLoaded(client.getCustomerId(), client.getDisplayName());
     }
-    
+
     public void testFindCustomerWithNoAssocationsLoadedDoesntReturnClosedClient() throws Exception {
 
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -1189,7 +1189,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         .findCustomerWithNoAssocationsLoaded(customerId);
 
         Assert.assertNotNull(customerName + " was not returned", collectionSheetCustomerDto);
-        Assert.assertEquals(collectionSheetCustomerDto.getCustomerId(), customerId);           
+        Assert.assertEquals(collectionSheetCustomerDto.getCustomerId(), customerId);
     }
 
     private void verifyCustomerNotLoaded(Integer customerId, String customerName) {
@@ -1197,10 +1197,10 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         CollectionSheetCustomerDto collectionSheetCustomerDto = customerPersistence
         .findCustomerWithNoAssocationsLoaded(customerId);
 
-        Assert.assertNull(customerName + " was returned", collectionSheetCustomerDto);                
+        Assert.assertNull(customerName + " was returned", collectionSheetCustomerDto);
     }
-    
-    
+
+
     private AccountBO getSavingsAccount(final CustomerBO customer, final String prdOfferingname, final String shortName)
             throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
@@ -1298,7 +1298,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     }
 
-    
+
     private AccountBO getLoanAccountInActiveBadStanding(final CustomerBO group, final MeetingBO meeting,
             final String offeringName, final String shortName) {
         Date startDate = new Date(System.currentTimeMillis());

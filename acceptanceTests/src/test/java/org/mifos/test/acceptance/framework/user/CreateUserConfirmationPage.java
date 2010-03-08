@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.user;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -32,15 +32,15 @@ public class CreateUserConfirmationPage extends MifosPage {
     public CreateUserConfirmationPage(Selenium selenium) {
         super(selenium);
     }
-    
+
 
     public void verifyPage() {
         verifyPage("createuser_confirmation");
     }
-    
+
     public String getConfirmation() {
         return selenium.getText("createuser_confirmation.text.confirmation");
-    }    
+    }
 
     public UserViewDetailsPage navigateToUserViewDetailsPage() {
         selenium.click("createuser_confirmation.link.viewUser");

@@ -35,7 +35,7 @@ public class IdGenerator {
      * office. EG: if the office global customer number is BRANCH01 and max id
      * of customers in that branch is 14 then the new id generated will be
      * BRANCH01-000000015
-     * 
+     *
      * @param officeGlobalNum
      *            Global customer number for the office of the customer
      * @return The global customer number that is generated
@@ -59,7 +59,7 @@ public class IdGenerator {
      * current max customerId in that office. EG: if the office global customer
      * number is BRANCH01 and max id of customers in that branch is 14 then the
      * new id generated will be BRANCH01-000000015
-     * 
+     *
      * @param officeGlobalNum
      *            Global customer number for the office of the customer
      * @return The global customer number that is generated

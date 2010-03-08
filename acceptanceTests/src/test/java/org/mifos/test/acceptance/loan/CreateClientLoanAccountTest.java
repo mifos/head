@@ -42,7 +42,7 @@ import org.testng.annotations.Test;
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
-    
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -106,7 +106,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @Test(sequential = true, groups = {"loan","acceptance","ui"})
@@ -144,7 +144,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
-        
+
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyPage();
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());

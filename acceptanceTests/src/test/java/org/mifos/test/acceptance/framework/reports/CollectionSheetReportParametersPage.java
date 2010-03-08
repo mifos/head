@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.reports;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -35,7 +35,7 @@ public class CollectionSheetReportParametersPage extends MifosPage {
     public CollectionSheetReportParametersPage(Selenium selenium) {
         super(selenium);
     }
-        
+
     public CollectionSheetReportPage generateCollectionSheetEntryReport(SubmitFormParameters formParameters) {
         selenium.select("branchId_selection", formParameters.getBranch());
         selenium.select("loanOfficerId_selection", formParameters.getLoanOfficer());
@@ -45,9 +45,9 @@ public class CollectionSheetReportParametersPage extends MifosPage {
                                      formParameters.getTransactionYear());
         selenium.click("//input[@value='Generate']");
         waitForPageToLoad();
-        return new CollectionSheetReportPage(selenium);     
+        return new CollectionSheetReportPage(selenium);
     }
-    
+
     public CollectionSheetReportParametersPage verifyPage() {
         Assert.assertTrue(selenium.isTextPresent("Select"));
         return this;

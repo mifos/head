@@ -28,7 +28,7 @@ public class ViewProductCategoriesPage extends MifosPage {
     public ViewProductCategoriesPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public ViewProductCategoriesPage verifyPage() {
         verifyPage("viewProductCategories");
         return this;
@@ -37,8 +37,8 @@ public class ViewProductCategoriesPage extends MifosPage {
     public void verifyProductCategories(String[] expectedData) {
         for (int i = 0; i < expectedData.length; i++) {
             String expectedProductCategory = expectedData[i];
-            Assert.assertTrue(selenium.isTextPresent(expectedProductCategory), "Expected Product: " + expectedProductCategory);     
+            Assert.assertTrue(selenium.isTextPresent(expectedProductCategory), "Expected Product: " + expectedProductCategory);
         }
-        
+
     }
 }

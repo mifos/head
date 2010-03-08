@@ -233,7 +233,7 @@ public class AccountBO extends BusinessObject {
 
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal legal constructor
      */
     public AccountBO(final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
@@ -251,7 +251,7 @@ public class AccountBO extends BusinessObject {
         this.accountFees = accountFees;
         this.office = office;
         this.personnel = accountOfficer;
-        
+
         this.accountId = null;
         this.accountFlags = new HashSet<AccountFlagMapping>();
         this.accountCustomFields = new HashSet<AccountCustomFieldEntity>();
@@ -356,7 +356,7 @@ public class AccountBO extends BusinessObject {
     }
 
     public List<AccountPaymentEntity> getAccountPayments() {
-        
+
         return accountPayments;
     }
 
@@ -373,9 +373,9 @@ public class AccountBO extends BusinessObject {
     }
 
     public void setAccountPayments(final List<AccountPaymentEntity> accountPayments) {
-        
+
         this.accountPayments = accountPayments;
-                
+
     }
 
     protected void setAccountState(final AccountStateEntity accountState) {
@@ -449,7 +449,7 @@ public class AccountBO extends BusinessObject {
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
-    }    
+    }
     /*
      * Take raw PaymentData (usually from a web page) and enter it into Mifos.
      */
@@ -480,7 +480,7 @@ public class AccountBO extends BusinessObject {
             final Date receiptDate, final Short paymentTypeId) {
         return createPaymentData(userContext.getId(), amount, trxnDate, receiptId, receiptDate, paymentTypeId);
     }
-    
+
     public PaymentData createPaymentData(final Short personnelId, final Money amount, final Date trxnDate, final String receiptId,
             final Date receiptDate, final Short paymentTypeId) {
         PersonnelBO personnel;
@@ -551,8 +551,8 @@ public class AccountBO extends BusinessObject {
         buildFinancialEntries(new HashSet(reversedTrxns));
     }
 
-    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {       
-        // find the installment to update               
+    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+        // find the installment to update
         AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
         if (nextInstallment != null) {
             regenerateFutureInstallments(nextInstallment, workingDays, holidays);
@@ -565,20 +565,20 @@ public class AccountBO extends BusinessObject {
             resetUpdatedFlag();
         }
     }
-  
+
     protected MeetingBO getMeetingForAccount() {
         return null;
     }
 
     /*
-     * Find the first installment which has an enclosing "interval" such 
+     * Find the first installment which has an enclosing "interval" such
      * that the entire interval is after the current date.  For example
-     * assume March 1 is a Monday and that weeks are defined to start on 
-     * Monday.  If the meeting is a weekly meeting on a Wednesday 
+     * assume March 1 is a Monday and that weeks are defined to start on
+     * Monday.  If the meeting is a weekly meeting on a Wednesday
      * then the "interval" for the meeting of Wednesday March 10 is Monday
-     * March 8 to Sunday March 14.  If the current date was March 7, then 
+     * March 8 to Sunday March 14.  If the current date was March 7, then
      * we would return the installment for March 10 since the 3/8-14 interval
-     * is after the 7th.  But if today were the 8th, then we would return 
+     * is after the 7th.  But if today were the 8th, then we would return
      * the following installment.
      */
     private AccountActionDateEntity findInstallmentToUpdate() {
@@ -589,12 +589,12 @@ public class AccountBO extends BusinessObject {
 
         LocalDate currentDate = new LocalDate();
         MeetingBO meeting = getMeetingForAccount();
-        
+
         int installmentIndex = 0;
         AccountActionDateEntity installment = allInstallments.get(installmentIndex);
-        // keep looking at the next installment as long as the current date falls on or 
+        // keep looking at the next installment as long as the current date falls on or
         // after (!before) the start of the current installment
-        while(installment != null && !currentDate.isBefore(meeting.startDateForMeetingInterval(                
+        while(installment != null && !currentDate.isBefore(meeting.startDateForMeetingInterval(
                 new LocalDate(installment.getActionDate().getTime())))) {
             ++installmentIndex;
             // if we've iterated over all the installments, then just return null
@@ -604,7 +604,7 @@ public class AccountBO extends BusinessObject {
                 installment = allInstallments.get(installmentIndex);
             }
         }
-        return installment;        
+        return installment;
     }
 
     protected void resetUpdatedFlag() throws AccountException {
@@ -1157,17 +1157,17 @@ public class AccountBO extends BusinessObject {
                     dueDates = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments
                             + installmentToSkip, adjustForHolidays);
                 } else {
-                    
+
                     List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
                     List<Holiday> holidays = new ArrayList<Holiday>();
-                    
+
                     if (adjustForHolidays) {
                         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
                         holidays = holidayDao.findAllHolidaysThisYearAndNext();
                     }
-                    
+
                     final int occurrences = noOfInstallments + installmentToSkip;
-                    
+
                     DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
                     ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
                     ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
@@ -1644,30 +1644,30 @@ public class AccountBO extends BusinessObject {
     }
 
     public void setExternalId(final String externalId) {
-        this.externalId= externalId;        
+        this.externalId= externalId;
     }
     public String getExternalId() {
-        return externalId;        
+        return externalId;
     }
-    
+
     /**
      * Return true if a given payment amount valid for this account.
      * @param amount the payment amount to validate.
-     * 
+     *
      */
     public boolean paymentAmountIsValid(final Money amount) {
         return true;
     }
-    
+
     protected void updateSchedule(final Short nextInstallmentId, final List<DateTime> meetingDates) {
         short installmentId = nextInstallmentId;
         for (int count = 0; count < meetingDates.size(); count++) {
             AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
             if (accountActionDate != null) {
-                DateTime meetingDate = meetingDates.get(count); 
+                DateTime meetingDate = meetingDates.get(count);
                 accountActionDate.setActionDate(new java.sql.Date(meetingDate.toDate().getTime()));
             }
             installmentId++;
         }
-    }    
+    }
 }

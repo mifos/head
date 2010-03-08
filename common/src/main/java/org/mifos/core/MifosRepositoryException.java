@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.core;
 
 /**
@@ -27,18 +27,18 @@ public class MifosRepositoryException extends MifosException {
 
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 7173403774363928547L;
 
     public MifosRepositoryException() {
         super();
     }
-    
+
     public MifosRepositoryException(String message) {
         super(message);
     }
-    
+
     public MifosRepositoryException(String message, Throwable cause) {
         super(message, cause);
     }

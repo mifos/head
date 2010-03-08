@@ -49,17 +49,17 @@ public class PPICalculator {
     public static boolean scoreLimitsAreValid(PPISurvey survey) {
         /*
          * int sum = 0;
-         * 
+         *
          * { int min = survey.getVeryPoorMin(); int max =
          * survey.getVeryPoorMax(); sum += max * (max + 1) / 2 - min * (min + 1)
          * / 2 ; }
-         * 
+         *
          * { int min = survey.getPoorMin(); int max = survey.getPoorMax(); sum
          * += max * (max + 1) / 2 - min * (min + 1) / 2 ; }
-         * 
+         *
          * { int min = survey.getAtRiskMin(); int max = survey.getAtRiskMax();
          * sum += max * (max + 1) / 2 - min * (min + 1) / 2 ; }
-         * 
+         *
          * { int min = survey.getNonPoorMin(); int max = survey.getNonPoorMax();
          * sum += max * (max + 1) / 2 - min * (min + 1) / 2 ; }
          */

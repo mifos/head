@@ -38,14 +38,14 @@ public class SavingsAccountView extends View {
     private final Short recommendedAmntUnitId;
     private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
 
-    
+
     private boolean isValidDepositAmountEntered = true;
     private boolean isValidWithDrawalAmountEntered = true;
 
     private String depositAmountEntered;
     private String withDrawalAmountEntered;
 
-    
+
     public SavingsAccountView(Integer accountId, Integer customerId, String savingsOfferingShortName,
             Short savingsOfferingId, Short savingsTypeId, Short recommendedAmntUnitId) {
         this.accountId = accountId;
@@ -79,7 +79,7 @@ public class SavingsAccountView extends View {
     public void setWithDrawalAmountEntered(String withDrawalAmountEntered) {
         this.withDrawalAmountEntered = withDrawalAmountEntered;
     }
-    
+
     public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
         return accountTrxnDetails;
     }

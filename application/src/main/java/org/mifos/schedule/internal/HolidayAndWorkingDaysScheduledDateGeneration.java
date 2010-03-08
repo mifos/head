@@ -59,9 +59,9 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
             DateAdjustmentStrategy holidayAjustment = new BasicHolidayStrategy(upcomingHolidays, workingDays,
                     scheduledEvent);
             DateTime ajustedForHolidays = holidayAjustment.adjust(ajustedForWorkingDay);
-            
+
             scheduledDates.add(ajustedForHolidays);
-            
+
             latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
         }
 

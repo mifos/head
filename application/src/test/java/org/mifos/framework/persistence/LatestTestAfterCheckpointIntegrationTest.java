@@ -49,14 +49,14 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * based and java based).  It uses a version of the database referred to as
  * a "checkpoint" as a starting point.  The database checkpoint version that
  * it starts with can be adjusted by updating sql/latest-schema-checkupoint.sql
- * and sql/latest-data-checkupoint.sql with a pair of the corresponding 
+ * and sql/latest-data-checkupoint.sql with a pair of the corresponding
  * latest-schema.sql and latest-data.sql files for a given database version.
- * The static variable DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION 
- * must then be set to the database version number of the latest-xxx.sql files 
- * that have been used to update the latest-xxx-checkpoint.sql files.  
+ * The static variable DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION
+ * must then be set to the database version number of the latest-xxx.sql files
+ * that have been used to update the latest-xxx-checkpoint.sql files.
  * This test will run upgrade scripts using LATEST_CHECKPOINT_VERSION
- * as a starting point.  In general LATEST_CHECKPOINT_VERSION should be a 
- * database version that is at least 3-5 upgrades ago in order to allow for 
+ * as a starting point.  In general LATEST_CHECKPOINT_VERSION should be a
+ * database version that is at least 3-5 upgrades ago in order to allow for
  * fixes to be made to recent upgrades when necessary.
  */
 
@@ -103,7 +103,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
         createLatestDatabaseWithLatestData();
-        
+
         Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection)
                 .read());
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);

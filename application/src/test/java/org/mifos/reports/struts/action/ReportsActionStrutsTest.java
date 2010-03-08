@@ -40,7 +40,7 @@ public class ReportsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private UserContext userContext;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");

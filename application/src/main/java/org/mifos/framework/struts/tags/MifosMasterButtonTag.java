@@ -46,7 +46,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * Construct a new instance of this tag.
-     * 
+     *
      * @param pageContext
      *            pageContext of the Tag
      * @param property
@@ -67,7 +67,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * Render the Button element.
-     * 
+     *
      * @exception JspException
      *                if a JSP exception has occurred
      */
@@ -88,7 +88,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * Render the opening element.
-     * 
+     *
      * @return The opening part of the element.
      */
     @Override
@@ -98,7 +98,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * Prepare the name element
-     * 
+     *
      * @return The element name.
      */
     @Override
@@ -123,7 +123,7 @@ public class MifosMasterButtonTag extends ButtonTag {
     /**
      * Prepares an attribute if the value is not null, appending it to the the
      * given StringBuffer.
-     * 
+     *
      * @param handlers
      *            The StringBuffer that output will be appended to.
      */
@@ -140,7 +140,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * Render the button attributes
-     * 
+     *
      * @param results
      *            The StringBuffer that output will be appended to.
      */
@@ -153,7 +153,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * 'Hook' to enable tags to be extended and additional attributes added.
-     * 
+     *
      * @param handlers
      *            The StringBuffer that output will be appended to.
      */
@@ -163,7 +163,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * Render the value element
-     * 
+     *
      * @param results
      *            The StringBuffer that output will be appended to.
      */
@@ -183,7 +183,7 @@ public class MifosMasterButtonTag extends ButtonTag {
 
     /**
      * Return the default value.
-     * 
+     *
      * @return The default value if none supplied.
      */
     @Override

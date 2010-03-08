@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.core;
 
 public class MifosRuntimeException extends RuntimeException {
@@ -27,15 +27,15 @@ public class MifosRuntimeException extends RuntimeException {
 	public MifosRuntimeException() {
 		super();
 	}
-	
+
 	public MifosRuntimeException(final String message) {
 		super(message);
 	}
-	
+
     public MifosRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     public MifosRuntimeException(final Throwable cause) {
         super(cause);
     }

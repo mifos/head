@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -39,35 +39,35 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     private StandardAccountService standardAccountService;
     private List<PaymentTypeDto> paymentTypeDtos;
     private PaymentTypeDto defaultPaymentType;
-    
+
     public StandardAccountServiceIntegrationTest() throws Exception {
         super();
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         standardAccountService = new StandardAccountService(new AccountPersistence(),
                 new LoanPersistence(), new AcceptedPaymentTypePersistence());
-        paymentTypeDtos = standardAccountService.getLoanPaymentTypes();   
+        paymentTypeDtos = standardAccountService.getLoanPaymentTypes();
         defaultPaymentType = paymentTypeDtos.get(0);
         StaticHibernateUtil.commitTransaction();
     }
-    
+
     public void testMakePayment() throws Exception {
         String paymentAmount = "700";
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDto(accountBO.getAccountId()), 
-                new BigDecimal(paymentAmount), 
-                new LocalDate(), 
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(accountBO.getAccountId()),
+                new BigDecimal(paymentAmount),
+                new LocalDate(),
                 defaultPaymentType,"");
         standardAccountService.makePayment(accountPaymentParametersDto);
 
         TestObjectFactory.updateObject(accountBO);
-        Assert.assertEquals("The amount returned for the payment should have been " + paymentAmount, 
+        Assert.assertEquals("The amount returned for the payment should have been " + paymentAmount,
                 Double.parseDouble(paymentAmount), accountBO.getLastPmntAmnt());
     }
 
@@ -76,10 +76,10 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDto(accountBO.getAccountId()), 
-                new BigDecimal(paymentAmount), 
-                new LocalDate(), 
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(accountBO.getAccountId()),
+                new BigDecimal(paymentAmount),
+                new LocalDate(),
                 defaultPaymentType,"");
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 
@@ -91,10 +91,10 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDto(accountBO.getAccountId()), 
-                new BigDecimal(paymentAmount), 
-                new LocalDate(1980, 1, 1), 
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(accountBO.getAccountId()),
+                new BigDecimal(paymentAmount),
+                new LocalDate(1980, 1, 1),
                 defaultPaymentType,"");
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 
@@ -107,10 +107,10 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDto(accountBO.getAccountId()), 
-                new BigDecimal(paymentAmount), 
-                new LocalDate(), 
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(accountBO.getAccountId()),
+                new BigDecimal(paymentAmount),
+                new LocalDate(),
                 defaultPaymentType,
                 comment);
         standardAccountService.makePayment(accountPaymentParametersDto);
@@ -119,20 +119,20 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         Assert.assertEquals("We should get the comment back",
                 comment, accountBO.getLastPmnt().getComment());
     }
-    
+
     public void testLookupLoanIdFromExternalId() throws Exception {
         String externalId = "ABC";
         accountBO.setExternalId(externalId);
         accountBO.save();
         StaticHibernateUtil.commitTransaction();
-        
+
         standardAccountService.setAccountPersistence(new AccountPersistence());
         standardAccountService.setLoanPersistence(new LoanPersistence());
-        
+
         AccountReferenceDto accountReferenceDto = standardAccountService.lookupLoanAccountReferenceFromExternalId(externalId);
 
         Assert.assertEquals(accountBO.getAccountId().intValue(), accountReferenceDto.getAccountId());
-    }       
+    }
 
     public void testValidatePaymentWithInvalidPaymentType() throws Exception {
         String paymentAmount = "700";
@@ -140,40 +140,40 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         PaymentTypeDto invalidPaymentType = new PaymentTypeDto((short)-1, "pseudo payment type! Not cash, check, etc.");
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDto(accountBO.getAccountId()), 
-                new BigDecimal(paymentAmount), 
-                new LocalDate(), 
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(accountBO.getAccountId()),
+                new BigDecimal(paymentAmount),
+                new LocalDate(),
                 invalidPaymentType,"");
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 
         Assert.assertTrue(errors.contains(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE));
     }
-    
+
     public void testValidatePaymentWithInvalidLargePaymentAmount() throws Exception {
         String paymentAmount = "700000";
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDto(accountBO.getAccountId()), 
-                new BigDecimal(paymentAmount), 
-                new LocalDate(), 
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(accountBO.getAccountId()),
+                new BigDecimal(paymentAmount),
+                new LocalDate(),
                 defaultPaymentType,"");
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 
         Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT));
-    }    
+    }
 
     public void testValidatePaymentWithInvalidNegativePaymentAmount() throws Exception {
         String paymentAmount = "-1";
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()), 
-                new AccountReferenceDto(accountBO.getAccountId()), 
-                new BigDecimal(paymentAmount), 
-                new LocalDate(), 
+                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(accountBO.getAccountId()),
+                new BigDecimal(paymentAmount),
+                new LocalDate(),
                 defaultPaymentType,"");
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 

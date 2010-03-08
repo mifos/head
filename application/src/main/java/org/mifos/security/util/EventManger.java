@@ -26,7 +26,7 @@ public class EventManger {
 
     /**
      * This function will handle the posting of event to autherization manager
-     * 
+     *
      * @param type
      *            type of event
      * @param obj

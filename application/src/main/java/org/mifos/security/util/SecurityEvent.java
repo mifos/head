@@ -30,14 +30,14 @@ public interface SecurityEvent {
     /**
      * This fucnction returns the type of event it is i.e. insert,update or
      * delete
-     * 
+     *
      * @return String as type of event
      */
     public String getEventType();
 
     /**
      * Thsi function return the object which is being updated
-     * 
+     *
      * @return object
      */
     public Object getObject();

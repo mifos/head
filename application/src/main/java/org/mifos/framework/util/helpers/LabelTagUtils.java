@@ -65,7 +65,7 @@ public class LabelTagUtils {
     /**
      * The method is used to obtain the label associated with the key based on
      * the Locale.
-     * 
+     *
      * @param key
      *            -- The key used to obtain the Label
      * @return Label associated with key of the Locale
@@ -103,7 +103,7 @@ public class LabelTagUtils {
     /**
      * The method is used to check, if the element associated with the key is
      * configurable mandatory or not.
-     * 
+     *
      * @param key
      *            -- The key used to determine if the element associated with is
      *            configurable mandatory or not
@@ -123,7 +123,7 @@ public class LabelTagUtils {
     /**
      * The method is used to check, if the element associated with the key is
      * hidden or not.
-     * 
+     *
      * @param key
      *            --The key used to determine if the element associated with is
      *            hidden or not
@@ -142,7 +142,7 @@ public class LabelTagUtils {
     /**
      * The method is used to check, if the element associated with the key is
      * confidential or not.
-     * 
+     *
      * @param key
      *            --The key used to determine if the element associated with is
      *            confidential or not
@@ -161,7 +161,7 @@ public class LabelTagUtils {
     /**
      * This helper method returns the User Preferred Locale, if any. Otherwise
      * it returns default Mifos Locale
-     * 
+     *
      * @param pageContext
      * @return User Preferred Locale
      */

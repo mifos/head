@@ -48,7 +48,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * implementation of CollectionSheetService
- * 
+ *
  */
 public class CollectionSheetServiceImpl implements CollectionSheetService {
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
@@ -71,7 +71,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
     /**
      * The method saves a collection sheet.
-     * 
+     *
      * @throws SaveCollectionSheetException
      * */
     public CollectionSheetErrorsView saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
@@ -115,7 +115,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         /*
          * With preprocessing complete...
-         * 
+         *
          * only errors and warnings from the business model remain
          */
 
@@ -405,13 +405,13 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         }
 
         for (CollectionSheetCustomerSavingsAccountDto individualSavingsAccount : clientIndividualSavingsAccounts) {
-            
+
             //
             if ((individualSavingsAccount.getCustomerLevelId().compareTo(CustomerLevel.CENTER.getValue()) == 0)
                     || (individualSavingsAccount.getCustomerId().compareTo(customer.getParentCustomerId())) == 0) {
                 if(!isAccountInCombinedSavingsAccountsList(
                         combinedSavingsAccountsList, individualSavingsAccount.getAccountId())) {
- 
+
                     CollectionSheetCustomerSavingDto zeroValueSavingsAccount = new CollectionSheetCustomerSavingDto();
                     zeroValueSavingsAccount.setCustomerId(individualSavingsAccount.getCustomerId());
                     zeroValueSavingsAccount.setAccountId(individualSavingsAccount.getAccountId());

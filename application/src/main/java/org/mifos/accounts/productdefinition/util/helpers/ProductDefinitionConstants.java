@@ -285,7 +285,7 @@ public interface ProductDefinitionConstants {
     public String EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR = "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR";
     public String NOT_ALL_NUMBER = "NOT_ALL_NUMBER";
     public String CONVERSION_ERROR = "CONVERSION_ERROR";
-    
+
     //Create Saving Products
     public static final String MANDATORY_AMOUNT_FOR_DEPOSIT_KEY = "product.mandamntdep";
     public static final String RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY = "product.recamtdep";

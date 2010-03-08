@@ -58,7 +58,7 @@ public class Parameters {
 
     /**
      * Function to get the parameters.
-     * 
+     *
      * @param obj
      * @return string string array of parameters.
      * @throws TableTagException

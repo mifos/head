@@ -44,10 +44,10 @@ public class MifosSqlDateConverter implements Converter {
         java.sql.Date date = null;
         /*
          * TODO: Get rid of this comment
-         * 
+         *
          * if(locale!=null && value!=null && type!=null && !value.equals("")){
          * try{
-         * 
+         *
          * SimpleDateFormat sdf =
          * (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT,
          * locale); String userfmt = ((SimpleDateFormat) sdf).toPattern();
@@ -60,7 +60,7 @@ public class MifosSqlDateConverter implements Converter {
          * dayMnthYear[0])).getTimeInMillis()); String
          * dbDate=DateHelper.convertUserToDbFmt((String)value,userfmt);
          * date=java.sql.Date.valueOf(dbDate);
-         * 
+         *
          * }catch(Exception parsee){ //TODO Exception handling and remove print
          * stack trace parsee.printStackTrace(); //date= new java.sql.Date(0l);
          * } } return date;

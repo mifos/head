@@ -261,7 +261,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
                 if (amount.getAmount().equals(BigDecimal.ZERO)) {
                     amount = savingsBalance;
                 } else {
-                    amount = amount.add(savingsBalance);                    
+                    amount = amount.add(savingsBalance);
                 }
             }
         }
@@ -300,8 +300,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
             for (CustomerBO client : clients) {
                 Money balanceAtRisk = getBalanceForAccountsAtRisk(client);
                 if (amount.getAmount().equals(BigDecimal.ZERO)) {
-                    amount = balanceAtRisk;                    
-                } else {                    
+                    amount = balanceAtRisk;
+                } else {
                     amount = amount.add(balanceAtRisk);
                 }
             }

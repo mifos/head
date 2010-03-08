@@ -180,7 +180,7 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
         }
         if(getLoanAmount()!=null && !getLoanAmount().equals("") ){
             validateLoanAmount(errors, locale);
-        } 
+        }
 
         if(getInterestPaid()!=null && !getInterestPaid().equals("") ){
             validateInterestPaid(errors, locale);
@@ -190,30 +190,30 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
             validateTotalAmountPaid(errors, locale);
         }
     }
-    
+
     private void validateLoanAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), CustomerConstants.AMOUNT_OF_LOAN_KEY, errors, locale, 
+        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), CustomerConstants.AMOUNT_OF_LOAN_KEY, errors, locale,
                 FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
-            addError(errors, CustomerConstants.AMOUNT_OF_LOAN_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
+            addError(errors, CustomerConstants.AMOUNT_OF_LOAN_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE,
                     lookupLocalizedPropertyValue(CustomerConstants.AMOUNT_OF_LOAN_KEY, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE));
         }
     }
-    
+
     private void validateInterestPaid(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getInterestPaid(), CustomerConstants.INTEREST_PAID_KEY, errors, locale, 
+        DoubleConversionResult conversionResult = validateAmount(getInterestPaid(), CustomerConstants.INTEREST_PAID_KEY, errors, locale,
                 FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
-            addError(errors, CustomerConstants.INTEREST_PAID_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
+            addError(errors, CustomerConstants.INTEREST_PAID_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE,
                     lookupLocalizedPropertyValue(CustomerConstants.INTEREST_PAID_KEY, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE));
         }
     }
-    
+
     private void validateTotalAmountPaid(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getTotalAmountPaid(), CustomerConstants.TOTAL_AMOUNT_PAID_KEY, errors, locale, 
+        DoubleConversionResult conversionResult = validateAmount(getTotalAmountPaid(), CustomerConstants.TOTAL_AMOUNT_PAID_KEY, errors, locale,
                 FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
-            addError(errors, CustomerConstants.TOTAL_AMOUNT_PAID_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE, 
+            addError(errors, CustomerConstants.TOTAL_AMOUNT_PAID_KEY, CustomerConstants.ERRORS_MUST_NOT_BE_NEGATIVE,
                     lookupLocalizedPropertyValue(CustomerConstants.TOTAL_AMOUNT_PAID_KEY, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE));
         }
     }

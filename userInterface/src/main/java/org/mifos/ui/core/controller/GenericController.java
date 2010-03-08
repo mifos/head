@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class GenericController extends AbstractController {
         	modelAndView.addObject("status", status);
         	return modelAndView;
 	}
-	
+
 	public String getPageToDisplay(HttpServletRequest request) {
 		return request.getRequestURI().replace("mifos/","").replace("/", "").replace(".ftl", "");
 	}

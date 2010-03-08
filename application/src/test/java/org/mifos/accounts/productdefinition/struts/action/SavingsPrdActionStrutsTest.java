@@ -74,7 +74,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
     AccountPersistence accountPersistence = new AccountPersistence();
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
@@ -188,7 +188,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("depositGLCode", "42");
         addRequestParameter("interestGLCode", "57");
         addRequestParameter("recommendedAmount", "");
-        
+
         actionPerform();
         verifyActionErrors(new String[] { ProductDefinitionConstants.ERRORMANDAMOUNT });
         verifyInputForward();
@@ -631,7 +631,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("depositGLCode", "42");
         addRequestParameter("interestGLCode", "57");
         addRequestParameter("recommendedAmount", "");
-        
+
         actionPerform();
        Assert.assertEquals("Manadatory amount", 1, getErrorSize("recommendedAmount"));
         verifyInputForward();

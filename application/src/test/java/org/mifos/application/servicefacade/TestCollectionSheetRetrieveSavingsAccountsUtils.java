@@ -57,7 +57,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
 
     private Boolean onlyCreateCenterAndItsSavingsAccount = false;
     /*
-     * 
+     *
      */
     private CenterBO center;
     private SavingsBO centerSavingsAccount;
@@ -74,7 +74,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
 
     /**
      * Write a sample center hierarchy with savings accounts and retrieve the collection sheet information.
-     * 
+     *
      * Convert the collection sheet information into the format for saving.
      */
     public SaveCollectionSheetDto createSampleSaveCollectionSheetDto() {
@@ -102,19 +102,19 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
     /**
      * By default generates 1 center with a mandatory savings account (center savings accounts are always
      * PER_INDIVIDUAL)
-     * 
+     *
      * 1 group with a voluntary COMPLETE_GROUP savings account
-     * 
+     *
      * 1 client with a mandatory savings account
-     * 
+     *
      * 1 group with a mandatory PER_INDIVIDUAL savings account
-     * 
+     *
      * 1 client with a voluntary savings account
      */
     public void createSampleCenterHierarchy() throws Exception {
         // TODO - correct clientBuilder so that when there are "PER_INDIVIDUAL" savings accounts relevant to it... a
         // saving schedule is created.
-        //        
+        //
         // As a work-around for this problem... the two "PER_INDIVIDUAL" savings accounts (centerSavingsAccount and
         // groupPerIndividualSavingsAccount) are created last... this kicks of a process that creates schedules for all
         // the relevant clients.
@@ -202,7 +202,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
     public SavingsBO getClientOfGroupCompleteGroupSavingsAccount() {
         return this.clientOfGroupCompleteGroupSavingsAccount;
     }
-    
+
     /**
      * clears persistent objects created by this class
      */
@@ -260,7 +260,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
     }
 
     /*
-     * 
+     *
      * methods to configure invalid entries below
      */
 

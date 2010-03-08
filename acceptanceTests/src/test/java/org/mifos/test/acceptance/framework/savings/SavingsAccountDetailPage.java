@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.savings;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -37,21 +37,21 @@ public class SavingsAccountDetailPage extends AbstractPage {
     public void verifyPage() {
         this.verifyPage("savingsaccountdetail");
     }
-    
+
     public void verifySavingsAmount(String amount) {
-        Assert.assertTrue(selenium.isTextPresent(amount));        
+        Assert.assertTrue(selenium.isTextPresent(amount));
     }
 
     public void verifySavingsProduct(String savingsProduct) {
-        Assert.assertTrue(selenium.isTextPresent(savingsProduct));        
-        
+        Assert.assertTrue(selenium.isTextPresent(savingsProduct));
+
     }
     public AccountAddNotesPage navigateToAddNotesPage() {
         selenium.click("savingsaccountdetail.link.addANotes");
         waitForPageToLoad();
         return new AccountAddNotesPage(selenium);
     }
-    
+
     public AccountNotesPage navigateToAccountNotesPage() {
         selenium.click("savingsaccountdetail.link.seeAllNotes");
         waitForPageToLoad();

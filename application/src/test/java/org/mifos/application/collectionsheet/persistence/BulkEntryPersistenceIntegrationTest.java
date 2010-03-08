@@ -160,7 +160,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         }
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(account.getAccountActionDates());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, 
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
                 TestUtils.createMoney("3000.0"), null, account.getPersonnel(), "423423", Short
                 .valueOf("1"), startDate, startDate);
 

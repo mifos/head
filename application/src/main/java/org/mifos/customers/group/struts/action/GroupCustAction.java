@@ -216,22 +216,22 @@ public class GroupCustAction extends CustAction {
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         GroupBO groupBO;
         String globalCustNum = actionForm.getGlobalCustNum();
-        
+
         groupBO = getGroupBusinessService().findBySystemId(globalCustNum);
         groupBO.setUserContext(getUserContext(request));
         groupBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         loadMasterDataForDetailsPage(request, groupBO, getUserContext(request).getLocaleId());
         setLocaleForMasterEntities(groupBO, getUserContext(request).getLocaleId());
-        
+
         // We would like to move away from sending business objects to the jsp page
         // instead, load data into a data transfer object.
-        // Whatever is needed on the jsp page and is coming from the clientBO 
+        // Whatever is needed on the jsp page and is coming from the clientBO
         // should be moved over to the Dto so that we can stop passing a business
         // object like groupBo to the jsp page.
         GroupInformationDto groupInformationDto = new WebTierGroupDetailsServiceFacade().getGroupInformationDto(globalCustNum);
         SessionUtils.removeAttribute("groupInformationDto", request);
         SessionUtils.setAttribute("groupInformationDto", groupInformationDto, request);
-        
+
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request);
         request.getSession().setAttribute(Constants.BUSINESS_KEY, groupBO);

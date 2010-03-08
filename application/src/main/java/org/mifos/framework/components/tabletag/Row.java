@@ -81,7 +81,7 @@ public class Row {
 
     /**
      * Function to get the row
-     * 
+     *
      * @param obj
      *            Object from the user.
      * @return row string.

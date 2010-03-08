@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.center;
 
 import com.thoughtworks.selenium.Selenium;
@@ -30,11 +30,11 @@ public class CreateCenterConfirmationPage extends MifosPage {
     public CreateCenterConfirmationPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         Assert.assertTrue(selenium.isElementPresent("createcenterconfirmation.text.confirmation"), "Confirmation message not found on create new center confirmation page");
     }
-    
+
     public CenterViewDetailsPage navigateToCenterViewDetailsPage() {
         selenium.click("createcenterconfirmation.link.viewDetailsInfo");
         waitForPageToLoad();

@@ -56,7 +56,7 @@ public class ConfigurationLocatorTest {
 
     @Test
     public void testGetFileHandle() throws IOException {
-        
+
         // exercise test
         File returnedFile = configurationLocator.getFile("mock.mifosChartOfAccounts.xml");
 
@@ -66,7 +66,7 @@ public class ConfigurationLocatorTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testGetFileHandleFailure() throws IOException {
-        
+
         // exercise test
         configurationLocator.getFile("x.xml");
     }

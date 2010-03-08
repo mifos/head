@@ -48,7 +48,7 @@ public class ConversionUtil {
                 conBean.register(stringToJavaDateConverter, java.util.Date.class);
                 conBean.register(converter, java.sql.Date.class);
                 conBean.register(mifosDoubleConverter, Double.class);
-                
+
                 BeanUtilsBean bean = new BeanUtilsBean(conBean, BeanUtilsBean.getInstance().getPropertyUtils());
                 bean.copyProperties(object, actionForm);
             } else {

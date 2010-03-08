@@ -76,7 +76,7 @@ public class DisplayName {
     /**
      * A helper method which gets the display name according to the label using
      * another helper method
-     * 
+     *
      * @param obj
      * @return displayNames
      * @throws TableTagException

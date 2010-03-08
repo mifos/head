@@ -64,7 +64,7 @@ public class ClientCustActionFormTest extends TestCase {
         minimumAgeForNewClientBeforeTestRun = ClientRules.getMinimumAgeForNewClient();
         maximumAgeForNewClientBeforeTestRun = ClientRules.getMaximumAgeForNewClient();
         ageCheckSettingBeforeTestRun = ClientRules.isAgeCheckEnabled();
-        
+
     }
 
     public void testGoodDate() throws Exception {
@@ -138,7 +138,7 @@ public class ClientCustActionFormTest extends TestCase {
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.INVALID_AGE, message.getKey());
     }
-    
+
     public void testInvaildFamilyDateOfBirth() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -153,7 +153,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyDateOfBirths(errors);
         Assert.assertEquals(1, errors.size());
     }
-    
+
   public void testVaildFamilyDateOfBirth() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -168,7 +168,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyDateOfBirths(errors);
         Assert.assertEquals(0, errors.size());
     }
-    
+
     public void testNoFirstName() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -181,7 +181,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyNames(errors);
         Assert.assertEquals(1,errors.size());
     }
- 
+
     public void testNoLastName() throws Exception {
          if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -207,7 +207,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyNames(errors);
         Assert.assertEquals(0,errors.size());
     }
-  
+
     public void testTwoFathers() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -235,7 +235,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyOneSpouseOrFather(errors);
         Assert.assertEquals(1,errors.size());
     }
-    
+
     public void testValidRelationships() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -249,7 +249,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyOneSpouseOrFather(errors);
         Assert.assertEquals(0,errors.size());
     }
-    
+
     public void testNoRelationships() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -260,7 +260,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyRelationship(errors);
         Assert.assertEquals(1,errors.size());
     }
-    
+
     public void testNoGender() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -282,7 +282,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyLivingStatus(errors);
         Assert.assertEquals(1,errors.size());
     }
-    
+
     public void testValidFamilyMember() throws Exception {
         if(!ClientRules.isFamilyDetailsRequired()){
             ClientRules.setFamilyDetailsRequired(true);
@@ -306,7 +306,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.validateFamilyLivingStatus(errors);
         Assert.assertEquals(0,errors.size());
     }
-    
+
     @Override
     public void tearDown() {
         form = null;

@@ -107,8 +107,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         Date currentDate = new Date(System.currentTimeMillis());
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630), 
-                "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), 
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630),
+                "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")),
                 new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
@@ -176,7 +176,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), accountAction
                         .getActionDate(), TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
-                TestUtils.createMoney(630), "test for loan adjustment", null, TestUtils.createMoney(200), 
+                TestUtils.createMoney(630), "test for loan adjustment", null, TestUtils.createMoney(200),
                 TestUtils.createMoney(300), TestUtils.createMoney(),
                 TestUtils.createMoney(10), TestUtils.createMoney(20), null,
                 masterPersistenceService);
@@ -413,16 +413,16 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
             } else {
-                fail("There should not be any other entry"); 
+                fail("There should not be any other entry");
             }
         }
-            
+
     }
 
     public void testLoanRescheduleAccountingEntries() throws Exception {
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630), 
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630),
                 null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
                 .currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
@@ -451,7 +451,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
             } else {
-                fail("There should not be any other entry"); 
+                fail("There should not be any other entry");
             }
         }
     }

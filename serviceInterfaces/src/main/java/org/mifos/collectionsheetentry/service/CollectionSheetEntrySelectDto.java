@@ -17,12 +17,12 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.collectionsheetentry.service;
 
 
 public class CollectionSheetEntrySelectDto {
-    
+
     private Integer branchOfficeId;
     private Integer loanOfficerId;
     private Integer centerId;
@@ -34,7 +34,7 @@ public class CollectionSheetEntrySelectDto {
     private int receiptDay;
     private int receiptMonth;
     private int receiptYear;
- 
+
     public Integer getBranchOfficeId() {
         return branchOfficeId;
     }

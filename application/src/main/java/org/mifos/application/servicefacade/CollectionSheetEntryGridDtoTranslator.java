@@ -72,7 +72,7 @@ public class CollectionSheetEntryGridDtoTranslator {
                 .getWithDrawalAmountEntered(), collectionSheetEntryGridDto.getSavingProducts());
 
         setCustomerAccountAmountEntered(collectionSheetParent, rowIndex, dataView.getCustomerAccountAmountEntered());
-        
+
         return collectionSheetEntryGridDto;
     }
 

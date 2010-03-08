@@ -26,7 +26,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 
 /**
- * 
+ *
  */
 public interface CustomerDao {
 

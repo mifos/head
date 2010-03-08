@@ -58,5 +58,5 @@ public class SavingBOTestUtils {
     public static void setPaymentDate(AccountActionDateEntity accountActionDateEntity, java.sql.Date paymentDate) {
         ((SavingsScheduleEntity) accountActionDateEntity).setPaymentDate(paymentDate);
     }
-    
+
 }

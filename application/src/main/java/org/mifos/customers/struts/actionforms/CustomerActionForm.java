@@ -483,12 +483,12 @@ public abstract class CustomerActionForm extends BaseActionForm {
             if (StringUtils.isBlank(fee.getAmount())) {
                 errors.add(CustomerConstants.FEE, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_FEE_AMOUNT));
             } else {
-                validateAmount(fee.getAmount(), CustomerConstants.FEE, 
-                        errors, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);              
+                validateAmount(fee.getAmount(), CustomerConstants.FEE,
+                        errors, locale, FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
             }
         }
     }
-    
+
     protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors)
             throws ApplicationException {
         List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(

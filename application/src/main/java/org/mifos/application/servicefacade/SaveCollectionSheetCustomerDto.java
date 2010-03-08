@@ -35,15 +35,15 @@ public class SaveCollectionSheetCustomerDto {
 
     /*
      * About Individual Savings Accounts
-     * 
+     *
      * All CENTER savings accounts are 'individual'. GROUP savings accounts can
      * be defined as 'individual'.
-     * 
+     *
      * 'Individual' means that deposits and withdrawals can be entered for any
      * CLIENT customer that appears below the CENTER/GROUP as well as for the
      * CENTER/GROUP itself. However, GROUPs appearing below a CENTER cannot
      * deposit into or withdraw from a CENTER savings account.
-     * 
+     *
      * CENTER and GROUP individual savings accounts appear in variable
      * saveCollectionSheetCustomerSavings above for the owning CENTER/GROUP but
      * appear in variable saveCollectionSheetCustomerIndividualSavings below for

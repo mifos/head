@@ -19,7 +19,7 @@
  */
 
 /**
- * 
+ *
  */
 package org.mifos.security.rolesandpermission.util.helpers;
 
@@ -80,7 +80,7 @@ public class RoleTempleteBuilder {
 
     /**
      * This Function returns the currentActivites
-     * 
+     *
      * @return Returns the currentActivites.
      */
     public Set<Short> getCurrentActivites() {
@@ -89,7 +89,7 @@ public class RoleTempleteBuilder {
 
     /**
      * This function set the currentActivites
-     * 
+     *
      * @param currentActivites
      *            The currentActivites to set.
      */
@@ -108,7 +108,7 @@ public class RoleTempleteBuilder {
     /**
      * This is internal helpher function used to build the templete this give
      * the childern associated with the current id
-     * 
+     *
      * @param activities
      *            List of all Activity object in the system
      * @param id
@@ -144,7 +144,7 @@ public class RoleTempleteBuilder {
 
     /**
      * This function is recursive function helps in making the tree table
-     * 
+     *
      * @param l
      *            List of all activities in the system
      * @param aid
@@ -217,7 +217,7 @@ public class RoleTempleteBuilder {
 
     /**
      * This is the main function which would build the table tree for ui
-     * 
+     *
      * @param l
      *            List if all the activities in the system
      * @return stringbuffer representatiuon of the tree
@@ -273,7 +273,7 @@ public class RoleTempleteBuilder {
     /**
      * This is internal helper function which would return the index of current
      * activity ijn the activities list
-     * 
+     *
      * @param id
      *            of the activity
      * @return index of the activity in the list
@@ -285,7 +285,7 @@ public class RoleTempleteBuilder {
     /**
      * This is main internal helper function which would build the map of
      * checked item in the templete
-     * 
+     *
      * @param l
      *            List of activities in the system
      */
@@ -312,7 +312,7 @@ public class RoleTempleteBuilder {
     /**
      * This is internal recursive helper function used to build the map of the
      * checked items if some activity is selected
-     * 
+     *
      * @param l
      *            list of all activities in the system
      * @param id

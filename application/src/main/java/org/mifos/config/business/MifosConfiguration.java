@@ -37,7 +37,7 @@ import org.mifos.config.LocalizedTextLookup;
 
 /**
  * This class caches label text and lookUpValue text.
- * 
+ *
  * Feb. 2008 - this class is slated to be removed. It is unclear if we need
  * caching and if we do, we should be able to use the Hibernate 2nd level cache
  * or Spring based caching support.

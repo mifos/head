@@ -169,7 +169,7 @@ public class BirtReportsUploadAction extends BaseAction {
 
         AuthorizationManager.getInstance().init();
     }
-    
+
     private static String getServletRoot(ActionServlet servlet) {
         return servlet.getServletContext().getRealPath("/");
     }
@@ -178,7 +178,7 @@ public class BirtReportsUploadAction extends BaseAction {
         return ConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
                 "$HOME/.mifos/uploads").replaceFirst("\\$HOME", System.getProperty("user.home"));
     }
-    
+
     public static String getCustomReportStorageDirectory() {
         return getUploadStorageDirectory().endsWith("/") ?
                 getUploadStorageDirectory() + "report" : getUploadStorageDirectory() + "/report";

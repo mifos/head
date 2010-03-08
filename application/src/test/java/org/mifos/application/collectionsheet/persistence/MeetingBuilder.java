@@ -47,14 +47,14 @@ public class MeetingBuilder {
     private Date startDate = new DateTime().toDate();
     private final String meetingLocation = "test-meeting-location";
     private MasterPersistence masterPersistence = null;
-    
-    public MeetingBuilder() {        
+
+    public MeetingBuilder() {
     }
-    
+
     public MeetingBuilder(MasterPersistence masterPersistence) {
         this.masterPersistence = masterPersistence;
     }
-    
+
     public MeetingBO build() {
 
         final MeetingBO meeting = new MeetingBO(meetingType, startDate, meetingLocation);

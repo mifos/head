@@ -58,7 +58,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * Function return the property represent the input list
-     * 
+     *
      * @return property. Get from the user
      */
 
@@ -68,7 +68,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * Function set the property represent the input list
-     * 
+     *
      * @param property
      *            . The property to set
      */
@@ -79,7 +79,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * Function get the name of the bean
-     * 
+     *
      * @return name. The name of the bean
      */
 
@@ -89,7 +89,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * Function set the name of the bean
-     * 
+     *
      * @param name
      *            . The name to set
      */
@@ -108,7 +108,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * function get the height of the listbox
-     * 
+     *
      * @return height. Height of the listbox
      */
 
@@ -118,7 +118,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * function set the height of the listbox
-     * 
+     *
      * @param height
      *            . Height of the listbox
      */
@@ -129,7 +129,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * function get the userContext
-     * 
+     *
      * @return userContext.The userContext get from the user
      */
 
@@ -139,7 +139,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * function set the userContext
-     * 
+     *
      * @param usercontext
      *            . It sets the userContext
      */
@@ -150,7 +150,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * function get the width of the listbox
-     * 
+     *
      * @return width. Width of the listBox
      */
     public String getWidth() {
@@ -159,7 +159,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * function set the widht of the listbox
-     * 
+     *
      * @param width
      *            . Set the width of the listbox by user
      */
@@ -179,7 +179,7 @@ public class MifosListBox extends BodyTagSupport {
 
     /**
      * Function to render the tag in jsp
-     * 
+     *
      * @throws JspException
      */
     @Override
@@ -259,13 +259,13 @@ public class MifosListBox extends BodyTagSupport {
     /**
      * a helper method in the bean which directs the href as to where the code
      * should go
-     * 
+     *
      * @param text
      *            inputList item
-     * 
+     *
      * @param obj
      *            bean object
-     * 
+     *
      * @return link To get link in the listbox
      */
 

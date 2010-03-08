@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -53,7 +53,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
 
     private static final String TEST_ACCOUNT = "000100000000004";
@@ -79,24 +79,24 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         initData();
         LoanAccountPage loanAccountPage = addNoteToAccount();
         loanAccountPage.verifyPage();
-        assertTextFoundOnPage(TEST_ACCOUNT_NOTE);       
+        assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void addNoteToLoanAccountAndVerifyAllNotes() throws Exception {
         initData();
 
-        LoanAccountPage loanAccountPage = addNoteToAccount();        
+        LoanAccountPage loanAccountPage = addNoteToAccount();
         loanAccountPage.verifyPage();
         AccountNotesPage accountNotesPage = loanAccountPage.navigateToAccountNotesPage();
         accountNotesPage.verifyPage();
-        assertTextFoundOnPage(TEST_ACCOUNT_NOTE);       
+        assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
-    
+
     private void initData() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
     }
-    
+
     private LoanAccountPage addNoteToAccount() {
         // find the loan w/ id TEST_ACCOUNT
         NavigationHelper helper = new NavigationHelper(selenium);
@@ -109,9 +109,9 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         AccountPreviewNotesPage previewPage = addNotesPage.submitAndNavigateToAccountAddNotesPreviewPage(TEST_ACCOUNT_NOTE);
         previewPage.verifyPage();
         loanAccountPage = previewPage.submitAndNavigateToLoanAccountPage();
-        
+
         return loanAccountPage;
     }
-    
-    
+
+
 }

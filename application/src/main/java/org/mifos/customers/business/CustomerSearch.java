@@ -414,7 +414,7 @@ public class CustomerSearch extends View {
 
     /**
      * This function returns the branchGlobalNum
-     * 
+     *
      * @return Returns the branchGlobalNum.
      */
 
@@ -424,7 +424,7 @@ public class CustomerSearch extends View {
 
     /**
      * This function sets the branchGlobalNum
-     * 
+     *
      * @param branchGlobalNum
      *            the branchGlobalNum to set.
      */

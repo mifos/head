@@ -31,14 +31,14 @@ import org.mifos.application.meeting.util.helpers.RankType;
 
 /**
  * Utility class contain side-effect free functions for processing date and calendar functionality.
- * 
+ *
  * FIXME - keithw - refactor all methods to use joda-time rather than java.util.Date and Calendar.
  */
 public class CalendarUtils {
-    
+
     /**
      * Set the day of week according to given start day to the require weekday, i.e. so it matches the meeting week day.
-     * 
+     *
      * e.g. - If start date is Monday 9 June 2008 and meeting week day is Tuesday, then roll forward the date to Tuesday
      * 10 June 2008 - or if start date is Sunday 8 June 2008 and meeting week day is Saturday, then roll forward the
      * date to Saturday 14 June 2008 - or if start date is Tuesday 10 2008 June and meeting week day is Monday, then
@@ -47,15 +47,15 @@ public class CalendarUtils {
      * is Sunday, then roll forward the date to Sunday 9 June 2008.
      */
     public static DateTime getFirstDateForWeek(final DateTime startDate, final int dayOfWeek) {
-        
+
         /*
          * In Joda time MONDAY=1 and SUNDAY=7, so shift these to SUNDAY=1, SATURDAY=7 to match this class
          */
         int calendarDayOfWeek = (dayOfWeek % 7) + 1;
-        
+
         final GregorianCalendar firstDateForWeek = new GregorianCalendar();
         firstDateForWeek.setTime(startDate.toDate());
-        
+
         int startDateWeekDay = firstDateForWeek.get(Calendar.DAY_OF_WEEK);
         int amountOfDaysToAdd = calendarDayOfWeek - startDateWeekDay;
         if (amountOfDaysToAdd < 0) {
@@ -64,7 +64,7 @@ public class CalendarUtils {
         firstDateForWeek.add(Calendar.DAY_OF_WEEK, amountOfDaysToAdd);
         return new DateTime(firstDateForWeek.getTime());
     }
-    
+
     /**
      * for monthly on date return the next date falling on the same day. If date has passed, pass in the date of next
      * month, adjust to day number if day number exceed total number of days in month
@@ -96,15 +96,15 @@ public class CalendarUtils {
         return new DateTime(gc.getTime());
     }
 
-    
+
     public static DateTime getFirstDayForMonthUsingWeekRankAndWeekday(final DateTime startDate, final int calendarWeekOfMonth,
             final int dayOfWeek) {
-        
+
         /*
          * In Joda time MONDAY=1 and SUNDAY=7, so shift these to SUNDAY=1, SATURDAY=7 to match this class
          */
         int calendarDayOfWeek = (dayOfWeek % 7) + 1;
-        
+
         final GregorianCalendar gc = new GregorianCalendar();
         gc.setTime(startDate.toDate());
 
@@ -155,7 +155,7 @@ public class CalendarUtils {
         gc.add(Calendar.DAY_OF_WEEK, every);
         return new DateTime(gc.getTime().getTime());
     }
-    
+
     public static DateTime getNextDateForMonthOnDate(final DateTime startDate, final int dayOfMonth, final int every) {
 
         final GregorianCalendar gc = new GregorianCalendar();
@@ -165,7 +165,7 @@ public class CalendarUtils {
         int M1 = gc.get(GregorianCalendar.MONTH);
         gc.set(GregorianCalendar.DATE, dayOfMonth);
         int M2 = gc.get(GregorianCalendar.MONTH);
-        
+
         int daynum = dayOfMonth;
         while (M1 != M2) {
             gc.set(GregorianCalendar.MONTH, gc.get(GregorianCalendar.MONTH) - 1);
@@ -175,7 +175,7 @@ public class CalendarUtils {
         }
         return new DateTime(gc.getTime().getTime());
     }
-    
+
     public static DateTime getNextDayForMonthUsingWeekRankAndWeekday(final DateTime startDate, final int weekOfMonth,
             final int dayOfWeek, final int every) {
 
@@ -183,7 +183,7 @@ public class CalendarUtils {
          * In Joda time MONDAY=1 and SUNDAY=7, so shift these to SUNDAY=1, SATURDAY=7 to match this class
          */
         int calendarDayOfWeek = (dayOfWeek % 7) + 1;
-        
+
         final GregorianCalendar gc = new GregorianCalendar();
         gc.setTime(startDate.toDate());
 
@@ -219,34 +219,34 @@ public class CalendarUtils {
     }
 
     public static DateTime nearestDayOfWeekTo(final int dayOfWeek, final DateTime date) {
-        
+
         DateTime withDayOfWeek = date.withDayOfWeek(dayOfWeek);
-        
+
         if (date.getYear() == withDayOfWeek.getYear()) {
-        
+
             if (date.getDayOfYear() > withDayOfWeek.getDayOfYear()) {
                 return withDayOfWeek.plusWeeks(1);
             }
-            
+
             return withDayOfWeek;
         }
-        
+
         // back a year
         if (date.getYear() > withDayOfWeek.getYear()) {
             return withDayOfWeek.plusWeeks(1);
         }
-        
+
         return withDayOfWeek;
     }
 
     public static List<DateTime> convertListOfDatesToDateTimes(final List<Date> meetingDates) {
-        
+
         List<DateTime> convertedDates = new ArrayList<DateTime>();
-        
+
         for (Date meeting : meetingDates) {
             convertedDates.add(new DateTime(meeting));
         }
-        
+
         return convertedDates;
     }
 }

@@ -22,7 +22,7 @@ package org.mifos.service.test;
 
 /**
  * Mifos must behave slightly differently during testing.
- * 
+ *
  * <table border="1">
  * <tr>
  * <th>mode</th>
@@ -41,7 +41,7 @@ package org.mifos.service.test;
  * <td>Application is configured for integration testing.</td>
  * </tr>
  * </table>
- *  
+ *
  * @see TestingService
  */
 public enum TestMode {

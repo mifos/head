@@ -296,7 +296,7 @@ public class AccountingRulesTest {
      * Example usage: LBP should round to the 10s or 100s. Not sure if
      * DigitsAfterDecimal is the correct configuration option (there may be
      * several that need to go negative).
-     * 
+     *
      * See: <a href="http://mingle.mifos.org/projects/mifos/cards/2306">Card
      * 2306</a> and <a href="http://mifosforge.jira.com/browse/MIFOS-2600">Issue
      * 2600</a>.

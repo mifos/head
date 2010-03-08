@@ -94,7 +94,7 @@ public class HolidayBusinessService implements BusinessService {
             }
         };
     }
-    
+
     public List<LoanScheduleEntity> getAllLoanSchedule(final HolidayBO holiday) throws ServiceException {
         try {
             return new HolidayPersistence().getAllLoanSchedules(holiday);
@@ -130,12 +130,12 @@ public class HolidayBusinessService implements BusinessService {
     public HolidayBO getHolidayContaining (Date date) {
         return HolidayUtils.inHoliday(DateUtils.getCalendarDate(date.getTime()));
     }
-    
+
     public List<HolidayBO> getAllPushOutHolidaysContaining (Date date) {
         //TODO: implement this
         return null;
     }
-    
+
     public HolidayBO findNonPushOutHolidayContaining (Date date) {
         //TODO: implement
         return null;
@@ -148,7 +148,7 @@ public class HolidayBusinessService implements BusinessService {
     public boolean isWorkingDay(Calendar day) throws RuntimeException {
         return new FiscalCalendarRules().isWorkingDay(day);
     }
-    
+
     public Date getNextWorkingDay(Date day) {
         Calendar calendarDay = DateUtils.getCalendar(day);
         do {
@@ -158,11 +158,11 @@ public class HolidayBusinessService implements BusinessService {
     }
 
     /**
-     * Get the first working day of the week that the given day is in. 
-     * 
+     * Get the first working day of the week that the given day is in.
+     *
      * Precondition: The given day is a working day.
-     * 
-     * @return the given day, if it's the first working day of the week, otherwise 
+     *
+     * @return the given day, if it's the first working day of the week, otherwise
      * back up to the first working day of the week.
      */
     public Date getFirstWorkingDayOfWeekForDate (Date day) {

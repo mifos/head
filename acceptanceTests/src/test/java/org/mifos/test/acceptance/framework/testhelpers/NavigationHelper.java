@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -49,7 +49,7 @@ public class NavigationHelper {
     public NavigationHelper(Selenium selenium) {
         this.selenium = selenium;
     }
-    
+
     public HomePage navigateToHomePage() {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
         loginPage.verifyPage();
@@ -57,32 +57,32 @@ public class NavigationHelper {
         homePage.verifyPage();
         return homePage;
     }
-    
+
     public AdminPage navigateToAdminPage() {
         HomePage homePage = navigateToHomePage();
         AdminPage adminPage = homePage.navigateToAdminPage();
         adminPage.verifyPage();
-        
+
         return adminPage;
     }
-    
-    public LoanAccountPage navigateToLoanAccountPage(String loanAccountID) {        
+
+    public LoanAccountPage navigateToLoanAccountPage(String loanAccountID) {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(loanAccountID);
         searchResultsPage.verifyPage();
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(loanAccountID);
         loanAccountPage.verifyPage();
-        
+
         return loanAccountPage;
     }
-    
-    public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String savingsAccountID) {        
+
+    public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String savingsAccountID) {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(savingsAccountID);
         searchResultsPage.verifyPage();
         SavingsAccountDetailPage savingsAccountDetailPage = searchResultsPage.navigateToSavingsAccountDetailPage(savingsAccountID);
         savingsAccountDetailPage.verifyPage();
-        
+
         return savingsAccountDetailPage;
     }
     public ClientViewDetailsPage navigateToClientViewDetailsPage(String clientName) {
@@ -91,36 +91,36 @@ public class NavigationHelper {
         searchResultsPage.verifyPage();
         ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=" + clientName + "*");
         clientDetailsPage.verifyPage();
-        
+
         return clientDetailsPage;
     }
-    
+
     public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(centerName);
         searchResultsPage.verifyPage();
         CenterViewDetailsPage centerDetailsPage = searchResultsPage.navigateToCenterViewDetailsPage("link=" + centerName + "*");
         centerDetailsPage.verifyPage();
-        
+
         return centerDetailsPage;
     }
-    
+
     public LoanProductDetailsPage navigateToLoanProductDetailsPage(String loanProduct)
     {
         ViewLoanProductsPage loanProductsPage = navigateToLoanProductsPage();
         LoanProductDetailsPage loanProductDetailsPage = loanProductsPage.viewLoanProductDetails(loanProduct);
         loanProductDetailsPage.verifyPage();
-        
+
         return loanProductDetailsPage;
     }
-    
+
     public GroupViewDetailsPage navigateToGroupViewDetailsPage(String groupName) {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(groupName);
         searchResultsPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=" + groupName + "*");
         groupDetailsPage.verifyPage();
-        
+
         return groupDetailsPage;
     }
 
@@ -128,7 +128,7 @@ public class NavigationHelper {
         HomePage homePage = navigateToHomePage();
         ClientsAndAccountsHomepage clientsAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
         clientsAccountsPage.verifyPage();
-        
+
         return clientsAccountsPage;
     }
 
@@ -136,30 +136,30 @@ public class NavigationHelper {
         AdminPage adminPage = navigateToAdminPage();
         ChooseOfficePage createUserPage = adminPage.navigateToCreateUserPage();
         createUserPage.verifyPage();
-        
+
         return createUserPage;
     }
-    
+
     public ViewLoanProductsPage navigateToLoanProductsPage() {
         AdminPage adminPage = navigateToAdminPage();
         ViewLoanProductsPage loanProductsPage = adminPage.navigateToViewLoanProducts();
         loanProductsPage.verifyPage();
         return loanProductsPage;
     }
-    
+
     public DefineNewLoanProductPage navigateToDefineNewLoanProductPage() {
         AdminPage adminPage = navigateToAdminPage();
         DefineNewLoanProductPage newLoanPage = adminPage.navigateToDefineLoanProduct();
         newLoanPage.verifyPage();
         return newLoanPage;
     }
-    
+
     public CreateCenterEnterDataPage navigateToCreateCenterEnterDataPage(String officeName){
         ClientsAndAccountsHomepage clientsAccountsPage = navigateToClientsAndAccountsPage();
         CreateCenterChooseOfficePage chooseOfficePage = clientsAccountsPage.navigateToCreateNewCenterPage();
         return chooseOfficePage.selectOffice(officeName);
     }
-    
+
     public CreateClientEnterMfiDataPage navigateToCreateClientEnterMfiDataPage(String officeName) {
         ClientsAndAccountsHomepage clientsAccountsPage = navigateToClientsAndAccountsPage();
         GroupSearchPage groupSearchPage = clientsAccountsPage.navigateToCreateNewClientPage();
@@ -168,6 +168,6 @@ public class NavigationHelper {
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
         return clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
-    }    
-    
+    }
+
 }

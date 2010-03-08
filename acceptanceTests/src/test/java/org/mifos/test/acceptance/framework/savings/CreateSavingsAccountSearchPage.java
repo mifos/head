@@ -25,7 +25,7 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateSavingsAccountSearchPage extends AbstractPage{
-    
+
 
         public CreateSavingsAccountSearchPage(Selenium selenium) {
             super(selenium);
@@ -47,8 +47,8 @@ public class CreateSavingsAccountSearchPage extends AbstractPage{
             waitForPageToLoad();
             return new CreateSavingsAccountEntryPage(selenium);
         }
-        
 
-    
+
+
 
 }

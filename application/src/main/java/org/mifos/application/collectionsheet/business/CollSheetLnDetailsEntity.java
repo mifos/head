@@ -69,7 +69,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
     private Money penaltyOverDue;
 
     private Money amntToBeDisbursed;
-    
+
     /*
      * Collection sheets can only handle one currency for now.  For the time being punt on
      * figuring it out and just use the default currency.
@@ -77,7 +77,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
     public MifosCurrency getCurrency() {
         return Money.getDefaultCurrency();
     }
-    
+
     public Integer getAccountId() {
         return accountId;
     }
@@ -305,7 +305,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
      * collectionSheetLoanDetails.collSheetCustomer is equal to the
      * corresponding properties of the passed object else it calls
      * super.equals();
-     * 
+     *
      * @param obj
      *            - Object to be compared for equality.
      * @return - Returns true if the objects are equal else returns false.

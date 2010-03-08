@@ -186,14 +186,14 @@ public class StandardTestingService implements TestingService {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void setLocale(String languageCode, String countryCode) throws MifosException {
         try {
             ConfigLocale configLocale = new ConfigLocale();
             configLocale.setLanguageCode(languageCode);
             configLocale.setCountryCode(countryCode);
-            Localization localization = Localization.getInstance();    
+            Localization localization = Localization.getInstance();
             localization.setConfigLocale(configLocale);
             localization.refresh();
             ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -214,7 +214,7 @@ public class StandardTestingService implements TestingService {
         configMgr.setProperty(accountingRulesParamName, accountingRulesParamValue);
 
     }
-    
+
     @Override
     public void setFiscalCalendarRules(String workingDays, String scheduleTypeForMeetingOnHoliday)
             throws MifosException {
@@ -225,26 +225,26 @@ public class StandardTestingService implements TestingService {
             new FiscalCalendarRules().setScheduleTypeForMeetingOnHoliday(scheduleTypeForMeetingOnHoliday);
         }
     }
-    
+
     private boolean isSet(Object value) {
         return value != null;
     }
 
     @Override
     public void setMaximumAgeForNewClient(int age) {
-        ClientRules.setMaximumAgeForNewClient(age);        
+        ClientRules.setMaximumAgeForNewClient(age);
     }
 
     @Override
     public void setMinimumAgeForNewClient(int age) {
-        ClientRules.setMinimumAgeForNewClient(age);        
+        ClientRules.setMinimumAgeForNewClient(age);
     }
-    
+
     @Override
     public void setAreFamilyDetailsRequired(boolean flag) {
         ClientRules.setFamilyDetailsRequired(flag);
     }
-    
+
     @Override
     public void setMaximumNumberOfFamilyMembers(int number) {
         ClientRules.setMaximumNumberOfFamilyMembers(number);
@@ -280,5 +280,5 @@ public class StandardTestingService implements TestingService {
             throw new IllegalArgumentException(requestedJob + " is unknown and will not be executed.");
         }
     }
-    
+
 }

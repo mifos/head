@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -47,20 +47,20 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
     private ScheduledDateGeneration scheduleGeneration;
 
     private List<Days> workingDays;
-    
+
     private DateTime mon_2011_07_04;
     private DateTime wed_2011_06_29;
-    
+
     @Before
     public void setupAndInjectDependencies() {
 
         workingDays = Arrays.asList(DayOfWeek.mondayAsDay(), DayOfWeek.tuesdayAsDay(), DayOfWeek
                 .wednesdayAsDay(), DayOfWeek.thursdayAsDay(), DayOfWeek.fridayAsDay());
-        
+
         List<Holiday> upcomingHolidays = new ArrayList<Holiday>();
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         //Dates frequently used in tests
         mon_2011_07_04 = new DateTime().withYear(2011).withMonthOfYear(7).withDayOfMonth(4)
                                        .toDateMidnight().toDateTime();
@@ -101,7 +101,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
 
         DateTime lastScheduledDate = DayOfWeek.mondayMidnight();
         DateTime dayAfterLastScheduledDate = DayOfWeek.tuesdayMidnight();
-        
+
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).weeks().on(DayOfWeek.monday()).build();
 
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(10, dayAfterLastScheduledDate,
@@ -113,7 +113,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
             lastDate = generatedDate;
         }
     }
-    
+
     @Test
     public void aWeeklyScheduledEventWithSecondDateInOneWeekNextMeetingHolidayShouldPushOutSecondDateOneWeek() {
 
@@ -135,7 +135,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         assertThat(scheduledDates.get(2), is(wed_2011_06_29.plusWeeks(2)));
         assertThat(scheduledDates.get(3), is(wed_2011_06_29.plusWeeks(3)));
     }
-    
+
     @Test
     public void adjustWeeklyScheduledEventWithSecondThirdFourthDateInThreeWeekNextMeetingHolidayShouldQuadrupleUpDatesAfterHoliday() {
 
@@ -154,14 +154,14 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(independenceDay);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         DateTime june29thNextYear = new DateTime().plusYears(1).withMonthOfYear(6).withDayOfMonth(29).toDateMidnight().toDateTime();
         DateTime startingFrom = june29thNextYear.minusDays(1);
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).weeks().on(june29thNextYear.getDayOfWeek()).build();
 
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(5, startingFrom, scheduleEvent);
-        
+
         assertThat(scheduledDates.size(), is(5));
         assertThat(scheduledDates.get(0), is(june29thNextYear));
         assertThat(scheduledDates.get(1), is(june29thNextYear.plusWeeks(4)));
@@ -169,7 +169,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         assertThat(scheduledDates.get(3), is(june29thNextYear.plusWeeks(4)));
         assertThat(scheduledDates.get(3), is(june29thNextYear.plusWeeks(4)));
     }
-    
+
     @Test
     public void adjusteWeeklyScheduleThreeDayMoratoriumEnclosesSecondScheduledDate() {
 
@@ -183,7 +183,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(independenceDay);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         DateTime june29thNextYear = new DateTime().plusYears(1).withMonthOfYear(6).withDayOfMonth(29).toDateMidnight().toDateTime();
         DateTime startingFrom = june29thNextYear.minusDays(1);
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).weeks().on(june29thNextYear.getDayOfWeek()).build();
@@ -191,12 +191,12 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(3, startingFrom,
                 scheduleEvent);
-        
+
         assertThat(scheduledDates.get(0), is(june29thNextYear));
         assertThat(scheduledDates.get(1), is(june29thNextYear.plusWeeks(2)));
         assertThat(scheduledDates.get(2), is(june29thNextYear.plusWeeks(3)));
     }
-    
+
     @Test
     public void adjustWeeklyScheduleTwoWeekMoratoriumEnclosesSecondAndThirdScheduledDates() {
 
@@ -211,7 +211,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(independenceDay);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         DateTime june29thNextYear = new DateTime().plusYears(1).withMonthOfYear(6)
                                                   .withDayOfMonth(29).toDateMidnight().toDateTime();
         DateTime startingFrom = june29thNextYear.minusDays(1);
@@ -223,12 +223,12 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(3, startingFrom,
                 scheduleEvent);
-        
+
         assertThat(scheduledDates.get(0), is(june29thNextYear));
         assertThat(scheduledDates.get(1), is(june29thNextYear.plusWeeks(3)));
         assertThat(scheduledDates.get(2), is(june29thNextYear.plusWeeks(4)));
     }
-    
+
     @Test
     public void adjustWeeklyScheduledEventWithSecondThirdFourthDateInThreeWeekSameDayHolidayExpectNoAdjustment() {
 
@@ -247,14 +247,14 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(threeWeekSameDay);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         DateTime june29thNextYear = new DateTime().plusYears(1).withMonthOfYear(6).withDayOfMonth(29).toDateMidnight().toDateTime();
         DateTime startingFrom = june29thNextYear.minusDays(1);
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).weeks().on(june29thNextYear.getDayOfWeek()).build();
 
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(5, startingFrom, scheduleEvent);
-        
+
         assertThat(scheduledDates.size(), is(5));
         assertThat(scheduledDates.get(0), is(june29thNextYear));
         assertThat(scheduledDates.get(1), is(june29thNextYear.plusWeeks(1)));
@@ -262,7 +262,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         assertThat(scheduledDates.get(3), is(june29thNextYear.plusWeeks(3)));
         assertThat(scheduledDates.get(4), is(june29thNextYear.plusWeeks(4)));
     }
-    
+
     @Test
     public void adjustWeeklyScheduledEventWithMoratoriumImmediatelyFollowingNexRepaymentHoliday() {
 
@@ -289,7 +289,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(twoWeekNextRepaymentHoliday, twoWeekMoratorium);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         //Start generating the schedule from the Monday the week before the first holiday starts
         DateTime startingFrom = startNextRepaymentHoliday.minusWeeks(1);
         ScheduledEvent scheduledEvent = new ScheduledEventBuilder()
@@ -298,9 +298,9 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
 
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(6, startingFrom, scheduledEvent);
-        
+
         /*
-         * Schedule should start on the next Wednesday (2 days from the starting point). 
+         * Schedule should start on the next Wednesday (2 days from the starting point).
          * The second and third dates get shifted into the first week of the moratorium, on the same
          * date as the fourth date. These and the remaining schedule get shifted two mor weeks
          *  past the moratorium.
@@ -314,7 +314,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         assertThat(scheduledDates.get(4), is(expectedFirstScheduledDate.plusWeeks(6)));
         assertThat(scheduledDates.get(5), is(expectedFirstScheduledDate.plusWeeks(7)));
     }
-    
+
     @Test
     public void adjustWeeklyScheduledEventWithMoratoriumImmediatelyFollowingSameDayHoliday() {
 
@@ -341,7 +341,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(twoWeekSameDayHoliday, twoWeekMoratorium);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         //Start generating the schedule from the Monday the week before the first holiday starts
         DateTime startingFrom = startSameDayHoliday.minusWeeks(1);
         ScheduledEvent scheduledEvent = new ScheduledEventBuilder()
@@ -350,9 +350,9 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
 
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(6, startingFrom, scheduledEvent);
-        
+
         /*
-         * Schedule should start on the next Wednesday (2 days from the starting point). 
+         * Schedule should start on the next Wednesday (2 days from the starting point).
          * The second and third dates do not shift (same day repayment). The remaining schedule get shifted two weeks
          *  past the moratorium.
          */
@@ -365,7 +365,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         assertThat(scheduledDates.get(4), is(expectedFirstScheduledDate.plusWeeks(6)));
         assertThat(scheduledDates.get(5), is(expectedFirstScheduledDate.plusWeeks(7)));
     }
-    
+
     @Test
     public void adjustWeeklyScheduledEventWithMoratoriumImmediatelyFollowingNextWorkingDayHoliday() {
 
@@ -392,7 +392,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(twoWeekNextWorkingDayHoliday, twoWeekMoratorium);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         //Start generating the schedule from the Monday the week before the first holiday starts
         DateTime startingFrom = startNextWorkingDayHoliday.minusWeeks(1);
         ScheduledEvent scheduledEvent = new ScheduledEventBuilder()
@@ -401,11 +401,11 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
 
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(6, startingFrom, scheduledEvent);
-        
+
         /*
-         * Schedule should start on the next Wednesday (2 days from the starting point). 
-         * The second and third unadjusted dates, being in the next-working-day holiday shift to the 
-         * first Monday after the holiday and moratorium. Because the fourth unadjusted date is in the moratorium, 
+         * Schedule should start on the next Wednesday (2 days from the starting point).
+         * The second and third unadjusted dates, being in the next-working-day holiday shift to the
+         * first Monday after the holiday and moratorium. Because the fourth unadjusted date is in the moratorium,
          * it and the remaining schedule are shifted two more weeks past the moratorium.
          */
         DateTime expectedFirstScheduledDate = startingFrom.withDayOfWeek(DayOfWeek.wednesday());
@@ -417,7 +417,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         assertThat(scheduledDates.get(4), is(expectedFirstScheduledDate.plusWeeks(6)));
         assertThat(scheduledDates.get(5), is(expectedFirstScheduledDate.plusWeeks(7)));
     }
-    
+
     @Test
     public void adjustDatesBiWeeklyScheduleSecondDateHitsThreeDayMoratorium() {
 
@@ -431,7 +431,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(independenceDay);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         DateTime startingFrom = fourthOfJuly.minusWeeks(2);
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(2).weeks()
                                                                   .on(startingFrom.getDayOfWeek()).build();
@@ -439,13 +439,13 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(3, startingFrom,
                 scheduleEvent);
-        
+
         assertThat(scheduledDates.get(0), is(startingFrom));
         assertThat(scheduledDates.get(1), is(startingFrom.plusWeeks(4))); // pushed out two weeks
         assertThat(scheduledDates.get(2), is(startingFrom.plusWeeks(6))); // pushed out two weeks
-         
+
     }
-    
+
     @Test
     public void adjustDatesMonthlyByDayScheduleSecondDateHitsThreeDayMoratorium() {
 
@@ -460,17 +460,17 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(independenceDay);
 
         scheduleGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         DateTime startingFrom = fourthOfJuly2011.minusMonths(1).plusDays(2); //A Monday
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).months().onDayOfMonth(6).build();
 
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(3, startingFrom,
                 scheduleEvent);
-        
+
         assertThat(scheduledDates.get(0), is(startingFrom));
         assertThat(scheduledDates.get(1), is(startingFrom.plusMonths(2))); // pushed out one month
         assertThat(scheduledDates.get(2), is(startingFrom.plusMonths(3))); // pushed out one month
-         
+
     }
 }

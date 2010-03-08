@@ -192,7 +192,7 @@ import org.mifos.security.util.UserContext;
  * </ul>
  * </li>
  * </ul>
- * 
+ *
  * <h3>required for monthly recurrence</h3>
  * <ul>
  * <li>monthType=1 : "12th day of every 1 month"
@@ -229,7 +229,7 @@ import org.mifos.security.util.UserContext;
  * </ul>
  * </li>
  * </ul>
- * 
+ *
  * <h3>required for weekly recurrence</h3>
  * <ul>
  * <li>(only one kind of weekly schedule)
@@ -267,7 +267,7 @@ public class LoanAccountAction extends AccountAppAction {
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
-    
+
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
                 new FeeBusinessService(), new LoanPrdBusinessService(), new ClientBusinessService(),
@@ -404,7 +404,7 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setDefaultFees(defaultFees);
         SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST, additionalFees, request);
         // end of load fee
-        
+
         // setDateIntoForm
         updateForm(loanOffering, loanActionForm);
         loanActionForm.setInterestRate(getDoubleStringForInterest(loanOffering.getDefInterestRate()));
@@ -454,7 +454,7 @@ public class LoanAccountAction extends AccountAppAction {
 
         }
         if (configService.isRepaymentIndepOfMeetingEnabled()) {
-            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanOfferingMeetingDetail, 
+            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanOfferingMeetingDetail,
                     customerBO.getCustomerMeeting().getMeeting().getMeetingDetails());
         }
 
@@ -465,7 +465,7 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    private void setRepaymentDayFieldsOnFormForLoad(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail, 
+    private void setRepaymentDayFieldsOnFormForLoad(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail,
             MeetingDetailsEntity customerMeetingDetail) {
         loanActionForm.setMonthDay("");
         loanActionForm.setMonthWeek("0");
@@ -477,7 +477,7 @@ public class LoanAccountAction extends AccountAppAction {
             setWeeklySchedule(loanActionForm, customerMeetingDetail);
         }
     }
-    
+
     private List<FeeView> getFilteredFeesByCurrency(List<FeeView> defaultFees, Short currencyId) {
         List<FeeView> filteredFees = new ArrayList<FeeView>();
         for(FeeView feeView:defaultFees) {
@@ -487,7 +487,7 @@ public class LoanAccountAction extends AccountAppAction {
         }
         return filteredFees;
     }
-        
+
     private void setRepaymentDayFieldsOnForm(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail) {
         loanActionForm.setMonthDay("");
         loanActionForm.setMonthWeek("0");
@@ -944,11 +944,11 @@ public class LoanAccountAction extends AccountAppAction {
 
     /**
      * Resolve repayment start date according to given disbursement date
-     * 
+     *
      * The resulting date equates to the disbursement date plus MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY: e.g.
      * If disbursement date is 18 June 2008, and MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY is 1 then the
      * repayment start date would be 19 June 2008
-     * 
+     *
      * @return Date repaymentStartDate
      * @throws PersistenceException
      */
@@ -1457,11 +1457,11 @@ public class LoanAccountAction extends AccountAppAction {
 
     /**
      * Create new meeting for the repayment day.
-     * 
+     *
      * Depending on the recurrence id (WEEKLY or MONTHLY) a MeetingBO will be created and returned
-     * 
+     *
      * @throws InvalidDateException
-     * 
+     *
      */
     private MeetingBO createNewMeetingForRepaymentDay(final HttpServletRequest request,
             final LoanAccountActionForm loanAccountActionForm, final CustomerBO customer) // ,

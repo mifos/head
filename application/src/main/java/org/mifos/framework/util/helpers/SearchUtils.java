@@ -53,7 +53,7 @@ public class SearchUtils {
     /*
      * Create a camelcase token from a string containing multiple whitespace
      * separated tokens.
-     * 
+     *
      * For example "aBc dEF_gh-iJ  k.l" becomes "AbcDef_ghIjKL"
      */
     protected static String camelCase(String string) {

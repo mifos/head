@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -30,7 +30,7 @@ public class ManageRolePage  extends MifosPage {
     public ManageRolePage(Selenium selenium) {
         super(selenium);
     }
- 
+
     public ManageRolePage verifyPage() {
         verifyPage("managerole");
         return this;
@@ -52,5 +52,5 @@ public class ManageRolePage  extends MifosPage {
         return new ViewRolesPage(selenium);
     }
 
- 
+
 }

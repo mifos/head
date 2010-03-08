@@ -22,7 +22,7 @@ package org.mifos.accounts.util.helpers;
 
 /**
  * This interface stores constants common to all accounts.
- * 
+ *
  */
 public interface AccountConstants {
     public static final String GETPRDOFFERINGS = "getPrdOfferings";

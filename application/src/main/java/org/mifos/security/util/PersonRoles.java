@@ -79,7 +79,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the locked
-     * 
+     *
      * @return Returns the locked.
      */
     public Short getLocked() {
@@ -88,7 +88,7 @@ public class PersonRoles {
 
     /**
      * This function set the locked
-     * 
+     *
      * @param locked
      *            The locked to set.
      */
@@ -98,7 +98,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the personnelStatus
-     * 
+     *
      * @return Returns the personnelStatus.
      */
     public Short getPersonnelStatus() {
@@ -107,7 +107,7 @@ public class PersonRoles {
 
     /**
      * This function set the personnelStatus
-     * 
+     *
      * @param personnelStatus
      *            The personnelStatus to set.
      */
@@ -117,7 +117,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the officeid
-     * 
+     *
      * @return Returns the officeid.
      */
     public Short getOfficeid() {
@@ -126,7 +126,7 @@ public class PersonRoles {
 
     /**
      * This function set the officeid
-     * 
+     *
      * @param officeid
      *            The officeid to set.
      */
@@ -135,7 +135,7 @@ public class PersonRoles {
     }
 
     /**
-	 * 
+	 *
 	 */
     public PersonRoles() {
         super();
@@ -143,7 +143,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the displayName
-     * 
+     *
      * @return Returns the displayName.
      */
     public String getDisplayName() {
@@ -152,7 +152,7 @@ public class PersonRoles {
 
     /**
      * This function set the displayName
-     * 
+     *
      * @param displayName
      *            The displayName to set.
      */
@@ -162,7 +162,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the id
-     * 
+     *
      * @return Returns the id.
      */
     public Short getId() {
@@ -171,7 +171,7 @@ public class PersonRoles {
 
     /**
      * This function set the id
-     * 
+     *
      * @param id
      *            The id to set.
      */
@@ -181,7 +181,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the loginName
-     * 
+     *
      * @return Returns the loginName.
      */
     public String getLoginName() {
@@ -190,7 +190,7 @@ public class PersonRoles {
 
     /**
      * This function set the loginName
-     * 
+     *
      * @param loginName
      *            The loginName to set.
      */
@@ -200,7 +200,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the noOfTries
-     * 
+     *
      * @return Returns the noOfTries.
      */
     public Short getNoOfTries() {
@@ -209,7 +209,7 @@ public class PersonRoles {
 
     /**
      * This function set the noOfTries
-     * 
+     *
      * @param noOfTries
      *            The noOfTries to set.
      */
@@ -219,7 +219,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the password
-     * 
+     *
      * @return Returns the password.
      */
     public byte[] getPassword() {
@@ -228,7 +228,7 @@ public class PersonRoles {
 
     /**
      * This function set the password
-     * 
+     *
      * @param password
      *            The password to set.
      */
@@ -238,7 +238,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the passwordChanged
-     * 
+     *
      * @return Returns the passwordChanged.
      */
     public Short getPasswordChanged() {
@@ -247,7 +247,7 @@ public class PersonRoles {
 
     /**
      * This function set the passwordChanged
-     * 
+     *
      * @param passwordChanged
      *            The passwordChanged to set.
      */
@@ -257,7 +257,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the preferedLocale
-     * 
+     *
      * @return Returns the preferedLocale.
      */
     public Short getPreferedLocale() {
@@ -266,7 +266,7 @@ public class PersonRoles {
 
     /**
      * This function set the preferedLocale
-     * 
+     *
      * @param preferedLocale
      *            The preferedLocale to set.
      */
@@ -276,7 +276,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the roles
-     * 
+     *
      * @return Returns the roles.
      */
     public Set getRoles() {
@@ -285,7 +285,7 @@ public class PersonRoles {
 
     /**
      * This function set the roles
-     * 
+     *
      * @param roles
      *            The roles to set.
      */
@@ -295,7 +295,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the levelId
-     * 
+     *
      * @return Returns the levelId.
      */
     public Short getLevelId() {
@@ -304,7 +304,7 @@ public class PersonRoles {
 
     /**
      * This function set the levelId
-     * 
+     *
      * @param levelId
      *            The levelId to set.
      */
@@ -314,7 +314,7 @@ public class PersonRoles {
 
     /**
      * This Function returns the lastLogin
-     * 
+     *
      * @return Returns the lastLogin.
      */
     public Date getLastLogin() {
@@ -323,7 +323,7 @@ public class PersonRoles {
 
     /**
      * This function set the lastLogin
-     * 
+     *
      * @param lastLogin
      *            The lastLogin to set.
      */

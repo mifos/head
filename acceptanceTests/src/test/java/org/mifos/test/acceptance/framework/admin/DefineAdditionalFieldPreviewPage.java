@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -29,7 +29,7 @@ public class DefineAdditionalFieldPreviewPage extends MifosPage {
     public DefineAdditionalFieldPreviewPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public DefineAdditionalFieldPreviewPage verifyPage() {
         verifyPage("preview_additional_fields");
         return this;

@@ -84,7 +84,7 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
 
         List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();
         accountActionsToBeUpdated.add(account.getAccountActionDates().iterator().next());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accountActionsToBeUpdated, 
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accountActionsToBeUpdated,
                 TestUtils.createMoney("700.0"), null, account.getPersonnel(), "423423", Short
                 .valueOf("1"), sampleDate, sampleDate);
         account.applyPaymentWithPersist(paymentData);

@@ -114,7 +114,7 @@ public class SaveCollectionSheetFromLegacyAssembler {
         if ((null != savingsAccountDetails) && (savingsAccountDetails.size() > 0)) {
             List<SaveCollectionSheetCustomerSavingDto> saveCollectionSheetCustomerSavings = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
             for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
-                
+
                 Boolean match = false;
                 if (attemptingToPopulateClientIndividualSavingsList) {
                     if (isClient(customerLevelId) && isIndividualSavingsAccount(savingsAccountView.getRecommendedAmntUnitId())) {
@@ -132,7 +132,7 @@ public class SaveCollectionSheetFromLegacyAssembler {
                         match = true;
                     }
                 }
-                
+
                 if (match) {
 
                     BigDecimal depositEntered = setBigDecimalAmount(savingsAccountView.getDepositAmountEntered());

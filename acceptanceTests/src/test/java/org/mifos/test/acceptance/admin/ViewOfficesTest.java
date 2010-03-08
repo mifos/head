@@ -38,16 +38,16 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"smoke", "admin", "acceptance","ui"})
 public class ViewOfficesTest extends UiTestCaseBase {
-        
+
     private AppLauncher appLauncher;
-    
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
- 
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -64,11 +64,11 @@ public class ViewOfficesTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyViewOfficesTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
-        
+
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOfficesPage viewOfficesPage = adminPage.navigateToViewOfficesPage();
         viewOfficesPage.verifyPage();
-        
+
         String[] expectedData = new String[]{
                 "MyOffice1232993831593",
                 "MyOffice1233171674227",
@@ -76,11 +76,11 @@ public class ViewOfficesTest extends UiTestCaseBase {
                 "MyOffice1233266072712",
                 "MyOffice1233266206574"
         };
-        
+
         viewOfficesPage.verifyOfficeList(expectedData);
-    
+
     }
-   
+
     private AdminPage loginAndGoToAdminPage() {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();

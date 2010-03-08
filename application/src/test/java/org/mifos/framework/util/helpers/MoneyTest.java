@@ -93,7 +93,7 @@ public class MoneyTest extends TestCase {
        Assert.assertEquals("testing multiply with a factor, should succeed", new Money(RUPEE, "124.0"), money
                 .multiply(factor));
     }
-    
+
     public void testMultiplyBigDecimal() {
         Money money = new Money(RUPEE, "100.0");
         BigDecimal factor = new BigDecimal(1.24);
@@ -126,7 +126,7 @@ public class MoneyTest extends TestCase {
         Money result = money.divide(dividend);
        Assert.assertEquals("testing divide, should succeed", expected, result);
     }
-    
+
     public void testDivideRepeating() {
         BigDecimal dividend = new BigDecimal("3.0");
         Money money = new Money(RUPEE, "10.0");
@@ -165,29 +165,29 @@ public class MoneyTest extends TestCase {
         Money money = new Money(currency, "1");
        Assert.assertEquals(new Money(currency, "3"), Money.round(money, currency.getRoundingAmount(), RoundingMode.CEILING));
     }
-    
+
     public void testRoundWhenRoundingOffMultipleIsHundred() {
         BigDecimal roundingOffMultiple = BigDecimal.valueOf(100);
-        
+
         Money roundedMoney = Money.round(new Money(EURO, "1100"), roundingOffMultiple, RoundingMode.CEILING);
         Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
-        
+
         roundedMoney = Money.round(new Money(EURO, "1101"), roundingOffMultiple, RoundingMode.CEILING);
         Assert.assertEquals(new Money(EURO, "1200"), roundedMoney);
 
         roundedMoney = Money.round(new Money(EURO, "1149"), roundingOffMultiple, RoundingMode.HALF_UP);
         Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
-        
+
         roundedMoney = Money.round(new Money(EURO, "1150"), roundingOffMultiple, RoundingMode.HALF_UP);
         Assert.assertEquals(new Money(EURO, "1200"), roundedMoney);
-        
+
         roundedMoney = Money.round(new Money(EURO, "1199"), roundingOffMultiple, RoundingMode.FLOOR);
         Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
-        
+
         roundedMoney = Money.round(new Money(EURO, "1199"), roundingOffMultiple, RoundingMode.FLOOR);
         Assert.assertEquals(new Money(EURO, "1100"), roundedMoney);
     }
-    
+
     public void testRoundingExceptionWhenRoundingOffMultipleIsZero() {
         BigDecimal roundingOffMultiple = BigDecimal.valueOf(0);
         try {
@@ -241,7 +241,7 @@ public class MoneyTest extends TestCase {
         Money money = new Money(RUPEE, "4456456456.6");
        Assert.assertEquals("The toString of money returns : ", "4456456456.6", money.toString());
     }
-    
+
     public void testIsGreaterThan() {
         Money large = new Money(RUPEE, "10.0");
         Money small = new Money(RUPEE, "1.0");
@@ -252,17 +252,17 @@ public class MoneyTest extends TestCase {
         Assert.assertFalse("small should not be greater than large", small.isGreaterThan(large));
         Assert.assertFalse("large should not be equal to same", large.isGreaterThan(same));
     }
-    
+
     public void testIsGreaterThanOrEqual() {
         Money large = new Money(RUPEE, "10.0");
         Money small = new Money(RUPEE, "1.0");
-        
+
         Assert.assertTrue(large.isGreaterThanOrEqual(small));
         Assert.assertTrue(large.isGreaterThanOrEqual(large));
         Assert.assertFalse(small.isGreaterThanOrEqual(large));
-        
+
     }
-    
+
     public void testIsGreaterThanZero() {
         Money nonZero = new Money(RUPEE, "10.0");
         Money zero = new Money(RUPEE, "0.0");
@@ -271,7 +271,7 @@ public class MoneyTest extends TestCase {
         Assert.assertFalse(lessThanZero.isGreaterThanZero());
         Assert.assertFalse(zero.isGreaterThanZero());
     }
-    
+
     public void testIsGreaterThanOrEqualZero() {
         Money nonZero = new Money(RUPEE, "10.0");
         Money zero = new Money(RUPEE, "0.0");
@@ -289,19 +289,19 @@ public class MoneyTest extends TestCase {
         Assert.assertFalse("small should not be less than itself", small.isLessThan(small));
         Assert.assertFalse("large should not be less than small", large.isLessThan(small));
     }
-    
+
     public void testIsLessThanOrEqual() {
         Money large = new Money(RUPEE, "10.0");
         Money small = new Money(RUPEE, "1.0");
         Money same = new Money(RUPEE, "10.0");
-        
+
         Assert.assertFalse(large.isLessThanOrEqual(small));
         Assert.assertTrue(small.isLessThanOrEqual(large));
         Assert.assertTrue(small.isLessThanOrEqual(large));
         Assert.assertTrue(large.isLessThanOrEqual(same));
-        
+
     }
-    
+
     public void testIsLessThanZero() {
         Money nonZero = new Money(RUPEE, "10.0");
         Money zero = new Money(RUPEE);
@@ -310,7 +310,7 @@ public class MoneyTest extends TestCase {
         Assert.assertTrue(lessThanZero.isLessThanZero());
         Assert.assertFalse(zero.isLessThanZero());
     }
-    
+
     public void testIsLessThanOrEqualZero() {
         Money nonZero = new Money(RUPEE, "10.0");
         Money zero = new Money(RUPEE);
@@ -319,7 +319,7 @@ public class MoneyTest extends TestCase {
         Assert.assertTrue(lessThanZero.isLessThanOrEqualZero());
         Assert.assertTrue(zero.isLessThanOrEqualZero());
     }
-    
+
     public void testIsZero() {
         Money nonZero = new Money(RUPEE, "10.0");
         Money zero = new Money(RUPEE);
@@ -328,7 +328,7 @@ public class MoneyTest extends TestCase {
         Assert.assertFalse(lessThanZero.isZero());
         Assert.assertTrue(zero.isZero());
     }
-    
+
     public void testIsNonZero() {
         Money nonZero = new Money(RUPEE, "10.0");
         Money zero = new Money(RUPEE);

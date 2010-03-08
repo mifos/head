@@ -35,7 +35,7 @@ public class RoleChangeEvent implements SecurityEvent {
 
     /**
      * This Function returns the object
-     * 
+     *
      * @return Returns the object.
      */
     public Object getObject() {
@@ -44,7 +44,7 @@ public class RoleChangeEvent implements SecurityEvent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mifos.security.Util.SecurityEvent#getEventType()
      */
     public String getEventType() {

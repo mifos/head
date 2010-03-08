@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -36,11 +36,11 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
     public CreateClientEnterFamilyDetailsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
- 
-        
+
+
         Integer relationship;
         Integer livingStatus;
         String  firstName;
@@ -50,31 +50,31 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
         String  dateOfBirthMM;
         String  dateOfBirthYY;
         Integer gender;
-        
+
         // gender
         public static final int MALE = 49;
         public static final int FEMALE = 50;
-        
+
         //Living Status
         public static final int TOGETHER= 622;
         public static final int NOT_TOGETHER= 623;
-        
+
         //relationship
         public static final int SPOUSE = 1;
         public static final int FATHER = 2;
         public static final int OTHER_RELATIVE= 4;
-        
+
         public Integer getGender() {
             return this.gender;
         }
         public void setGender(Integer gender) {
             this.gender = gender;
         }
-        
+
         public void setFirstName(String firstName) {
             this.firstName = firstName;
         }
-       
+
         public String getMiddleName() {
             return this.middleName;
         }
@@ -93,7 +93,7 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
         public void setDateOfBirthMM(String dateOfBirthMM) {
             this.dateOfBirthMM = dateOfBirthMM;
         }
-        
+
         public String getLastName() {
             return this.lastName;
         }
@@ -106,7 +106,7 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
         public void setDateOfBirthYY(String dateOfBirthYY) {
             this.dateOfBirthYY = dateOfBirthYY;
         }
-      
+
 
         public Integer getRelationship() {
             return this.relationship;
@@ -124,35 +124,35 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
             return this.firstName;
         }
 
-      
+
 
     }
-    
+
     public CreateClientEnterFamilyDetailsPage createMember(SubmitFormParameters parameters) {
         selectValueIfNotZero("familyRelationship[0]", parameters.getRelationship());
         typeTextIfNotEmpty("familyFirstName[0]", parameters.getFirstName());
-        typeTextIfNotEmpty("familyLastName[0]", parameters.getLastName());      
+        typeTextIfNotEmpty("familyLastName[0]", parameters.getLastName());
         typeTextIfNotEmpty("familyDateOfBirthDD[0]", parameters.getDateOfBirthDD());
         typeTextIfNotEmpty("familyDateOfBirthMM[0]", parameters.getDateOfBirthMM());
-        typeTextIfNotEmpty("familyDateOfBirthYY[0]", parameters.getDateOfBirthYY());     
+        typeTextIfNotEmpty("familyDateOfBirthYY[0]", parameters.getDateOfBirthYY());
         selectValueIfNotZero("familyGender[0]", parameters.getGender());
         selectValueIfNotZero("familyLivingStatus[0]", parameters.getLivingStatus());
         return this;
-        
+
     }
-    
+
     public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage() {
         selenium.click("create_ClientFamilyInfo.button.continue");
         waitForPageToLoad();
         return new CreateClientEnterMfiDataPage(selenium);
     }
-    
+
     public CreateClientEnterFamilyDetailsPage addRow() {
         selenium.click("create_ClientFamilyInfo.button.addRow");
         waitForPageToLoad();
         return new CreateClientEnterFamilyDetailsPage(selenium);
     }
-    
+
     public CreateClientEnterFamilyDetailsPage deleteRow() {
         selenium.click("create_ClientFamilyInfo.button.deleteRow");
         waitForPageToLoad();

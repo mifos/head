@@ -44,7 +44,7 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsOfferingBO extends PrdOfferingBO {
 
     private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
-    
+
     private Money recommendedAmount;
     private Money maxAmntWithdrawl;
     private Money minAmntForInt;
@@ -54,7 +54,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     private InterestCalcTypeEntity interestCalcType;
     private final GLCodeEntity depositGLCode;
     private final GLCodeEntity interestGLCode;
-    
+
     private final Set<PrdOfferingMeetingEntity> savingsOfferingMeetings;
 
     /**
@@ -63,7 +63,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     public SavingsOfferingBO() {
         this(null, null, null, new HashSet<PrdOfferingMeetingEntity>());
     }
-    
+
     /**
      * TODO - keithw - work in progress
      */

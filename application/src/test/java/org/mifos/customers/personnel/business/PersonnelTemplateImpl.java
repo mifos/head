@@ -143,7 +143,7 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
      * Use this in transactions that you don't plan on committing to the
      * database. If you commit more than one of these to the database you'll run
      * into uniqueness constraints. Plan on always rolling back the transaction.
-     * 
+     *
      * @param officeId
      * @return personnelTemplateImpl
      */

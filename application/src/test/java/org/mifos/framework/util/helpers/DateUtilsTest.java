@@ -61,7 +61,7 @@ public class DateUtilsTest extends TestCase {
         Locale.setDefault(new Locale("ar","LB"));
         DateUtils.convertDbToUserFmt("2009-01-26", "dd/MM/yyyy");
     }
-    
+
     public void testDateToDatabaseFormat() throws Exception {
         java.util.Date date = new Date(1000333444000L);
         String databaseFormat = DateUtils.toDatabaseFormat(date);

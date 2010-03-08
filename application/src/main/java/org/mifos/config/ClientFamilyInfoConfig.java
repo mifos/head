@@ -26,7 +26,7 @@ public class ClientFamilyInfoConfig{
 
     public static final String AreFamilyDetailsRequired = "ClientInformation.AreFamilyDetailsRequired";
     public static final String MaximumNumberOfFamilyMembers = "ClientInformation.MaximumNumberOfFamilyMembers";
-    
+
     public static Boolean getAreFamilyDetailsRequired() throws ConfigurationException{
         //default value is false
         Boolean required=false;

@@ -31,11 +31,11 @@ import org.hibernate.usertype.UserType;
 
 /**
  * For more information check out http://www.hibernate.org/312.html
- * 
+ *
  * Generic class to map a JDK 1.5 enum to a SMALL INT column in the DB. Beware
  * that the enum.ordinal() relates to the ORDERING of the enum values, so, if
  * your change it later on, all your DB values will return an incorrect value!
- * 
+ *
  * @author Benoit Xhenseval
  * @version 1
  */
@@ -45,7 +45,7 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
 
     /**
      * Contrary to the example mapping to a VARCHAR, this would
-     * 
+     *
      * @param c
      *            the class of the enum.
      * @param e

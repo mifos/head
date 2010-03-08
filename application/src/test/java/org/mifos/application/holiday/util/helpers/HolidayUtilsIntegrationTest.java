@@ -409,7 +409,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         // Create Non Working Day
         toggleFirstDayOnOff(Short.valueOf("0"));
         setNewWorkingDays(sundayIncludedWorkingDays);
-        
+
         // FIXME this test leaves CUSTOMER table in dirty state
         TestDatabase.resetMySQLDatabase();
     }

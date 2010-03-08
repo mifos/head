@@ -68,33 +68,33 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class StandardAccountServiceTest {
 
     private StandardAccountService standardAccountService;
-    
+
     @Mock
     private AccountPersistence accountPersistence;
 
     @Mock
     private CustomerPersistence customerPersistence;
-    
+
     @Mock
     private ConfigurationPersistence configurationPersistence;
-    
+
     @Mock
     private PersonnelPersistence personnelPersistence;
-    
+
     @Mock
     private PersonnelBO personnelBO;
-    
-    @Mock 
+
+    @Mock
     private CustomerBO customerBO;
 
     @Mock
     private HibernateUtil hibernateUtil;
 
-    @Mock 
+    @Mock
     private AccountBO someAccountBo;
-    
+
     private LoanBO accountBO;
-        
+
     @Before
     public void setup() {
         standardAccountService = new StandardAccountService();
@@ -105,7 +105,7 @@ public class StandardAccountServiceTest {
         accountBO.setConfigurationPersistence(configurationPersistence);
         accountBO.setPersonnelPersistence(personnelPersistence);
     }
-    
+
     @Ignore
     @Test
     public void testMakeLoanPayment() throws PersistenceException, AccountException {
@@ -118,29 +118,29 @@ public class StandardAccountServiceTest {
         LocalDate paymentDate = new LocalDate(2009,10,1);
         String comment = "some comment";
         java.sql.Date lastMeetingDate = new java.sql.Date(paymentDate.minusWeeks(3).toDateMidnight().getMillis());
-        
+
         when(customerBO.getCustomerId()).thenReturn(customerId);
-        when(accountPersistence.getAccount(accountId)).thenReturn(accountBO);      
+        when(accountPersistence.getAccount(accountId)).thenReturn(accountBO);
         //when(accountBO.isTrxnDateValid(paymentDate.toDateMidnight().toDate())).thenReturn(true);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(customerPersistence.getLastMeetingDateForCustomer(anyInt())).thenReturn(lastMeetingDate);
         when(personnelPersistence.getPersonnel(anyShort())).thenReturn(personnelBO);
-        
+
         // FIXME - work in progress Vanmh
         //standardLoanAccountService.makeLoanPayment(new AccountPaymentParametersDTO(userMakingPayment, loanAccount, paymentAmount, paymentDate, PaymentTypeDTO.CASH, comment));
     }
-    
+
     private AccountPaymentParametersDto createAccountPaymentParametersDto(short userId, int accountId, String paymentAmount) {
         AccountPaymentParametersDto accountPaymentParametersDTO = new AccountPaymentParametersDto(
-            new UserReferenceDto(userId), 
-            new AccountReferenceDto(accountId), 
-            new BigDecimal(paymentAmount), 
-            new LocalDate(), 
+            new UserReferenceDto(userId),
+            new AccountReferenceDto(accountId),
+            new BigDecimal(paymentAmount),
+            new LocalDate(),
             new PaymentTypeDto((short)1,"CASH"),"");
-    
+
         return accountPaymentParametersDTO;
     }
-    
+
     /*
      * Make sure that a payment is made for each DTO passed in
      */
@@ -154,7 +154,7 @@ public class StandardAccountServiceTest {
         AccountPaymentParametersDto dto2 = createAccountPaymentParametersDto(userId, accountId, paymentAmount);
         accountPaymentParametersDtoList.add(dto1);
         accountPaymentParametersDtoList.add(dto2);
-        
+
         try {
             StaticHibernateUtil.setHibernateUtil(hibernateUtil);
             StandardAccountService standardAccountServiceSpy = spy(standardAccountService);
@@ -166,9 +166,9 @@ public class StandardAccountServiceTest {
         } finally {
             StaticHibernateUtil.setHibernateUtil(new HibernateUtil());
         }
-        
+
     }
-    
+
     @Test
     public void testLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";
@@ -179,7 +179,7 @@ public class StandardAccountServiceTest {
             lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
         assertThat(accountReferenceDto.getAccountId(), is(accountId));
     }
-    
+
     @Test(expected=PersistenceException.class)
     public void testFailureOfLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";
@@ -187,9 +187,9 @@ public class StandardAccountServiceTest {
         AccountReferenceDto accountReferenceDto = standardAccountService.
             lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
     }
-    
+
     private class PrivateLoanAccountBuilder {
-        
+
         private LoanOfferingBO loanProduct = new LoanProductBuilder().buildForUnitTests();
         private final Short numOfInstallments = Short.valueOf("5");
         private final GraceType gracePeriodType = GraceType.NONE;
@@ -197,7 +197,7 @@ public class StandardAccountServiceTest {
         private final AccountState accountState = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
         private CustomerBO customer;
         private final Integer offsettingAllowable = Integer.valueOf(1);
-        
+
         private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
         private final java.util.Date createdDate = new DateTime().minusDays(14).toDate();
         private final Money loanAmount = new Money(TestUtils.RUPEE, "1000");
@@ -209,48 +209,48 @@ public class StandardAccountServiceTest {
         private final short maxInstall = 100;
         private final short minInstall = 2;
         /*
-    public LoanBO(final UserContext userContext, 
-        final LoanOfferingBO loanOffering, 
-        final CustomerBO customer, 
+    public LoanBO(final UserContext userContext,
+        final LoanOfferingBO loanOffering,
+        final CustomerBO customer,
         final AccountState accountState,
-        final Money loanAmount, 
-        final Short noOfinstallments, 
-        final Date disbursementDate, 
+        final Money loanAmount,
+        final Short noOfinstallments,
+        final Date disbursementDate,
         final boolean interestDeductedAtDisbursement,
-        final Double interestRate, 
-        final Short gracePeriodDuration, 
-        final FundBO fund, 
+        final Double interestRate,
+        final Short gracePeriodDuration,
+        final FundBO fund,
         final List<FeeView> feeViews,
-        final List<CustomFieldView> customFields, 
-        final Boolean isRedone, 
-        final Double maxLoanAmount, 
+        final List<CustomFieldView> customFields,
+        final Boolean isRedone,
+        final Double maxLoanAmount,
         final Double minLoanAmount,
-        final Short maxNoOfInstall, 
-        final Short minNoOfInstall, 
+        final Short maxNoOfInstall,
+        final Short minNoOfInstall,
         final boolean isRepaymentIndepOfMeetingEnabled,
-        final MeetingBO newMeetingForRepaymentDay)         
+        final MeetingBO newMeetingForRepaymentDay)
          */
         public LoanBO build() throws AccountException {
             final LoanBO loanAccount = new LoanBO(
-                    TestUtils.makeUserWithLocales(), 
-                    loanProduct, 
-                    customer, 
+                    TestUtils.makeUserWithLocales(),
+                    loanProduct,
+                    customer,
                     accountState,
-                    loanAmount, 
-                    numOfInstallments, 
-                    createdDate, 
-                    noInterestDeductedAtDisbursement, 
-                    interestRate, 
+                    loanAmount,
+                    numOfInstallments,
+                    createdDate,
+                    noInterestDeductedAtDisbursement,
+                    interestRate,
                     gracePeriodDuration,
-                    null, 
-                    null, 
-                    null, 
-                    false, 
+                    null,
+                    null,
+                    null,
+                    false,
                     maxLoan,
                     minLoan,
                     maxInstall,
                     minInstall,
-                    false, 
+                    false,
                     null);
             return loanAccount;
         }
@@ -259,10 +259,10 @@ public class StandardAccountServiceTest {
             this.loanProduct = withLoanProduct;
             return this;
         }
-        
+
         public PrivateLoanAccountBuilder withCustomer(final CustomerBO withCustomer) {
             this.customer = withCustomer;
             return this;
         }
-    }    
+    }
 }

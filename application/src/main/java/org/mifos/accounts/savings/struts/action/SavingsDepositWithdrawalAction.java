@@ -73,9 +73,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class SavingsDepositWithdrawalAction extends BaseAction {
-    
+
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-    
+
     private SavingsBusinessService savingsService;
     private AccountBusinessService accountsService;
 
@@ -224,7 +224,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         actionForm.setAmount(Constants.EMPTY_STRING);
     }
 
-    private PaymentData createPaymentData(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc, 
+    private PaymentData createPaymentData(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc,
             final MifosCurrency currency)
             throws Exception {
         Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());

@@ -26,7 +26,7 @@ package org.mifos.framework.business.service;
  * domain/business objects to its callers. This is different from existing
  * legacy {@link BusinessService} classes that do expose business objects via
  * their methods (and will be phased out)
- * 
+ *
  */
 public interface Service {
 

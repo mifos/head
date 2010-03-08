@@ -32,7 +32,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
     public AddRepaymentRuleIntegrationTest() throws Exception {
         super();
     }
-    
+
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "RepaymentRule-NewSameDay";
         String format = "RepaymentRule-";

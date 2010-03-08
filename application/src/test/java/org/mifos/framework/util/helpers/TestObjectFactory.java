@@ -185,7 +185,7 @@ import org.mifos.security.util.UserContext;
  * This class assumes that you are connected to the model database, which has master data in it and also you have some
  * default objects in it, for this you can run the master data script and then the test scripts, this script has
  * statements for creating some default objects.
- * 
+ *
  * The convention followed here is that any method that starts with "get" is returning an object already existing in the
  * database, this object is not meant to be modified and the method that starts with "create" creates a new object
  * inserts it into the database and returns that hence these objects are meant to be cleaned up by the user.
@@ -364,7 +364,7 @@ public class TestObjectFactory {
                 null, formedBy, parentCustomer);
     }
 
-    
+
     public static GroupBO createWeeklyFeeGroupUnderCenterForTestGetLoanAccountsInActiveBadStanding(final String customerName,
             final CustomerStatus customerStatus, final CustomerBO parentCustomer) {
         Short formedBy = PersonnelConstants.TEST_USER;
@@ -626,7 +626,7 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes,TestUtils.createMoney(defLnAmnt), 
+                    startDate, null, null, gracePeriodType, (short) 0, interestTypes,TestUtils.createMoney(defLnAmnt),
                     TestUtils.createMoney(defLnAmnt),  TestUtils.createMoney(defLnAmnt),
                     defIntRate, defIntRate, defIntRate, defInstallments, defInstallments, defInstallments, true,
                     interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
@@ -946,7 +946,7 @@ public class TestObjectFactory {
 
     /**
      * createPeriodicAmountFee.
-     * 
+     *
      * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
      * in {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee} (and about 163 other tests).
      */
@@ -1037,7 +1037,7 @@ public class TestObjectFactory {
 
     /**
      * createOneTimeAmountFee.
-     * 
+     *
      * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
      * in {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
@@ -1068,7 +1068,7 @@ public class TestObjectFactory {
 
     /**
      * createOneTimeRateFee.
-     * 
+     *
      * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
      * in {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
@@ -1090,11 +1090,11 @@ public class TestObjectFactory {
     /**
      * Return a new meeting object with a meeting occurring on the day of the week that the test is run. Creating a new
      * method to fix issues with meeting creation without breaking existing tests that may depend on it.
-     * 
-     * 
+     *
+     *
      * @param recurAfter
      *            1 means every day/week/month, 2 means every second day/week/month...
-     * 
+     *
      */
     public static MeetingBO getNewWeeklyMeeting(final short recurAfter) {
         Calendar calendar = new GregorianCalendar();
@@ -1111,7 +1111,7 @@ public class TestObjectFactory {
 
     /**
      * Return a new meeting object.
-     * 
+     *
      * @param frequency
      *            DAILY, WEEKLY, MONTHLY
      * @param recurAfter
@@ -1138,10 +1138,10 @@ public class TestObjectFactory {
 
     /**
      * Return a new meeting object which occurs on today's day of the week.
-     * 
+     *
      * Not recommended: New tests should call {@link #getNewMeeting(RecurrenceType, short, MeetingType, WeekDay)}
      * instead to avoid bugs where the test will pass on one day but not another.
-     * 
+     *
      * @param frequency
      *            DAILY, WEEKLY, MONTHLY
      * @param recurAfter
@@ -1151,7 +1151,7 @@ public class TestObjectFactory {
      */
     public static MeetingBO getNewMeetingForToday(final RecurrenceType frequency, final short recurAfter,
             final MeetingType meetingType) {
-        LocalDate today = new LocalDate(); 
+        LocalDate today = new LocalDate();
         return getNewMeeting(frequency, recurAfter, meetingType, WeekDay.getJodaWeekDay(today.getDayOfWeek()));
     }
 

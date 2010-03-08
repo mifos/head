@@ -36,7 +36,7 @@ public interface SavingsTransactionActivityHelper {
 
     SavingsActivityEntity createSavingsActivityForWithdrawal(AccountPaymentEntity payment, Money savingsBalance,
             SavingsBO savingsBO);
-    
+
     SavingsTrxnDetailEntity createSavingsTrxnForDeposit(AccountPaymentEntity payment, Money amount,
             CustomerBO payingCustomer, SavingsScheduleEntity savingsInstallment, Money savingsBalance);
 

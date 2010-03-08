@@ -33,7 +33,7 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 
 /**
  * Information about a user, including ID's of their roles.
- * 
+ *
  * Accessed from jsp's.
  */
 public class UserContext implements Serializable {

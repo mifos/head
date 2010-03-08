@@ -60,7 +60,7 @@ public class ConfigurationManager implements Configuration {
      * Filename where default application-wide configuration values are stored.
      * This file should never be hand-edited, edit values in the custom config
      * file instead.
-     * 
+     *
      * @see #CUSTOM_CONFIG_PROPS_FILENAME
      */
     public static final String DEFAULT_CONFIG_PROPS_FILENAME = "applicationConfiguration.default.properties";
@@ -69,7 +69,7 @@ public class ConfigurationManager implements Configuration {
      * Filename where custom overrides for application-wide configuration values
      * are stored. Keys in this file must exist in the default config file. This
      * file may be hand-edited.
-     * 
+     *
      * @see #DEFAULT_CONFIG_PROPS_FILENAME
      */
     public static final String CUSTOM_CONFIG_PROPS_FILENAME = "applicationConfiguration.custom.properties";

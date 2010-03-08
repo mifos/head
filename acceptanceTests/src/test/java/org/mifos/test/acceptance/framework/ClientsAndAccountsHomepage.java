@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
@@ -43,15 +43,15 @@ import org.mifos.test.acceptance.util.StringUtil;
 import com.thoughtworks.selenium.Selenium;
 
 public class ClientsAndAccountsHomepage extends AbstractPage {
-	
+
 	public ClientsAndAccountsHomepage() {
 		super();
 	}
-	
+
 	public ClientsAndAccountsHomepage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
 	public void verifyPage() {
 	    verifyPage("ClientsAccounts");
 	}
@@ -64,41 +64,41 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 	}
 
     public CreateLoanAccountsSearchPage navigateToCreateMultipleLoanAccountsUsingLeftMenu() {
-        selenium.click("menu.link.label.createmultipleloanaccountsprefix.loan.label.createmultipleloanaccountssuffix"); 
+        selenium.click("menu.link.label.createmultipleloanaccountsprefix.loan.label.createmultipleloanaccountssuffix");
         waitForPageToLoad();
         return new CreateLoanAccountsSearchPage(selenium);
     }
-    
+
     public CreateLoanAccountSearchPage navigateToCreateLoanAccountUsingLeftMenu() {
-        selenium.click("menu.link.label.createloanaccountprefix.loan.label.createloanaccountsuffix"); 
+        selenium.click("menu.link.label.createloanaccountprefix.loan.label.createloanaccountsuffix");
         waitForPageToLoad();
         return new CreateLoanAccountSearchPage(selenium);
     }
 
     public CreateSavingsAccountSearchPage navigateToCreateSavingsAccountUsingLeftMenu() {
-        selenium.click("menu.link.label.createsavingsaccountprefix.savings.label.createsavingsaccountsuffix"); 
+        selenium.click("menu.link.label.createsavingsaccountprefix.savings.label.createsavingsaccountsuffix");
         waitForPageToLoad();
         return new CreateSavingsAccountSearchPage(selenium);
     }
 
     public CreateCenterChooseOfficePage navigateToCreateNewCenterPage() {
-        selenium.click("menu.link.label.createnew.center"); 
+        selenium.click("menu.link.label.createnew.center");
         waitForPageToLoad();
         return new CreateCenterChooseOfficePage(selenium);
-    }    
-    
+    }
+
     public GroupSearchPage navigateToCreateNewClientPage() {
-        selenium.click("menu.link.label.createnew.client"); 
+        selenium.click("menu.link.label.createnew.client");
         waitForPageToLoad();
         return new GroupSearchPage(selenium);
     }
-    
+
     // TODO belongs in a helper
     public ClientViewDetailsPage createClient(String loanOfficer, String officeName) {
         GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
         ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
         CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
-        
+
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
         CreateClientEnterMfiDataPage clientMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
@@ -110,22 +110,22 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         meetingFormParameters.setWeekFrequency("1");
         meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
         meetingFormParameters.setMeetingPlace("Bangalore");
-        
+
         mfiFormParameters.setMeeting(meetingFormParameters);
 
         CreateClientPreviewDataPage clientPreviewDataPage = clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
         CreateClientConfirmationPage clientConfirmationPage = clientPreviewDataPage.submit();
         clientConfirmationPage.verifyPage();
-        
+
         ClientViewDetailsPage clientViewDetailsPage = clientConfirmationPage.navigateToClientViewDetailsPage();
         clientViewDetailsPage.verifyName(formParameters.getFirstName() + " " + formParameters.getLastName());
         clientViewDetailsPage.verifyDateOfBirth(formParameters.getDateOfBirthDD(), formParameters.getDateOfBirthMM(), formParameters.getDateOfBirthYYYY());
         clientViewDetailsPage.verifySpouseFather(formParameters.getSpouseFirstName() + " " + formParameters.getSpouseLastName());
         clientViewDetailsPage.verifyHandicapped(formParameters.getHandicapped());
         return clientViewDetailsPage;
-    }  
-    
-    public CreateClientEnterPersonalDataPage createClient(String loanOfficer, String officeName, String dd, String mm, String yy){ 
+    }
+
+    public CreateClientEnterPersonalDataPage createClient(String loanOfficer, String officeName, String dd, String mm, String yy){
         GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
         ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
         CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
@@ -144,8 +144,8 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
         return clientPersonalDataPage.create(formParameters);
     }
-    
-    
+
+
     public CreateClientEnterPersonalDataPage createClientForFamilyInfo(String officeName, String dd, String mm, String yy) {
          GroupSearchPage groupSearchPage = navigateToCreateNewClientPage();
          ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
@@ -163,8 +163,8 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
          formParameters.setHandicapped("Yes");
          return clientPersonalDataPage.createWithoutSpouse(formParameters);
      }
-    
-    public CreateClientEnterFamilyDetailsPage createFamily(String fname, String lname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page) {       
+
+    public CreateClientEnterFamilyDetailsPage createFamily(String fname, String lname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page) {
          CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
          formParameters.setRelationship(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.FATHER);
          formParameters.setFirstName(fname);
@@ -176,8 +176,8 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
          formParameters.setLivingStatus(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.TOGETHER);
          return page.createMember(formParameters);
     }
-    
-    public CreateClientEnterFamilyDetailsPage createFamilyWithoutLookups(Integer relation,Integer gender, Integer livingStatus,CreateClientEnterFamilyDetailsPage page) {       
+
+    public CreateClientEnterFamilyDetailsPage createFamilyWithoutLookups(Integer relation,Integer gender, Integer livingStatus,CreateClientEnterFamilyDetailsPage page) {
         CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
         formParameters.setRelationship(relation);
         formParameters.setFirstName("fname");
@@ -189,7 +189,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         formParameters.setLivingStatus(livingStatus);
         return page.createMember(formParameters);
    }
-   
+
    public CreateClientPreviewDataPage createClientMFIInformationAndGoToPreviewPage(String loanOfficer,CreateClientEnterMfiDataPage clientMfiDataPage) {
        CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
        mfiFormParameters.setLoanOfficerId(loanOfficer);
@@ -198,7 +198,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
        meetingFormParameters.setWeekFrequency("1");
        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
        meetingFormParameters.setMeetingPlace("Mangalore");
-       
+
        mfiFormParameters.setMeeting(meetingFormParameters);
        return clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
    }
@@ -210,33 +210,33 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         waitForPageToLoad();
         return new ClientSearchResultsPage(selenium);
     }
-    
+
     // TODO this belongs in a helper
-    public ClientViewDetailsPage changeCustomerStatus(ClientViewDetailsPage clientDetailsPage) {    
+    public ClientViewDetailsPage changeCustomerStatus(ClientViewDetailsPage clientDetailsPage) {
         CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
-        
+
         CustomerChangeStatusPage.SubmitFormParameters statusParameters = new CustomerChangeStatusPage.SubmitFormParameters();
         statusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.PARTIAL_APPLICATION);
-        statusParameters.setNotes("Status change");        
-        
+        statusParameters.setNotes("Status change");
+
         CustomerChangeStatusPreviewDataPage statusPreviewPage = statusChangePage.submitAndGotoCustomerChangeStatusPreviewDataPage(statusParameters);
         ClientViewDetailsPage clientDetailsPage2 = statusPreviewPage.submitAndGotoClientViewDetailsPage();
         clientDetailsPage2.verifyNotes(statusParameters.getNotes());
-        
+
         CustomerChangeStatusPage statusChangePage2 = clientDetailsPage2.navigateToCustomerChangeStatusPage();
         statusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.PENDING_APPROVAL);
-        statusParameters.setNotes("notes");     
-        CustomerChangeStatusPreviewDataPage statusPreviewPage2 = 
+        statusParameters.setNotes("notes");
+        CustomerChangeStatusPreviewDataPage statusPreviewPage2 =
             statusChangePage2.submitAndGotoCustomerChangeStatusPreviewDataPage(statusParameters);
-        
+
         ClientViewDetailsPage clientDetailsPage3 = statusPreviewPage2.submitAndGotoClientViewDetailsPage();
         clientDetailsPage3.verifyNotes(statusParameters.getNotes());
-        
+
         CustomerChangeStatusPage statusChangePage3 = clientDetailsPage3.navigateToCustomerChangeStatusPage();
 
         ClientViewDetailsPage clientDetailsPage4 = statusChangePage3.cancelAndGotoClientViewDetailsPage(statusParameters);
         clientDetailsPage4.verifyNotes(statusParameters.getNotes());
-        
+
         return clientDetailsPage4;
     }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.collectionsheet;
 
 import org.mifos.test.acceptance.framework.HomePage;
@@ -35,7 +35,7 @@ public class CollectionSheetEntryConfirmationPage extends MifosPage {
         this.verifyPage("BulkEntryConfirmation");
         return this;
     }
-    
+
     public HomePage navigateToHomePage() {
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();

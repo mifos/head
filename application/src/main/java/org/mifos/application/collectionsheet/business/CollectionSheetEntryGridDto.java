@@ -32,7 +32,7 @@ import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
 
 /**
- * 
+ *
  */
 public class CollectionSheetEntryGridDto implements Serializable {
 
@@ -46,7 +46,7 @@ public class CollectionSheetEntryGridDto implements Serializable {
     private List<ProductDto> loanProducts = new ArrayList<ProductDto>();
     private List<ProductDto> savingProducts = new ArrayList<ProductDto>();
     private List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
-    
+
     /**
      * used when previewing
      */
@@ -100,7 +100,7 @@ public class CollectionSheetEntryGridDto implements Serializable {
     public int getTotalCustomers() {
         return totalCustomers;
     }
-    
+
     public List<ProductDto> getLoanProducts() {
         return this.loanProducts;
     }

@@ -35,7 +35,7 @@ public class ClientBoTest extends TestCase {
 
     // class under test
     private ClientBO client;
-    
+
     @Override
     public void setUp() throws Exception {
         client = new ClientBuilder().buildForUnitTests();
@@ -59,11 +59,11 @@ public class ClientBoTest extends TestCase {
 
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
         client.handleAttendance(meetingDate.toDate(), AttendanceType.PRESENT.getValue(), false);
-        
+
         Assert.assertEquals("The size of customer attendance is : ", client.getClientAttendances().size(), 1);
         Assert.assertEquals("The value of customer attendance for the meeting : ", AttendanceType.PRESENT, client
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
-        
+
         client.handleAttendance(meetingDate.toDate(), AttendanceType.ABSENT.getValue(), false);
         Assert.assertEquals("The size of customer attendance is : ", 1, client.getClientAttendances().size());
         Assert.assertEquals("The value of customer attendance for the meeting : ", AttendanceType.ABSENT, client

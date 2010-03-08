@@ -31,14 +31,14 @@ import org.apache.strutsel.taglib.html.ELHtmlTag;
 import org.mifos.config.ConfigLocale;
 
 /**
- * Renders an HTML <html> element with appropriate language attributes 
+ * Renders an HTML <html> element with appropriate language attributes
  * from the Mifos applicationConfiguration.custom.properties.
- * 
+ *
  * Based on the Struts version of this tag.
  *
  */
 public class MifosInternationalizedHtmlTag extends ELHtmlTag {
-  
+
     private static final String ARABIC_LANGUAGE = "ar";
     private static final String RTL = "rtl";
     private static final String LTR = "ltr";
@@ -68,7 +68,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
                 Globals.XHTML_KEY,
                 "true",
                 PageContext.PAGE_SCOPE);
-                
+
             sb.append(" xmlns=\"http://www.w3.org/1999/xhtml\"");
         }
 
@@ -81,7 +81,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
             sb.append(" xml:lang=\"");
             appendLangIfCountryIsValid(sb, languageCode, countryCode, validCountry);
         }
-        
+
         appendLang(sb, languageCode);
         setDirection(sb, languageCode, direction);
         sb.append(">");
@@ -107,7 +107,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
     }
 
     private void autoDetectAndSetDirection(StringBuffer sb, String languageCode) {
-        String calculatedDirection = getDirection(languageCode);        
+        String calculatedDirection = getDirection(languageCode);
         if (RTL.equals(calculatedDirection)) {
             appendDirection(sb, RTL);
         }
@@ -118,7 +118,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
         sb.append(directionToAppend);
         sb.append("\"");
     }
-    
+
     private void appendLang(StringBuffer sb, String languageCode) {
         sb.append(" lang=\"");
         sb.append(languageCode);
@@ -138,6 +138,6 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
         HttpSession session = ((HttpServletRequest) this.pageContext.getRequest()).getSession();
         session.setAttribute(Globals.LOCALE_KEY, userLocale);
     }
-    
-    
+
+
 }

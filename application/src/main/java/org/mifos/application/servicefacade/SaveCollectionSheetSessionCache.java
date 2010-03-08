@@ -31,7 +31,7 @@ import org.mifos.core.MifosRuntimeException;
 
 /**
  * Loads Collection Sheet data into Hibernate session cache.
- * 
+ *
  * This minimises the number of read requests required to process the Collection Sheet.
  */
 public class SaveCollectionSheetSessionCache {
@@ -62,7 +62,7 @@ public class SaveCollectionSheetSessionCache {
     private Integer prefetchAccountFeeDetailsCount = null;
     private Long prefetchCustomerSchedulesTotalTime = null;
     private Integer prefetchCustomerSchedulesCount = null;
-    
+
     public void loadSessionCacheWithCollectionSheetData(final SaveCollectionSheetDto saveCollectionSheet,
             Short branchId, String searchId) {
 

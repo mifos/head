@@ -95,12 +95,12 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
     private static final String dateFormat = "dd/MM/yyyy";
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

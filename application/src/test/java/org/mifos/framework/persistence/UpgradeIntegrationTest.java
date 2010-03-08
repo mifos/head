@@ -38,18 +38,18 @@ public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Connection connection;
-    
+
     @Override
     public void setUp() {
         connection = StaticHibernateUtil.getSessionTL().connection();
     }
-    
+
     @Override
     public void tearDown() throws Exception {
         databaseWithVersion();
     }
-    
-    
+
+
     public void testIncrementVersion() throws Exception {
         databaseWithVersion();
         new DummyUpgrade(DatabaseVersionPersistence.APPLICATION_VERSION + 1).upgradeVersion(connection);
@@ -72,7 +72,7 @@ public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
         invalidKey = "";
         Assert.assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
     }
-    
+
     private void databaseWithVersion() throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute("truncate table DATABASE_VERSION");

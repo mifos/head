@@ -40,7 +40,7 @@ public class MenuBuilder {
     /**
      * Method to build menu respective to a locale only when it is not available
      * in menu repository. It then sets menu built for locale to the repository.
-     * 
+     *
      * @param pageCtx PageContext
      */
     public static void buildMenuForLocale(PageContext pageCtx) throws SystemException, JspException {
@@ -60,7 +60,7 @@ public class MenuBuilder {
 
     /**
      * Method to return crud menu for the application
-     * 
+     *
      * @return array of Menu objects for Mifos. These menu objects contain keys
      *         respective to display strings
      * @throws MenuParseException
@@ -71,7 +71,7 @@ public class MenuBuilder {
 
     /**
      * Method to prepare menu for a given locale from crude menu
-     * 
+     *
      * @param crudeMenu
      *            array of crude Menu objects
      * @param lc
@@ -94,7 +94,7 @@ public class MenuBuilder {
     /**
      * Method to prepare MenuGroups of one top-menu-tab of crude menu as per
      * locale
-     * 
+     *
      * @param crudeMenuGroups
      *            array of crude MenuGroups objects for one top-menu-tab.
      * @return array of MenuGroup objects of one top-menu-tab for a given locale
@@ -112,7 +112,7 @@ public class MenuBuilder {
 
     /**
      * Method to prepare MenuItems for MenuGroup of crude menu as per locale
-     * 
+     *
      * @param crudeMenuGroups
      *            array of crude MenuGroup objects for one top-menu-tab.
      * @return array of MenuItem objects of a MenuGroup for a given locale
@@ -121,7 +121,7 @@ public class MenuBuilder {
         MenuItem[] localeMenuItem = new MenuItem[crudeMenuItems.length];
         for (int i = 0; i < crudeMenuItems.length; i++) {
             localeMenuItem[i] = new MenuItem();
-            
+
             localeMenuItem[i].setLinkValue(crudeMenuItems[i].getLinkValue());
             localeMenuItem[i].setLinkId(parseLinkId(crudeMenuItems[i].getDisplayName()));
             localeMenuItem[i].setDisplayName(parseDisplayName(crudeMenuItems[i].getDisplayName()));
@@ -132,7 +132,7 @@ public class MenuBuilder {
     /**
      * Method to prepare display names by concatinating messages obtained from
      * locale specific resource bundle.
-     * 
+     *
      * @param displayNameKeys
      *            array of keys for that messages are to be obtained from
      *            resources
@@ -147,7 +147,7 @@ public class MenuBuilder {
         }
         return new String[] { displayNameValue.toString().trim() };
     }
-    
+
     private static String parseLinkId(String[] displayNameParts) throws JspException {
         // concatenate the words in the link text (example: "Create", "loan", "account"),
         // with . and then lowercase the whole shebang to make a nice id, "create.loan.account".
@@ -157,7 +157,7 @@ public class MenuBuilder {
             linkIdValue.append(value);
             linkIdValue.append(MenuConstants.SPACE);
         }
-        
+
         return linkIdValue.toString().trim().replace(' ', '.');*/
         return StringUtils.join(displayNameParts, ".").toLowerCase();
     }
@@ -166,9 +166,9 @@ public class MenuBuilder {
         return LabelTagUtils.getInstance().getLabel(pageContext, MenuConstants.MENU_RESOURCE_NAME,
                 LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext), key, null);
     }
-    
+
     /**
-     * This method is used for creating the link id's, that'll 
+     * This method is used for creating the link id's, that'll
      * always be in english.
      */
     private static String getLabelInEnglish(String key) throws JspException {

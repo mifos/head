@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.group;
 
 import org.mifos.framework.util.DbUnitUtilities;
@@ -88,7 +88,7 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();  
+        groupDetailsPage.verifyPage();
         groupDetailsPage.verifyStatus("Application Pending*");
     }
 
@@ -101,10 +101,10 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForPartialApplication(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();       
+        groupDetailsPage.verifyPage();
         groupDetailsPage.verifyStatus("Partial Application*");
     }
-    
+
     @Test(sequential = true, groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void changeCenterMembership() throws Exception {
@@ -114,13 +114,13 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();  
+        groupDetailsPage.verifyPage();
         CenterSearchTransferGroupPage centerSearchTransfer = groupDetailsPage.editCenterMembership();
         centerSearchTransfer.verifyPage();
         ConfirmCenterMembershipPage confirmMembership = centerSearchTransfer.search("Center3");
         confirmMembership.verifyPage();
         groupDetailsPage = confirmMembership.submitMembershipChange();
-        groupDetailsPage.verifyPage();  
+        groupDetailsPage.verifyPage();
         groupDetailsPage.verifyLoanOfficer(" Loan officer: Jenna Barth");
     }
 

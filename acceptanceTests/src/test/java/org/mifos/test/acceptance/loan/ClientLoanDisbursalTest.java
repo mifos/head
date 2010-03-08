@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -41,29 +41,29 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"acceptance","ui", "loan"})
 public class ClientLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
-    
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
-        
+
         loanTestHelper = new LoanTestHelper(selenium);
     }
-    
+
     @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @Test( groups={"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void disburseLoan() throws Exception {
@@ -76,21 +76,21 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         // account w/ id 000100000000005 has an approved but not disbursed loan.
 
         DisburseLoanParameters params = new DisburseLoanParameters();
-        
+
         params.setDisbursalDateDD("08");
         params.setDisbursalDateMM("07");
         params.setDisbursalDateYYYY("2009");
         params.setPaymentType(DisburseLoanParameters.CASH);
-        
+
         loanTestHelper.disburseLoan("000100000000005", params);
-        
+
         String[] tablesToValidate = { "ACCOUNT_PAYMENT",  "ACCOUNT_TRXN", "ACCOUNT_STATUS_CHANGE_HISTORY" };
-        
+
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("ClientLoanDisbursalTest_001_result_dbunit.xml.zip");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
 
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
-        
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

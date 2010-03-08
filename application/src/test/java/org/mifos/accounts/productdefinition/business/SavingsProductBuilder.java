@@ -48,7 +48,7 @@ public class SavingsProductBuilder {
     private final Double interestRate = Double.valueOf("2.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private final InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
-    
+
     // PRD_OFFERING FIELDS
     private String globalProductNumber = "XXXXX-1111";
     private final Date startDate = new DateTime().minusDays(14).toDate();
@@ -62,15 +62,15 @@ public class SavingsProductBuilder {
     private ProductCategoryBO category = new ProductCategoryBO(Short.valueOf("1"), "savtest");
     private final PrdStatus productStatus = PrdStatus.SAVINGS_ACTIVE;
     private PrdStatusEntity productStatusEntity;
-    
+
     public SavingsOfferingBO buildForUnitTests() {
         return build();
     }
-    
+
     public SavingsOfferingBO buildForIntegrationTests() {
         category = (ProductCategoryBO) StaticHibernateUtil.getSessionTL().get(ProductCategoryBO.class,
                 Short.valueOf("2"));
-        
+
         productStatusEntity = (PrdStatusEntity) StaticHibernateUtil.getSessionTL().get(PrdStatusEntity.class,
                 this.productStatus.getValue());
 
@@ -119,7 +119,7 @@ public class SavingsProductBuilder {
         this.applicableToCustomer = ApplicableTo.CLIENTS;
         return this;
     }
-    
+
     public SavingsProductBuilder mandatory() {
         this.savingsType = SavingsType.MANDATORY;
         return this;

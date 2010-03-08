@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.admin;
 
 import java.util.Locale;
@@ -36,7 +36,7 @@ public class SystemInfoPage extends MifosPage {
     public SystemInfoPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public SystemInfoPage verifyPage() {
         verifyPage("SysInfo");
         return this;
@@ -45,11 +45,11 @@ public class SystemInfoPage extends MifosPage {
     public String getDateTime() {
         return selenium.getText("sysinfo.text.dateTime");
     }
-    
+
     public void verifyDateTime(DateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(new Locale("en","GB"));
         String expectedDateTime =  formatter.print(dateTime.getMillis());
-        Assert.assertEquals(expectedDateTime, getDateTime(),"System date time and Mifos date time should be the same.");        
+        Assert.assertEquals(expectedDateTime, getDateTime(),"System date time and Mifos date time should be the same.");
     }
 
 }

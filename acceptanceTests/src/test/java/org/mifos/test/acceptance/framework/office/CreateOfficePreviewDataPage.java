@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.office;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -40,7 +40,7 @@ public class CreateOfficePreviewDataPage extends MifosPage {
 	public CreateOfficePreviewDataPage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
 	public String getOfficeName() {
 	    return selenium.getText("preview_new_office.text.officeName");
 	}
@@ -48,7 +48,7 @@ public class CreateOfficePreviewDataPage extends MifosPage {
 	public String getShortName() {
 	    return selenium.getText("preview_new_office.text.shortName");
 	}
-	
+
     public CreateOfficeConfirmationPage submit() {
         selenium.click("preview_new_office.button.submit");
         waitForPageToLoad();

@@ -39,19 +39,19 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
     public SavingsPaymentStrategyImpl(final SavingsTransactionActivityHelper savingsTransactionActivityHelper) {
         this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;
     }
-    
+
     @Override
     public Money makeScheduledPayments(final AccountPaymentEntity payment,
             final List<SavingsScheduleEntity> scheduledDeposits, final CustomerBO payingCustomer,
             final SavingsType savingsType, final Money savingsBalanceBeforeDeposit) {
-        
+
         MifosCurrency currency = payment.getAccount().getCurrency();
         Money amountRemaining = new Money(currency, payment.getAmount().getAmount());
         Money runningBalance = new Money(currency, savingsBalanceBeforeDeposit.getAmount());
         final Date transactionDate = payment.getPaymentDate();
         Money depositAmount;
         PaymentStatus paymentStatus;
-        
+
         if (savingsType.getValue().equals(SavingsType.VOLUNTARY.getValue())) {
             // For voluntary savings accounts - mark all outstanding
             // installments as paid and then put the deposit amount in the
@@ -63,7 +63,7 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
                 expectedPayment.setPaymentDetails(new Money(currency), paymentStatus,
                         new java.sql.Date(transactionDate.getTime()));
             }
-            
+
             if (lastExpectedPayment != null) {
                 if (amountRemaining.isGreaterThanOrEqual(lastExpectedPayment.getTotalDepositDue())) {
                     depositAmount = lastExpectedPayment.getTotalDepositDue();
@@ -72,11 +72,11 @@ public class SavingsPaymentStrategyImpl implements SavingsPaymentStrategy {
                     depositAmount = new Money(currency, amountRemaining.getAmount());
                     amountRemaining = new Money(currency);
                 }
-                
+
                 lastExpectedPayment.setPaymentDetails(depositAmount, paymentStatus, new java.sql.Date(transactionDate
                         .getTime()));
                 runningBalance = runningBalance.add(depositAmount);
-                
+
                 final SavingsTrxnDetailEntity voluntaryPaymentTrxn = savingsTransactionActivityHelper
                         .createSavingsTrxnForDeposit(payment, depositAmount, payingCustomer, lastExpectedPayment,
                                 runningBalance);

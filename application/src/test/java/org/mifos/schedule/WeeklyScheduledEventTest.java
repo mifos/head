@@ -42,7 +42,7 @@ public class WeeklyScheduledEventTest {
 
         assertThat(result, is(monday.plusDays(2)));
     }
-    
+
     @Test
     public void canRollForwardDateToNextNearestDateMatchingSchedule() {
 

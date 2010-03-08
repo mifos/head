@@ -71,12 +71,12 @@ public class MifosImageTag extends TagSupport {
     }
 
     private ResourceBundle getResourceBundle(Locale locale) {
-        return ResourceBundle.getBundle(getModuleName(), locale);        
+        return ResourceBundle.getBundle(getModuleName(), locale);
     }
 
     /**
      * Function to render the tag
-     * 
+     *
      * @throws JspException
      */
     @Override

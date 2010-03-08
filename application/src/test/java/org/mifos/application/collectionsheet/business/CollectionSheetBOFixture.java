@@ -27,7 +27,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 /**
  * @deprecated not used
- * 
+ *
  * <b>CollectionSheetService#retrieveCollectionSheet(Integer, java.util.Date)</b>
  */
 @Deprecated

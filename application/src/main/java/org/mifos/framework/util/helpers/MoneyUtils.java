@@ -45,9 +45,9 @@ public class MoneyUtils {
      * WARNING: This method is using rounding the amount using
      * <code> digitAfterDecimal </code>. Why do we need to roundoff the amount
      * using digitAfterDecimal
-     * 
+     *
      * @deprecated use {@link Money#getAmount()}
-     * 
+     *
      * <br/>
      * <br/>
      *             FIXME this probably is a bug so remove it after replacing its
@@ -85,7 +85,7 @@ public class MoneyUtils {
      * {@link AccountingRules#getInitialRoundOffMultiple()} (Default 1) <br />
      * {@link AccountingRules#getInitialRoundingMode()} (Default
      * {@link RoundingMode#HALF_UP}
-     * 
+     *
      * @param money
      * @return {@link Money}
      */
@@ -101,7 +101,7 @@ public class MoneyUtils {
      * {@link AccountingRules#getFinalRoundOffMultiple()} (Default 1) <br />
      * {@link AccountingRules#getFinalRoundingMode()} (Default
      * {@link RoundingMode#CEILING}
-     * 
+     *
      * @param money
      * @return {@link Money}
      */
@@ -124,7 +124,7 @@ public class MoneyUtils {
      * {@link Money#round(Money, BigDecimal, RoundingMode)} with <br />
      * {@link AccountingRules#getCurrencyRoundingMode()} (Default
      * {@link RoundingMode#HALF_UP}
-     * 
+     *
      * @param money
      * @return {@link Money}
      */

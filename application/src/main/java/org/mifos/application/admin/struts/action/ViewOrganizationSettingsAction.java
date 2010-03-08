@@ -123,7 +123,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         accountingRules.setProperty("finalRoundingMode", AccountingRules.getFinalRoundingMode().toString());
         return accountingRules;
     }
-    
+
     private List<Properties> getCurrencies() {
         List<Properties> currencies = new ArrayList<Properties>();
         Properties currencyRules = new Properties();

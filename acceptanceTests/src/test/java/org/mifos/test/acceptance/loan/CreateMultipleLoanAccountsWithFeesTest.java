@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.loan;
 
 import org.mifos.framework.util.DbUnitUtilities;
@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"smoke","loan","acceptance","ui"})
 public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
-    
+
     private AppLauncher appLauncher;
 
     @Autowired
@@ -52,7 +52,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
@@ -65,7 +65,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-  
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void defaultAdminUserCreatesMultipleLoanAccountsWithFees() throws Exception {
         CreateMultipleLoanAccountSelectParameters formParameters = new CreateMultipleLoanAccountSelectParameters();
@@ -91,8 +91,8 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToCreateMultipleLoanAccountsUsingLeftMenu();    
+        return clientsAndAccountsPage.navigateToCreateMultipleLoanAccountsUsingLeftMenu();
     }
-    
+
 }
 

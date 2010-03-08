@@ -145,7 +145,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function get the multiple property of listboxes
-     * 
+     *
      * @return Returns the multiple.
      */
     public String getMultiple() {
@@ -154,7 +154,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function set the multiple property of listboxes
-     * 
+     *
      * @param multiple
      *            The multiple to set.
      */
@@ -164,7 +164,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function get the nmae of the tag
-     * 
+     *
      * @return Returns the name.
      */
     public String getName() {
@@ -173,7 +173,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function set the nmae of the tag
-     * 
+     *
      * @param name
      *            The name to set.
      */
@@ -183,7 +183,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function get the size of select boxes
-     * 
+     *
      * @return Returns the size.
      */
     public String getSize() {
@@ -192,7 +192,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function Set the size of select boxes
-     * 
+     *
      * @param size
      *            The size to set.
      */
@@ -202,7 +202,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function Set the Style of select boxes
-     * 
+     *
      * @return Returns the selectStyle.
      */
     public String getSelectStyle() {
@@ -211,7 +211,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function Set the Style of select boxes
-     * 
+     *
      * @param selectStyle
      *            The selectStyle to set.
      */
@@ -294,7 +294,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Constructor Initializes the label of the select tag
-     * 
+     *
      * @param label
      */
     public MifosCompositeSelect(String label) {
@@ -304,7 +304,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function to obtain the label of the select
-     * 
+     *
      * @return Returns the label.
      */
     public String getLabel() {
@@ -313,7 +313,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function to obtain the label of the select
-     * 
+     *
      * @param label
      */
     public void setLabel(String label) {
@@ -325,7 +325,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function to render the tag in jsp
-     * 
+     *
      * @exception JspException
      *                throws JspException
      */
@@ -478,7 +478,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
     /**
      * This function Add the javascript to the tag for moving the data between
      * the lists
-     * 
+     *
      * @param results
      *            StringBuffer object to hold the string representation of the
      *            tag
@@ -492,7 +492,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
 
     /**
      * Function to add html style to mifos tag
-     * 
+     *
      * @param results
      *            StringBuffer object to hold the string representation of the
      *            tag

@@ -43,7 +43,7 @@ public class CenterSearchInput implements Serializable {
 
     /**
      * Return the value of the groupInput attribute.
-     * 
+     *
      * @return String
      */
     public String getGroupInput() {
@@ -52,7 +52,7 @@ public class CenterSearchInput implements Serializable {
 
     /**
      * Sets the value of groupInput
-     * 
+     *
      * @param groupInput
      */
     public void setGroupInput(String groupInput) {
@@ -61,7 +61,7 @@ public class CenterSearchInput implements Serializable {
 
     /**
      * Return the value of the officeId attribute.
-     * 
+     *
      * @return Short
      */
     public Short getOfficeId() {
@@ -70,7 +70,7 @@ public class CenterSearchInput implements Serializable {
 
     /**
      * Sets the value of officeId
-     * 
+     *
      * @param officeId
      */
     public void setOfficeId(Short officeId) {

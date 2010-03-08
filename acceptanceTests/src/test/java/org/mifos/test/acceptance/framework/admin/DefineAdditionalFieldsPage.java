@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.admin;
 
 import org.apache.commons.lang.StringUtils;
@@ -30,7 +30,7 @@ public class DefineAdditionalFieldsPage extends MifosPage {
     public DefineAdditionalFieldsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public DefineAdditionalFieldsPage verifyPage() {
         verifyPage("define_additional_fields");
         return this;
@@ -42,7 +42,7 @@ public class DefineAdditionalFieldsPage extends MifosPage {
         } else if ("Group".equals(category)) {
             selenium.select("categoryType", "value=2");
         }
-        
+
         typeTextIfNotEmpty("define_additional_fields.input.labelName", label);
         if (! StringUtils.isEmpty(dataType)) {
             if ("Text".equals(dataType)) {
@@ -51,10 +51,10 @@ public class DefineAdditionalFieldsPage extends MifosPage {
                 selenium.select("dataType", "value=1");
             }
         }
-        
+
         selenium.click("define_additional_fields.button.preview");
         waitForPageToLoad();
-        return new DefineAdditionalFieldPreviewPage(selenium);       
+        return new DefineAdditionalFieldPreviewPage(selenium);
     }
 
 

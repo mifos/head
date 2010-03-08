@@ -45,7 +45,7 @@ import org.mifos.framework.util.helpers.Money;
 /**
  * The Loan Data Access Object (DAO) for create, read, update, delete (CRUD)
  * operations on loans.
- * 
+ *
  * Further refactoring: loan creation seems like a good candidate to make use of
  * the Factory pattern.
  */
@@ -79,7 +79,7 @@ public class LoanDao implements DataAccessObject {
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
-                customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall, 
+                customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
                 isRepaymentIndepOfMeetingEnabled, null);
     }
 

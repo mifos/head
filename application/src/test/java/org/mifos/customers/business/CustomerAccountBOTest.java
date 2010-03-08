@@ -33,58 +33,58 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class CustomerAccountBOTest {
 
     private CustomerAccountBO customerAccount;
-    
+
     @Mock
     private UserContext userContext;
-    
+
     @Mock
     private CustomerBO customer;
-    
+
     private final MeetingBO meeting = new MeetingBuilder().every(1).weekly().occuringOnA(WeekDay.MONDAY).build();
-    
-    private final List<FeeView> fees = new ArrayList<FeeView>(); 
+
+    private final List<FeeView> fees = new ArrayList<FeeView>();
     private List<Days> workingDays;
     private List<Holiday> holidays;
-    
+
     @BeforeClass
     public static void setupDefaultCurrency() {
         MifosCurrency defaultCurrency = TestUtils.EURO;
         Money.setDefaultCurrency(defaultCurrency);
     }
-    
+
     @Before
     public void setupAndInjectDependencies() throws Exception {
-        
+
         workingDays = Arrays.asList(DayOfWeek.mondayAsDay(), DayOfWeek.tuesdayAsDay(), DayOfWeek.wednesdayAsDay(), DayOfWeek.thursdayAsDay(), DayOfWeek.fridayAsDay());
-        
+
         customerAccount = new CustomerAccountBO(userContext, customer, fees);
     }
-    
+
     @Test
     public void canGenerateSchedulesMatchingMeetingRecurrenceWhenNoPreviousSchedulesExisted() {
-        
+
         // setup
         holidays = new ArrayList<Holiday>();
-        
+
         // stubbing
         when(customer.getCustomerMeetingValue()).thenReturn(meeting);
-        
+
         // exercise test
         customerAccount.generateNextSetOfMeetingDates(workingDays, holidays);
-        
+
         // verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
-        
+
         Short lastInstallment = Short.valueOf("1");
         DateTime lastInstallmentDate = new DateTime().withDayOfWeek(DayOfWeek.monday());
         if (lastInstallmentDate.isBeforeNow() || lastInstallmentDate.isEqualNow()) {
             lastInstallmentDate = lastInstallmentDate.plusWeeks(1);
         }
-        
+
         for (AccountActionDateEntity scheduledDate : customerAccount.getAccountActionDates()) {
-            assertThat(scheduledDate.getInstallmentId(), is(lastInstallment)); 
-            assertThat(new LocalDate(scheduledDate.getActionDate()), is(new LocalDate(lastInstallmentDate.toDate()))); 
-            
+            assertThat(scheduledDate.getInstallmentId(), is(lastInstallment));
+            assertThat(new LocalDate(scheduledDate.getActionDate()), is(new LocalDate(lastInstallmentDate.toDate())));
+
             lastInstallment++;
             lastInstallmentDate = lastInstallmentDate.plusWeeks(1);
         }

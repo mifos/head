@@ -26,7 +26,7 @@ package org.mifos.customers.ppi.business;
  * <li> no two likelihoods should overlap the same score value </li>
  * <li> there must be a likelihood for all scores between 0 and 100 </li>
  * </ul>
- * 
+ *
  * @throws org.mifos.framework.exceptions.ValidationException if any invariants are violated
  */
 

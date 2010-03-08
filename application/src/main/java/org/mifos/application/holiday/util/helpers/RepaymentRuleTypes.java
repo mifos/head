@@ -34,16 +34,16 @@ public enum RepaymentRuleTypes {
     }
 
     public static RepaymentRuleTypes fromShort(final Short id) {
-        
+
         for (RepaymentRuleTypes adjustmentRule : values()) {
             if (adjustmentRule.getValue().equals(id)) {
                 return adjustmentRule;
             }
         }
-        
+
         return null;
     }
-    
+
     public static RepaymentRuleTypes fromOrd(int i) {
         if (i < 1 || i > RepaymentRuleTypes.values().length) {
             throw new IndexOutOfBoundsException("Invalid ordinal value for RepaymentRuleTypes");

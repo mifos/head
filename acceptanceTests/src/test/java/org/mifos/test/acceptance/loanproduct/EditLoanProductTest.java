@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.loanproduct;
 
 
@@ -51,7 +51,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-        
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
@@ -63,16 +63,16 @@ public class EditLoanProductTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void viewExistingLoanProduct() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         ViewLoanProductsPage viewLoanProducts = loginAndNavigateToViewLoanProductsPage();
         LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails("FlatInterestLoanProduct1");
         loanProductDetailsPage.verifyPage();
-   
+
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void editExistingLoanProduct() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
@@ -92,7 +92,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
         loanProductDetailsPage.editLoanProduct();
         editLoanProductPage.verifyPage();
         editLoanProductPage.verifyModifiedDescriptionAndInterest(formParameters);
-   
+
     }
 
     private ViewLoanProductsPage loginAndNavigateToViewLoanProductsPage() {
@@ -102,8 +102,8 @@ public class EditLoanProductTest extends UiTestCaseBase {
         viewLoanProducts.verifyPage();
         return viewLoanProducts;
     }
-    
-                    
+
+
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher
          .launchMifos()

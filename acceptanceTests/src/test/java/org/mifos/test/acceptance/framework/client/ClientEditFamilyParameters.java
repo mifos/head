@@ -5,16 +5,16 @@ public class ClientEditFamilyParameters {
     // gender
     public static final int MALE = 49;
     public static final int FEMALE = 50;
-    
+
     //Living Status
     public static final int TOGETHER= 622;
     public static final int NOT_TOGETHER= 623;
-    
+
     //relationship
     public static final int SPOUSE = 1;
     public static final int FATHER = 2;
     public static final int OTHER_RELATIVE= 4;
-    
+
     Integer relationship;
     Integer livingStatus;
     String firstName;

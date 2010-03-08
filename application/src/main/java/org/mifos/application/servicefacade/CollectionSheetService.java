@@ -22,16 +22,16 @@ package org.mifos.application.servicefacade;
 import org.joda.time.LocalDate;
 
 /**
- * The Interface CollectionSheetService provides methods to retrieve and save collection sheets. 
+ * The Interface CollectionSheetService provides methods to retrieve and save collection sheets.
  */
 public interface CollectionSheetService {
 
     /**
      * Saves a Collection Sheet
-     * @throws SaveCollectionSheetException 
+     * @throws SaveCollectionSheetException
      */
     CollectionSheetErrorsView saveCollectionSheet(SaveCollectionSheetDto saveCollectionSheetDto) throws SaveCollectionSheetException;
-    
+
     /**
      * Retrieves a Collection Sheet
      */

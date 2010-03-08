@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.personnel;
 
 import org.mifos.framework.util.DbUnitUtilities;
@@ -56,7 +56,7 @@ public class PersonnelTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
@@ -79,7 +79,7 @@ public class PersonnelTest extends UiTestCaseBase {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void editUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
@@ -99,7 +99,7 @@ public class PersonnelTest extends UiTestCaseBase {
         UserViewDetailsPage userDetailsPage2 = editPreviewDataPage.submit();
         userDetailsPage2.verifyModifiedNameAndEmail(formParameters);
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserWithNonAdminRoleTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
@@ -107,15 +107,15 @@ public class PersonnelTest extends UiTestCaseBase {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         userHelper.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = {"personnel","acceptance","ui"})
     public void changePasswordTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
-        
+
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateUserParameters userParameters = adminPage.getAdminUserParameters();
-        UserViewDetailsPage userDetailsPage = userHelper.createUser(userParameters, "MyOffice1233171674227");        
+        UserViewDetailsPage userDetailsPage = userHelper.createUser(userParameters, "MyOffice1233171674227");
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
         CreateUserParameters passwordParameters = new CreateUserParameters();
@@ -124,7 +124,7 @@ public class PersonnelTest extends UiTestCaseBase {
 
         EditUserPreviewDataPage editPreviewDataPage = editUserPage.submitAndGotoEditUserPreviewDataPage(passwordParameters);
         editPreviewDataPage.submit();
-        
+
         LoginPage loginPage = new LoginPage(selenium);
         loginPage.logout();
         ChangePasswordPage changePasswordPage = loginPage.loginAndGoToChangePasswordPageAs(userParameters.getUserName(), passwordParameters.getPassword());
@@ -133,7 +133,7 @@ public class PersonnelTest extends UiTestCaseBase {
         changePasswordParameters.setNewPassword("tester2");
         changePasswordParameters.setConfirmPassword("tester2");
         HomePage homePage2 = changePasswordPage.submitAndGotoHomePage(changePasswordParameters);
-        
+
         Assert.assertTrue(homePage2.getWelcome().contains(userParameters.getFirstName()));
     }
 }

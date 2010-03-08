@@ -37,7 +37,7 @@ public class Message {
 
     /**
      * Constructor: Initialises the values of the message
-     * 
+     *
      * @param str
      *            The statement to be logged
      */
@@ -48,7 +48,7 @@ public class Message {
     /**
      * Constructor: Initialises the values of the message , user id and office
      * id
-     * 
+     *
      * @param str
      *            The statement to be logged
      * @param loggedUser
@@ -69,7 +69,7 @@ public class Message {
 
     /**
      * Function to obtain the office id of the user logging the statement
-     * 
+     *
      * @return The office id
      */
     public String getUserOffice() {
@@ -78,7 +78,7 @@ public class Message {
 
     /**
      * Function to set the office id of the user logging the statement
-     * 
+     *
      * @param userOffice
      *            The office id to be set
      */
@@ -88,7 +88,7 @@ public class Message {
 
     /**
      * Function to obtain the user id of the user logging the statement
-     * 
+     *
      * @return The User Id
      */
 
@@ -98,7 +98,7 @@ public class Message {
 
     /**
      * Function to set the user id of the user logging the statement
-     * 
+     *
      * @param loggedUser
      *            The user id to be set
      */

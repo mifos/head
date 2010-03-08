@@ -26,7 +26,7 @@ import org.mifos.framework.util.helpers.Money;
 /*
  * What does EMI stand for?  Equal Monthly Installment,
  * Estimated Monthly Installment?  In any case this seems
- * like a poor name since this class is used for both 
+ * like a poor name since this class is used for both
  * weekly and monthly installments.
  */
 public class EMIInstallment {

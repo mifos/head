@@ -25,7 +25,7 @@ import java.math.BigDecimal;
  *
  */
 public class CollectionSheetCustomerAccountCollectionDto {
-    
+
     private Integer customerId;
     private Integer accountId;
     private Short currencyId;
@@ -33,11 +33,11 @@ public class CollectionSheetCustomerAccountCollectionDto {
     private BigDecimal miscFeesPaid = BigDecimal.ZERO;
     private BigDecimal miscPenaltyDue = BigDecimal.ZERO;
     private BigDecimal miscPenaltyPaid = BigDecimal.ZERO;
-    
+
     // fees
     private BigDecimal feeAmountDue = BigDecimal.ZERO;
     private BigDecimal feeAmountPaid = BigDecimal.ZERO;
-    
+
     public CollectionSheetCustomerAccountCollectionDto() {
         // default constructor for hibernate
     }
@@ -108,7 +108,7 @@ public class CollectionSheetCustomerAccountCollectionDto {
     }
 
     public void setFeeAmountDue(final BigDecimal feeAmountDue) {
-        
+
         if (feeAmountDue != null) {
             this.feeAmountDue = feeAmountDue;
         }
@@ -119,12 +119,12 @@ public class CollectionSheetCustomerAccountCollectionDto {
     }
 
     public void setFeeAmountPaid(final BigDecimal feeAmountPaid) {
-        
+
         if (feeAmountPaid != null) {
             this.feeAmountPaid = feeAmountPaid;
         }
     }
-    
+
     public Double getTotalFeeAmountDue() {
         return feeAmountDue.subtract(feeAmountPaid).doubleValue();
     }

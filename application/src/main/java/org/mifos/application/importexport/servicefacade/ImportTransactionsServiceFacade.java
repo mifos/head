@@ -23,9 +23,9 @@ package org.mifos.application.importexport.servicefacade;
 import org.mifos.security.util.UserContext;
 
 public interface ImportTransactionsServiceFacade {
-    
+
     void saveImportedFileName(UserContext userContext, String importTransactionsFileName) throws Exception;
-    
+
     boolean isAlreadyImported(String importTransactionsFileName) throws Exception;
 
 }

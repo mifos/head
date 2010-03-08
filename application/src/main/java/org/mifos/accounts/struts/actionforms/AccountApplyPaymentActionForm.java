@@ -71,7 +71,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String accountId;
 
     private String prdOfferingName;
-    
+
     private boolean amountCannotBeZero = true;
 
     public boolean amountCannotBeZero() {
@@ -112,7 +112,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         if (methodCalled != null && methodCalled.equals("preview")) {
             ActionErrors errors2 = validateDate(getTransactionDate(), resources.getString("accounts.date_of_trxn"),
                     request);
-            
+
             if (null != errors2 && !errors2.isEmpty())
                 errors.add(errors2);
             if (StringUtils.isEmpty(getPaymentTypeId())) {
@@ -176,12 +176,12 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         }
         return locale;
     }
-    
+
     protected void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+        DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         if (amountCannotBeZero() && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+            addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
         }
     }

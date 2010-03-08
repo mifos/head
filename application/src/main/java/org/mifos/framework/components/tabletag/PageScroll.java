@@ -35,7 +35,7 @@ public class PageScroll {
     /**
      * Function is used to get the required pages on the click of previous or
      * next link.
-     * 
+     *
      * @param current
      *            value of the current page.
      * @param pageSize
@@ -104,7 +104,7 @@ public class PageScroll {
 
     /**
      * Function to get the link property on previous and next.
-     * 
+     *
      * @param hRef
      *            page to which it is going on click.
      * @param text

@@ -31,11 +31,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @NamedQueries(
- {         
+ {
   @NamedQuery(
     name="getEntityMaster",
     query="from EntityMaster"
-  ) 
+  )
  }
 )
 @Entity

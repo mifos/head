@@ -37,7 +37,7 @@ import org.mifos.security.util.UserContext;
 public class ProductCategoryBO extends BusinessObject {
 
     private static final MifosLogger prdLoanLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
-    
+
     private final Short productCategoryID;
 
     private final ProductTypeEntity productType;
@@ -63,10 +63,10 @@ public class ProductCategoryBO extends BusinessObject {
         office = null;
         globalPrdCategoryNum = null;
     }
-    
+
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal legal constructor
      */
     public ProductCategoryBO(final Short id, final String globalPrdCategoryNum) {
@@ -75,7 +75,7 @@ public class ProductCategoryBO extends BusinessObject {
         this.office = null;
         this.globalPrdCategoryNum = globalPrdCategoryNum;
     }
-    
+
     public ProductCategoryBO(final UserContext userContext, final ProductTypeEntity productType, final String productCategoryName,
             final String productCategoryDesc) throws ProductDefinitionException {
         super(userContext);

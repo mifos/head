@@ -636,7 +636,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
     /*
      * public void testValidateSuccess() throws Exception {
-     * 
+     *
      * String dateConducted = DateUtils.makeDateAsSentFromBrowser();
      * //InstanceStatus status = InstanceStatus.INCOMPLETE;
      * addRequestParameter("customerId", "4");

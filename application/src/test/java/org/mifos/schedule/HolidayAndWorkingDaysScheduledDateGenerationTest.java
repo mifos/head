@@ -43,13 +43,13 @@ public class HolidayAndWorkingDaysScheduledDateGenerationTest {
     private ScheduledDateGeneration scheduleGeneration;
 
     private List<Days> workingDays;
-    
+
     @Before
     public void setupAndInjectDependencies() {
 
         workingDays = Arrays.asList(DayOfWeek.mondayAsDay(), DayOfWeek.tuesdayAsDay(), DayOfWeek
                 .wednesdayAsDay(), DayOfWeek.thursdayAsDay(), DayOfWeek.fridayAsDay());
-        
+
         List<Holiday> upcomingHolidays = new ArrayList<Holiday>();
 
         scheduleGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, upcomingHolidays);
@@ -88,7 +88,7 @@ public class HolidayAndWorkingDaysScheduledDateGenerationTest {
 
         DateTime lastScheduledDate = DayOfWeek.mondayMidnight();
         DateTime dayAfterLastScheduledDate = DayOfWeek.tuesdayMidnight();
-        
+
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).weeks().on(DayOfWeek.monday()).build();
 
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(10, dayAfterLastScheduledDate,
@@ -100,7 +100,7 @@ public class HolidayAndWorkingDaysScheduledDateGenerationTest {
             lastDate = generatedDate;
         }
     }
-    
+
     @Test
     public void givenAHolidayFallsOnScheduledDateAndAdjustmentRuleForHolidayIsNextMeetingShouldGenerateScheduledDatesThatTakeIntoAccountHolidaysAndDuplicateAnyScheduledDatesThatOccurOnHoliday() {
 
@@ -110,7 +110,7 @@ public class HolidayAndWorkingDaysScheduledDateGenerationTest {
         List<Holiday> upcomingHolidays = Arrays.asList(independenceDay);
 
         scheduleGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, upcomingHolidays);
-        
+
         DateTime june29thNextYear = new DateTime().plusYears(1).withMonthOfYear(6).withDayOfMonth(29).toDateMidnight().toDateTime();
         DateTime startingFrom = june29thNextYear.minusDays(1);
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).weeks().on(june29thNextYear.getDayOfWeek()).build();
@@ -118,7 +118,7 @@ public class HolidayAndWorkingDaysScheduledDateGenerationTest {
         // exercise test
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(10, startingFrom,
                 scheduleEvent);
-        
+
         assertThat(scheduledDates.get(0), is(june29thNextYear));
         assertThat(scheduledDates.get(1), is(june29thNextYear.plusWeeks(2)));
         assertThat(scheduledDates.get(2), is(june29thNextYear.plusWeeks(2)));

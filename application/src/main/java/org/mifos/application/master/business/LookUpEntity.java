@@ -38,12 +38,12 @@ import javax.persistence.Table;
  * {@link LookUpEntity} is now depreciated and should not be used. Use
  * {@link MifosLookUpEntity} instead which provides the same functionality and
  * includes the constants previously defined here.
- * 
+ *
  * This class can probably be deleted now-- will make sure no issues show up
  * first.
  */
 @NamedQueries(
- {         
+ {
   @NamedQuery(
     name="masterdata.entityvalue",
     query="select new org.mifos.application.master.business.CustomValueList(entity.entityId ,label.localeId,label.labelName) "
@@ -54,8 +54,8 @@ import javax.persistence.Table;
     name="masterdata.entitylookupvalue",
     query="select new org.mifos.application.master.business.CustomValueListElement(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
                 +"from LookUpValueEntity lookup, LookUpEntity entity "
-                +"where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId" 
-  ) 
+                +"where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId"
+  )
  }
 )
 @Entity
@@ -73,7 +73,7 @@ public class LookUpEntity implements Serializable {
     public LookUpEntity() {
         super();
     }
-    
+
     @Id
     @GeneratedValue
     @Column(name = "ENTITY_ID", nullable = false)
@@ -85,13 +85,13 @@ public class LookUpEntity implements Serializable {
     public String getEntityType() {
         return entityType;
     }
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "ENTITY_ID", updatable = false)
     public Set<LookUpLabelEntity> getLookUpLabelSet() {
         return lookUpLabelSet;
     }
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "ENTITY_ID", updatable = false)
     public Set<LookUpValueEntity> getLookUpValueSet() {

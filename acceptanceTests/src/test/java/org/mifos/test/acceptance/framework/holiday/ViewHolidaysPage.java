@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.holiday;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -29,11 +29,11 @@ public class ViewHolidaysPage extends MifosPage {
     public ViewHolidaysPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         this.verifyPage("view_organizational_holidays");
     }
-    
+
     public CreateHolidayEntryPage navigateToDefineHolidayPage() {
         selenium.click("holiday.link.defineNewHoliday");
         waitForPageToLoad();

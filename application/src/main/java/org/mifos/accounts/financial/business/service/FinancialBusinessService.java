@@ -56,7 +56,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.security.util.UserContext;
 
 public class FinancialBusinessService implements BusinessService {
-    
+
     /**
      * Added by Keith for testing
      */

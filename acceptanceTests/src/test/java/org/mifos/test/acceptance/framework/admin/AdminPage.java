@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -42,7 +42,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Encapsulates the GUI based actions that can
- * be done from the Admin page and the page 
+ * be done from the Admin page and the page
  * that will be navigated to.
  *
  */
@@ -61,51 +61,51 @@ public class AdminPage extends MifosPage {
 	public ViewHolidaysPage navigateToViewHolidaysPage() {
 	    selenium.click("admin.link.viewHolidays");
         waitForPageToLoad();
-        return new ViewHolidaysPage(selenium);     
+        return new ViewHolidaysPage(selenium);
     }
- 
+
 	public ViewFeesPage navigateToViewFeesPage() {
         selenium.click("admin.link.viewFees");
         waitForPageToLoad();
         return new ViewFeesPage(selenium);
     }
-	
+
    public ViewReportsPage navigateToViewReportsPage() {
         selenium.click("admin.link.ViewReportsTemplates");
         waitForPageToLoad();
-        return new ViewReportsPage(selenium);     
+        return new ViewReportsPage(selenium);
     }
 
     public CreateOfficeEnterDataPage navigateToCreateOfficeEnterDataPage() {
         selenium.click("admin.link.defineNewOffice");
         waitForPageToLoad();
-        return new CreateOfficeEnterDataPage(selenium);     
+        return new CreateOfficeEnterDataPage(selenium);
     }
-    
+
     public ChooseOfficePage navigateToCreateUserPage() {
         selenium.click("admin.link.defineNewUsers");
         waitForPageToLoad();
-        return new ChooseOfficePage(selenium);       
+        return new ChooseOfficePage(selenium);
     }
-    
+
     public ViewOfficesPage navigateToViewOfficesPage() {
         selenium.click("admin.link.viewOffices");
         waitForPageToLoad();
-        return new ViewOfficesPage(selenium);     
-    }   
-                             
+        return new ViewOfficesPage(selenium);
+    }
+
     public ViewProductCategoriesPage navigateToViewProductCategoriesPage() {
         selenium.click("admin.link.viewProductCategories");
         waitForPageToLoad();
-        return new ViewProductCategoriesPage(selenium);     
-    }   
-    
+        return new ViewProductCategoriesPage(selenium);
+    }
+
     public DefineNewLoanProductPage navigateToDefineLoanProduct() {
         selenium.click("admin.link.defineNewLoanProduct");
         waitForPageToLoad();
         return new DefineNewLoanProductPage(selenium);
     }
-    
+
     public DefineNewDifferentCurrencyLoanProductPage navigateToDefineDifferentCurrencyLoanProduct() {
         selenium.click("admin.link.defineNewLoanProduct");
         waitForPageToLoad();
@@ -117,7 +117,7 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new UndoLoanDisbursalSearchPage(selenium);
     }
-    
+
     public RedoLoanDisbursalSearchPage navigateToRedoLoanDisbursal() {
         selenium.click("admin.link.redoLoanDisbursal");
         waitForPageToLoad();
@@ -128,7 +128,7 @@ public class AdminPage extends MifosPage {
         verifyPage("admin");
         return this;
     }
-    
+
     public CreateUserParameters getAdminUserParameters() {
         CreateUserParameters formParameters = new CreateUserParameters();
         formParameters.setFirstName("New");
@@ -159,8 +159,8 @@ public class AdminPage extends MifosPage {
         formParameters.setPassword("tester");
         formParameters.setPasswordRepeat("tester");
         return formParameters;
-    }    
-    
+    }
+
     public void defineLoanProduct(SubmitFormParameters formParameters) {
         DefineNewLoanProductPage newLoanPage = navigateToDefineLoanProduct();
         newLoanPage.verifyPage();
@@ -168,9 +168,9 @@ public class AdminPage extends MifosPage {
         DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
         previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
-        confirmationPage.verifyPage();    
+        confirmationPage.verifyPage();
     }
-    
+
     public void defineMultiCurrencyLoanProduct(SubmitMultiCurrencyFormParameters formParameters) {
         DefineNewDifferentCurrencyLoanProductPage newLoanPage =  navigateToDefineDifferentCurrencyLoanProduct();
         newLoanPage.verifyPage();
@@ -178,7 +178,7 @@ public class AdminPage extends MifosPage {
         DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
         previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
-        confirmationPage.verifyPage();    
+        confirmationPage.verifyPage();
     }
 
     public SystemInfoPage navigateToSystemInfoPage() {
@@ -201,17 +201,17 @@ public class AdminPage extends MifosPage {
     }
 
     public ViewAdditionalFieldCategoriesPage navigateToViewAdditionalFields() {
-        selenium.click("admin.link.viewAdditionalFields");  
+        selenium.click("admin.link.viewAdditionalFields");
         waitForPageToLoad();
         return new ViewAdditionalFieldCategoriesPage(selenium);
     }
-  
+
     public ViewFundsPage navigateToViewFundsPage() {
         selenium.click("admin.link.viewFunds");
         waitForPageToLoad();
         return new ViewFundsPage(selenium);
     }
-    
+
     public DefineNewSavingsProductPage navigateToDefineSavingsProduct() {
         selenium.click("admin.link.defineNewSavingsProduct");
         waitForPageToLoad();
@@ -224,17 +224,17 @@ public class AdminPage extends MifosPage {
     }
 
     public ViewHolidaysPage navigateToViewHolidays() {
-        selenium.click("admin.link.viewHolidays");  
+        selenium.click("admin.link.viewHolidays");
         waitForPageToLoad();
         return new ViewHolidaysPage(selenium);
     }
-    
+
     public ViewReportCategoriesPage navigateToViewReportCategories() {
         selenium.click("admin.link.ViewReportsCategory");
         waitForPageToLoad();
         return new ViewReportCategoriesPage(selenium);
     }
-    
+
     public DefineLabelsPage navigateToDefineLabelsPage() {
         selenium.click("admin.link.defineLabels");
         waitForPageToLoad();

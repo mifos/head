@@ -137,14 +137,14 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
 
     private PersonnelBO createdBy = null;
-    
+
     private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
     private List<Holiday> holidays = new ArrayList<Holiday>();
-    
+
     private Money getRoundedMoney(final Money value) {
         return MoneyUtils.currencyRound(value);
     }
-    
+
     private Money getRoundedMoney(final Double value) {
         return MoneyUtils.currencyRound(new Money(TestUtils.RUPEE, value.toString()));
     }
@@ -714,7 +714,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     // //////////////////////////////////////////////////
 
-    
+
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -3150,7 +3150,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     // For the MifosTestCases for amount in arrears, we are creating a savings
     // account with deposit due of 200.0 for each installment. So all the values
     // and asserts are based on that.
-    // 
+    //
     // So, if 1 installments is not paid, then amount in arrears will be 200.0
     // and the total amount due will be 400.0 (which includes amount in arrears
     // +
@@ -3994,7 +3994,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DATE), 0, 0, 0)));
         TestObjectFactory.cleanUp(savingsBO);
     }
-    
+
     private void addNotes(final String comment) throws Exception {
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());

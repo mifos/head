@@ -7,13 +7,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 public class ClientFamilyDetailView {
 
     private Short relationship;
-    
+
     private Short gender;
-    
+
     private Short livingStatus;
-    
+
     private Date dateOfBirth;
-    
+
     private String displayName;
 
     public String getDisplayName() {
@@ -63,12 +63,12 @@ public class ClientFamilyDetailView {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
-    
+
     public String getDateOfBirthForBrowser() {
         if(getDateOfBirth()!=null)
             return DateUtils.makeDateAsSentFromBrowser(getDateOfBirth());
         return null;
     }
-    
-    
+
+
 }

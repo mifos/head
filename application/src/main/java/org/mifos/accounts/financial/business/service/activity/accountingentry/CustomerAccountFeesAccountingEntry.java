@@ -37,7 +37,7 @@ public class CustomerAccountFeesAccountingEntry extends BaseAccountingEntry {
         CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity) financialActivity.getAccountTrxn();
         Set<FeesTrxnDetailEntity> feesTrxns = customertrxn.getFeesTrxnDetails();
         FinancialActionBO finActionFee = getFinancialAction(FinancialActionConstants.FEEPOSTING);
-        
+
         for (FeesTrxnDetailEntity feeTrxn: feesTrxns) {
             addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,
                     feeTrxn.getAccountFees().getFees().getGlCode(), FinancialConstants.CREDIT);

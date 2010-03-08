@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -53,7 +53,7 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     private static final String START_DATA_SET = "acceptance_small_011_dbunit.xml.zip";
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -79,32 +79,32 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
         initData();
         String testAccount = "000100000000221";
         EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
-        params.setExternalID("ID83328");      
+        params.setExternalID("ID83328");
         LoanAccountPage loanAccountPage = editLoanAccount(testAccount, params);
         loanAccountPage.verifyPage();
-        assertTextFoundOnPage(params.getExternalID());       
+        assertTextFoundOnPage(params.getExternalID());
     }
-     
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void editLSIMLoanWithMonthlyTenthDayOfMonthPayment() throws Exception {
         initData();
         String testAccount = "000100000000222";
         EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
-        params.setExternalID("ID98765");      
+        params.setExternalID("ID98765");
         LoanAccountPage loanAccountPage = editLoanAccount(testAccount, params);
         loanAccountPage.verifyPage();
-        assertTextFoundOnPage(params.getExternalID());       
+        assertTextFoundOnPage(params.getExternalID());
     }
-         
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void editLSIMLoanWithWeeklyPayment() throws Exception {
         initData();
         String testAccount = "000100000000223";
         EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
-        params.setExternalID("ID2323ID");      
+        params.setExternalID("ID2323ID");
         LoanAccountPage loanAccountPage = editLoanAccount(testAccount, params);
         loanAccountPage.verifyPage();
-        assertTextFoundOnPage(params.getExternalID());       
+        assertTextFoundOnPage(params.getExternalID());
     }
 
     private LoanAccountPage editLoanAccount(String accountID, EditLoanAccountInformationParameters params) {
@@ -119,9 +119,9 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
         EditPreviewLoanAccountPage editPreviewLoanAccountPage = editAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage();
         editPreviewLoanAccountPage.verifyPage();
         loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
-        
+
         return loanAccountPage;
     }
-    
-    
+
+
 }

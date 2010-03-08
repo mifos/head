@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.center;
 
 
@@ -49,9 +49,9 @@ public class CenterTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
-	private NavigationHelper navigationHelper; 
-	
+
+	private NavigationHelper navigationHelper;
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
 	@BeforeMethod
 	public void setUp() throws Exception {
@@ -64,17 +64,17 @@ public class CenterTest extends UiTestCaseBase {
 	public void logOut() {
 		(new MifosPage(selenium)).logout();
 	}
-	
+
 	@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 	public void createCenterTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
-    
+
         createCenter(getCenterParameters("Fantastico", "Joe1233171679953 Guy1233171679953"), "MyOffice1233171674227");
 	}
-	
+
 	public CenterViewDetailsPage createCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
 	    ClientsAndAccountsHomepage clientsAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-	    
+
         CreateCenterChooseOfficePage chooseOfficePage = clientsAccountsPage.navigateToCreateNewCenterPage();
         CreateCenterEnterDataPage enterDataPage = chooseOfficePage.selectOffice(officeName);
 	    CreateCenterPreviewDataPage centerPreviewDataPage = enterDataPage.submitAndGotoCreateCenterPreviewDataPage(formParameters);
@@ -82,22 +82,22 @@ public class CenterTest extends UiTestCaseBase {
         confirmationPage.verifyPage();
         CenterViewDetailsPage centerDetailsPage = confirmationPage.navigateToCenterViewDetailsPage();
         centerDetailsPage.verifyActiveCenter(formParameters);
-        
+
         return centerDetailsPage;
 	}
-     
+
 	public CreateCenterEnterDataPage.SubmitFormParameters getCenterParameters(String centerName, String loanOfficer) {
-        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();        
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
         formParameters.setCenterName(centerName);
         formParameters.setLoanOfficer(loanOfficer);
-        
+
         MeetingParameters meetingFormParameters = new MeetingParameters();
         meetingFormParameters.setWeekFrequency("1");
         meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
         meetingFormParameters.setMeetingPlace("Bangalore");
-        
+
         formParameters.setMeeting(meetingFormParameters);
         return formParameters;
 	}
-	
+
 }

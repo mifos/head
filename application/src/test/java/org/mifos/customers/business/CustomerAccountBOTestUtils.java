@@ -60,5 +60,5 @@ public class CustomerAccountBOTestUtils {
     public static void setPaymentDate(AccountActionDateEntity accountActionDateEntity, java.sql.Date paymentDate) {
         accountActionDateEntity.setPaymentDate(paymentDate);
     }
-    
+
 }

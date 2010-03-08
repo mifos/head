@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.reports;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -39,13 +39,13 @@ public class ReportsPage extends MifosPage {
     public ReportsPage(Selenium selenium) {
         super(selenium);
     }
-        
+
     public CollectionSheetReportParametersPage selectCollectionSheetEntryReport() {
         selenium.click("link=Collection Sheet Report");
         waitForPageToLoad();
-        return new CollectionSheetReportParametersPage(selenium);     
+        return new CollectionSheetReportParametersPage(selenium);
     }
-    
+
     public ReportsPage verifyPage() {
         Assert.assertTrue(selenium.isTextPresent("Welcome to mifos reports area. Click on a report name below to view the report ."));
         return this;

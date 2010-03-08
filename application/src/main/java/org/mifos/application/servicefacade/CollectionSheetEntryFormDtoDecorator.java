@@ -37,7 +37,7 @@ public class CollectionSheetEntryFormDtoDecorator {
     }
 
     public CustomerView findSelectedCustomerById(final Integer selectedCustomerId) {
-        
+
         for (CustomerView customer : collectionSheetEntryFormDto.getCustomerList()) {
             if (selectedCustomerId.intValue() == customer.getCustomerId().intValue()) {
                 return customer;
@@ -66,13 +66,13 @@ public class CollectionSheetEntryFormDtoDecorator {
     }
 
     public ListItem<Short> findSelectedPaymentTypeById(final Short paymentId) {
-        
+
         for (ListItem<Short> paymentType : collectionSheetEntryFormDto.getPaymentTypesList()) {
             if (paymentId.shortValue() == paymentType.getId().shortValue()) {
                 return paymentType;
             }
         }
-        
+
         return null;
     }
 

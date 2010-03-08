@@ -104,5 +104,5 @@ public class MockMifosTestObjects {
         return new MeetingBO(RecurrenceType.WEEKLY, TestObjectFactory.EVERY_WEEK, new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING);
     }
-    
+
 }

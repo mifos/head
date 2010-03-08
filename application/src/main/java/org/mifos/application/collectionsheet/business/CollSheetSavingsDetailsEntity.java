@@ -139,7 +139,7 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
      * This method sets values to the account details object , it also
      * calculates over due amounts upto the current installment and sets it
      * here.
-     * 
+     *
      * @param accountActionDate
      */
     public void addAccountDetails(AccountActionDateEntity accountActionDate) throws SystemException,

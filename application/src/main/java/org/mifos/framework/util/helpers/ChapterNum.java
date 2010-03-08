@@ -32,7 +32,7 @@ import java.util.List;
  * runtime checks exist to ensure this. If {@link #fromString(String)} is used,
  * negative numbers will be filtered out. This is the preferred method for
  * instantiating new objects of this class.
- * 
+ *
  * <p>
  * We don't need to override {@link ArrayList#equals(Object)}, the parent
  * version works for us too.
@@ -97,14 +97,14 @@ public class ChapterNum extends ArrayList<Integer> implements Comparable<List<In
     /**
      * Instantiates a new <code>ChapterNum</code> object based on information
      * found in the given string.
-     * 
+     *
      * <p>
      * Dots are discarded and numbers are then parsed as <code>int</code>s.
-     * 
+     *
      * <p>
      * Strings that don't exactly match the form <code>^\d+(\.\d+)*$</code> will
      * result in a <code>null</code> return value.
-     * 
+     *
      * @param s
      *            {@link String} to transform into a <code>ChapterNum</code>.
      * @return May be null if input does not match expected pattern of a chapter

@@ -49,7 +49,7 @@ public class BaseAccountingEntryTestCase {
     /**
      * Return an iterator on the list of TransactionBO objects created by an AccountEntry object, sorted by GLCode
      * string. First verify the correct number of transactions was created.
-     * 
+     *
      * @param mockedFinancialActivity
      *            a Mockito-mocked BaseFinancialActivity instance
      * @param expectedTransCount
@@ -99,7 +99,7 @@ public class BaseAccountingEntryTestCase {
     /**
      * Compare FinancialTransactionBO objects lexicographically by GL Code string values. Use this to sort collections
      * of transactions created by AccountingEntry objects to verify the transactions in order of gl codes.
-     * 
+     *
      */
     protected class GLCodeComparator implements Comparator<FinancialTransactionBO> {
         public int compare(final FinancialTransactionBO tran1, final FinancialTransactionBO tran2) {

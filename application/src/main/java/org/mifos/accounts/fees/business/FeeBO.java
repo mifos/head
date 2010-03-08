@@ -55,9 +55,9 @@ public abstract class FeeBO extends BusinessObject {
     private final FeeFrequencyEntity feeFrequency;
     private final GLCodeEntity glCode;
     private final Set<FeeLevelEntity> feeLevels;
-    
+
     private OfficePersistence officePersistence;
-    
+
     public OfficePersistence getOfficePersistence() {
         if(officePersistence == null){
             officePersistence = new OfficePersistence();
@@ -73,7 +73,7 @@ public abstract class FeeBO extends BusinessObject {
      * @param office
      * @param createdByUserId
      * @param createdDate
-     * 
+     *
      */
     public FeeBO(final String name, final FeeCategory category, final FeeFrequencyType feeFrequencyType,
             final GLCodeEntity feeGLCode, final MeetingBO meetingPeriodicity, final OfficeBO office,
@@ -89,7 +89,7 @@ public abstract class FeeBO extends BusinessObject {
         this.createdDate = createdDate;
         this.createdBy = createdByUserId;
         this.office = office;
-        
+
         FeePaymentEntity feePaymentEntity = null;
         FeeFrequencyTypeEntity feeFrequencyTypeEntity = new FeeFrequencyTypeEntity(feeFrequencyType);
         try {

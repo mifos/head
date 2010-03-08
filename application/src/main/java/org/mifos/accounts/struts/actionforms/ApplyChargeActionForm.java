@@ -51,7 +51,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
     private String charge;
 
     private String selectedChargeFormula;
-    
+
     public String getAccountId() {
         return accountId;
     }
@@ -91,7 +91,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
     public void setSelectedChargeFormula(String selectedChargeFormula) {
         this.selectedChargeFormula = selectedChargeFormula;
     }
-    
+
     /*
      * Extract the <isRateType> boolean value from the chargeType (see note above about chargeType)
      */
@@ -105,7 +105,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
      */
     public String getFeeId() {
         String[] values = getChargeType().split(":");
-        return values[0];        
+        return values[0];
     }
 
     @Override
@@ -118,8 +118,8 @@ public class ApplyChargeActionForm extends BaseActionForm {
                 if (StringUtils.isNotBlank(selectedChargeFormula)) {
                     validateRate(errors, request);
 
-                }          
-                validateAmount(errors, locale);           
+                }
+                validateAmount(errors, locale);
                 errors.add(super.validate(mapping, request));
             }
         }
@@ -137,19 +137,19 @@ public class ApplyChargeActionForm extends BaseActionForm {
             request.setAttribute("selectedChargeFormula", selectedChargeFormula);
         }
     }
-    
+
     protected void validateAmount(ActionErrors errors, Locale locale) {
         DoubleConversionResult conversionResult;
-    
+
         if (isRateType()) {
-            conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+            conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         } else {
-            conversionResult = validateAmount(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
-                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);            
+            conversionResult = validateAmount(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
+                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         }
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+            addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
         }
     }

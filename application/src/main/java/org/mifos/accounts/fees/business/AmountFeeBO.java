@@ -49,9 +49,9 @@ public class AmountFeeBO extends FeeBO {
 
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal legal constructor
-     * 
+     *
      * @param office
      */
     public AmountFeeBO(final Money feeAmount, final String name, final FeeCategory category,

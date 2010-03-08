@@ -56,12 +56,12 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
     private UserContext userContext;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
-        
+
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
@@ -97,8 +97,8 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
     public void testRepaymentScheduleInstallment() {
         long l = System.currentTimeMillis();
         RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment(
-                10, 
-                new Date(l), 
+                10,
+                new Date(l),
                 new Money(getCurrency(), "100.0"),
                 new Money(getCurrency(), "100.0"),
                 new Money(getCurrency(), "100.0"),

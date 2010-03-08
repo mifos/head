@@ -36,7 +36,7 @@ import org.mifos.service.test.TestMode;
 
 /**
  * Many tests initialize themselves via this class.
- * 
+ *
  * However, the fact that it is a static block, and initializes more than it may
  * need to for a given test, means that it might be desirable to call
  * {@link DatabaseSetup} directly in some cases, or to avoid everything here in

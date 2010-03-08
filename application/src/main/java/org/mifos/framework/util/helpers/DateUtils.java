@@ -166,7 +166,7 @@ public class DateUtils {
     /**
      * Converts a string of a date in DB format ("yyyy-MM-dd") to a
      * {@link java.util.Date} object.
-     * 
+     *
      * @param date
      *            , a String of the form "yyyy-MM-dd"
      * @return A {@link java.util.Date} object equivilant to the value of the
@@ -283,7 +283,7 @@ public class DateUtils {
      * "as sent from browser" is a bit of a misnomer; it really is (at least in
      * many cases), as formatted by a routine on the server side like
      * {@link ClientCustActionForm#getDateOfBirth()}.
-     * 
+     *
      * @throws InvalidDateException
      */
     public static java.sql.Date getDateAsSentFromBrowser(String value) throws InvalidDateException {

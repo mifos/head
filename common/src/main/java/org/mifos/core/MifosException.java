@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.core;
 
 public class MifosException extends Exception {
@@ -27,11 +27,11 @@ public class MifosException extends Exception {
 	public MifosException() {
 		super();
 	}
-	
+
 	public MifosException(String message) {
 		super(message);
 	}
-	
+
     public MifosException(String message, Throwable cause) {
         super(message, cause);
     }

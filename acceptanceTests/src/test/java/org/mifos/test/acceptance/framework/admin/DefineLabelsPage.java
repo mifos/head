@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -33,9 +33,9 @@ public class DefineLabelsPage extends MifosPage {
     public void verifyPage() {
         verifyPage("definelabels");
     }
-    
+
     public void setLabelValue(String label, String value) {
-        selenium.type("definelabels.input." + label, value);              
+        selenium.type("definelabels.input." + label, value);
     }
 
     public String getCitizenshipLabel() {
@@ -46,10 +46,10 @@ public class DefineLabelsPage extends MifosPage {
         return selenium.getText("defineLabels.input.govtId");
     }
 
-    public void verifyLabelValue(String label, String value) {               
+    public void verifyLabelValue(String label, String value) {
         Assert.assertEquals(selenium.getValue(label), value);
     }
-    
+
     public void verifyCitizenshipLabel(DefineLabelsParameters labelParameters) {
         Assert.assertEquals(getCitizenshipLabel(), labelParameters.getCitizenship());
     }
@@ -57,11 +57,11 @@ public class DefineLabelsPage extends MifosPage {
     public void verifyGovtIdLabel(DefineLabelsParameters labelParameters) {
         Assert.assertEquals(getGovtIdLabel(), labelParameters.getGovtId());
     }
-    
+
     public AdminPage submit() {
         selenium.click("definelabels.button.submit");
         waitForPageToLoad();
         return new AdminPage(selenium);
     }
-   
+
 }

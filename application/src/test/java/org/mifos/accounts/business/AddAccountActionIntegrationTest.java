@@ -37,13 +37,13 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     public AddAccountActionIntegrationTest() throws Exception {
         super();
     }
-    
+
     private Session session;
-    
+
     private Connection connection;
 
     private static final short SEND_TO_ORPHANS = 43;
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -102,7 +102,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         // use valid construtor and valid key
         upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey);
         upgrade.upgrade(connection);
-        
+
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
        Assert.assertEquals(goodKey, action.getLookUpValue().getLookUpName());
     }

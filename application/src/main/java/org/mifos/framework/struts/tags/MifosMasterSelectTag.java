@@ -54,7 +54,7 @@ public class MifosMasterSelectTag extends SelectTag {
 
     /**
      * Construct a new instance of this tag.
-     * 
+     *
      * @param pageContext
      *            pageContext of the Tag
      * @param property
@@ -84,7 +84,7 @@ public class MifosMasterSelectTag extends SelectTag {
 
     /**
      * Create an appropriate select start element based on our parameters.
-     * 
+     *
      * @exception JspException
      *                if a JSP exception has occurred
      */

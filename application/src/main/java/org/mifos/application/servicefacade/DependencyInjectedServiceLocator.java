@@ -44,7 +44,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 
 /**
  * I contain static factory methods for locating/creating application services.
- * 
+ *
  * NOTE: Use of DI frameworks method would make this redundant. e.g.
  * spring/juice
  */
@@ -56,7 +56,7 @@ public class DependencyInjectedServiceLocator {
 
     // services
     private static CollectionSheetService collectionSheetService;
-    
+
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
     private static MasterPersistence masterPersistence = new MasterPersistence();
@@ -67,14 +67,14 @@ public class DependencyInjectedServiceLocator {
     private static LoanPersistence loanPersistence = new LoanPersistence();
     private static AccountPersistence accountPersistence = new AccountPersistence();
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
-    
+
     private static GenericDao genericDao = new GenericDaoHibernate();
     private static HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
     private static CustomerDao customerDao = new CustomerDaoHibernate(genericDao);
     private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
-    
+
 
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();

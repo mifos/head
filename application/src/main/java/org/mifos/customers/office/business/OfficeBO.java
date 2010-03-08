@@ -76,10 +76,10 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
         status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
         address = new OfficeAddressEntity();
     }
-    
+
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal legal constructor
      */
     public OfficeBO(final String name, final String globalOfficeNum) {

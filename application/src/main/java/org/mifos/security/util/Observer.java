@@ -27,7 +27,7 @@ package org.mifos.security.util;
 public interface Observer {
     /**
      * This function is called when any change in system role happens
-     * 
+     *
      * @param e
      *            SecurityEvent interface
      */

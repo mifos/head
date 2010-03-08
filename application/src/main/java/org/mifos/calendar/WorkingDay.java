@@ -26,7 +26,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 public class WorkingDay {
-    
+
     public static boolean isWorkingDay(final DateTime day, final List<Days> workingDays) {
         return workingDays.contains(Days.days(day.dayOfWeek().get()));
     }

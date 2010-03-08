@@ -47,7 +47,7 @@ public class OfficeView extends View {
         this.officeName = null;
         this.versionNo = null;
     }
-    
+
     /**
      * used by hibernate queries
      */

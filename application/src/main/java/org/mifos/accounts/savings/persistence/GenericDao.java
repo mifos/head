@@ -34,7 +34,7 @@ public interface GenericDao {
             Map<String, ?> nameQueryParameters, Class<?> className);
 
     List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters);
-    
+
     Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
 
     void createOrUpdate(Object entity);

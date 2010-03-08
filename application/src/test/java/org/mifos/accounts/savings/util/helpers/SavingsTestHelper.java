@@ -145,8 +145,8 @@ public class SavingsTestHelper {
             Short intGLCode) {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        return TestObjectFactory.createSavingsProduct(offeringName, shortName, ApplicableTo.GROUPS, 
-                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.SAVINGS_ACTIVE, 300.0, 
+        return TestObjectFactory.createSavingsProduct(offeringName, shortName, ApplicableTo.GROUPS,
+                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.SAVINGS_ACTIVE, 300.0,
                 RecommendedAmountUnit.PER_INDIVIDUAL, 24.0,
                 200.0, 200.0, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost,
                 depGLCode, intGLCode);
@@ -156,8 +156,8 @@ public class SavingsTestHelper {
             SavingsType savingsType) {
         MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        return TestObjectFactory.createSavingsProduct(offeringName, ApplicableTo.GROUPS, 
-                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.SAVINGS_ACTIVE, 300.0, 
+        return TestObjectFactory.createSavingsProduct(offeringName, ApplicableTo.GROUPS,
+                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.SAVINGS_ACTIVE, 300.0,
                 RecommendedAmountUnit.PER_INDIVIDUAL, 24.0,
                 200.0, 200.0, savingsType, interestCalcType, meetingIntCalc, meetingIntPost);
     }
@@ -178,7 +178,7 @@ public class SavingsTestHelper {
 
     public SavingsBO createSavingsAccount(SavingsOfferingBO savingsOffering, CustomerBO customer,
             AccountState accountState, UserContext userContext) throws Exception {
-        SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, accountState, 
+        SavingsBO savings = new SavingsBO(userContext, savingsOffering, customer, accountState,
                 TestUtils.createMoney( "500.0"), null);
         savings.save();
         return savings;

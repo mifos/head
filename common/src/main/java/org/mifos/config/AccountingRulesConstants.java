@@ -38,5 +38,5 @@ public class AccountingRulesConstants {
     public static final String FINAL_ROUND_OFF_MULTIPLE = "AccountingRules.FinalRoundOffMultiple";
     public static final String CURRENCY_ROUNDING_MODE = "AccountingRules.CurrencyRoundingMode";
     public static final String BACKDATED_TRANSACTIONS_ALLOWED = "BackDatedTransactionsAllowed";
-    
+
 }

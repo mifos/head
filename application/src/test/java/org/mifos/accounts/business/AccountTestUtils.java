@@ -33,13 +33,13 @@ public class AccountTestUtils {
     public static void addAccountActionDate(AccountActionDateEntity accountAction, AccountBO account) {
         account.addAccountActionDate(accountAction);
     }
-    
+
 
     public static void addToAccountStatusChangeHistory(LoanBO loan,
             AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
         loan.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
     }
-    
+
     public static void addAccountFees(AccountFeesEntity fees, AccountBO account) {
         account.addAccountFees(fees);
     }
@@ -47,7 +47,7 @@ public class AccountTestUtils {
     public static void addAccountFlag(AccountStateFlagEntity flagDetail, AccountBO account) {
         account.addAccountFlag(flagDetail);
     }
-    
+
     public static void addAccountPayment(AccountPaymentEntity payment, AccountBO account) {
         account.addAccountPayment(payment);
     }
@@ -58,7 +58,7 @@ public class AccountTestUtils {
                 .getId()), adjustmentComment);
 
     }
-    
+
     /**
      * Changes <em>all</em> installment dates to yesterday. In production,
      * multiple installments should never have the same ACTION_DATE.

@@ -46,7 +46,7 @@ import org.mifos.framework.util.helpers.Money;
 /**
  * A product is a set of rules (interest rate, number of installments, maximum
  * amount, etc) which describes what an MFI offers.
- * 
+ *
  * Although we may sometimes call these "offerings", the preferred word is
  * "products" (that is what they are called in the functional specification, and
  * the wider microfinance industry).
@@ -73,7 +73,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
     private Date startDate;
 
     private Date endDate;
-    
+
     private MifosCurrency currency;
 
     private final OfficeBO office;
@@ -93,11 +93,11 @@ public abstract class PrdOfferingBO extends BusinessObject {
     protected PrdOfferingBO() {
         this(null, null, null, null);
     }
-    
+
     protected PrdOfferingBO(final Short prdOfferingId) {
         this(prdOfferingId, null, null, null);
     }
-    
+
     protected PrdOfferingBO(final Short prdOfferingId, final String globalPrdOfferingNum,
             final ProductTypeEntity prdType, final OfficeBO office) {
         this.prdOfferingId = prdOfferingId;
@@ -108,7 +108,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
     /**
      * TODO - keithw - work in progress -
-     * 
+     *
      * Minimal legal constructor
      */
     public PrdOfferingBO(final String name, final String shortName, final String globalProductNumber,

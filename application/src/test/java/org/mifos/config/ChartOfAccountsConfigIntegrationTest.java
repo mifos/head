@@ -92,11 +92,11 @@ public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCa
                     + "<GLAccount code=\"11101\" name=\"Cash 1\" />" + "<GLAccount code=\"11101\" name=\"Cash 1\" />"
                     + "<GLAccount code=\"11102\" name=\"Cash 2\" />" + "</GLAccount>";
             ByteArrayInputStream bstr = new ByteArrayInputStream(invalid.getBytes("UTF-8"));
-    
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder parser = dbf.newDocumentBuilder();
             Document document = parser.parse(bstr);
-    
+
             ChartOfAccountsConfig.traverse(document.getFirstChild(), null);
             Assert.fail("Expected RuntimeException");
         } catch (RuntimeException e) {

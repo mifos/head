@@ -227,7 +227,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
         }
 
         catch (Exception e) {
-            // processException logs an error (see MifosExceptionHandler) 
+            // processException logs an error (see MifosExceptionHandler)
             forward = (processException(request, response, e, form, mapping));
 
             // set the last forward in the activity context

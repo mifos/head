@@ -26,7 +26,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level DEBUG
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -43,7 +43,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level DEBUG
-     * 
+     *
      * @param message
      *            Message to be printed
      */
@@ -53,7 +53,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level INFO
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -71,7 +71,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level INFO
-     * 
+     *
      * @param message
      *            Message to be printed
      */
@@ -81,7 +81,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level WARN
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -98,7 +98,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level WARN
-     * 
+     *
      * @param message
      *            Message to be printed
      */
@@ -109,7 +109,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level WARN and print stack trace
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -128,7 +128,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level ERROR
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -145,7 +145,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level ERROR and print stack trace
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -164,7 +164,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level ERROR
-     * 
+     *
      * @param message
      *            Message to be printed
      */
@@ -174,7 +174,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level ERROR
-     * 
+     *
      * @param message
      *            Message to be printed
      * @param throwable
@@ -186,7 +186,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level FATAL
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -203,7 +203,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level FATAL and print stack trace
-     * 
+     *
      * @param key
      *            Key present in the resource bundle. If asString parameter is
      *            false then this is treated as the string to be displayed
@@ -222,7 +222,7 @@ public abstract class MifosLogger {
 
     /**
      * Log statements with level FATAL
-     * 
+     *
      * @param message
      *            Message to be printed
      */
@@ -233,21 +233,21 @@ public abstract class MifosLogger {
     /**
      * Description: Function to obtain the userID of the person logging the
      * statements
-     * 
+     *
      * @return UserId of the person
      */
     public abstract String getUserID();
 
     /**
      * Function to obtain the officeID of the user logging the statements
-     * 
+     *
      * @return OfficeId of the person
      */
     public abstract String getOfficeID();
 
     /**
      * Log statements with the designated Level
-     * 
+     *
      * @param level
      *            Level with which the message should be logged
      * @param key

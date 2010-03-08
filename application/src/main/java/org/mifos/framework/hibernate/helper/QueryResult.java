@@ -38,14 +38,14 @@ import org.mifos.framework.exceptions.HibernateSearchException;
 public interface QueryResult {
     /**
      * Return the Session used for query
-     * 
+     *
      * @return Session
      */
     public Session getSession() throws HibernateProcessException;
 
     /**
      * Set the query which will be used for query execution
-     * 
+     *
      * @param query Query
      */
     public void executeQuery(Query query) throws HibernateSearchException;
@@ -53,14 +53,14 @@ public interface QueryResult {
     /**
      * Returns the requested set of search result objects based on the
      * pagination at the front end.
-     * 
+     *
      * @return List
      */
     public List get(int position, int noOfObjects) throws HibernateSearchException;
 
     /**
      * Set the query inputs which will be used for query execution
-     * 
+     *
      * @param queryInputs
      */
     public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException;
@@ -73,7 +73,7 @@ public interface QueryResult {
 
     /**
      * Returns the size
-     * 
+     *
      * @return int
      */
     public int getSize() throws HibernateSearchException;

@@ -52,7 +52,7 @@ public class ResourceBundleFactory {
 
     /**
      * Obtains the resource bundle
-     * 
+     *
      * @return The resource bundle
      * @throws ResourceBundleNotFoundException
      */

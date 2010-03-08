@@ -17,13 +17,13 @@ public class NextScheduledEventStrategyTest {
 
     @Mock
     private ScheduledEvent scheduledEvent;
-    
+
     @Before
     public void setupAndInjectDependencies() {
 
         scheduledEventStrategy = new NextScheduledEventStrategy(scheduledEvent);
     }
-    
+
     @Test
     public void whenAdjustingDateUseScheduledEventImplementationOfNextEventDate() {
 

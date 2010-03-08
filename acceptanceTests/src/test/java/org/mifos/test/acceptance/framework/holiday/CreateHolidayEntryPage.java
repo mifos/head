@@ -33,13 +33,13 @@ public class CreateHolidayEntryPage extends MifosPage {
     public CreateHolidayEntryPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class CreateHolidaySubmitParameters {
         public static final String NEXT_WORKING_DAY = "Next Working Day";
         public static final String SAME_DAY = "Same Day";
-        public static final String NEXT_MEETING_OR_REPAYMENT = "Next Meeting/Repayment";       
-        
+        public static final String NEXT_MEETING_OR_REPAYMENT = "Next Meeting/Repayment";
+
         private String name;
         private String fromDateDD;
         private String fromDateMM;
@@ -48,67 +48,67 @@ public class CreateHolidayEntryPage extends MifosPage {
         private String thruDateMM;
         private String thruDateYYYY;
         private String repaymentRule;
-        
+
         public String getName() {
             return this.name;
         }
-        
+
         public void setName(String name) {
             this.name = name;
         }
-        
+
         public String getFromDateDD() {
             return this.fromDateDD;
         }
-        
+
         public void setFromDateDD(String fromDateDD) {
             this.fromDateDD = fromDateDD;
         }
-        
+
         public String getFromDateMM() {
             return this.fromDateMM;
         }
-        
+
         public void setFromDateMM(String fromDateMM) {
             this.fromDateMM = fromDateMM;
         }
-        
+
         public String getFromDateYYYY() {
             return this.fromDateYYYY;
         }
-        
+
         public void setFromDateYYYY(String fromDateYYYY) {
             this.fromDateYYYY = fromDateYYYY;
         }
-        
+
         public String getThruDateDD() {
             return this.thruDateDD;
         }
-        
+
         public void setThruDateDD(String thruDateDD) {
             this.thruDateDD = thruDateDD;
         }
-        
+
         public String getThruDateMM() {
             return this.thruDateMM;
         }
-        
+
         public void setThruDateMM(String thruDateMM) {
             this.thruDateMM = thruDateMM;
         }
-        
+
         public String getThruDateYYYY() {
             return this.thruDateYYYY;
         }
-        
+
         public void setThruDateYYYY(String thruDateYYYY) {
             this.thruDateYYYY = thruDateYYYY;
         }
-        
+
         public String getRepaymentRule() {
             return this.repaymentRule;
         }
-        
+
         public void setRepaymentRule(String repaymentRule) {
             this.repaymentRule = repaymentRule;
         }
@@ -123,7 +123,7 @@ public class CreateHolidayEntryPage extends MifosPage {
         }
 
     }
-    
+
     public CreateHolidayConfirmationPage submitAndNavigateToHolidayConfirmationPage(CreateHolidaySubmitParameters formParameters) {
         selenium.type("holiday.input.name",formParameters.getName());
         selenium.type("holidayFromDateDD", formParameters.getFromDateDD());
@@ -133,16 +133,16 @@ public class CreateHolidayEntryPage extends MifosPage {
         this.typeTextIfNotEmpty("holidayThruDateMM", formParameters.getThruDateMM());
         this.typeTextIfNotEmpty("holidayThruDateYY", formParameters.getThruDateYYYY());
         selenium.select("holiday.input.repaymentrule", "value=" + formParameters.getRepaymentRuleValue());
-        
+
         selenium.fireEvent("holidayFromDateYY", "blur");
         selenium.fireEvent("holidayThruDateYY", "blur");
-        
-        
+
+
         selenium.click("holiday.button.preview");
         waitForPageToLoad();
-        
-        
+
+
         return new CreateHolidayConfirmationPage(selenium);
-         
+
     }
 }

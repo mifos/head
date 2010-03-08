@@ -66,7 +66,7 @@ public class SqlExecutor {
 
     /**
      * Closes the stream when done.
-     * 
+     *
      * @return individual statements
      * */
     @SuppressWarnings( { "PMD.CyclomaticComplexity", "PMD.AssignmentInOperand", "PMD.AppendCharacterWithChar",

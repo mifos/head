@@ -64,7 +64,7 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutFeeName() throws Exception {
         try {
             fee = new AmountFeeBO(TestUtils.makeUser(), "", new CategoryTypeEntity(FeeCategory.CENTER),
-                    new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"), 
+                    new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"),
                     TestUtils.createMoney("100"), false, new FeePaymentEntity(FeePayment.UPFRONT));
             Assert.assertFalse("Fee is created without fee name", true);
         } catch (FeeException e) {
@@ -334,14 +334,14 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
     private FeeBO createOneTimeAmountFee(String feeName, FeeCategory feeCategory, String amount, boolean isDefaultFee,
             FeePayment feePayment) throws Exception {
         return new AmountFeeBO(TestUtils.makeUser(), feeName, new CategoryTypeEntity(feeCategory),
-                new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"), 
+                new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), getGLCode("7"),
                 TestUtils.createMoney(amount), isDefaultFee, new FeePaymentEntity(feePayment));
     }
 
     private FeeBO createPeriodicAmountFee(String feeName, FeeCategory feeCategory, String amount, boolean isDefaultFee,
             MeetingBO feeFrequency) throws Exception {
         return new AmountFeeBO(TestUtils.makeUser(), feeName, new CategoryTypeEntity(feeCategory),
-                new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), getGLCode("7"), 
+                new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), getGLCode("7"),
                 TestUtils.createMoney(amount), isDefaultFee, feeFrequency);
     }
 

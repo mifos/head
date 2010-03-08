@@ -52,7 +52,7 @@ public class FiscalCalendarRulesTest {
     public static void init() {
         configMgr = ConfigurationManager.getInstance();
     }
-    
+
     @AfterClass
     public static void destroy(){
         configMgr.clear();
@@ -62,14 +62,14 @@ public class FiscalCalendarRulesTest {
         configMgr.setProperty(new FiscalCalendarRules().FiscalCalendarRulesWorkingDays, newWorkingDays);
         new FiscalCalendarRules().reloadConfigWorkingDays();
     }
-    
+
     @Test
     public void shouldConvertWorkingDaysOfMifosWeekDayToJodaTimeDays() {
-        
+
         // setup
         String configWorkingDays = "MONDAY,WEDNESDAY,SATURDAY,SUNDAY";
         setNewWorkingDays(configWorkingDays);
-        
+
         // exercise test
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
 

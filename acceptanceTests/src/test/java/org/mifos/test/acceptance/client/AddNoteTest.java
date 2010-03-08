@@ -80,7 +80,7 @@ public class AddNoteTest extends UiTestCaseBase {
         details.verifyTextOnPage(testNote);
 
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void addNoteToClientAndVerifyOnNotesDetailsPage() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
@@ -97,10 +97,10 @@ public class AddNoteTest extends UiTestCaseBase {
         details = notes.addNotePreviewAndSubmit(testNote);
 
         details.verifyTextOnPage(testNote);
-        
+
         notes = details.navigateToAllNotesPage();
         notes.verifyTextOnPage(testNote);
 
     }
-    
+
 }

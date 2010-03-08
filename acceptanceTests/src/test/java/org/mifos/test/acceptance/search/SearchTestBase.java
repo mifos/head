@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.search;
 
 import org.mifos.test.acceptance.framework.HomePage;
@@ -30,9 +30,9 @@ public class SearchTestBase extends UiTestCaseBase {
     {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
-    
+
         SearchResultsPage searchResult = homePage.search( s );
-        searchResult.verifyPage();    
+        searchResult.verifyPage();
         return searchResult ;
     }
 }

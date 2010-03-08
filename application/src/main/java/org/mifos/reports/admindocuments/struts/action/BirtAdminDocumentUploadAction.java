@@ -218,11 +218,11 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         return getViewBirtAdminDocumentPage(mapping, form, request, response);
 
     }
-    
+
     private static String getServletRoot(ActionServlet servlet) {
         return servlet.getServletContext().getRealPath("/");
     }
-    
+
     public static String getUploadStorageDirectory() {
         return ConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
                 "$HOME/.mifos/uploads").replaceFirst("\\$HOME", System.getProperty("user.home"));

@@ -31,7 +31,7 @@ public class MifosDOMConfigurator extends DOMConfigurator {
 
     /**
      * Function to configure the logger from the configuration file
-     * 
+     *
      * @param filename
      *            The configuration file for the logger
      * @param repository
@@ -45,7 +45,7 @@ public class MifosDOMConfigurator extends DOMConfigurator {
      * Function to configure logger from configuration file. If the
      * configuration file is changed while the application is running then the
      * logger will reflect the changes
-     * 
+     *
      * @param configFilename
      *            The configuration file
      * @param delay

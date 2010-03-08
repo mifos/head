@@ -17,13 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.util;
 
 public final class UiTestUtils {
-	
+
 	private static final int DEFAULT_SLEEP_TIME = 30000;
-	
+
 	private UiTestUtils() {
 		// prevent instantiation
 	}

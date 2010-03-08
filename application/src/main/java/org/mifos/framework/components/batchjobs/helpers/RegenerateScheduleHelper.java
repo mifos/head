@@ -41,7 +41,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 public class RegenerateScheduleHelper extends TaskHelper {
 
     private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-    
+
     public RegenerateScheduleHelper(final MifosTask mifosTask) {
         super(mifosTask);
     }
@@ -52,10 +52,10 @@ public class RegenerateScheduleHelper extends TaskHelper {
     public void execute(final long timeInMills) throws BatchJobException {
         List<String> errorList = new ArrayList<String>();
         accountList = new ArrayList<Integer>();
-        
+
         List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        
+
         List<Integer> customerIds;
         try {
             customerIds = new CustomerPersistence().getCustomersWithUpdatedMeetings();
@@ -74,7 +74,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
                     StaticHibernateUtil.closeSession();
                 }
             }
-        
+
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
@@ -88,7 +88,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
     private void handleChangeInMeetingSchedule(final Integer customerId, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         CustomerBO customer = customerPersistence.getCustomer(customerId);
-        
+
         Set<AccountBO> accounts = customer.getAccounts();
         if (accounts != null && !accounts.isEmpty())
             for (AccountBO account : accounts) {

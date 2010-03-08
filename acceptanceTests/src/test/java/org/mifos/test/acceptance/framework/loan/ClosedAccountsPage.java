@@ -16,7 +16,7 @@ public class ClosedAccountsPage extends MifosPage {
         verifyPage("GetAllClosedAccounts");
         return this;
     }
-    
+
     public CenterViewDetailsPage returnToCenterViewDetailsPage() {
         selenium.click("getallclosedaccounts.button.cancel");
         waitForPageToLoad();

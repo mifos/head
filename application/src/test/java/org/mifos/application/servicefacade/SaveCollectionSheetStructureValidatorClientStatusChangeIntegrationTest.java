@@ -63,7 +63,7 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
         /*
          * JPW - this test commented out because of the follower error which occurs
          * when changing the first clients status to closed:
-         * 
+         *
          * org.hibernate.LazyInitializationException: could not initialize proxy
          * - no Session at
          * org.hibernate.proxy.AbstractLazyInitializer.initialize
@@ -83,16 +83,16 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
          * mvn integration-test-Dtest=
          * SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest
          * but not when run in mvn install
-         * 
-         * 
+         *
+         *
          * This test used to be in
          * SaveCollectionSheetStructureValidatorIntegrationTest but was taken
          * out to isolate it
          */
 
-        
+
 //         saveCollectionSheetUtils.setFirstClientClosed();
-//        
+//
 //         createSampleCollectionSheetAndVerifyInvalidReason(InvalidSaveCollectionSheetReason.INVALID_CUSTOMER_STATUS);
     }
 

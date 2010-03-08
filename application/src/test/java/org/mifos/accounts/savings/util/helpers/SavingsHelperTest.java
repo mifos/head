@@ -56,7 +56,7 @@ public class SavingsHelperTest extends TestCase {
         //ConfigurationInitializer#createSystemConfiguration() (Protected method)
         SystemConfiguration systemConfig = new SystemConfiguration(TestUtils.EURO, 19800000);
         Mockito.when(config.getSystemConfig()).thenReturn(systemConfig);
-        
+
         Date fromDate = getDate("01/01/2006");
         Date toDate = getDate("08/01/2006");
         int days = helper.calculateDays(fromDate, toDate);
@@ -84,7 +84,7 @@ public class SavingsHelperTest extends TestCase {
         toDate = getDate("06/07/2006");
         days = helper.calculateDays(fromDate, toDate);
        Assert.assertEquals("182", String.valueOf(days));
-       
+
        // Destroy mock configuration instance
        Configuration.setConfig(null);
     }
@@ -240,7 +240,7 @@ public class SavingsHelperTest extends TestCase {
          * Date resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
          * getDate("30/06/2006"), meeting); Date date = getDate("31/05/2006");
          *Assert.assertEquals(date, resultDate);
-         * 
+         *
          * resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
          * getDate("01/01/2007"), meeting); date = getDate("01/12/2006");
          *Assert.assertEquals(date, resultDate);
@@ -311,7 +311,7 @@ public class SavingsHelperTest extends TestCase {
                 "somePlace"));
        Assert.assertEquals(getDate("30/06/2008"), interestPostingDate);
     }
-    
+
     protected Date getDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         return format.parse(date);

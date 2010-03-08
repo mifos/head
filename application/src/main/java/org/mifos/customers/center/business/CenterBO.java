@@ -53,17 +53,17 @@ import org.mifos.security.util.UserContext;
 public class CenterBO extends CustomerBO {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
-    
+
     /*
      * Injected Persistence classes
-     * 
+     *
      * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     * 
+     *
      * The Persistence classes below are used by this class and can be injected
      * via a setter for testing purposes. In order for this mechanism to work
      * correctly, the getter must be used to access them because the getter will
      * initialize the Persistence class if it has not been injected.
-     * 
+     *
      * Long term these references to Persistence classes should probably be
      * eliminated.
      */
@@ -89,7 +89,7 @@ public class CenterBO extends CustomerBO {
 
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal constructor for builder
      */
     public CenterBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,

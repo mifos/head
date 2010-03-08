@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.client;
 
 import org.mifos.framework.util.DbUnitUtilities;
@@ -54,7 +54,7 @@ public class ClientTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
@@ -68,54 +68,54 @@ public class ClientTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientAndChangeStatusTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 "acceptance_small_003_dbunit.xml.zip",
-                dataSource, selenium);   
-        
+                dataSource, selenium);
+
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
 
         ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
-        
+
         clientsAndAccountsPage.changeCustomerStatus(clientDetailsPage);
     }
     // implementation of test described in issue 2454
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndEditDetailsTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 "acceptance_small_003_dbunit.xml.zip",
-                dataSource, selenium);        
+                dataSource, selenium);
 
         ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
         ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("Stu1232993852651");
         searchResultsPage.verifyPage();
         ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToSearchResult("Stu1232993852651 Client1232993852651: ID 0002-000000003");
-        
+
         ClientEditMFIPage editMFIPage = clientDetailsPage.navigateToEditMFIPage();
         editMFIPage.verifyPage();
-        
+
         ClientEditMFIParameters params = new ClientEditMFIParameters();
         params.setExternalId("extID123");
         params.setTrainedDateDD("15");
         params.setTrainedDateMM("12");
         params.setTrainedDateYYYY("2008");
-        
-        
+
+
         ClientEditMFIPreviewPage mfiPreviewPage = editMFIPage.submitAndNavigateToClientEditMFIPreviewPage(params);
         mfiPreviewPage.verifyPage();
         clientDetailsPage = mfiPreviewPage.submit();
         assertTextFoundOnPage("extID123");
         assertTextFoundOnPage("15/12/2008");
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups = {"smoke"})
     public void createClientWithCorrectAgeTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 "acceptance_small_003_dbunit.xml.zip",
-                dataSource, selenium);   
+                dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -123,10 +123,10 @@ public class ClientTest extends UiTestCaseBase {
         CreateClientEnterMfiDataPage nextPage=clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithMoreThanMaximumAgeTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 "acceptance_small_003_dbunit.xml.zip",
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
@@ -136,10 +136,10 @@ public class ClientTest extends UiTestCaseBase {
         CreateClientEnterPersonalDataPage nextPage=clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithLessThanMinimumAgeTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 "acceptance_small_003_dbunit.xml.zip",
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
@@ -149,6 +149,6 @@ public class ClientTest extends UiTestCaseBase {
         CreateClientEnterPersonalDataPage nextPage=clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
-    
- 
+
+
 }

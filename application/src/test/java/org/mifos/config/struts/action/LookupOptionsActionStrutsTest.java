@@ -114,9 +114,9 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testLoad() throws Exception {
-        // Required for resetting the label cache 
+        // Required for resetting the label cache
         MifosConfiguration.getInstance().init();
-        
+
         setRequestPathInfo("/lookupOptionsAction.do");
         addRequestParameter("method", "load");
         performNoErrors();

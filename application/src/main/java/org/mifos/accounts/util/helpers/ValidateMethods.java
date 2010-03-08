@@ -28,7 +28,7 @@ public class ValidateMethods {
 
     /***
      * This method checks if a particuar value is either null or blank
-     * 
+     *
      * @param value
      *            the value that has to be checked as to whether it is null or
      *            blank

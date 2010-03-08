@@ -269,5 +269,5 @@ public interface CustomerConstants {
     public static final String AMOUNT_OF_LOAN_KEY = "label.amountofloanLabel";
     public static final String INTEREST_PAID_KEY = "Customer.History.InterestPaid";
     public static final String TOTAL_AMOUNT_PAID_KEY = "label.totalamountpaidLabel";
-    
+
 }

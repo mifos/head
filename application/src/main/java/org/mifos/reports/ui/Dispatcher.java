@@ -38,7 +38,7 @@ public class Dispatcher extends HttpServlet {
     /**
      * HTTP status to send when we are redirecting from a POST which creates a
      * resource to the URL of that new resource.
-     * 
+     *
      * RFC2616 seems to say 201 ("created") is the right status for this. But
      * with Firefox 2.0.0.1, 201 didn't seem to work (I think it was ignoring
      * the Location header). So we'll stick with the 303; that seems appropriate

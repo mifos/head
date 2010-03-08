@@ -37,7 +37,7 @@ public class PasswordHashing {
     /**
      * This function will return the hashed password out of the passed string
      * password
-     * 
+     *
      * @param password
      *            password passed by the user
      * @param randomBytes
@@ -63,7 +63,7 @@ public class PasswordHashing {
 
     /**
      * This function verifies a given password
-     * 
+     *
      */
     public boolean verifyPassword(String password, byte[] encPassword) {
         byte[] randomBytes = new byte[12];
@@ -81,7 +81,7 @@ public class PasswordHashing {
 
     /**
      * This function create the hashed password
-     * 
+     *
      */
     public byte[] createEncryptedPassword(String password) {
         byte[] randomBytes = generateRandomBytes();
@@ -98,7 +98,7 @@ public class PasswordHashing {
 
     /**
      * Hepler function which compare two hashed password
-     * 
+     *
      * @param encPassword
      * @param decPassword
      * @return boolean compare result
@@ -112,7 +112,7 @@ public class PasswordHashing {
 
     /**
      * This function generate and returns the random no of bytes
-     * 
+     *
      * @return randomBytes
      */
     public byte[] generateRandomBytes() {

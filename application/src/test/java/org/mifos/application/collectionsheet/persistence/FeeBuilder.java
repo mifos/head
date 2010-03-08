@@ -35,30 +35,30 @@ import org.mifos.framework.util.helpers.Money;
  *
  */
 public class FeeBuilder {
-    
+
     private final GLCodeEntity feeGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
     private final MeetingBuilder meetingPeriodicity = new MeetingBuilder().periodicFeeMeeting().weekly().every(1);
     private final FeeFrequencyType feeFrequencyType = FeeFrequencyType.PERIODIC;
     private String name = "weekly-client-periodic-fee";
     private FeeCategory category = FeeCategory.CLIENT;
     private Money feeAmount = new Money(TestUtils.RUPEE, "12.5");
-    
+
     private final Date createdDate = new DateTime().minusDays(14).toDate();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private OfficeBO office;
-    
+
     public AmountFeeBO build() {
-        
+
         final AmountFeeBO fee = new AmountFeeBO(feeAmount, name, category, feeFrequencyType, feeGLCode,
                 meetingPeriodicity.build(), office, createdDate, createdByUserId);
         return fee;
     }
-    
+
     public FeeBuilder appliesToAllCustomers() {
         this.category = FeeCategory.ALLCUSTOMERS;
         return this;
     }
-    
+
     public FeeBuilder appliesToCenterOnly() {
         this.category = FeeCategory.CENTER;
         return this;
@@ -73,7 +73,7 @@ public class FeeBuilder {
         this.category = FeeCategory.CLIENT;
         return this;
     }
-    
+
     public FeeBuilder withFeeAmount(final String withFeeAmount) {
         this.feeAmount = new Money(TestUtils.RUPEE, withFeeAmount);
         return this;
@@ -83,7 +83,7 @@ public class FeeBuilder {
         this.name = withName;
         return this;
     }
-    
+
     public FeeBuilder withSameRecurrenceAs(final MeetingBO meeting) {
         this.meetingPeriodicity.withSameRecurrenceAs(meeting);
         return this;

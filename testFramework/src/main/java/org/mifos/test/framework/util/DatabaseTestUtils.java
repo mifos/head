@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.framework.util;
 
 import java.io.BufferedWriter;
@@ -49,7 +49,7 @@ public class DatabaseTestUtils {
     // This method takes a variable number of String arguments - the names of the tables to clear.
     // Note: to avoid database constraint violations, list tables in reverse order you want them to be cleared.
     @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // test method doesn't need performance optimization yet
-    public void deleteDataFromTables(DriverManagerDataSource dataSource, String...tableNames) 
+    public void deleteDataFromTables(DriverManagerDataSource dataSource, String...tableNames)
     throws IOException, DataSetException, SQLException, DatabaseUnitException {
         StringBuffer dataSet = new StringBuffer();
         dataSet.append("<dataset>");
@@ -72,7 +72,7 @@ public class DatabaseTestUtils {
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     //Rationale: You cannot define new local variables in the try block because the finally block must reference it.
-    public void cleanAndInsertDataSet(String xmlString, DriverManagerDataSource dataSource) 
+    public void cleanAndInsertDataSet(String xmlString, DriverManagerDataSource dataSource)
                     throws IOException, DataSetException, SQLException, DatabaseUnitException {
         StringReader dataSetXmlStream = new StringReader(xmlString);
         IDataSet dataSet = new FlatXmlDataSet(dataSetXmlStream);
@@ -81,7 +81,7 @@ public class DatabaseTestUtils {
 
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     //Rationale: You cannot define new local variables in the try block because the finally block must reference it.
-    public void cleanAndInsertDataSetWithColumnSensing(String xmlString, DriverManagerDataSource dataSource) 
+    public void cleanAndInsertDataSetWithColumnSensing(String xmlString, DriverManagerDataSource dataSource)
                     throws IOException, DataSetException, SQLException, DatabaseUnitException {
         IDataSet dataSet = getXmlDataSet(xmlString);
         cleanAndInsertDataSet(dataSource, dataSet);
@@ -90,7 +90,7 @@ public class DatabaseTestUtils {
     private void cleanAndInsertDataSet(DriverManagerDataSource dataSource,
             IDataSet dataSet) throws DatabaseUnitException, SQLException {
         Connection jdbcConnection = null;
-        ReplacementDataSet replacementDataSet = getDataSetWithNullsReplaced(dataSet);        
+        ReplacementDataSet replacementDataSet = getDataSetWithNullsReplaced(dataSet);
         try {
             jdbcConnection = DataSourceUtils.getConnection(dataSource);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
@@ -104,7 +104,7 @@ public class DatabaseTestUtils {
         }
     }
 
-    /** 
+    /**
      * given an XML string, returns an data set with [null] replaced by actual null objects.
      * @param xmlString
      * @return IDataSet
@@ -124,7 +124,7 @@ public class DatabaseTestUtils {
      * @return replacementDataSet
      */
     public ReplacementDataSet getDataSetWithNullsReplaced(IDataSet dataSet) {
-        ReplacementDataSet replacementDataSet = new ReplacementDataSet(dataSet); 
+        ReplacementDataSet replacementDataSet = new ReplacementDataSet(dataSet);
         replacementDataSet.addReplacementObject("[null]", null);
         return replacementDataSet;
     }
@@ -140,7 +140,7 @@ public class DatabaseTestUtils {
         }
         return tempFile;
     }
-    
+
     /**
      * Verify that a database table matches a dataSet table. dataSetXml must be formatted as a DBUnit
      * xml dataset. This method can be safely invoked inside a Spring-managed transaction.
@@ -161,7 +161,7 @@ public class DatabaseTestUtils {
             ITable actualTable = databaseDataSet.getTable(tableName);
             IDataSet expectedDataSet = new FlatXmlDataSet(dataSetXmlStream);
             ITable expectedTable = expectedDataSet.getTable(tableName);
-            Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] { "id" });   
+            Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] { "id" });
         }
         finally {
             if (null != jdbcConnection) {
@@ -169,12 +169,12 @@ public class DatabaseTestUtils {
             }
             DataSourceUtils.releaseConnection(jdbcConnection, dataSource);
         }
-    }    
-    
+    }
+
     /**
-     * Return the current contents of the specified tables as a DBUnit dataset as XML string. 
+     * Return the current contents of the specified tables as a DBUnit dataset as XML string.
      * This method can be invoked safely inside a Spring-managed transaction.
-     * 
+     *
      * @param dataSource
      * @param tableNames variable parameter list of table names
      * @return XML string containing the current contents of the specified tables
@@ -185,13 +185,13 @@ public class DatabaseTestUtils {
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     //Rationale: You cannot define new local variables in the try block because the finally block must reference it.
-    public String saveTables(DriverManagerDataSource dataSource, String...tableNames) 
+    public String saveTables(DriverManagerDataSource dataSource, String...tableNames)
                     throws IOException, DataSetException, SQLException, DatabaseUnitException {
         Connection jdbcConnection = null;
         try {
             jdbcConnection = DataSourceUtils.getConnection(dataSource);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            FlatXmlDataSet.write(new DatabaseConnection(jdbcConnection).createDataSet(tableNames), 
+            FlatXmlDataSet.write(new DatabaseConnection(jdbcConnection).createDataSet(tableNames),
                                  stream);
             return stream.toString();
         }

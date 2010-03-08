@@ -54,12 +54,12 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     private String flowKey;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
-        
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -172,7 +172,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
-    
+
 
     public void testLoadForClient() {
         createInitialObjects();
@@ -489,7 +489,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
                 .get(CenterBO.class, new Integer(center.getCustomerId())));
        Assert.assertEquals(1, center.getCustomerNotes().size());
     }
-    
+
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);

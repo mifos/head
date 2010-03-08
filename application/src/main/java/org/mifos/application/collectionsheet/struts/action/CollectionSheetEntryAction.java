@@ -173,7 +173,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     /**
      * This method retrieves the last meeting date for the chosen customer. This meeting date is put as the default date
      * for the transaction date in the search criteria
-     * 
+     *
      */
     @TransactionDemarcate(joinToken = true)
     public ActionForward getLastMeetingDateForCustomer(final ActionMapping mapping, final ActionForm form,
@@ -285,11 +285,11 @@ public class CollectionSheetEntryAction extends BaseAction {
          * Visit CREATESUCCESS if user entered data that breaks business rules, such as withdrawing more than the total
          * amount in a savings account. Is this intended? It seems like we wouldn't want to even call
          * saveCollectionSheet if business rules were violated in this manner.
-         * 
+         *
          * JohnW: Yes it is intended. The collection sheet logic 'does what it can' in terms of updating accounts. It
          * allows for accounts with no issues to be persisted while building up error lists (warning lists really) for
          * accounts that have problems (including breaking business rules) preventing them being persisted.
-         * 
+         *
          * So, in summary, what happens is, although "saveCollectionSheet" is called, part of the responsibility of the
          * "saveCollectionSheet" process is to identify for each account if rules are broken. Only accounts that 'pass'
          * are saved, the others are identified so that a warning message can be shown.

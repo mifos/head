@@ -148,8 +148,8 @@ public class LocalizationConverter {
         DoubleConversionResult result = new DoubleConversionResult();
         if (doubleStr == null) {
             List<ConversionError> errors = new ArrayList<ConversionError>();
-            errors.add(ConversionError.CONVERSION_ERROR);   
-            result.setErrors(errors);       
+            errors.add(ConversionError.CONVERSION_ERROR);
+            result.setErrors(errors);
             return result;
         }
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
@@ -164,7 +164,7 @@ public class LocalizationConverter {
         } catch (Exception ex) {
             // after all the checkings this is not likely to happen, but just in
             // case
-            result.getErrors().add(ConversionError.CONVERSION_ERROR);            
+            result.getErrors().add(ConversionError.CONVERSION_ERROR);
         }
         return result;
     }
@@ -173,7 +173,7 @@ public class LocalizationConverter {
         DoubleConversionResult result = new DoubleConversionResult();
         if (doubleStr == null) {
             List<ConversionError> errors = new ArrayList<ConversionError>();
-            errors.add(ConversionError.CONVERSION_ERROR);   
+            errors.add(ConversionError.CONVERSION_ERROR);
             result.setErrors(errors);
             return result;
         }
@@ -191,7 +191,7 @@ public class LocalizationConverter {
             } else
                 result.setDoubleValue(interest);
         } catch (Exception ex) {
-            result.getErrors().add(ConversionError.CONVERSION_ERROR);            
+            result.getErrors().add(ConversionError.CONVERSION_ERROR);
         }
         return result;
     }
@@ -340,5 +340,5 @@ public class LocalizationConverter {
             return new SimpleDateFormat(((SimpleDateFormat) dateFormat).toPattern().replace("yy", "yyyy"), dateLocale);
         return dateFormat;
     }
-     
+
 }

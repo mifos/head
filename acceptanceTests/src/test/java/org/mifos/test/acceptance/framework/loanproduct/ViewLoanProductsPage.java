@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.loanproduct;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -29,7 +29,7 @@ public class ViewLoanProductsPage extends MifosPage {
     public ViewLoanProductsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public ViewLoanProductsPage verifyPage() {
         verifyPage("ViewEditLoanProduct");
         return this;
@@ -39,7 +39,7 @@ public class ViewLoanProductsPage extends MifosPage {
         selenium.click("link=" + loanProduct + "*");
         waitForPageToLoad();
         return new LoanProductDetailsPage(selenium);
-  
+
     }
 
 }

@@ -46,7 +46,7 @@ public class MeetingDetailsEntity extends PersistentObject {
     private MeetingRecurrenceEntity meetingRecurrence;
 
     private final MeetingBO meeting;
-    
+
     protected MeetingDetailsEntity() {
         detailsId = null;
         recurrenceType = null;

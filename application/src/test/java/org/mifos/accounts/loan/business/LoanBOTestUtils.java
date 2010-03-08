@@ -78,13 +78,13 @@ public class LoanBOTestUtils {
      * change the repayment schedule, it leaves the loan in an inconsistent
      * state, which leads one to suspect the validity of any of the 67 unit
      * tests that use it.
-     * 
+     *
      * It has been verified that setActionDate method calls in the loop below
      * will set the dates of the installments incorrectly for some if not all
      * cases. For certain classes of tests this doesn't matter, but for others
      * (involving verifying dates) it does. So BEWARE if you call down through
      * this method.
-     * 
+     *
      * @param globalNum
      *            Currently ignored (TODO: remove it or honor it)
      */
@@ -136,7 +136,7 @@ public class LoanBOTestUtils {
         setLoanSummary(loan, currency);
         return loan;
     }
-    
+
     public static LoanBO createIndividualLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state,
             final Date startDate, final LoanOfferingBO loanOfering) {
         Calendar calendar = new GregorianCalendar();
@@ -178,12 +178,12 @@ public class LoanBOTestUtils {
         setLoanSummary(loan, TestUtils.RUPEE);
         return loan;
     }
-    
+
     /**
      * Like
      * {@link #createLoanAccount(String, CustomerBO, AccountState, Date, LoanOfferingBO)}
      * but differs in various ways.
-     * 
+     *
      * Note: the manipulation done in this method looks very suspicious and
      * possibly wrong. Tests that use this method should be considered as
      * suspect.
@@ -318,7 +318,7 @@ public class LoanBOTestUtils {
         setLoanSummary(loan, currency);
         return loan;
     }
-    
+
     /**
      * This method is an attempt to fix some of what is wrong in the
      * createLoanAccount method below. This method has been created late in the
@@ -349,7 +349,7 @@ public class LoanBOTestUtils {
 
         return loan;
     }
-    
+
     public static void setFeeAmountPaid(final AccountFeesActionDetailEntity accountFeesActionDetailEntity, final Money feeAmountPaid) {
         ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).setFeeAmountPaid(feeAmountPaid);
     }
@@ -361,24 +361,24 @@ public class LoanBOTestUtils {
     public static void setDisbursementDate(final AccountBO account, final Date disbursementDate) {
         ((LoanBO) account).setDisbursementDate(disbursementDate);
     }
-    
+
     private static void setLoanSummary(final LoanBO loan, final MifosCurrency currency) {
         LoanSummaryEntity loanSummary = loan.getLoanSummary();
         loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
         loanSummary.setOriginalInterest(new Money(currency, "36.0"));
     }
-    
+
     public static void modifyDisbursementDate(final LoanBO loan, final Date disbursementDate) {
         loan.setDisbursementDate(disbursementDate);
     }
-    
+
     /**
      * FIXME: Only called from {@link HolidayUtilsIntegrationTest}. We should
      * not have one test depending on another.
      */
     public LoanScheduleEntity[] createLoanRepaymentSchedule() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
-        AccountBO accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3, 
+        AccountBO accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3,
                 TestUtils.createMoney("20"), TestUtils.createMoney("30"));
 
         Set<AccountActionDateEntity> intallments = accountBO.getAccountActionDates();
@@ -402,7 +402,7 @@ public class LoanBOTestUtils {
 
         return paymentsArray;
     }
-    
+
     public static LoanScheduleEntity[] getSortedAccountActionDateEntity(
             final Set<AccountActionDateEntity> actionDateCollection) {
 
@@ -414,7 +414,7 @@ public class LoanBOTestUtils {
 
         return sortedList;
     }
-    
+
     private AccountBO getLoanAccountWithMiscFeeAndPenalty(final AccountState state, final Date startDate, final int disbursalType,
             final Money miscFee, final Money miscPenalty) {
         LoanBO accountBO = getLoanAccount(state, startDate, disbursalType);
@@ -433,7 +433,7 @@ public class LoanBOTestUtils {
         testObjectPersistence.update(accountBO);
         return testObjectPersistence.getObject(LoanBO.class, accountBO.getAccountId());
     }
-    
+
     private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -443,7 +443,7 @@ public class LoanBOTestUtils {
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
     }
-    
+
     public static LoanScheduleEntity[] getSortedAccountActionDateEntity(
             final Set<AccountActionDateEntity> actionDateCollection, final int expectedCount) {
 
@@ -457,7 +457,7 @@ public class LoanBOTestUtils {
 
         return sortedList;
     }
-    
+
     public static void modifyData(final LoanScheduleEntity accntActionDate, final Money penalty, final Money penaltyPaid,
             final Money miscPenalty, final Money miscPenaltyPaid, final Money miscFee, final Money miscFeePaid, final Money principal,
             final Money principalPaid, final Money interest, final Money interestPaid) {

@@ -145,7 +145,7 @@ public class AccountPersistence extends Persistence {
         queryParameters.put("DATE", date.toString());
         List<Integer> customerIds = executeNamedQuery("getActiveCustomerAccountIdsForGenerateMeetingsTask", queryParameters);
         List<Integer> savingsIds = executeNamedQuery("getActiveSavingsAccountIdsForGenerateMeetingsTask", queryParameters);
-        
+
         customerIds.addAll(savingsIds);
         return customerIds;
     }

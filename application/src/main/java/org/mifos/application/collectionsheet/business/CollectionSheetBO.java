@@ -45,7 +45,7 @@ import org.mifos.framework.exceptions.SystemException;
 
 /**
  * @deprecated collection sheets not used as a domain concept.
- * 
+ *
  * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated
@@ -235,12 +235,12 @@ public class CollectionSheetBO extends BusinessObject {
 
     /**
      * Populates customer, customer account, loan and savings details
-     * 
+     *
      * This is achieved by retrieving customer objects from the list
      * accountActionDates passed as parameter, also if the account associated
      * with that item of accountActionDates is a CustomerAccount it populates
      * the relevant details from that object like fees , misc penalty etc.
-     * 
+     *
      * @throws ApplicationException
      * @throws SystemException
      */

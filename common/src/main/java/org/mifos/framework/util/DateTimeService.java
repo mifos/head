@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util;
 
 import java.util.Date;
@@ -34,9 +34,9 @@ public class DateTimeService {
 
     public void setCurrentDateTime(DateTime someDateTime) {
         resetToCurrentSystemDateTime();
-        DateTimeUtils.setCurrentMillisOffset(someDateTime.getMillis() - new DateTime().getMillis());        
+        DateTimeUtils.setCurrentMillisOffset(someDateTime.getMillis() - new DateTime().getMillis());
     }
-    
+
     public void resetToCurrentSystemDateTime() {
         DateTimeUtils.setCurrentMillisSystem();
     }
@@ -46,7 +46,7 @@ public class DateTimeService {
     }
 
     public void setCurrentDateTimeFixed(DateTime dateTime) {
-        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());        
+        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
     }
 
     public java.sql.Date getCurrentJavaSqlDate() {

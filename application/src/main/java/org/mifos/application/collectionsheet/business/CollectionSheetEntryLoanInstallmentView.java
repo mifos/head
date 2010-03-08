@@ -49,7 +49,7 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
     private final Money miscPenaltyPaid;
 
     private List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions;
-    
+
     private final MifosCurrency currency;
 
     public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId, Short installmentId,

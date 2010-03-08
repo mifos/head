@@ -73,7 +73,7 @@ public class ConfigurationPersistence extends Persistence {
      * Lookup an integer valued, persistent configuration key-value pair based
      * on the key. This is intended to be more of a helper method than to be
      * used directly.
-     * 
+     *
      * @return if the key is found return the corresponding
      *         ConfigurationKeyValueInteger, if not then return null.
      */
@@ -87,7 +87,7 @@ public class ConfigurationPersistence extends Persistence {
 
     /**
      * Lookup a known persistent integer configuration value.
-     * 
+     *
      * @throws RuntimeException
      *             thrown if no value is found for the key.
      */

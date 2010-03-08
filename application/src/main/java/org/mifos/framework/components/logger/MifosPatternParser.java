@@ -40,7 +40,7 @@ public class MifosPatternParser extends PatternParser {
 
     /**
      * Constructor: Passes the pattern string to the superclass PatternParser
-     * 
+     *
      * @param pattern
      */
     public MifosPatternParser(String pattern) {
@@ -54,7 +54,7 @@ public class MifosPatternParser extends PatternParser {
      * 'C' indicates the class name. The MifosLocationPatternConverter will call
      * the required method based on whether the line number, method name or
      * class name is needed
-     * 
+     *
      * @param c
      *            The specifier
      */

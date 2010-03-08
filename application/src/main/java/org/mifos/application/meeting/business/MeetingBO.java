@@ -75,11 +75,11 @@ public class MeetingBO extends BusinessObject {
      * which uses it. I don't see it being used outside a single method.
      */
     private final GregorianCalendar gc = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
-    
+
     private FiscalCalendarRules fiscalCalendarRules = null;
-        
+
     private MasterPersistence masterPersistence = null;
-    
+
     public FiscalCalendarRules getFiscalCalendarRules() {
         if (fiscalCalendarRules == null) {
             fiscalCalendarRules = new FiscalCalendarRules();
@@ -90,10 +90,10 @@ public class MeetingBO extends BusinessObject {
     public void setFiscalCalendarRules(FiscalCalendarRules fiscalCalendarRules) {
         this.fiscalCalendarRules = fiscalCalendarRules;
     }
-    
+
     public MasterPersistence getMasterPersistence() {
         if (masterPersistence == null) {
-            masterPersistence = new MasterPersistence();            
+            masterPersistence = new MasterPersistence();
         }
         return this.masterPersistence;
     }
@@ -158,7 +158,7 @@ public class MeetingBO extends BusinessObject {
     private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank, final Short recurAfter,
             final Date startDate, final MeetingType meetingType, final String meetingPlace) throws MeetingException {
         this(recurrenceType, dayNumber, weekDay, rank, recurAfter, startDate, meetingType, meetingPlace, new MasterPersistence());
-    }    
+    }
     private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank, final Short recurAfter,
             final Date startDate, final MeetingType meetingType, final String meetingPlace, final MasterPersistence masterPersistence) throws MeetingException {
         setMasterPersistence(masterPersistence);
@@ -545,14 +545,14 @@ public class MeetingBO extends BusinessObject {
 
     /**
      * Set the day of week according to given start day to the require weekday, i.e. so it matches the meeting week day.
-     * 
+     *
      * e.g. - If start date is Monday 9 June 2008 and meeting week day is Tuesday, then roll forward the date to Tuesday
      * 10 June 2008 - or if start date is Sunday 8 June 2008 and meeting week day is Saturday, then roll forward the
      * date to Saturday 14 June 2008 - or if start date is Tuesday 10 2008 June and meeting week day is Monday, then
      * roll forward the date to Monday 16 June 2008 - or if start date is Sunday 8 June 2008 and meeting week day is
      * Sunday, then keep the date as Sunday 8 June 2008 - or if start date is Saturday 7 June 2008 and meeting week day
      * is Sunday, then roll forward the date to Sunday 9 June 2008
-     * 
+     *
      * @deprecated - Please use {@link CalendarUtils#getFirstDateForWeek(Date, int)} instead. Also when generating
      *             schedules please use {@link ScheduledDateGeneration#generateScheduledDates}.
      */
@@ -589,7 +589,7 @@ public class MeetingBO extends BusinessObject {
     /**
      * for monthly on date return the next date falling on the same day. If date has passed, pass in the date of next
      * month, adjust to day number if day number exceed total number of days in month.
-     * 
+     *
      * @deprecated - Please use {@link CalendarUtils#getFirstDateForMonthOnDate()} or
      *             {@link CalendarUtils#getFirstDayForMonthUsingWeekRankAndWeekday} instead. Also when generating
      *             schedules please use {@link ScheduledDateGeneration#generateScheduledDates}.
@@ -661,7 +661,7 @@ public class MeetingBO extends BusinessObject {
     /**
      * for monthly is on date add the number of months after which meeting is to
      * recur, and then adjust the date for day on which meeting is to occur
-     * 
+     *
      * @deprecated - Please use {@link CalendarUtils#getNextDateForMonthOnDate()} or
      *             {@link CalendarUtils#getNextDayForMonthUsingWeekRankAndWeekday} instead.
      */
@@ -852,12 +852,12 @@ public class MeetingBO extends BusinessObject {
     }
 
     /*
-     * Get the start date of the "interval" surrounding a given date 
-     * For example assume March 1 is a Monday and that weeks are defined to start on 
-     * Monday.  If this is a weekly meeting on a Wednesday then the "interval" 
+     * Get the start date of the "interval" surrounding a given date
+     * For example assume March 1 is a Monday and that weeks are defined to start on
+     * Monday.  If this is a weekly meeting on a Wednesday then the "interval"
      * for Wednesday March 10 is the week from Monday March 8 to Sunday March 14,
-     * and this method would return March 8.  
-     */    
+     * and this method would return March 8.
+     */
     public LocalDate startDateForMeetingInterval(LocalDate date) {
         LocalDate startOfMeetingInterval = date;
         if (isWeekly()) {
@@ -871,22 +871,22 @@ public class MeetingBO extends BusinessObject {
         } else {
             // for days we return the same day
             startOfMeetingInterval =  date;
-        }       
+        }
         return startOfMeetingInterval;
     }
-    
+
     public boolean queryDateIsInMeetingIntervalForFixedDate(LocalDate queryDate, LocalDate fixedDate) {
         LocalDate startOfMeetingInterval = startDateForMeetingInterval(fixedDate);
         LocalDate endOfMeetingInterval;
         if (isWeekly()) {
-            endOfMeetingInterval = startOfMeetingInterval.plusWeeks(getRecurAfter());                   
+            endOfMeetingInterval = startOfMeetingInterval.plusWeeks(getRecurAfter());
         } else if (isMonthly()) {
             endOfMeetingInterval = startOfMeetingInterval.plusMonths(getRecurAfter());
         } else {
             // we don't handle meeting intervals in days
             return false;
         }
-        return (queryDate.isEqual(startOfMeetingInterval) || 
+        return (queryDate.isEqual(startOfMeetingInterval) ||
                 queryDate.isAfter(startOfMeetingInterval)) &&
                 queryDate.isBefore(endOfMeetingInterval);
     }

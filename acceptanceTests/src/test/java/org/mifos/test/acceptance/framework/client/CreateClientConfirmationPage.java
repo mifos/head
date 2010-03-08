@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.client;
 
 import com.thoughtworks.selenium.Selenium;
@@ -31,11 +31,11 @@ public class CreateClientConfirmationPage extends MifosPage {
     public CreateClientConfirmationPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
         this.verifyPage("ClientCreationConfirmation");
-    }    
-    
+    }
+
     public String getConfirmation() {
         return selenium.getText("client_creationConfirmation.text.confirmation");
     }

@@ -23,7 +23,7 @@ package org.mifos.calendar;
 import org.joda.time.DateTime;
 
 public interface DateAdjustmentStrategy {
-    
+
     DateTime adjust(DateTime startingFrom);
-    
+
 }

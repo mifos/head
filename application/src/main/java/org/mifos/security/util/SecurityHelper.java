@@ -55,7 +55,7 @@ public class SecurityHelper {
     /**
      * This function is used to retrive the all the activities in the system and
      * the set of roles which includes these activities
-     * 
+     *
      * @return list of ActivityRoles objects
      * @throws HibernateProcessException
      */
@@ -86,7 +86,7 @@ public class SecurityHelper {
     /**
      * This function returns the PersonRoles object which contains the person
      * information and the set of all the roles related to that user
-     * 
+     *
      * @param uid
      *            user id
      * @return PersonRoles
@@ -130,7 +130,7 @@ public class SecurityHelper {
     /**
      * This function is used to get the list of the offices under the given
      * personnel office under any user at any time
-     * 
+     *
      * @param officeid
      *            office id of the person
      * @return List list of the offices under him
@@ -170,7 +170,7 @@ public class SecurityHelper {
      * paert of the security module which keeps the cache of officeid to office
      * search id so that it can find office under given person without going to
      * database every time
-     * 
+     *
      * @return List of OfficeSearch objects which contains office is and
      *         associated searchid
      * @throws HibernateProcessException
@@ -205,7 +205,7 @@ public class SecurityHelper {
      * This function is used to find the leaf activities in the system as those
      * are the actual activities user can perform in the system rest are used
      * for grouping activities only
-     * 
+     *
      * @return List of leafs activity id's
      * @throws HibernateProcessException
      */
@@ -221,7 +221,7 @@ public class SecurityHelper {
     /**
      * Internal helper function used to find the leaf activities this function
      * is once each for the top level activity which has parent as 0
-     * 
+     *
      * @param l
      *            list of activities in the system
      * @param leafs
@@ -239,7 +239,7 @@ public class SecurityHelper {
      * This is internal helper function used to find the childern of the given
      * activity it takes the list of all the activity in the system and find out
      * which are childern of passed activity
-     * 
+     *
      * @param activities
      *            List of Activity objects in the system
      * @param id
@@ -282,7 +282,7 @@ public class SecurityHelper {
      * This function is called recursively for each top level activities in the
      * system till we reach the leafs this is the function where we find the
      * leafs
-     * 
+     *
      * @param l
      *            List of Activity objects in the system
      * @param id

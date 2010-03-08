@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -43,22 +43,22 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
  * </ul>
  */
 public abstract class Schedule {
-    
+
     /**
      * Turn new scheduling code on or off
      */
     public static boolean isNewSchedulingEnabled = false;
-    
+
     protected final Short recurAfter;
     protected final Date startDate;
     protected final Integer numberOfOccurrences;
     protected final Date endDate;
     protected final Boolean adjustForHolidays;
-    
+
     protected List<Date> scheduledDates;
-    
+
     private HolidayBusinessService holidayBusinessService;
-    
+
     public HolidayBusinessService getHolidayBusinessService() {
         return this.holidayBusinessService;
     }
@@ -66,7 +66,7 @@ public abstract class Schedule {
     public void setHolidayBusinessService(HolidayBusinessService holidayBusinessService) {
         this.holidayBusinessService = holidayBusinessService;
     }
-    
+
     public List<Date> getScheduledDates() {
         return this.scheduledDates;
     }
@@ -75,7 +75,7 @@ public abstract class Schedule {
         this.scheduledDates = scheduledDates;
     }
 
-    
+
     public Schedule (Date startDate, Date endDate, Short recurAfter, Integer numberOfOccurrences,
                            Boolean adjustForHolidays) {
         this.recurAfter = recurAfter;
@@ -83,10 +83,10 @@ public abstract class Schedule {
         this.adjustForHolidays = adjustForHolidays;
         this.startDate = startDate;
         this.endDate = endDate;
-        
+
     }
-    
-    
+
+
     public List<Date> getAllDates() {
         List<Date> dates;
         if (adjustForHolidays) {
@@ -96,7 +96,7 @@ public abstract class Schedule {
         }
         return dates;
     }
-    
+
     private List<Date> getAllUnadjustedDates () {
         List<Date> scheduledDates = new ArrayList<Date>();
         Date date = startDate;
@@ -107,12 +107,12 @@ public abstract class Schedule {
         }
         return scheduledDates;
     }
-    
+
     private List<Date> getAllDatesAdjustedForHolidays () {
         if (numberOfOccurrences == 0) {
             return new ArrayList<Date>();
         }
-       
+
         return adjustDatesForHolidays(getAllUnadjustedDates ());
     }
     /**
@@ -138,26 +138,26 @@ public abstract class Schedule {
         }
         return adjustedDates;
     }
-    
+
     private List<Date> adjustDatesWhenFirstDateInNonMoratoriumHoliday
                             (Date firstDate, List<Date> rest, HolidayBO holiday) {
-        
+
         assert firstDate != null;
         assert rest != null;
         assert holiday !=null;
         assert !isInMoratorium(firstDate);
         assert holiday.encloses(firstDate);
-        
+
         List<Date> adjustedDates;
         if (holiday.getRepaymentRuleType().equals(RepaymentRuleTypes.SAME_DAY)) {
             // Same as if no holiday
             adjustedDates = adjustDatesForHolidays(rest);
-            adjustedDates.add(0, firstDate);                    
+            adjustedDates.add(0, firstDate);
         }
         else {
             Date shiftedFirstDate = firstDate;
             do {
-                shiftedFirstDate = shiftDateOnceUsingRepaymentRule 
+                shiftedFirstDate = shiftDateOnceUsingRepaymentRule
                                       (shiftedFirstDate, holiday.getRepaymentRuleType());
             } while (holiday.encloses(shiftedFirstDate) && !isInMoratorium(shiftedFirstDate));
             adjustedDates = adjustDatesForHolidays(makeList(shiftedFirstDate, rest));
@@ -175,13 +175,13 @@ public abstract class Schedule {
         }
         return butFirst;
     }
-    
+
     private List<Date> makeList (Date first, List<Date> rest) {
         List<Date> list = rest;
         list.add(0, first);
         return list;
     }
-    
+
     /**
      * Shift the entire schedule by one recurrence period
      */
@@ -212,7 +212,7 @@ public abstract class Schedule {
         }
         return shiftedDate;
     }
-    
+
 
     protected abstract Date getNextDate(Date startDate);
 
@@ -229,16 +229,16 @@ public abstract class Schedule {
 
     /**
      * Get the closest next scheduled date on or after the given date.
-     * 
+     *
      */
     protected abstract Date getFirstDate(Date startDate);
-    
+
     private boolean isInMoratorium(Date date) {
         return !(holidayBusinessService
                     .getAllPushOutHolidaysContaining(date)
                        .isEmpty());
     }
-    
+
     private Date advanceToWorkingDay (Date day) {
         Date closestWorkingDay = day;
         if (!holidayBusinessService.isWorkingDay(day)) {

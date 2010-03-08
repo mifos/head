@@ -27,7 +27,7 @@ import org.mifos.framework.business.View;
 /**
  * This class represents a {@link MifosLookUpEntity} and its associated list of
  * {@link LookUpValueEntity} objects for a given locale.
- * 
+ *
  * A better name for this class might be ValueListForLocale.
  */
 public class CustomValueList extends View {
@@ -71,7 +71,7 @@ public class CustomValueList extends View {
 
     /**
      * Method which returns the customValueListElements
-     * 
+     *
      * @return Returns the customValueListElements.
      */
     public List<CustomValueListElement> getCustomValueListElements() {
@@ -93,7 +93,7 @@ public class CustomValueList extends View {
 
     /**
      * Method which sets the customValueListElements
-     * 
+     *
      * @param customValueListElements
      *            The customValueListElements to set.
      */
@@ -103,7 +103,7 @@ public class CustomValueList extends View {
 
     /**
      * Method which obtains a particular lookupValue for the given lookup id
-     * 
+     *
      * @param lookUpId the lookup id.
      */
     public String getLookUpValueForId(int lookUpId) {

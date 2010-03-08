@@ -44,7 +44,7 @@ import org.mifos.framework.util.DateTimeService;
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
     private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-    
+
     public GenerateMeetingsForCustomerAndSavingsHelper(final MifosTask mifosTask) {
         super(mifosTask);
     }
@@ -90,9 +90,9 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         int updatedRecordCount = 0;
 
         List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-        
+
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        
+
         try {
             StaticHibernateUtil.getSessionTL();
             StaticHibernateUtil.startTransaction();
@@ -100,7 +100,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 currentRecordNumber++;
                 currentAccountId = accountId;
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
-                
+
                 if (accountBO instanceof CustomerAccountBO) {
                     ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
                     updatedRecordCount++;
@@ -108,7 +108,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                     ((SavingsBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
                     updatedRecordCount++;
                 }
-                
+
                 if (currentRecordNumber % batchSize == 0) {
                     StaticHibernateUtil.flushAndClearSession();
                     getLogger().debug("completed HibernateUtil.flushAndClearSession()");
@@ -137,7 +137,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                     + " ms";
             System.out.println(message);
             getLogger().info(message);
-            
+
 
         } catch (Exception e) {
             getLogger().info("account " + currentAccountId.intValue() + " exception " + e.getMessage());

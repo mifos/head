@@ -103,7 +103,7 @@ public class ProcessFlowRules {
      * and in the config file, determine if it is necessary to override the
      * value stored in the database. Uses logic similar to ClientRules: override
      * is necessary when flag in db is false and flag in config file is true.
-     * 
+     *
      * @throws ConfigurationException
      *             if an invalid override is specified. Will not be thrown if
      *             arguments pass {@link #isValidOverride(boolean, boolean)}.

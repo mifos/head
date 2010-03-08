@@ -40,11 +40,11 @@ public class CollectionSheetCustomerSavingDtoTest {
 
         // exercise test
         final Double totalRepayment = customerSavingsDto.getTotalDepositAmount();
-        
+
         // verification
         assertThat(totalRepayment, is(Double.valueOf("0.0")));
     }
-    
+
     @Test
     public void shouldHaveATotalDepositOfZeroWhenDepositsDueAndPaidAreNull() {
         // setup

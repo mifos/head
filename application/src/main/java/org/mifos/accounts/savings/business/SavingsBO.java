@@ -177,7 +177,7 @@ public class SavingsBO extends AccountBO {
 
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal constructor for builder
      */
     public SavingsBO(final SavingsOfferingBO savingsProduct, final SavingsType savingsType,
@@ -910,7 +910,7 @@ public class SavingsBO extends AccountBO {
     }
 
     public void generateAndUpdateDepositActionsForClient(final ClientBO client, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
-        
+
         if (client.getCustomerMeeting().getMeeting() != null) {
             if (!(getCustomer().getLevel() == CustomerLevel.GROUP && getRecommendedAmntUnit().getId().equals(
                     RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
@@ -946,7 +946,7 @@ public class SavingsBO extends AccountBO {
     }
 
     private void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting, final List<Days> workingDays, final List<Holiday> holidays) {
-        
+
         DateTime startingFromtoday = new DateTime().toDateMidnight().toDateTime();
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
@@ -954,7 +954,7 @@ public class SavingsBO extends AccountBO {
                 holidays);
 
         List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFromtoday, scheduledEvent);
-        
+
         short installmentNumber = 1;
         for (DateTime date : depositDates) {
             AccountActionDateEntity actionDate = helper.createActionDateObject(this, customer, installmentNumber++,
@@ -967,13 +967,13 @@ public class SavingsBO extends AccountBO {
 
     private void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting,
             final AccountActionDateEntity lastInstallment, final List<Days> workingDays, final List<Holiday> holidays) {
-        
+
         DateTime startFromDayAfterLastKnownInstallmentDate = new DateTime(lastInstallment.getActionDate()).plusDays(1);
-        
+
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays);
         List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
-        
+
         short installmentNumber = lastInstallment.getInstallmentId();
         for (DateTime depositDate : depositDates) {
             AccountActionDateEntity actionDate = helper.createActionDateObject(this, customer, ++installmentNumber, depositDate.toDate(),
@@ -1223,11 +1223,11 @@ public class SavingsBO extends AccountBO {
 
     @Override
     protected void activationDateHelper(final Short newStatusId) throws AccountException {
-        
+
         // FIXME - keithw - pass in this info to method
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> holidays = new ArrayList<Holiday>();
-        
+
         if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
             if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PENDINGAPPROVAL
                     && newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
@@ -1803,9 +1803,9 @@ public class SavingsBO extends AccountBO {
      * PaymentStatus.UNPAID.getValue())) { totalAmount = totalAmount
      * .add(((SavingsScheduleEntity) accntActionDate) .getTotalDepositDue()); }
      * } }
-     * 
+     *
      * return totalAmount; }
-     * 
+     *
      * public Money getTotalAmountDueForNextInstallment() {
      * AccountActionDateEntity nextAccountAction =
      * getDetailsOfNextInstallment(); if (nextAccountAction != null) return
@@ -1877,14 +1877,14 @@ public class SavingsBO extends AccountBO {
 
     @Override
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
-        
+
         if (!this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CANCEL)
                 && !this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED)) {
-        
+
             MeetingBO customerMeeting  = getCustomer().getCustomerMeetingValue();
             DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
-                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();            
-            
+                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
+
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
                     holidays);
@@ -1892,7 +1892,7 @@ public class SavingsBO extends AccountBO {
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
                     startFromMeetingDate, scheduledEvent);
-            
+
             if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                     || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
                     && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
@@ -1927,7 +1927,7 @@ public class SavingsBO extends AccountBO {
             installmentId++;
         }
     }
-    
+
     public Money getTotalPaymentDue(final Integer customerId) {
         return isMandatory() ? getTotalPaymentDueForManAccount(customerId)
                 : getTotalPaymentDueForVolAccount(customerId);
@@ -1999,14 +1999,14 @@ public class SavingsBO extends AccountBO {
     public void generateNextSetOfMeetingDates(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
         CustomerBO customerBO = getCustomer();
         if (customerBO.getCustomerMeeting() != null && customerBO.getCustomerMeeting().getMeeting() != null) {
-            
+
             MeetingBO depositSchedule = customerBO.getCustomerMeeting().getMeeting();
-            
+
             Date oldMeetingDate = depositSchedule.getStartDate();
             Short lastInstallmentId = getLastInstallmentId();
             AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
             depositSchedule.setMeetingStartDate(lastInstallment.getActionDate());
-            
+
             if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                     || customerBO.getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
                     && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
@@ -2080,7 +2080,7 @@ public class SavingsBO extends AccountBO {
 
         return customerSchedulePayments;
     }
-    
+
     /*
      * In order to do audit logging, we need to get the name of the PaymentTypeEntity.
      * A new instance constructed with the paymentTypeId is not good enough for this,
@@ -2090,9 +2090,9 @@ public class SavingsBO extends AccountBO {
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return (PaymentTypeEntity)getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
-    
+
     @Override
     public MeetingBO getMeetingForAccount() {
         return getCustomer().getCustomerMeetingValue();
-    }        
+    }
 }

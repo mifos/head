@@ -19,9 +19,9 @@ public class ClientNotesPage extends MifosPage {
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
     }
-    
+
     public void verifyTextOnPage(String testNote) {
         Assert.assertTrue(selenium.isTextPresent(testNote));
-        
+
     }
 }

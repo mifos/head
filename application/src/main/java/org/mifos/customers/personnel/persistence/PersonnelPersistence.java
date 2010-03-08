@@ -303,7 +303,7 @@ public class PersonnelPersistence extends Persistence {
             }
         });
     }
-    
+
     private List<Param> getParamList(PersonnelBO personnel) {
         List<Param> paramList = new ArrayList<Param>();
         paramList.add(typeNameValue("String", "SEARCH_ALL", personnel.getOffice().getSearchId() + "%"));

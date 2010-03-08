@@ -170,7 +170,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
         // TODO: performance history will only work if all accounts use the default (or same?) currency
         return Money.getDefaultCurrency();
     }
-    
+
     public Integer getLoanCycleNumber() {
         Integer loanCount = 0;
         for (LoanCounter loanCounter : getLoanCounters()) {
@@ -194,7 +194,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
             if (accountBO.isLoanAccount() && ((LoanBO) accountBO).isAccountActive()) {
                 Money totalPrincipalAmountInArrears = ((LoanBO) accountBO).getTotalPrincipalAmountInArrears();
                 if (amountOverDue == null) {
-                    amountOverDue = totalPrincipalAmountInArrears; 
+                    amountOverDue = totalPrincipalAmountInArrears;
                 } else {
                     amountOverDue = amountOverDue.add(totalPrincipalAmountInArrears);
                 }

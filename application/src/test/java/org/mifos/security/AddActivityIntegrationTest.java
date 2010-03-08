@@ -52,14 +52,14 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     public AddActivityIntegrationTest() throws Exception {
         super();
     }
-    
+
     private Session session;
-    
+
     @Override
     public void setUp() {
-        session = StaticHibernateUtil.getSessionTL(); 
+        session = StaticHibernateUtil.getSessionTL();
     }
-    
+
     @Override
     public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
@@ -90,7 +90,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         upgrade.upgrade(session.connection());
 
         MifosConfiguration.getInstance().init();
-        session = StaticHibernateUtil.getSessionTL(); 
+        session = StaticHibernateUtil.getSessionTL();
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
 
        Assert.assertEquals("Can use the executive washroom", fetched.getActivityName());

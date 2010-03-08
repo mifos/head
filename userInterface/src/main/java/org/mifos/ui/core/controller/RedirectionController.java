@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.ui.core.controller;
 
 import java.io.IOException;
@@ -36,10 +36,10 @@ import org.springframework.web.servlet.mvc.Controller;
 public class RedirectionController implements Controller {
     private static final Log LOG = LogFactory.getLog(RedirectionController.class);
 	private String viewToRedirectTo = "";
-	
+
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	
+
         LOG.info("In RedirectionController.");
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("response", response);

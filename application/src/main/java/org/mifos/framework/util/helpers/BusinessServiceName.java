@@ -38,7 +38,7 @@ import org.mifos.framework.components.audit.business.service.AuditBusinessServic
 
 /**
  * This class is @deprecated.
- * 
+ *
  * Instead of calling
  * </b>ServiceFactory#getBusinessService(BusinessServiceName)</b>, just call the
  * constructor of the business service directly. for example, new

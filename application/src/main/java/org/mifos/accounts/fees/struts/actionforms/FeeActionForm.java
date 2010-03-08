@@ -53,7 +53,7 @@ public class FeeActionForm extends BaseActionForm {
     private String feeFrequencyType;
 
     private String feeRecurrenceType;
-    
+
     private Short currencyId;
 
     private String amount;

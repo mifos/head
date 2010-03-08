@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -35,11 +35,11 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
  *
  */
 class WeeklySchedule extends Schedule {
-    
+
     private HolidayBusinessService holidayBusinessService;
- 
+
     private final WeekDay dayOfWeek;
-   
+
     public HolidayBusinessService getHolidayBusinessService() {
         return this.holidayBusinessService;
     }
@@ -47,13 +47,13 @@ class WeeklySchedule extends Schedule {
     public void setHolidayBusinessService(HolidayBusinessService holidayBusinessService) {
         this.holidayBusinessService = holidayBusinessService;
     }
-    
+
     public WeeklySchedule (Date startDate, Date endDate, Short recurAfter, WeekDay dayOfWeek, Integer numberOfOccurrences,
                            Boolean adjustForHolidays) {
         super(startDate, endDate, recurAfter, numberOfOccurrences, adjustForHolidays);
         this.dayOfWeek = dayOfWeek;
     }
-    
+
     public List<Date> getAllDates() {
         List<Date> dates;
         if (adjustForHolidays) {
@@ -63,7 +63,7 @@ class WeeklySchedule extends Schedule {
         }
         return dates;
     }
-    
+
     private List<Date> getAllUnadjustedDates () {
         List<Date> scheduledDates = new ArrayList<Date>();
         Date date = startDate;
@@ -74,12 +74,12 @@ class WeeklySchedule extends Schedule {
         }
         return scheduledDates;
     }
-    
+
     private List<Date> getAllDatesAdjustedForHolidays () {
         if (numberOfOccurrences == 0) {
             return new ArrayList<Date>();
         }
-       
+
         return adjustDatesForHolidays(getAllUnadjustedDates ());
     }
     /**
@@ -105,26 +105,26 @@ class WeeklySchedule extends Schedule {
         }
         return adjustedDates;
     }
-    
+
     private List<Date> adjustDatesWhenFirstDateInNonMoratoriumHoliday
                             (Date firstDate, List<Date> rest, HolidayBO holiday) {
-        
+
         assert firstDate != null;
         assert rest != null;
         assert holiday !=null;
         assert !isInMoratorium(firstDate);
         assert holiday.encloses(firstDate);
-        
+
         List<Date> adjustedDates;
         if (holiday.getRepaymentRuleType().equals(RepaymentRuleTypes.SAME_DAY)) {
             // Same as if no holiday
             adjustedDates = adjustDatesForHolidays(rest);
-            adjustedDates.add(0, firstDate);                    
+            adjustedDates.add(0, firstDate);
         }
         else {
             Date shiftedFirstDate = firstDate;
             do {
-                shiftedFirstDate = shiftDateOnceUsingRepaymentRule 
+                shiftedFirstDate = shiftDateOnceUsingRepaymentRule
                                       (shiftedFirstDate, holiday.getRepaymentRuleType());
             } while (holiday.encloses(shiftedFirstDate) && !isInMoratorium(shiftedFirstDate));
             adjustedDates = adjustDatesForHolidays(makeList(shiftedFirstDate, rest));
@@ -142,13 +142,13 @@ class WeeklySchedule extends Schedule {
         }
         return butFirst;
     }
-    
+
     private List<Date> makeList (Date first, List<Date> rest) {
         List<Date> list = rest;
         list.add(0, first);
         return list;
     }
-    
+
     /**
      * Shift the entire schedule by one recurrence period
      */
@@ -179,7 +179,7 @@ class WeeklySchedule extends Schedule {
         }
         return shiftedDate;
     }
-    
+
 
 
     protected Date getNextDateForWeek(Date startDate) {
@@ -203,7 +203,7 @@ class WeeklySchedule extends Schedule {
     /**
      * Set the day of week according to given start day to the require weekday,
      * i.e. so it matches the schedule's day of the week.
-     * 
+     *
      * <p>Sample scenarios</p>
      * <ul>
      * <li> Start date is Monday 9 June 2008 and week day is
@@ -212,14 +212,14 @@ class WeeklySchedule extends Schedule {
      *      forward the date to Saturday 14 June 2008.</li>
      * <li> Start date is Tuesday 10 June 2008 and week day is Monday. Roll forward the date
      *      to Monday 16 June 2008.</li>
-     * <li> Start date is Sunday 8 June 2008 and week day is Sunday. 
+     * <li> Start date is Sunday 8 June 2008 and week day is Sunday.
      *      Keep the date as Sunday 8 June 2008.</li>
-     * <li> Start date is Saturday 7 June 2008 and week day is Sunday. 
+     * <li> Start date is Saturday 7 June 2008 and week day is Sunday.
      *      Roll forward the date to Sunday 8 June 2008 </li>
      * </ul>
-     * 
+     *
      * TODO Move this method to a generic calendaring class.
-     * 
+     *
      */
     protected Date getFirstDate(Date startDate) {
         final GregorianCalendar firstDateForWeek = new GregorianCalendar();
@@ -239,13 +239,13 @@ class WeeklySchedule extends Schedule {
         firstDateForWeek.add(Calendar.DAY_OF_WEEK, amountOfDaysToAdd);
         return firstDateForWeek.getTime();
     }
-    
+
     private boolean isInMoratorium(Date date) {
         return !(holidayBusinessService
                     .getAllPushOutHolidaysContaining(date)
                        .isEmpty());
     }
-    
+
     private Date advanceToWorkingDay (Date day) {
         Date closestWorkingDay = day;
         if (!holidayBusinessService.isWorkingDay(day)) {
@@ -254,10 +254,10 @@ class WeeklySchedule extends Schedule {
         return closestWorkingDay;
 
     }
-    
+
     @Override
     protected Date getNextDate(Date startDate) {
         return null;
     }
- 
+
 }

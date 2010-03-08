@@ -29,11 +29,11 @@ public class DefineNewDifferentCurrencyLoanProductPage extends DefineNewLoanProd
     public DefineNewDifferentCurrencyLoanProductPage() {
         super();
     }
-    
+
     public DefineNewDifferentCurrencyLoanProductPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     @Override
     public void verifyPage() {
           this.verifyPage("CreateLoanProduct");
@@ -44,7 +44,7 @@ public class DefineNewDifferentCurrencyLoanProductPage extends DefineNewLoanProd
     public DefineNewLoanProductPage submitPage() {
         return this;
     }
-    
+
     public static class SubmitMultiCurrencyFormParameters extends SubmitFormParameters{
         private Short currencyId;
 
@@ -54,9 +54,9 @@ public class DefineNewDifferentCurrencyLoanProductPage extends DefineNewLoanProd
 
         public Short getCurrencyId() {
             return currencyId;
-        }   
+        }
     }
-    
+
     public void fillLoanParameters(SubmitMultiCurrencyFormParameters parameters) {
         super.fillLoanParameters(parameters);
         selenium.select("currencyId", "value=" + parameters.getCurrencyId());

@@ -106,7 +106,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
      * Setting this to true fixes the printing of stack traces to standard out, but seems to cause failures (MySQL threw
      * a "Deadlock found when trying to get lock; try restarting transaction" exception) only if
      * BulkEntryBusinessServiceIntegrationTest is run previously as part of the same suite.
-     * 
+     *
      * This is presumably a second problem which was always there but was masked by the first one.
      */
     private static final boolean SUPPLY_ENTERED_AMOUNT_PARAMETERS = false;

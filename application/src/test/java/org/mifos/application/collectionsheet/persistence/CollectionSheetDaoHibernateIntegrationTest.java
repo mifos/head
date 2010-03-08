@@ -215,7 +215,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         final String searchId = center.getSearchId() + ".%";
         final LocalDate transactionDate = new LocalDate();
         // exercise test
-        
+
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepayments = collectionSheetDao
                 .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate,
                         customerAtTopOfHierarchyId);
@@ -354,7 +354,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         assertThat(loanDisbursements.get(0).getTotalDisbursement(), is(Double.valueOf("300.0")));
         assertThat(loanDisbursements.get(0).getAmountDueAtDisbursement(), is(Double.valueOf("30.0")));
     }
-    
+
     public void testShouldFindSavingsDepositsforCustomerHierarchy() {
 
         // setup
@@ -362,18 +362,18 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
                 .withCustomer(center).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
-        
+
         savingsProduct2 = new SavingsProductBuilder().withName("product2").mandatory().appliesToCentersOnly()
                 .buildForIntegrationTests();
         savingsAccount2 = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct2).withCustomer(
                 center).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct2, savingsAccount2);
-        
+
         final Integer customerAtTopOfHierarchyId = center.getCustomerId();
         final Short branchId = center.getOffice().getOfficeId();
         final String searchId = center.getSearchId() + ".%";
         final LocalDate transactionDate = new LocalDate();
-        
+
         final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerAtTopOfHierarchyId,
                 branchId, searchId, transactionDate);
 
@@ -384,5 +384,5 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         // verification
         assertThat(allSavingsDeposits.size(), is(2));
     }
-    
+
 }

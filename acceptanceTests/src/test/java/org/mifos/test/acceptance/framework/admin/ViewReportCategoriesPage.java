@@ -6,7 +6,7 @@ import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 /**
- * Represents the View Report Categories page 
+ * Represents the View Report Categories page
  *
  */
 public class ViewReportCategoriesPage extends MifosPage {
@@ -22,7 +22,7 @@ public class ViewReportCategoriesPage extends MifosPage {
         super.verifyPage("ViewReportsCategory");
         return this;
     }
-    
+
     public void verifyReportCategoriesExist(String[] expectedData) {
         int start = CATEGORY_NAMES_START_ROW;
         for (int i = 0; i < expectedData.length; i++) {
@@ -30,9 +30,9 @@ public class ViewReportCategoriesPage extends MifosPage {
             String actualCellData = selenium.getTable(REPORT_CATEGORIES_TABLE_ID + "." + (start++) + ".0");
             Assert.assertEquals(actualCellData, expectedCellData);
         }
-        
-    }
-    
 
-    
+    }
+
+
+
 }

@@ -48,10 +48,10 @@ public class SearchAccountTest extends SearchTestBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
-    
+
+
     private static String dataFileName = "acceptance_small_003_dbunit.xml.zip";
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -64,7 +64,7 @@ public class SearchAccountTest extends SearchTestBase {
     public void tearDown() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     /**
      * Enters an account number <b>ACCT_SEARCH_STRING</b> in the search box
      * and verifies that the expected text with that account number
@@ -72,15 +72,15 @@ public class SearchAccountTest extends SearchTestBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchAccountTest()  throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
-                dataSource, selenium);    
-        
+                dataSource, selenium);
+
         SearchResultsPage page = searchFor( appLauncher, ACCT_SEARCH_STRING);
         int count = page.countSearchResults();
         //Check that only one row for this account number is returned
         Assert.assertEquals( count, 1 );
-        
+
         //Check the displayed text
         Assert.assertTrue(selenium.isTextPresent(ACCT_SEARCH_STRING));
     }

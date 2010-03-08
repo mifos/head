@@ -772,7 +772,7 @@ public interface NamedQueryConstants {
 
     public String SCHEDULED_TASK_GET_LATEST_TASK = "scheduledTasks.getLatestTask";
     public String SCHEDULED_TASK_GET_SUCCESSFUL_TASK = "scheduledTasks.getSuccessfulTask";
-    
+
     // Imported transactions files
     public String GET_IMPORTED_FILES_BY_NAME = "importfiles.getImportedFileByName";
 

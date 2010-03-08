@@ -88,7 +88,7 @@ public class Cache {
 
     /**
      * Overriding constructor
-     * 
+     *
      * @param listObject
      *            object we are getting from user.
      * @throws HibernateSearchException
@@ -109,7 +109,7 @@ public class Cache {
 
     /**
      * Function to get the data
-     * 
+     *
      * @throws HibernateSearchException
      */
 
@@ -132,7 +132,7 @@ public class Cache {
     /**
      * Function to set the cache repository size. we are putting 5 pages in
      * cache anytime.
-     * 
+     *
      * @param current
      *            current page number.
      * @param methodValue
@@ -171,7 +171,7 @@ public class Cache {
 
     /**
      * A helper method to remove the page which is not required.
-     * 
+     *
      * @param key
      *            key of the cacheMap.
      * @param method
@@ -190,7 +190,7 @@ public class Cache {
 
     /**
      * A helper method to add the page which is required.
-     * 
+     *
      * @param key
      *            key of the cacheMap.
      * @param method

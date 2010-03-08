@@ -37,7 +37,7 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
     private final Money miscPenaltyPaid;
 
     private List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions;
-    
+
     private final MifosCurrency currency;
 
     public CollectionSheetEntryCustomerAccountInstallmentView(Integer accountId, Integer customerId,

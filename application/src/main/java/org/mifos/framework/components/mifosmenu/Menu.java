@@ -43,7 +43,7 @@ public class Menu {
 
     /**
      * Method to get the value of menuGroups member variable.
-     * 
+     *
      * @return an array of MenuGroup objects
      */
     public MenuGroup[] getMenuGroups() {
@@ -52,7 +52,7 @@ public class Menu {
 
     /**
      * Method to set the value of menuGroups member variable.
-     * 
+     *
      * @param menuGroups
      *            is an array of MenuGroup objects of current leftmenu
      */
@@ -62,7 +62,7 @@ public class Menu {
 
     /**
      * Method to get the value of menuHeading member variable.
-     * 
+     *
      * @return String holding menu heading
      */
     public String getMenuHeading() {
@@ -71,7 +71,7 @@ public class Menu {
 
     /**
      * Method to set the value of menuHeading member variable.
-     * 
+     *
      * @param menuHeading
      *            is the display name for the left menu.
      */
@@ -81,7 +81,7 @@ public class Menu {
 
     /**
      * Method to get the value of topMenuTabName member variable.
-     * 
+     *
      * @return String holding tab name of the top menu.
      */
     public String getTopMenuTabName() {
@@ -90,7 +90,7 @@ public class Menu {
 
     /**
      * Method to set the value of topMenuTabName member variable.
-     * 
+     *
      * @param topMenuTabName
      *            is the name of tab on top menu for this leftmenu.
      */

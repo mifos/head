@@ -205,7 +205,7 @@ public class LoanOfferingTestUtils {
         return loanPrdActionForm;
 
     }
-    
+
     public static LoanOfferingBO createInstanceForTest(final UserContext userContext, final String prdOfferingName,
             final String prdOfferingShortName, final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster,
             final Date startDate, final Date endDate, final String description, final GracePeriodTypeEntity gracePeriodType,

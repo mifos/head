@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.customer;
 
 import com.thoughtworks.selenium.Selenium;
@@ -36,14 +36,14 @@ public class CustomerChangeStatusPreviewDataPage extends MifosPage {
 	public CustomerChangeStatusPreviewDataPage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
     public void verifyPage() {
         this.verifyPage("customerchangeStatusPreview");
-    }   
-    
+    }
+
     public ClientViewDetailsPage submitAndGotoClientViewDetailsPage() {
         selenium.click("customerchangeStatusPreview.button.submit");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
-    }    
+    }
 }

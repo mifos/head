@@ -31,7 +31,7 @@ import org.mifos.framework.util.helpers.Money;
 
 /*
  * Used to hold information entered about a payment made.
- * Currently this is populated from data entered on a web page. 
+ * Currently this is populated from data entered on a web page.
  */
 public class PaymentData {
 
@@ -48,7 +48,7 @@ public class PaymentData {
     private Date receiptDate;
 
     private Short paymentTypeId;
-    
+
     private String comment;
 
     /*
@@ -162,6 +162,6 @@ public class PaymentData {
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
-    
+
+
 }

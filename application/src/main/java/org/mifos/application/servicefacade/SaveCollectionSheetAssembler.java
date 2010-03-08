@@ -54,7 +54,7 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * Methods to assemble mifos business model from Save Collection Sheet Dto's
- * 
+ *
  */
 public class SaveCollectionSheetAssembler {
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);

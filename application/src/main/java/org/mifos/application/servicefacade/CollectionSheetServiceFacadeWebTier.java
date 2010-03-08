@@ -186,7 +186,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
                 .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
-        
+
         try {
             final List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(
                     MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",

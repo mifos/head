@@ -35,7 +35,7 @@ public class ApplicableCharge implements Serializable {
     private String periodicity;
 
     private String paymentType;
-    
+
     private String isRateType;
 
     public ApplicableCharge() {
@@ -63,7 +63,7 @@ public class ApplicableCharge implements Serializable {
             this.isRateType = "0";
         }
     }
-    
+
     public String getFeeId() {
         return feeId;
     }

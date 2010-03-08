@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.loan;
 
 import java.util.ArrayList;
@@ -39,16 +39,16 @@ public class CreateLoanAccountsSuccessPage extends AbstractPage {
     public void verifyPage() {
         this.verifyPage("CreateMultipleLoanAccountsConfirm");
     }
-    
+
     public LoanAccountPage selectLoansAndNavigateToLoanAccountPage(int loanNumberToChoose) {
         selenium.click("id=CreateMultipleLoanAccountsConfirm.link.account." + loanNumberToChoose);
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
-    
+
     public List<String> verifyAndGetLoanAccountNumbers(int expectedLoanAccountNumbers){
         String[] links = selenium.getAllLinks();
-        List<String> accountNumbers = new ArrayList<String>();        
+        List<String> accountNumbers = new ArrayList<String>();
         for (String link : links) {
             if (link.startsWith("CreateMultipleLoanAccountsConfirm.link.account.")){
                 String text = selenium.getText("id="+link);
@@ -56,12 +56,12 @@ public class CreateLoanAccountsSuccessPage extends AbstractPage {
                 accountNumbers.add(accountNumber);
             }
         }
-        
-        Assert.assertEquals(expectedLoanAccountNumbers, accountNumbers.size());        
+
+        Assert.assertEquals(expectedLoanAccountNumbers, accountNumbers.size());
 
         return accountNumbers;
     }
-    
+
     public HomePage navigateToHomePage(){
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();

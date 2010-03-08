@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.framework.util;
 
 import java.io.IOException;
@@ -31,13 +31,13 @@ import org.testng.annotations.Test;
 @Test(groups = { "unit" })
 public class SimpleDataSetTest {
 
-    private SimpleDataSet simpleDataSet; 
-    
+    private SimpleDataSet simpleDataSet;
+
     @BeforeMethod
     public void setUp() {
         this.simpleDataSet = new SimpleDataSet();
     }
-    
+
 	public void testEmptyDataSet() {
 	    String expectedOutput = "<dataset>\n</dataset>";
 	    Assert.assertEquals(this.simpleDataSet.toString(), expectedOutput);

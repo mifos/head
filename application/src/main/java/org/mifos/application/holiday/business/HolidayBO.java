@@ -112,11 +112,11 @@ public class HolidayBO extends BusinessObject implements Holiday {
     public DateTime getFromDate() {
         return new DateTime(getHolidayFromDate());
     }
-    
+
     public Date getHolidayFromDate() {
         return this.holidayPK.getHolidayFromDate();
     }
-    
+
     public DateTime getThruDate() {
         return new DateTime(getHolidayThruDate());
     }
@@ -223,7 +223,7 @@ public class HolidayBO extends BusinessObject implements Holiday {
     public Short getRepaymentRuleId() {
         return repaymentRuleEntity.getId();
     }
-    
+
     public RepaymentRuleTypes getRepaymentRuleType() {
         return RepaymentRuleTypes.fromOrd(repaymentRuleEntity.getId());
     }
@@ -254,7 +254,7 @@ public class HolidayBO extends BusinessObject implements Holiday {
                 scheduledEvent, RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId()));
 
         DateTime dayAfterEndOfHoliday = new DateTime(this.getHolidayThruDate()).plusDays(1);
-        
+
         return dateAdjustment.adjust(dayAfterEndOfHoliday);
     }
 

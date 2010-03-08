@@ -23,8 +23,8 @@ package org.mifos.framework.exceptions;
 /**
  * This Exception is thrown when any hibernate execptions are encountered during
  * the initialization process for hibernate during start up
- * 
- * 
+ *
+ *
  */
 public class HibernateStartUpException extends SystemException {
     public HibernateStartUpException(Throwable cause) {

@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -48,7 +48,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
     private SavingsAccountHelper savingsAccountHelper;
     public static final String SAVINGS_TRXN_DETAIL = "SAVINGS_TRXN_DETAIL";
 
-    
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -56,7 +56,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
 
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     private static final String startDataSet = "acceptance_small_008_dbunit.xml.zip";
 
 
@@ -82,7 +82,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
         initData();
 
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
-        
+
         params.setTrxnDateMM("09");
         params.setTrxnDateDD("09");
         params.setTrxnDateYYYY("2009");
@@ -92,29 +92,29 @@ public class SavingsDepositTest extends UiTestCaseBase {
         params.setReceiptDateDD("09");
         params.setReceiptDateMM("09");
         params.setReceiptDateYYYY("2009");
-        
+
         savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000036", params);
 
         String[] tablesToRetrieve = { "SAVINGS_ACTIVITY_DETAILS", "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE", "SAVINGS_TRXN_DETAIL" };
         String[] tablesToValidate = { "SAVINGS_ACTIVITY_DETAILS", "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE" };
-       
+
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("SavingsDeposit_001_result_dbunit.xml.zip");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToRetrieve);
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
-        
+
         // verify savings transaction table with sorting
-        String[] orderSavingsTrxnByColumns =  new String[]{"deposit_amount"};  
+        String[] orderSavingsTrxnByColumns =  new String[]{"deposit_amount"};
         dbUnitUtilities.verifyTableWithSort(orderSavingsTrxnByColumns,SavingsDepositTest.SAVINGS_TRXN_DETAIL, expectedDataSet, databaseDataSet );
 
 
     }
-    
-    
+
+
     private void initData() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
     }
-    
-    
+
+
 }
 
 

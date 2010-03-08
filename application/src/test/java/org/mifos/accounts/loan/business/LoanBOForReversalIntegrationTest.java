@@ -134,7 +134,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         Date currentDate = new Date(System.currentTimeMillis());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, 
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
                 TestUtils.createMoney(200), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
         loan.applyPaymentWithPersist(paymentData);
@@ -167,8 +167,8 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
     }
     /*
      * TODO: fn_calc_test_fix
-     * 
-     * 
+     *
+     *
      * public void testLoanDisbursalReversal() throws AccountException {
      * createLoanAccount(); disburseLoan(); applyPaymentForLoan(); loan =
      * retrieveLoanAccount(); int noOfPayments =
@@ -181,7 +181,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      * accountTrxn : accountPayment .getAccountTrxns()) {
      * noOfFinancialTransactions += accountTrxn
      * .getFinancialTransactions().size(); } }
-     * 
+     *
      * reverseLoan(); loan = retrieveLoanAccount();Assert.assertEquals(noOfPayments,
      * loan.getAccountPayments().size()); int noOfTransactionsAfterReversal = 0;
      * int noOfFinancialTransactionsAfterReversal = 0; for (AccountPaymentEntity
@@ -207,8 +207,8 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
 
     /*
      * TODO: fn_calc_test_fix
-     * 
-     * 
+     *
+     *
      * public void testLoanDisbursalReversalWithAdjustment() throws
      * AccountException { createLoanAccount(); disburseLoan();
      * applyPaymentForLoan(); loan = retrieveLoanAccount(); int noOfPayments =

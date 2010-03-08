@@ -58,7 +58,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
         super.setUp();
         TestDatabase.resetMySQLDatabase();
     }
-    
+
     public void testRetrievePPIChoice() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");

@@ -33,7 +33,7 @@ import org.mifos.framework.util.helpers.Constants;
  *
  */
 public class CenterBuilder {
-    
+
     private CenterBO center;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Center";
@@ -43,7 +43,7 @@ public class CenterBuilder {
     private String searchId = "1.1";
     private final Short updatedFlag = Constants.NO;
     private final CustomerStatus customerStatus = CustomerStatus.CENTER_ACTIVE;
-    
+
     public CenterBO build() {
 
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);

@@ -49,40 +49,40 @@ public class HolidayTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
 
     private AppLauncher appLauncher;
-    
+
     public static final String HOLIDAY = "HOLIDAY";
     private static final String HOLIDAY_RESULT_DATA_SET = "HolidayTest_001_result_dbunit.xml.zip";
-        
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        
+
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        
+
         appLauncher = new AppLauncher(selenium);
-        
+
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createHoliday() throws Exception {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
         createHolidayEntryPage.verifyPage();
-        
+
         CreateHolidaySubmitParameters params = this.getHolidayParameters();
         CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
         confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
-        
+
         verifyHolidayData(HOLIDAY_RESULT_DATA_SET);
     }
 
@@ -92,15 +92,15 @@ public class HolidayTest extends UiTestCaseBase {
         ViewHolidaysPage viewHolidays = adminPage.navigateToViewHolidays();
         viewHolidays.verifyPage();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyHolidayData(String resultDataSetFile) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { HOLIDAY });
-        
+
         dbUnitUtilities.verifyTable(HOLIDAY, databaseDataSet, expectedDataSet);
     }
-    
+
     private CreateHolidaySubmitParameters getHolidayParameters() {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         params.setName("Test Holiday");
@@ -113,8 +113,8 @@ public class HolidayTest extends UiTestCaseBase {
         params.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
         return params;
     }
-    
-                    
+
+
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher
          .launchMifos()

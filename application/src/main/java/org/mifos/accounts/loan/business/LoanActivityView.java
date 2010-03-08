@@ -44,7 +44,7 @@ public class LoanActivityView implements Serializable {
     private Money runningBalancePenalty;
     private Locale locale = null;
     private java.sql.Timestamp timeStamp;
-    
+
     public LoanActivityView(MifosCurrency currency) {
         this.principal = new Money(currency);
         this.interest = new Money(currency);

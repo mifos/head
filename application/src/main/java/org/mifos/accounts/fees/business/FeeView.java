@@ -36,7 +36,7 @@ public class FeeView extends View {
     private String feeName;
 
     private String amount;
-    
+
     private Short currencyId;
 
     private boolean periodic;
@@ -48,7 +48,7 @@ public class FeeView extends View {
     private String feeFormula;
 
     private Short localeId;
-    
+
     private RateAmountFlag feeType;
 
     private RecurrenceType frequencyType;
@@ -160,9 +160,9 @@ public class FeeView extends View {
     public void setFrequencyType(RecurrenceType frequencyType) {
         this.frequencyType = frequencyType;
     }
-    
+
     public boolean isValidForCurrency(Short currencyId){
-     //  Rate fees do not have currency hence the currencyId will be null for them, 
+     //  Rate fees do not have currency hence the currencyId will be null for them,
      //  when fee has a currency  then it should match loan account currency id
        return (getCurrencyId()== null || getCurrencyId().equals(currencyId));
     }

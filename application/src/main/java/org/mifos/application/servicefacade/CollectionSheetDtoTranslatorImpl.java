@@ -50,7 +50,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
     public CollectionSheetEntryGridDto toLegacyDto(final CollectionSheetDto collectionSheet,
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final List<CustomValueListElement> attendanceTypesList,
             final MifosCurrency currency) {
-        
+
         final CollectionSheetEntryView collectionSheetEntryViewHierarchy = createEntryViewHierarchyFromCollectionSheetData(
                 collectionSheet.getCollectionSheetCustomer(), currency);
 
@@ -71,7 +71,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
 
         return translatedGridDto;
     }
-    
+
     private List<ProductDto> createListOfSavingProducts(final List<CollectionSheetCustomerDto> collectionSheetCustomer) {
 
         final Set<ProductDto> savingProductsSet = new HashSet<ProductDto>();

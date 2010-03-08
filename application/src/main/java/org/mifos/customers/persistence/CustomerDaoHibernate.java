@@ -40,7 +40,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @Override
     public CustomerBO findCustomerById(final Integer customerId) {
-        
+
         if (customerId == null) {
             throw new IllegalArgumentException("customerId cannot be null");
         }

@@ -25,7 +25,7 @@ public class CreateMultipleLoanAccountSelectParameters {
     public void setLoanProduct(String loanProduct) {
         this.loanProduct = loanProduct;
     }
-    
+
     private String branch;
     private String loanOfficer;
     private String center;

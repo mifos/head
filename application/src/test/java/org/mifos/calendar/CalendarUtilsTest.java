@@ -38,7 +38,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstOfNextMonth.plusDays(1)));
     }
-    
+
     @Test
     public void shouldRollDateForwardByTwoDay() {
 
@@ -49,7 +49,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstOfNextMonth.plusDays(2)));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNearestDayOfWeek() {
 
@@ -61,7 +61,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstTuesdayOfNextMonth.plusDays(1)));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNearestDayOfWeek2() {
 
@@ -73,7 +73,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstThursdayOfNextMonth.plusDays(6)));
     }
-    
+
     @Test
     public void shouldNotRollDateForwardWhenItMatchesDayOfWeek() {
 
@@ -85,7 +85,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstThursdayOfNextMonth));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNearestMonthAndDayOfMonth() {
 
@@ -96,7 +96,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstOfNextMonth.plusDays(14)));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNearestMonthAndDayOfMonthWhenDayOfMonthHasBeenPassed() {
 
@@ -107,20 +107,20 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(twentiethOfNextMonth.plusMonths(1).withDayOfMonth(15)));
     }
-    
+
 
     @Test
     public void shouldNotRollForwardDateIfStartingDateMatchesDayOfMonth() {
 
         DateTime secondLastDayOfJune = new DateTime().withMonthOfYear(6).withDayOfMonth(29).toDateMidnight()
                 .toDateTime();
-        
+
         // exercise test
         DateTime adjustedDate = CalendarUtils.getFirstDateForMonthOnDate(secondLastDayOfJune, 29);
 
         assertThat(adjustedDate, is(secondLastDayOfJune));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNearestMonthGivenWeekAndWeekDay() {
 
@@ -132,7 +132,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstThursdayOfNextMonth.plusDays(1)));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNearestMonthGivenWeekAndWeekDayHaveBeenPassedInCurrentMonth() {
 
@@ -145,7 +145,7 @@ public class CalendarUtilsTest {
         DateTime expectedAdjustedDate = new DateTime().withYear(2010).withMonthOfYear(4).withDayOfMonth(7).toDateMidnight().toDateTime();
         assertThat(adjustedDate, is(expectedAdjustedDate));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNearestMonthGivenWeekAndWeekDayForMonthWithFiveWeekdaysInMonth() {
 
@@ -156,7 +156,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(monday29thOfMarch2010.plusDays(1)));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNextMonthAndDayOfMonthThatMatches() {
 
@@ -167,7 +167,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstOfNextMonth.plusMonths(1)));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNextMonthAndDayOfMonthThatMatchesGivenMonthDoesNotHaveThatDayNumber() {
 
@@ -179,7 +179,7 @@ public class CalendarUtilsTest {
         assertThat(adjustedDate, is(lastDayInAugust.plusMonths(1)));
         assertThat(adjustedDate.getDayOfMonth(), is(30));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNextDateThatMatchesGivenWeekAndWeekDayHaveBeenPassedInCurrentMonth() {
 
@@ -191,7 +191,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(firstWednesdayOfTwoMonthsAway()));
     }
-    
+
     @Test
     public void shouldRollDateForwardToNextDateThatMatchesGivenWeekAndWeekDayForMonthWithFiveWeekdaysInMonth() {
 
@@ -206,11 +206,11 @@ public class CalendarUtilsTest {
     private DateTime firstWednesdayOfTwoMonthsAway() {
         DateTime firstOfTwoMonthsAway = new DateTime().plusMonths(2).withDayOfMonth(1).toDateMidnight().toDateTime();
         DateTime firstWednesdayOfTwoMonthsAway = firstOfTwoMonthsAway.withDayOfWeek(DayOfWeek.wednesday());
-        
+
         if (firstWednesdayOfTwoMonthsAway.getMonthOfYear() != firstOfTwoMonthsAway.getMonthOfYear()) {
             return firstWednesdayOfTwoMonthsAway.plusWeeks(1);
         }
-        
+
         return firstWednesdayOfTwoMonthsAway;
     }
 }

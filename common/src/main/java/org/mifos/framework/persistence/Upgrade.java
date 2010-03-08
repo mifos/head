@@ -128,7 +128,7 @@ public abstract class Upgrade {
      * and must not be used after 174 because after 174, a lookup key is
      * required for a lookup value to be displayed. Prior to version 174 an
      * empty (" ") key was passed in because the key was unused.
-     * 
+     *
      * @deprecated
      */
     protected int insertLookupValue(Connection connection, int lookupEntity) throws SQLException {
@@ -140,7 +140,7 @@ public abstract class Upgrade {
      * to a message by looking up the key value in a properties file. The
      * message can be overridden by a LookupValueLocale in the database that is
      * associated with a given LookupValue.
-     * 
+     *
      * @param connection
      *            the database connection to use
      * @param lookupEntity
@@ -273,22 +273,22 @@ public abstract class Upgrade {
         }
         return numFields;
     }
-    
-    @SuppressWarnings("PMD.CloseResource") 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.") 
-    protected int addLookupEntity(Connection connection, String name, String description)  throws SQLException { 
-       int newId = -1; 
+
+    @SuppressWarnings("PMD.CloseResource")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
+    protected int addLookupEntity(Connection connection, String name, String description)  throws SQLException {
+       int newId = -1;
        PreparedStatement statement = connection.prepareStatement(
                "INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION) VALUES(NULL,?,?)",
                 PreparedStatement.RETURN_GENERATED_KEYS);
        statement.setString(1, name);
-       statement.setString(2, description); 
-       statement.executeUpdate(); 
-       ResultSet keys = statement.getGeneratedKeys(); 
-       keys.next(); 
-       newId = Integer.parseInt(keys.getString(1)); 
-       statement.close(); 
-       return newId; 
-    } 
+       statement.setString(2, description);
+       statement.executeUpdate();
+       ResultSet keys = statement.getGeneratedKeys();
+       keys.next();
+       newId = Integer.parseInt(keys.getString(1));
+       statement.close();
+       return newId;
+    }
 
 }

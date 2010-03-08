@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
 public class ViewFeesTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
-    
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -62,7 +62,7 @@ public class ViewFeesTest extends UiTestCaseBase {
     public void tearDown() {
         (new MifosPage(selenium)).logout();
     }
-    
+
 //    @Test(enabled=false)
     public void verifyViewFeesTest() {
         AdminPage adminPage = loginAndGoToAdminPage();
@@ -70,14 +70,14 @@ public class ViewFeesTest extends UiTestCaseBase {
         viewFeesPage.verifyPage();
     }
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void verifyViewFeesTableContentsTest() throws Exception {        
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+    public void verifyViewFeesTableContentsTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                                            dataFileName,
-                                           dataSource, selenium);        
+                                           dataSource, selenium);
 
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewFeesPage viewFeesPage = adminPage.navigateToViewFeesPage();
-        
+
         String[] expectedProductFees = new String[]{
                 "OneTimeDisburse9",
                 "OneTimeFirstRepay90",

@@ -30,20 +30,20 @@ public class ViewReportsPage extends MifosPage {
     public ViewReportsPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public ViewReportsPage verifyPage() {
         verifyPage("viewReports");
         return this;
     }
 
     public void verifyReportCategories(String[] expectedData) {
-       
+
         for (int i = 0; i < expectedData.length; i++) {
             String expectedCellData = expectedData[i];
             String actualCellData = selenium.getTable("reportCategoryTable."+i+".0");
             Assert.assertEquals(actualCellData, expectedCellData);
         }
-        
+
     }
-    
+
 }

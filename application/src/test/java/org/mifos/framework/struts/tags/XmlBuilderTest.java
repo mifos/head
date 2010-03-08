@@ -113,7 +113,7 @@ public class XmlBuilderTest extends TestCase {
          * Of course, this is just a small subset of the characters which are
          * illegal accoding to the XML spec. But these ones seem like the ones
          * most likely to create a security hole or other really strange stuff.
-         * 
+         *
          * As for the rest, the rules are complicated and differ between XML 1.0
          * and 1.1, so maybe this is one of those things that isn't a big enough
          * problem in practice to worry about enforcing.

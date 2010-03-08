@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.remote;
 
 import java.io.UnsupportedEncodingException;
@@ -35,7 +35,7 @@ public class DateTimeUpdaterRemoteTestingService {
 
     private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
     protected Selenium selenium;
-    
+
     public DateTimeUpdaterRemoteTestingService(Selenium selenium) {
         this.selenium = selenium;
     }
@@ -50,23 +50,23 @@ public class DateTimeUpdaterRemoteTestingService {
         String timeMachineUrl = "dateTimeUpdate.ftl?dateTime=" + getUrlEncodedTimeMachineDate(dateTime, formatter);
         selenium.open(timeMachineUrl);
         waitForPageToLoad();
-        return new TimeMachinePage(selenium);        
+        return new TimeMachinePage(selenium);
     }
 
     private String getUrlEncodedTimeMachineDate(DateTime dateTime, DateTimeFormatter formatter)
             throws UnsupportedEncodingException {
         return URLEncoder.encode(formatter.print(dateTime.getMillis()), "UTF-8");
     }
-    
+
     public TimeMachinePage resetDateTime() {
         selenium.open("dateTimeUpdate.ftl?dateTime=system");
         waitForPageToLoad();
-        return new TimeMachinePage(selenium);        
-        
+        return new TimeMachinePage(selenium);
+
     }
 
     protected void waitForPageToLoad() {
         selenium.waitForPageToLoad(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
     }
-    
+
 }

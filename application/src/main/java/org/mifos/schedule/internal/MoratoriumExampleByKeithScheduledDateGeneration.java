@@ -62,14 +62,14 @@ public class MoratoriumExampleByKeithScheduledDateGeneration implements Schedule
             DateAdjustmentStrategy holidayAjustment = new BasicHolidayStrategy(upcomingHolidays, workingDays,
                     scheduledEvent);
             DateTime ajustedForHolidays = holidayAjustment.adjust(ajustedForWorkingDay);
-            
+
             DateAdjustmentStrategy moratoriumStrategy = new BasicMoratoriumStrategy(upcomingMoratoria, workingDays, scheduledEvent);
             DateTime ajustedForMoratorium = moratoriumStrategy.adjust(ajustedForHolidays);
 
             scheduledDates.add(ajustedForMoratorium);
-            
+
             if (ajustedForWorkingDay.isEqual(ajustedForHolidays)) {
-                latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForMoratorium);    
+                latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForMoratorium);
             } else {
                 latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
             }

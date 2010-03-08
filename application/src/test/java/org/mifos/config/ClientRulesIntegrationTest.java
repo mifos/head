@@ -84,7 +84,7 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
     /**
      * A name sequence is the order in which client names are displayed.
      * Example: first name, then middle name, then last name.
-     * 
+     *
      * @see ClientRules#getNameSequence()
      * @see ClientRules#isValidNameSequence(String[])
      */
@@ -96,7 +96,7 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
     /**
      * A name sequence is the order in which client names are displayed.
      * Example: first name, then middle name, then last name.
-     * 
+     *
      * @see ClientRules#getNameSequence()
      * @see ClientRules#isValidNameSequence(String[])
      */

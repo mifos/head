@@ -57,7 +57,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
                 FinancialConstants.DEBIT);
 
         // check if rounding is required
-        Money roundedAmount = Money.round(loanTrxn.getInterestAmount(), 
+        Money roundedAmount = Money.round(loanTrxn.getInterestAmount(),
                 loanTrxn.getInterestAmount().getCurrency().getRoundingAmount(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(loanTrxn.getInterestAmount())) {
             FinancialActionBO finActionRounding = FinancialActionCache

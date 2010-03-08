@@ -76,7 +76,7 @@ public class ChartOfAccountsConfig {
      * Factory method which loads the Chart of Accounts configuration from the
      * given filename. Given XML filename will be validated against
      * {@link FilePaths#CHART_OF_ACCOUNTS_SCHEMA}.
-     * 
+     *
      * @param chartOfAccountsXml
      *            a relative path to the Chart of Accounts configuration file.
      */
@@ -122,7 +122,7 @@ public class ChartOfAccountsConfig {
      * Allows for easy overriding/customization of the chart of accounts by
      * placing a file called <code>mifosChartOfAccounts.custom.xml</code>
      * anywhere in the application server classpath.
-     * 
+     *
      * @return relative path to Chart of Accounts config file that the
      *         {@link ClasspathResource} can use to derive the actual on-disk
      *         location.
@@ -208,7 +208,7 @@ public class ChartOfAccountsConfig {
      * <p>
      * Result set is guaranteed to be ordered since parent accounts will
      * probably need to be dealt with before children.
-     * 
+     *
      * @param node
      *            Usually a top-level account (aka category). This means
      *            GLAssetsAccount, GLLiabilitiesAccount, etc. Also accepts any

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.loanproduct;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -25,15 +25,15 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import com.thoughtworks.selenium.Selenium;
 
 public class DefineNewLoanProductPage extends AbstractPage {
-    
+
     public DefineNewLoanProductPage() {
         super();
     }
-    
+
     public DefineNewLoanProductPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public void verifyPage() {
           this.verifyPage("CreateLoanProduct");
 
@@ -42,7 +42,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
     public DefineNewLoanProductPage submitPage() {
         return this;
     }
-    
+
    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
    public static class SubmitFormParameters {
         // interest types
@@ -50,17 +50,17 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public static final int DECLINING_BALANCE = 2;
         public static final int DECLINING_BALANCE_EPI = 4;
 
-        // applicable for 
+        // applicable for
         public static final int CLIENTS = 1;
         public static final int GROUPS = 2;
-        
+
         // freq of installments
         public static final int WEEKS = 1;
         public static final int MONTHS = 2;
-        
+
         // grace period type
         public static final int NONE = 1;
-        
+
         private String branch;
         private String offeringName;
         private String offeringShortName;
@@ -80,7 +80,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private int gracePeriodType;
         private String interestGLCode;
         private String principalGLCode;
-        
+
 
         public String getBranch() {
             return this.branch;
@@ -233,9 +233,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setPrincipalGLCode(String principalGLCode) {
             this.principalGLCode = principalGLCode;
         }
-        
+
     }
-        
+
     public void fillLoanParameters(SubmitFormParameters parameters) {
         selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
         selenium.type("createLoanProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
@@ -249,14 +249,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
-        selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments()); 
+        selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
         selenium.type("maxNoInstallments", parameters.getMaxInstallments());
         selenium.type("defNoInstallments", parameters.getDefInstallments());
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
     }
-    
+
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
         selenium.click("createLoanProduct.button.preview");
         waitForPageToLoad();

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -29,10 +29,10 @@ public class ChooseOfficePage extends MifosPage {
     public ChooseOfficePage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public CreateClientEnterPersonalDataPage chooseOffice(String officeName) {
         selenium.click("link=" + officeName);
-        waitForPageToLoad(); 
+        waitForPageToLoad();
         return new CreateClientEnterPersonalDataPage(selenium);
     }
 }

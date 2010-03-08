@@ -258,7 +258,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
     /*
      * method verifies that all the savings accounts from the sample savings account center structure (created by a
      * utility method) are represented in the retrieved collection sheet and are in their appropriate list
-     * 
+     *
      * This is considered important because understanding individual savings can be tricky.
      */
     private void verifyAllSavingsAccountsIncluded(List<CollectionSheetCustomerDto> customers) {

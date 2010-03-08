@@ -32,7 +32,7 @@ public class ViewReportCategoriesTest extends UiTestCaseBase {
     public void tearDown() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     /**
      * Verify that expected Report Categories exist on the page
      */
@@ -41,18 +41,18 @@ public class ViewReportCategoriesTest extends UiTestCaseBase {
         ViewReportCategoriesPage page = adminPage.navigateToViewReportCategories();
         page.verifyPage();
         String[] expectedData = new String[]{
-                "Client Detail",   
-                "Performance",     
-                "Center",  
-                "Loan Product Detail",     
-                "Status",  
-                "Analysis",    
+                "Client Detail",
+                "Performance",
+                "Center",
+                "Loan Product Detail",
+                "Status",
+                "Analysis",
                 "Miscellaneous"
         };
-        
+
         page.verifyReportCategoriesExist(expectedData);
     }
-    
+
     private AdminPage loginAndGoToAdminPage() {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();

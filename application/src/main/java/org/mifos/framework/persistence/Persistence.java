@@ -101,7 +101,7 @@ public abstract class Persistence {
     public List executeNamedQuery(final String queryName, final Map queryParameters) throws PersistenceException {
         try {
             Query query = createdNamedQuery(queryName);
-            
+
             setParametersInQuery(query, queryName, queryParameters);
             return runQuery(query);
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public abstract class Persistence {
             throw new PersistenceException(e);
         }
     }
-    
+
     public Object execUniqueResultNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> queryParameters,
             final Class<?> clazz) {
@@ -160,7 +160,7 @@ public abstract class Persistence {
 
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public List executeNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> queryParameters, final Class<?> clazz) {
@@ -173,14 +173,14 @@ public abstract class Persistence {
             throw new MifosRuntimeException(e);
         }
     }
-    
+
     public Object executeUniqueHqlQuery(final String hqlQuery) {
 
         Session session = getHibernateUtil().getSessionTL();
         final Query query = session.createQuery(hqlQuery);
         return query.uniqueResult();
     }
-    
+
     public List executeNonUniqueHqlQuery(final String hqlQuery) {
 
         Session session = getHibernateUtil().getSessionTL();

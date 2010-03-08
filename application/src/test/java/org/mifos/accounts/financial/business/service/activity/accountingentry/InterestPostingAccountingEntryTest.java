@@ -75,7 +75,7 @@ public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestC
 
     @Mock
     private PersonnelBO transactionCreator;
-    
+
     COABO coaLiability;
     COABO coaSavingsInterestPayable;
     COABO coaClientsSavings;
@@ -172,7 +172,7 @@ public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestC
         assertThat(savingsPostingTrans.getDebitCreditFlag(), is(FinancialConstants.CREDIT.getValue()));
         assertThat(savingsPostingTrans.getPostedBy(), is(transactionCreator));
     }
-    
+
     protected COABO makeCategory(Short categoryId, GLCategoryType categoryType, String glCode) {
         COABO category = new COABO(categoryId, categoryType.name(), new GLCodeEntity(categoryId, glCode));
         COAHierarchyEntity hierarchy = new COAHierarchyEntity(category, null);
@@ -180,13 +180,13 @@ public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestC
         category.setCategoryType(categoryType);
         return category;
     }
-    
+
     /**
      * Establish child-parent relationship between two COABO instances.
-     * 
+     *
      * <p>
      * ASSUMPTION: the parentCoa's hierarchy has been created. In other words, build the hierarchy from top down.
-     * 
+     *
      * @throws RuntimeException  if parentCoa has no associated COAHierarchy.
      */
     protected COABO makeChildCoaboOf(COABO parentCoa, Short accountId, String accountName, String glCode) {
@@ -202,7 +202,7 @@ public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestC
 
     /**
      * Compare GLCodes lexicographically by GL Code string values
-     * 
+     *
      */
     protected class GLCodeComparator implements Comparator<FinancialTransactionBO> {
         public int compare(final FinancialTransactionBO tran1, final FinancialTransactionBO tran2) {

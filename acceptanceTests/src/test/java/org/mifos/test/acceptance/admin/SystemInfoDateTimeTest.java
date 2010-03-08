@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.admin;
 
 import java.io.UnsupportedEncodingException;
@@ -72,12 +72,12 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         timeMachinePage.verifyPage();
         timeMachinePage.verifySuccess(targetTime);
     }
-    
+
     public void verifyDateTimeTest() throws UnsupportedEncodingException {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        
+
         AdminPage adminPage = loginAndGoToAdminPage();
         SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();
         systemInfoPage.verifyPage();
@@ -89,7 +89,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime, dateTimeZone);
-        
+
         AdminPage adminPage = loginAndGoToAdminPage();
         SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();
         systemInfoPage.verifyPage();

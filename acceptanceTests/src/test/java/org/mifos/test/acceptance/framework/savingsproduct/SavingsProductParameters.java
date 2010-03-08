@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -39,32 +39,32 @@ public class SavingsProductParameters {
     private String frequencyOfInterestPostings;
     private String glCodeForDeposit;
     private String glCodeForInterest;
-    
+
     // constants:
     // product category
     public static final int OTHER = 2;
-    
+
     // applicable for
     public static final int CLIENTS = 1;
     public static final int GROUPS = 2;
     public static final int CENTERS = 3;
-    
+
     // type of deposits
     public static final int MANDATORY = 1;
     public static final int VOLUNTARY = 2;
-    
+
     // balance used for interest calculation
     public static final int MINIMUM_BALANCE = 1;
     public static final int AVERAGE_BALANCE = 2;
-    
+
     // days or months for interest calculation
     public static final int MONTHS = 2;
     public static final int DAYS = 3;
-    
+
     // the amount applies to either the whole group or per individual
     public static final int PER_INDIVIDUAL = 1;
     public static final int WHOLE_GROUP = 2;
-    
+
     public String getProductInstanceName() {
         return this.productInstanceName;
     }

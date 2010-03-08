@@ -23,12 +23,12 @@ package org.mifos.application.master.util.helpers;
 import org.mifos.config.LocalizedTextLookup;
 
 /**
- * 
+ *
  * PaymentTypes represents the three built in PaymentTypeEntity
- * values (CASH, VOUCHER, CHEQUE).  Note that unlike other 
+ * values (CASH, VOUCHER, CHEQUE).  Note that unlike other
  * enums that represent a fixed set of values that can only
  * change with a software update, in this case PyamentTypeEntities
- * can be dynamically added and renamed by the end user.  As 
+ * can be dynamically added and renamed by the end user.  As
  * a result, it should never be assumed that the three values
  * in this enum are the only payment type values in the system.
  *

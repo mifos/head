@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.search;
 
 import org.mifos.framework.util.DbUnitUtilities;
@@ -44,10 +44,10 @@ public class SearchGroupTest extends SearchTestBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
-   
+
+
     private static String dataFileName = "acceptance_small_003_dbunit.xml.zip";
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -60,26 +60,26 @@ public class SearchGroupTest extends SearchTestBase {
     public void tearDown() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchGroupListTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
                 dataSource, selenium);
 
-        SearchResultsPage page = searchFor( appLauncher, "MyGroup"); 
+        SearchResultsPage page = searchFor( appLauncher, "MyGroup");
         int count = page.countSearchResults();
         Assert.assertEquals( count, 11 );
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchGroupSpecificTest()  throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
                 dataSource, selenium);
 
         SearchResultsPage page = searchFor( appLauncher, "MyGroup1233265937564");
         int count = page.countSearchResults();
         Assert.assertEquals( count, 1 );
-    }    
+    }
 }

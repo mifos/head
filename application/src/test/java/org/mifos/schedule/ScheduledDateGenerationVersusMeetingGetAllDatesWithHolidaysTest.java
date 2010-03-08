@@ -91,7 +91,7 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
 
         assertThat(meetingDates.get(0), is(march1stNextYear.toDate()));
         assertThat(scheduledDates.get(0), is(march1stNextYear));
-        
+
         // cleanup
         TestObjectFactory.cleanUpHolidays(Arrays.asList(holiday));
     }
@@ -112,7 +112,7 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
 
         assertThat(meetingDates.get(0), is(march1stNextYear.toDate()));
         assertThat(scheduledDates.get(0), is(march1stNextYear));
-        
+
         // cleanup
         TestObjectFactory.cleanUpHolidays(Arrays.asList(holiday));
     }
@@ -136,7 +136,7 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
         DateTime nextWorkingDayAfterHoliday = new DateTime(holiday.getHolidayThruDate()).plusDays(1);
         assertThat(meetingDates.get(0), is(nextWorkingDayAfterHoliday.toDate()));
         assertThat(scheduledDates.get(0), is(nextWorkingDayAfterHoliday));
-        
+
         // cleanup
         TestObjectFactory.cleanUpHolidays(Arrays.asList(holiday));
     }
@@ -168,16 +168,16 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
 
         assertThat(meetingDates.get(4), is(march1stNextYear.plusWeeks(4).toDate()));
         assertThat(scheduledDates.get(4), is(march1stNextYear.plusWeeks(4)));
-        
+
         // cleanup
         TestObjectFactory.cleanUpHolidays(Arrays.asList(holiday));
     }
-    
+
     public void testShouldReturnListOfDatesMatchingScheduleWithSameDayRule() throws Exception {
 
         DateTime march2ndNextYear = march1stNextYear.plusDays(1);
         meeting = new MeetingBuilder().weekly().withStartDate(march2ndNextYear).build();
-        
+
         holiday = (HolidayBO) new HolidayBuilder().from(march1stNextYear.plusDays(2)).to(march1stNextYear.plusDays(14))
                 .withSameDayAsRule().build();
         insert(holiday);
@@ -202,11 +202,11 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
 
         assertThat(meetingDates.get(4), is(march2ndNextYear.plusWeeks(4).toDate()));
         assertThat(scheduledDates.get(4), is(march2ndNextYear.plusWeeks(4)));
-        
+
         // cleanup
         TestObjectFactory.cleanUpHolidays(Arrays.asList(holiday));
     }
-    
+
     public void testShouldReturnListOfDatesMatchingScheduleWithNextRepaymentOrMeetingRule() throws Exception {
 
         holiday = (HolidayBO) new HolidayBuilder().from(march1stNextYear.plusDays(1)).to(march1stNextYear.plusDays(7))
@@ -234,7 +234,7 @@ public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest ext
 
         assertThat(meetingDates.get(4), is(march1stNextYear.plusWeeks(4).toDate()));
         assertThat(scheduledDates.get(4), is(march1stNextYear.plusWeeks(4)));
-        
+
         // cleanup
         TestObjectFactory.cleanUpHolidays(Arrays.asList(holiday));
     }

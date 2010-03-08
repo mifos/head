@@ -37,7 +37,7 @@ public class ActivityRoles {
 
     /**
      * This Function returns the activityRoles
-     * 
+     *
      * @return Returns the activityRoles.
      */
     public Set getActivityRoles() {
@@ -46,7 +46,7 @@ public class ActivityRoles {
 
     /**
      * This function set the activityRoles
-     * 
+     *
      * @param activityRoles
      *            The activityRoles to set.
      */
@@ -56,7 +56,7 @@ public class ActivityRoles {
 
     /**
      * This Function returns the id
-     * 
+     *
      * @return Returns the id.
      */
     public Short getId() {
@@ -65,7 +65,7 @@ public class ActivityRoles {
 
     /**
      * This function set the id
-     * 
+     *
      * @param id
      *            The id to set.
      */

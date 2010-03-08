@@ -71,9 +71,9 @@ public class BulkEntryTag extends BodyTagSupport {
                 final List<CustomValueListElement> custAttTypes = (List<CustomValueListElement>) SessionUtils
                         .getAttribute(
                         CollectionSheetEntryConstants.CUSTOMERATTENDANCETYPES, request);
-                
+
                 String method = request.getParameter(CollectionSheetEntryConstants.METHOD);
-                
+
                 generateTagData(bulkEntry, loanProducts, savingsProducts, custAttTypes, method, builder);
             } catch (ApplicationException ae) {
                 throw new JspException(ae);
@@ -95,7 +95,7 @@ public class BulkEntryTag extends BodyTagSupport {
             throws SystemException {
         UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
         BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();
-        
+
         builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts, savingsProducts, userContext
                 .getPreferredLocale()));
         CollectionSheetEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();

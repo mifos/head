@@ -94,8 +94,8 @@ public class CalendarTest {
      * @Test public void testDayOfWeek3() { //Wednesday, June 4, 2008
      * GregorianCalendar aWednesdayCal = new GregorianCalendar(2008, 5, 4); Date
      * aWednesday = aWednesdayCal.getTime();
-     * 
-     * 
+     *
+     *
      * Date computed = getFirstDateForWeek(new GregorianCalendar, aWednesday,
      * 2); System.out.println ("actual: " + cal.getTime());
      * Assert.assertEquals(DateUtils

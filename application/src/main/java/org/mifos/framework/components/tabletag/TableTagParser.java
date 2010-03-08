@@ -71,7 +71,7 @@ public class TableTagParser {
              * NodeList tableNodeList =
              * document.getElementsByTagName(TableTagConstants.TABLE); table =
              * new Table[tableNodeList.getLength()];
-             * 
+             *
              * for (int i = 0; i < table.length; i++) { table[i] = new Table();
              * table[i].setRow(createRow(tableNodeList.item(i))); }
              */

@@ -43,11 +43,11 @@ public class ProductDto {
     public String getShortName() {
         return this.shortName;
     }
-    
+
     @Override
     public boolean equals(final Object obj) {
         final ProductDto product = (ProductDto) obj;
-        
+
         return new EqualsBuilder().reflectionEquals(this, product);
     }
 

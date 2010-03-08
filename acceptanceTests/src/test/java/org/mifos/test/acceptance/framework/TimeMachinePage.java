@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework;
 
 import org.joda.time.DateTime;
@@ -29,7 +29,7 @@ import com.thoughtworks.selenium.Selenium;
 
 public class TimeMachinePage extends MifosPage {
 
-    
+
     public TimeMachinePage(Selenium selenium) {
         super(selenium);
     }
@@ -42,5 +42,5 @@ public class TimeMachinePage extends MifosPage {
     public void verifySuccess(DateTime dateTime) {
         Assert.assertEquals(dateTime.toString(), selenium.getText("DateTimeUpdate.text.result"));
     }
-    
+
 }

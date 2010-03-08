@@ -25,7 +25,7 @@ import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * Loan Data Transfer Object (DTO)
- * 
+ *
  */
 public class LoanDto implements DataTransferObject {
     private String globalAccountNumber;

@@ -155,7 +155,7 @@ public class MessageLookup implements MessageSourceAware {
 
     /*
      * Set a custom label value that will override resource bundle values.
-     * 
+     *
      * TODO: we need to add a method for getting and/or setting a label value
      * directly rather than having to iterate. Also, we don't necessarily want
      * to reinitialize the MifosConfiguration after each update. Ultimately, it

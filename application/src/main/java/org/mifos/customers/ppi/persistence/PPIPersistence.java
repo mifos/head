@@ -62,7 +62,7 @@ public class PPIPersistence extends SurveysPersistence {
 
     /**
      * Returns the {@link PPISurvey} from persistence with the given id.
-     * 
+     *
      * If a survey with that id does not exists, or if the survey is not a
      * {@link PPISurvey}, <code>null</code> is returned.
      */
@@ -73,7 +73,7 @@ public class PPIPersistence extends SurveysPersistence {
 
     /**
      * Returns the {@link PPIChoice} from persistence with the given id.
-     * 
+     *
      * If a QuestionChoice with that id does not exists, or if the
      * QuestionChoice is not a {@link PPIChoice}, <code>null</code> is returned.
      */

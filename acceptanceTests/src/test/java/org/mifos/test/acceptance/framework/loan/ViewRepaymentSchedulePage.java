@@ -35,7 +35,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         this.verifyPage("LoanRepayment");
     }
 
-    
+
     public void verifyInstallmentAmount(int row, int column, String amount) {
         Assert.assertEquals(selenium.getText("//tr[" + row + "]/td[" + column + "]"), amount);
     }
@@ -49,6 +49,6 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
-    
+
 
 }

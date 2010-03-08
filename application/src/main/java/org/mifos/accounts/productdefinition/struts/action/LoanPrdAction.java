@@ -139,7 +139,7 @@ public class LoanPrdAction extends BaseAction {
         request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
-    
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -332,7 +332,7 @@ public class LoanPrdAction extends BaseAction {
                 request);
         return mapping.findForward(ActionForwards.viewAllLoanProducts_success.toString());
     }
-    
+
     private void loadMasterData(HttpServletRequest request) throws Exception {
         prdDefLogger.debug("start Load master data method of Loan Product Action ");
         LoanPrdBusinessService service = new LoanPrdBusinessService();

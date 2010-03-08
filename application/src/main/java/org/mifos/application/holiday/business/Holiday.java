@@ -33,11 +33,11 @@ public interface Holiday {
     boolean encloses(Date date);
 
     DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
-    
+
     RepaymentRuleTypes getRepaymentRuleType();
-    
+
     DateTime getFromDate();
-    
+
     DateTime getThruDate();
 
 }

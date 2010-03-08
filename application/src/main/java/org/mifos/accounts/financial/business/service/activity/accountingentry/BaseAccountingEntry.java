@@ -35,14 +35,14 @@ import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.framework.util.helpers.Money;
 
 /**
- * The abstract base class for all classes that create accounting entries from financial activities. 
+ * The abstract base class for all classes that create accounting entries from financial activities.
  * These accounting entries -- <code>FinancialTransactionBO</code> instances -- are used to post the
  * financial activity to one or more general ledger accounts.
  * <p>
- * Subclasses create accounting entries by side effect on a passed-in <code>BaseFinancialActivity</code> instance: 
+ * Subclasses create accounting entries by side effect on a passed-in <code>BaseFinancialActivity</code> instance:
  * When <code>buildAccountEntryForAction(financialActivity)</code>
- * is called, the subclass creates a list of <code>{@link FinancialTransactionBO}</code> 
- * instances and stores it in the financialActivity. The caller can then retrieve the list using 
+ * is called, the subclass creates a list of <code>{@link FinancialTransactionBO}</code>
+ * instances and stores it in the financialActivity. The caller can then retrieve the list using
  * <code>financialActivity.getFinancialTransactions()</code>.
  * <p>
  * Subclasses depend on the following classes for correct operation (protected methods using these classes
@@ -58,14 +58,14 @@ import org.mifos.framework.util.helpers.Money;
  *             <li> createDate</li>
  *         </ul>
  *     <li><code>ChartOfAccountsCache</code> (static) retrieves the correct GL accounts for a transaction.</li>
- *     <li><code>FinancialActionCache</code> (static) retrieves a <code>FinancialActionBO</code> instance for a 
+ *     <li><code>FinancialActionCache</code> (static) retrieves a <code>FinancialActionBO</code> instance for a
  *         financial action id.</li>
  *     <li><code>COABO</code>  instances (GL accounts) can find their top-level (head) category.</li>
  *     <li>concrete subclass instances of this class compute <code>FinancialTransdactionBO</code> instances
  *         from information in the financialActivity and invoke <code>addAccountEntryDetails()</code> for each
  *         instance.</li>
  * </ul>
- * 
+ *
  *  Also see
  * <a href="http://www.mifos.org/knowledge/functional-specifications/system-setup/chart-of-accounts">
  * chart-of-accounts </a> page for details.
@@ -106,7 +106,7 @@ public abstract class BaseAccountingEntry {
    /*
     * Factor out access to the static cache to allow this method to be overridden for testing.
     * Globals like ChartOfAccountsCache should be eliminated or refactored to be injectable.
-    * 
+    *
     * [KeithP] ChartOfAccountsCache is now encapsulated in FinancialBusinessService, where it can
     * be refactored away without affecting this class.
     */
@@ -148,7 +148,7 @@ public abstract class BaseAccountingEntry {
      * <p>
      * This random behavior occurs when the GL code mapped to by a financial action is not at the lowest level. For
      * example, in the default financial action mapping,
-     * 
+     *
      * @param a set of GL accounts
      * @return the GL account code entity of the member of the account set, if it contains just one account. If the set
      *         is empty, return null. If the set contains two or more accounts, return an account code chosen at random.

@@ -58,7 +58,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     public boolean hasValidAmount() {
         return getAmount() != null && !getAmount().equals("");
     }
-    
+
     public Money getTotalAmount() {
         if (getAmount() == null || getAmount().equals("")) {
             return null;

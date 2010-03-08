@@ -124,7 +124,7 @@ public abstract class TaskHelper {
 
     /**
      * This methods, performs the job specific to each task. Most batch jobs must be run daily.
-     * 
+     *
      * @param timeInMillis
      *            date the job is being run for. Useful for "catch up", ie: running batch jobs for dates past. Note
      *            some jobs ignore this value.

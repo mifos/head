@@ -46,7 +46,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public List<LoanOfferingBO> loadActiveProductsApplicableForCustomer(final CustomerBO customer) {
-        
+
         final List<LoanOfferingBO> applicableLoanProducts = new ArrayList<LoanOfferingBO>();
 
         final List<LoanOfferingBO> loanOfferings = loanProductDao.findActiveLoanProductsApplicableToCustomerLevel(customer
@@ -64,7 +64,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public LoanCreationGlimDto retrieveGlimSpecificDataForGroup(final CustomerBO customer) {
-        
+
         final List<ValueListElement> loanPurposes = loanProductDao.findAllLoanPurposes();
 
         final List<ClientBO> activeClientsOfGroup = customerDao.findActiveClientsUnderGroup(customer);

@@ -79,11 +79,11 @@ public class MifosNumberTextTag extends ELTextTag {
 
     /**
      * Set the onBlur and onKeyPress events of the element.
-     * 
+     *
      * @return int
      * @exception JspException
      *                if a JSP exception has occurred
-     * 
+     *
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     @Override

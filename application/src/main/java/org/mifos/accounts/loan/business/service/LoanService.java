@@ -49,7 +49,7 @@ import org.mifos.framework.util.helpers.Money;
  * LoanService encapsulates high level operations on loans including loan
  * creation and retrieval. No domain/business objects should be returned from
  * this class, only Data Transfer Objects (DTOs) or primitives.
- * 
+ *
  */
 public class LoanService implements Service {
     private static final FundBO NO_FUND = null;
@@ -97,7 +97,7 @@ public class LoanService implements Service {
         loanProductService.getDefaultAndAdditionalFees(loanProductId, userContext, defaultFees, additionalFees);
 
         CustomerBO client = new CustomerBusinessService().getCustomer(clientId);
-        LoanBO loan = loanDao.createLoan(userContext, loanOffering, client, accountState, 
+        LoanBO loan = loanDao.createLoan(userContext, loanOffering, client, accountState,
                 new Money(loanOffering.getCurrency(), loanAmount),
                 defaultNumberOfInstallments, center.getCustomerAccount().getNextMeetingDate(), loanOffering
                         .isIntDedDisbursement(), loanOffering.getDefInterestRate(), loanOffering

@@ -30,7 +30,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 public class ActivityTestUtil {
     /**
      * This method creates a new activity entity with a given activity id
-     * 
+     *
      * @return activityEntity {@link ActivityEntity}
      * @throws PersistenceException
      */

@@ -49,7 +49,7 @@ public class CustomerMeetingEntity extends PersistentObject {
 
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal constructor for builder
      */
     public CustomerMeetingEntity(final MeetingBO meeting, final Short updatedFlag) {
@@ -57,7 +57,7 @@ public class CustomerMeetingEntity extends PersistentObject {
         this.meeting = meeting;
         this.updatedFlag = updatedFlag;
     }
-    
+
     public CustomerMeetingEntity(final CustomerBO customer, final MeetingBO meeting) {
         meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMER_MEETING));
         this.customer = customer;

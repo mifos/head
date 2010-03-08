@@ -110,7 +110,7 @@ public class TestSaveCollectionSheetUtils {
     private Boolean normalLoanRepayment = false;
 
     /*
-     * 
+     *
      */
     private CenterBO center;
     private GroupBO group;
@@ -127,10 +127,10 @@ public class TestSaveCollectionSheetUtils {
     /**
      * Write a sample center hierarchy, retrieve the collection sheet information and put it into a
      * saveCollectionSheetDto.
-     * 
+     *
      * Sample hierarchy contains one center, one group and one client with a loan to be disbursed and 1 weekly account
      * collection fee
-     * 
+     *
      * Finally, change client and loan status if configured to do so.
      */
     public SaveCollectionSheetDto createSampleSaveCollectionSheet() throws AccountException, CustomerException {
@@ -267,7 +267,7 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /*
-     * 
+     *
      */
     private ClientBO getAnotherClientFromAnotherCenter() throws Exception {
 
@@ -597,7 +597,7 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /*
-     * 
+     *
      * methods to configure invalid entries below
      */
     /**

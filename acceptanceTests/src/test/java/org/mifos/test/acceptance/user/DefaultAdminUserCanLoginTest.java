@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.user;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 
 	private AppLauncher appLauncher;
-	
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
 	@BeforeMethod
 	public void setUp() throws Exception {
@@ -51,13 +51,13 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 	public void logOut() {
 		(new MifosPage(selenium)).logout();
 	}
-	
+
 	public void canLaunchMifosTest() {
 		appLauncher
 			.launchMifos()
 				.verifyPage();
 	}
-	
+
 	public void defaultAdminLoginSuccessTest() {
 		appLauncher
 			.launchMifos()
@@ -74,7 +74,7 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 	public void userLoginFailureNoPasswordTest() {
 		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "");
 		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no password was used to login.");
-					
+
 	}
 
 	public void userLoginFailureNoUsernameTest() {

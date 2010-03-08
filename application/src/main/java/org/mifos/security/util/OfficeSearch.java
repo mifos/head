@@ -44,7 +44,7 @@ public class OfficeSearch extends View {
 
     /**
      * This Function returns the officeId
-     * 
+     *
      * @return Returns the officeId.
      */
     public Short getOfficeId() {
@@ -68,7 +68,7 @@ public class OfficeSearch extends View {
 
     /**
      * This function set the officeId
-     * 
+     *
      * @param officeId
      *            The officeId to set.
      */
@@ -78,7 +78,7 @@ public class OfficeSearch extends View {
 
     /**
      * This Function returns the searchId
-     * 
+     *
      * @return Returns the searchId.
      */
     public String getSearchId() {
@@ -87,7 +87,7 @@ public class OfficeSearch extends View {
 
     /**
      * This function set the searchId
-     * 
+     *
      * @param searchId
      *            The searchId to set.
      */

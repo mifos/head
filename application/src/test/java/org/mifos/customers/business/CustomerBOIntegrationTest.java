@@ -359,7 +359,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     /*
      * Removing this test for now since this test case is the only place the
      * method getDelinquentPortfolioAmount() is called
-     * 
+     *
      * public void testGetDelinquentPortfolioAmount() { createInitialObjects();
      * accountBO = getLoanAccount(client, meeting);
      * TestObjectFactory.flushandCloseSession(); accountBO =

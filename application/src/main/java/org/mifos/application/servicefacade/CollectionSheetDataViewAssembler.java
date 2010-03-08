@@ -45,25 +45,25 @@ public class CollectionSheetDataViewAssembler {
 
         for (int rowIndex = 0; rowIndex <= customers; rowIndex++) {
             attendance[rowIndex] = request.getParameter("attendanceSelected[" + rowIndex + "]");
-            
+
             for (int columnIndex = 0; columnIndex < loanProductsSize; columnIndex++) {
                 enteredAmount[rowIndex][columnIndex] = request.getParameter("enteredAmount[" + rowIndex + "]["
                         + columnIndex + "]");
                 disbursalAmount[rowIndex][columnIndex] = request.getParameter("enteredAmount[" + rowIndex + "]["
                         + (loanProductsSize + savingsProductSize + columnIndex) + "]");
             }
-            
+
             for (int columnIndex = 0; columnIndex < savingsProductSize; columnIndex++) {
                 depositAmountEntered[rowIndex][columnIndex] = request.getParameter("depositAmountEntered[" + rowIndex
                         + "][" + (loanProductsSize + columnIndex) + "]");
                 withdrawalAmountEntered[rowIndex][columnIndex] = request.getParameter("withDrawalAmountEntered["
                         + rowIndex + "][" + ((2 * loanProductsSize) + savingsProductSize + columnIndex) + "]");
             }
-            
+
             customerAccountAmountEntered[rowIndex] = request.getParameter("customerAccountAmountEntered[" + rowIndex
                     + "][" + (2 * (loanProductsSize + savingsProductSize)) + "]");
         }
-        
+
         return new CollectionSheetDataView(enteredAmount, disbursalAmount,
                 depositAmountEntered, withdrawalAmountEntered, customerAccountAmountEntered, attendance);
     }

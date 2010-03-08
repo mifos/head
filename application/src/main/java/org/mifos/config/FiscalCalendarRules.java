@@ -131,7 +131,7 @@ public class FiscalCalendarRules {
         return startOfWeek;
     }
 
-    
+
     public String getScheduleTypeForMeetingOnHoliday() {
         String scheduleType = null;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -162,17 +162,17 @@ public class FiscalCalendarRules {
     }
 
     public List<Days> getWorkingDaysAsJodaTimeDays() {
-        
+
         List<Days> jodaWorkingDays = new ArrayList<Days>();
-        
+
         List<WeekDay> workingDaysAsWeekDays = getWorkingDays();
         for (WeekDay weekDay : workingDaysAsWeekDays) {
-            
+
             Days jodaWeekDay =  Days.days(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(weekDay.getValue()));
-            
+
             jodaWorkingDays.add(jodaWeekDay);
         }
-        
+
         return jodaWorkingDays;
     }
 

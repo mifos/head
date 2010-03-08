@@ -137,13 +137,13 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("Savings.amount")));
             }
-            
+
             if(StringUtils.isNotBlank(getAmount())) {
                 Locale locale = getUserContext(request).getPreferredLocale();
-                DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale, 
+                DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
                         FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-                    addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+                    addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                             lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
                 }
             }

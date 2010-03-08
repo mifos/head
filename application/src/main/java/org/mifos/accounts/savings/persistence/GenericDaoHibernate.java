@@ -107,7 +107,7 @@ public class GenericDaoHibernate implements GenericDao {
             throw new MifosRuntimeException(e);
         }
     }
-    
+
     private void setParametersInQuery(final Query query, final Map<String, ?> queryParameters) {
 
         final Set<String> queryParamKeys = queryParameters.keySet();

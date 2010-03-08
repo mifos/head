@@ -52,7 +52,7 @@ public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
         }
 
         // check if rounding is required
-        Money roundedAmount = Money.round(loanTrxn.getPrincipalAmount(), 
+        Money roundedAmount = Money.round(loanTrxn.getPrincipalAmount(),
                 loanTrxn.getPrincipalAmount().getCurrency().getRoundingAmount(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(loanTrxn.getPrincipalAmount())) {
             FinancialActionBO finActionRounding = FinancialActionCache

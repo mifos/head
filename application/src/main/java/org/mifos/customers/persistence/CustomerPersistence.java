@@ -180,7 +180,7 @@ public class CustomerPersistence extends Persistence {
                 NamedQueryConstants.GET_LAST_MEETINGDATE_FOR_CUSTOMER, queryParameters);
         return meetingDate;
     }
-    
+
     /**
      * @deprecated use {@link CustomerDao#findCustomerById(Integer)}
      */
@@ -805,15 +805,15 @@ public class CustomerPersistence extends Persistence {
 
     /**
      * Update loan officer for all children accounts.
-     * 
+     *
      * This method was introduced for when a center is assigned a new loan
      * officer, and this loan officer needs to be re-assigned not just for the
      * center's groups and clients, but for each account belonging to those
      * customers.
-     * 
+     *
      * Note: Required as to fix issues 1570 and 1804 Note 10/08/2008: direct
      * sqls are used to improve performance (issue 2209)
-     * 
+     *
      * @param parentLO
      *            the parent loan officer
      * @param parentSearchId
@@ -1043,7 +1043,7 @@ public class CustomerPersistence extends Persistence {
         Short currencyId = (Short)queryResult.get(0);
         return AccountingRules.getCurrencyByCurrencyId(currencyId);
     }
-    
+
     public List<BasicGroupInfo> getAllBasicGroupInfo() throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         return executeNamedQuery(NamedQueryConstants.GET_ALL_BASIC_GROUP_INFO, params);
@@ -1052,12 +1052,12 @@ public class CustomerPersistence extends Persistence {
     public Money getTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState, final String searchIdString)
             throws PersistenceException {
         MifosCurrency currency = getCurrencyForTotalAmountForAllClientsOfGroup(officeId, accountState, searchIdString);
-        
+
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("officeId", officeId);
         params.put("accountState", accountState.getValue());
         params.put("searchId", searchIdString);
-                
+
         BigDecimal amount = getCalculateValueFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_TOTAL_AMOUNT_FOR_ALL_CLIENTS_OF_GROUP, params));
         Money totalAmount = new Money(currency, amount);
@@ -1082,7 +1082,7 @@ public class CustomerPersistence extends Persistence {
         Short currencyId = (Short)queryResult.get(0);
         return AccountingRules.getCurrencyByCurrencyId(currencyId);
     }
-    
+
     private HashMap<String, Object> populateDormantQueryParams(final OfficeBO office, final Integer loanCyclePeriod) {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put(CustomerSearchConstants.OFFICEID, office.getOfficeId());
@@ -1159,7 +1159,7 @@ public class CustomerPersistence extends Persistence {
     public Money retrieveTotalLoan(final String searchId, final Short officeId) throws PersistenceException {
         return retrieveTotalForQuery(NamedQueryConstants.RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER, searchId, officeId);
     }
-    
+
     public Money retrieveTotalSavings(final String searchId, final Short officeId) throws PersistenceException {
         return retrieveTotalForQuery(NamedQueryConstants.RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER, searchId, officeId);
     }
@@ -1181,9 +1181,9 @@ public class CustomerPersistence extends Persistence {
         }
         Integer currencyId = (Integer)((Object[])queryResult.get(0))[0];
         MifosCurrency currency =  AccountingRules.getCurrencyByCurrencyId(currencyId.shortValue());
-        
+
         BigDecimal total = (BigDecimal)((Object[])queryResult.get(0))[1];
-        
+
         return new Money(currency, total);
     }
 
@@ -1220,5 +1220,5 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQueryWithResultTransformer(
                 "Customer.get_loanofficer_list_of_groups", queryParameters, CustomerListDto.class);
     }
-    
+
 }

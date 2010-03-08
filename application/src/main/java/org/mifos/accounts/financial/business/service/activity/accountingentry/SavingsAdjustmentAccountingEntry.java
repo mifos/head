@@ -37,7 +37,7 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
  * <ul>
  *     <li><code>BaseFinancialActivity</code> (parameter) -- knows the
  *                         <code>SavingsTrxnDetailEntity</code> instance for the activity.
- *     <li><code>SavingsTrxnDetailEntity</code> instance knows 
+ *     <li><code>SavingsTrxnDetailEntity</code> instance knows
  *         <ul>
  *             <li>the <code>SavingsBO</code> instance
  *             <li>the deposit or withdrawal amount of the adjustment
@@ -52,11 +52,11 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
  *     <li><code>SavingsHelper</code> instance knows the payment action type (deposit or withdrawal) of the payment.
  *     <li><code>
  * </ul>
- * 
+ *
  * <h3>Post-conditions</h3>
  * <p>
  * Creates two <code>FinancialTransactionBO</code> and adds them to the financialActivity. These values
- * are set for both transactions: 
+ * are set for both transactions:
  *     <table border=1 cellspacing=0 cellpadding=5>
  *       <tr><td>*accountTrxn         </td><td>financialActivity.getAccountTrxn()c
  *       <tr><td>*relatedFinancialTrxn</td><td>null</td></tr>
@@ -70,25 +70,25 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
  * <p>
  * If the adjustment is to a savings withdrawal, these two transactions are created with these
  * additional field values:
- * 
+ *
  *   <ul>
  *     <li>a FinancialTransactionBO debiting the savings account where:
- *         
+ *
  * <p>
  *         <table border=1 cellspacing=0 cellpadding=5 vspace=10>
  *            <tr><td>postedAmount         </td><td> <code>savingsTrxn.getWithdrawlAmount()</code>, adjusted for sign per specs<br/>
  *                                         (see <code>BaseAccountingEntry.getAmountToPost()</code></td></tr>
- *            <tr><td>financialAction      </td><td> the FinancialActionBO corresponding to one of<br/> 
- *                                            FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT 
+ *            <tr><td>financialAction      </td><td> the FinancialActionBO corresponding to one of<br/>
+ *                                            FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT
  *                                            <br/>or FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT
  *                                         <br/>depending on the type of savings account.</td></tr>
  *            <tr><td>glCode               </td><td> savings.getSavingsOffering().getDepositGLCode()</td></tr>
  *            <tr><td>postedAmount         </td><td> SavingsTrxnDetailEntity.withdrawalAmount</td></tr>
  *            <tr><td>debitCreditFlag      </td><td> FinancialConstants.DEBIT</td></tr>
  *         </table>
- *         
+ *
  * <p>
- *     <li>a financialTransactionBO crediting a savings or deposit liability account: 
+ *     <li>a financialTransactionBO crediting a savings or deposit liability account:
  * <p>
  *         <table border=1 cellspacing=0 cellpadding=5 vspace=10>
  *            <tr><td>  postedAmount         </td><td> <code>savingsTrxn.getWithdrawlAmount()</code>, adjusted for sign per specs <br/>
@@ -102,7 +102,7 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
  *            <tr><td>  debitCreditFlag      </td><td> FinancialConstants.CREDIT</td><tr>
  *         </table>
  *    </ul>
- *    
+ *
  * <p>
  * If the adjustment is to a savings deposit, these two transactions are created with these
  * additional field values:
@@ -121,12 +121,12 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
  *         </table>
  *  <p>
  *     <li>a financialTransactionBO crediting a savings or deposit liability account:
- *     <p> 
+ *     <p>
  *         <table border=1 cellspacing=0 cellpadding=5 vspace=10>
  *            <tr><td>  postedAmount         </td><td> <code>savingsTrxn.getDepositAmount()</code>, adjusted for sign per specs <br/>
  *                                         (see <code>BaseAccountingEntry.getAmountToPost()</code></td><tr>
  *            <tr><td>  financialAction      </td><td> the FinancialActionBO corresponding to one <br/>
- *                                            FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT<br/> 
+ *                                            FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT<br/>
  *                                            or FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT<br/>
  *                                         depending on the type of savings account.</td><tr>
  *            <tr><td>  glCode               </td><td> **the GLCodeEntity of the GL account to credit for the above financial action</td><tr>
@@ -141,13 +141,13 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
  *         action maps to a GL code that is not at the lowest level of hierarchy in the chart of accounts, the result
  *         is a GL code chosen randomly among the lowest level descendants of the mapped GL code.
  *  </dl>
- *         
+ *
  *
  */
 public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
-        
+
         private SavingsHelper savingsHelper = new SavingsHelper(); //use fresh instance when not being injected
-        
+
     @Override
     protected void applySpecificAccountActionEntry() throws FinancialException {
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();

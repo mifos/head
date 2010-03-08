@@ -32,12 +32,12 @@ public class PaymentTypeEntity extends MasterDataEntity {
      * name.  Beware that this cannot be used in a situation where getName()
      * may be called.  getName() may be called by the audit logger,
      * so this should not be used if the audit logger may be called.
-     * 
+     *
      */
     public PaymentTypeEntity(Short id) {
         super(id);
     }
-    
+
     public PaymentTypeEntity(LookUpValueEntity lookUpValueEntity) {
         super(lookUpValueEntity);
     }

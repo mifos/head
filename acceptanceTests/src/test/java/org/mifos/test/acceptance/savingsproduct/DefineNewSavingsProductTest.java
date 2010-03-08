@@ -39,16 +39,16 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"savingsproduct","acceptance"})
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class DefineNewSavingsProductTest extends UiTestCaseBase {
-    
-    SavingsProductHelper savingsProductHelper;    
-    
+
+    SavingsProductHelper savingsProductHelper;
+
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
@@ -60,26 +60,26 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     public void createVoluntarySavingsProductForClients() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
-        
+
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         params.setApplicableFor(SavingsProductParameters.CLIENTS);
-        
+
         savingsProductHelper.createSavingsProduct(params);
-        
+
         verifySavingsProduct("DefineNewSavingsProduct_001_result_dbunit.xml.zip");
     }
-    
+
     public void createMandatorySavingsProductForClients() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
         params.setApplicableFor(SavingsProductParameters.CLIENTS);
-        
+
         savingsProductHelper.createSavingsProduct(params);
 
         verifySavingsProduct("DefineNewSavingsProduct_002_result_dbunit.xml.zip");
@@ -91,36 +91,36 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         params.setApplicableFor(SavingsProductParameters.GROUPS);
-        
+
         savingsProductHelper.createSavingsProduct(params);
 
         verifySavingsProduct("DefineNewSavingsProduct_003_result_dbunit.xml.zip");
-    }   
-    
+    }
+
     public void createMandatorySavingsProductForGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
         params.setApplicableFor(SavingsProductParameters.GROUPS);
-        
+
         savingsProductHelper.createSavingsProduct(params);
 
         verifySavingsProduct("DefineNewSavingsProduct_004_result_dbunit.xml.zip");
     }
-    
+
     public void createVoluntarySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         params.setApplicableFor(SavingsProductParameters.CENTERS);
-        
+
         savingsProductHelper.createSavingsProduct(params);
 
         verifySavingsProduct("DefineNewSavingsProduct_005_result_dbunit.xml.zip");
     }
-    
+
     public void createMandatorySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
 
@@ -132,8 +132,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         verifySavingsProduct("DefineNewSavingsProduct_006_result_dbunit.xml.zip");
     }
-    
-    
+
+
     /**
      * This method return a fully useable parameter object EXCEPT for the type of deposit (mandatory/voluntary)
      * and applicable for (clients/groups/centers).
@@ -141,41 +141,41 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
      */
     private SavingsProductParameters getGenericSavingsProductParameters() {
         SavingsProductParameters params = new SavingsProductParameters();
-        
+
         params.setProductInstanceName("Savings product" + StringUtil.getRandomString(3));
         params.setShortName("SV" + StringUtil.getRandomString(2));
         params.setProductCategory(SavingsProductParameters.OTHER);
         params.setStartDateDD("15");
         params.setStartDateMM("06");
         params.setStartDateYYYY("2010");
-        
+
         // these two settings are not required in all configurations
         // but they're good to have anyway
         params.setMandatoryAmount("10");
         params.setAmountAppliesTo(SavingsProductParameters.WHOLE_GROUP);
-        
+
         params.setInterestRate("4");
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
         params.setDaysOrMonthsForInterestCalculation(SavingsProductParameters.MONTHS);
         params.setNumberOfDaysOrMonthsForInterestCalculation("3");
         params.setFrequencyOfInterestPostings("6");
-        
+
         params.setGlCodeForDeposit("24101");
         params.setGlCodeForInterest("41102");
-        
+
         return params;
     }
-    
+
     private void verifySavingsProduct(String resultDataSetFile) throws Exception {
         String[] tablesToValidate = { "PRD_OFFERING",  "SAVINGS_OFFERING" };
-        
+
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
 
-        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);     
-        
-        
+        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
+
+
     }
 
-    
+
 }

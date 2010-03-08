@@ -46,7 +46,7 @@ public abstract class LanguageUpgrade extends Upgrade {
     /**
      * This method adds language name, code pairs to the map to be added to the
      * database
-     * 
+     *
      * @param languageNameAndCodesToAdd
      *            - add data to this map
      */

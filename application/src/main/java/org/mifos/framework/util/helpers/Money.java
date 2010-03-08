@@ -38,20 +38,20 @@ import org.mifos.core.CurrencyMismatchException;
  * deals with only one currency but later it can be extended to handle currency
  * conversions while performing operations. This is an immutable class as the
  * money object is not supposed to be modified .
- * 
+ *
  */
 public final class Money implements Serializable, Comparable<Money> {
 
     /**
      * The precision used for internal calculations
      *  7 (before decimal) + 6(after decimal) = 13.
-     *  Assuming that we are bounding the calculations to 7 digits 
+     *  Assuming that we are bounding the calculations to 7 digits
      *  before decimal, we get 6 digits after the decimal which is enough
      *  for the precision.
      *  <br><br>
      *  Why we bound the before decimal digits to 7 ?
      *  <br>see latest_schema.sql for amount (DECIMAL(10,3))
-     * 
+     *
      */
     private static int internalPrecision = 13;
     /**
@@ -137,7 +137,7 @@ public final class Money implements Serializable, Comparable<Money> {
     public Money multiply(BigDecimal factor) {
         return new Money(currency, amount.multiply(factor).setScale(internalPrecision, internalRoundingMode));
     }
-    
+
     public Money multiply(int intValue) {
         return multiply(new BigDecimal(intValue));
     }
@@ -157,7 +157,7 @@ public final class Money implements Serializable, Comparable<Money> {
         return new Money(currency, amount.divide(factor.setScale(internalPrecision, internalRoundingMode),
                 internalPrecision, internalRoundingMode));
     }
-    
+
     public Money divide(Double value) {
         return divide(new BigDecimal(value));
     }
@@ -185,7 +185,7 @@ public final class Money implements Serializable, Comparable<Money> {
      * number) we will divide 142.34 by .5 which will result in 284.68 now we
      * will round this to a whole number using ceil mode which will result in
      * 285 and then multiply 285 by 0.5 resulting in 142.5.
-     * 
+     *
      */
     public static Money round(Money money, BigDecimal roundOffMultiple, RoundingMode roundingMode) {
         // insure that we are using the correct internal precision
@@ -208,7 +208,7 @@ public final class Money implements Serializable, Comparable<Money> {
      * the amount of the two money objects. It is not advisable to use equals
      * method of BigDecimal because it would return false for numbers like 10.0
      * and 10.00 instead we should use compareTo.
-     * 
+     *
      */
     @Override
     public boolean equals(Object obj) {
@@ -248,15 +248,15 @@ public final class Money implements Serializable, Comparable<Money> {
     public boolean isGreaterThan(Money money) {
         return this.compareTo(money) > 0;
     }
-    
+
     public boolean isGreaterThanOrEqual(Money money) {
         return this.compareTo(money) >= 0;
     }
-    
+
     public boolean isGreaterThanZero() {
         return this.getAmount().compareTo(BigDecimal.ZERO) > 0;
     }
-    
+
     public boolean isGreaterThanOrEqualZero() {
         return this.getAmount().compareTo(BigDecimal.ZERO) >= 0;
     }
@@ -264,23 +264,23 @@ public final class Money implements Serializable, Comparable<Money> {
     public boolean isLessThan(Money money) {
         return this.compareTo(money) < 0;
     }
-    
+
     public boolean isLessThanOrEqual(Money money) {
         return this.compareTo(money) <= 0;
     }
-    
+
     public boolean isLessThanZero() {
         return this.getAmount().compareTo(BigDecimal.ZERO) < 0;
     }
-    
+
     public boolean isLessThanOrEqualZero() {
         return this.getAmount().compareTo(BigDecimal.ZERO) <= 0;
     }
-    
+
     public boolean isZero() {
         return this.getAmount().compareTo(BigDecimal.ZERO) == 0;
     }
-    
+
     public boolean isNonZero() {
         return this.getAmount().compareTo(BigDecimal.ZERO) != 0;
     }

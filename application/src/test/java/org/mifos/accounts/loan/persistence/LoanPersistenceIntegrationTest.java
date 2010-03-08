@@ -155,7 +155,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.startTransaction();
         loanAccount.setExternalId(externalId);
         StaticHibernateUtil.commitTransaction();
-        
+
         LoanPersistence loanPersistance = new LoanPersistence();
         LoanBO loanBO = loanPersistance.findByExternalId(loanAccount.getExternalId());
         Assert.assertEquals(externalId, loanBO.getExternalId());

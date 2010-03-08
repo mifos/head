@@ -120,20 +120,20 @@ public class TestUtils {
         SAXReader reader = new SAXReader();
         reader.read(new StringReader(xmlDocument));
     }
-        
+
     public static Money createMoney(String amount) {
         return new Money(RUPEE, amount);
     }
-    
+
     public static Money createMoney(Double amount) {
         return new Money(RUPEE, BigDecimal.valueOf(amount));
     }
-    
+
     public static Money createMoney(int amount) {
         // TODO Auto-generated method stub
         return new Money(RUPEE, BigDecimal.valueOf(amount));
     }
-    
+
     public static Money createMoney() {
         return new Money(RUPEE);
     }
@@ -153,7 +153,7 @@ public class TestUtils {
      * your equals implementation. Generally there should be an instance of a
      * subclass somewhere in the data you pass. The null case is always checked
      * and should not be passed in either the equalArray or noEqualArray.
-     * 
+     *
      * @param equalArray
      *            - an array of class T containing at least 2 elements which are
      *            all equal to one another (eg. new Foo[] {new Foo(5), new

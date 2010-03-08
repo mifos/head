@@ -67,7 +67,7 @@ public class ViewProductCategoriesTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = loginAndGoToAdminPage();
-        ViewProductCategoriesPage viewProductCategoriesPage = 
+        ViewProductCategoriesPage viewProductCategoriesPage =
             adminPage.navigateToViewProductCategoriesPage();
         viewProductCategoriesPage.verifyPage();
 
@@ -77,7 +77,7 @@ public class ViewProductCategoriesTest extends UiTestCaseBase {
 //                "Saving",
 //                "Other"
 //        };
-//        
+//
 //        viewProductCategoriesPage.verifyProductCategories(expectedData);
 
     }

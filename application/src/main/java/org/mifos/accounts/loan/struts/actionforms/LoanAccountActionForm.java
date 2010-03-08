@@ -711,7 +711,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             }
         }
     }
-    
+
     private  RateAmountFlag getAdditionalFeeType(List<FeeView> additionalFeeList, String feeId) {
         for (FeeView fee : additionalFeeList)
             if (fee.getFeeId().equals(feeId)) {

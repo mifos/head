@@ -50,15 +50,15 @@ public class CustomPropertiesUpdateController extends AbstractController {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
             handleLocalization(request, response, errorMessages, model);
-            
+
             handleAccountingRules(request, response, errorMessages, model);
 
             handleCalendarRules(request, response, errorMessages, model);
 
-            handleMinMaxClientAge(request, response, errorMessages, model);           
-            
+            handleMinMaxClientAge(request, response, errorMessages, model);
+
             handleFamilyDetails(request, response, errorMessages, model);
-            
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -79,7 +79,7 @@ public class CustomPropertiesUpdateController extends AbstractController {
                 model.put("clientRulesResult", "minimumAge: " + minimumAge);
             } catch (NumberFormatException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                errorMessages.add("Unable to parse and int from ClientRules.MinimumAgeForNewClients: " + new LogUtils().getStackTrace(e) );                    
+                errorMessages.add("Unable to parse and int from ClientRules.MinimumAgeForNewClients: " + new LogUtils().getStackTrace(e) );
             }
         }
 
@@ -91,11 +91,11 @@ public class CustomPropertiesUpdateController extends AbstractController {
                 model.put("clientRulesResult", "maximumAge: " + maximumAge);
             } catch (NumberFormatException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                errorMessages.add("Unable to parse and int from ClientRules.MaximumAgeForNewClients: " + new LogUtils().getStackTrace(e) );                    
+                errorMessages.add("Unable to parse and int from ClientRules.MaximumAgeForNewClients: " + new LogUtils().getStackTrace(e) );
             }
         }
     }
-    
+
     private void handleFamilyDetails(HttpServletRequest request, HttpServletResponse response,
             List<String> errorMessages, Map<String, Object> model){
         String areFamilyDetailsRequired=request.getParameter("ClientInformation.AreFamilyDetailsRequired");
@@ -104,7 +104,7 @@ public class CustomPropertiesUpdateController extends AbstractController {
              testingService.setAreFamilyDetailsRequired(required);
              model.put("clientRulesResult", "areFamilyDetailsRequired: " + required);
         }
-        
+
         String numberOfFamilyMembers=request.getParameter("ClientInformation.MaximumNumberOfFamilyMembers");
         if (StringUtils.isNotBlank(numberOfFamilyMembers)) {
             try {
@@ -113,10 +113,10 @@ public class CustomPropertiesUpdateController extends AbstractController {
                 model.put("clientRulesResult", "maximumNumberOfFamilyMembers: " + maximumNumberOfFamilyMembers);
             } catch (NumberFormatException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                errorMessages.add("Unable to parse and int from ClientInformation.MaximumNumberOfFamilyMembers: " + new LogUtils().getStackTrace(e) );                    
+                errorMessages.add("Unable to parse and int from ClientInformation.MaximumNumberOfFamilyMembers: " + new LogUtils().getStackTrace(e) );
             }
         }
-        
+
     }
 
     private void handleCalendarRules(HttpServletRequest request, HttpServletResponse response,

@@ -36,7 +36,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         this.verifyPage("NextPaymentLoanAccount");
     }
 
-    
+
     public void verifyInstallmentAmount(int row, int column, String amount) {
         Assert.assertEquals(selenium.getText("//tr[" + row + "]/td[" + column + "]"), amount);
     }
@@ -46,13 +46,13 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         waitForPageToLoad();
         return new HomePage(selenium);
     }
-    
+
     public LoanAccountPage waiveFee() {
         selenium.click("nextPayment_loanAccount.link.waiveFeeDue");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
-    
+
     public LoanAccountPage waivePenalty() {
         selenium.click("nextPayment_loanAccount.link.waivePenaltyDue");
         waitForPageToLoad();

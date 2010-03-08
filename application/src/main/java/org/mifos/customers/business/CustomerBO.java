@@ -116,14 +116,14 @@ public abstract class CustomerBO extends BusinessObject {
 
     /*
      * Injected Persistence classes
-     * 
+     *
      * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     * 
+     *
      * The Persistence classes below are used by this class and can be injected
      * via a setter for testing purposes. In order for this mechanism to work
      * correctly, the getter must be used to access them because the getter will
      * initialize the Persistence class if it has not been injected.
-     * 
+     *
      * Long term these references to Persistence classes should probably be
      * eliminated.
      */
@@ -171,10 +171,10 @@ public abstract class CustomerBO extends BusinessObject {
         this(null, null, null, null, null);
         this.globalCustNum = null;
     }
-    
+
     /**
      * TODO - keithw - work in progress
-     * 
+     *
      * minimal constructor for builder
      */
     public CustomerBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
@@ -188,7 +188,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.customerMeeting = customerMeeting;
         this.customerMeeting.setCustomer(this);
         this.parentCustomer = parentCustomer;
-        
+
         this.accounts = new HashSet<AccountBO>();
         this.customerLevel = new CustomerLevelEntity(customerLevel);
         this.customerStatus = new CustomerStatusEntity(customerStatus);
@@ -196,7 +196,7 @@ public abstract class CustomerBO extends BusinessObject {
 
         this.customerNotes = new HashSet<CustomerNoteEntity>();
         this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
-        
+
         // FIXME - keithw - not convinced UserContext is required along with
         // Personnel and Office. inserting to satisfy id generation
         this.userContext = new UserContext();
@@ -522,7 +522,7 @@ public abstract class CustomerBO extends BusinessObject {
      * FIXME - keithw - find {@link CustomerAccountBO} using DAO/Persistence
      * rather than looping over all accounts (should it not be a one-to-one
      * relationship anyway?)
-     * 
+     *
      * @deprecated
      */
     @Deprecated
@@ -1300,7 +1300,7 @@ public abstract class CustomerBO extends BusinessObject {
 
     /**
      * Returns the amount which this customer
-     * 
+     *
      **/
     public Money getMaxLoanAmount(final LoanOfferingBO loanOffering) {
         ArrayList<Money> loanAmounts = new ArrayList<Money>();
@@ -1339,7 +1339,7 @@ public abstract class CustomerBO extends BusinessObject {
      * part of a group. This method was originally created for use in fixing <a
      * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1417">bug
      * #1417</a>.
-     * 
+     *
      * @return A {@link java.util.Comparator} useful for comparing customers by
      *         searchId.
      */

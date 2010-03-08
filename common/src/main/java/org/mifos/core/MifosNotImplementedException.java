@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.core;
 
 public class MifosNotImplementedException extends MifosRuntimeException {
@@ -27,11 +27,11 @@ public class MifosNotImplementedException extends MifosRuntimeException {
 	public MifosNotImplementedException() {
 		super();
 	}
-	
+
 	public MifosNotImplementedException(String message) {
 		super(message);
 	}
-	
+
     public MifosNotImplementedException(String message, Throwable cause) {
         super(message, cause);
     }

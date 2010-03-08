@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework;
 
 import org.testng.Assert;
@@ -29,16 +29,16 @@ public class AppInfoNoSecurityPage extends AbstractPage {
 	public AppInfoNoSecurityPage() {
 		super();
 	}
-	
+
 	public AppInfoNoSecurityPage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
     public AppInfoNoSecurityPage navigateToAppInfoNoSecurityPage() {
         selenium.open("appInfoNoSecurity.ftl");
         return new AppInfoNoSecurityPage(selenium);
     }
-	
+
 	public AppInfoNoSecurityPage verifyPage() {
 		Assert.assertEquals(selenium.getTitle(), "System Information");
         Assert.assertEquals(selenium.getText("id=appInfo.svn.revision.message"), "SVN revision number");

@@ -158,9 +158,9 @@ public class SavingsPrdAction extends BaseAction {
                         savingsprdForm.getTimeForInterestCalcValue(), new DateTimeService().getCurrentJavaDateTime(),
                         MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD), new MeetingBO(RecurrenceType.MONTHLY,
                         savingsprdForm.getFreqOfInterestValue(), new DateTimeService().getCurrentJavaDateTime(),
-                        MeetingType.SAVINGS_INTEREST_POSTING), 
+                        MeetingType.SAVINGS_INTEREST_POSTING),
                         new Money(Money.getDefaultCurrency(), savingsprdForm.getRecommendedAmount()),
-                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMaxAmntWithdrawl()), 
+                        new Money(Money.getDefaultCurrency(), savingsprdForm.getMaxAmntWithdrawl()),
                         new Money(Money.getDefaultCurrency(), savingsprdForm.getMinAmntForInt()), savingsprdForm
                         .getInterestRateValue(), findGLCodeEntity(request,
                         ProductDefinitionConstants.SAVINGSDEPOSITGLCODELIST, savingsprdForm.getDepositGLCodeValue()),
@@ -263,7 +263,7 @@ public class SavingsPrdAction extends BaseAction {
                         new DateTimeService().getCurrentJavaDateTime(),
                         MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD), new MeetingBO(RecurrenceType.MONTHLY,
                         savingsprdForm.getFreqOfInterestValue(), new DateTimeService().getCurrentJavaDateTime(),
-                        MeetingType.SAVINGS_INTEREST_POSTING), 
+                        MeetingType.SAVINGS_INTEREST_POSTING),
                         new Money(Money.getDefaultCurrency(), savingsprdForm.getRecommendedAmount()),
                         new Money(Money.getDefaultCurrency(), savingsprdForm.getMaxAmntWithdrawl()),
                         new Money(Money.getDefaultCurrency(), savingsprdForm.getMinAmntForInt()), savingsprdForm

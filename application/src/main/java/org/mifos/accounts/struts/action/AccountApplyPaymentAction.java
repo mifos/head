@@ -67,7 +67,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountApplyPaymentAction extends BaseAction {
     private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
-    private StandardAccountService standardAccountService = null;  
+    private StandardAccountService standardAccountService = null;
     private AccountBusinessService accountBusinessService = null;
     private AccountPersistence accountPersistence = new AccountPersistence();
     private List<PaymentTypeDto> loanPaymentTypeDtos;
@@ -82,7 +82,7 @@ public class AccountApplyPaymentAction extends BaseAction {
     public StandardAccountService getStandardAccountService() {
         return standardAccountService;
     }
-    
+
     @Override
     protected BusinessService getService() throws ServiceException {
         return getAccountBusinessService();
@@ -109,17 +109,17 @@ public class AccountApplyPaymentAction extends BaseAction {
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
         clearActionForm(actionForm);
         actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
-        
+
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
                 new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
                 request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()));
-                
+
         SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.getVersion(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.getAccountType().name(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_ID, Integer.valueOf(actionForm.getAccountId()), request);
-        
-        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, 
+
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
                 accountPaymentDto.getPaymentTypeList(), request);
 
         actionForm.setAmount(accountPaymentDto.getTotalPaymentDue().toString());
@@ -151,9 +151,9 @@ public class AccountApplyPaymentAction extends BaseAction {
                 accountReferenceDto,
                 request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()));
-        
+
         checkVersionMismatch(savedAccountVersion, accountPaymentDto.getVersion());
-        
+
         if (!accountServiceFacade.isPaymentPermitted(accountReferenceDto, userContext)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
@@ -171,7 +171,7 @@ public class AccountApplyPaymentAction extends BaseAction {
                 amount = accountPaymentDto.getTotalPaymentDue().toString();
                 paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
             }
-             
+
             AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
                     new UserReferenceDto(userContext.getId()),
                     new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
@@ -181,9 +181,9 @@ public class AccountApplyPaymentAction extends BaseAction {
                     "",
                     (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
                     actionForm.getReceiptId());
-            
+
             getStandardAccountService().makePayment(accountPaymentParametersDto);
-            
+
             return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
         } catch (InvalidDateException ide) {
             throw new AccountException(ide);
@@ -198,7 +198,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         }
         throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + id);
     }
-    
+
     private PaymentTypeDto getFeePaymentTypeDtoForId(short id) {
         for (PaymentTypeDto paymentTypeDto : feePaymentTypeDtos) {
             if (paymentTypeDto.getValue() == id) {
@@ -206,9 +206,9 @@ public class AccountApplyPaymentAction extends BaseAction {
             }
         }
         throw new MifosRuntimeException("Expected fee PaymentTypeDto not found for id: " + id);
-        
+
     }
-    
+
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {

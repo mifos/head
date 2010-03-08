@@ -51,7 +51,7 @@ public class MeetingRecurrenceEntity extends PersistentObject {
         detailsId = null;
         meetingDetails = null;
     }
-    
+
     /**
      * minimal legal constructor
      */
@@ -61,7 +61,7 @@ public class MeetingRecurrenceEntity extends PersistentObject {
         this.meetingDetails = meetingDetails;
         this.detailsId = null;
     }
-    
+
     public MeetingRecurrenceEntity(final MeetingDetailsEntity meetingDetails) {
         this.meetingDetails = meetingDetails;
         this.weekDay = null;

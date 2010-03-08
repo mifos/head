@@ -45,12 +45,12 @@ public enum WeekDay implements LocalizedTextLookup {
 
     /*
      * In Joda time MONDAY=1 and SUNDAY=7, so shift these
-     * to SUNDAY=1, SATURDAY=7 to match this class 
+     * to SUNDAY=1, SATURDAY=7 to match this class
      */
     public static WeekDay getJodaWeekDay(final int value) {
         return getWeekDay((value%7)+1);
     }
-    
+
     /*
      * Shift Sunday=1 to joda time equivalent Sunday=7
      * Shift Monday=2 to joda time equivalent Monday=1
@@ -58,18 +58,18 @@ public enum WeekDay implements LocalizedTextLookup {
      * etc.
      */
     public static int getJodaDayOfWeekThatMatchesMifosWeekDay(final int mifosWeekDayValue) {
-        
+
         if (WeekDay.SUNDAY.getValue().equals((short)mifosWeekDayValue)) {
             return DateTimeConstants.SUNDAY;
         }
-        
+
         if (WeekDay.SATURDAY.getValue().equals((short)mifosWeekDayValue)) {
             return DateTimeConstants.SATURDAY;
         }
-        
+
         return (mifosWeekDayValue%7)-1;
     }
-    
+
     public static WeekDay getWeekDay(final int value) {
         for (WeekDay weekday : WeekDay.values()) {
             if (weekday.value == value) {

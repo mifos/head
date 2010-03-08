@@ -47,7 +47,7 @@ public class BasicHolidayStrategyTest {
 
     @Mock
     private Holiday holiday;
-    
+
     @Mock
     private Holiday holiday2;
 
@@ -81,14 +81,14 @@ public class BasicHolidayStrategyTest {
 
     @Test
     public void whenAHolidayAdjustmentCausesAdjustedDateToFallOnAnotherHolidayTheDateShouldAgainBeAdjustedForSubsequentHoliday() {
-        
+
         // setup
         List<Holiday> upcomingHolidays = Arrays.asList(holiday, holiday2);
         holidayStrategy = new BasicHolidayStrategy(upcomingHolidays, workingDays, scheduledEvent);
 
         DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
         DateTime secondOfNextMonth = firstOfNextMonth.plusDays(1);
-        
+
         when(holiday.encloses(firstOfNextMonth.toDate())).thenReturn(true);
         when(holiday.adjust(firstOfNextMonth, workingDays, scheduledEvent)).thenReturn(secondOfNextMonth);
 

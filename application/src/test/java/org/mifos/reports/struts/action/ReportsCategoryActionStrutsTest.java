@@ -33,7 +33,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         super();
     }
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");

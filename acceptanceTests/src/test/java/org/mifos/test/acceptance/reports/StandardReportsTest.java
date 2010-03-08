@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.reports;
 
 import org.mifos.framework.util.DbUnitUtilities;
@@ -60,7 +60,7 @@ public class StandardReportsTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void generateCollectionSheetEntryReport() throws Exception {
@@ -72,19 +72,19 @@ public class StandardReportsTest extends UiTestCaseBase {
         formParameters.setTransactionDay("23");
         formParameters.setTransactionMonth("04");
         formParameters.setTransactionYear("2009");
-        
-        
+
+
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         ReportsPage reportsPage = homePage.navigateToReportsPage();
         CollectionSheetReportParametersPage collSheetReportParametersPage = reportsPage.selectCollectionSheetEntryReport();
         collSheetReportParametersPage.generateCollectionSheetEntryReport(formParameters);
-        // TODO: No validation for now.  This will simply demonstrate the problem if 
+        // TODO: No validation for now.  This will simply demonstrate the problem if
         // PDF generation is messed up (as it was when the itext library was removed)
         // An attempt was made to validate by using the BIRT url to generate the PDF
         // but following that url includes parameter dropdown screens before whatever
         // call actually generates the PDF
-       
+
     }
 
 }

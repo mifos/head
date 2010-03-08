@@ -262,7 +262,7 @@ public class LabelConfigurationActionStrutsTest extends MifosMockStrutsTestCase 
     /**
      * FIXME: This test passes at independent (with clean database), But its
      * failing with the surefire *Test semantic.
-     * 
+     *
      */
     public void xtestLoad() throws Exception {
         setRequestPathInfo("/labelconfigurationaction.do");

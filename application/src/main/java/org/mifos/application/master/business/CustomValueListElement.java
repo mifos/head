@@ -32,7 +32,7 @@ import org.mifos.framework.business.View;
  * {@link CustomValueList} element for a given locale. This corresponds to a
  * {@link LookUpValueEntity} with the text pulled in from a
  * {@link LookUpValueLocaleEntity} for a given locale.
- * 
+ *
  * A better name for this class might be ValueListElementForLocale.
  */
 public class CustomValueListElement extends View implements Serializable {

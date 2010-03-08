@@ -43,7 +43,7 @@ import org.mifos.framework.util.helpers.Money;
 public class CollectionSheetEntryView extends View {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
-    
+
     private boolean hasChild;
 
     private final List<CollectionSheetEntryView> collectionSheetEntryChildren;
@@ -165,7 +165,7 @@ public class CollectionSheetEntryView extends View {
     public void populateCustomerAccountInformation(final List<CustomerAccountView> customerAccountList,
             final List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
             final List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
-        
+
         Integer accountId = Integer.valueOf(0);
         for (CustomerAccountView customerAccountView : customerAccountList) {
             if (customerDetail.getCustomerId().equals(customerAccountView.getCustomerId())) {
@@ -178,7 +178,7 @@ public class CollectionSheetEntryView extends View {
 
             }
         }
-        
+
     }
 
     public void populateSavingsAccountsInformation(final List<SavingsAccountView> savingsAccountViewList) {
@@ -189,7 +189,7 @@ public class CollectionSheetEntryView extends View {
                 savingsAccounts.add(savingsAccountView);
             }
         }
-        
+
         if (customerDetail.isCustomerCenter()) {
             for (CollectionSheetEntryView child : collectionSheetEntryChildren) {
                 addSavingsAccountViewToClients(child.getCollectionSheetEntryChildren(), savingsAccounts);
@@ -197,7 +197,7 @@ public class CollectionSheetEntryView extends View {
         } else if (customerDetail.isCustomerGroup()) {
             addSavingsAccountViewToClients(collectionSheetEntryChildren, savingsAccounts);
         }
-        
+
         for (SavingsAccountView savingsAccountView : savingsAccounts) {
             addSavingsAccountDetail(savingsAccountView);
         }
@@ -303,7 +303,7 @@ public class CollectionSheetEntryView extends View {
     public void setCountOfCustomers(final int countOfCustomers) {
         this.countOfCustomers = countOfCustomers;
     }
-    
+
     private boolean isProductExists(final LoanAccountView loanAccount, final LoanAccountsProductView loanAccountProductView) {
         if (loanAccountProductView.getPrdOfferingId() != null
                 && loanAccountProductView.getPrdOfferingId().equals(loanAccount.getPrdOfferingId())) {
@@ -362,12 +362,12 @@ public class CollectionSheetEntryView extends View {
     private Double getAmountPaidAtDisb(final LoanAccountView loanAccountView, final Integer customerId,
             final List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
             final List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
-        
+
         if (loanAccountView.isInterestDeductedAtDisbursement()) {
             return getInterestAmountDedAtDisb(retrieveLoanSchedule(loanAccountView.getAccountId(), customerId,
                     collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
         }
-        
+
         return new LoanPersistence().getFeeAmountAtDisbursement(loanAccountView.getAccountId(), Money.getDefaultCurrency()).getAmountDoubleValue();
     }
 

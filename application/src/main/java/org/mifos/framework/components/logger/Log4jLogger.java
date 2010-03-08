@@ -37,7 +37,7 @@ public class Log4jLogger extends MifosLogger {
     /**
      * Constructor: Obtains an instance of the logger with a specified name.
      * Root logger is "org.mifos"
-     * 
+     *
      * @param name
      *            The name of the Logger
      */
@@ -48,7 +48,7 @@ public class Log4jLogger extends MifosLogger {
     /**
      * Constructor: Obtains an instance of the logger with a specified name.
      * Root logger is "org.mifos"
-     * 
+     *
      * @param name
      *            The name of the Logger
      * @param resourceBundle

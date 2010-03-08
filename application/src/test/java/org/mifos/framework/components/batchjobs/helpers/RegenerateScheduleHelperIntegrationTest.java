@@ -114,13 +114,13 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         regenerateScheduleHelper = null;
         StaticHibernateUtil.closeSession();
         super.tearDown();
-        new DateTimeService().resetToCurrentSystemDateTime();         
+        new DateTimeService().resetToCurrentSystemDateTime();
     }
 
     private MeetingBO setupWeeklyMeeting(DateTime startDate, short recurEvery) {
         new DateTimeService().setCurrentDateTime(startDate);
         return TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, recurEvery,
-                CUSTOMER_MEETING));        
+                CUSTOMER_MEETING));
     }
 
     private void validateAccountSchedule(List<DateTime> expectedMeetingDates, AccountBO account) {
@@ -131,26 +131,26 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
             }
             ++count;
         }
-    }    
-    
+    }
+
     private void checkScheduleDates(final DateTime expectedMeetingDate,
             final AccountActionDateEntity actionDateEntity) {
         System.out.println(new java.sql.Date(expectedMeetingDate.getMillis()) + ":" + actionDateEntity.getActionDate());
 
         Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(expectedMeetingDate.toDate()), DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
     }
-    
+
     public void testExcuteWithCustomerAccounts() throws NumberFormatException, SystemException, ApplicationException {
         DateTime startDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,10).toDateTime();
         DateTime testDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,12).toDateTime();
         MeetingBO meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
-        
+
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,10).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,17).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.MARCH,3).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.MARCH,17).toDateTime());
-        
+
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         CenterBO center1 = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test1", meeting);
@@ -158,8 +158,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
         ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
         ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
-        
-        new DateTimeService().setCurrentDateTime(testDate);   
+
+        new DateTimeService().setCurrentDateTime(testDate);
         center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("2"));
         CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
@@ -200,7 +200,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,25).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.MARCH,11).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.MARCH,25).toDateTime());
-               
+
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -249,7 +249,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         accountBO.getAccountActionDate((short) 2).setPaymentStatus(PaymentStatus.PAID);
         accountBO.getAccountActionDate((short) 3).setPaymentStatus(PaymentStatus.PAID);
 
-        new DateTimeService().setCurrentDateTime(updateDate.toDateTimeAtStartOfDay());        
+        new DateTimeService().setCurrentDateTime(updateDate.toDateTimeAtStartOfDay());
         center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence().setWeekDay(
                 (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
                         WeekDaysEntity.class, null));
@@ -272,9 +272,9 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.APRIL,1).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.APRIL,15).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.APRIL,29).toDateTime());
-        
+
         validateAccountSchedule(expectedMeetingDates, center.getCustomerAccount());
-        
+
         validateAccountSchedule(expectedMeetingDates, group.getCustomerAccount());
 
        Assert.assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
@@ -284,14 +284,14 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
     }
-    
+
     private AccountBO getLoanAccount(LocalDate startDate) {
         new DateTimeService().setCurrentDateTime(startDate.toDateTimeAtStartOfDay());
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        
+
         loanOfferingBO = TestObjectFactory.createLoanOffering(new DateTimeService().getCurrentJavaDateTime(), meeting);
 
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
@@ -304,7 +304,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         DateTime startDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,11).toDateTime();
         DateTime testDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,20).toDateTime();
         meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
-        
+
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,11).toDateTime());
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,18).toDateTime());
@@ -316,17 +316,17 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
                 CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
                 CustomerStatus.CLIENT_ACTIVE, group);
-        SavingsBO savings = createSavingsAccount(meeting); 
+        SavingsBO savings = createSavingsAccount(meeting);
 
         // move weekly center meeting
         MeetingBO newMeeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY,
                 Short.valueOf("1"), MeetingType.CUSTOMER_MEETING, WeekDay.SATURDAY));
-        new DateTimeService().setCurrentDateTime(testDate);   
-        
+        new DateTimeService().setCurrentDateTime(testDate);
+
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         center.updateMeeting(newMeeting);
-        
+
         int dummy = 0;
         regenerateScheduleHelper.execute(dummy);
         StaticHibernateUtil.closeSession();
@@ -343,15 +343,15 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
 
     public SavingsBO createSavingsAccount(MeetingBO meeting) throws Exception {
         MeetingBO meetingIntCalc = meeting;
-        MeetingBO meetingIntPost = meeting;        
-        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.CLIENTS, 
+        MeetingBO meetingIntPost = meeting;
+        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.CLIENTS,
                 new DateTime().toDate(), PrdStatus.LOAN_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 24.0, 200.0,
                 200.0, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
         SavingsBO savings = new SavingsBO(TestUtils.makeUser(), savingsOffering, client, AccountState.SAVINGS_ACTIVE,
-                savingsOffering.getRecommendedAmount(), null);     
+                savingsOffering.getRecommendedAmount(), null);
         savings.save();
         StaticHibernateUtil.commitTransaction();
         return savings;
     }
-    
+
 }

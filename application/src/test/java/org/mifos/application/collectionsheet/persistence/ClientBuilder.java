@@ -36,7 +36,7 @@ import org.mifos.framework.util.helpers.Constants;
  *
  */
 public class ClientBuilder {
-    
+
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private final CustomerLevel customerLevel = CustomerLevel.CLIENT;
     private String name = "Test Center";
@@ -46,23 +46,23 @@ public class ClientBuilder {
     private String searchId = null;
     private final Short updatedFlag = Constants.NO;
     private CustomerStatus customerStatus = CustomerStatus.CLIENT_ACTIVE;
-    private CustomerBO parentCustomer; 
-    
-    
+    private CustomerBO parentCustomer;
+
+
     public ClientBO buildForIntegrationTests() {
-        
+
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
         if (searchId == null) {
             setSearchId();
         }
-        
+
         final ClientBO client = new ClientBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting,
-                searchId, parentCustomer); 
+                searchId, parentCustomer);
         customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer)
                 .buildForIntegrationTests();
         return client;
     }
-    
+
     public ClientBO buildForUnitTests() {
 
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
@@ -72,7 +72,7 @@ public class ClientBuilder {
         customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer).buildForUnitTests();
         return client;
     }
-    
+
     public ClientBuilder withName(final String withName) {
         this.name = withName;
         return this;
@@ -92,17 +92,17 @@ public class ClientBuilder {
         this.loanOfficer = withLoanOfficer;
         return this;
     }
-    
+
     public ClientBuilder withFee(final AmountFeeBO withFee) {
         customerAccountBuilder.withFee(withFee);
         return this;
     }
-    
+
     public ClientBuilder withParentCustomer(final CustomerBO withParentCustomer) {
         this.parentCustomer = withParentCustomer;
         return this;
     }
-    
+
     public ClientBuilder active() {
         this.customerStatus = CustomerStatus.CLIENT_ACTIVE;
         return this;

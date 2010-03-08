@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.collectionsheet;
 
 import java.io.IOException;
@@ -66,12 +66,12 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-  
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @Test(sequential = true, groups = {"smoke"})
     public void defaultAdminUserEntersAttendanceData() throws Exception {
@@ -136,10 +136,10 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
     private CollectionSheetEntryConfirmationPage submitDataAndVerifySuccessPage(SubmitFormParameters formParameters,
             CollectionSheetEntryEnterDataPage enterDataPage) {
-        CollectionSheetEntryPreviewDataPage previewPage = 
+        CollectionSheetEntryPreviewDataPage previewPage =
             enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
         previewPage.verifyPage(formParameters);
-        CollectionSheetEntryConfirmationPage confirmationPage = 
+        CollectionSheetEntryConfirmationPage confirmationPage =
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
         return confirmationPage;
@@ -166,7 +166,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyAttendanceData(IDataSet attendanceDataSet) throws Exception {
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTable(dataSource, CUSTOMER_ATTENDANCE);
-        dbUnitUtilities.verifyTable(CUSTOMER_ATTENDANCE, databaseDataSet, attendanceDataSet);   
+        dbUnitUtilities.verifyTable(CUSTOMER_ATTENDANCE, databaseDataSet, attendanceDataSet);
     }
 
     private IDataSet getBasicAttendanceDataSet() throws DataSetException, IOException {
@@ -174,7 +174,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         addBasicAttendanceRows(attendanceDataSet);
         return attendanceDataSet.getDataSet();
     }
-    
+
     private IDataSet getOverwriteAttendanceDataSet() throws DataSetException, IOException {
         SimpleDataSet attendanceDataSet = new SimpleDataSet();
         addAttendanceRow(attendanceDataSet, 1, 8, ATTENDANCE_P);
@@ -203,6 +203,6 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     private void addAttendanceRow(SimpleDataSet dataSet, int id, int customerId, int attendance) {
         dataSet.row(CUSTOMER_ATTENDANCE, "ID=" + id,"MEETING_DATE=[null]","CUSTOMER_ID=" + customerId,"ATTENDANCE=" + attendance);
     }
-    
+
 }
 

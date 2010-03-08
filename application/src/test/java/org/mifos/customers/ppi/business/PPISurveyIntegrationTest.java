@@ -51,7 +51,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.core.io.ClassPathResource;
 
 public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
-    
+
     public PPISurveyIntegrationTest() throws Exception {
         super();
     }

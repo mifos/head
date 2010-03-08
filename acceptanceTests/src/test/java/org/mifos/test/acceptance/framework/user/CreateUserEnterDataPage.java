@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.user;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -36,7 +36,7 @@ public class CreateUserEnterDataPage extends MifosPage {
 	public CreateUserEnterDataPage(Selenium selenium) {
 		super(selenium);
 	}
- 
+
     public CreateUserPreviewDataPage submitAndGotoCreateUserPreviewDataPage(CreateUserParameters parameters) {
         typeTextIfNotEmpty("create_user.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("create_user.input.lastName", parameters.getLastName());
@@ -44,7 +44,7 @@ public class CreateUserEnterDataPage extends MifosPage {
         selectIfNotEmpty("maritalStatus", parameters.getMaritalStatus());
         typeTextIfNotEmpty("dobDD", parameters.getDateOfBirthDD());
         typeTextIfNotEmpty("dobMM", parameters.getDateOfBirthMM());
-        typeTextIfNotEmpty("dobYY", parameters.getDateOfBirthYYYY());        
+        typeTextIfNotEmpty("dobYY", parameters.getDateOfBirthYYYY());
         selectValueIfNotZero("gender", parameters.getGender());
         selectValueIfNotZero("preferredLocale", parameters.getPreferredLanguage());
         selectValueIfNotZero("level", parameters.getUserLevel());
@@ -54,9 +54,9 @@ public class CreateUserEnterDataPage extends MifosPage {
         typeTextIfNotEmpty("create_user.input.userName", parameters.getUserName());
         typeTextIfNotEmpty("create_user.input.password", parameters.getPassword());
         typeTextIfNotEmpty("create_user.input.passwordRepeat", parameters.getPasswordRepeat());
-        
+
         selenium.click("create_user.button.preview");
         waitForPageToLoad();
         return new CreateUserPreviewDataPage(selenium);
-    }   
+    }
 }

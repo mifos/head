@@ -67,7 +67,7 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
         super.setUp();
         persistence = new PPIPersistence();
     }
-    
+
     @Override
     public void tearDown() throws Exception {
         Statement stmt = StaticHibernateUtil.getSessionTL().connection().createStatement();

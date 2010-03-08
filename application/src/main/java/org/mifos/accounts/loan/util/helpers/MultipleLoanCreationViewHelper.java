@@ -43,7 +43,7 @@ public class MultipleLoanCreationViewHelper {
     private ClientBO client;
 
     private String selected;
-    
+
     private MifosCurrency currency;
 
     public MultipleLoanCreationViewHelper(ClientBO client, LoanAmountOption loanAmountOption,
@@ -88,22 +88,22 @@ public class MultipleLoanCreationViewHelper {
         return StringUtils.isNotBlank(this.loanAmount)
                 && loanAmountOption.isInRange(getDoubleValue(this.loanAmount));
     }
-    //FIXME: Loan are created using double, the better way to do this would be to 
-    // make those double argument as Money or BigDecimal. this workaround is added 
+    //FIXME: Loan are created using double, the better way to do this would be to
+    // make those double argument as Money or BigDecimal. this workaround is added
     // to fix MIFOS-2698
     public Money getMinLoanAmount() {
         return loanAmountOption == null ? new Money(getCurrency()) : new Money(getCurrency(), loanAmountOption
                 .getMinLoanAmount().toString());
     }
-    //FIXME: Loan are created using double, the better way to do this would be to 
-    // make those double argument as Money or BigDecimal. this workaround is added 
+    //FIXME: Loan are created using double, the better way to do this would be to
+    // make those double argument as Money or BigDecimal. this workaround is added
     // to fix MIFOS-2698
     public Money getMaxLoanAmount() {
         return loanAmountOption == null ? new Money(getCurrency()) : new Money(getCurrency(), loanAmountOption
                 .getMaxLoanAmount().toString());
     }
-    //FIXME: Loan are created using double, the better way to do this would be to 
-    // make those double argument as Money or BigDecimal. this workaround is added 
+    //FIXME: Loan are created using double, the better way to do this would be to
+    // make those double argument as Money or BigDecimal. this workaround is added
     // to fix MIFOS-2698
     public Money getDefaultLoanAmount() {
         return loanAmountOption == null ? new Money(getCurrency()) : new Money(getCurrency(), loanAmountOption

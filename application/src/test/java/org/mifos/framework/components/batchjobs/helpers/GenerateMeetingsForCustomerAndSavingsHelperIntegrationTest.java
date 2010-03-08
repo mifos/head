@@ -136,7 +136,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         // jpw - this test is similar to testExecuteForSavingsAccount
         // Re-using much of it to test that customer and savings accounts are processed as have made separate queries to
         // return the two different types of accounts.
-        
+
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         int outputInterval = 1;
@@ -148,7 +148,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
             savings = getSavingsAccountForCenter();
             int noOfInstallments = savings.getAccountActionDates().size();
             AccountTestUtils.changeInstallmentDatesToPreviousDate(savings);
-            
+
             CustomerAccountBO centerCustomerAccount = center.getCustomerAccount();
             Integer centerCustomerAccountInstallments = centerCustomerAccount.getAccountActionDates().size();
             AccountTestUtils.changeInstallmentDatesToPreviousDate(centerCustomerAccount);
@@ -161,7 +161,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
             CustomerAccountBO client2CustomerAccount = client2.getCustomerAccount();
             Integer client2CustomerAccountInstallments = client2CustomerAccount.getAccountActionDates().size();
             AccountTestUtils.changeInstallmentDatesToPreviousDate(client2CustomerAccount);
-            
+
             TestObjectFactory.flushandCloseSession();
             savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
             new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
@@ -170,7 +170,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
             groupCustomerAccount = TestObjectFactory.getObject(CustomerAccountBO.class, groupCustomerAccount.getAccountId());
             client1CustomerAccount = TestObjectFactory.getObject(CustomerAccountBO.class, client1CustomerAccount.getAccountId());
             client2CustomerAccount = TestObjectFactory.getObject(CustomerAccountBO.class, client2CustomerAccount.getAccountId());
-            
+
             Assert.assertEquals(noOfInstallments + 20, savings.getAccountActionDates().size());
             Assert.assertEquals(centerCustomerAccountInstallments + 10, centerCustomerAccount.getAccountActionDates().size());
             Assert.assertEquals(groupCustomerAccountInstallments + 10, groupCustomerAccount.getAccountActionDates().size());

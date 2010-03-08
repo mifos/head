@@ -45,12 +45,12 @@ public class CacheTest extends TestCase {
         verify(queryResultMock);
         cache = new Cache(queryResultMock);
     }
-    
+
     @Override
     public void tearDown() {
         cache = null;
     }
-    
+
     public void testGetCache() throws Exception {
         List<?> list = cache.getList(1, "newMethod");
         list = cache.getList(3, "previous");

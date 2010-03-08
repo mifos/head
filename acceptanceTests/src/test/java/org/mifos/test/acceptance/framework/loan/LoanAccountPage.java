@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -36,31 +36,31 @@ public class LoanAccountPage extends AbstractPage {
     public void verifyPage() {
         this.verifyPage("LoanAccountDetail");
     }
-    
+
     public void verifyFeeExists(String expectedFee) {
         Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), expectedFee);
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertTrue(selenium.isTextPresent(amount));        
+        Assert.assertTrue(selenium.isTextPresent(amount));
     }
-   
+
     public void verifyLoanIsForClient(String clientName){
         Assert.assertTrue(selenium.isTextPresent(clientName));
     }
-    
+
     public void verifyPurpose (String purpose){
         Assert.assertTrue(selenium.isTextPresent(purpose));
     }
-    
+
     public void verifyLoanIsPendingApproval(){
         Assert.assertTrue(selenium.isTextPresent("Application Pending Approval"));
     }
-    
+
     public void verifyLoanIsInPartialApplication(){
         Assert.assertTrue(selenium.isTextPresent("Partial Application "));
     }
-    
+
     /**
      * Returns the id of the account displayed on the current page, or -1 if no id is found.
      * The id is the global id (0001...000...263, not just 263).
@@ -80,7 +80,7 @@ public class LoanAccountPage extends AbstractPage {
         }
         return returnId;
     }
-    
+
     public HomePage navigateToHomePage(){
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();
@@ -92,49 +92,49 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new ViewInstallmentDetailsPage(selenium);
     }
-    
+
     public RepayLoanPage navigateToRepayLoan() {
         selenium.click("id=loanaccountdetail.link.repayLoan");
         waitForPageToLoad();
         return new RepayLoanPage(selenium);
     }
-    
+
     public EditLoanAccountStatusPage navigateToEditAccountStatus() {
         selenium.click("loanaccountdetail.link.editAccountStatus");
         waitForPageToLoad();
         return new EditLoanAccountStatusPage(selenium);
     }
-    
+
     public EditLoanAccountInformationPage navigateToEditAccountInformation() {
         selenium.click("loanaccountdetail.link.editAccountInformation");
         waitForPageToLoad();
         return new EditLoanAccountInformationPage(selenium);
     }
-    
+
     public DisburseLoanPage navigateToDisburseLoan() {
         selenium.click("loanaccountdetail.link.disburseLoan");
         waitForPageToLoad();
         return new DisburseLoanPage(selenium);
     }
-    
+
     public ApplyChargePage navigateToApplyCharge() {
         selenium.click("loanaccountdetail.link.applyCharges");
         waitForPageToLoad();
         return new ApplyChargePage(selenium);
     }
-    
+
     public ApplyPaymentPage navigateToApplyPayment() {
         selenium.click("loanaccountdetail.link.applyPayment");
         waitForPageToLoad();
         return new ApplyPaymentPage(selenium);
     }
-    
+
     public AccountAddNotesPage navigateToAddNotesPage() {
         selenium.click("loanaccountdetail.link.addNote");
         waitForPageToLoad();
         return new AccountAddNotesPage(selenium);
     }
-    
+
     public AccountNotesPage navigateToAccountNotesPage() {
         selenium.click("loanaccountdetail.link.seeAllNotes");
         waitForPageToLoad();
@@ -152,5 +152,5 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new ViewRepaymentSchedulePage(selenium);
     }
-    
+
 }

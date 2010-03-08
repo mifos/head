@@ -13,11 +13,11 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"admin","acceptance","ui"})
-public class DefineLabelsTest  extends UiTestCaseBase {    
-    
+public class DefineLabelsTest  extends UiTestCaseBase {
+
     private NavigationHelper navigationHelper;
-    
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
@@ -31,26 +31,26 @@ public class DefineLabelsTest  extends UiTestCaseBase {
     }
 
     public void defineLabelsTest() {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();                
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineLabelsPage defineLabelsPage = adminPage.navigateToDefineLabelsPage();
 
         String citizenshipVal = "citizenship.testval." + StringUtil.getRandomString(6);
         String govtIdVal = "govtId.testval." + StringUtil.getRandomString(6);
-        
+
         defineLabelsPage.setLabelValue( "citizenship", citizenshipVal );
-        defineLabelsPage.setLabelValue( "govtId", govtIdVal );       
-        
-        adminPage = defineLabelsPage.submit();       
-        defineLabelsPage = adminPage.navigateToDefineLabelsPage();            
-        
+        defineLabelsPage.setLabelValue( "govtId", govtIdVal );
+
+        adminPage = defineLabelsPage.submit();
+        defineLabelsPage = adminPage.navigateToDefineLabelsPage();
+
         defineLabelsPage.verifyLabelValue( "citizenship", citizenshipVal );
         defineLabelsPage.verifyLabelValue( "govtId", govtIdVal );
 
         //Restore to previous values (presumes EN)
         defineLabelsPage.setLabelValue( "citizenship", "Citizenship" );
-        defineLabelsPage.setLabelValue( "govtId", "Government ID" );       
-        adminPage = defineLabelsPage.submit();       
+        defineLabelsPage.setLabelValue( "govtId", "Government ID" );
+        adminPage = defineLabelsPage.submit();
 
     }
-     
+
 }

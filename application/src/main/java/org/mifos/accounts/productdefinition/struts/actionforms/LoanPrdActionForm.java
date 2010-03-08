@@ -82,7 +82,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     private String prdApplicableMaster;
 
     private String loanCounter;
-    
+
     private Short currencyId;
 
     private String minLoanAmount;

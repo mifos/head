@@ -52,9 +52,9 @@ public class HibernateSessionFactory {
          * Throwing HibernateStartUpException if sessionFactory is already set
          * seems to cause somewhat mysterious failures in
          * {@link ConstPluginTest}.
-         * 
+         *
          * Why?
-         * 
+         *
          * And shouldn't we at least call .close() on the old sessionFactory, if
          * nothing else?
          */

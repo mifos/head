@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MifosCurrencyTest extends TestCase {
 
-    
+
     public void testEqualsOnCurrencyId() {
         MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
         MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.collectionsheet;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -33,7 +33,7 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 	public CollectionSheetEntryPreviewDataPage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
 
 	public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
         this.verifyPage("BulkEntryPreview");
@@ -51,6 +51,6 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
         waitForPageToLoad();
         return new CollectionSheetEntryConfirmationPage(selenium);
     }
-	
+
 
 }

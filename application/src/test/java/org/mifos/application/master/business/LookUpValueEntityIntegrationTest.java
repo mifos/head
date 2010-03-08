@@ -37,7 +37,7 @@ public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Session session;
-    
+
     @Override
     public void setUp() {
         session = StaticHibernateUtil.getSessionTL();
@@ -63,7 +63,7 @@ public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
 
         session.save(entity);
         int writtenId = entity.getLookUpId();
-        
+
        LookUpValueEntity readEntity = (LookUpValueEntity) session.get(LookUpValueEntity.class, writtenId);
        Assert.assertEquals("my entity", readEntity.getLookUpName());
        Assert.assertEquals(87, (int) readEntity.getLookUpEntity().getEntityId());

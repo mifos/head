@@ -221,7 +221,7 @@ public class SaveCollectionSheetDtoTest {
         } catch (SaveCollectionSheetException e) {
             InvalidSaveCollectionSheetReasons = e.getInvalidSaveCollectionSheetReasons();
         }
-        
+
         assertNull("There were errors", InvalidSaveCollectionSheetReasons);
         assertNotNull("saveCollectionSheet is null", saveCollectionSheet);
         assertThat("countOneLevelUnder", saveCollectionSheet.countOneLevelUnder(), is(2));
@@ -396,7 +396,7 @@ public class SaveCollectionSheetDtoTest {
 
         List<SaveCollectionSheetCustomerSavingDto> customerIndividualSavingsAccounts = new ArrayList<SaveCollectionSheetCustomerSavingDto>();
         customerIndividualSavingsAccounts.add(customerIndividualSaving(SAVING_ACCOUNT_AMOUNT.ZERO));
-        
+
         List<SaveCollectionSheetCustomerLoanDto> customerLoans = null;
 
         SaveCollectionSheetCustomerAccountDto customerAccount = customerCharge(CUSTOMER_ACCOUNT_AMOUNT.ZERO);

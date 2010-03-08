@@ -56,7 +56,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
     private String flowKey;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");

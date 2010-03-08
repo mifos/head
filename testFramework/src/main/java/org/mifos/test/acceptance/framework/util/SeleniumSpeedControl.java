@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.util;
 
 import org.apache.commons.logging.Log;
@@ -32,14 +32,14 @@ public class SeleniumSpeedControl {
     private static final Log LOG = LogFactory.getLog(SeleniumSpeedControl.class);
 
     @SuppressWarnings("PMD.ImmutableField") // making this final generates a compile error in the constructor
-	private int delay = 0; 
-	
+	private int delay = 0;
+
 	public SeleniumSpeedControl() {
 		String delayString = System.getProperty("mifos.selenium.delay", "0");
 		delay = Integer.parseInt(delayString);
 		LOG.info("Delay after each Selenium method call: " + delay + "ms");
 	}
-	
+
 	@After("bean(selenium) && execution(public * *(..))")
 	public void after(JoinPoint joinPoint) throws Throwable {
 		if (delay > 0) {

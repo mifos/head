@@ -40,7 +40,7 @@ public class ScheduledEventFactory {
             break;
         case MONTHLY:
             if (weekOfMonth != 0 && dayOfWeek != 0) {
-                recurringEvent = new MonthlyOnWeekAndWeekDayScheduledEvent(every, weekOfMonth, dayOfWeek);                
+                recurringEvent = new MonthlyOnWeekAndWeekDayScheduledEvent(every, weekOfMonth, dayOfWeek);
             }
             else if (dayOfMonth != 0) {
                 recurringEvent = new MonthlyOnDateScheduledEvent(every, dayOfMonth);
@@ -59,23 +59,23 @@ public class ScheduledEventFactory {
     }
 
     public static ScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
-        
+
         RecurrenceType period = meeting.getRecurrenceType();
         int every = meeting.getRecurAfter();
         int dayOfWeek = 0;
         if (meeting.getMeetingDetails().getWeekDay() != null) {
             dayOfWeek = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(meeting.getMeetingDetails().getWeekDay().getValue());
         }
-            
+
         int dayOfMonth = 0;
         if (meeting.getMeetingDetails().getDayNumber() != null) {
             dayOfMonth = meeting.getMeetingDetails().getDayNumber();
         }
-        int weekOfMonth = 0; 
+        int weekOfMonth = 0;
         if (meeting.getMeetingDetails().getWeekRank() != null) {
             weekOfMonth = meeting.getMeetingDetails().getWeekRank().getValue();
         }
-        
+
         return createScheduledEvent(period, every, dayOfWeek, dayOfMonth, weekOfMonth);
     }
 

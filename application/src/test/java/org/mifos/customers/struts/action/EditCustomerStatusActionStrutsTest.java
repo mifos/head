@@ -78,12 +78,12 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
 
     private OfficeBO office;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
-        
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -950,7 +950,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", groupStatus, center);
         client = TestObjectFactory.createClient("Client", clientStatus, group);
     }
-    
+
     private void cleanInitialObjects(){
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
@@ -980,7 +980,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
                 .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
         client = TestObjectFactory.createClient( name, getMeeting(), CustomerStatus.CLIENT_PARTIAL);
     }
-    
+
     private void cleanObjectsForClient() {
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(office);
@@ -1000,7 +1000,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
                 PersonnelConstants.TEST_USER);
         client = TestObjectFactory.createClient("Client", clientStatus, group, new java.util.Date());
     }
-    
+
     private void cleanInitialObjectsOfficeInactive(){
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);

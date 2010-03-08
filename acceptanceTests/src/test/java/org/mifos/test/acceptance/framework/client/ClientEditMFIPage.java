@@ -25,13 +25,13 @@ import com.thoughtworks.selenium.Selenium;
 
 public class ClientEditMFIPage extends MifosPage {
     public ClientEditMFIPage(Selenium selenium) {
-        super(selenium);    
+        super(selenium);
     }
-    
+
     public void verifyPage() {
         this.verifyPage("EditClientMfiInfo");
     }
-        
+
     public ClientEditMFIPreviewPage submitAndNavigateToClientEditMFIPreviewPage(ClientEditMFIParameters params) {
         selenium.type("edit_ClientMfiInfo.input.externalId", params.getExternalId());
         selenium.click("trained");
@@ -39,9 +39,9 @@ public class ClientEditMFIPage extends MifosPage {
         selenium.type("trainedDateDD", params.getTrainedDateDD());
         selenium.type("trainedDateMM", params.getTrainedDateMM());
         selenium.type("trainedDateYY", params.getTrainedDateYYYY());
-        
+
         selenium.fireEvent("trainedDateDD", "blur");
-        
+
         selenium.click("edit_ClientMfiInfo.button.preview");
         waitForPageToLoad();
         return new ClientEditMFIPreviewPage(selenium);

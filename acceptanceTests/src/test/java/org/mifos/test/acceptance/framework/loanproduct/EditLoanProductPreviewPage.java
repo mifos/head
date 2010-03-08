@@ -27,7 +27,7 @@ public class EditLoanProductPreviewPage extends MifosPage {
     public EditLoanProductPreviewPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public EditLoanProductPreviewPage verifyPage() {
         verifyPage("EditLoanProductPreview");
         return this;

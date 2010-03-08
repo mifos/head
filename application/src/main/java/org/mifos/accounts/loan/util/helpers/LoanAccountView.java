@@ -40,7 +40,7 @@ public class LoanAccountView extends View {
     private final Short interestDeductedAtDisbursement;
     private final Money loanAmount;
     private Double amountPaidAtDisbursement;
-    
+
     private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
 
     public LoanAccountView(Integer accountId, Integer customerId, String prdOfferingShortName,
@@ -72,7 +72,7 @@ public class LoanAccountView extends View {
     public Short getPrdOfferingId() {
         return prdOfferingId;
     }
-    
+
     public Short getAccountSate() {
         return accountState;
     }

@@ -36,7 +36,7 @@ public class MenuGroup {
 
     /**
      * Method to get the value of menuItems member variable.
-     * 
+     *
      * @return an array of MenuItem objects
      */
     public MenuItem[] getMenuItems() {
@@ -45,7 +45,7 @@ public class MenuGroup {
 
     /**
      * Method to set the value of menuItems member variable.
-     * 
+     *
      * @param menuItems
      *            an array of MenuItem objects
      */
@@ -56,7 +56,7 @@ public class MenuGroup {
     /**
      * Method to get the value of displayName member variable. If it is crude
      * menu displayName length will be >=1 otherwise it will be 1 only.
-     * 
+     *
      * @return an array of String holding displayNames
      */
     public String[] getDisplayName() {
@@ -66,7 +66,7 @@ public class MenuGroup {
     /**
      * Method to set the value of displayName member variable. If it is crude
      * menu displayName length will be >=1 otherwise it will be 1 only.
-     * 
+     *
      * @param displayName
      *            an array of displaynames.
      */

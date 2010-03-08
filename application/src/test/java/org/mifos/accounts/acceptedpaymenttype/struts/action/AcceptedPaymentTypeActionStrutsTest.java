@@ -204,7 +204,7 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
     /*
      * private String GetPaymentTypeName(Short paymentTypeId,
      * List<PaymentTypeData> paymentTypes) {
-     * 
+     *
      * for (PaymentTypeData paymentTypeData : paymentTypes) { Short paymentId =
      * paymentTypeData.getId(); if (paymentId.shortValue() ==
      * paymentTypeId.shortValue()) return paymentTypeData.getName(); } return

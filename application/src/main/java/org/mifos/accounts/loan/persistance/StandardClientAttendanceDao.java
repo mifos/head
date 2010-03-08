@@ -58,7 +58,7 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         return masterPersistence.executeNamedQuery("ClientAttendance.getAttendanceForClientsOnMeetingDate",
                 queryParameters);
     }
-    
+
     public void save(final List<ClientAttendanceBO> clientAttendances) {
         Session session = getHibernateUtil().getSessionTL();
 
@@ -66,7 +66,7 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
             session.saveOrUpdate(clientAttendanceBO);
         }
     }
-    
+
     private HibernateUtil getHibernateUtil() {
         if (null == hibernateUtil) {
             hibernateUtil = new HibernateUtil();

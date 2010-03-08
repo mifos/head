@@ -259,7 +259,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
 
     /**
      * Verify first date for week is resolved as expected for given start date.
-     * 
+     *
      * Note, it invokes verifyFirstDateForWeekForGivenStartDateAndWeekDay for
      * each day of the week
      */
@@ -276,11 +276,11 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
     /**
      * Asserts that meeting.getFirstDateForWeek(startDate) returns a date
      * matching the expected date.
-     * 
+     *
      * A dummy meeting is created with the given weekDay, and then the resulting
      * date from meeting.getFirstDateForWeek(startDate) is asserted to be the
      * expected date
-     * 
+     *
      */
     private void verifyFirstDateForWeekForGivenStartDateAndWeekDay(final WeekDay weekDay, final Date startDate, final Date expectedDate)
             throws MeetingException {

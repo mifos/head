@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.loanproduct;
 
 
@@ -42,28 +42,28 @@ import org.testng.annotations.Test;
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
-    
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-        
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);        
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createWeeklyLoanProduct()throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -72,7 +72,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         adminPage.defineLoanProduct(formParameters);
 
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createMonthlyLoanProduct()throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
@@ -81,7 +81,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         adminPage.defineLoanProduct(formParameters);
 
     }
-    
+
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher
          .launchMifos()

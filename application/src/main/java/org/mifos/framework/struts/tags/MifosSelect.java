@@ -38,7 +38,7 @@ import org.apache.struts.taglib.TagUtils;
  * submit button passing the refrence of the output list i.e. whatever he has
  * given as property1 above e.g. <html:submit
  * onclick="transferData(this.form.outList)"/>
- * 
+ *
  * Mifos Select is the class which will be used by the end user to create the
  * Mifos select Tag usages: <mifos:MifosSelect [name][label] [property]
  * [property1] [multiple] [selectStyle] > [name] : name of the bean from which
@@ -196,7 +196,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function get the multiple property of listboxes
-     * 
+     *
      * @return Returns the multiple.
      */
     public String getMultiple() {
@@ -205,7 +205,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function set the multiple property of listboxes
-     * 
+     *
      * @param multiple
      *            The multiple to set.
      */
@@ -215,7 +215,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function get the nmae of the tag
-     * 
+     *
      * @return Returns the name.
      */
     public String getName() {
@@ -224,7 +224,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function set the nmae of the tag
-     * 
+     *
      * @param name
      *            The name to set.
      */
@@ -234,7 +234,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function get the size of select boxes
-     * 
+     *
      * @return Returns the size.
      */
     public String getSize() {
@@ -243,7 +243,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function Set the size of select boxes
-     * 
+     *
      * @param size
      *            The size to set.
      */
@@ -253,7 +253,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function Set the Style of select boxes
-     * 
+     *
      * @return Returns the selectStyle.
      */
     public String getSelectStyle() {
@@ -262,7 +262,7 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function Set the Style of select boxes
-     * 
+     *
      * @param selectStyle
      *            The selectStyle to set.
      */

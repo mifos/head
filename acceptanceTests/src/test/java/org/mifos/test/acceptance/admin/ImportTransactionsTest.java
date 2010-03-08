@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.admin;
 
 import org.dbunit.dataset.IDataSet;
@@ -52,7 +52,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
+
     public static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
     public static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
     public static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
@@ -82,25 +82,25 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     public void importTabDelimitedAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-OneTransactionEA00002.txt").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
-        
+
         importTransaction(importFile, TSV_IMPORT_TYPE);
-        
+
         String expectedDataSetFile = "ImportTransactions_001_result_dbunit.xml.zip";
-     
-        verifyImportTransactions(expectedDataSetFile);     
+
+        verifyImportTransactions(expectedDataSetFile);
      }
 
- 
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void importExcelFormatAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
 
         importTransaction(importFile, EXCEL_IMPORT_TYPE);
-        
+
         String expectedDataSetFile = "ImportTransactions_002_result_dbunit.xml.zip";
-     
-        verifyImportTransactions(expectedDataSetFile);     
+
+        verifyImportTransactions(expectedDataSetFile);
      }
 
 
@@ -111,11 +111,11 @@ public class ImportTransactionsTest extends UiTestCaseBase {
         ImportTransactionsConfirmationPage importTransactionsConfirmationPage = importTransactionsPage.importAudiTransactions(importFile, importType);
         importTransactionsConfirmationPage.verifyPage();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyImportTransactions(String expectedDataSetFile) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(expectedDataSetFile);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_PAYMENT, 
+        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_PAYMENT,
                                     ACCOUNT_TRXN,
                                     FINANCIAL_TRXN,
                                     LOAN_ACTIVITY_DETAILS,
@@ -123,17 +123,17 @@ public class ImportTransactionsTest extends UiTestCaseBase {
                                     LOAN_SUMMARY,
                                     LOAN_TRXN_DETAIL  });
 
-        dbUnitUtilities.verifyTable(ACCOUNT_TRXN, databaseDataSet, expectedDataSet);     
-        dbUnitUtilities.verifyTable(LOAN_ACTIVITY_DETAILS, databaseDataSet, expectedDataSet);     
-        dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);     
-        dbUnitUtilities.verifyTable(LOAN_SUMMARY, databaseDataSet, expectedDataSet);     
+        dbUnitUtilities.verifyTable(ACCOUNT_TRXN, databaseDataSet, expectedDataSet);
+        dbUnitUtilities.verifyTable(LOAN_ACTIVITY_DETAILS, databaseDataSet, expectedDataSet);
+        dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
+        dbUnitUtilities.verifyTable(LOAN_SUMMARY, databaseDataSet, expectedDataSet);
         dbUnitUtilities.verifyTable(LOAN_TRXN_DETAIL, databaseDataSet, expectedDataSet);
 
         String[] orderAccountPaymentByColumns = new String[] {"amount","account_id"};
         dbUnitUtilities.verifyTableWithSort(orderAccountPaymentByColumns,ACCOUNT_PAYMENT, expectedDataSet, databaseDataSet);
-        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};  
+        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};
         dbUnitUtilities.verifyTableWithSort(orderFinTrxnByColumns,FINANCIAL_TRXN, expectedDataSet, databaseDataSet );
-        
+
     }
- 
+
 }

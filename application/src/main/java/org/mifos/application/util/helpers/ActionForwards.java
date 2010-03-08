@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.util.helpers;
 
 public enum ActionForwards {
@@ -183,7 +183,7 @@ public enum ActionForwards {
     addEditLookupOption_success,
     addEditLookupOption_failure,
     addEditLookupOption_cancel_success,
-    addEditLookupOption_cancel_failure, 
+    addEditLookupOption_cancel_failure,
     viewCategory_success,
     viewCategory_failure,
     loadDefineCustomFields_success,

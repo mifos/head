@@ -55,7 +55,7 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 
     /**
      * Set the onBlur and onKeyPress events of the element.
-     * 
+     *
      * @return doStart of super class
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */

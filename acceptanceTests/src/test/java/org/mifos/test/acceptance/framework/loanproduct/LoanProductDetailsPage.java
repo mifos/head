@@ -28,7 +28,7 @@ public class LoanProductDetailsPage  extends MifosPage {
         public LoanProductDetailsPage(Selenium selenium) {
             super(selenium);
         }
-        
+
         public LoanProductDetailsPage verifyPage() {
             verifyPage("LoanProductDetails");
             return this;
@@ -38,15 +38,15 @@ public class LoanProductDetailsPage  extends MifosPage {
             selenium.click("loanproductdetails.link.editLoanProduct");
             waitForPageToLoad();
             return new EditLoanProductPage(selenium);
-      
+
         }
 
         public void verifyInterestAmount(String amount) {
-            Assert.assertTrue(selenium.isTextPresent(amount));        
+            Assert.assertTrue(selenium.isTextPresent(amount));
         }
-        
+
         public void verifyDefaultLoanAmount(String amount) {
-            Assert.assertTrue(selenium.isTextPresent(amount));        
+            Assert.assertTrue(selenium.isTextPresent(amount));
         }
-    
+
 }

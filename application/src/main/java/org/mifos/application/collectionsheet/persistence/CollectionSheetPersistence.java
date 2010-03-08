@@ -48,7 +48,7 @@ import org.mifos.framework.persistence.Persistence;
 
 /**
  * no longer used in relation to Collection sheet functionality
- * 
+ *
  * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated

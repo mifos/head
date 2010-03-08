@@ -318,7 +318,7 @@ public class DatabaseVersionPersistence {
                 "Permissions-CanViewBranchProgressReport", SecurityConstants.CAN_VIEW_BRANCH_REPORT,
                 SecurityConstants.ANALYSIS)));
     }
-    
+
     /**
      * Adds activity/role/permission data for transactions import bulk settings.
      */

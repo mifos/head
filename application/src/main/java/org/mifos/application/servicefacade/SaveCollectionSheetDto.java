@@ -34,7 +34,7 @@ public class SaveCollectionSheetDto {
     /*
      * The "Contract" is that the first customer must be the "top customer" (usually Center) but other customers can be
      * any or all of the groups and clients underneath the top customer in any order.
-     * 
+     *
      * It would be normal to have them in order thought e.g center, group 1, client 1, client 2, group 2...
      */
     private List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers;
@@ -89,12 +89,12 @@ public class SaveCollectionSheetDto {
 
     /*
      * The Dto really ends here: All the fields and methods below are only 'helpers' derived because of:
-     * 
+     *
      * a) self-validation (any error is a programming problem) Some may think this should not be part of this class
      * and/or errors should just throw a runtime exception. I (JPW) thought it might be useful for a programmer to have
      * the errors nicely put in an array with a method to print them for debugging purposes. We'll see how it goes.
-     * 
-     * 
+     *
+     *
      * b) analysing the save collection sheet input. Again some may think this should not be in this class. However,
      * even this simplified structure takes quite a bit of set up and I thought it would be good to have methods that
      * told the programmer how the collection sheet was made up. Some of the fields are used to determine if it is worth
@@ -350,7 +350,7 @@ public class SaveCollectionSheetDto {
                 doLog("            : No Individual Saving Accounts");
             }
         }
-        
+
         doLog("");
         doLog("================= Summary (only items > 0.00 are processed)===================");
         doLog("No. of Customers One level Under Top Customer : " + countOneLevelUnder);
@@ -367,7 +367,7 @@ public class SaveCollectionSheetDto {
         doLog("==============================================================================");
 
     }
-    
+
     public String printSummary() {
 
         final StringBuilder builder = new StringBuilder();
@@ -394,11 +394,11 @@ public class SaveCollectionSheetDto {
         builder.append(countIndividualSavingsDeposits);
         builder.append(comma);
         builder.append(countIndividualSavingsWithdrawals);
-        
+
         return builder.toString();
     }
-    
-    
+
+
     private void doLog(String str) {
         System.out.println(str);
     }

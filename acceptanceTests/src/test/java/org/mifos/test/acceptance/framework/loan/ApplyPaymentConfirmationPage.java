@@ -19,5 +19,5 @@ public class ApplyPaymentConfirmationPage extends AbstractPage {
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
-    
+
 }

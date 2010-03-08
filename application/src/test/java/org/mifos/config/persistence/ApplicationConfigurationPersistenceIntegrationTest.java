@@ -82,12 +82,12 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      * public void testDump() { List<MifosLookUpEntity> entities=null; try {
      * Session session = StaticHibernateUtil.getSessionTL(); entities =
      * session.getNamedQuery( NamedQueryConstants.GET_ENTITIES).list();
-     * 
+     *
      * for (MifosLookUpEntity entity : entities) { Set<LookUpLabelEntity> labels
      * = entity.getLookUpLabels(); for (LookUpLabelEntity label : labels) {
      * System.out.println(entity.getEntityType() + ".Label = " +
      * label.getLabelText()); } }
-     * 
+     *
      * // for (MifosLookUpEntity entity : entities) { // Set<LookUpValueEntity>
      * values = entity.getLookUpValues(); // List<LookUpValueEntity> valuesList
      * = new ArrayList<LookUpValueEntity>(); // valuesList.addAll(values); //
@@ -106,9 +106,9 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      * System.out.println(entity.getEntityType() + "." +
      * lookupValue.getLookUpName() + " = " + locale.getLookUpValue()); // } // }
      * // } // }
-     * 
+     *
      * } finally { StaticHibernateUtil.closeSession(); }
-     * 
+     *
      * }
      */
 }

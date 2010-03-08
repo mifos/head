@@ -32,7 +32,7 @@ public class MifosXMLWatchdog extends FileWatchdog {
     /**
      * Constructor: It simply calls the super to initialise the thread with the
      * file name thai it has to poll.
-     * 
+     *
      * @param filename
      *            : The file to be polled
      */

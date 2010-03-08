@@ -44,7 +44,7 @@ public class DecimalInput extends ELTextTag {
 
     /**
      * This function renders the tag
-     * 
+     *
      * @return int
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */

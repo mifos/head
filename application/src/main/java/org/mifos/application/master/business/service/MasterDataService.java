@@ -40,7 +40,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 
 public class MasterDataService implements BusinessService {
-    
+
     private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private final OfficePersistence officePersistence = new OfficePersistence();
     private final CustomerPersistence customerPersistence = new CustomerPersistence();

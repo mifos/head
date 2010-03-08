@@ -26,7 +26,7 @@ import org.mifos.application.meeting.business.MeetingTypeEntity;
  * When ever we require a frequency(recurrence pattern) to be stored, we create
  * a "meeting" (this is not necessarily a meeting in the sense we present to the
  * users).
- * 
+ *
  * See also {@link MeetingTypeEntity}.
  */
 public enum MeetingType {

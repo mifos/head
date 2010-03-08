@@ -33,12 +33,12 @@ import org.mifos.framework.TestUtils;
 public class FeeActionFormTest {
     Locale locale = TestUtils.ukLocale();
     FeeActionForm form;
-    
+
     @Before
     public void setUp() {
         form = new FeeActionForm();
     }
-    
+
     @After
     public void tearDown() {
         form = null;

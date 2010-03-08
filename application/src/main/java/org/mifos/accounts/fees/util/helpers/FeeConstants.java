@@ -86,7 +86,7 @@ public interface FeeConstants {
     public static final String INVALID_FEE = "errors.Fee.invalid";
     public static final String RATE = "Fees.error.rate";
     public static final String AMOUNT = "Fees.error.amount";
-    
+
     // error messages for UI
     public static final String ERRORS_SPECIFY_VALUE = "errors.enter";
     public static final String ERRORS_SPECIFY_AMOUNT_OR_RATE = "errors.amountOrRate";

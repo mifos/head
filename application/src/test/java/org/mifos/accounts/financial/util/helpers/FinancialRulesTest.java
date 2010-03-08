@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class FinancialRulesTest extends TestCase {
 
     FinancialRules mock;
-    
+
     public void setUp() throws Exception {
         mock = new FinancialRules();
         Map<FinancialActionConstants, String> actionToDebitAccount = new HashMap<FinancialActionConstants, String>();
@@ -39,11 +39,11 @@ public class FinancialRulesTest extends TestCase {
         mock.setActionToCreditAccount(actionToCreditAccount);
         mock.setActionToDebitAccount(actionToDebitAccount);
     }
-    
+
     public void tearDown() {
         mock = null;
     }
-    
+
     public void testSupportedActions() throws Exception {
        Assert.assertEquals("11201", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.DEBIT));
        Assert.assertEquals("13100", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.CREDIT));

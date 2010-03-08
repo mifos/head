@@ -19,7 +19,7 @@
  */
 
 /**
- * 
+ *
  */
 package org.mifos.security.authentication;
 

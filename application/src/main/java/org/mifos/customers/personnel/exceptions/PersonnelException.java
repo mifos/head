@@ -33,7 +33,7 @@ public class PersonnelException extends ApplicationException {
 
     /**
      * Constructor for PersonnelException
-     * 
+     *
      * @param key
      * @param values
      */
@@ -43,7 +43,7 @@ public class PersonnelException extends ApplicationException {
 
     /**
      * Constructor for PersonnelException
-     * 
+     *
      * @param cause
      */
     public PersonnelException(Throwable cause) {
@@ -52,7 +52,7 @@ public class PersonnelException extends ApplicationException {
 
     /**
      * Constructor for PersonnelException
-     * 
+     *
      * @param cause
      */
     public PersonnelException(String key, Throwable cause) {

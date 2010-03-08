@@ -44,7 +44,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
     private String expectedDate;
-    
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -61,7 +61,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2010,1,22,10,55,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
- 
+
     }
 
     @AfterMethod(alwaysRun = true)
@@ -82,7 +82,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyWeeks("on");
         submitAccountParameters.setLsimWeekFrequency("1");
         submitAccountParameters.setLsimWeekDay("Friday");
-        
+
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml.zip", dataSource, selenium);
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
@@ -126,10 +126,10 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
-    
+
     private void createLSIMLoanAndCheckAmountAndInstallmentDate(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters, String expectedDate) {
-        
+
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyPage();
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());

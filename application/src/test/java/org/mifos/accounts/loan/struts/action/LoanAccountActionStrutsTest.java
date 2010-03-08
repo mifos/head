@@ -163,12 +163,12 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     private LoanOfferingBO loanOfferingForLoanRedo = null;
     private CenterBO centerForLoanRedo = null;
 
-    @Override 
+    @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
-        
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -370,7 +370,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
-        
+
     public void testRedoLoanThenApplyPayment() throws Exception {
         createInitialObjectsForLoanRedo();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -966,12 +966,12 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     public void testSchedulePreviewWithoutData() throws Exception {
         // make sure that everything needed to resolve hidden/mandatory fields is loaded
-        EntityMasterData.getInstance().init();        
+        EntityMasterData.getInstance().init();
         FieldConfig fieldConfig = FieldConfig.getInstance();
         fieldConfig.init();
         getActionServlet().getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,
                 fieldConfig.getEntityMandatoryFieldMap());
-        
+
         schedulePreviewPageParams.put("loanAmount", "");
         schedulePreviewPageParams.put("interestRate", "");
         schedulePreviewPageParams.put("noOfInstallments", "");
@@ -1035,8 +1035,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     /*
      * TODO: turn back on when IntersetDeductedAtDisbursement is re-enabled
-     * 
-     * 
+     *
+     *
      * public void testSchedulePreviewWithDataForIntDedAtDisb() throws
      * Exception { request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
      * schedulePreviewPageParams.put("intDedDisbursement", "1");
@@ -1131,12 +1131,12 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
      * accountBO; LoanOfferingBO loanOffering = loan.getLoanOffering();
      * loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
      * SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-     * 
+     *
      * setRequestPathInfo("/loanAccountAction.do");
      * addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
      * .getAttribute(Constants.CURRENTFLOWKEY)); addRequestParameter("method",
      * "manage"); actionPerform();
-     * 
+     *
      * setRequestPathInfo("/loanAccountAction.do");
      * addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
      * .getAttribute(Constants.CURRENTFLOWKEY)); addRequestParameter("method",
@@ -1152,7 +1152,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
      * addRequestParameter("gracePeriodDuration", "1");
      * addRequestParameter("intDedDisbursement", "1"); actionPerform();
      * verifyForward(ActionForwards.managepreview_success.toString());
-     * 
+     *
      * Assert.assertNotNull(SessionUtils.getAttribute(
      * MasterConstants.COLLATERAL_TYPE_NAME, request));
      * Assert.assertNotNull(SessionUtils.getAttribute(

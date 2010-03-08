@@ -94,7 +94,7 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
 
         MasterPersistence masterPersistenceService = new MasterPersistence();
 
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO, TestUtils.createMoney(100), 
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO, TestUtils.createMoney(100),
                 "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,

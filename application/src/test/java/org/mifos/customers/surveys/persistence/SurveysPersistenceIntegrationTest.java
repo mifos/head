@@ -33,7 +33,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class SurveysPersistenceIntegrationTest extends MifosIntegrationTestCase {
-    
+
     public SurveysPersistenceIntegrationTest() throws Exception {
         super();
     }

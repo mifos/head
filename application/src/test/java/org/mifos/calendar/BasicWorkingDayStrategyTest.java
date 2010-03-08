@@ -42,10 +42,10 @@ public class BasicWorkingDayStrategyTest {
 
         workingDays = Arrays.asList(DayOfWeek.mondayAsDay(), DayOfWeek.tuesdayAsDay(), DayOfWeek.wednesdayAsDay(),
                 DayOfWeek.thursdayAsDay(), DayOfWeek.fridayAsDay());
-        
+
         workingDayStrategy = new BasicWorkingDayStrategy(workingDays);
     }
-    
+
     @Test
     public void whenADateFallsOnAWorkingDayItShouldNotBeAdjusted() {
 

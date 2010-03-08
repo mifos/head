@@ -23,8 +23,8 @@ package org.mifos.framework.exceptions;
 /**
  * This Exception is thrown when any hibernate execptions are encountered in the
  * application
- * 
- * 
+ *
+ *
  */
 
 public class HibernateProcessException extends SystemException {

@@ -79,7 +79,7 @@ public class SystemException extends RuntimeException {
     public SystemException(final String key, final String internalMessage, final Throwable cause, final Object[] values) {
         super(internalMessage, cause);
         this.key = key;
-        
+
         // we clone to make sure that the Object[] isn't modified outside this method.
         if (values == null) {
             this.values = null;

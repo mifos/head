@@ -39,7 +39,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * @deprecated - please use {@link HolidayDao} instead.
- * 
+ *
  * FIXME - move holiday dao functionality from here to {@link HolidayDaoHibernate}.
  */
 @Deprecated
@@ -56,10 +56,10 @@ public class HolidayPersistence extends MasterPersistence {
      * we need a way to make this worx because our PK is the HolidayPK public
      * HolidayBO getHoliday(HolidayPK holidayPK) throws PersistenceException {
      * return (HolidayBO) getPersistentObject(HolidayBO.class, holidayPK); }
-     * 
+     *
      * Force a locale that works with pattern parsing.
      */
-    
+
     @Deprecated
     public List<HolidayBO> getHolidays(final int year) throws PersistenceException {
         SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd",new Locale("en","GB"));

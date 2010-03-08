@@ -37,7 +37,7 @@ public class CollectionSheetCustomerDto {
     private List<CollectionSheetCustomerLoanDto> collectionSheetCustomerLoan = new ArrayList<CollectionSheetCustomerLoanDto>();
     private List<CollectionSheetCustomerSavingDto> collectionSheetCustomerSaving = new ArrayList<CollectionSheetCustomerSavingDto>();
     private List<CollectionSheetCustomerSavingDto> individualSavingAccounts = new ArrayList<CollectionSheetCustomerSavingDto>();
-    
+
     public CollectionSheetCustomerDto() {
         // Default empty constructor for hibernate
     }

@@ -22,7 +22,7 @@ package org.mifos.security.util;
 
 /**
  * This inteface will hold all the constants used related to the security
- * 
+ *
  * NOTE: if a new activity is being added, the values in RoleTestUtil need to be
  * increased.
  */
@@ -469,10 +469,10 @@ public interface SecurityConstants {
      * <li>running/executing an admin document when it shows up during a
      * particular loan or savings account state
      * </ul>
-     * 
+     *
      * This was done to fix the issue quickly and since the operations seem to
      * have reasonable overlap.
-     * 
+     *
      */
     public final short CAN_VIEW_ADMIN_DOCUMENTS = 226;
 
@@ -489,7 +489,7 @@ public interface SecurityConstants {
     public final short CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT = 231;
 
     public final short CAN_VIEW_BRANCH_REPORT = 232;
-    
+
     public final short CAN_IMPORT_TRANSACTIONS = 233;
 
     /** Can shutdown Mifos */

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.customer;
 
 import com.thoughtworks.selenium.Selenium;
@@ -36,21 +36,21 @@ public class CustomerChangeStatusPage extends MifosPage {
 	public CustomerChangeStatusPage(Selenium selenium) {
 		super(selenium);
 	}
-	
+
     public void verifyPage() {
         this.verifyPage("customerchangeStatus");
-    }	
-	
+    }
+
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
-        // statuses 
+        // statuses
         public final static int APPROVED = 3;
         public final static int PARTIAL_APPLICATION = 1;
-        public final static int PENDING_APPROVAL = 2; 
-        
+        public final static int PENDING_APPROVAL = 2;
+
         private int status;
         private String notes;
-        
+
         public int getStatus() {
             return this.status;
         }
@@ -66,21 +66,21 @@ public class CustomerChangeStatusPage extends MifosPage {
         public void setNotes(String notes) {
             this.notes = notes;
         }
-    }	
-    
+    }
+
     public CustomerChangeStatusPreviewDataPage submitAndGotoCustomerChangeStatusPreviewDataPage(SubmitFormParameters parameters) {
         selenium.check("name=newStatusId value="+ parameters.getStatus());
         typeTextIfNotEmpty("customerchangeStatus.input.notes", parameters.getNotes());
         selenium.click("customerchangeStatus.button.preview");
         waitForPageToLoad();
         return new CustomerChangeStatusPreviewDataPage(selenium);
-    }  
-    
+    }
+
     public ClientViewDetailsPage cancelAndGotoClientViewDetailsPage(SubmitFormParameters parameters) {
         //checkIfNotEmpty("customerchangeStatus.input.status", parameters.getStatus());
         //typeTextIfNotEmpty("customerchangeStatus.input.notes", parameters.getNotes());
         selenium.click("customerchangeStatus.button.cancel");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
-    }      
+    }
 }

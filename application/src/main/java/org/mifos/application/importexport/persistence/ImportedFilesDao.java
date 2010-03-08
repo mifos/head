@@ -26,7 +26,7 @@ import org.mifos.framework.persistence.DataAccessObject;
 public interface ImportedFilesDao extends DataAccessObject {
 
     void saveImportedFile(ImportedFilesEntity importedFileEntity) throws Exception;
-    
+
     ImportedFilesEntity findImportedFileByName(String fileName) throws Exception;
 
 }

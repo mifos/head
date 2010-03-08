@@ -35,12 +35,12 @@ public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Session session;
-    
+
     @Override
     public void setUp() {
-        session = StaticHibernateUtil.getSessionTL(); 
+        session = StaticHibernateUtil.getSessionTL();
     }
-    
+
     /*
      * INSERT INTO
      * FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG

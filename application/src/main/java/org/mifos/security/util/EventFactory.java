@@ -30,7 +30,7 @@ public class EventFactory {
 
     /**
      * This function returns the EventFactory object
-     * 
+     *
      * @return ef event factory object
      */
     public static EventFactory getEventFactory() {
@@ -39,7 +39,7 @@ public class EventFactory {
 
     /**
      * This function creates the event based on the passed parameter
-     * 
+     *
      * @param name
      *            name of the event
      * @return SecurityEvent interface

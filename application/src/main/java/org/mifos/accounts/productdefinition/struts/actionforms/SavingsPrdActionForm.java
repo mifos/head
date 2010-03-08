@@ -447,23 +447,23 @@ public class SavingsPrdActionForm extends BaseActionForm {
         }
 
     }
-    
+
     private void validateMaxAmntWithdrawl(ActionErrors errors, HttpServletRequest request) {
         Locale locale = getUserContext(request).getPreferredLocale();
         if(getMaxAmntWithdrawl() != null && !getMaxAmntWithdrawl().equals("")){
-            validateAmount(getMaxAmntWithdrawl(), ProductDefinitionConstants.MAX_AMOUNT_WITHDRAWL_KEY, errors, locale, 
+            validateAmount(getMaxAmntWithdrawl(), ProductDefinitionConstants.MAX_AMOUNT_WITHDRAWL_KEY, errors, locale,
                     FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
         }
     }
-    
+
     private void validateMinAmntForInt(ActionErrors errors, HttpServletRequest request) {
         Locale locale = getUserContext(request).getPreferredLocale();
         if(getMinAmntForInt() != null && !getMinAmntForInt().equals("")){
-            validateAmount(getMinAmntForInt(), ProductDefinitionConstants.MIN_BALANCE_FOR_CALC_KEY, errors, locale, 
+            validateAmount(getMinAmntForInt(), ProductDefinitionConstants.MIN_BALANCE_FOR_CALC_KEY, errors, locale,
                     FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE);
         }
     }
-    
+
     private void validateInterestRate(ActionErrors errors, HttpServletRequest request) {
         Locale locale = getUserContext(request).getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,

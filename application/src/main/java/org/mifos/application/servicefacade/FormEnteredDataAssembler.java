@@ -54,7 +54,7 @@ public class FormEnteredDataAssembler {
         final ListItem<Short> selectedPaymentType = collectionSheetFormDtoDecorator.findSelectedPaymentTypeById(Short
                 .valueOf(collectionSheetForm.getPaymentId()));
         final java.sql.Date meetingDate = collectionSheetFormDtoDecorator.getMeetingDateAsSqlDate();
-        
+
         final java.sql.Date receiptDate = determineReceiptDateIfPopulated();
 
         return new CollectionSheetFormEnteredDataDto(office, loanOfficer, selectedCustomer, selectedPaymentType,

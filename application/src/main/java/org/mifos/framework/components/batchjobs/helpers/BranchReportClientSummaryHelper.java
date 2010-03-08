@@ -44,7 +44,7 @@ public class BranchReportClientSummaryHelper {
         /**
          * If want to switch to Hibernate based Batch Job, kindly replace the
          * below line with
-         * 
+         *
          * branchReport .addClientSummaries( new
          * BranchReportPersistenceDataAggregator( customerBusinessService,
          * branchReportService,

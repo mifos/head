@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.admin;
 
 
@@ -48,7 +48,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
- 
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
@@ -76,5 +76,5 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
         //try to reach System Info page, should fail
         adminPage = adminPage.failNavigationToSystemInfoPage();
      }
- 
+
 }

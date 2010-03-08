@@ -74,7 +74,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
 
     @Mock
     private SavingsTrxnDetailEntity savingsTrxnDetail;
-    
+
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
         defaultCurrency = TestUtils.RUPEE;
@@ -159,7 +159,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
         assertThat(unpaidSaving1.isPaid(), is(true));
         assertThat(unpaidSaving2.isPaid(), is(false));
     }
-    
+
     @Test
     public void whenDepositAmountIsNotEnoughToPayOffAllScheduledPaymentsThenPayAsMuchAsPossibleOfEarliestScheduledPayments() {
 
@@ -188,7 +188,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
         assertThat(unpaidSaving2.isPaid(), is(false));
         assertThat(unpaidSaving2.getDepositPaid(), is(new Money(TestUtils.RUPEE, "20.0")));
     }
-    
+
     @Test
     public void whenDepositAmountIsInExcessOfTotalDepositDueAllScheduledPaymentsShouldBeMarkedAsPaid() {
 
@@ -216,7 +216,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
         assertThat(unpaidSaving1.isPaid(), is(true));
         assertThat(unpaidSaving2.isPaid(), is(true));
     }
-    
+
     @Test
     public void whenDepositAmountIsInExcessOfTotalDepositDueTheExcessAmountIsReturnedInRemainingAmount() {
 
@@ -272,7 +272,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
         assertThat(unpaidSaving2.getPaymentDate(), is(dateOfDeposit));
         assertThat(unpaidSaving2.getPaymentDate(), is(dateOfDeposit));
     }
-    
+
 
     @Test
     public void whenAllDepositIsPaidOnInstallmentASavingsTrxnDetailIsCreatedWithLatestBalance() {
@@ -339,7 +339,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
                 new Money(TestUtils.RUPEE, "35.0"), payingCustomer, unpaidSaving2,
                 balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "60.0")));
     }
-    
+
     @Test
     public void whenSomeDepositIsPaidOnInstallmentTheSavingsTrxnDetailCreatedIsAddedToAccountPaymentTrxnss() {
 
@@ -366,7 +366,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
                 savingsTransactionActivityHelper.createSavingsTrxnForDeposit(accountPayment, new Money(TestUtils.RUPEE, "40.0"),
                         payingCustomer, unpaidSaving2, balanceBeforeDeposit.add(new Money(TestUtils.RUPEE, "65.0"))))
                 .thenReturn(savingsTrxnDetail);
-        
+
         // exercise test
         paymentStrategy.makeScheduledPayments(accountPayment, unpaidDepositsForPayingCustomer, payingCustomer,
                 SavingsType.MANDATORY, balanceBeforeDeposit);

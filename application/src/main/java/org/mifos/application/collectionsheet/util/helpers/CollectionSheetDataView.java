@@ -21,7 +21,7 @@
 package org.mifos.application.collectionsheet.util.helpers;
 
 /**
- * 
+ *
  */
 public class CollectionSheetDataView {
 

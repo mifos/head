@@ -40,10 +40,10 @@ public class LoanProductBuilder {
     private final Date startDate = new DateTime().minusDays(14).toDate();
     private final String name = "testLoanProduct";
     private final String shortName = "TLP1";
-    
+
     private final Date createdDate = new DateTime().minusDays(14).toDate();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
-    
+
     private final GLCodeEntity depositGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
     private final GLCodeEntity interesetGLCode = new GLCodeEntity(Short.valueOf("2"), "11000");
 
@@ -63,7 +63,7 @@ public class LoanProductBuilder {
     private final Short defaultNoOfInstallmentsForLoan = Short.valueOf("6");
     private PrdStatus productStatus = PrdStatus.LOAN_ACTIVE;
     private PrdStatusEntity productStatusEntity;
-    
+
     public LoanOfferingBO buildForUnitTests() {
 
         LoanOfferingBO loanProduct = build();
@@ -72,22 +72,22 @@ public class LoanProductBuilder {
     }
 
     private LoanOfferingBO build() {
-        
+
         final LoanOfferingBO loanProduct = new LoanOfferingBO(depositGLCode, interesetGLCode, interestType,
                 minInterestRate, maxInterestRate, defaultInterestRate, interestPaidAtDisbursement,
                 principalDueLastInstallment, new NoOfInstallSameForAllLoanBO(), name, shortName, globalProductNumber,
                 startDate, applicableToCustomer, category, productStatusEntity, createdDate, createdByUserId);
-        
+
         final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan = new NoOfInstallSameForAllLoanBO(
                 minNoOfInstallmentsForLoan, maxNoOfInstallmentsForLoan, defaultNoOfInstallmentsForLoan, loanProduct);
-        
+
         loanProduct.setNoOfInstallSameForAllLoan(noOfInstallSameForAllLoan);
-        
+
         return loanProduct;
     }
 
     public LoanOfferingBO buildForIntegrationTests() {
-        
+
         category = (ProductCategoryBO) StaticHibernateUtil.getSessionTL().get(ProductCategoryBO.class,
                 Short.valueOf("2"));
 

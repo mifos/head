@@ -863,7 +863,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Assert.assertNotNull(customers);
         Assert.assertEquals(1, customers.size());
     }
-    
+
     public void testGetListOfActiveCentersUnderUser() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
@@ -871,14 +871,14 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         List<CustomerListDto> customers = service.getListOfActiveCentersUnderUser(personnel);
         Assert.assertNotNull(customers);
         Assert.assertEquals(1, customers.size());
-        
+
         center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "make center inactive");
         center.update();
         StaticHibernateUtil.commitTransaction();
-        
+
         customers = service.getListOfActiveCentersUnderUser(personnel);
         Assert.assertNotNull(customers);
-        Assert.assertEquals(0, customers.size());      
+        Assert.assertEquals(0, customers.size());
     }
 
     public void testFailureGetActiveCentersUnderUser() throws Exception {
@@ -918,10 +918,10 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         group.changeStatus(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_LEFTPROGRAM, "make group closed");
         group.update();
         StaticHibernateUtil.commitTransaction();
-        
+
         customers = service.getListOfGroupsUnderUser(personnel);
         Assert.assertNotNull(customers);
-        Assert.assertEquals(0, customers.size());      
+        Assert.assertEquals(0, customers.size());
     }
     public void testFailuregetGroupsUnderUser() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());

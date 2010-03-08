@@ -96,7 +96,7 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
             if (method != null && method.equals("preview")) {
                 SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
                 AccountPaymentEntity payment = savings.getLastPmnt();
-                if (payment == null || savings.getLastPmntAmnt() == 0 
+                if (payment == null || savings.getLastPmntAmnt() == 0
                     || !(new SavingsHelper().getPaymentActionType(payment).equals(
                                 AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()) || new SavingsHelper()
                                 .getPaymentActionType(payment).equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue()))) {
@@ -107,7 +107,7 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
                         errors.add(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT, new ActionMessage(
                                 SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
                     }
-                    
+
                     if(StringUtils.isNotBlank(getLastPaymentAmount())) {
                         Locale locale = getUserContext(request).getPreferredLocale();
                         validateAmount(errors, locale);
@@ -130,12 +130,12 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
         }
         return errors;
     }
-    
+
     private void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getLastPaymentAmount(), SavingsConstants.AMOUNT, errors, locale, 
+        DoubleConversionResult conversionResult = validateAmount(getLastPaymentAmount(), SavingsConstants.AMOUNT, errors, locale,
                 FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, SavingsConstants.AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, 
+            addError(errors, SavingsConstants.AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(SavingsConstants.AMOUNT, locale, FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE));
         }
     }

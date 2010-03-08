@@ -30,7 +30,7 @@ public class NumberUtils {
         }
         return intValue.shortValue();
     }
-    
+
     public static Integer convertShortToInteger(Short shortValue) {
         if (shortValue == null) {
             return null;

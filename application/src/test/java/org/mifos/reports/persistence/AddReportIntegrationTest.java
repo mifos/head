@@ -34,18 +34,18 @@ import org.mifos.framework.persistence.TestDatabase;
 
 @Ignore
 public class AddReportIntegrationTest extends MifosIntegrationTestCase {
-    
+
     public AddReportIntegrationTest() throws Exception {
         super();
     }
 
     private Session session;
-    
+
     @Override
     public void setUp() {
-        session = StaticHibernateUtil.getSessionTL(); 
+        session = StaticHibernateUtil.getSessionTL();
     }
-    
+
     @Override
     public void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();

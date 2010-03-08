@@ -49,7 +49,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 /**
  * I test integration of {@link SavingsDaoHibernate}, hibernate mapping
  * configuration and queries against latest database schema.
- * 
+ *
  * I should test the contract of {@link SavingsDao} in every way that its test
  * double (mock, stub) is used in unit tests.
  */
@@ -215,7 +215,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // verification
         assertTrue(mandatorySavingAccounts.isEmpty());
     }
-    
+
     public void testShouldFindOnlyMandatorySavingsAccountsForCentersOrGroupThatToBePaidIndividuallyByTheirClients() {
 
         // setup
@@ -248,7 +248,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // verification
         assertTrue(mandatorySavingAccounts.isEmpty());
     }
-    
+
     public void testShouldFindOnlyVoluntarySavingsAccountsForIndividualClientsOfTheVoluntaryCentersOrVoluntaryGroupsWithPerIndividualStatus() {
 
         // setup

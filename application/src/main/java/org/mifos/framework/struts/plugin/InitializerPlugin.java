@@ -38,7 +38,7 @@ import org.mifos.framework.util.helpers.Constants;
  * This plugin is called when the system starts up. It mainly initializes
  * struts-related things. See also
  * {@link org.mifos.framework.ApplicationInitializer}.
- * 
+ *
  * It reads the initialization.xml (? - or used to?)
  */
 public class InitializerPlugin implements PlugIn {
@@ -47,7 +47,7 @@ public class InitializerPlugin implements PlugIn {
      * This is the central method which is called by the struts framework. This
      * function then delegates the initialization part to different methods of
      * the class.
-     * 
+     *
      */
     public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
 

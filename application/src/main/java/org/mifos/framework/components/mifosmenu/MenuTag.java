@@ -39,7 +39,7 @@ public class MenuTag extends BaseHandlerTag {
 
     /**
      * Method to find left menu respective to given topMenuTab
-     * 
+     *
      * @return integer to indicate what to do next after executing the do
      *         function.
      */
@@ -75,7 +75,7 @@ public class MenuTag extends BaseHandlerTag {
 
     /**
      * Method to get the value of topMenuTab member variable
-     * 
+     *
      * @return value of topMenuTab
      */
     public String getTopMenuTab() {
@@ -84,7 +84,7 @@ public class MenuTag extends BaseHandlerTag {
 
     /**
      * Method to set the value of topMenuTab member variable
-     * 
+     *
      * @param topMenuTab
      *            is the value to be set
      */
@@ -94,7 +94,7 @@ public class MenuTag extends BaseHandlerTag {
 
     /**
      * Method to prepare html to display menu items
-     * 
+     *
      * @param output
      *            is the string to which generated html is to be appended
      * @param menuGroup

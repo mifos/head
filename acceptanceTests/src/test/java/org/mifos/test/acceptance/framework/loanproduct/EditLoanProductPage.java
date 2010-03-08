@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.framework.loanproduct;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -31,7 +31,7 @@ public class EditLoanProductPage extends MifosPage {
     public EditLoanProductPage(Selenium selenium) {
         super(selenium);
     }
-    
+
     public EditLoanProductPage verifyPage() {
         verifyPage("EditLoanProduct");
         return this;
@@ -46,7 +46,7 @@ public class EditLoanProductPage extends MifosPage {
         waitForPageToLoad();
         return new EditLoanProductPreviewPage(selenium);
     }
- 
+
     public void verifyModifiedDescriptionAndInterest(SubmitFormParameters formParameters) {
         Assert.assertEquals(getDescription(), formParameters.getDescription());
         Assert.assertEquals(getMinInterestRate(), formParameters.getMinInterestRate());

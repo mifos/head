@@ -35,7 +35,7 @@ import org.mifos.framework.TestUtils;
  *
  */
 public class LoanAccountBuilder {
-    
+
     private LoanOfferingBO loanProduct = new LoanProductBuilder().buildForUnitTests();
     private final Short numOfInstallments = Short.valueOf("5");
     private final GraceType gracePeriodType = GraceType.NONE;
@@ -43,10 +43,10 @@ public class LoanAccountBuilder {
     private final AccountState accountState = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
     private CustomerBO customer;
     private final Integer offsettingAllowable = Integer.valueOf(1);
-    
+
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
-    
+
     public LoanBO build() {
         final LoanBO loanAccount = new LoanBO(loanProduct, numOfInstallments, gracePeriodType, accountType,
                 accountState, customer, offsettingAllowable);
@@ -57,7 +57,7 @@ public class LoanAccountBuilder {
         this.loanProduct = withLoanProduct;
         return this;
     }
-    
+
     public LoanAccountBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
         return this;
