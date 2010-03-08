@@ -115,8 +115,9 @@ public class SavingsPrdAction extends BaseAction {
         prdDefLogger.debug("start validate method of Savings Product Action");
         String forward = null;
         String method = (String) request.getAttribute("methodCalled");
-        if (method != null)
+        if (method != null) {
             forward = method + "_failure";
+        }
         return mapping.findForward(forward);
     }
 
@@ -293,30 +294,41 @@ public class SavingsPrdAction extends BaseAction {
         actionForm.setPrdOfferingName(savingsProduct.getPrdOfferingName());
         actionForm.setPrdOfferingShortName(savingsProduct.getPrdOfferingShortName());
         actionForm.setDescription(savingsProduct.getDescription());
-        if (savingsProduct.getPrdCategory() != null)
+        if (savingsProduct.getPrdCategory() != null) {
             actionForm.setPrdCategory(savingsProduct.getPrdCategory().getProductCategoryID().toString());
-        if (savingsProduct.getStartDate() != null)
+        }
+        if (savingsProduct.getStartDate() != null) {
             actionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
                     savingsProduct.getStartDate().toString()));
-        if (savingsProduct.getEndDate() != null)
+        }
+        if (savingsProduct.getEndDate() != null) {
             actionForm.setEndDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
                     savingsProduct.getEndDate().toString()));
-        if (savingsProduct.getPrdApplicableMaster() != null)
+        }
+        if (savingsProduct.getPrdApplicableMaster() != null) {
             actionForm.setPrdApplicableMaster(savingsProduct.getPrdApplicableMasterEnum().getValue().toString());
-        if (savingsProduct.getSavingsType() != null)
+        }
+        if (savingsProduct.getSavingsType() != null) {
             actionForm.setSavingsType(savingsProduct.getSavingsType().getId().toString());
-        if (savingsProduct.getRecommendedAmount() != null)
+        }
+        if (savingsProduct.getRecommendedAmount() != null) {
             actionForm.setRecommendedAmount(savingsProduct.getRecommendedAmount().toString());
-        if (savingsProduct.getRecommendedAmntUnit() != null)
+        }
+        if (savingsProduct.getRecommendedAmntUnit() != null) {
             actionForm.setRecommendedAmntUnit(savingsProduct.getRecommendedAmntUnit().getId().toString());
-        if (savingsProduct.getMaxAmntWithdrawl() != null)
+        }
+        if (savingsProduct.getMaxAmntWithdrawl() != null) {
             actionForm.setMaxAmntWithdrawl(savingsProduct.getMaxAmntWithdrawl().toString());
-        if (savingsProduct.getPrdStatus() != null)
+        }
+        if (savingsProduct.getPrdStatus() != null) {
             actionForm.setStatus(savingsProduct.getStatus().getValue().toString());
-        if (savingsProduct.getInterestRate() != null)
+        }
+        if (savingsProduct.getInterestRate() != null) {
             actionForm.setInterestRate(savingsProduct.getInterestRate().toString());
-        if (savingsProduct.getInterestCalcType() != null)
+        }
+        if (savingsProduct.getInterestCalcType() != null) {
             actionForm.setInterestCalcType(savingsProduct.getInterestCalcType().getId().toString());
+        }
         if (savingsProduct.getTimePerForInstcalc() != null
                 && savingsProduct.getTimePerForInstcalc().getMeeting() != null
                 && savingsProduct.getTimePerForInstcalc().getMeeting().getMeetingDetails() != null) {
@@ -330,12 +342,15 @@ public class SavingsPrdAction extends BaseAction {
             actionForm.setFreqOfInterest(savingsProduct.getFreqOfPostIntcalc().getMeeting().getMeetingDetails()
                     .getRecurAfter().toString());
         }
-        if (savingsProduct.getMinAmntForInt() != null)
+        if (savingsProduct.getMinAmntForInt() != null) {
             actionForm.setMinAmntForInt(savingsProduct.getMinAmntForInt().toString());
-        if (savingsProduct.getDepositGLCode() != null)
+        }
+        if (savingsProduct.getDepositGLCode() != null) {
             actionForm.setDepositGLCode(savingsProduct.getDepositGLCode().getGlcodeId().toString());
-        if (savingsProduct.getInterestGLCode() != null)
+        }
+        if (savingsProduct.getInterestGLCode() != null) {
             actionForm.setInterestGLCode(savingsProduct.getInterestGLCode().getGlcodeId().toString());
+        }
     }
 
     private void loadUpdateMasterData(HttpServletRequest request) throws Exception {
@@ -385,8 +400,9 @@ public class SavingsPrdAction extends BaseAction {
 
     private ProductCategoryBO getProductCategory(List<ProductCategoryBO> productCategories, Short productCategoryId) {
         for (ProductCategoryBO productCategory : productCategories) {
-            if (productCategory.getProductCategoryID().equals(productCategoryId))
+            if (productCategory.getProductCategoryID().equals(productCategoryId)) {
                 return productCategory;
+            }
         }
         return null;
     }
@@ -396,9 +412,11 @@ public class SavingsPrdAction extends BaseAction {
         if (value != null) {
             List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils.getAttribute(collectionName,
                     request);
-            for (MasterDataEntity entity : entities)
-                if (entity.getId().equals(value))
+            for (MasterDataEntity entity : entities) {
+                if (entity.getId().equals(value)) {
                     return entity;
+                }
+            }
         }
         return null;
     }
@@ -406,9 +424,11 @@ public class SavingsPrdAction extends BaseAction {
     private GLCodeEntity findGLCodeEntity(HttpServletRequest request, String collectionName, Short value)
             throws PageExpiredException {
         List<GLCodeEntity> glCodeList = (List<GLCodeEntity>) SessionUtils.getAttribute(collectionName, request);
-        for (GLCodeEntity glCode : glCodeList)
-            if (glCode.getGlcodeId().equals(value))
+        for (GLCodeEntity glCode : glCodeList) {
+            if (glCode.getGlcodeId().equals(value)) {
                 return glCode;
+            }
+        }
         return null;
     }
 

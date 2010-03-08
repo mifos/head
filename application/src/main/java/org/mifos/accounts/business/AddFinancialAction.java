@@ -45,8 +45,9 @@ public class AddFinancialAction extends Upgrade {
      */
     public AddFinancialAction(int higherVersion, int action, String lookupValueKey) {
         super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, lookupValueKey))
+        if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
+        }
         this.action = action;
         this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.lookupValueKey = lookupValueKey;

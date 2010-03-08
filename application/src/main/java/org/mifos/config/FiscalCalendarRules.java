@@ -39,10 +39,12 @@ public class FiscalCalendarRules {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         if (configMgr.containsKey(FiscalCalendarRulesWorkingDays)) {
             workingDays = configMgr.getStringArray(FiscalCalendarRulesWorkingDays);
-            if (workingDays == null)
+            if (workingDays == null) {
                 throw new RuntimeException("The working days are not configured correctly in the config file.");
-        } else
+            }
+        } else {
             throw new RuntimeException("The working days are not defined in the config file.");
+        }
         return workingDays;
     }
 
@@ -65,56 +67,67 @@ public class FiscalCalendarRules {
     public List<WeekDay> getWeekDaysList() {
         WeekDay[] weekDays = WeekDay.values();
         List<WeekDay> list = new ArrayList();
-        for (WeekDay weekDay : weekDays)
+        for (WeekDay weekDay : weekDays) {
             list.add(weekDay);
+        }
         return list;
     }
 
     public List<WeekDay> getWorkingDays() {
-        if (configWorkingDays == null)
+        if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
+        }
         List<WeekDay> workingDays = new ArrayList(); // returned working days
-        for (String configWorkingDay : configWorkingDays)
+        for (String configWorkingDay : configWorkingDays) {
             workingDays.add(findWeekDay(configWorkingDay));
+        }
 
         return workingDays;
     }
 
     public List<Short> getWeekDayOffList() {
-        if (configWorkingDays == null)
+        if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
+        }
         List<Short> offDays = new ArrayList(); // returned off days
         WeekDay[] weekDays = WeekDay.values();
-        for (int i = 0; i < weekDays.length; i++)
-            if (!isWorkingDay(weekDays[i]))
+        for (int i = 0; i < weekDays.length; i++) {
+            if (!isWorkingDay(weekDays[i])) {
                 offDays.add(weekDays[i].getValue());
+            }
+        }
         return offDays;
     }
 
     private boolean isWorkingDay(final WeekDay weekDay) {
-        for (String configWorkingDay : configWorkingDays)
-            if (configWorkingDay.toUpperCase().equals(weekDay.name().toUpperCase()))
+        for (String configWorkingDay : configWorkingDays) {
+            if (configWorkingDay.toUpperCase().equals(weekDay.name().toUpperCase())) {
                 return true;
+            }
+        }
         return false;
     }
 
     public boolean isWorkingDay(final Calendar day) {
-        if (configWorkingDays == null)
+        if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
+        }
         return isWorkingDay(WeekDay.getWeekDay(day.get(Calendar.DAY_OF_WEEK)));
     }
 
     public boolean isWorkingDay(final Short dayOfWeek) {
-        if (configWorkingDays == null)
+        if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
+        }
         WeekDay weekDay = WeekDay.getWeekDay(dayOfWeek);
         return isWorkingDay(weekDay);
 
     }
 
     public boolean isStartOfFiscalWeek(final Short dayOfWeek) {
-        if (configWorkingDays == null)
+        if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
+        }
         Short startOfWeekDay = getStartOfWeek();
         return (dayOfWeek.shortValue() == startOfWeekDay.shortValue());
 
@@ -125,8 +138,9 @@ public class FiscalCalendarRules {
     }
 
     public WeekDay getStartOfWeekWeekDay() {
-        if (configWorkingDays == null)
+        if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
+        }
         WeekDay startOfWeek = findWeekDay(configWorkingDays[0]);
         return startOfWeek;
     }
@@ -135,20 +149,22 @@ public class FiscalCalendarRules {
     public String getScheduleTypeForMeetingOnHoliday() {
         String scheduleType = null;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday))
+        if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday)) {
             scheduleType = configMgr.getString(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday);
-        else
+        } else {
             throw new RuntimeException("The schedule type for meeting on holiday is not defined in the config file.");
+        }
         return scheduleType;
     }
 
     public Short getDaysForCalendarDefinition() {
         Short days = null;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(FiscalCalendarRulesDaysForCalendarDefinition))
+        if (configMgr.containsKey(FiscalCalendarRulesDaysForCalendarDefinition)) {
             days = configMgr.getShort(FiscalCalendarRulesDaysForCalendarDefinition);
-        else
+        } else {
             throw new RuntimeException("The days for calendar definition is not defined in the config file.");
+        }
         return days;
     }
 

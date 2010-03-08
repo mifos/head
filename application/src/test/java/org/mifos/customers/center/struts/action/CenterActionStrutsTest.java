@@ -241,10 +241,11 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         }
         actionPerform();
 
-        if (isCustomFieldMandatory)
-           Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        else
-           Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        if (isCustomFieldMandatory) {
+            Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        } else {
+            Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        }
     }
 
     public void testFailurePreview_WithDuplicateFee() throws Exception {
@@ -462,10 +463,11 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         }
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        if (isCustomFieldMandatory)
-           Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        else
-           Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        if (isCustomFieldMandatory) {
+            Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        } else {
+            Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        }
         verifyInputForward();
     }
 
@@ -785,8 +787,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void removeInactiveFees(List<FeeBO> feesToRemove) {
         for (FeeBO fee : feesToRemove) {
-            if (!fee.isActive())
+            if (!fee.isActive()) {
                 TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeId()));
+            }
         }
     }
 

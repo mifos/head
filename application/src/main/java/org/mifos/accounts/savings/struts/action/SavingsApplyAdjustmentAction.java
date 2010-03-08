@@ -111,8 +111,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
             SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION, accountAction, request);
             SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME, getClientName(savings, lastPayment), request);
             SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, Constants.YES, request);
-        } else
+        } else {
             SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, Constants.NO, request);
+        }
 
         logger.debug("In SavingsAdjustmentAction::load(), accountId: " + savings.getAccountId());
         return mapping.findForward("load_success");
@@ -146,12 +147,13 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 
-        if (savings.getPersonnel() != null)
+        if (savings.getPersonnel() != null) {
             getBizService().checkPermissionForAdjustment(AccountTypes.SAVINGS_ACCOUNT, null, uc,
                     savings.getOffice().getOfficeId(), savings.getPersonnel().getPersonnelId());
-        else
+        } else {
             getBizService().checkPermissionForAdjustment(AccountTypes.SAVINGS_ACCOUNT, null, uc,
                     savings.getOffice().getOfficeId(), uc.getId());
+        }
 
         SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
         if (actionForm.getLastPaymentAmount() == null) {
@@ -178,9 +180,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         String method = (String) request.getAttribute("methodCalled");
         logger.debug("In SavingsAdjustmentAction::validate(), method: " + method);
         String forward = null;
-        if (method != null && method.equals("preview"))
+        if (method != null && method.equals("preview")) {
             forward = "preview_failure";
-        else if (method != null && method.equals("SavingsAdjustmentAction")) {
+        } else if (method != null && method.equals("SavingsAdjustmentAction")) {
             forward = "adjustLastUserAction_failure";
         }
         return mapping.findForward(forward);
@@ -206,8 +208,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
     }
 
     private String getClientName(SavingsBO savings, AccountPaymentEntity lastPayment) {
-        if (savings.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()))
+        if (savings.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())) {
             return null;
+        }
         String clientName = null;
         CustomerBO customer = null;
         for (AccountTrxnEntity accountTrxn : lastPayment.getAccountTrxns()) {

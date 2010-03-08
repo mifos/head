@@ -89,8 +89,9 @@ public class AddReport extends Upgrade {
     }
 
     private void insertIntoReport(Connection connection) throws SQLException {
-        if (newId == 0)
+        if (newId == 0) {
             newId = getNextReportId(connection);
+        }
         PreparedStatement statement = connection.prepareStatement(isLowerVersion() ? getSqlForLowerVersion()
                 : getSqlForHigherVersion());
         statement.setShort(1, newId);

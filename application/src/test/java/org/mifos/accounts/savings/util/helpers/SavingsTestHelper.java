@@ -208,8 +208,9 @@ public class SavingsTestHelper {
         SavingsScheduleEntity actionDate = new SavingsScheduleEntity(account, customer, installmentId,
                 new java.sql.Date(dueDate.getTime()), paymentStatus, deposit);
         SavingBOTestUtils.setDepositPaid(actionDate, depositPaid);
-        if (paymentDate != null)
+        if (paymentDate != null) {
             SavingBOTestUtils.setPaymentDate(actionDate, new java.sql.Date(paymentDate.getTime()));
+        }
         return actionDate;
     }
 

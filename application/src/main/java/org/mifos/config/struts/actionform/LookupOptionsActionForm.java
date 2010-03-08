@@ -647,8 +647,9 @@ public class LookupOptionsActionForm extends BaseActionForm {
             entityType = resources.getString("configuration.officertitle");
         } else if (entity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE)) {
             entityType = resources.getString("configuration.usertitle");
-        } else
+        } else {
             entityType = "";
+        }
         return entityType;
     }
 

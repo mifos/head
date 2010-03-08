@@ -107,9 +107,10 @@ public class RepayLoanAction extends BaseAction {
         checkVersionMismatch(loanBOInSession.getVersionNo(), loanBO.getVersionNo());
         RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
         Date receiptDate = null;
-        if (repayLoanActionForm.getReceiptDate() != null && repayLoanActionForm.getReceiptDate() != "")
+        if (repayLoanActionForm.getReceiptDate() != null && repayLoanActionForm.getReceiptDate() != "") {
             receiptDate = new Date(DateUtils.getLocaleDate(uc.getPreferredLocale(),
                     repayLoanActionForm.getReceiptDate()).getTime());
+        }
         loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(), repayLoanActionForm.getReceiptNumber(),
                 receiptDate, repayLoanActionForm.getPaymentTypeId(), uc.getId());
         return mapping.findForward(Constants.UPDATE_SUCCESS);
@@ -138,8 +139,9 @@ public class RepayLoanAction extends BaseAction {
         String method = (String) request.getAttribute("methodCalled");
         logger.debug("In RepayLoanAction::validate(), method: " + method);
         String forward = null;
-        if (method != null && method.equals("preview"))
+        if (method != null && method.equals("preview")) {
             forward = ActionForwards.preview_failure.toString();
+        }
         return mapping.findForward(forward);
     }
 

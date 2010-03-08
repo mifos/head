@@ -187,10 +187,11 @@ public class TableTagParser {
     }
 
     protected String getAttributeValue(Node node) {
-        if (node != null)
+        if (node != null) {
             return node.getNodeValue();
-        else
+        } else {
             return null;
+        }
     }
 
     protected DisplayName createDisplayName(Node column) throws TableTagParseException {

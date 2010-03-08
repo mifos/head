@@ -58,8 +58,9 @@ public class BranchReportClientSummaryBO extends BusinessObject {
     public BranchReportClientSummaryBO(String fieldName, BigDecimal total, BigDecimal veryPoorTotal) {
         this.fieldName = fieldName;
         this.total = total.setScale(2, RoundingMode.HALF_EVEN).toPlainString();
-        if (veryPoorTotal != null)
+        if (veryPoorTotal != null) {
             this.veryPoorTotal = veryPoorTotal.setScale(2, RoundingMode.HALF_EVEN).toPlainString();
+        }
     }
 
     protected BranchReportClientSummaryBO() {
@@ -139,33 +140,44 @@ public class BranchReportClientSummaryBO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchReportClientSummaryBO other = (BranchReportClientSummaryBO) obj;
         if (clientSummaryId == null) {
-            if (other.clientSummaryId != null)
+            if (other.clientSummaryId != null) {
                 return false;
-        } else if (!clientSummaryId.equals(other.clientSummaryId))
+            }
+        } else if (!clientSummaryId.equals(other.clientSummaryId)) {
             return false;
+        }
         if (fieldName == null) {
-            if (other.fieldName != null)
+            if (other.fieldName != null) {
                 return false;
-        } else if (!fieldName.equals(other.fieldName))
+            }
+        } else if (!fieldName.equals(other.fieldName)) {
             return false;
+        }
         if (total == null) {
-            if (other.total != null)
+            if (other.total != null) {
                 return false;
-        } else if (!total.equals(other.total))
+            }
+        } else if (!total.equals(other.total)) {
             return false;
+        }
         if (veryPoorTotal == null) {
-            if (other.veryPoorTotal != null)
+            if (other.veryPoorTotal != null) {
                 return false;
-        } else if (!veryPoorTotal.equals(other.veryPoorTotal))
+            }
+        } else if (!veryPoorTotal.equals(other.veryPoorTotal)) {
             return false;
+        }
         return true;
     }
 

@@ -67,16 +67,19 @@ public class GLAccount {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null || !(obj instanceof GLAccount))
+        if (obj == null || !(obj instanceof GLAccount)) {
             return false;
+        }
 
         GLAccount other = (GLAccount) obj;
         if (other.glCode.equals(glCode) && other.name.equals(name)
-                && (null == other.parentGlCode ? null == parentGlCode : other.parentGlCode.equals(parentGlCode)))
+                && (null == other.parentGlCode ? null == parentGlCode : other.parentGlCode.equals(parentGlCode))) {
             return true;
+        }
 
         return false;
     }

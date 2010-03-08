@@ -60,21 +60,21 @@ public class Upgrade183 extends Upgrade {
                     Short lookUpId = results.getShort(2);
                     String newElementText = null;
                     String lookUpName = null;
-                    if (lookUpId.equals((short) 65))
+                    if (lookUpId.equals((short) 65)) {
                         lookUpName = unusedLookupName1;
-                    else if (lookUpId.equals((short) 71))
+                    } else if (lookUpId.equals((short) 71)) {
                         lookUpName = unusedLookupName2;
-                    else if (lookUpId.equals((short) 90))
+                    } else if (lookUpId.equals((short) 90)) {
                         lookUpName = unusedLookupName3;
-                    else if (lookUpId.equals((short) 223))
+                    } else if (lookUpId.equals((short) 223)) {
                         lookUpName = unusedLookupName4;
-                    else if (lookUpId.equals((short) 224))
+                    } else if (lookUpId.equals((short) 224)) {
                         lookUpName = unusedLookupName5;
-                    else if (lookUpId.equals((short) 259))
+                    } else if (lookUpId.equals((short) 259)) {
                         lookUpName = unusedLookupName6;
-                    else if (lookUpId.equals((short) 263))
+                    } else if (lookUpId.equals((short) 263)) {
                         lookUpName = unusedLookupName7;
-                    else {
+                    } else {
                         newElementText = entityName + counter;
                         lookUpName = org.mifos.framework.util.helpers.SearchUtils.generateLookupName(
                                 DynamicLookUpValueCreationTypes.DBUpgrade.name(), newElementText);

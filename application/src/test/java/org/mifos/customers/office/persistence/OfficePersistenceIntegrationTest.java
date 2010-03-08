@@ -141,10 +141,11 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(2, parents.size());
         for (OfficeView view : parents) {
 
-            if (view.getLevelId().equals(OfficeLevel.HEADOFFICE.getValue()))
-               Assert.assertEquals("Head Office", view.getLevelName());
-            else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue()))
-               Assert.assertEquals("Area Office", view.getLevelName());
+            if (view.getLevelId().equals(OfficeLevel.HEADOFFICE.getValue())) {
+                Assert.assertEquals("Head Office", view.getLevelName());
+            } else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue())) {
+                Assert.assertEquals("Area Office", view.getLevelName());
+            }
         }
 
     }

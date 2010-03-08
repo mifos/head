@@ -339,8 +339,9 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             FinancialBusinessService financialBusinessService = new FinancialBusinessService();
             AccountTestUtils.addAccountPayment(payment, savings);
             SavingsTrxnDetailEntity accountTrxn = null;
-            for (AccountTrxnEntity trxn : payment.getAccountTrxns())
+            for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
                 accountTrxn = (SavingsTrxnDetailEntity) trxn;
+            }
             savings.setUserContext(TestObjectFactory.getContext());
             savings.changeStatus(AccountState.SAVINGS_CLOSED.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
                     "");
@@ -351,10 +352,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             int withdrawalTrxns = 0;
             int roundingTrxns = 0;
             for (FinancialTransactionBO finTrxn : financialTrxns) {
-                if (finTrxn.getFinancialAction().getId().equals(FinancialActionConstants.ROUNDING.getValue()))
+                if (finTrxn.getFinancialAction().getId().equals(FinancialActionConstants.ROUNDING.getValue())) {
                     roundingTrxns++;
-                else
+                } else {
                     withdrawalTrxns++;
+                }
             }
            Assert.assertEquals(Integer.valueOf(2).intValue(), roundingTrxns);
            Assert.assertEquals(Integer.valueOf(2).intValue(), withdrawalTrxns);

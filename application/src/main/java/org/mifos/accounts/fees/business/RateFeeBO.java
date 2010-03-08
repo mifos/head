@@ -78,8 +78,9 @@ public class RateFeeBO extends FeeBO {
     }
 
     private void validateFields(Double rate, FeeFormulaEntity feeFormula) throws FeeException {
-        if (rate == null || rate.doubleValue() <= 0.0 || feeFormula == null)
+        if (rate == null || rate.doubleValue() <= 0.0 || feeFormula == null) {
             throw new FeeException(FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
+        }
     }
 
     public FeeFormulaEntity getFeeFormula() {

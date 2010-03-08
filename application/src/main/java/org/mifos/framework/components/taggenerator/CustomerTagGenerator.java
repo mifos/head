@@ -40,8 +40,9 @@ public class CustomerTagGenerator extends TagGenerator {
         CustomerBO customer = (CustomerBO) obj;
 
         StringBuilder strBuilder = getAssociatedGenerator().build(customer.getOffice(), randomNum);
-        if (strBuilder == null)
+        if (strBuilder == null) {
             strBuilder = new StringBuilder();
+        }
 
         buildLink(strBuilder, customer, customer, selfLinkRequired, randomNum);
         return strBuilder;
@@ -49,8 +50,9 @@ public class CustomerTagGenerator extends TagGenerator {
 
     private void buildLink(StringBuilder strBuilder, CustomerBO customer, CustomerBO originalCustomer,
             boolean selfLinkRequired, Object randomNum) {
-        if (customer == null)
+        if (customer == null) {
             return;
+        }
         buildLink(strBuilder, customer.getParentCustomer(), originalCustomer, selfLinkRequired, randomNum);
         strBuilder.append(" / ");
         createCustomerLink(strBuilder, customer, originalCustomer, selfLinkRequired, randomNum);
@@ -83,12 +85,13 @@ public class CustomerTagGenerator extends TagGenerator {
     }
 
     private String getAction(CustomerBO customer) {
-        if (customer.getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue())
+        if (customer.getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue()) {
             return "centerCustAction.do?method=get&globalCustNum=";
-        else if (customer.getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue())
+        } else if (customer.getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue()) {
             return "groupCustAction.do?method=get&globalCustNum=";
-        else if (customer.getCustomerLevel().getId().shortValue() == CustomerLevel.CLIENT.getValue())
+        } else if (customer.getCustomerLevel().getId().shortValue() == CustomerLevel.CLIENT.getValue()) {
             return "clientCustAction.do?method=get&globalCustNum=";
+        }
         return "";
     }
 

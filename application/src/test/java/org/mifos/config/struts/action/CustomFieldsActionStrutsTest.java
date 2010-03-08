@@ -79,8 +79,9 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         for (CustomFieldsListBoxData listboxDataType : listboxDataTypes) {
             String dataTypeName = MessageLookup.getInstance().lookup(dataType, locale);
             if ((listboxDataType.getId().equals(dataType.getValue()))
-                    && (listboxDataType.getName().toUpperCase().equals(dataTypeName.toUpperCase())))
+                    && (listboxDataType.getName().toUpperCase().equals(dataTypeName.toUpperCase()))) {
                 return true;
+            }
         }
         return false;
     }
@@ -90,8 +91,9 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
             if (listboxDataType.getId().equals(category.mapToEntityType().getValue())) {
                 String name1 = listboxDataType.getName().toUpperCase();
                 String name2 = MessageLookup.getInstance().lookupLabel(category.name()).toUpperCase();
-                if (name1.equals(name2))
+                if (name1.equals(name2)) {
                     return true;
+                }
             }
         }
         return false;

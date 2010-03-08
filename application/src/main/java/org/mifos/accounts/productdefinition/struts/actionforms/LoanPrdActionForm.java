@@ -296,236 +296,275 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double defInterestRateValue;
 
     public Double getLastLoanDefaultLoanAmt1Value() {
-        if (lastLoanDefaultLoanAmt1Value != null)
+        if (lastLoanDefaultLoanAmt1Value != null) {
             return lastLoanDefaultLoanAmt1Value;
+        }
         return getDoubleValueForMoney(lastLoanDefaultLoanAmt1);
     }
 
     public Double getLastLoanDefaultLoanAmt2Value() {
-        if (lastLoanDefaultLoanAmt2Value != null)
+        if (lastLoanDefaultLoanAmt2Value != null) {
             return lastLoanDefaultLoanAmt2Value;
+        }
         return getDoubleValueForMoney(lastLoanDefaultLoanAmt2);
     }
 
     public Double getLastLoanDefaultLoanAmt3Value() {
-        if (lastLoanDefaultLoanAmt3Value != null)
+        if (lastLoanDefaultLoanAmt3Value != null) {
             return lastLoanDefaultLoanAmt3Value;
+        }
         return getDoubleValueForMoney(lastLoanDefaultLoanAmt3);
     }
 
     public Double getLastLoanDefaultLoanAmt4Value() {
-        if (lastLoanDefaultLoanAmt4Value != null)
+        if (lastLoanDefaultLoanAmt4Value != null) {
             return lastLoanDefaultLoanAmt4Value;
+        }
         return getDoubleValueForMoney(lastLoanDefaultLoanAmt4);
     }
 
     public Double getLastLoanDefaultLoanAmt5Value() {
-        if (lastLoanDefaultLoanAmt5Value != null)
+        if (lastLoanDefaultLoanAmt5Value != null) {
             return lastLoanDefaultLoanAmt5Value;
+        }
         return getDoubleValueForMoney(lastLoanDefaultLoanAmt5);
     }
 
     public Double getLastLoanDefaultLoanAmt6Value() {
-        if (lastLoanDefaultLoanAmt6Value != null)
+        if (lastLoanDefaultLoanAmt6Value != null) {
             return lastLoanDefaultLoanAmt6Value;
+        }
         return getDoubleValueForMoney(lastLoanDefaultLoanAmt6);
     }
 
     public Double getMinLoanAmountValue() {
-        if (minLoanAmountValue != null)
+        if (minLoanAmountValue != null) {
             return minLoanAmountValue;
+        }
         return getDoubleValueForMoney(minLoanAmount);
     }
 
     public Double getMaxLoanAmountValue() {
-        if (maxLoanAmountValue != null)
+        if (maxLoanAmountValue != null) {
             return maxLoanAmountValue;
+        }
         return getDoubleValueForMoney(maxLoanAmount);
     }
 
     public Double getDefaultLoanAmountValue() {
-        if (defaultLoanAmountValue != null)
+        if (defaultLoanAmountValue != null) {
             return defaultLoanAmountValue;
+        }
         return getDoubleValueForMoney(defaultLoanAmount);
     }
 
     public Double getLastLoanMinLoanAmt1Value() {
-        if (lastLoanMinLoanAmt1Value != null)
+        if (lastLoanMinLoanAmt1Value != null) {
             return lastLoanMinLoanAmt1Value;
+        }
         return getDoubleValueForMoney(lastLoanMinLoanAmt1);
     }
 
     public Double getLastLoanMinLoanAmt2Value() {
-        if (lastLoanMinLoanAmt2Value != null)
+        if (lastLoanMinLoanAmt2Value != null) {
             return lastLoanMinLoanAmt2Value;
+        }
         return getDoubleValueForMoney(lastLoanMinLoanAmt2);
     }
 
     public Double getLastLoanMinLoanAmt3Value() {
-        if (lastLoanMinLoanAmt3Value != null)
+        if (lastLoanMinLoanAmt3Value != null) {
             return lastLoanMinLoanAmt3Value;
+        }
         return getDoubleValueForMoney(lastLoanMinLoanAmt3);
     }
 
     public Double getLastLoanMinLoanAmt4Value() {
-        if (lastLoanMinLoanAmt4Value != null)
+        if (lastLoanMinLoanAmt4Value != null) {
             return lastLoanMinLoanAmt4Value;
+        }
         return getDoubleValueForMoney(lastLoanMinLoanAmt4);
     }
 
     public Double getLastLoanMinLoanAmt5Value() {
-        if (lastLoanMinLoanAmt5Value != null)
+        if (lastLoanMinLoanAmt5Value != null) {
             return lastLoanMinLoanAmt5Value;
+        }
         return getDoubleValueForMoney(lastLoanMinLoanAmt5);
     }
 
     public Double getLastLoanMinLoanAmt6Value() {
-        if (lastLoanMinLoanAmt6Value != null)
+        if (lastLoanMinLoanAmt6Value != null) {
             return lastLoanMinLoanAmt6Value;
+        }
         return getDoubleValueForMoney(lastLoanMinLoanAmt6);
     }
 
     public Double getLastLoanMaxLoanAmt1Value() {
-        if (lastLoanMaxLoanAmt1Value != null)
+        if (lastLoanMaxLoanAmt1Value != null) {
             return lastLoanMaxLoanAmt1Value;
+        }
         return getDoubleValueForMoney(lastLoanMaxLoanAmt1);
     }
 
     public Double getLastLoanMaxLoanAmt2Value() {
-        if (lastLoanMaxLoanAmt2Value != null)
+        if (lastLoanMaxLoanAmt2Value != null) {
             return lastLoanMaxLoanAmt2Value;
+        }
         return getDoubleValueForMoney(lastLoanMaxLoanAmt2);
     }
 
     public Double getLastLoanMaxLoanAmt3Value() {
-        if (lastLoanMaxLoanAmt3Value != null)
+        if (lastLoanMaxLoanAmt3Value != null) {
             return lastLoanMaxLoanAmt3Value;
+        }
         return getDoubleValueForMoney(lastLoanMaxLoanAmt3);
     }
 
     public Double getLastLoanMaxLoanAmt4Value() {
-        if (lastLoanMaxLoanAmt4Value != null)
+        if (lastLoanMaxLoanAmt4Value != null) {
             return lastLoanMaxLoanAmt4Value;
+        }
         return getDoubleValueForMoney(lastLoanMaxLoanAmt4);
     }
 
     public Double getLastLoanMaxLoanAmt5Value() {
-        if (lastLoanMaxLoanAmt5Value != null)
+        if (lastLoanMaxLoanAmt5Value != null) {
             return lastLoanMaxLoanAmt5Value;
+        }
         return getDoubleValueForMoney(lastLoanMaxLoanAmt5);
     }
 
     public Double getLastLoanMaxLoanAmt6Value() {
-        if (lastLoanMaxLoanAmt6Value != null)
+        if (lastLoanMaxLoanAmt6Value != null) {
             return lastLoanMaxLoanAmt6Value;
+        }
         return getDoubleValueForMoney(lastLoanMaxLoanAmt6);
     }
 
     public Double getCycleLoanMinLoanAmt1Value() {
-        if (cycleLoanMinLoanAmt1Value != null)
+        if (cycleLoanMinLoanAmt1Value != null) {
             return cycleLoanMinLoanAmt1Value;
+        }
         return getDoubleValueForMoney(cycleLoanMinLoanAmt1);
     }
 
     public Double getCycleLoanMinLoanAmt2Value() {
-        if (cycleLoanMinLoanAmt2Value != null)
+        if (cycleLoanMinLoanAmt2Value != null) {
             return cycleLoanMinLoanAmt2Value;
+        }
         return getDoubleValueForMoney(cycleLoanMinLoanAmt2);
     }
 
     public Double getCycleLoanMinLoanAmt3Value() {
-        if (cycleLoanMinLoanAmt3Value != null)
+        if (cycleLoanMinLoanAmt3Value != null) {
             return cycleLoanMinLoanAmt3Value;
+        }
         return getDoubleValueForMoney(cycleLoanMinLoanAmt3);
     }
 
     public Double getCycleLoanMinLoanAmt4Value() {
-        if (cycleLoanMinLoanAmt4Value != null)
+        if (cycleLoanMinLoanAmt4Value != null) {
             return cycleLoanMinLoanAmt4Value;
+        }
         return getDoubleValueForMoney(cycleLoanMinLoanAmt4);
     }
 
     public Double getCycleLoanMinLoanAmt5Value() {
-        if (cycleLoanMinLoanAmt5Value != null)
+        if (cycleLoanMinLoanAmt5Value != null) {
             return cycleLoanMinLoanAmt5Value;
+        }
         return getDoubleValueForMoney(cycleLoanMinLoanAmt5);
     }
 
     public Double getCycleLoanMinLoanAmt6Value() {
-        if (cycleLoanMinLoanAmt6Value != null)
+        if (cycleLoanMinLoanAmt6Value != null) {
             return cycleLoanMinLoanAmt6Value;
+        }
         return getDoubleValueForMoney(cycleLoanMinLoanAmt6);
     }
 
     public Double getCycleLoanMaxLoanAmt1Value() {
-        if (cycleLoanMaxLoanAmt1Value != null)
+        if (cycleLoanMaxLoanAmt1Value != null) {
             return cycleLoanMaxLoanAmt1Value;
+        }
         return getDoubleValueForMoney(cycleLoanMaxLoanAmt1);
     }
 
     public Double getCycleLoanMaxLoanAmt2Value() {
-        if (cycleLoanMaxLoanAmt2Value != null)
+        if (cycleLoanMaxLoanAmt2Value != null) {
             return cycleLoanMaxLoanAmt2Value;
+        }
         return getDoubleValueForMoney(cycleLoanMaxLoanAmt2);
     }
 
     public Double getCycleLoanMaxLoanAmt3Value() {
-        if (cycleLoanMaxLoanAmt3Value != null)
+        if (cycleLoanMaxLoanAmt3Value != null) {
             return cycleLoanMaxLoanAmt3Value;
+        }
         return getDoubleValueForMoney(cycleLoanMaxLoanAmt3);
     }
 
     public Double getCycleLoanMaxLoanAmt4Value() {
-        if (cycleLoanMaxLoanAmt4Value != null)
+        if (cycleLoanMaxLoanAmt4Value != null) {
             return cycleLoanMaxLoanAmt4Value;
+        }
         return getDoubleValueForMoney(cycleLoanMaxLoanAmt4);
     }
 
     public Double getCycleLoanMaxLoanAmt5Value() {
-        if (cycleLoanMaxLoanAmt5Value != null)
+        if (cycleLoanMaxLoanAmt5Value != null) {
             return cycleLoanMaxLoanAmt5Value;
+        }
         return getDoubleValueForMoney(cycleLoanMaxLoanAmt5);
     }
 
     public Double getCycleLoanMaxLoanAmt6Value() {
-        if (cycleLoanMaxLoanAmt6Value != null)
+        if (cycleLoanMaxLoanAmt6Value != null) {
             return cycleLoanMaxLoanAmt6Value;
+        }
         return getDoubleValueForMoney(cycleLoanMaxLoanAmt6);
     }
 
     public Double getCycleLoanDefaultLoanAmt1Value() {
-        if (cycleLoanDefaultLoanAmt1Value != null)
+        if (cycleLoanDefaultLoanAmt1Value != null) {
             return cycleLoanDefaultLoanAmt1Value;
+        }
         return getDoubleValueForMoney(cycleLoanDefaultLoanAmt1);
     }
 
     public Double getCycleLoanDefaultLoanAmt2Value() {
-        if (cycleLoanDefaultLoanAmt2Value != null)
+        if (cycleLoanDefaultLoanAmt2Value != null) {
             return cycleLoanDefaultLoanAmt2Value;
+        }
         return getDoubleValueForMoney(cycleLoanDefaultLoanAmt2);
     }
 
     public Double getCycleLoanDefaultLoanAmt3Value() {
-        if (cycleLoanDefaultLoanAmt3Value != null)
+        if (cycleLoanDefaultLoanAmt3Value != null) {
             return cycleLoanDefaultLoanAmt3Value;
+        }
         return getDoubleValueForMoney(cycleLoanDefaultLoanAmt3);
     }
 
     public Double getCycleLoanDefaultLoanAmt4Value() {
-        if (cycleLoanDefaultLoanAmt4Value != null)
+        if (cycleLoanDefaultLoanAmt4Value != null) {
             return cycleLoanDefaultLoanAmt4Value;
+        }
         return getDoubleValueForMoney(cycleLoanDefaultLoanAmt4);
     }
 
     public Double getCycleLoanDefaultLoanAmt5Value() {
-        if (cycleLoanDefaultLoanAmt5Value != null)
+        if (cycleLoanDefaultLoanAmt5Value != null) {
             return cycleLoanDefaultLoanAmt5Value;
+        }
         return getDoubleValueForMoney(cycleLoanDefaultLoanAmt5);
     }
 
     public Double getCycleLoanDefaultLoanAmt6Value() {
-        if (cycleLoanDefaultLoanAmt6Value != null)
+        if (cycleLoanDefaultLoanAmt6Value != null) {
             return cycleLoanDefaultLoanAmt6Value;
+        }
         return getDoubleValueForMoney(cycleLoanDefaultLoanAmt6);
     }
 
@@ -1605,20 +1644,23 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     public Double getMaxInterestRateValue() {
-        if (maxInterestRateValue != null)
+        if (maxInterestRateValue != null) {
             return maxInterestRateValue;
+        }
         return getDoubleValueForInterest(maxInterestRate);
     }
 
     public Double getMinInterestRateValue() {
-        if (minInterestRateValue != null)
+        if (minInterestRateValue != null) {
             return minInterestRateValue;
+        }
         return getDoubleValueForInterest(minInterestRate);
     }
 
     public Double getDefInterestRateValue() {
-        if (defInterestRateValue != null)
+        if (defInterestRateValue != null) {
             return defInterestRateValue;
+        }
         return getDoubleValueForInterest(defInterestRate);
     }
 
@@ -1712,15 +1754,17 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private Double getDoubleValueForMoney(String doubleStr) {
         DoubleConversionResult result = parseDoubleForMoney(doubleStr);
-        if (result != null)
+        if (result != null) {
             return result.getDoubleValue();
+        }
         return null;
     }
 
     private Double getDoubleValueForInterest(String doubleStr) {
         DoubleConversionResult result = parseDoubleForInterest(doubleStr);
-        if (result != null)
+        if (result != null) {
             return result.getDoubleValue();
+        }
         return null;
     }
 
@@ -1775,9 +1819,10 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
                 forNumberOfLastLoanInstallmentAtRow);
-        if (StringUtils.isBlank(getInterestTypes()))
+        if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST, request), rateType);
+        }
         validateMinMaxDefInterestRates(errors, locale, request);
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
@@ -1802,11 +1847,13 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
                 forNumberOfLastLoanInstallmentAtRow);
-        if (StringUtils.isBlank(getInterestTypes()))
+        if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST, request), rateType);
-        if (StringUtils.isBlank(getPrdStatus()))
+        }
+        if (StringUtils.isBlank(getPrdStatus())) {
             addError(errors, "prdStatus", ProductDefinitionConstants.ERROR_SELECT, status);
+        }
         validateMinMaxDefInterestRates(errors, locale, request);
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
@@ -1858,8 +1905,9 @@ public class LoanPrdActionForm extends BaseActionForm {
         if (startingDate != null
                 && ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime()).compareTo(
                         DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils.getDateWithoutTimeStamp(
-                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))
+                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0))) {
             addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+        }
         logger.debug("validateStartDate method of Loan Product Action form method called :" + startDate);
     }
 
@@ -1877,8 +1925,9 @@ public class LoanPrdActionForm extends BaseActionForm {
         } catch (InvalidDateException ide) {
             addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
         }
-        if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0)
+        if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0) {
             addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
+        }
         logger
                 .debug("validateEndDate method of Loan Product Action form method called :" + startDate + "---"
                         + endDate);
@@ -1916,8 +1965,9 @@ public class LoanPrdActionForm extends BaseActionForm {
                         request);
                 for (String selectedFund : getLoanOfferingFunds()) {
                     FundBO fund = getFundFromList(funds, selectedFund);
-                    if (fund != null)
+                    if (fund != null) {
                         selectedFunds.add(fund);
+                    }
                 }
             }
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, selectedFunds,
@@ -1947,17 +1997,21 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private FeeBO getFeeFromList(List<FeeBO> fees, String feeSelected) {
         logger.debug("getFeeFromList method of Loan Product Action form method called :" + feeSelected);
-        for (FeeBO fee : fees)
-            if (fee.getFeeId().equals(getShortValue(feeSelected)))
+        for (FeeBO fee : fees) {
+            if (fee.getFeeId().equals(getShortValue(feeSelected))) {
                 return fee;
+            }
+        }
         return null;
     }
 
     private FundBO getFundFromList(List<FundBO> funds, String fundSelected) {
         logger.debug("getFundFromList method of Loan Product Action form method called :" + fundSelected);
-        for (FundBO fund : funds)
-            if (fund.getFundId().equals(getShortValue(fundSelected)))
+        for (FundBO fund : funds) {
+            if (fund.getFundId().equals(getShortValue(fundSelected))) {
                 return fund;
+            }
+        }
         return null;
     }
 
@@ -1966,8 +2020,9 @@ public class LoanPrdActionForm extends BaseActionForm {
         if (getFreqOfInstallmentsValue() != null
                 && fee.isPeriodic()
                 && !(fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurrenceType()
-                        .getRecurrenceId().equals(getFreqOfInstallmentsValue())))
+                        .getRecurrenceId().equals(getFreqOfInstallmentsValue()))) {
             addError(errors, "Fee", ProductDefinitionConstants.ERRORFEEFREQUENCY, fee.getFeeName());
+        }
         logger.debug("Loan prd Action Form isFrequencyMatchingOfferingFrequency called - fee:" + fee);
     }
 
@@ -2235,10 +2290,11 @@ public class LoanPrdActionForm extends BaseActionForm {
             minInterestResult = parseDoubleForInterest(minInterestRate);
             errorList = minInterestResult.getErrors();
             if (errorList.size() > 0) {
-                for (int i = 0; i < errorList.size(); i++)
+                for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORMININTERESTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORMININTERESTINVALIDFORMAT, getConversionErrorText(errorList
                                     .get(i), locale));
+                }
             } else {
                 minInterest = minInterestResult.getDoubleValue();
             }
@@ -2250,12 +2306,14 @@ public class LoanPrdActionForm extends BaseActionForm {
             maxInterestResult = parseDoubleForInterest(maxInterestRate);
             errorList = maxInterestResult.getErrors();
             if (errorList.size() > 0) {
-                for (int i = 0; i < errorList.size(); i++)
+                for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT, getConversionErrorText(errorList
                                     .get(i), locale));
-            } else
+                }
+            } else {
                 maxInterest = maxInterestResult.getDoubleValue();
+            }
         }
 
         if (!StringUtils.isNotBlank(defInterestRate)) {
@@ -2265,12 +2323,14 @@ public class LoanPrdActionForm extends BaseActionForm {
             defInterestResult = parseDoubleForInterest(defInterestRate);
             errorList = defInterestResult.getErrors();
             if (errorList.size() > 0) {
-                for (int i = 0; i < errorList.size(); i++)
+                for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORDEFINTERESTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORDEFINTERESTINVALIDFORMAT, getConversionErrorText(errorList
                                     .get(i), locale));
-            } else
+                }
+            } else {
                 defInterest = defInterestResult.getDoubleValue();
+            }
 
         }
         if ((minInterest != null) && (maxInterest != null)) {
@@ -2312,12 +2372,14 @@ public class LoanPrdActionForm extends BaseActionForm {
             minLoanResult = parseDoubleForMoney(minLoanAmountStr);
             errorList = minLoanResult.getErrors();
             if (errorList.size() > 0) {
-                for (int i = 0; i < errorList.size(); i++)
+                for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNTINVALIDFORMAT, error, rownum,
                             getConversionErrorText(errorList.get(i), locale));
-            } else
+                }
+            } else {
                 minLoanAmt = minLoanResult.getDoubleValue();
+            }
         }
 
         if (!StringUtils.isNotBlank(maxLoanAmountStr)) {
@@ -2327,12 +2389,14 @@ public class LoanPrdActionForm extends BaseActionForm {
             maxLoanResult = parseDoubleForMoney(maxLoanAmountStr);
             errorList = maxLoanResult.getErrors();
             if (errorList.size() > 0) {
-                for (int i = 0; i < errorList.size(); i++)
+                for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT, error, rownum,
                             getConversionErrorText(errorList.get(i), locale));
-            } else
+                }
+            } else {
                 maxLoanAmt = maxLoanResult.getDoubleValue();
+            }
         }
 
         if (!StringUtils.isNotBlank(defLoanAmountStr)) {
@@ -2342,24 +2406,28 @@ public class LoanPrdActionForm extends BaseActionForm {
             defaultLoanResult = parseDoubleForMoney(defLoanAmountStr);
             errorList = defaultLoanResult.getErrors();
             if (errorList.size() > 0) {
-                for (int i = 0; i < errorList.size(); i++)
+                for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORDEFAULTLOANAMOUNTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORDEFAULTLOANAMOUNTINVALIDFORMAT, error, rownum,
                             getConversionErrorText(errorList.get(i), locale));
-            } else
+                }
+            } else {
                 defLoanAmt = defaultLoanResult.getDoubleValue();
+            }
 
         }
         if ((minLoanAmt != null) && (maxLoanAmt != null)) {
-            if (minLoanAmt > maxLoanAmt)
+            if (minLoanAmt > maxLoanAmt) {
                 addError(errors, ProductDefinitionConstants.ERRORMAXMINLOANAMOUNT,
                         ProductDefinitionConstants.ERRORMAXMINLOANAMOUNT, error, rownum);
+            }
             if (defLoanAmt != null) {
-                if ((defLoanAmt < minLoanAmt) || (defLoanAmt > maxLoanAmt))
+                if ((defLoanAmt < minLoanAmt) || (defLoanAmt > maxLoanAmt)) {
                     addError(errors, ProductDefinitionConstants.ERRORDEFLOANAMOUNT,
                             ProductDefinitionConstants.ERRORDEFLOANAMOUNT, error, rownum);
-                else
+                } else {
                     setLoanAmounts(minLoanAmt, maxLoanAmt, defLoanAmt, rownum);
+                }
 
             }
         }
@@ -2521,9 +2589,10 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
 
         if (StringUtils.isNotBlank(maxNoOfInstall) && StringUtils.isNotBlank(minNoOfInstall)) {
-            if (Integer.parseInt(minNoOfInstall) > Integer.parseInt(maxNoOfInstall))
+            if (Integer.parseInt(minNoOfInstall) > Integer.parseInt(maxNoOfInstall)) {
                 addError(errors, ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL,
                         ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL, error, rownum);
+            }
         }
         if (StringUtils.isNotBlank(defNoOfInstall) && StringUtils.isNotBlank(maxNoOfInstall)
                 && StringUtils.isNotBlank(minNoOfInstall)) {
@@ -2550,9 +2619,10 @@ public class LoanPrdActionForm extends BaseActionForm {
                     ProductDefinitionConstants.ERRORENDLOANAMOUNT, error, rownum);
         }
         if (StringUtils.isNotBlank(S_StartLoanAmount) && StringUtils.isNotBlank(S_EndLoanAmount)) {
-            if (StartLoanAmount > EndLoanAmnount)
+            if (StartLoanAmount > EndLoanAmnount) {
                 addError(errors, ProductDefinitionConstants.ERRORSTARTENDLOANAMOUNT,
                         ProductDefinitionConstants.ERRORSTARTENDLOANAMOUNT, error, rownum);
+            }
         }
     }
 
@@ -2570,9 +2640,10 @@ public class LoanPrdActionForm extends BaseActionForm {
                     ProductDefinitionConstants.ERRORENDINSTALLMENT, error, rownum);
         }
         if (StringUtils.isNotBlank(S_StartInstallmentno) && StringUtils.isNotBlank(S_EndInstallmentno)) {
-            if (StartInstallmentno > EndInstallmentno)
+            if (StartInstallmentno > EndInstallmentno) {
                 addError(errors, ProductDefinitionConstants.ERRORSTARTENDINSTALLMENT,
                         ProductDefinitionConstants.ERRORSTARTENDINSTALLMENT, error, rownum);
+            }
         }
     }
 }

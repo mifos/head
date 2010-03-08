@@ -65,10 +65,11 @@ public class BaseActionForm extends ValidatorActionForm {
             if (propertyName != null && !propertyName.equals("")) {
                 String propertyValue = request.getParameter(propertyName);
                 UserContext userContext = ((UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT));
-                if (propertyValue == null || propertyValue.equals(""))
+                if (propertyValue == null || propertyValue.equals("")) {
                     errors.add(fieldConfigurationEntity.getLabel(), new ActionMessage(
                             FieldConfigurationConstant.EXCEPTION_MANDATORY, FieldConfigurationHelper
                                     .getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(), userContext)));
+                }
             }
         }
     }

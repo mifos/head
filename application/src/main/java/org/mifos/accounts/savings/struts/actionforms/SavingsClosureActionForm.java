@@ -120,17 +120,19 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
             String amount = getAmount();
             if (!("0.0".equals(amount))) {
                 if (StringUtils.isNotBlank(amount)) {
-                    if (StringUtils.isBlank(getPaymentTypeId()))
+                    if (StringUtils.isBlank(getPaymentTypeId())) {
                         errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
                                 AccountConstants.ERROR_MANDATORY, resources.getString("Savings.paymentType")));
+                    }
                 }
             }
 
             if (this.getReceiptDate() != null && !this.getReceiptDate().equals("")) {
                 ActionErrors dateError = validateDate(this.getReceiptDate(),
                         resources.getString("Savings.receiptDate"), userContext);
-                if (dateError != null && !dateError.isEmpty())
+                if (dateError != null && !dateError.isEmpty()) {
                     errors.add(dateError);
+                }
             }
 
             if (StringUtils.isBlank(getCustomerId())) {

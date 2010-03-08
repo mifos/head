@@ -87,8 +87,9 @@ public class FundBO extends BusinessObject {
     public void update(String fundName) throws FundException {
         logger.debug("updating the fund ");
         validateFundName(fundName);
-        if (!this.fundName.equals(fundName))
+        if (!this.fundName.equals(fundName)) {
             validateDuplicateFundName(fundName);
+        }
         this.fundName = fundName;
         try {
             new FundPersistence().createOrUpdate(this);
@@ -108,8 +109,9 @@ public class FundBO extends BusinessObject {
     private void validateDuplicateFundName(String fundName) throws FundException {
         logger.debug("Checking for duplicate Fund name");
         try {
-            if (!new FundPersistence().getFundNameCount(fundName.trim()).equals(Long.valueOf("0")))
+            if (!new FundPersistence().getFundNameCount(fundName.trim()).equals(Long.valueOf("0"))) {
                 throw new FundException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
+            }
         } catch (PersistenceException e) {
             throw new FundException(e);
         }
@@ -117,13 +119,15 @@ public class FundBO extends BusinessObject {
 
     private void validateFundName(String fundName) throws FundException {
         logger.debug("Checking for empty Fund name");
-        if (StringUtils.isBlank(fundName))
+        if (StringUtils.isBlank(fundName)) {
             throw new FundException(FundConstants.INVALID_FUND_NAME);
+        }
     }
 
     private void validateFundCode(FundCodeEntity fundCode) throws FundException {
         logger.debug("Checking for empty Fund Code");
-        if (fundCode == null)
+        if (fundCode == null) {
             throw new FundException(FundConstants.INVALID_FUND_CODE);
+        }
     }
 }

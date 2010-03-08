@@ -90,8 +90,9 @@ public enum WeekDay implements LocalizedTextLookup {
      * TODO: we should be passing in a Locale or UserContext here
      */
     public String getName() {
-        if (name == null)
+        if (name == null) {
             name = MessageLookup.getInstance().lookup(this);
+        }
         return name;
     }
 

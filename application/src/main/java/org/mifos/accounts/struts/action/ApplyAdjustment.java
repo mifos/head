@@ -110,12 +110,13 @@ public class ApplyAdjustment extends BaseAction {
         checkVersionMismatch(accountBOInSession.getVersionNo(), accnt.getVersionNo());
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         accnt.setUserContext(uc);
-        if (accnt.getPersonnel() != null)
+        if (accnt.getPersonnel() != null) {
             getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
                     accnt.getOffice().getOfficeId(), accnt.getPersonnel().getPersonnelId());
-        else
+        } else {
             getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
                     accnt.getOffice().getOfficeId(), uc.getId());
+        }
         try {
             accnt.adjustLastPayment(appAdjustActionForm.getAdjustmentNote());
         } catch (ApplicationException ae) {

@@ -195,13 +195,14 @@ public class TransactionHistoryView extends View implements Comparable<Transacti
      */
     public int compareTo(TransactionHistoryView o) {
         int dateCompare = this.getPostedDate().compareTo(o.getPostedDate());
-        if (dateCompare != 0)
+        if (dateCompare != 0) {
             return dateCompare;
-        else if (!this.getDebit().equals("-"))
+        } else if (!this.getDebit().equals("-")) {
             return !o.getDebit().equals("-") ? this.getDebit().compareTo(o.getDebit()) : 1;
-        else if (!this.getCredit().equals("-"))
+        } else if (!this.getCredit().equals("-")) {
             return !o.getCredit().equals("-") ? this.getCredit().compareTo(o.getCredit()) : -1;
-        else
+        } else {
             return 0;
+        }
     }
 }

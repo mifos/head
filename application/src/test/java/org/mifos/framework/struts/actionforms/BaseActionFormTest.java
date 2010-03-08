@@ -60,8 +60,9 @@ public class BaseActionFormTest extends TestCase {
         Assert.assertEquals(one, baseActionForm.getStringValue(true));
         String strValue = "0.25";
         Locale locale = Localization.getInstance().getMainLocale();
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(strValue, baseActionForm.getStringValue(0.25));
+        }
     }
 
     /**
@@ -82,8 +83,9 @@ public class BaseActionFormTest extends TestCase {
     public void testGetDoubleValue() throws Exception {
         Locale locale = Localization.getInstance().getMainLocale();
         double dValue = 2.34;
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(dValue, baseActionForm.getDoubleValue("2.34"));
+        }
 
     }
 

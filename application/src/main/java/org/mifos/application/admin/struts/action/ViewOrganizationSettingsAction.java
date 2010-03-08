@@ -205,25 +205,28 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     private String getWeekDays() {
         List<WeekDay> weekDaysList = new FiscalCalendarRules().getWeekDaysList();
         List<String> weekDayNames = new ArrayList<String>();
-        for (WeekDay weekDay : weekDaysList)
+        for (WeekDay weekDay : weekDaysList) {
             weekDayNames.add(weekDay.getName());
+        }
         return StringUtils.join(weekDayNames, DELIMITER);
     }
 
     private String getOffDays() {
         List<Short> offDaysList = new FiscalCalendarRules().getWeekDayOffList();
         List<String> offDayNames = new ArrayList<String>();
-        for (Short offDayNum : offDaysList)
+        for (Short offDayNum : offDaysList) {
             offDayNames.add(WeekDay.getWeekDay(offDayNum).getName());
+        }
         return StringUtils.join(offDayNames, DELIMITER);
     }
 
     private String booleanToYesNo(boolean bool) {
         MessageLookup m = MessageLookup.getInstance();
-        if (bool)
+        if (bool) {
             return m.lookup(YesNoFlag.YES);
-        else
+        } else {
             return m.lookup(YesNoFlag.NO);
+        }
     }
 
     @Override

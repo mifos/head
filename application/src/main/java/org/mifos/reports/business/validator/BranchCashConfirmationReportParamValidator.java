@@ -46,8 +46,9 @@ public class BranchCashConfirmationReportParamValidator extends
     @Override
     public void validate(BranchReportParameterForm form, Errors errors) {
         super.validate(form, errors);
-        if (errors.hasErrors())
+        if (errors.hasErrors()) {
             return;
+        }
         if (!service.isReportDataPresentForRundateAndBranchId(form.getBranchId(), form.getRunDate())) {
             errors.rejectValue(ReportValidationConstants.RUN_DATE_PARAM,
                     ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG);

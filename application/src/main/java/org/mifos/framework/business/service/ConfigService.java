@@ -39,9 +39,10 @@ public abstract class ConfigService {
     }
 
     protected void initConfig(Resource configResource) {
-        if (!configResource.exists())
+        if (!configResource.exists()) {
             throw new ConfigServiceInitializationException("Failed to initialize config cervice for resource: "
                     + configResource.getFilename());
+        }
         config = new Properties();
         try {
             config.load(configResource.getInputStream());
@@ -52,8 +53,9 @@ public abstract class ConfigService {
 
     protected String getProperty(String propertyKey) throws ServiceException {
         String propertyValue = config.getProperty(propertyKey);
-        if (propertyValue == null)
+        if (propertyValue == null) {
             throw new ServiceException("Failed to retrieve " + propertyKey + " from config resource");
+        }
         return propertyValue;
     }
 

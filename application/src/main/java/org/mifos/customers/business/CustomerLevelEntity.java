@@ -65,8 +65,9 @@ public class CustomerLevelEntity extends MasterDataEntity {
             return ApplicableTo.CLIENTS.getValue();
         } else if (getId().equals(CustomerLevel.GROUP.getValue())) {
             return ApplicableTo.GROUPS.getValue();
-        } else
+        } else {
             return ApplicableTo.CENTERS.getValue();
+        }
     }
 
     public boolean isCenter() {

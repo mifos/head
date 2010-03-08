@@ -131,8 +131,9 @@ public class PPIAction extends PersistenceAction {
         survey.setNonPoorMin((Integer) results.get("nonPoorMin"));
         survey.setNonPoorMax((Integer) results.get("nonPoorMax"));
 
-        if (!PPICalculator.scoreLimitsAreValid(survey))
+        if (!PPICalculator.scoreLimitsAreValid(survey)) {
             errors.add("limits", new ActionMessage("errors.ppi.invalidlimits"));
+        }
         if (errors.size() > 0) {
             saveErrors(request, errors);
             return mapping.findForward("configure");
@@ -159,8 +160,9 @@ public class PPIAction extends PersistenceAction {
             PPISurvey ppiSurvey = ppiPersistence.retrievePPISurveyByCountry((Country) results.get("country"));
 
             if (((SurveyState) results.get("state")).equals(SurveyState.ACTIVE)) {
-                for (PPISurvey curSurvey : ppiPersistence.retrieveAllPPISurveys())
+                for (PPISurvey curSurvey : ppiPersistence.retrieveAllPPISurveys()) {
                     curSurvey.setState(SurveyState.INACTIVE);
+                }
             }
 
             if (ppiSurvey == null) {
@@ -222,9 +224,9 @@ public class PPIAction extends PersistenceAction {
 
         PPISurvey survey = persistence.retrieveActivePPISurvey();
 
-        if (survey == null)
+        if (survey == null) {
             return mapping.findForward(ActionForwards.get_success.toString());
-        else {
+        } else {
             request.setAttribute(SurveysConstants.KEY_SURVEY, survey);
             return mapping.findForward(ActionForwards.get_success.toString());
         }

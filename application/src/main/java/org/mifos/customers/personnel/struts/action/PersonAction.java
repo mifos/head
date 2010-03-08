@@ -136,8 +136,9 @@ public class PersonAction extends SearchAction {
         SessionUtils.setAttribute(PersonnelConstants.OFFICE, office, request);
         personActionForm.clear();
         loadCreateMasterData(request, personActionForm);
-        if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE)
+        if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE) {
             updatePersonnelLevelList(request);
+        }
         personActionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -178,8 +179,9 @@ public class PersonAction extends SearchAction {
         }
         Date dateOfJoiningMFI = null;
 
-        if (personActionForm.getDateOfJoiningMFI() != null && !personActionForm.getDateOfJoiningMFI().equals(""))
+        if (personActionForm.getDateOfJoiningMFI() != null && !personActionForm.getDateOfJoiningMFI().equals("")) {
             dateOfJoiningMFI = DateUtils.getDateAsSentFromBrowser(personActionForm.getDateOfJoiningMFI());
+        }
         PersonnelBO personnelBO = new PersonnelBO(level, office, title, perefferedLocale, personActionForm
                 .getUserPassword(), personActionForm.getLoginName(), personActionForm.getEmailId(), getRoles(request,
                 personActionForm), personActionForm.getCustomFields(), personActionForm.getName(), personActionForm
@@ -193,11 +195,12 @@ public class PersonAction extends SearchAction {
     }
 
     private Short getPerefferedLocale(PersonActionForm personActionForm, UserContext userContext) {
-        if (StringUtils.isNotBlank(personActionForm.getPreferredLocale()))
+        if (StringUtils.isNotBlank(personActionForm.getPreferredLocale())) {
             return getShortValue(personActionForm.getPreferredLocale());
-        else
+        } else {
             // return userContext.getMfiLocaleId();
             return userContext.getLocaleId();
+        }
 
     }
 
@@ -427,14 +430,18 @@ public class PersonAction extends SearchAction {
     private void setValuesInActionForm(PersonActionForm actionForm, HttpServletRequest request) throws Exception {
         PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         actionForm.setPersonnelId(personnel.getPersonnelId().toString());
-        if (personnel.getOffice() != null)
+        if (personnel.getOffice() != null) {
             actionForm.setOfficeId(personnel.getOffice().getOfficeId().toString());
-        if (personnel.getTitle() != null)
+        }
+        if (personnel.getTitle() != null) {
             actionForm.setTitle(personnel.getTitle().toString());
-        if (personnel.getLevel() != null)
+        }
+        if (personnel.getLevel() != null) {
             actionForm.setLevel(personnel.getLevelEnum().getValue().toString());
-        if (personnel.getStatus() != null)
+        }
+        if (personnel.getStatus() != null) {
             actionForm.setStatus(personnel.getStatus().getId().toString());
+        }
         actionForm.setLoginName(personnel.getUserName());
         actionForm.setGlobalPersonnelNum(personnel.getGlobalPersonnelNum());
         actionForm.setCustomFields(createCustomFieldViews(personnel.getCustomFields(), request));
@@ -445,10 +452,12 @@ public class PersonAction extends SearchAction {
             actionForm.setMiddleName(personnelDetails.getName().getMiddleName());
             actionForm.setSecondLastName(personnelDetails.getName().getSecondLastName());
             actionForm.setLastName(personnelDetails.getName().getLastName());
-            if (personnelDetails.getGender() != null)
+            if (personnelDetails.getGender() != null) {
                 actionForm.setGender(personnelDetails.getGender().toString());
-            if (personnelDetails.getMaritalStatus() != null)
+            }
+            if (personnelDetails.getMaritalStatus() != null) {
                 actionForm.setMaritalStatus(personnelDetails.getMaritalStatus().toString());
+            }
             actionForm.setAddress(personnelDetails.getAddress());
             if (personnelDetails.getDateOfJoiningMFI() != null) {
                 actionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser(personnelDetails
@@ -460,8 +469,9 @@ public class PersonAction extends SearchAction {
 
         }
         actionForm.setEmailId(personnel.getEmailId());
-        if (personnel.getPreferredLocale() != null)
+        if (personnel.getPreferredLocale() != null) {
             actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId()));
+        }
         List<RoleBO> selectList = new ArrayList<RoleBO>();
         for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
             selectList.add(personnelRole.getRole());
@@ -498,7 +508,7 @@ public class PersonAction extends SearchAction {
         boolean addFlag = false;
         List<RoleBO> selectList = new ArrayList<RoleBO>();
         List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST, request);
-        if (personActionForm.getPersonnelRoles() != null)
+        if (personActionForm.getPersonnelRoles() != null) {
             for (RoleBO role : masterList) {
                 for (String roleId : personActionForm.getPersonnelRoles()) {
                     if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
@@ -507,10 +517,12 @@ public class PersonAction extends SearchAction {
                     }
                 }
             }
-        if (addFlag)
+        }
+        if (addFlag) {
             return selectList;
-        else
+        } else {
             return null;
+        }
     }
 
     private void updateRoleLists(HttpServletRequest request, PersonActionForm personActionForm)
@@ -530,10 +542,11 @@ public class PersonAction extends SearchAction {
                 }
             }
         }
-        if (addFlag)
+        if (addFlag) {
             SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
-        else
+        } else {
             SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, null, request);
+        }
     }
 
     protected Locale getUserLocale(HttpServletRequest request) {

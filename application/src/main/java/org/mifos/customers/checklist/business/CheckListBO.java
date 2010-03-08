@@ -143,10 +143,12 @@ public abstract class CheckListBO extends BusinessObject {
     protected void update(String checkListName, Short checkListStatus, List<String> details, Short localeId,
             Short userId) throws CheckListException {
         setUpdateDetails(userId);
-        if (details == null || details.size() <= 0)
+        if (details == null || details.size() <= 0) {
             throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
-        if (StringUtils.isBlank(checkListName))
+        }
+        if (StringUtils.isBlank(checkListName)) {
             throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
+        }
         this.checklistName = checkListName;
         getChecklistDetails().clear();
         for (String detail : details) {
@@ -162,8 +164,9 @@ public abstract class CheckListBO extends BusinessObject {
             throws CheckListException {
         try {
             Long records = new CheckListPersistence().isValidCheckListState(masterTypeId, stateId, isCustomer);
-            if (records.intValue() != 0)
+            if (records.intValue() != 0) {
                 throw new CheckListException(CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
+            }
         } catch (PersistenceException pe) {
             throw new CheckListException(pe);
         }

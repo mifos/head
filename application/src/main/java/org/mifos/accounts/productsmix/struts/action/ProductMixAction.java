@@ -482,12 +482,14 @@ public class ProductMixAction extends BaseAction {
 
                 ProductMixBO product = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(
                         productOff.getPrdOfferingId(), oldnotallowedProduct.getPrdOfferingId());
-                if (null != product)
+                if (null != product) {
                     product.delete();
+                }
                 ProductMixBO productmix = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(
                         oldnotallowedProduct.getPrdOfferingId(), productOff.getPrdOfferingId());
-                if (null != productmix)
+                if (null != productmix) {
                     productmix.delete();
+                }
             }
         }
 
@@ -528,12 +530,14 @@ public class ProductMixAction extends BaseAction {
                 ProductMixBO product = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(
                         productOff.getPrdOfferingId(), oldnotallowedProduct.getPrdOfferingId());
                 // product.setUserContext(getUserContext(request));
-                if (null != product)
+                if (null != product) {
                     product.delete();
+                }
                 ProductMixBO productmix = getPrdMixBusinessService().getPrdOfferingMixByPrdOfferingID(
                         oldnotallowedProduct.getPrdOfferingId(), productOff.getPrdOfferingId());
-                if (null != productmix)
+                if (null != productmix) {
                     productmix.delete();
+                }
 
             }
         }

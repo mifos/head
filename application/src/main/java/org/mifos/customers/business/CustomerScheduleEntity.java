@@ -196,10 +196,11 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
     }
 
     void applyMiscCharge(Short chargeType, Money charge) {
-        if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+        if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES))) {
             setMiscFee(getMiscFee().add(charge));
-        else if (chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+        } else if (chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
             setMiscPenalty(getMiscPenalty().add(charge));
+        }
     }
 
 }

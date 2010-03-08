@@ -192,8 +192,9 @@ public class ClientCustAction extends CustAction {
                 actionForm.getParentGroup().getCustomerMeeting().getMeeting().isWeekly();
             }
             actionForm.setOfficeId(actionForm.getParentGroup().getOffice().getOfficeId().toString());
-            if (actionForm.getParentGroup().getPersonnel() != null)
+            if (actionForm.getParentGroup().getPersonnel() != null) {
                 actionForm.setFormedByPersonnel(actionForm.getParentGroup().getPersonnel().getPersonnelId().toString());
+            }
         }
         loadCreateMasterData(actionForm, request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(),
@@ -287,8 +288,9 @@ public class ClientCustAction extends CustAction {
         if (ProcessFlowRules.isClientPendingApprovalStateEnabled() == true) {
             SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, CustomerConstants.YES, request);
 
-        } else
+        } else {
             SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, CustomerConstants.NO, request);
+        }
         actionForm.setEditFamily("edit");
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
         checkForGovtIdAndDisplayNameDobDuplicacy(request, actionForm);
@@ -323,11 +325,12 @@ public class ClientCustAction extends CustAction {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         String fromPage = actionForm.getInput();
         if (ClientConstants.INPUT_PERSONAL_INFO.equals(fromPage) || ClientConstants.INPUT_MFI_INFO.equals(fromPage)
-                || CenterConstants.INPUT_CREATE.equals(fromPage) )
+                || CenterConstants.INPUT_CREATE.equals(fromPage) ) {
             forward = ActionForwards.cancelCreate_success.toString();
-        else if (ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(fromPage)
-                || ClientConstants.INPUT_EDIT_MFI_INFO.equals(fromPage) || ClientConstants.INPUT_EDIT_FAMILY_INFO.equals(fromPage))
+        } else if (ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(fromPage)
+                || ClientConstants.INPUT_EDIT_MFI_INFO.equals(fromPage) || ClientConstants.INPUT_EDIT_FAMILY_INFO.equals(fromPage)) {
             forward = ActionForwards.cancelEdit_success.toString();
+        }
         return mapping.findForward(forward);
     }
 
@@ -346,11 +349,12 @@ public class ClientCustAction extends CustAction {
             loadFees(actionForm, request, FeeCategory.CLIENT, null);
         } else {
             officeId = actionForm.getParentGroup().getOffice().getOfficeId();
-            if (actionForm.getParentGroup().getCustomerMeeting() != null)
+            if (actionForm.getParentGroup().getCustomerMeeting() != null) {
                 loadFees(actionForm, request, FeeCategory.CLIENT, actionForm.getParentGroup().getCustomerMeeting()
                         .getMeeting());
-            else
+            } else {
                 loadFees(actionForm, request, FeeCategory.CLIENT, null);
+            }
         }
         loadFormedByPersonnel(officeId, request);
         SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, getClientBusinessService()
@@ -502,12 +506,13 @@ public class ClientCustAction extends CustAction {
             personnelId = actionForm.getLoanOfficerIdValue();
             officeId = actionForm.getOfficeIdValue();
         }
-        if (personnelId != null)
+        if (personnelId != null) {
             checkPermissionForCreate(actionForm.getStatusValue().getValue(), getUserContext(request), null, officeId,
                     personnelId);
-        else
+        } else {
             checkPermissionForCreate(actionForm.getStatusValue().getValue(), getUserContext(request), null, officeId,
                     getUserContext(request).getId());
+        }
         List<SavingsOfferingBO> selectedOfferings = getSelectedOfferings(actionForm, request);
         if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
             if(ClientRules.isFamilyDetailsRequired()){
@@ -589,9 +594,11 @@ public class ClientCustAction extends CustAction {
                 ClientConstants.SAVINGS_OFFERING_LIST, request);
         for (Short offeringId : actionForm.getSelectedOfferings()) {
             if (offeringId != null) {
-                for (SavingsOfferingBO savingsOffering : offeringsList)
-                    if (offeringId.equals(savingsOffering.getPrdOfferingId()))
+                for (SavingsOfferingBO savingsOffering : offeringsList) {
+                    if (offeringId.equals(savingsOffering.getPrdOfferingId())) {
                         selectedOfferings.add(savingsOffering);
+                    }
+                }
             }
         }
         return selectedOfferings;
@@ -637,8 +644,9 @@ public class ClientCustAction extends CustAction {
         actionForm.setSpouseName(new ClientNameDetailView());
         actionForm.setClientDetailView(new ClientDetailView());
         actionForm.setNextOrPreview("next");
-        for (int i = 0; i < actionForm.getSelectedOfferings().size(); i++)
+        for (int i = 0; i < actionForm.getSelectedOfferings().size(); i++) {
             actionForm.getSelectedOfferings().set(i, null);
+        }
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -656,9 +664,10 @@ public class ClientCustAction extends CustAction {
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
         Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
                 "loanIndividualMonitoringIsEnabled").getValue();
-        if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0)
+        if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
             SessionUtils.setAttribute(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
                     loanIndividualMonitoringIsEnabled.intValue(), request);
+        }
 
         String globalCustNum = actionForm.getGlobalCustNum();
         // We would like to move away from sending business objects to the jsp page
@@ -671,8 +680,9 @@ public class ClientCustAction extends CustAction {
                 CustomerLevel.CLIENT.getValue());
         clientBO.setUserContext(getUserContext(request));
         clientBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
-        for (CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags())
+        for (CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags()) {
             custFlag.getStatusFlag().setLocaleId(getUserContext(request).getLocaleId());
+        }
 
         SessionUtils.removeAttribute("clientDetailsDto", request);
         SessionUtils.setAttribute("clientDetailsDto", clientInformationDto, request);
@@ -782,10 +792,13 @@ public class ClientCustAction extends CustAction {
         client.updateAddress(actionForm.getAddress());
         convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(), getUserContext(request)
                 .getPreferredLocale());
-        for (CustomFieldView fieldView : actionForm.getCustomFields())
-            for (CustomerCustomFieldEntity fieldEntity : client.getCustomFields())
-                if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+        for (CustomFieldView fieldView : actionForm.getCustomFields()) {
+            for (CustomerCustomFieldEntity fieldEntity : client.getCustomFields()) {
+                if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                     fieldEntity.setFieldValue(fieldView.getFieldValue());
+                }
+            }
+        }
         client.getClientName().updateNameDetails(actionForm.getClientName());
         if(!ClientRules.isFamilyDetailsRequired()){
             client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
@@ -868,8 +881,9 @@ public class ClientCustAction extends CustAction {
                 CustomerLevel.CLIENT.getValue());
         client = null;
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
-        if (!clientBO.isClientUnderGroup())
+        if (!clientBO.isClientUnderGroup()) {
             loadUpdateMfiMasterData(clientBO.getOffice().getOfficeId(), request);
+        }
         setValuesForMfiEditInActionForm(actionForm, request);
         return mapping.findForward(ActionForwards.editMfiInfo_success.toString());
     }
@@ -899,10 +913,11 @@ public class ClientCustAction extends CustAction {
         setInitialObjectForAuditLogging(client);
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         client.setExternalId(actionForm.getExternalId());
-        if (actionForm.getTrainedValue() != null && actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue()))
+        if (actionForm.getTrainedValue() != null && actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue())) {
             client.setTrained(true);
-        else
+        } else {
             client.setTrained(false);
+        }
 
         client.setTrainedDate(DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()));
         PersonnelBO personnel = null;
@@ -994,14 +1009,17 @@ public class ClientCustAction extends CustAction {
         if (client.isClientUnderGroup()) {
             actionForm.setGroupFlag(ClientConstants.YES);
             actionForm.setParentGroup(client.getParentCustomer());
-        } else
+        } else {
             actionForm.setGroupFlag(ClientConstants.NO);
-        if (client.isTrained())
+        }
+        if (client.isTrained()) {
             actionForm.setTrained(ClientConstants.YES);
-        else
+        } else {
             actionForm.setTrained(ClientConstants.NO);
-        if (client.getTrainedDate() != null)
+        }
+        if (client.getTrainedDate() != null) {
             actionForm.setTrainedDate(DateUtils.makeDateAsSentFromBrowser(client.getTrainedDate()));
+        }
     }
 
     private void loadUpdateMfiMasterData(Short officeId, HttpServletRequest request) throws Exception {
@@ -1077,8 +1095,9 @@ public class ClientCustAction extends CustAction {
     }
 
     private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList, Short localeId) {
-        for (SavingsBO accountBO : accountList)
+        for (SavingsBO accountBO : accountList) {
             setLocaleForAccount(accountBO, localeId);
+        }
     }
 
     private void setLocaleForAccount(AccountBO account, Short localeId) {
@@ -1087,9 +1106,10 @@ public class ClientCustAction extends CustAction {
 
     private String getNameForBusinessActivityEntity(Integer entityId, Short localeId) throws PersistenceException,
             ServiceException {
-        if (entityId != null)
+        if (entityId != null) {
             return ((MasterDataService) ServiceFactory.getInstance().getBusinessService(
                     BusinessServiceName.MasterDataService)).retrieveMasterEntities(entityId, localeId);
+        }
         return "";
     }
 
@@ -1108,9 +1128,11 @@ public class ClientCustAction extends CustAction {
     private MasterDataEntity findMasterEntity(HttpServletRequest request, String collectionName, Short value)
             throws Exception {
         List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils.getAttribute(collectionName, request);
-        for (MasterDataEntity entity : entities)
-            if (entity.getId().equals(value))
+        for (MasterDataEntity entity : entities) {
+            if (entity.getId().equals(value)) {
                 return entity;
+            }
+        }
         return null;
     }
 

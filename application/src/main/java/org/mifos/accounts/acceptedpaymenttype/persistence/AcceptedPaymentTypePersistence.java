@@ -49,15 +49,17 @@ public class AcceptedPaymentTypePersistence extends Persistence {
     }
 
     public void addAcceptedPaymentTypes(List<AcceptedPaymentType> acceptedPaymentTypeList) throws PersistenceException {
-        for (AcceptedPaymentType paymentType : acceptedPaymentTypeList)
+        for (AcceptedPaymentType paymentType : acceptedPaymentTypeList) {
             createOrUpdate(paymentType);
+        }
     }
 
     // delete a list of accepted payment type for account actions
     public void deleteAcceptedPaymentTypes(List<AcceptedPaymentType> acceptedPaymentTypeList)
             throws PersistenceException {
-        for (AcceptedPaymentType paymentType : acceptedPaymentTypeList)
+        for (AcceptedPaymentType paymentType : acceptedPaymentTypeList) {
             delete(paymentType);
+        }
     }
 
     public List<PaymentTypeEntity> getAcceptedPaymentTypesForATransaction(Short localeId, Short transactionId)

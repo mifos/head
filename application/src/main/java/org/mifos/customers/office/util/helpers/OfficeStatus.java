@@ -36,8 +36,9 @@ public enum OfficeStatus {
 
     public static OfficeStatus getOfficeStatus(Short id) throws PropertyNotFoundException {
         for (OfficeStatus status : OfficeStatus.values()) {
-            if (status.value.equals(id))
+            if (status.value.equals(id)) {
                 return status;
+            }
         }
         throw new PropertyNotFoundException(OfficeConstants.ERROR_STATUS);
     }

@@ -63,7 +63,8 @@ public class SavingsIntPostingHelper extends TaskHelper {
                 StaticHibernateUtil.closeSession();
             }
         }
-        if (errorList.size() > 0)
+        if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
     }
 }

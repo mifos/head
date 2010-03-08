@@ -36,8 +36,9 @@ public class CollectionUtils {
     public static <T> T find(Collection<T> collections, Predicate<T> predicate) throws Exception {
         if (collections != null && predicate != null) {
             for (T item : collections) {
-                if (predicate.evaluate(item))
+                if (predicate.evaluate(item)) {
                     return item;
+                }
             }
         }
         return null;
@@ -62,14 +63,16 @@ public class CollectionUtils {
     }
 
     public static <T> T first(Collection<T> collection) {
-        if (collection == null || collection.isEmpty())
+        if (collection == null || collection.isEmpty()) {
             return null;
+        }
         return collection.iterator().next();
     }
 
     public static <T> T last(Collection<T> collection) {
-        if (collection == null || collection.isEmpty())
+        if (collection == null || collection.isEmpty()) {
             return null;
+        }
         Iterator<T> iterator = collection.iterator();
         T elem = null;
         while (iterator.hasNext()) {
@@ -79,8 +82,9 @@ public class CollectionUtils {
     }
 
     public static <T> T last(List<T> list) {
-        if (list == null || list.isEmpty())
+        if (list == null || list.isEmpty()) {
             return null;
+        }
         return list.get(list.size() - 1);
     }
 
@@ -116,9 +120,10 @@ public class CollectionUtils {
     }
 
     public static List<List> splitListIntoParts(List list, int sizeOfEachPart) {
-        if (sizeOfEachPart <= 0)
+        if (sizeOfEachPart <= 0) {
             throw new IllegalArgumentException("Cannot split list into sizes of zero or less. Given value: "
                     + sizeOfEachPart);
+        }
 
         List<List> result = new ArrayList<List>();
         int start = 0, end = sizeOfEachPart;

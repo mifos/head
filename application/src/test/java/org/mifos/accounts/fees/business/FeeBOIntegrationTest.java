@@ -294,25 +294,32 @@ public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
         boolean bClient = false;
 
         for (FeeLevelEntity feeLevel : defaultCustomers) {
-            if (feeLevel.getLevelId().equals(FeeLevel.CENTERLEVEL.getValue()))
+            if (feeLevel.getLevelId().equals(FeeLevel.CENTERLEVEL.getValue())) {
                 bCenter = true;
-            if (feeLevel.getLevelId().equals(FeeLevel.GROUPLEVEL.getValue()))
+            }
+            if (feeLevel.getLevelId().equals(FeeLevel.GROUPLEVEL.getValue())) {
                 bGroup = true;
-            if (feeLevel.getLevelId().equals(FeeLevel.CLIENTLEVEL.getValue()))
+            }
+            if (feeLevel.getLevelId().equals(FeeLevel.CLIENTLEVEL.getValue())) {
                 bClient = true;
+            }
         }
 
-        if (feeCategory.equals(FeeCategory.CENTER))
+        if (feeCategory.equals(FeeCategory.CENTER)) {
             return bCenter && !bGroup && !bClient;
+        }
 
-        if (feeCategory.equals(FeeCategory.GROUP))
+        if (feeCategory.equals(FeeCategory.GROUP)) {
             return !bCenter && bGroup && !bClient;
+        }
 
-        if (feeCategory.equals(FeeCategory.CLIENT))
+        if (feeCategory.equals(FeeCategory.CLIENT)) {
             return !bCenter && !bGroup && bClient;
+        }
 
-        if (feeCategory.equals(FeeCategory.ALLCUSTOMERS))
+        if (feeCategory.equals(FeeCategory.ALLCUSTOMERS)) {
             return bCenter && bGroup && bClient;
+        }
 
         return !bCenter && !bGroup && !bClient;
     }

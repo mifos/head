@@ -197,10 +197,11 @@ public class BirtReportsUploadAction extends BaseAction {
          * not produce any sort of file that can be retirieved. !! it only
          * allows us to perform the upload action.
          */
-        if (getServletRoot(getServlet()) != null)
+        if (getServletRoot(getServlet()) != null) {
             os = new FileOutputStream(file);
-        else
+        } else {
             os = new ByteArrayOutputStream();
+        }
         byte[] buffer = new byte[4096];
         int bytesRead = 0;
         while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {

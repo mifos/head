@@ -130,8 +130,9 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
             Integer resultSetCount = ((Number) query.uniqueResult()).intValue();
             this.queryInputs.setTypes(query.getReturnTypes());
             dtoBuilder.setInputs(queryInputs);
-            if (resultSetCount != null && resultSetCount > 0)
+            if (resultSetCount != null && resultSetCount > 0) {
                 size = resultSetCount;
+            }
             QuerySession.closeSession(session);
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);

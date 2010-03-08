@@ -159,28 +159,32 @@ public class OffActionForm extends BaseActionForm {
     }
 
     private void verifyFields(ActionErrors actionErrors, UserContext userContext) {
-        if (StringUtils.isBlank(officeName))
+        if (StringUtils.isBlank(officeName)) {
             actionErrors.add(OfficeConstants.OFFICE_NAME, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                     getLocaleString(OfficeConstants.OFFICE_NAME, userContext)));
-        if (StringUtils.isBlank(shortName))
+        }
+        if (StringUtils.isBlank(shortName)) {
             actionErrors.add(OfficeConstants.OFFICESHORTNAME, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                     getLocaleString(OfficeConstants.OFFICESHORTNAME, userContext)));
-        if (StringUtils.isBlank(officeLevel))
+        }
+        if (StringUtils.isBlank(officeLevel)) {
             actionErrors.add(OfficeConstants.OFFICETYPE, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                     getLocaleString(OfficeConstants.OFFICETYPE, userContext)));
-        if (StringUtils.isNotBlank(officeLevel) && officeLevel.equals("1"))
+        }
+        if (StringUtils.isNotBlank(officeLevel) && officeLevel.equals("1")) {
             ;
-        else {
+        } else {
 
-            if (StringUtils.isBlank(parentOfficeId))
+            if (StringUtils.isBlank(parentOfficeId)) {
                 actionErrors.add(OfficeConstants.PARENTOFFICE, new ActionMessage(OfficeConstants.ERRORMANDATORYFIELD,
                         getLocaleString(OfficeConstants.PARENTOFFICE, userContext)));
+            }
         }
     }
 
     private String getLocaleString(String key, UserContext userContext) {
 
-        if (resourceBundle == null)
+        if (resourceBundle == null) {
             try {
 
                 resourceBundle = ResourceBundle.getBundle(FilePaths.OFFICERESOURCEPATH, userContext
@@ -191,6 +195,7 @@ public class OffActionForm extends BaseActionForm {
                         .getPreferredLocale());
 
             }
+        }
         return resourceBundle.getString(key);
 
     }
@@ -207,16 +212,18 @@ public class OffActionForm extends BaseActionForm {
             for (CustomFieldView customField : customFields) {
                 boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory())
+                    if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
                         if (StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
                                     OfficeConstants.ENTERADDTIONALINFO));
                             isErrorFound = true;
                             break;
                         }
+                    }
                 }
-                if (isErrorFound)
+                if (isErrorFound) {
                     break;
+                }
             }
         } catch (PageExpiredException pee) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
@@ -230,8 +237,9 @@ public class OffActionForm extends BaseActionForm {
         String method = request.getParameter("method");
 
         if (null != request.getParameter(Constants.CURRENTFLOWKEY)
-                && null == request.getAttribute(Constants.CURRENTFLOWKEY))
+                && null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        }
 
         if (method.equals(Methods.preview.toString()) || method.equals(Methods.editpreview.toString())) {
             verifyFields(errors, getUserContext(request));
@@ -267,10 +275,11 @@ public class OffActionForm extends BaseActionForm {
         } else {
             this.address = new Address();
         }
-        if (officeBO.getParentOffice() != null)
+        if (officeBO.getParentOffice() != null) {
             this.parentOfficeId = officeBO.getParentOffice().getOfficeId().toString();
-        else
+        } else {
             this.parentOfficeId = null;
+        }
     }
 
     public String getInput() {

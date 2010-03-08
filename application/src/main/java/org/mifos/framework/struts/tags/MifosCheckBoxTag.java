@@ -42,9 +42,9 @@ public class MifosCheckBoxTag extends ELCheckboxTag {
 
     @Override
     public int doStartTag() throws JspException {
-        if (fieldConfig.isFieldHidden(getKeyhm()))
+        if (fieldConfig.isFieldHidden(getKeyhm())) {
             return EVAL_PAGE;
-        else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm())) {
+        } else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm())) {
             TagUtils.getInstance().write(this.pageContext, renderInputsForhidden());
         }
         return super.doStartTag();

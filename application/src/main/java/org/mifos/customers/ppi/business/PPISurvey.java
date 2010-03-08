@@ -178,11 +178,13 @@ public class PPISurvey extends Survey {
     }
 
     public PPILikelihood getLikelihood(int score) {
-        if (score < 0 || score > DEFAULT_NON_POOR_MAX)
+        if (score < 0 || score > DEFAULT_NON_POOR_MAX) {
             throw new IllegalArgumentException("score must be between 0 and " + DEFAULT_NON_POOR_MAX);
+        }
         for (PPILikelihood likelihood : likelihoods) {
-            if (score >= likelihood.getScoreFrom() && score <= likelihood.getScoreTo())
+            if (score >= likelihood.getScoreFrom() && score <= likelihood.getScoreTo()) {
                 return likelihood;
+            }
         }
         return null;
     }

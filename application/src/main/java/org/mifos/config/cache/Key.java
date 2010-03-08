@@ -61,23 +61,30 @@ public class Key {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final Key other = (Key) obj;
         if (key == null) {
-            if (other.key != null)
+            if (other.key != null) {
                 return false;
-        } else if (!key.equalsIgnoreCase(other.key))
+            }
+        } else if (!key.equalsIgnoreCase(other.key)) {
             return false;
+        }
         if (officeId == null) {
-            if (other.officeId != null)
+            if (other.officeId != null) {
                 return false;
-        } else if (!officeId.equals(other.officeId))
+            }
+        } else if (!officeId.equals(other.officeId)) {
             return false;
+        }
         return true;
     }
 }

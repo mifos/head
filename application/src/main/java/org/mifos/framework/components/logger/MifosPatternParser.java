@@ -133,9 +133,9 @@ public class MifosPatternParser extends PatternParser {
                 // org.mifos.framework.components.logger.MifosPattern, then the
                 // display would show MifosPattern as class name
                 // if it is %C{2} then logger.MifosPattern is shown.
-                if (precision <= 0)
+                if (precision <= 0) {
                     return n;
-                else {
+                } else {
                     int len = n.length();
 
                     // We substract 1 from 'len' when assigning to 'end' to
@@ -146,8 +146,9 @@ public class MifosPatternParser extends PatternParser {
                     int end = len - 1;
                     for (int i = precision; i > 0; i--) {
                         end = n.lastIndexOf('.', end - 1);
-                        if (end == -1)
+                        if (end == -1) {
                             return n;
+                        }
                     }
                     return n.substring(end + 1, len);
                 }

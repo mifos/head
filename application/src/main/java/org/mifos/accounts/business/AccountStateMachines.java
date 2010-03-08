@@ -281,34 +281,39 @@ public class AccountStateMachines {
         String configurationName = null;
         if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
             if (ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled()) {
-                if (ProcessFlowRules.isLoanPendingApprovalStateEnabled())
+                if (ProcessFlowRules.isLoanPendingApprovalStateEnabled()) {
                     configurationName = "configuration 1";
-                else
+                } else {
                     configurationName = "configuration 2";
+                }
             } else {
-                if (ProcessFlowRules.isLoanPendingApprovalStateEnabled())
+                if (ProcessFlowRules.isLoanPendingApprovalStateEnabled()) {
                     configurationName = "configuration 3";
-                else
+                } else {
                     configurationName = "configuration 4";
+                }
             }
         } else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
-            if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled())
+            if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
                 configurationName = "configuration 1";
-            else
+            } else {
                 configurationName = "configuration 2";
+            }
         } else if (accountType.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             if (level.equals(CustomerLevel.CENTER)) {
                 configurationName = "configuration 1";
             } else if (level.equals(CustomerLevel.GROUP)) {
-                if (ProcessFlowRules.isGroupPendingApprovalStateEnabled())
+                if (ProcessFlowRules.isGroupPendingApprovalStateEnabled()) {
                     configurationName = "configuration 1";
-                else
+                } else {
                     configurationName = "configuration 2";
+                }
             } else if (level.equals(CustomerLevel.CLIENT)) {
-                if (ProcessFlowRules.isClientPendingApprovalStateEnabled())
+                if (ProcessFlowRules.isClientPendingApprovalStateEnabled()) {
                     configurationName = "configuration 1";
-                else
+                } else {
                     configurationName = "configuration 2";
+                }
             }
         }
         return configurationName;

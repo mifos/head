@@ -309,10 +309,11 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
             i++;
         }
         actionPerform();
-        if (isCustomFieldMandatory)
-           Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        else
-           Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        if (isCustomFieldMandatory) {
+            Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        } else {
+            Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        }
 
     }
 
@@ -701,9 +702,9 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
 
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-            if (auditLogRecord.getFieldName().equalsIgnoreCase("Recommended Amount"))
+            if (auditLogRecord.getFieldName().equalsIgnoreCase("Recommended Amount")) {
                 matchValues(auditLogRecord, "300.0", "600.0");
-            else if (auditLogRecord.getFieldName().equalsIgnoreCase("Additional Information")) {
+            } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Additional Information")) {
                 matchValues(auditLogRecord, "External Savings Id-custom field value", "External Savings Id-12");
             }
         }

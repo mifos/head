@@ -119,16 +119,20 @@ public final class MifosCurrency implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final MifosCurrency other = (MifosCurrency) obj;
         if (currencyId == null) {
-            if (other.currencyId != null)
+            if (other.currencyId != null) {
                 return false;
-        } else if (!currencyId.equals(other.currencyId))
+            }
+        } else if (!currencyId.equals(other.currencyId)) {
             return false;
+        }
         return true;
     }
 

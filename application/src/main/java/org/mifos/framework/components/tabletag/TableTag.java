@@ -379,13 +379,15 @@ public class TableTag extends BodyTagSupport {
             forwardkey = pathVar.getForwardkey();
             if (action != null) {
                 SessionUtils.setRemovableAttribute("action", action, TableTagConstants.PATH, pageContext.getSession());
-            } else
+            } else {
                 throw new JspException(resource.getString(TableTagConstants.NOACTION_ERROR));
+            }
             if (forwardkey != null) {
                 SessionUtils.setRemovableAttribute("forwardkey", forwardkey, TableTagConstants.PATH, pageContext
                         .getSession());
-            } else
+            } else {
                 throw new JspException(resource.getString(TableTagConstants.NOFWDKEY_ERROR));
+            }
         }
 
         return action;
@@ -429,8 +431,9 @@ public class TableTag extends BodyTagSupport {
             getSingleData(list, locale, currentValue);
         } else if (type.equalsIgnoreCase("multiple")) {
             getMultipleData(list, locale, currentValue);
-        } else
+        } else {
             throw new TableTagException(resource.getString(TableTagConstants.WRONGTYPE_ERROR));
+        }
     }
 
     private void getSingleData(List list, Locale locale, Integer currentValue) throws TableTagParseException,
@@ -446,8 +449,9 @@ public class TableTag extends BodyTagSupport {
             createStartTable(result, headingRequired, topBlueLineRequired);
             out.write(result.toString());
             displayData(list, table, locale, currentValue);
-        } else
+        } else {
             throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
+        }
     }
 
     private void getMultipleData(List list, Locale locale, Integer currentValue) throws TableTagTypeParserException,
@@ -463,8 +467,9 @@ public class TableTag extends BodyTagSupport {
             Table table = helperMultipleData(object, locale);
             if (table != null) {
                 displayDataMultiple(object, table, ++number, locale);
-            } else
+            } else {
                 throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
+            }
         }
         result = new StringBuilder();
         createEndTable(result, false);

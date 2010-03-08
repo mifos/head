@@ -86,22 +86,25 @@ public class FiscalCalendarRulesTest {
         List<WeekDay> workingDays = new FiscalCalendarRules().getWorkingDays();
        Assert.assertEquals(workingDays.size(), 6);
         WeekDay[] weekDays = WeekDay.values();
-        for (int i = 0; i < workingDays.size(); i++)
-        Assert.assertEquals(workingDays.get(i).toString(), weekDays[i + 1].name());
+        for (int i = 0; i < workingDays.size(); i++) {
+            Assert.assertEquals(workingDays.get(i).toString(), weekDays[i + 1].name());
+        }
         configWorkingDays = "TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
         setNewWorkingDays(configWorkingDays);
         workingDays = new FiscalCalendarRules().getWorkingDays();
        Assert.assertEquals(workingDays.size(), 4);
-        for (int i = 0; i < workingDays.size(); i++)
-        Assert.assertEquals(workingDays.get(i).toString().toUpperCase(), weekDays[i + 2].name().toUpperCase());
+        for (int i = 0; i < workingDays.size(); i++) {
+            Assert.assertEquals(workingDays.get(i).toString().toUpperCase(), weekDays[i + 2].name().toUpperCase());
+        }
     }
 
     @Test
     public void testGetWeekDaysList() {
         List<WeekDay> weekDaysFromFiscalCalendarRules = new FiscalCalendarRules().getWeekDaysList();
         WeekDay[] weekDays = WeekDay.values();
-        for (int i = 0; i < weekDays.length; i++)
-           Assert.assertEquals(weekDaysFromFiscalCalendarRules.get(i).toString(), weekDays[i].name());
+        for (int i = 0; i < weekDays.length; i++) {
+            Assert.assertEquals(weekDaysFromFiscalCalendarRules.get(i).toString(), weekDays[i].name());
+        }
     }
 
     @Test

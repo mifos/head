@@ -132,12 +132,13 @@ public class CustomerNotesAction extends SearchAction {
         CustomerBO customerBO = getCustomerBusinessService().getCustomer(
                 Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
         UserContext uc = getUserContext(request);
-        if (customerBO.getPersonnel() != null)
+        if (customerBO.getPersonnel() != null) {
             checkPermissionForAddingNotes(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(), uc, customerBO
                     .getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
-        else
+        } else {
             checkPermissionForAddingNotes(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(), uc, customerBO
                     .getOffice().getOfficeId(), uc.getId());
+        }
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
         CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new DateTimeService()
                 .getCurrentJavaSqlDate(), personnelBO, customerBO);
@@ -153,12 +154,15 @@ public class CustomerNotesAction extends SearchAction {
         CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
         String input = notesActionForm.getInput();
         String forward = null;
-        if (input.equals("center"))
+        if (input.equals("center")) {
             forward = ActionForwards.center_detail_page.toString();
-        if (input.equals("group"))
+        }
+        if (input.equals("group")) {
             forward = ActionForwards.group_detail_page.toString();
-        if (input.equals("client"))
+        }
+        if (input.equals("client")) {
             forward = ActionForwards.client_detail_page.toString();
+        }
         return forward;
     }
 
@@ -168,10 +172,11 @@ public class CustomerNotesAction extends SearchAction {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.preview.toString()))
+            if (method.equals(Methods.preview.toString())) {
                 forward = ActionForwards.preview_failure.toString();
-            else if (method.equals(Methods.create.toString()))
+            } else if (method.equals(Methods.create.toString())) {
                 forward = ActionForwards.create_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }
@@ -198,11 +203,12 @@ public class CustomerNotesAction extends SearchAction {
         notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());
         notesActionForm.setCustomerName(customerBO.getDisplayName());
         notesActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
-        if (customerBO instanceof CenterBO)
+        if (customerBO instanceof CenterBO) {
             notesActionForm.setInput("center");
-        else if (customerBO instanceof GroupBO)
+        } else if (customerBO instanceof GroupBO) {
             notesActionForm.setInput("group");
-        else if (customerBO instanceof ClientBO)
+        } else if (customerBO instanceof ClientBO) {
             notesActionForm.setInput("client");
+        }
     }
 }

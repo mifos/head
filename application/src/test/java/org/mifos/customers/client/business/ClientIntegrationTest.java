@@ -360,10 +360,12 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client = new ClientPersistence().getClient(client.getCustomerId());
        Assert.assertEquals(offerings.size(), client.getOfferingsAssociatedInCreate().size());
         for (ClientInitialSavingsOfferingEntity clientOffering : client.getOfferingsAssociatedInCreate()) {
-            if (clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId()))
-               Assert.assertTrue(true);
-            if (clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId()))
-               Assert.assertTrue(true);
+            if (clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId())) {
+                Assert.assertTrue(true);
+            }
+            if (clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId())) {
+                Assert.assertTrue(true);
+            }
         }
         savingsOffering1 = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering1
                 .getPrdOfferingId());

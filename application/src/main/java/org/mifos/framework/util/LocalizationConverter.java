@@ -124,14 +124,16 @@ public class LocalizationConverter {
     }
 
     private void loadDecimalFormats() {
-        if (currentLocale == null)
+        if (currentLocale == null) {
             throw new RuntimeException("The current locale is not set for LocalizationConverter.");
+        }
         Locale[] locales = NumberFormat.getInstance().getAvailableLocales();
         // use this English locale for decimal format for 1.1 release
         boolean find = supportThisLocale(locales, decimalFormatLocale);
-        if (find == false)
+        if (find == false) {
             throw new RuntimeException("NumberFormat class doesn't support this country code: "
                     + decimalFormatLocale.getCountry() + " and language code: " + decimalFormatLocale.getLanguage());
+        }
         NumberFormat format = DecimalFormat.getInstance(decimalFormatLocale);
         if (format instanceof DecimalFormat) {
             currentDecimalFormat = (DecimalFormat) format;
@@ -188,8 +190,9 @@ public class LocalizationConverter {
             Double interest = getDoubleValueForInterest(doubleStr);
             if ((interest > AccountingRules.getMaxInterest()) || (interest < AccountingRules.getMinInterest())) {
                 errors.add(ConversionError.INTEREST_OUT_OF_RANGE);
-            } else
+            } else {
                 result.setDoubleValue(interest);
+            }
         } catch (Exception ex) {
             result.getErrors().add(ConversionError.CONVERSION_ERROR);
         }
@@ -205,7 +208,7 @@ public class LocalizationConverter {
         List<ConversionError> errors = new ArrayList<ConversionError>();
         char temp;
         ConversionError error = null;
-        for (int i = 0; i < number.length(); i++)
+        for (int i = 0; i < number.length(); i++) {
             if (Character.isDigit(number.charAt(i)) == false) {
                 temp = number.charAt(i);
                 if (temp != decimalFormatSymbol) {
@@ -215,6 +218,7 @@ public class LocalizationConverter {
                 }
 
             }
+        }
         int index = number.indexOf(decimalFormatSymbol);
         if (index < 0) {
             if (number.length() > digitsBefore) {
@@ -240,8 +244,9 @@ public class LocalizationConverter {
 
     private Double getDoubleValueForInterest(String doubleValueString) {
 
-        if (currentDecimalFormatForInterest == null)
+        if (currentDecimalFormatForInterest == null) {
             loadDecimalFormats();
+        }
         Double dNum = null;
         try {
             ParsePosition pp = new ParsePosition(0);
@@ -296,9 +301,10 @@ public class LocalizationConverter {
         // decimalFormatLocale is the English locale used temporarily because
         // 1.1 release doesn't
         // support date/time/double localization yet
-        if (!supportThisLocale(locales, dateLocale))
+        if (!supportThisLocale(locales, dateLocale)) {
             throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
                     + " and language code: " + dateLocale.getLanguage());
+        }
 
         String separator = "";
         DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
@@ -319,9 +325,10 @@ public class LocalizationConverter {
         // doesn't
         // support date/time/double localization yet
         Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-        if (!supportThisLocale(locales, dateLocale))
+        if (!supportThisLocale(locales, dateLocale)) {
             throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
                     + " and language code: " + dateLocale.getLanguage());
+        }
 
         DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
         // DateFormat simpleFormat =
@@ -336,8 +343,9 @@ public class LocalizationConverter {
      **/
     public DateFormat getDateFormatWithFullYear() {
         DateFormat dateFormat = getDateFormat();
-        if (SimpleDateFormat.class.equals(dateFormat.getClass()))
+        if (SimpleDateFormat.class.equals(dateFormat.getClass())) {
             return new SimpleDateFormat(((SimpleDateFormat) dateFormat).toPattern().replace("yy", "yyyy"), dateLocale);
+        }
         return dateFormat;
     }
 

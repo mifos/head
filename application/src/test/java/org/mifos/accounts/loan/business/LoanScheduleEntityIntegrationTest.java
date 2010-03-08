@@ -152,8 +152,9 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
             if (accountActionDateEntity.getInstallmentId() == 1) {
                 accountActionDateEntity.setPrincipal(new Money(getCurrency()));
                Assert.assertTrue(accountActionDateEntity.isPrincipalZero());
-            } else
+            } else {
                 Assert.assertFalse(accountActionDateEntity.isPrincipalZero());
+            }
         }
     }
 

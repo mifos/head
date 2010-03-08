@@ -184,81 +184,111 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchReportStaffSummaryBO other = (BranchReportStaffSummaryBO) obj;
         if (activeBorrowersCount == null) {
-            if (other.activeBorrowersCount != null)
+            if (other.activeBorrowersCount != null) {
                 return false;
-        } else if (!activeBorrowersCount.equals(other.activeBorrowersCount))
+            }
+        } else if (!activeBorrowersCount.equals(other.activeBorrowersCount)) {
             return false;
+        }
         if (activeLoansCount == null) {
-            if (other.activeLoansCount != null)
+            if (other.activeLoansCount != null) {
                 return false;
-        } else if (!activeLoansCount.equals(other.activeLoansCount))
+            }
+        } else if (!activeLoansCount.equals(other.activeLoansCount)) {
             return false;
+        }
         if (centerCount == null) {
-            if (other.centerCount != null)
+            if (other.centerCount != null) {
                 return false;
-        } else if (!centerCount.equals(other.centerCount))
+            }
+        } else if (!centerCount.equals(other.centerCount)) {
             return false;
+        }
         if (clientCount == null) {
-            if (other.clientCount != null)
+            if (other.clientCount != null) {
                 return false;
-        } else if (!clientCount.equals(other.clientCount))
+            }
+        } else if (!clientCount.equals(other.clientCount)) {
             return false;
+        }
         if (clientsEnrolledThisMonth == null) {
-            if (other.clientsEnrolledThisMonth != null)
+            if (other.clientsEnrolledThisMonth != null) {
                 return false;
-        } else if (!clientsEnrolledThisMonth.equals(other.clientsEnrolledThisMonth))
+            }
+        } else if (!clientsEnrolledThisMonth.equals(other.clientsEnrolledThisMonth)) {
             return false;
+        }
         if (interestAndFeesAmountOutstanding == null) {
-            if (other.interestAndFeesAmountOutstanding != null)
+            if (other.interestAndFeesAmountOutstanding != null) {
                 return false;
-        } else if (!interestAndFeesAmountOutstanding.equals(other.interestAndFeesAmountOutstanding))
+            }
+        } else if (!interestAndFeesAmountOutstanding.equals(other.interestAndFeesAmountOutstanding)) {
             return false;
+        }
         if (joiningDate == null) {
-            if (other.joiningDate != null)
+            if (other.joiningDate != null) {
                 return false;
-        } else if (!joiningDate.equals(other.joiningDate))
+            }
+        } else if (!joiningDate.equals(other.joiningDate)) {
             return false;
+        }
         if (loanAmountOutstanding == null) {
-            if (other.loanAmountOutstanding != null)
+            if (other.loanAmountOutstanding != null) {
                 return false;
-        } else if (!loanAmountOutstanding.equals(other.loanAmountOutstanding))
+            }
+        } else if (!loanAmountOutstanding.equals(other.loanAmountOutstanding)) {
             return false;
+        }
         if (loanArrearsAmount == null) {
-            if (other.loanArrearsAmount != null)
+            if (other.loanArrearsAmount != null) {
                 return false;
-        } else if (!loanArrearsAmount.equals(other.loanArrearsAmount))
+            }
+        } else if (!loanArrearsAmount.equals(other.loanArrearsAmount)) {
             return false;
+        }
         if (personnelId == null) {
-            if (other.personnelId != null)
+            if (other.personnelId != null) {
                 return false;
-        } else if (!personnelId.equals(other.personnelId))
+            }
+        } else if (!personnelId.equals(other.personnelId)) {
             return false;
+        }
         if (personnelName == null) {
-            if (other.personnelName != null)
+            if (other.personnelName != null) {
                 return false;
-        } else if (!personnelName.equals(other.personnelName))
+            }
+        } else if (!personnelName.equals(other.personnelName)) {
             return false;
+        }
         if (portfolioAtRisk == null) {
-            if (other.portfolioAtRisk != null)
+            if (other.portfolioAtRisk != null) {
                 return false;
-        } else if (!portfolioAtRisk.equals(other.portfolioAtRisk))
+            }
+        } else if (!portfolioAtRisk.equals(other.portfolioAtRisk)) {
             return false;
+        }
         if (staffSummaryId == null) {
-            if (other.staffSummaryId != null)
+            if (other.staffSummaryId != null) {
                 return false;
-        } else if (!staffSummaryId.equals(other.staffSummaryId))
+            }
+        } else if (!staffSummaryId.equals(other.staffSummaryId)) {
             return false;
+        }
         if (totalClientsEnrolled == null) {
-            if (other.totalClientsEnrolled != null)
+            if (other.totalClientsEnrolled != null) {
                 return false;
-        } else if (!totalClientsEnrolled.equals(other.totalClientsEnrolled))
+            }
+        } else if (!totalClientsEnrolled.equals(other.totalClientsEnrolled)) {
             return false;
+        }
         return true;
     }
 }

@@ -546,8 +546,9 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     public Boolean isInterestDeductedAtDisbursement() {
-        if (getIntDedDisbursement().equals("1"))
+        if (getIntDedDisbursement().equals("1")) {
             return true;
+        }
         return false;
     }
 
@@ -568,18 +569,23 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     public List<FeeView> getFeesToApply() {
         List<FeeView> feesToApply = new ArrayList<FeeView>();
-        for (FeeView fee : getAdditionalFees())
-            if (fee.getFeeIdValue() != null)
+        for (FeeView fee : getAdditionalFees()) {
+            if (fee.getFeeIdValue() != null) {
                 feesToApply.add(fee);
-        for (FeeView fee : getDefaultFees())
-            if (!fee.isRemoved())
+            }
+        }
+        for (FeeView fee : getDefaultFees()) {
+            if (!fee.isRemoved()) {
                 feesToApply.add(fee);
+            }
+        }
         return feesToApply;
     }
 
     public FeeView getSelectedFee(int index) {
-        while (index >= additionalFees.size())
+        while (index >= additionalFees.size()) {
             additionalFees.add(new FeeView());
+        }
         return additionalFees.get(index);
     }
 
@@ -609,8 +615,9 @@ public class LoanAccountActionForm extends BaseActionForm {
         String method = request.getParameter(Methods.method.toString());
         ActionErrors errors = new ActionErrors();
         UserContext userContext = getUserContext(request);
-        if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+        if (null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        }
         try {
             if (method.equals(Methods.getPrdOfferings.toString())) {
                 checkValidationForGetPrdOfferings(errors, userContext);
@@ -712,10 +719,11 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     private  RateAmountFlag getAdditionalFeeType(List<FeeView> additionalFeeList, String feeId) {
-        for (FeeView fee : additionalFeeList)
+        for (FeeView fee : additionalFeeList) {
             if (fee.getFeeId().equals(feeId)) {
                 return fee.getFeeType();
             }
+        }
         return null;
     }
 
@@ -986,8 +994,9 @@ public class LoanAccountActionForm extends BaseActionForm {
     protected void validateForFeeAmount(ActionErrors errors) {
         List<FeeView> feeList = getFeesToApply();
         for (FeeView fee : feeList) {
-            if (StringUtils.isBlank(fee.getAmount()))
+            if (StringUtils.isBlank(fee.getAmount())) {
                 errors.add(LoanConstants.FEE, new ActionMessage(LoanConstants.ERRORS_SPECIFY_FEE_AMOUNT));
+            }
         }
     }
 
@@ -1000,8 +1009,9 @@ public class LoanAccountActionForm extends BaseActionForm {
             for (FeeView duplicateSelectedfee : getAdditionalFees()) {
                 if (selectedFee.getFeeIdValue() != null
                         && selectedFee.getFeeId().equals(duplicateSelectedfee.getFeeId())) {
-                    if (isSelectedFeePeriodic(selectedFee, additionalFeeList))
+                    if (isSelectedFeePeriodic(selectedFee, additionalFeeList)) {
                         count++;
+                    }
                 }
             }
             if (count > 1) {
@@ -1012,9 +1022,11 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList) {
-        for (FeeView fee : additionalFeeList)
-            if (fee.getFeeId().equals(selectedFee.getFeeId()))
+        for (FeeView fee : additionalFeeList) {
+            if (fee.getFeeId().equals(selectedFee.getFeeId())) {
                 return fee.isPeriodic();
+            }
+        }
         return false;
     }
 
@@ -1034,8 +1046,9 @@ public class LoanAccountActionForm extends BaseActionForm {
                         }
                     }
                 }
-                if (isErrorFound)
+                if (isErrorFound) {
                     break;
+                }
             }
         } catch (PageExpiredException pee) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
@@ -1141,8 +1154,9 @@ public class LoanAccountActionForm extends BaseActionForm {
             }
         }
         int amountValidationErrors = errors.size() - errorsBeforeLoanAmountsValidation;
-        if (amountValidationErrors == 0)
+        if (amountValidationErrors == 0) {
             validateSumOfTheAmountsSpecified(errors);
+        }
     }
 
     private List<FieldConfigurationEntity> getMandatoryFields(HttpServletRequest request) {
@@ -1181,14 +1195,16 @@ public class LoanAccountActionForm extends BaseActionForm {
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
         Locale locale = getUserContext(request).getPreferredLocale();
         try {
-            if (paymentDataBeans == null || paymentDataBeans.size() <= 0)
+            if (paymentDataBeans == null || paymentDataBeans.size() <= 0) {
                 return;
+            }
             CustomerBO customer = getCustomer(request);
             for (PaymentDataTemplate template : paymentDataBeans) {
                 // No data for amount and transaction date, validation not
                 // applicable
-                if (!template.hasValidAmount() || template.getTransactionDate() == null)
+                if (!template.hasValidAmount() || template.getTransactionDate() == null) {
                     continue;
+                }
                 // Meeting date is invalid
                 if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
                         DateUtils.getLastDayOfNextYear())) {
@@ -1227,8 +1243,9 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     void validateTransactionDate(ActionErrors errors, PaymentDataTemplate template, java.util.Date disbursementDate) {
-        if (template.getTotalAmount() == null)
+        if (template.getTotalAmount() == null) {
             return;
+        }
         try {
             if (!DateUtils.dateFallsOnOrBeforeDate(template.getTransactionDate(), DateUtils.currentDate())) {
                 errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(
@@ -1287,15 +1304,17 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     public String getClients(int i) {
-        while (i >= clients.size())
+        while (i >= clients.size()) {
             clients.add("");
+        }
         return clients.get(i).toString();
     }
 
     public void setClients(int i, String string) {
 
-        while (this.clients.size() <= i)
+        while (this.clients.size() <= i) {
             this.clients.add(new String());
+        }
         this.clients.set(i, string);
     }
 

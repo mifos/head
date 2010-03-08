@@ -112,8 +112,9 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
     public void deleteBranchCashConfirmationReports(List<BranchCashConfirmationReportBO> reports)
             throws ServiceException {
         try {
-            for (BranchCashConfirmationReportBO report : reports)
+            for (BranchCashConfirmationReportBO report : reports) {
                 branchCashConfirmationReportPersistence.delete(report);
+            }
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

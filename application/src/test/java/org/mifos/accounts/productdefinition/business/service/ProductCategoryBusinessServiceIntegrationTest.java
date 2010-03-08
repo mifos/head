@@ -68,11 +68,12 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
        Assert.assertEquals(2, productTypeList.size());
         for (ProductTypeEntity productTypeEntity : productTypeList) {
             productTypeEntity.setUserContext(context);
-            if (productTypeEntity.getProductTypeID().equals(ProductType.LOAN.getValue()))
-               Assert.assertEquals("Loan", productTypeEntity.getName());
-            else
+            if (productTypeEntity.getProductTypeID().equals(ProductType.LOAN.getValue())) {
+                Assert.assertEquals("Loan", productTypeEntity.getName());
+            } else {
                 //Assert.assertEquals("Margin Money",productTypeEntity.getName());
-               Assert.assertEquals("Savings", productTypeEntity.getName());
+                   Assert.assertEquals("Savings", productTypeEntity.getName());
+            }
         }
     }
 

@@ -75,26 +75,34 @@ public class BranchReportHeaderDTO {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchReportHeaderDTO other = (BranchReportHeaderDTO) obj;
         if (branchManagerName == null) {
-            if (other.branchManagerName != null)
+            if (other.branchManagerName != null) {
                 return false;
-        } else if (!branchManagerName.equals(other.branchManagerName))
+            }
+        } else if (!branchManagerName.equals(other.branchManagerName)) {
             return false;
+        }
         if (office == null) {
-            if (other.office != null)
+            if (other.office != null) {
                 return false;
-        } else if (!office.equals(other.office))
+            }
+        } else if (!office.equals(other.office)) {
             return false;
+        }
         if (runDate == null) {
-            if (other.runDate != null)
+            if (other.runDate != null) {
                 return false;
-        } else if (!runDate.equals(other.runDate))
+            }
+        } else if (!runDate.equals(other.runDate)) {
             return false;
+        }
         return true;
     }
 }

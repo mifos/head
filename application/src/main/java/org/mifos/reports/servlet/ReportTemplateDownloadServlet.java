@@ -42,19 +42,21 @@ public class ReportTemplateDownloadServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String realPath = request.getParameter("realPath");
         boolean isReportAnAdminDocument = false;
-        if (StringUtils.isBlank(realPath))
+        if (StringUtils.isBlank(realPath)) {
             realPath = "report";
-        else
+        } else {
             isReportAnAdminDocument = true;
+        }
 
         File dir = new File(BirtAdminDocumentUploadAction.getUploadStorageDirectory(), realPath);
         String reportFileName = "";
-        if (isReportAnAdminDocument)
+        if (isReportAnAdminDocument) {
             reportFileName = ((AdminDocumentBO) request.getSession().getAttribute("reportsBO"))
                     .getAdminDocumentIdentifier();
-        else
+        } else {
             reportFileName = ((ReportsBO) request.getSession().getAttribute("reportsBO")).getReportsJasperMap()
                     .getReportJasper();
+        }
 
         File file = new File(dir, reportFileName);
 

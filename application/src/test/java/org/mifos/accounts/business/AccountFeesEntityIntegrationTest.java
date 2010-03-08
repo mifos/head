@@ -125,10 +125,11 @@ public class AccountFeesEntityIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountFeesEntity> accountFeeSet = group.getCustomerAccount().getAccountFees();
        Assert.assertEquals(1, accountFeeSet.size());
         for (AccountFeesEntity periodicFees : center.getCustomerAccount().getAccountFees()) {
-            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
-               Assert.assertEquals(Integer.valueOf(0), periodicFees.getApplicableDatesCount(currentDate));
-            else
-               Assert.assertEquals(Integer.valueOf(1), periodicFees.getApplicableDatesCount(currentDate));
+            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee")) {
+                Assert.assertEquals(Integer.valueOf(0), periodicFees.getApplicableDatesCount(currentDate));
+            } else {
+                Assert.assertEquals(Integer.valueOf(1), periodicFees.getApplicableDatesCount(currentDate));
+            }
         }
     }
 

@@ -102,10 +102,12 @@ public class ReportsDataSourceAction extends BaseAction {
         logger.debug("In ReportsDataSourceAction:loadView Method: ");
         ReportsDataSourceActionForm actionForm = (ReportsDataSourceActionForm) form;
         String strDataSourceId = request.getParameter("dataSourceId");
-        if (strDataSourceId == null)
+        if (strDataSourceId == null) {
             strDataSourceId = actionForm.getDatasourceId() + "";
-        if (strDataSourceId == null || strDataSourceId.equals(""))
+        }
+        if (strDataSourceId == null || strDataSourceId.equals("")) {
             strDataSourceId = "0";
+        }
         int dataSourceId = Integer.parseInt(strDataSourceId);
         actionForm.setDatasourceId(dataSourceId);
         request.getSession().setAttribute("viewDataSource", reportsPersistence.viewDataSource(dataSourceId));

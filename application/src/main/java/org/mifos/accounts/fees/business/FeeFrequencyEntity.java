@@ -81,13 +81,17 @@ public class FeeFrequencyEntity extends PersistentObject {
 
     private void validateFields(FeeFrequencyTypeEntity frequencyType, FeeBO fee, FeePaymentEntity feePayment,
             MeetingBO feeFrequency) throws FeeException {
-        if (fee == null)
+        if (fee == null) {
             throw new FeeException(FeeConstants.INVALID_FEE);
-        if (frequencyType == null)
+        }
+        if (frequencyType == null) {
             throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY_TYPE);
-        if (frequencyType.isOneTime() && feePayment == null)
+        }
+        if (frequencyType.isOneTime() && feePayment == null) {
             throw new FeeException(FeeConstants.INVALID_FEE_PAYEMENT_TYPE);
-        if (frequencyType.isPeriodic() && feeFrequency == null)
+        }
+        if (frequencyType.isPeriodic() && feeFrequency == null) {
             throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY);
+        }
     }
 }

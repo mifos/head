@@ -87,10 +87,11 @@ public class CustomerStatusEntity extends StateEntity {
      * "setOptional(boolean)" because hibernate gets confused.
      */
     public void setIsOptional(boolean optional) {
-        if (optional)
+        if (optional) {
             setOptional(YesNoFlag.YES.getValue());
-        else
+        } else {
             setOptional(YesNoFlag.NO.getValue());
+        }
     }
 
     public Set<CustomerStatusFlagEntity> getFlagSet() {

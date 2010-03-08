@@ -70,38 +70,51 @@ public class BranchCashConfirmationCenterRecoveryBO extends BranchCashConfirmati
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchCashConfirmationCenterRecoveryBO other = (BranchCashConfirmationCenterRecoveryBO) obj;
         if (actual == null) {
-            if (other.actual != null)
+            if (other.actual != null) {
                 return false;
-        } else if (!actual.equals(other.actual))
+            }
+        } else if (!actual.equals(other.actual)) {
             return false;
+        }
         if (arrears == null) {
-            if (other.arrears != null)
+            if (other.arrears != null) {
                 return false;
-        } else if (!arrears.equals(other.arrears))
+            }
+        } else if (!arrears.equals(other.arrears)) {
             return false;
+        }
         if (due == null) {
-            if (other.due != null)
+            if (other.due != null) {
                 return false;
-        } else if (!due.equals(other.due))
+            }
+        } else if (!due.equals(other.due)) {
             return false;
+        }
         if (productOffering == null) {
-            if (other.productOffering != null)
+            if (other.productOffering != null) {
                 return false;
-        } else if (!productOffering.equals(other.productOffering))
+            }
+        } else if (!productOffering.equals(other.productOffering)) {
             return false;
+        }
         if (recoveryId == null) {
-            if (other.recoveryId != null)
+            if (other.recoveryId != null) {
                 return false;
-        } else if (!recoveryId.equals(other.recoveryId))
+            }
+        } else if (!recoveryId.equals(other.recoveryId)) {
             return false;
+        }
         return true;
     }
 }

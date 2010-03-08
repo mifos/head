@@ -230,40 +230,46 @@ public class MeetingActionForm extends BaseActionForm {
 
     private ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
         ActionErrors errors = null;
-        if (Methods.create.toString().equals(method) || Methods.update.toString().equals(method))
+        if (Methods.create.toString().equals(method) || Methods.update.toString().equals(method)) {
             errors = validateMeeting();
+        }
         return errors;
     }
 
     private ActionErrors validateMeeting() {
         ActionErrors errors = new ActionErrors();
-        if (getRecurrenceType() == null)
+        if (getRecurrenceType() == null) {
             errors.add(MeetingConstants.INVALID_RECURRENCETYPE, new ActionMessage(
                     MeetingConstants.INVALID_RECURRENCETYPE));
-        else if (getRecurrenceType().equals(RecurrenceType.WEEKLY))
+        } else if (getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
             validateWeeklyMeeting(errors);
-        else if (getRecurrenceType().equals(RecurrenceType.MONTHLY))
+        } else if (getRecurrenceType().equals(RecurrenceType.MONTHLY)) {
             validateMonthlyMeeting(errors);
+        }
 
-        if (StringUtils.isBlank(getMeetingPlace()))
+        if (StringUtils.isBlank(getMeetingPlace())) {
             errors.add(MeetingConstants.INVALID_MEETINGPLACE, new ActionMessage(MeetingConstants.INVALID_MEETINGPLACE));
+        }
         return errors;
     }
 
     private void validateWeeklyMeeting(ActionErrors errors) {
-        if (getWeekDayValue() == null || getRecurWeekValue() == null)
+        if (getWeekDayValue() == null || getRecurWeekValue() == null) {
             errors.add(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER, new ActionMessage(
                     MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
+        }
     }
 
     private void validateMonthlyMeeting(ActionErrors errors) {
         if (StringUtils.isNotBlank(monthType) && monthType.equals(MeetingConstants.MONTHLY_ON_DATE)) {
-            if (getMonthDayValue() == null || getDayRecurMonthValue() == null)
+            if (getMonthDayValue() == null || getDayRecurMonthValue() == null) {
                 errors.add(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER, new ActionMessage(
                         MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
-        } else if (getMonthRankValue() == null || getMonthWeekValue() == null || getRecurMonthValue() == null)
+            }
+        } else if (getMonthRankValue() == null || getMonthWeekValue() == null || getRecurMonthValue() == null) {
             errors.add(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY, new ActionMessage(
                     MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
+        }
     }
 
     public String getMeetingId() {

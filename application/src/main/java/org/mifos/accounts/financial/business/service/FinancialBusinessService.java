@@ -119,8 +119,9 @@ public class FinancialBusinessService implements BusinessService {
                 .getValue()) {
             baseFinancialActivity = new DisbursalAmountReversalFinancialActivity(accounttrxn);
         }
-        if (baseFinancialActivity != null)
+        if (baseFinancialActivity != null) {
             baseFinancialActivity.buildAccountEntries();
+        }
     }
 
     public List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction, FinancialConstants debitCredit)

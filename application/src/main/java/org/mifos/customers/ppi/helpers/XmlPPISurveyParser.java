@@ -99,8 +99,9 @@ public class XmlPPISurveyParser {
                 mandatory = node.getAttributes().getNamedItem("mandatory").getNodeValue();
                 order = Integer.parseInt(node.getAttributes().getNamedItem("order").getNodeValue());
             }
-            if (name == null || mandatory == null || order == null || questionText == null)
+            if (name == null || mandatory == null || order == null || questionText == null) {
                 throw new IllegalStateException("Malformatted xml file");
+            }
 
             SurveyQuestion surveyQuestion = new SurveyQuestion();
             surveyQuestion.setSurvey(survey);
@@ -137,14 +138,16 @@ public class XmlPPISurveyParser {
             int largestChoice = 0;
             for (QuestionChoice qc : surveyQuestion.getQuestion().getChoices()) {
                 PPIChoice choice = (PPIChoice) qc;
-                if (choice.getPoints() > largestChoice)
+                if (choice.getPoints() > largestChoice) {
                     largestChoice = choice.getPoints();
+                }
             }
             totalPoints += largestChoice;
         }
         int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
-        if (totalPoints > maxPoints)
+        if (totalPoints > maxPoints) {
             throw new ValidationException("Question choices amount to more than " + maxPoints + " points.");
+        }
     }
 
     private void parseQuestionChoices(Element questionNode, Question question, boolean emptyQuestionList) {
@@ -152,10 +155,11 @@ public class XmlPPISurveyParser {
         for (int i = 0; i < choices.getLength(); i++) {
             Node node = choices.item(i);
             PPIChoice choice = new PPIChoice();
-            if (!emptyQuestionList)
+            if (!emptyQuestionList) {
                 choice = (PPIChoice) question.getChoices().get(i);
-            else
+            } else {
                 question.addChoice(choice);
+            }
 
             choice.setChoiceText(node.getTextContent());
             Integer points = Integer.parseInt(node.getAttributes().getNamedItem("points").getNodeValue());

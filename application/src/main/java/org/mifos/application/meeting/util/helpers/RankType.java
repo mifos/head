@@ -35,9 +35,11 @@ public enum RankType {
     }
 
     public static RankType getRankType(final Short value) {
-        for (RankType rank : RankType.values())
-            if (rank.getValue().equals(value))
+        for (RankType rank : RankType.values()) {
+            if (rank.getValue().equals(value)) {
                 return rank;
+            }
+        }
         return null;
     }
 

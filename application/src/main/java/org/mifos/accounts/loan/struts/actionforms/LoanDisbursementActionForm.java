@@ -46,8 +46,9 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
         ActionErrors errors1 = super.validate(mapping, request);
-        if (errors1 != null)
+        if (errors1 != null) {
             errors.add(errors1);
+        }
 
         String method = request.getParameter(MethodNameConstants.METHOD);
         if (isPreviewMethod(method) && getPaymentAmountGreaterThanZero()

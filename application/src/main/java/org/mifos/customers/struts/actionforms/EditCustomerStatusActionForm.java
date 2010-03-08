@@ -221,18 +221,20 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
         UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
-        if (newStatusId == null)
+        if (newStatusId == null) {
             errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
                     resources.getString("Customer.status")));
-        else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId))
+        } else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId)) {
             errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
                     resources.getString("Customer.flag")));
-        if (StringUtils.isBlank(notes))
+        }
+        if (StringUtils.isBlank(notes)) {
             errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX,
                     resources.getString("Customer.notes")));
-        else if (notes.length() > CustomerConstants.COMMENT_LENGTH)
+        } else if (notes.length() > CustomerConstants.COMMENT_LENGTH) {
             errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, resources
                     .getString("Customer.notes"), CustomerConstants.COMMENT_LENGTH));
+        }
         return errors;
     }
 

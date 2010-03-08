@@ -211,15 +211,17 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
         ActivityEntity activity_1 = roleBO.getActivities().get(0);
         for (Iterator<ActivityEntity> iter = activities.iterator(); iter.hasNext();) {
             ActivityEntity activityEntity = iter.next();
-            if (activityEntity.getId().equals(activity_1.getId()))
+            if (activityEntity.getId().equals(activity_1.getId())) {
                 iter.remove();
+            }
         }
 
         ActivityEntity activity_2 = roleBO.getActivities().get(1);
         for (Iterator<ActivityEntity> iter = activities.iterator(); iter.hasNext();) {
             ActivityEntity activityEntity = iter.next();
-            if (activityEntity.getId().equals(activity_2.getId()))
+            if (activityEntity.getId().equals(activity_2.getId())) {
                 iter.remove();
+            }
         }
         roleBO.update(PersonnelConstants.SYSTEM_USER, "Test Role", activities);
         StaticHibernateUtil.commitTransaction();

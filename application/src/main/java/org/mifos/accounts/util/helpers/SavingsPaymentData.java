@@ -39,13 +39,15 @@ public class SavingsPaymentData extends AccountPaymentData {
 
     public SavingsPaymentData(AccountActionDateEntity accountActionDate) {
         super(accountActionDate);
-        if (accountActionDate != null)
+        if (accountActionDate != null) {
             setDepositPaid(((SavingsScheduleEntity) accountActionDate).getTotalDepositDue());
+        }
     }
 
     public SavingsPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
         super(bulkEntryAccountAction);
-        if (bulkEntryAccountAction != null)
+        if (bulkEntryAccountAction != null) {
             setDepositPaid(((CollectionSheetEntrySavingsInstallmentView) bulkEntryAccountAction).getTotalDepositDue());
+        }
     }
 }

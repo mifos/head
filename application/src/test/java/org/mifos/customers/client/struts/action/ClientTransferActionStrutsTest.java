@@ -256,8 +256,9 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
        Assert.assertEquals(1, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-            if (auditLogRecord.getFieldName().equalsIgnoreCase("Group Name"))
+            if (auditLogRecord.getFieldName().equalsIgnoreCase("Group Name")) {
                 matchValues(auditLogRecord, "Group", "Group2");
+            }
         }
         TestObjectFactory.cleanUpChangeLog();
     }
@@ -287,12 +288,13 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
 
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-            if (auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned"))
+            if (auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")) {
                 matchValues(auditLogRecord, "mifos", "-");
-            else if (auditLogRecord.getFieldName().equalsIgnoreCase("Status"))
+            } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Status")) {
                 matchValues(auditLogRecord, "Active", "On Hold");
-            else if (auditLogRecord.getFieldName().equalsIgnoreCase("Branch Office Name"))
+            } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Branch Office Name")) {
                 matchValues(auditLogRecord, "TestBranchOffice", "customer_office");
+            }
         }
         TestObjectFactory.cleanUpChangeLog();
     }

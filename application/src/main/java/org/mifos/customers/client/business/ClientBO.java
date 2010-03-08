@@ -219,8 +219,9 @@ public class ClientBO extends CustomerBO {
         this.lastName = clientNameDetailView.getLastName();
         this.secondLastName = clientNameDetailView.getSecondLastName();
         this.addNameDetailSet(new ClientNameDetailEntity(this, null, clientNameDetailView));
-        if(spouseNameDetailView!=null)
+        if(spouseNameDetailView!=null) {
             this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
+        }
         this.customerDetail = new ClientDetailEntity(this, clientDetailView);
         createPicture(picture);
         offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();

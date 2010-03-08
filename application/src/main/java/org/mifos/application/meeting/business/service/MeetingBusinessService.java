@@ -57,8 +57,9 @@ public class MeetingBusinessService implements BusinessService {
 
     public void checkPermissionForEditMeetingSchedule(CustomerLevel customerLevel, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(customerLevel, userContext, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId,

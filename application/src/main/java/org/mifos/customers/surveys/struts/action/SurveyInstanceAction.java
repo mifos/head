@@ -128,8 +128,9 @@ public class SurveyInstanceAction extends BaseAction {
                     String monthValue = (String) data.get(formName + "_MM");
                     String yearValue = (String) data.get(formName + "_YY");
                     if (StringUtils.isNotBlank(dayValue) && StringUtils.isNotBlank(dayValue)
-                            && StringUtils.isNotBlank(dayValue))
+                            && StringUtils.isNotBlank(dayValue)) {
                         formInput = dayValue + "/" + monthValue + "/" + yearValue;
+                    }
                 } else if (question.getQuestion().getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
                     formInput = "";
                     int size = question.getQuestion().getChoices().size();
@@ -139,12 +140,14 @@ public class SurveyInstanceAction extends BaseAction {
                         String value = (String) data.get(formName + "." + i);
                         formInput += "," + value;
 
-                        if (!value.equals(MULTI_SELECT_EMPTY_STRING))
+                        if (!value.equals(MULTI_SELECT_EMPTY_STRING)) {
                             filled = true;
+                        }
                     }
 
-                    if (!filled)
+                    if (!filled) {
                         formInput = null;
+                    }
                 } else {
                     formInput = (String) data.get(formName);
                 }
@@ -219,8 +222,9 @@ public class SurveyInstanceAction extends BaseAction {
     public static String getGlobalNum(SurveyInstance instance) {
         SurveyType type = instance.getSurvey().getAppliesToAsEnum();
         if (type == SurveyType.ALL) {
-            if (instance.getCustomer() != null)
+            if (instance.getCustomer() != null) {
                 return instance.getCustomer().getGlobalCustNum();
+            }
             return instance.getAccount().getGlobalAccountNum();
         } else if (type == SurveyType.CLIENT || type == SurveyType.CENTER || type == SurveyType.GROUP) {
             return instance.getCustomer().getGlobalCustNum();
@@ -339,10 +343,11 @@ public class SurveyInstanceAction extends BaseAction {
         BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
-        if (survey instanceof PPISurvey)
+        if (survey instanceof PPISurvey) {
             return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
-        else
+        } else {
             return mapping.findForward(ActionForwards.create_entry_success.toString());
+        }
     }
 
     public static String getBusinessObjectName(BusinessObject businessObject) throws Exception {
@@ -465,8 +470,9 @@ public class SurveyInstanceAction extends BaseAction {
         Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
         survey = (Survey) StaticHibernateUtil.getSessionTL().get(Survey.class, survey.getSurveyId());
         String ppi = "";
-        if (survey instanceof PPISurvey)
+        if (survey instanceof PPISurvey) {
             ppi = "_ppi";
+        }
 
         Map<String, Object> results = null;
         ActionMessages errors = new ActionMessages();
@@ -543,10 +549,11 @@ public class SurveyInstanceAction extends BaseAction {
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
         Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
-        if (PPISurvey.class.isInstance(survey))
+        if (PPISurvey.class.isInstance(survey)) {
             return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
-        else
+        } else {
             return mapping.findForward(ActionForwards.create_entry_success.toString());
+        }
     }
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -556,10 +563,11 @@ public class SurveyInstanceAction extends BaseAction {
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
         Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
-        if (PPISurvey.class.isInstance(survey))
+        if (PPISurvey.class.isInstance(survey)) {
             return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
-        else
+        } else {
             return mapping.findForward(ActionForwards.create_entry_success.toString());
+        }
     }
 
     /*
@@ -646,8 +654,9 @@ public class SurveyInstanceAction extends BaseAction {
         }
 
         instance.setSurveyResponses(surveyResponses);
-        if (instance instanceof PPISurveyInstance)
+        if (instance instanceof PPISurveyInstance) {
             ((PPISurveyInstance) instance).initialize();
+        }
 
         persistence.createOrUpdate(instance);
         SurveyType businessType = (SurveyType) request.getSession().getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);

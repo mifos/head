@@ -148,18 +148,19 @@ public class EditCustomerStatusAction extends BaseAction {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.preview.toString()))
+            if (method.equals(Methods.preview.toString())) {
                 forward = ActionForwards.preview_failure.toString();
-            else if (method.equals(Methods.load.toString()))
+            } else if (method.equals(Methods.load.toString())) {
                 forward = getDetailAccountPage(form);
-            else if (method.equals(Methods.update.toString()))
+            } else if (method.equals(Methods.update.toString())) {
                 forward = ActionForwards.update_failure.toString();
-            else if (method.equals(Methods.previewStatus.toString()))
+            } else if (method.equals(Methods.previewStatus.toString())) {
                 forward = ActionForwards.previewStatus_failure.toString();
-            else if (method.equals(Methods.loadStatus.toString()))
+            } else if (method.equals(Methods.loadStatus.toString())) {
                 forward = getDetailAccountPage(form);
-            else if (method.equals(Methods.updateStatus.toString()))
+            } else if (method.equals(Methods.updateStatus.toString())) {
                 forward = ActionForwards.updateStatus_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }
@@ -252,23 +253,25 @@ public class EditCustomerStatusAction extends BaseAction {
         EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
         String input = editStatusActionForm.getInput();
         String forward = null;
-        if (input.equals("center"))
+        if (input.equals("center")) {
             forward = ActionForwards.center_detail_page.toString();
-        else if (input.equals("group"))
+        } else if (input.equals("group")) {
             forward = ActionForwards.group_detail_page.toString();
-        else if (input.equals("client"))
+        } else if (input.equals("client")) {
             forward = ActionForwards.client_detail_page.toString();
+        }
         return forward;
     }
 
     private void checkPermission(CustomerBO customerBO, HttpServletRequest request, Short newStatusId, Short flagId)
             throws Exception {
-        if (null != customerBO.getPersonnel())
+        if (null != customerBO.getPersonnel()) {
             customerService.checkPermissionForStatusChange(newStatusId, getUserContext(request), flagId, customerBO
                     .getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
-        else
+        } else {
             customerService.checkPermissionForStatusChange(newStatusId, getUserContext(request), flagId, customerBO
                     .getOffice().getOfficeId(), getUserContext(request).getId());
+        }
     }
 
     private void loadInitialData(ActionForm form, CustomerBO customerBO, UserContext userContext) throws Exception {
@@ -288,10 +291,12 @@ public class EditCustomerStatusAction extends BaseAction {
         customerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
         Short flagId = null;
         Short newStatusId = null;
-        if (StringUtils.isNotBlank(editStatusActionForm.getFlagId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getFlagId())) {
             flagId = editStatusActionForm.getFlagIdValue();
-        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId()))
+        }
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())) {
             newStatusId = editStatusActionForm.getNewStatusIdValue();
+        }
         checkPermission(customerBO, request, newStatusId, flagId);
         setInitialObjectForAuditLogging(customerBO);
         customerBO.changeStatus(newStatusId, flagId, editStatusActionForm.getNotes());

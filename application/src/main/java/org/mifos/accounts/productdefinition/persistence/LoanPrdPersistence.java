@@ -94,12 +94,16 @@ public class LoanPrdPersistence extends Persistence {
         loanOffering.getGracePeriodType().setLocaleId(localeId);
         loanOffering.getPrincipalGLcode().getGlcode();
         loanOffering.getInterestGLcode().getGlcode();
-        if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0)
-            for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds())
+        if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0) {
+            for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds()) {
                 loanOfferingFund.getFund().getFundName();
-        if (loanOffering.getLoanOfferingFees() != null && loanOffering.getLoanOfferingFees().size() > 0)
-            for (LoanOfferingFeesEntity prdOfferingFees : loanOffering.getLoanOfferingFees())
+            }
+        }
+        if (loanOffering.getLoanOfferingFees() != null && loanOffering.getLoanOfferingFees().size() > 0) {
+            for (LoanOfferingFeesEntity prdOfferingFees : loanOffering.getLoanOfferingFees()) {
                 prdOfferingFees.getFees().getFeeName();
+            }
+        }
 
         return loanOffering;
     }

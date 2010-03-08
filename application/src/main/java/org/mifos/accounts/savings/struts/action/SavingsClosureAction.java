@@ -126,11 +126,12 @@ public class SavingsClosureAction extends BaseAction {
 
         if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue()
                 || (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue() && savings
-                        .getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
+                        .getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue()))) {
             SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings.getCustomer().getChildren(
                     CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
-        else
+        } else {
             SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null, request);
+        }
 
         Money interestAmount = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
         logger.debug("In SavingsClosureAction::load(), Interest calculated:  " + interestAmount);
@@ -149,24 +150,26 @@ public class SavingsClosureAction extends BaseAction {
         AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils.getAttribute(
                 SavingsConstants.ACCOUNT_PAYMENT, request);
         AccountPaymentEntity accountPaymentEntity = null;
-        if (actionForm.getReceiptDate() != null && actionForm.getReceiptDate() != "")
+        if (actionForm.getReceiptDate() != null && actionForm.getReceiptDate() != "") {
             accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm
                     .getReceiptId(), new java.util.Date(DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate())
                     .getTime()), new PaymentTypeEntity(Short.valueOf(actionForm.getPaymentTypeId())),
                     new DateTimeService().getCurrentJavaDateTime());
-        else {
+        } else {
             if (actionForm.getPaymentTypeId() != null && !actionForm.getPaymentTypeId().equals("")) {
-                if (!(actionForm.getPaymentTypeId().equals("")))
+                if (!(actionForm.getPaymentTypeId().equals(""))) {
                     accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(),
                             actionForm.getReceiptId(), null, new PaymentTypeEntity(Short.valueOf(actionForm
                                     .getPaymentTypeId())), new DateTimeService().getCurrentJavaDateTime());
-                else
+                } else {
                     accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(),
                             actionForm.getReceiptId(), null, new PaymentTypeEntity(), new DateTimeService()
                                     .getCurrentJavaDateTime());
-            } else
+                }
+            } else {
                 accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm
                         .getReceiptId(), null, new PaymentTypeEntity(), new DateTimeService().getCurrentJavaDateTime());
+            }
         }
         SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, accountPaymentEntity, request);
         return mapping.findForward("preview_success");
@@ -194,8 +197,9 @@ public class SavingsClosureAction extends BaseAction {
         AccountNotesEntity notes = new AccountNotesEntity(new DateTimeService().getCurrentJavaSqlDate(), actionForm
                 .getNotes(), (new PersonnelPersistence()).getPersonnel(getUserContext(request).getId()), savings);
         CustomerBO customer = searchForCustomer(request, actionForm.getCustomerId());
-        if (customer == null)
+        if (customer == null) {
             customer = savings.getCustomer();
+        }
         savings.closeAccount(payment, notes, customer);
         SessionUtils.removeAttribute(SavingsConstants.CLIENT_LIST, request);
         SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);
@@ -232,8 +236,9 @@ public class SavingsClosureAction extends BaseAction {
         String method = (String) request.getAttribute("methodCalled");
         logger.debug("In SavingsClosureAction::validate(), method: " + method);
         String forward = null;
-        if (method != null && method.equals("preview"))
+        if (method != null && method.equals("preview")) {
             forward = "preview_faliure";
+        }
         return mapping.findForward(forward);
     }
 

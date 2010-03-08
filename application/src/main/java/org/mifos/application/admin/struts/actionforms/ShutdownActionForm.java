@@ -41,8 +41,9 @@ public class ShutdownActionForm extends BaseActionForm {
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
-        if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+        if (null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        }
         ActionErrors errors;
         try {
             errors = validateFields(method);

@@ -112,8 +112,9 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Set<ReportsBO> reportsSet = listOfReportCategories.get(0).getReportsSet();
 
         for (ReportsBO reports : reportsSet) {
-            if (reports.getReportId().equals("1"))
-               Assert.assertEquals("report_designer", reports.getReportIdentifier());
+            if (reports.getReportId().equals("1")) {
+                Assert.assertEquals("report_designer", reports.getReportIdentifier());
+            }
         }
     }
 

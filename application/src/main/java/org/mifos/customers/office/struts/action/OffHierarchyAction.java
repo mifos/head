@@ -87,12 +87,15 @@ public class OffHierarchyAction extends BaseAction {
         officeHierarchyActionForm.setHeadOffice(getStringValue(true));
         officeHierarchyActionForm.setBranchOffice(getStringValue(true));
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-            if (officeLevelEntity.getLevel().equals(OfficeLevel.REGIONALOFFICE))
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.REGIONALOFFICE)) {
                 officeHierarchyActionForm.setRegionalOffice(getStringValue(officeLevelEntity.isConfigured()));
-            if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE))
+            }
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE)) {
                 officeHierarchyActionForm.setSubRegionalOffice(getStringValue(officeLevelEntity.isConfigured()));
-            if (officeLevelEntity.getLevel().equals(OfficeLevel.AREAOFFICE))
+            }
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.AREAOFFICE)) {
                 officeHierarchyActionForm.setAreaOffice(getStringValue(officeLevelEntity.isConfigured()));
+            }
 
         }
     }
@@ -100,12 +103,15 @@ public class OffHierarchyAction extends BaseAction {
     private void updateConfiguredData(OffHierarchyActionForm officeHierarchyActionForm,
             List<OfficeLevelEntity> officeLevels) throws PropertyNotFoundException, OfficeException {
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-            if (officeLevelEntity.getLevel().equals(OfficeLevel.REGIONALOFFICE))
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.REGIONALOFFICE)) {
                 officeLevelEntity.update(officeHierarchyActionForm.getRegionalOfficeValue());
-            if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE))
+            }
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE)) {
                 officeLevelEntity.update(officeHierarchyActionForm.getSubRegionalOfficeValue());
-            if (officeLevelEntity.getLevel().equals(OfficeLevel.AREAOFFICE))
+            }
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.AREAOFFICE)) {
                 officeLevelEntity.update(officeHierarchyActionForm.getAreaOfficeValue());
+            }
 
         }
     }

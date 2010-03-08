@@ -72,8 +72,9 @@ public class SearchAction extends BaseAction {
         SessionUtils.setRemovableAttribute("meth", "previous", TableTagConstants.PATH, request.getSession());
         setPerspective(request);
         String forwardkey = (String) SessionUtils.getAttribute("forwardkey", request.getSession());
-        if (forwardkey == null)
+        if (forwardkey == null) {
             throw new PageExpiredException();
+        }
         return mapping.findForward(forwardkey);
     }
 
@@ -134,8 +135,9 @@ public class SearchAction extends BaseAction {
 
     protected void checkPermissionForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(accountTypes, customerLevel, userContext, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(accountTypes, customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(AccountTypes accountTypes, CustomerLevel customerLevel,

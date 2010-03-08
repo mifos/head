@@ -33,15 +33,17 @@ public class FinancialActionCache {
     private static Map<Short, FinancialActionBO> financialCacheRepository = new HashMap<Short, FinancialActionBO>();
 
     public static void addToCache(FinancialActionBO financialAction) {
-        if ((financialAction != null) && (financialCacheRepository.get(financialAction.getId()) == null))
+        if ((financialAction != null) && (financialCacheRepository.get(financialAction.getId()) == null)) {
             financialCacheRepository.put(financialAction.getId(), financialAction);
+        }
     }
 
     public static FinancialActionBO getFinancialAction(FinancialActionConstants financialActionId)
             throws FinancialException {
         FinancialActionBO financialAction = financialCacheRepository.get(financialActionId.getValue());
-        if (financialAction == null)
+        if (financialAction == null) {
             throw new FinancialException(FinancialExceptionConstants.ACTIONNOTFOUND);
+        }
 
         return financialAction;
     }

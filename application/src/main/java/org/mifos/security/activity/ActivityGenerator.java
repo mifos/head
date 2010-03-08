@@ -74,10 +74,11 @@ public class ActivityGenerator {
             ActivityGeneratorException, PersistenceException {
         ActivityEntity parentActivityEntity;
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
-        if (parentActivity != 0)
+        if (parentActivity != 0) {
             parentActivityEntity = (ActivityEntity) rpp.getPersistentObject(ActivityEntity.class, parentActivity);
-        else
+        } else {
             parentActivityEntity = null;
+        }
         LookUpValueEntity lookupValueEntity = (LookUpValueEntity) rpp.getPersistentObject(LookUpValueEntity.class,
                 lookUpId);
         activityEntity = new ActivityEntity((short) calculateDynamicActivityId(), parentActivityEntity,
@@ -123,11 +124,13 @@ public class ActivityGenerator {
     public static int calculateDynamicActivityId() throws ServiceException, ActivityGeneratorException {
         int activityId = 0;
         for (ActivityEntity activity : new RolesPermissionsBusinessService().getActivities()) {
-            if (activity.getId().intValue() < activityId)
+            if (activity.getId().intValue() < activityId) {
                 activityId = activity.getId();
+            }
         }
-        if (activityId <= Short.MIN_VALUE)
+        if (activityId <= Short.MIN_VALUE) {
             throw new ActivityGeneratorException();
+        }
         int newActivityId = activityId - 1;
 
         return newActivityId;

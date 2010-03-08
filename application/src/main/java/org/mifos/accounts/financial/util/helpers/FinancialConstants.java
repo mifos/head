@@ -38,9 +38,11 @@ public enum FinancialConstants {
     }
 
     public static FinancialConstants fromValue(short value) {
-        for (FinancialConstants f : values())
-            if (value == f.getValue())
+        for (FinancialConstants f : values()) {
+            if (value == f.getValue()) {
                 return f;
+            }
+        }
         throw new IllegalArgumentException("unknown value given");
     }
 }

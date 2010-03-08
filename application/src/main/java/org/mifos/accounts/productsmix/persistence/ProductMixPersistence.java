@@ -68,9 +68,11 @@ public class ProductMixPersistence extends Persistence {
     }
 
     public boolean doesPrdOfferingsCanCoexist(Short idPrdOff_A, Short idPrdOff_B) throws PersistenceException {
-        if (null == getPrdOfferingMixByPrdOfferingID(idPrdOff_A, idPrdOff_B))
-            if (null == getPrdOfferingMixByPrdOfferingID(idPrdOff_B, idPrdOff_A))
+        if (null == getPrdOfferingMixByPrdOfferingID(idPrdOff_A, idPrdOff_B)) {
+            if (null == getPrdOfferingMixByPrdOfferingID(idPrdOff_B, idPrdOff_A)) {
                 return true;
+            }
+        }
 
         return false;
 

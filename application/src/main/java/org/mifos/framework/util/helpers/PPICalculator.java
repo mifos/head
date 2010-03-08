@@ -32,16 +32,18 @@ public class PPICalculator {
     public static int calculateScore(SurveyInstance instance) {
         int sum = 0;
 
-        if (!PPISurvey.class.isInstance(instance.getSurvey()))
+        if (!PPISurvey.class.isInstance(instance.getSurvey())) {
             throw new RuntimeException("Survey is not a PPI survey");
+        }
 
         for (SurveyResponse response : instance.getSurveyResponses()) {
             PPIChoice choice = (PPIChoice) response.getChoiceValue();
             sum += choice.getPoints();
         }
         int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
-        if (sum > maxPoints)
+        if (sum > maxPoints) {
             throw new RuntimeException("Index is larger that " + maxPoints);
+        }
 
         return sum;
     }

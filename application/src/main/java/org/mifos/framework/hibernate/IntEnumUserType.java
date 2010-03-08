@@ -132,10 +132,12 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
     }
 
     public boolean equals(Object x, Object y) throws HibernateException {
-        if (x == y)
+        if (x == y) {
             return true;
-        if (null == x || null == y)
+        }
+        if (null == x || null == y) {
             return false;
+        }
         return x.equals(y);
     }
 }

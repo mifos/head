@@ -77,19 +77,22 @@ public class PrdConfActionForm extends BaseActionForm {
         String latenessDays = resources.getString("product.latenessDays");
         String dormancyDays = resources.getString("product.dormancyDays");
         if (method.equals(Methods.update.toString())) {
-            if (StringUtils.isBlank(getLatenessDays()))
+            if (StringUtils.isBlank(getLatenessDays())) {
                 addError(errors, "latenessDays", ProductDefinitionConstants.ERROR_MANDATORY, latenessDays);
-            else if (getIntegerValue(getLatenessDays()) > 32767)
+            } else if (getIntegerValue(getLatenessDays()) > 32767) {
                 addError(errors, "latenessDays", ProductDefinitionConstants.ERROR_MAX_DAYS, latenessDays,
                         ProductDefinitionConstants.MAX_DAYS);
-            if (StringUtils.isBlank(getDormancyDays()))
+            }
+            if (StringUtils.isBlank(getDormancyDays())) {
                 addError(errors, "dormancyDays", ProductDefinitionConstants.ERROR_MANDATORY, dormancyDays);
-            else if (getIntegerValue(getDormancyDays()) > 32767)
+            } else if (getIntegerValue(getDormancyDays()) > 32767) {
                 addError(errors, "dormancyDays", ProductDefinitionConstants.ERROR_MAX_DAYS, dormancyDays,
                         ProductDefinitionConstants.MAX_DAYS);
+            }
         }
-        if (!method.equals(Methods.validate.toString()))
+        if (!method.equals(Methods.validate.toString())) {
             request.setAttribute("methodCalled", method);
+        }
         return errors;
     }
 }

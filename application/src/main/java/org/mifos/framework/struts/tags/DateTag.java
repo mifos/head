@@ -141,8 +141,9 @@ public class DateTag extends BaseInputTag {
                 day = stdt.nextToken();
             } else if (token.equalsIgnoreCase("M")) {
                 month = stdt.nextToken();
-            } else
+            } else {
                 year = stdt.nextToken();
+            }
         }
 
         // Assert that we got valid values
@@ -212,8 +213,9 @@ public class DateTag extends BaseInputTag {
         if (getRenderstyle().equalsIgnoreCase("simplemapped")) {
             String dateProperty = "dateValue(" + property + ")";
             value = TagUtils.getInstance().lookup(pageContext, name, dateProperty, null);
-        } else
+        } else {
             value = TagUtils.getInstance().lookup(pageContext, name, property, null);
+        }
         if (value == null) {
             return "";
         }
@@ -266,36 +268,39 @@ public class DateTag extends BaseInputTag {
         XmlBuilder htmlBuilderYear = new XmlBuilder();
 
         if (dateFunction.equals("")) {
-            if (disabled)
+            if (disabled) {
                 htmlBuilderDay
                         .singleTag("input", "type", "text", "id", dateName + "DD", "name", dateName + "DD",
                                 "maxlength", "2", "size", "2", "value", ddValue, "style", "width:1.5em", "disabled",
                                 "disabled");
-            else
+            } else {
                 htmlBuilderDay.singleTag("input", "type", "text", "id", dateName + "DD", "name", dateName + "DD",
                         "maxlength", "2", "size", "2", "value", ddValue, "style", "width:1.5em");
+            }
             htmlBuilderDay.nonBreakingSpace();
             htmlBuilderDay.text("DD");
             htmlBuilderDay.nonBreakingSpace();
 
-            if (disabled)
+            if (disabled) {
                 htmlBuilderMonth
                         .singleTag("input", "type", "text", "id", dateName + "MM", "name", dateName + "MM",
                                 "maxlength", "2", "size", "2", "value", mmValue, "style", "width:1.5em", "disabled",
                                 "disabled");
-            else
+            } else {
                 htmlBuilderMonth.singleTag("input", "type", "text", "id", dateName + "MM", "name", dateName + "MM",
                         "maxlength", "2", "size", "2", "value", mmValue, "style", "width:1.5em");
+            }
             htmlBuilderMonth.nonBreakingSpace();
             htmlBuilderMonth.text("MM");
             htmlBuilderMonth.nonBreakingSpace();
 
-            if (disabled)
+            if (disabled) {
                 htmlBuilderYear.singleTag("input", "type", "text", "id", dateName + "YY", "name", dateName + "YY",
                         "maxlength", "4", "size", "4", "value", yyValue, "style", "width:3em", "disabled", "disabled");
-            else
+            } else {
                 htmlBuilderYear.singleTag("input", "type", "text", "id", dateName + "YY", "name", dateName + "YY",
                         "maxlength", "4", "size", "4", "value", yyValue, "style", "width:3em");
+            }
             htmlBuilderYear.nonBreakingSpace();
             htmlBuilderYear.text("YYYY");
             htmlBuilderYear.nonBreakingSpace();
@@ -305,38 +310,41 @@ public class DateTag extends BaseInputTag {
             strFirstPart = dateFunction.substring(0, dateFunction.indexOf(","));
             strSecondPart = dateFunction.substring(dateFunction.indexOf(",") + 1);
 
-            if (disabled)
+            if (disabled) {
                 htmlBuilderDay.singleTag("input", "type", "text", "id", dateName + "DD", "name", dateName + "DD",
                         "maxlength", "2", "size", "2", "value", ddValue, strFirstPart, strSecondPart, "style",
                         "width:1.5em", "disabled", "disabled");
-            else
+            } else {
                 htmlBuilderDay.singleTag("input", "type", "text", "id", dateName + "DD", "name", dateName + "DD",
                         "maxlength", "2", "size", "2", "value", ddValue, strFirstPart, strSecondPart, "style",
                         "width:1.5em");
+            }
             htmlBuilderDay.nonBreakingSpace();
             htmlBuilderDay.text("DD");
             htmlBuilderDay.nonBreakingSpace();
 
-            if (disabled)
+            if (disabled) {
                 htmlBuilderMonth.singleTag("input", "type", "text", "id", dateName + "MM", "name", dateName + "MM",
                         "maxlength", "2", "size", "2", "value", mmValue, strFirstPart, strSecondPart, "style",
                         "width:1.5em", "disabled", "disabled");
-            else
+            } else {
                 htmlBuilderMonth.singleTag("input", "type", "text", "id", dateName + "MM", "name", dateName + "MM",
                         "maxlength", "2", "size", "2", "value", mmValue, strFirstPart, strSecondPart, "style",
                         "width:1.5em");
+            }
             htmlBuilderMonth.nonBreakingSpace();
             htmlBuilderMonth.text("MM");
             htmlBuilderMonth.nonBreakingSpace();
 
-            if (disabled)
+            if (disabled) {
                 htmlBuilderYear.singleTag("input", "type", "text", "id", dateName + "YY", "name", dateName + "YY",
                         "maxlength", "4", "size", "4", "value", yyValue, strFirstPart, strSecondPart, "style",
                         "width:3em", "disabled", "disabled");
-            else
+            } else {
                 htmlBuilderYear.singleTag("input", "type", "text", "id", dateName + "YY", "name", dateName + "YY",
                         "maxlength", "4", "size", "4", "value", yyValue, strFirstPart, strSecondPart, "style",
                         "width:3em");
+            }
             htmlBuilderYear.nonBreakingSpace();
             htmlBuilderYear.text("YYYY");
             htmlBuilderYear.nonBreakingSpace();
@@ -366,36 +374,39 @@ public class DateTag extends BaseInputTag {
         XmlBuilder htmlBuilderYear = new XmlBuilder();
         boolean disabled = getIsDisabled() != null && getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
 
-        if (disabled)
+        if (disabled) {
             htmlBuilderDay.singleTag("input", "type", "text", "id", "value" + "(" + dateName + "_DD)", "name", "value"
                     + "(" + dateName + "_DD)", "maxlength", "2", "size", "2", "value", ddValue, "style", "width:1.5em",
                     "disabled", "disabled");
-        else
+        } else {
             htmlBuilderDay.singleTag("input", "type", "text", "id", "value" + "(" + dateName + "_DD)", "name", "value"
                     + "(" + dateName + "_DD)", "maxlength", "2", "size", "2", "value", ddValue, "style", "width:1.5em");
+        }
         htmlBuilderDay.nonBreakingSpace();
         htmlBuilderDay.text("DD");
         htmlBuilderDay.nonBreakingSpace();
 
-        if (disabled)
+        if (disabled) {
             htmlBuilderMonth.singleTag("input", "type", "text", "id", "value" + "(" + dateName + "_MM)", "name",
                     "value" + "(" + dateName + "_MM)", "maxlength", "2", "size", "2", "value", mmValue, "style",
                     "width:1.5em", "disabled", "disabled");
-        else
+        } else {
             htmlBuilderMonth.singleTag("input", "type", "text", "id", "value" + "(" + dateName + "_MM)", "name",
                     "value" + "(" + dateName + "_MM)", "maxlength", "2", "size", "2", "value", mmValue, "style",
                     "width:1.5em");
+        }
         htmlBuilderMonth.nonBreakingSpace();
         htmlBuilderMonth.text("MM");
         htmlBuilderMonth.nonBreakingSpace();
 
-        if (disabled)
+        if (disabled) {
             htmlBuilderYear.singleTag("input", "type", "text", "id", "value" + "(" + dateName + "_YY)", "name", "value"
                     + "(" + dateName + "_YY)", "maxlength", "4", "size", "4", "value", yyValue, "style", "width:3em",
                     "disabled", "disabled");
-        else
+        } else {
             htmlBuilderYear.singleTag("input", "type", "text", "id", "value" + "(" + dateName + "_YY)", "name", "value"
                     + "(" + dateName + "_YY)", "maxlength", "4", "size", "4", "value", yyValue, "style", "width:3em");
+        }
         htmlBuilderYear.nonBreakingSpace();
         htmlBuilderYear.text("YY");
         htmlBuilderYear.nonBreakingSpace();

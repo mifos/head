@@ -639,12 +639,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         LoanBO loan = (LoanBO) accountBO;
         for (AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()) {
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1")))
+            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 LoanBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                         .getActionDate(), -14));
-            else if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+            } else if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 LoanBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                         .getActionDate(), -7));
+            }
         }
         TestObjectFactory.updateObject(loan);
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());

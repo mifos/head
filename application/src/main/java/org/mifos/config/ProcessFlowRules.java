@@ -93,8 +93,9 @@ public class ProcessFlowRules {
     // "protected" visibility so it can be unit tested; it would otherwise
     // be private
     protected static boolean isValidOverride(boolean fromDb, boolean fromCfg) {
-        if (fromDb && !fromCfg)
+        if (fromDb && !fromCfg) {
             return false;
+        }
         return true;
     }
 
@@ -111,12 +112,13 @@ public class ProcessFlowRules {
     // "protected" visibility so it can be unit tested; it would otherwise
     // be private
     protected static boolean needsOverride(boolean fromDb, boolean fromCfg) throws ConfigurationException {
-        if (fromDb && fromCfg)
+        if (fromDb && fromCfg) {
             return false;
-        else if (!fromDb && !fromCfg)
+        } else if (!fromDb && !fromCfg) {
             return false;
-        else if (!fromDb && fromCfg)
+        } else if (!fromDb && fromCfg) {
             return true;
+        }
 
         throw new ConfigurationException("unexpected override specified [" + fromDb + "], [" + fromCfg + "]");
     }

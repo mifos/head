@@ -165,10 +165,11 @@ public abstract class BaseAction extends DispatchAction {
             joinToken(request);
         } else if (null != annotation && annotation.conditionToken()) {
             String flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-            if (flowKey == null)
+            if (flowKey == null) {
                 createToken(request);
-            else
+            } else {
                 joinToken(request);
+            }
 
         }
     }
@@ -261,15 +262,17 @@ public abstract class BaseAction extends DispatchAction {
             UserContext userContext = (UserContext) request.getSession().getAttribute("UserContext");
             object = getService().getBusinessObject(userContext);
             request.getSession().setAttribute(Constants.BUSINESS_KEY, object);
-        } else
+        } else {
             object = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+        }
         return object;
     }
 
     protected Locale getLocale(UserContext userContext) {
         Locale locale = null;
-        if (userContext != null)
+        if (userContext != null) {
             locale = userContext.getCurrentLocale();
+        }
 
         return locale;
     }
@@ -327,8 +330,9 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected String getStringValue(boolean value) {
-        if (value)
+        if (value) {
             return "1";
+        }
         return "0";
 
     }
@@ -343,8 +347,9 @@ public abstract class BaseAction extends DispatchAction {
 
     protected Date getDateFromString(String strDate, Locale locale) throws InvalidDateException {
         Date date = null;
-        if (StringUtils.isNotBlank(strDate))
+        if (StringUtils.isNotBlank(strDate)) {
             date = new Date(DateUtils.getLocaleDate(locale, strDate).getTime());
+        }
         return date;
     }
 
@@ -389,8 +394,9 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected void checkVersionMismatch(Integer oldVersionNum, Integer newVersionNum) throws ApplicationException {
-        if (!oldVersionNum.equals(newVersionNum))
+        if (!oldVersionNum.equals(newVersionNum)) {
             throw new ApplicationException(Constants.ERROR_VERSION_MISMATCH);
+        }
     }
 
     /*

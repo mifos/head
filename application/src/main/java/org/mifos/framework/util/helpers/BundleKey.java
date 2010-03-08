@@ -34,14 +34,15 @@ public class BundleKey {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof BundleKey))
+        if (obj == null || !(obj instanceof BundleKey)) {
             return false;
-        else {
+        } else {
             BundleKey newObj = (BundleKey) obj;
-            if (newObj.locale.equals(this.locale) && newObj.key.equalsIgnoreCase(this.key))
+            if (newObj.locale.equals(this.locale) && newObj.key.equalsIgnoreCase(this.key)) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         }
     }
 

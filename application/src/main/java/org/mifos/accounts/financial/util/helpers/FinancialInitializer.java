@@ -106,11 +106,13 @@ public class FinancialInitializer {
             } else {
                 COABO account = (COABO) session.load(COABO.class, accountId);
 
-                if (account.getCategoryType() != glAccount.categoryType)
+                if (account.getCategoryType() != glAccount.categoryType) {
                     throw new FinancialException("category type change not supported");
+                }
 
-                if (!accountHierarchyMatch(account, glAccount))
+                if (!accountHierarchyMatch(account, glAccount)) {
                     throw new FinancialException("chart of accounts hierarchy change not supported");
+                }
 
                 if (!account.getAccountName().equals(glAccount.name)) {
                     logger.info("updating general ledger account name. code=" + account.getGlCode() + ". old name="
@@ -129,9 +131,9 @@ public class FinancialInitializer {
 
         COAHierarchyEntity account1hierarchy = account1.getCoaHierarchy().getParentAccount();
         if (null == account1hierarchy) {
-            if (null == account2.parentGlCode)
+            if (null == account2.parentGlCode) {
                 return true;
-            else {
+            } else {
                 logger.error("persisted account has no parent, but new account does");
                 return false;
             }
@@ -152,8 +154,9 @@ public class FinancialInitializer {
      * Reads chart of accounts from the database and caches in memory.
      */
     public static void cacheCOA() throws FinancialException {
-        if (ChartOfAccountsCache.isInitialized())
+        if (ChartOfAccountsCache.isInitialized()) {
             return;
+        }
         Session session = StaticHibernateUtil.getSessionTL();
         Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_COA);
         List<COABO> coaBoList = query.list();
@@ -167,8 +170,9 @@ public class FinancialInitializer {
         try {
             Query queryFinancialAction = session.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
             List<FinancialActionBO> listFinancialAction = queryFinancialAction.list();
-            for (FinancialActionBO fabo : listFinancialAction)
+            for (FinancialActionBO fabo : listFinancialAction) {
                 FinancialActionCache.addToCache(fabo);
+            }
         } catch (Exception e) {
             throw new FinancialException(FinancialExceptionConstants.FINANCIALACTION_INITFAILED, e);
         }

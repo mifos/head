@@ -146,8 +146,9 @@ public class SurveysAction extends BaseAction {
 
     public List<Question> getRemainingQuestions(List<Question> surveyQuestions) throws PersistenceException {
         List<Question> allQuestions = getQuestions();
-        for (Question question : surveyQuestions)
+        for (Question question : surveyQuestions) {
             allQuestions.remove(question);
+        }
         return allQuestions;
     }
 
@@ -206,8 +207,9 @@ public class SurveysAction extends BaseAction {
         try {
             int questionId = Integer.parseInt(actionForm.getValue("newQuestion"));
             Question newQuestion = surveysPersistence.getQuestion(questionId);
-            if (newQuestion == null)
+            if (newQuestion == null) {
                 throw new PersistenceException("Question does not exists");
+            }
             if (questionsList.contains(newQuestion)) {
                 addedQuestions.add(newQuestion);
                 questionsList.remove(newQuestion);
@@ -325,10 +327,11 @@ public class SurveysAction extends BaseAction {
         List<Question> associatedQuestions = new LinkedList<Question>();
         List<Question> questionsList = new LinkedList<Question>();
         for (Question question : getQuestions()) {
-            if (survey.getQuestionById(question.getQuestionId()) != null)
+            if (survey.getQuestionById(question.getQuestionId()) != null) {
                 associatedQuestions.add(question);
-            else
+            } else {
                 questionsList.add(question);
+            }
         }
 
         request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);

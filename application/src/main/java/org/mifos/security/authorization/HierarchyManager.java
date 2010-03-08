@@ -50,18 +50,20 @@ public class HierarchyManager implements Observer {
     }
 
     public static HierarchyManager getInstance() {
-        if (hierarchyManager == null)
+        if (hierarchyManager == null) {
             hierarchyManager = new HierarchyManager();
+        }
         return hierarchyManager;
     }
 
     public void handleEvent(SecurityEvent e) {
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map before" + hierarchyMap);
         List<OfficeCacheView> officeList = convertToOfficeCacheList((List<OfficeSearch>) e.getObject());
-        if (e.getEventType().equals(Constants.CREATE))
+        if (e.getEventType().equals(Constants.CREATE)) {
             updateMapForCreateEvent(officeList);
-        else if (e.getEventType().equals(Constants.UPDATE))
+        } else if (e.getEventType().equals(Constants.UPDATE)) {
             updateMapForUpdateEvent(officeList);
+        }
 
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map after " + hierarchyMap);
     }
@@ -101,8 +103,9 @@ public class HierarchyManager implements Observer {
             throw new OfficeException(e);
         }
         hierarchyMap.clear();
-        for (int i = 0; i < officeList.size(); i++)
+        for (int i = 0; i < officeList.size(); i++) {
             addToMap(officeList.get(i));
+        }
     }
 
     public BranchLocation compareOfficeInHierarchy(UserContext user, short officeId) {

@@ -41,11 +41,13 @@ public class BaseConfig {
     }
 
     private Object getValueFromCache(Key key) {
-        if (key.getOfficeId() == null)
+        if (key.getOfficeId() == null) {
             return null;
+        }
         Object obj = cacheRepo.getValueFromOfficeCache(key);
-        if (obj != null)
+        if (obj != null) {
             return obj;
+        }
         return getValueFromCache(new Key(hierarchyManager.getParentOfficeId(key.getOfficeId()), key.getKey()));
     }
 

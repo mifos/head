@@ -367,21 +367,24 @@ public class MifosSelect extends BodyTagSupport {
             html.append("<tr> <td>" + getLabel() + "</td></tr>");
         }
         String spacedOut = getSpacedOut();
-        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
+        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true"))) {
             html.append("<tr> <td width=\"28%\">");
-        else
+        } else {
             html.append("<tr> <td>");
+        }
         html.append(rawselect[0].toString());
-        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
+        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true"))) {
             html.append("</td><td width=\"31%\" align=\"center\">");
-        else
+        } else {
             html.append("</td><td>");
-        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
+        }
+        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true"))) {
             html.append("<table " + "width=\"70%\" border=\"0\" " + "cellspacing=\"0\" cellpadding=\"3\"> <tr>"
                     + "<td align=\"center\">" + rawbutton[0].toString());
-        else
+        } else {
             html.append("<table " + "width=\"50%\" border=\"0\" " + "cellspacing=\"0\" cellpadding=\"3\"> <tr>"
                     + "<td align=\"center\">" + rawbutton[0].toString());
+        }
 
         html.append("</td></tr><tr><td height=\"26\" align=\"center\">" + rawbutton[1].toString());
         html.append("</td></tr></table></td><td>");
@@ -427,13 +430,14 @@ public class MifosSelect extends BodyTagSupport {
             rawbutton[1].setId(getInput() + ".button.remove");
         }
         if (getLeftListName() == null) {
-            if (getProperty1() != null)
+            if (getProperty1() != null) {
                 rawselect[0].setName(getProperty1());
-            else {
+            } else {
                 rawselect[0].setName("LeftSelect");
             }
-        } else
+        } else {
             rawselect[0].setName(getLeftListName());
+        }
         rawselect[0].setStyle(getSelectStyle());
         rawselect[1].setStyle(getSelectStyle());
         rawselect[1].setName(getProperty());

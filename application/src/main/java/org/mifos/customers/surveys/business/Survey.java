@@ -152,8 +152,9 @@ public class Survey implements Serializable {
 
     public SurveyQuestion getSurveyQuestionById(int id) {
         for (SurveyQuestion surveyQuestion : getQuestions()) {
-            if (surveyQuestion.getSurveyQuestionId() == id)
+            if (surveyQuestion.getSurveyQuestionId() == id) {
                 return surveyQuestion;
+            }
         }
         throw new IllegalArgumentException("Survey does not contain a question with id: " + id);
     }
@@ -161,8 +162,9 @@ public class Survey implements Serializable {
     public Question getQuestionById(int id) {
         for (SurveyQuestion surveyQuestion : this.getQuestions()) {
             Question question = surveyQuestion.getQuestion();
-            if (question.getQuestionId() == id)
+            if (question.getQuestionId() == id) {
                 return question;
+            }
         }
         return null;
     }
@@ -177,8 +179,9 @@ public class Survey implements Serializable {
         surveyQuestion.setQuestion(question);
         surveyQuestion.setOrder(getQuestions().size());
         surveyQuestion.setSurvey(this);
-        if (surveyQuestion.getOrder() == null)
+        if (surveyQuestion.getOrder() == null) {
             surveyQuestion.setOrder(getQuestions().size());
+        }
         getQuestions().add(surveyQuestion);
         return surveyQuestion;
     }

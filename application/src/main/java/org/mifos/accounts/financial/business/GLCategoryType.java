@@ -37,8 +37,9 @@ public enum GLCategoryType {
      */
     public static GLCategoryType fromString(String typeAsString) {
         for (GLCategoryType t : values()) {
-            if (t.toString().equals(typeAsString))
+            if (t.toString().equals(typeAsString)) {
                 return t;
+            }
         }
         throw new IllegalArgumentException("given string does not correspond" + " to any known category type");
     }

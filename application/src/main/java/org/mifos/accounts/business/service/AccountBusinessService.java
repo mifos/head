@@ -155,8 +155,9 @@ public class AccountBusinessService implements BusinessService {
                 applicableChargeList = getLoanApplicableCharges(new AccountPersistence().getAllApplicableFees(
                         accountId, FeeCategory.LOAN), userContext, (LoanBO) account);
             } else if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
-                if (account.getCustomer().getCustomerMeeting() == null)
+                if (account.getCustomer().getCustomerMeeting() == null) {
                     throw new ServiceException(AccountExceptionConstants.APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION);
+                }
                 applicableChargeList = getCustomerApplicableCharges(new AccountPersistence().getAllApplicableFees(
                         accountId, categoryType), userContext, ((CustomerAccountBO) account).getCustomer()
                         .getCustomerMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId());
@@ -169,12 +170,13 @@ public class AccountBusinessService implements BusinessService {
     }
 
     private FeeCategory getCategoryType(CustomerBO customer) {
-        if (customer.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()))
+        if (customer.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())) {
             return FeeCategory.CLIENT;
-        else if (customer.getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue()))
+        } else if (customer.getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())) {
             return FeeCategory.GROUP;
-        else if (customer.getCustomerLevel().getId().equals(CustomerLevel.CENTER.getValue()))
+        } else if (customer.getCustomerLevel().getId().equals(CustomerLevel.CENTER.getValue())) {
             return FeeCategory.CENTER;
+        }
         return null;
     }
 
@@ -249,8 +251,9 @@ public class AccountBusinessService implements BusinessService {
             if (fee.getFeeFrequency().getFeeFrequencyType().getId().equals(FeeFrequencyType.PERIODIC.getValue())) {
                 Short feeRecurrance = fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails()
                         .getRecurrenceTypeEnum().getValue();
-                if (!feeRecurrance.equals(accountMeetingRecurrance))
+                if (!feeRecurrance.equals(accountMeetingRecurrance)) {
                     iter.remove();
+                }
             }
         }
     }
@@ -283,8 +286,9 @@ public class AccountBusinessService implements BusinessService {
             if (feePaymentEntity != null) {
                 Short paymentType = feePaymentEntity.getId();
                 if (paymentType.equals(FeePayment.TIME_OF_FIRSTLOANREPAYMENT.getValue())
-                        && loanBO.isCurrentDateGreaterThanFirstInstallment())
+                        && loanBO.isCurrentDateGreaterThanFirstInstallment()) {
                     iter.remove();
+                }
             }
 
         }
@@ -335,8 +339,9 @@ public class AccountBusinessService implements BusinessService {
     public void checkPermissionForStatusChange(Short newState, UserContext userContext, Short flagSelected,
             Short recordOfficeId, Short recordLoanOfficerId) throws ServiceException {
         if (!isPermissionAllowedForStatusChange(newState, userContext, flagSelected, recordOfficeId,
-                recordLoanOfficerId))
+                recordLoanOfficerId)) {
             throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowedForStatusChange(Short newState, UserContext userContext, Short flagSelected,
@@ -348,8 +353,9 @@ public class AccountBusinessService implements BusinessService {
     public void checkPermissionForAdjustment(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
         if (!isPermissionAllowedForAdjustment(accountTypes, customerLevel, userContext, recordOfficeId,
-                recordLoanOfficerId))
+                recordLoanOfficerId)) {
             throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowedForAdjustment(AccountTypes accountTypes, CustomerLevel customerLevel,
@@ -361,8 +367,9 @@ public class AccountBusinessService implements BusinessService {
     public void checkPermissionForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
         if (!isPermissionAllowedForWaiveDue(waiveEnum, accountTypes, customerLevel, userContext, recordOfficeId,
-                recordLoanOfficerId))
+                recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowedForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes,
@@ -374,8 +381,9 @@ public class AccountBusinessService implements BusinessService {
     public void checkPermissionForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
         if (!isPermissionAllowedForRemoveFees(accountTypes, customerLevel, userContext, recordOfficeId,
-                recordLoanOfficerId))
+                recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowedForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel,

@@ -85,12 +85,13 @@ public class ReportsBusinessService implements BusinessService {
                 }
             }
         }
-        if (objParams.getName() == null || objParams.getName().equals("") || isInUse)
+        if (objParams.getName() == null || objParams.getName().equals("") || isInUse) {
             error = "Parameter Name is blank or has been already Used";
-        else if (objParams.getDescription() == null || objParams.getDescription().equals("") || isInUse)
+        } else if (objParams.getDescription() == null || objParams.getDescription().equals("") || isInUse) {
             error = "Description cannot be blank";
-        else
+        } else {
             reportsPersistence.createReportParams(objParams);
+        }
         return error;
     }
 
@@ -177,16 +178,18 @@ public class ReportsBusinessService implements BusinessService {
                     } catch (Exception e) {
                         error = "Not a Valid Double";
                     }
-                } else
+                } else {
                     parameters.put(paramname, paramvalue);
+                }
 
             }
             request.getSession().setAttribute("paramerror", error);
             if (error.equals("")) {
                 try {
                     String jaspername = "";
-                    if (rjm != null)
+                    if (rjm != null) {
                         jaspername = rjm.getReportJasper() == null ? "" : rjm.getReportJasper();
+                    }
                     jaspername = jaspername.replaceAll(".jasper", ".jrxml");
                     conn = reportsPersistence.getJasperConnection();
 
@@ -223,8 +226,9 @@ public class ReportsBusinessService implements BusinessService {
         } else {
             try {
                 String jaspername = "";
-                if (rjm != null)
+                if (rjm != null) {
                     jaspername = rjm.getReportJasper() == null ? "" : rjm.getReportJasper();
+                }
                 jaspername = jaspername.replaceAll(".jasper", ".jrxml");
                 conn = reportsPersistence.getJasperConnection();
 

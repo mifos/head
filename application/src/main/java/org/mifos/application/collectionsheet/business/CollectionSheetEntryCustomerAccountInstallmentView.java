@@ -95,10 +95,11 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
 
     public Money getTotalFeeDue() {
         Money totalFees = new Money(currency);
-        if (collectionSheetEntryAccountFeeActions != null)
+        if (collectionSheetEntryAccountFeeActions != null) {
             for (CollectionSheetEntryAccountFeeActionView obj : collectionSheetEntryAccountFeeActions) {
                 totalFees = totalFees.add(obj.getFeeDue());
             }
+        }
 
         return totalFees;
     }

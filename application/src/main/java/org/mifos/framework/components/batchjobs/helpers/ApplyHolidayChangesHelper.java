@@ -51,7 +51,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         } catch (Exception e) {
             throw new BatchJobException(e);
         }
-        if (unappliedHolidays != null && !unappliedHolidays.isEmpty())
+        if (unappliedHolidays != null && !unappliedHolidays.isEmpty()) {
             for (HolidayBO holiday : unappliedHolidays) {
                 try {
                     handleHolidayApplication(holiday);
@@ -63,8 +63,10 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                     StaticHibernateUtil.closeSession();
                 }
             }
-        if (errorList.size() > 0)
+        }
+        if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
     }
 
     /*

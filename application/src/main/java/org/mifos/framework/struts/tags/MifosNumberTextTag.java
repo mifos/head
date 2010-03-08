@@ -90,10 +90,12 @@ public class MifosNumberTextTag extends ELTextTag {
     public int doStartTag() throws JspException {
         // get User Preferred Locale
         String preferredUserLocale = LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
-        if (maxValue == null)
+        if (maxValue == null) {
             maxValue = "''";
-        if (minValue == null)
+        }
+        if (minValue == null) {
             minValue = "''";
+        }
         // set the javascript function to be called on blur
         this.setOnblur("FnCheckNumber(event," + minValue + "," + maxValue + ",this);");
         // set the javascript function to be called on keypress

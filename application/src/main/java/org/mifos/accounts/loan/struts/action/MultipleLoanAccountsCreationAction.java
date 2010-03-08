@@ -194,8 +194,9 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
         List<ClientBO> clients = clientBusinessService.getActiveClientsUnderParent(loanActionForm.getCenterSearchId(),
                 getShortValue(loanActionForm.getBranchOfficeId()));
-        if (clients == null || clients.isEmpty())
+        if (clients == null || clients.isEmpty()) {
             throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
+        }
         LoanOfferingBO loanOffering = loanPrdBusinessService.getLoanOffering(getShortValue(loanActionForm
                 .getPrdOfferingId()), getUserContext(request).getLocaleId());
         loanActionForm.setClientDetails(buildClientViewHelper(loanOffering, clients));
@@ -270,8 +271,9 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
     private List<CustomerView> loadCustomers(Short loanOfficerId, Short officeId) throws Exception {
         logger.debug("Inside loadCustomers method");
         CustomerLevel customerLevel = CustomerLevel.CENTER;
-        if (!ClientRules.getCenterHierarchyExists())
+        if (!ClientRules.getCenterHierarchyExists()) {
             customerLevel = CustomerLevel.GROUP;
+        }
         List<CustomerView> activeParentsUnderLoanOfficer = ((MasterDataService) ServiceFactory.getInstance()
                 .getBusinessService(BusinessServiceName.MasterDataService)).getListOfActiveParentsUnderLoanOfficer(
                 loanOfficerId, customerLevel.getValue(), officeId);
@@ -284,8 +286,9 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         MeetingBO customerMeeting = customer.getCustomerMeeting().getMeeting();
         for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter.hasNext();) {
             LoanOfferingBO loanOffering = iter.next();
-            if (!isMeetingMatched(customerMeeting, loanOffering.getLoanOfferingMeeting().getMeeting()))
+            if (!isMeetingMatched(customerMeeting, loanOffering.getLoanOfferingMeeting().getMeeting())) {
                 iter.remove();
+            }
         }
         logger.debug("outside removePrdOfferingsNotMachingCustomerMeeting method");
     }
@@ -320,8 +323,9 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
     protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
             Short officeId, Short loanOfficerId) throws ApplicationException {
         logger.debug("inside checkPermissionForCreate called");
-        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true))
+        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true)) {
             throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(Short newSate, UserContext userContext, Short officeId, Short loanOfficerId,

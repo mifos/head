@@ -71,14 +71,18 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        if (loan != null)
+        if (loan != null) {
             loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loan.getAccountId());
-        if (client != null)
+        }
+        if (client != null) {
             client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
-        if (group != null)
+        }
+        if (group != null) {
             group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-        if (center != null)
+        }
+        if (center != null) {
             center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+        }
         TestObjectFactory.cleanUp(loan);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);

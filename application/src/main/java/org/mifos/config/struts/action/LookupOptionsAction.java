@@ -207,8 +207,9 @@ public class LookupOptionsAction extends BaseAction {
         }
         // edit
         String selectedValue = getSelectedValue(configurationEntity, lookupOptionsActionForm);
-        if (selectedValue == null)
+        if (selectedValue == null) {
             return false;
+        }
         String[] spliteStrList = selectedValue.split(";");
         assert (spliteStrList.length == 2);
         data.setLookupValue(spliteStrList[1]);
@@ -246,32 +247,33 @@ public class LookupOptionsAction extends BaseAction {
         Short valueListId = valueList.getEntityId();
         // save this value and will be retrieved when update the data to db
         SessionUtils.setAttribute(configurationEntityConst, valueListId, request);
-        if (configurationEntity.equals(MasterConstants.SALUTATION))
+        if (configurationEntity.equals(MasterConstants.SALUTATION)) {
             lookupOptionsActionForm.setSalutations(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.PERSONNEL_TITLE))
+        } else if (configurationEntity.equals(MasterConstants.PERSONNEL_TITLE)) {
             lookupOptionsActionForm.setUserTitles(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.MARITAL_STATUS))
+        } else if (configurationEntity.equals(MasterConstants.MARITAL_STATUS)) {
             lookupOptionsActionForm.setMaritalStatuses(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.ETHINICITY))
+        } else if (configurationEntity.equals(MasterConstants.ETHINICITY)) {
             lookupOptionsActionForm.setEthnicities(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.EDUCATION_LEVEL))
+        } else if (configurationEntity.equals(MasterConstants.EDUCATION_LEVEL)) {
             lookupOptionsActionForm.setEducationLevels(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.CITIZENSHIP))
+        } else if (configurationEntity.equals(MasterConstants.CITIZENSHIP)) {
             lookupOptionsActionForm.setCitizenships(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.BUSINESS_ACTIVITIES))
+        } else if (configurationEntity.equals(MasterConstants.BUSINESS_ACTIVITIES)) {
             lookupOptionsActionForm.setBusinessActivities(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.LOAN_PURPOSES))
+        } else if (configurationEntity.equals(MasterConstants.LOAN_PURPOSES)) {
             lookupOptionsActionForm.setPurposesOfLoan(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.COLLATERAL_TYPES))
+        } else if (configurationEntity.equals(MasterConstants.COLLATERAL_TYPES)) {
             lookupOptionsActionForm.setCollateralTypes(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.HANDICAPPED))
+        } else if (configurationEntity.equals(MasterConstants.HANDICAPPED)) {
             lookupOptionsActionForm.setHandicappeds(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.OFFICER_TITLES))
+        } else if (configurationEntity.equals(MasterConstants.OFFICER_TITLES)) {
             lookupOptionsActionForm.setOfficerTitles(valueList.getCustomValueListElements());
-        else if (configurationEntity.equals(MasterConstants.PAYMENT_TYPE))
+        } else if (configurationEntity.equals(MasterConstants.PAYMENT_TYPE)) {
             lookupOptionsActionForm.setPaymentTypes(valueList.getCustomValueListElements());
-        else
+        } else {
             throw new Exception("Invalid configuration type in LookupOptionAction. Type is " + configurationEntity);
+        }
     }
 
     protected Locale getUserLocale(HttpServletRequest request) {

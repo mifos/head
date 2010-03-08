@@ -118,26 +118,27 @@ public class DTOBuilder {
         // handeled for hibernate - integer , string , long , double , date ,
         // short
         try {
-            if (dataType.equals("integer"))
+            if (dataType.equals("integer")) {
                 params[0] = Integer.TYPE;
-            else if (dataType.equals("string"))
+            } else if (dataType.equals("string")) {
                 params[0] = new String("").getClass();
-            else if (dataType.equals("long"))
+            } else if (dataType.equals("long")) {
                 params[0] = Long.TYPE;
-            else if (dataType.equals("date"))
+            } else if (dataType.equals("date")) {
                 params[0] = new java.util.GregorianCalendar().getClass().getSuperclass();
-            else if (dataType.equals("double"))
+            } else if (dataType.equals("double")) {
                 params[0] = Double.TYPE;
-            else if (dataType.equals("short"))
+            } else if (dataType.equals("short")) {
                 params[0] = Short.TYPE;
-            else if (dataType.equals("CHAR"))
+            } else if (dataType.equals("CHAR")) {
                 params[0] = Character.TYPE;
-            else if (dataType.equals("TIMESTAMP"))
+            } else if (dataType.equals("TIMESTAMP")) {
                 params[0] = new java.sql.Timestamp(new DateTimeService().getCurrentDateTime().getMillis()).getClass();
-            else if (dataType.equals("TIME"))
+            } else if (dataType.equals("TIME")) {
                 params[0] = new java.sql.Time(new DateTimeService().getCurrentDateTime().getMillis()).getClass();
-            else
+            } else {
                 return null;
+            }
         } catch (Exception e) {
             throw e;
 

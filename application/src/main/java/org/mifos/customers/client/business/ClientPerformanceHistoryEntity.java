@@ -143,8 +143,9 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public void updateLoanCounter(final LoanOfferingBO loanOffering, YesNoFlag counterFlag) {
-        if (loanCounters == null)
+        if (loanCounters == null) {
             loanCounters = new HashSet<LoanCounter>();
+        }
         LoanCounter loanCounter = null;
         try {
             loanCounter = findLoanCounterForProduct(loanOffering);
@@ -174,12 +175,14 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
     public Integer getLoanCycleNumber() {
         Integer loanCount = 0;
         for (LoanCounter loanCounter : getLoanCounters()) {
-            if (loanCounter.getLoanOffering().isIncludeInLoanCounter())
+            if (loanCounter.getLoanOffering().isIncludeInLoanCounter()) {
                 loanCount += loanCounter.getLoanCycleCounter();
+            }
         }
         if (client.getHistoricalData() != null) {
-            if (client.getHistoricalData().getLoanCycleNumber() == null)
+            if (client.getHistoricalData().getLoanCycleNumber() == null) {
                 client.getHistoricalData().setLoanCycleNumber(0);
+            }
             loanCount += client.getHistoricalData().getLoanCycleNumber();
         }
         return loanCount;

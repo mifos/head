@@ -153,8 +153,9 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTestCa
     }
 
     private void clearCollectionSheets(List<CollectionSheetBO> collectionSheets) {
-        for (CollectionSheetBO collectionSheetBO : collectionSheets)
+        for (CollectionSheetBO collectionSheetBO : collectionSheets) {
             TestObjectFactory.cleanUp(collectionSheetBO);
+        }
     }
 
     private SavingsBO getSavingsAccount(CustomerBO customer, String offeringName, String shortName) throws Exception {

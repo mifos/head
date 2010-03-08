@@ -109,8 +109,9 @@ public class ReportsUploadAction extends BaseAction {
                 }
             }
             String fname = reportUploadFile.getName();
-            if (fname != null)
+            if (fname != null) {
                 fname = fname.replaceAll(".jrxml", ".jasper");
+            }
 
             ReportsJasperMap objmap = new ReportsJasperMap();
             objmap.setReportId((short) reportId);

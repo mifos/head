@@ -58,8 +58,9 @@ public class QueryResultDTOImpl implements QueryResult {
      *
      */
     public void executeQuery(Query query) throws HibernateSearchException {
-        if (query == null)
+        if (query == null) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
+        }
         try {
             scrollResult = query.scroll();
         } catch (HibernateException h) {
@@ -82,8 +83,9 @@ public class QueryResultDTOImpl implements QueryResult {
      *
      */
     public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException {
-        if (queryInputs == null)
+        if (queryInputs == null) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
+        }
         if (queryInputs.getBuildDTO()) {
             this.queryInputs = queryInputs;
             dtoBuilder = new DTOBuilder();
@@ -104,18 +106,18 @@ public class QueryResultDTOImpl implements QueryResult {
             scrollResult.setRowNumber(position);
             returnList = new ArrayList();
             if (position < size) {
-                if (buildDTO)
+                if (buildDTO) {
                     returnList.add(buildDTO(scrollResult.get()));
-                else {
+                } else {
                     Object[] obj = scrollResult.get();
                     returnList.add(obj[0]);
                 }
             }
             for (int i = 0; i < noOfObjects - 1; i++) {
                 if (scrollResult.next()) {
-                    if (buildDTO)
+                    if (buildDTO) {
                         returnList.add(buildDTO(scrollResult.get()));
-                    else {
+                    } else {
                         Object[] obj = scrollResult.get();
                         returnList.add(obj[0]);
                     }
@@ -150,8 +152,9 @@ public class QueryResultDTOImpl implements QueryResult {
      * view at the front end , the associated hibernate session would be closed
      */
     public void close() throws HibernateProcessException {
-        if (scrollResult != null)
+        if (scrollResult != null) {
             scrollResult.close();
+        }
         try {
             QuerySession.closeSession(hibernateSession);
         } catch (HibernateProcessException e) {

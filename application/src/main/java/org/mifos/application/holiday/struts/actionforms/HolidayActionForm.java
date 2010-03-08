@@ -109,9 +109,10 @@ public class HolidayActionForm extends BaseActionForm {
     }
 
     private void verifyFields(ActionErrors actionErrors, UserContext userContext, Locale userLocale) {
-        if (StringUtils.isBlank(holidayName))
+        if (StringUtils.isBlank(holidayName)) {
             actionErrors.add(HolidayConstants.HOLIDAY_NAME, new ActionMessage(HolidayConstants.ERRORMANDATORYFIELD,
                     getLocaleString(HolidayConstants.HOLIDAYNAME, userContext)));
+        }
 
         if (holidayFromDateString != null && !holidayFromDateString.equals("")) {
             try {
@@ -147,7 +148,7 @@ public class HolidayActionForm extends BaseActionForm {
 
     private String getLocaleString(String key, UserContext userContext) {
 
-        if (resourceBundle == null)
+        if (resourceBundle == null) {
             try {
 
                 resourceBundle = ResourceBundle
@@ -158,6 +159,7 @@ public class HolidayActionForm extends BaseActionForm {
                         .getBundle(FilePaths.HOLIDAYSOURCEPATH, userContext.getPreferredLocale());
 
             }
+        }
         return resourceBundle.getString(key);
 
     }
@@ -175,8 +177,9 @@ public class HolidayActionForm extends BaseActionForm {
         Locale userLocale = getUserLocale(request);
 
         if (null != request.getParameter(Constants.CURRENTFLOWKEY)
-                && null == request.getAttribute(Constants.CURRENTFLOWKEY))
+                && null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        }
 
         if (method.equals(Methods.preview.toString()) || method.equals(Methods.editpreview.toString())) {
 
@@ -239,8 +242,9 @@ public class HolidayActionForm extends BaseActionForm {
         this.holidayThruDateString = "";
         this.repaymentRuleId = "";
 
-        if (null != request.getParameter(Constants.CURRENTFLOWKEY))
+        if (null != request.getParameter(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
+        }
     }
 
     protected Locale getUserLocale(HttpServletRequest request) {

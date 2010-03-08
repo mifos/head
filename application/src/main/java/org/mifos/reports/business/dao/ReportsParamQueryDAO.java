@@ -74,8 +74,9 @@ public class ReportsParamQueryDAO {
             }
         } finally {
             try {
-                if (con != null)
+                if (con != null) {
                     con.close();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -131,14 +131,15 @@ public class OfficeListTag extends BodyTagSupport {
         String subregional = "";
         String area = "";
         for (OfficeView level : levels) {
-            if (level.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue()))
+            if (level.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue())) {
                 termForBranch = level.getLevelName();
-            else if (level.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue()))
+            } else if (level.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue())) {
                 area = level.getLevelName();
-            else if (level.getLevelId().equals(OfficeLevel.REGIONALOFFICE.getValue()))
+            } else if (level.getLevelId().equals(OfficeLevel.REGIONALOFFICE.getValue())) {
                 regional = level.getLevelName();
-            else if (level.getLevelId().equals(OfficeLevel.SUBREGIONALOFFICE.getValue()))
+            } else if (level.getLevelId().equals(OfficeLevel.SUBREGIONALOFFICE.getValue())) {
                 subregional = level.getLevelName();
+            }
         }
 
         XmlBuilder result = new XmlBuilder();

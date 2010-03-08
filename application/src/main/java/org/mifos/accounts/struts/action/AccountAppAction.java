@@ -97,13 +97,14 @@ public class AccountAppAction extends BaseAction {
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
         AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-        if (accountBO.getPersonnel() != null)
+        if (accountBO.getPersonnel() != null) {
             getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),
                     accountBO.getCustomer().getLevel(), uc, accountBO.getOffice().getOfficeId(),
                     accountBO.getPersonnel().getPersonnelId());
-        else
+        } else {
             getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),
                     accountBO.getCustomer().getLevel(), uc, accountBO.getOffice().getOfficeId(), uc.getId());
+        }
         accountBO.removeFees(feeId, uc.getId());
         String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
         StringBuilder forward = new StringBuilder();
@@ -136,13 +137,14 @@ public class AccountAppAction extends BaseAction {
         account.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
         WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
-        if (account.getPersonnel() != null)
+        if (account.getPersonnel() != null) {
             getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
                     account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(),
                     account.getPersonnel().getPersonnelId());
-        else
+        } else {
             getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
                     account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(), uc.getId());
+        }
         account.waiveAmountDue(waiveEnum);
         return mapping.findForward("waiveChargesDue_Success");
     }
@@ -156,13 +158,14 @@ public class AccountAppAction extends BaseAction {
         account.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
         WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
-        if (account.getPersonnel() != null)
+        if (account.getPersonnel() != null) {
             getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
                     account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(),
                     account.getPersonnel().getPersonnelId());
-        else
+        } else {
             getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
                     account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(), uc.getId());
+        }
         account.waiveAmountOverDue(waiveEnum);
         return mapping.findForward("waiveChargesOverDue_Success");
     }
@@ -198,8 +201,9 @@ public class AccountAppAction extends BaseAction {
     protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
         for (CustomFieldView customField : customFields) {
             if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNotBlank(customField.getFieldValue()))
+                    && StringUtils.isNotBlank(customField.getFieldValue())) {
                 customField.convertDateToUniformPattern(locale);
+            }
         }
     }
 
@@ -225,9 +229,10 @@ public class AccountAppAction extends BaseAction {
                     }
                 }
             }
-            if (!customFieldPresent)
+            if (!customFieldPresent) {
                 customFields.add(new CustomFieldView(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
                         customFieldDef.getFieldType()));
+            }
         }
         return customFields;
     }

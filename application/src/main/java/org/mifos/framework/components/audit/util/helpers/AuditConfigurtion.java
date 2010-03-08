@@ -307,23 +307,24 @@ public class AuditConfigurtion {
 
         String columnName = "";
         for (String key : keys) {
-            if (key.contains("."))
+            if (key.contains(".")) {
                 columnName = columnName + " " + columnNames.getString(key);
-            else
+            } else {
                 try {
                     columnName = columnName + " " + labelConfig.getLabel(key, locale);
                 } catch (ConfigurationException ce) {
                     // ignore it user may not see the label
                 }
+            }
         }
         return columnName;
     }
 
     private String[] getKeys(String DisplayKey) {
         String keys[] = null;
-        if (DisplayKey.contains(","))
+        if (DisplayKey.contains(",")) {
             keys = DisplayKey.split(",");
-        else {
+        } else {
             keys = new String[] { DisplayKey };
         }
         return keys;

@@ -104,10 +104,11 @@ public class PasswordHashing {
      * @return boolean compare result
      */
     public boolean compare(byte[] encPassword, byte[] decPassword) {
-        if (Arrays.equals(encPassword, decPassword))
+        if (Arrays.equals(encPassword, decPassword)) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**

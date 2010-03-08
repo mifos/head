@@ -69,14 +69,16 @@ public abstract class AbstractReportParameterForm implements ReportParameterForm
 
     protected void removeRequestParams(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
         for (String reportParam : getAllFormParameterNames()) {
-            if (errors.getFieldError(reportParam) != null)
+            if (errors.getFieldError(reportParam) != null) {
                 modifiedRequest.removeParameter(reportParam);
+            }
         }
     }
 
     protected void addErrorIfInvalidRunDate(Errors errors, String runDate, String fieldName, String errorCode) {
-        if (!DateValidator.getInstance().isValid(runDate, reportDatePattern(), false))
+        if (!DateValidator.getInstance().isValid(runDate, reportDatePattern(), false)) {
             errors.rejectValue(fieldName, errorCode);
+        }
     }
 
     protected static String extractBranchId(HttpServletRequest request) {

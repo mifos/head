@@ -131,13 +131,14 @@ public class MeetingAction extends BaseAction {
         CustomerBO customer = getCustomerBusinessService().getCustomer(customerInSession.getCustomerId());
         customer.setVersionNo(customerInSession.getVersionNo());
         customer.setUserContext(getUserContext(request));
-        if (customer.getPersonnel() != null)
+        if (customer.getPersonnel() != null) {
             getMeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(),
                     getUserContext(request), customer.getOffice().getOfficeId(),
                     customer.getPersonnel().getPersonnelId());
-        else
+        } else {
             getMeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(),
                     getUserContext(request), customer.getOffice().getOfficeId(), getUserContext(request).getId());
+        }
         customer.updateMeeting(meeting);
         ActionForwards forward = forwardForUpdate(actionForm.getCustomerLevelValue());
         return mapping.findForward(forward.toString());
@@ -162,18 +163,20 @@ public class MeetingAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         MeetingActionForm maf = (MeetingActionForm) form;
-        if (maf.getInput() == null || maf.getInput().equals(MeetingConstants.INPUT_EDIT))
+        if (maf.getInput() == null || maf.getInput().equals(MeetingConstants.INPUT_EDIT)) {
             return mapping.findForward(method + "_failure");
-        else
+        } else {
             return mapping.findForward(ActionForwards.createMeeting_failure.toString());
+        }
 
     }
 
     private void populateActionForm(HttpServletRequest request, MeetingActionForm form) throws PageExpiredException {
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         clearActionForm(form);
-        if (meeting != null)
+        if (meeting != null) {
             setValuesInActionForm(form, meeting);
+        }
     }
 
     private void setValuesInActionForm(MeetingActionForm form, MeetingBO meeting) {
@@ -214,21 +217,23 @@ public class MeetingAction extends BaseAction {
     }
 
     private ActionForwards forwardForCreate(CustomerLevel customerLevel) {
-        if (customerLevel.equals(CustomerLevel.CENTER))
+        if (customerLevel.equals(CustomerLevel.CENTER)) {
             return ActionForwards.loadCreateCenter;
-        else if (customerLevel.equals(CustomerLevel.GROUP))
+        } else if (customerLevel.equals(CustomerLevel.GROUP)) {
             return ActionForwards.loadCreateGroup;
-        else
+        } else {
             return ActionForwards.loadCreateClient;
+        }
     }
 
     private ActionForwards forwardForUpdate(CustomerLevel customerLevel) {
-        if (customerLevel.equals(CustomerLevel.CENTER))
+        if (customerLevel.equals(CustomerLevel.CENTER)) {
             return ActionForwards.center_detail_page;
-        else if (customerLevel.equals(CustomerLevel.GROUP))
+        } else if (customerLevel.equals(CustomerLevel.GROUP)) {
             return ActionForwards.group_detail_page;
-        else
+        } else {
             return ActionForwards.client_detail_page;
+        }
     }
 
     private MeetingBusinessService getMeetingBusinessService() throws ServiceException {

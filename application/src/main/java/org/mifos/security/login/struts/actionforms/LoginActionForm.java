@@ -99,8 +99,9 @@ public class LoginActionForm extends BaseActionForm {
                 }
             }
         }
-        if (method != null && !method.equals(Methods.validate.toString()))
+        if (method != null && !method.equals(Methods.validate.toString())) {
             request.setAttribute(LoginConstants.METHODCALLED, method);
+        }
         return errors;
     }
 }

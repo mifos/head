@@ -68,8 +68,9 @@ public class MifosConfiguration {
             if (labelCache.containsKey(key)) {
                 labelCache.remove(key);
                 labelCache.put(key, newLabelValue);
-            } else
+            } else {
                 labelCache.put(key, newLabelValue);
+            }
         }
     }
 
@@ -80,8 +81,9 @@ public class MifosConfiguration {
         List<LookUpValueEntity> lookupValueEntities = configurationPersistence.getLookupValues();
         for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
             String keyString = lookupValueEntity.getPropertiesKey();
-            if (keyString == null)
+            if (keyString == null) {
                 keyString = " ";
+            }
 
             labelCache.put(new LabelKey(keyString, MasterDataEntity.CUSTOMIZATION_LOCALE_ID), lookupValueEntity
                     .getMessageText());
@@ -103,8 +105,9 @@ public class MifosConfiguration {
             if (labelCache.containsKey(key)) {
                 labelCache.remove(key);
                 labelCache.put(key, newValue);
-            } else
+            } else {
                 labelCache.put(key, newValue);
+            }
         }
     }
 
@@ -114,8 +117,9 @@ public class MifosConfiguration {
             if (labelCache.containsKey(key)) {
                 labelCache.remove(key);
                 labelCache.put(key, newValue);
-            } else
+            } else {
                 labelCache.put(key, newValue);
+            }
         }
     }
 

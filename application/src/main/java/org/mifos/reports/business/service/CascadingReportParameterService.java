@@ -59,13 +59,15 @@ public class CascadingReportParameterService {
     }
 
     public List<SelectionItem> getBranchOfficesUnderUser(PersonnelBO user) throws ServiceException {
-        if (user == null)
+        if (user == null) {
             return CollectionUtils.asList(NA_BRANCH_OFFICE_SELECTION_ITEM);
+        }
 
         List<SelectionItem> offices = reportsParameterService.getActiveBranchesUnderUser(user.getOfficeSearchId());
 
-        if (offices.isEmpty())
+        if (offices.isEmpty()) {
             return CollectionUtils.asList(NA_BRANCH_OFFICE_SELECTION_ITEM);
+        }
 
         ArrayList<SelectionItem> branchOffices = new ArrayList<SelectionItem>();
         branchOffices.add(SELECT_BRANCH_OFFICE_SELECTION_ITEM);
@@ -106,11 +108,13 @@ public class CascadingReportParameterService {
     public List<SelectionItem> getActiveCentersInBranchForLoanOfficer(Integer branchId, Integer loanOfficerId)
             throws ServiceException {
         List<SelectionItem> activeCenters = new ArrayList<SelectionItem>();
-        if (loanOfficerId == null || SELECT_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId))
+        if (loanOfficerId == null || SELECT_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId)) {
             return CollectionUtils.asList(SELECT_CENTER_SELECTION_ITEM);
+        }
 
-        if (NA_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId))
+        if (NA_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId)) {
             return CollectionUtils.asList(NA_CENTER_SELECTION_ITEM);
+        }
 
         List<SelectionItem> loanOfficers = null;
         if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId)) {
@@ -159,8 +163,9 @@ public class CascadingReportParameterService {
                 for (SelectionItem customer : customers) {
                     List<DateSelectionItem> meetingDatesForCustomer = reportsParameterService.getMeetingDates(
                             branchIdInt, officer.getId(), customer.getId(), today());
-                    if (meetingDatesForCustomer != null)
+                    if (meetingDatesForCustomer != null) {
                         meetingDates.addAll(meetingDatesForCustomer);
+                    }
                 }
             }
         } else {
@@ -170,11 +175,13 @@ public class CascadingReportParameterService {
             }
             List<DateSelectionItem> meetingDatesForOfficerBranchCustomer = reportsParameterService.getMeetingDates(
                     branchIdInt, officerIdInt, customerId, today());
-            if (meetingDatesForOfficerBranchCustomer != null)
+            if (meetingDatesForOfficerBranchCustomer != null) {
                 meetingDates.addAll(meetingDatesForOfficerBranchCustomer);
+            }
         }
-        if (meetingDates.isEmpty())
+        if (meetingDates.isEmpty()) {
             meetingDates.add(NA_MEETING_DATE);
+        }
         return meetingDates;
     }
 

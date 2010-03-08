@@ -196,8 +196,9 @@ public class HolidayBO extends BusinessObject implements Holiday {
             this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
         }
 
-        if (this.getRepaymentRuleEntity().getLookUpValue().equals(RepaymentRuleTypes.SAME_DAY.getValue()))
+        if (this.getRepaymentRuleEntity().getLookUpValue().equals(RepaymentRuleTypes.SAME_DAY.getValue())) {
             this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
+        }
 
         new HolidayPersistence().createOrUpdate(this);
 

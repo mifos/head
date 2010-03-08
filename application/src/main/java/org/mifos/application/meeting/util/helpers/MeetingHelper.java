@@ -83,10 +83,11 @@ public class MeetingHelper {
     public String getMessageWithFrequency(MeetingBO meeting, UserContext userContext) {
         String key = null;
         Object[] args = new Object[1];
-        if (meeting.isWeekly())
+        if (meeting.isWeekly()) {
             key = MeetingConstants.WEEK_FREQUENCY;
-        else if (meeting.isMonthly())
+        } else if (meeting.isMonthly()) {
             key = MeetingConstants.MONTH_FREQUENCY;
+        }
         args[0] = meeting.getMeetingDetails().getRecurAfter();
 
         return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
@@ -96,10 +97,11 @@ public class MeetingHelper {
     public String getDetailMessageWithFrequency(MeetingBO meeting, UserContext userContext) {
         String key = null;
         Object[] args = new Object[1];
-        if (meeting.isWeekly())
+        if (meeting.isWeekly()) {
             key = MeetingConstants.WEEK_SCHEDULE_SHORT;
-        else if (meeting.isMonthly())
+        } else if (meeting.isMonthly()) {
             key = MeetingConstants.MONTH_SCHEDULE_SHORT;
+        }
         args[0] = meeting.getMeetingDetails().getRecurAfter();
 
         return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
@@ -107,9 +109,9 @@ public class MeetingHelper {
     }
 
     private void initializeLocale(MeetingBO meeting, Short localeId) {
-        if (meeting.isWeekly())
+        if (meeting.isWeekly()) {
             meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().setLocaleId(localeId);
-        else if (meeting.isMonthly() && !meeting.isMonthlyOnDate()) {
+        } else if (meeting.isMonthly() && !meeting.isMonthlyOnDate()) {
             meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().setLocaleId(localeId);
             meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().setLocaleId(localeId);
         }

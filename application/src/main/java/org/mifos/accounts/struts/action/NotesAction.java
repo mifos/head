@@ -115,12 +115,13 @@ public class NotesAction extends SearchAction {
         NotesActionForm notesActionForm = (NotesActionForm) form;
         AccountBO accountBO = new AccountBusinessService().getAccount(Integer.valueOf(notesActionForm.getAccountId()));
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        if (accountBO.getPersonnel() != null)
+        if (accountBO.getPersonnel() != null) {
             checkPermissionForAddingNotes(accountBO.getType(), null, uc, accountBO.getOffice().getOfficeId(), accountBO
                     .getPersonnel().getPersonnelId());
-        else
+        } else {
             checkPermissionForAddingNotes(accountBO.getType(), null, uc, accountBO.getOffice().getOfficeId(), uc
                     .getId());
+        }
         AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils.getAttribute(
                 AccountConstants.ACCOUNT_NOTES, request);
         accountBO.addAccountNotes(accountNotes);
@@ -131,10 +132,11 @@ public class NotesAction extends SearchAction {
 
     private String chooseForward(Short accountTypeId) {
         String forward = null;
-        if (accountTypeId.equals(AccountTypes.LOAN_ACCOUNT.getValue()))
+        if (accountTypeId.equals(AccountTypes.LOAN_ACCOUNT.getValue())) {
             forward = ActionForwards.loan_detail_page.toString();
-        else if (accountTypeId.equals(AccountTypes.SAVINGS_ACCOUNT.getValue()))
+        } else if (accountTypeId.equals(AccountTypes.SAVINGS_ACCOUNT.getValue())) {
             forward = ActionForwards.savings_details_page.toString();
+        }
         return forward;
     }
 
@@ -144,10 +146,11 @@ public class NotesAction extends SearchAction {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.preview.toString()))
+            if (method.equals(Methods.preview.toString())) {
                 forward = ActionForwards.preview_failure.toString();
-            else if (method.equals(Methods.create.toString()))
+            } else if (method.equals(Methods.create.toString())) {
                 forward = ActionForwards.create_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }

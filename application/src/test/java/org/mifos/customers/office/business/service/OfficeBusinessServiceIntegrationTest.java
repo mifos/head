@@ -54,10 +54,11 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         List<OfficeView> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
        Assert.assertEquals(2, parents.size());
         for (OfficeView view : parents) {
-            if (view.getLevelId().equals(OfficeLevel.HEADOFFICE))
-               Assert.assertEquals("Head Office", view.getLevelName());
-            else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE))
-               Assert.assertEquals("Area Office", view.getLevelName());
+            if (view.getLevelId().equals(OfficeLevel.HEADOFFICE)) {
+                Assert.assertEquals("Head Office", view.getLevelName());
+            } else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE)) {
+                Assert.assertEquals("Area Office", view.getLevelName());
+            }
         }
     }
 

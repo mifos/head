@@ -52,8 +52,9 @@ public class ConfigurationInitializer {
     private OfficeBO headOffice;
 
     private OfficeBO getHeadOffice() throws ApplicationException {
-        if (headOffice == null)
+        if (headOffice == null) {
             headOffice = new OfficePersistence().getHeadOffice();
+        }
         return headOffice;
     }
 
@@ -92,8 +93,9 @@ public class ConfigurationInitializer {
 
         // get weekday off (not working day)
         List<Short> weekOffList = new FiscalCalendarRules().getWeekDayOffList();
-        if (weekOffList != null)
+        if (weekOffList != null) {
             officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.WEEK_OFF_LIST), weekOffList);
+        }
     }
 
     private void setLateNessAndDormancyDaysForAccount(Map<Key, Object> officeConfigMap) throws SystemException,
@@ -117,11 +119,14 @@ public class ConfigurationInitializer {
     }
 
     static void checkModifiers(Field field) throws ConstantsNotLoadedException {
-        if (!Modifier.isFinal(field.getModifiers()))
+        if (!Modifier.isFinal(field.getModifiers())) {
             throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as final");
-        if (!Modifier.isStatic(field.getModifiers()))
+        }
+        if (!Modifier.isStatic(field.getModifiers())) {
             throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as static");
-        if (!Modifier.isPublic(field.getModifiers()))
+        }
+        if (!Modifier.isPublic(field.getModifiers())) {
             throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as public");
+        }
     }
 }

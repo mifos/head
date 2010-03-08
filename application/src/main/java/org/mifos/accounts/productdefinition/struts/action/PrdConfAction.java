@@ -79,10 +79,12 @@ public class PrdConfAction extends BaseAction {
         PrdConfActionForm prdConfActionForm = (PrdConfActionForm) form;
         List<ProductTypeEntity> productTypes = new ProductCategoryBusinessService().getProductTypes();
         for (ProductTypeEntity productType : productTypes) {
-            if (productType.getProductTypeID().equals(ProductType.LOAN.getValue()))
+            if (productType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
                 productType.update(getShortValue(prdConfActionForm.getLatenessDays()));
-            if (productType.getProductTypeID().equals(ProductType.SAVINGS.getValue()))
+            }
+            if (productType.getProductTypeID().equals(ProductType.SAVINGS.getValue())) {
                 productType.update(getShortValue(prdConfActionForm.getDormancyDays()));
+            }
         }
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -91,8 +93,9 @@ public class PrdConfAction extends BaseAction {
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) {
         String method = (String) request.getAttribute("methodCalled");
-        if (method.equalsIgnoreCase(Methods.update.toString()))
+        if (method.equalsIgnoreCase(Methods.update.toString())) {
             return mapping.findForward(ActionForwards.update_failure.toString());
+        }
         return null;
     }
 }

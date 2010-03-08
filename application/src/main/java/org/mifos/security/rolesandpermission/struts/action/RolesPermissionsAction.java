@@ -181,8 +181,9 @@ public class RolesPermissionsAction extends BaseAction {
             }
         }
         for (ActivityEntity activityEntity : activityList) {
-            if (ids.contains(activityEntity.getId()))
+            if (ids.contains(activityEntity.getId())) {
                 newActivityList.add(activityEntity);
+            }
         }
         return newActivityList;
     }

@@ -59,10 +59,11 @@ public class GroupLoanCounter {
     }
 
     public void updateLoanCounter(YesNoFlag yesNoFlag) {
-        if (yesNoFlag.yes())
+        if (yesNoFlag.yes()) {
             loanCycleCounter++;
-        else
+        } else {
             loanCycleCounter--;
+        }
     }
 
     public boolean isOfSameProduct(PrdOfferingBO prdOffering) {

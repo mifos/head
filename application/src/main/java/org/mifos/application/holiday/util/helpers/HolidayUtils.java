@@ -77,8 +77,9 @@ public class HolidayUtils {
         day.set(pday.get(Calendar.YEAR), pday.get(Calendar.MONTH), pday.get(Calendar.DAY_OF_MONTH));
         Date givenDate = getDateWithoutTimeStamp(day.getTimeInMillis());
         for (HolidayBO holiday : holidays) {
-            if (holiday.encloses(givenDate))
+            if (holiday.encloses(givenDate)) {
                 return holiday;
+            }
         }
         return null;
     }
@@ -92,8 +93,9 @@ public class HolidayUtils {
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
-        if (holiday == null)
+        if (holiday == null) {
             return adjustedDate;
+        }
         return adjustDateUsingRepaymentRule(holiday.getRepaymentRuleId(), adjustedDate, meeting);
     }
 

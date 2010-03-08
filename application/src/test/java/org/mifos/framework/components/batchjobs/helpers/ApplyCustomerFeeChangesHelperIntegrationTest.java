@@ -74,10 +74,12 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
     protected void tearDown() throws Exception {
         try {
             List<CustomerBO> customerList = new ArrayList<CustomerBO>();
-            if (group != null)
+            if (group != null) {
                 customerList.add(group);
-            if (center != null)
+            }
+            if (center != null) {
                 customerList.add(center);
+            }
             TestObjectFactory.cleanUp(customerList);
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db

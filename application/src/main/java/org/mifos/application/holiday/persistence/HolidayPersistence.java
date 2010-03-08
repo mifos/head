@@ -123,10 +123,11 @@ public class HolidayPersistence extends MasterPersistence {
         queryParameters.put("levelId", levelId);
         queryParameters.put("stateId", stateId);
         Integer count;
-        if (isCustomer)
+        if (isCustomer) {
             count = (Integer) execUniqueResultNamedQuery(NamedQueryConstants.CUSTOMER_VALIDATESTATE, queryParameters);
-        else
+        } else {
             count = (Integer) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
+        }
         return count;
     }
 

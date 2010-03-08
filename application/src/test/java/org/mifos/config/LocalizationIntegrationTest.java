@@ -108,9 +108,11 @@ public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private boolean findLocaleId(ArrayList<Short> locales, short localeId) {
-        for (int i = 0; i < locales.size(); i++)
-            if (locales.get(i).shortValue() == localeId)
+        for (int i = 0; i < locales.size(); i++) {
+            if (locales.get(i).shortValue() == localeId) {
                 return true;
+            }
+        }
         return false;
     }
 

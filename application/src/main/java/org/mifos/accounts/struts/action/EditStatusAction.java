@@ -127,10 +127,12 @@ public class EditStatusAction extends BaseAction {
         setInitialObjectForAuditLogging(accountBO);
         Short flagId = null;
         Short newStatusId = null;
-        if (StringUtils.isNotBlank(editStatusActionForm.getFlagId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getFlagId())) {
             flagId = getShortValue(editStatusActionForm.getFlagId());
-        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId()))
+        }
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())) {
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
+        }
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
         accountBO.changeStatus(newStatusId, flagId, editStatusActionForm.getNotes());
         accountBOInSession = null;
@@ -145,12 +147,13 @@ public class EditStatusAction extends BaseAction {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.preview.toString()))
+            if (method.equals(Methods.preview.toString())) {
                 forward = ActionForwards.preview_failure.toString();
-            else if (method.equals(Methods.load.toString()))
+            } else if (method.equals(Methods.load.toString())) {
                 forward = getDetailAccountPage(form);
-            else if (method.equals(Methods.update.toString()))
+            } else if (method.equals(Methods.update.toString())) {
                 forward = ActionForwards.update_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }
@@ -172,10 +175,11 @@ public class EditStatusAction extends BaseAction {
         EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
         String input = editStatusActionForm.getInput();
         String forward = null;
-        if (input.equals("loan"))
+        if (input.equals("loan")) {
             forward = ActionForwards.loan_detail_page.toString();
-        else if (input.equals("savings"))
+        } else if (input.equals("savings")) {
             forward = ActionForwards.savings_details_page.toString();
+        }
         return forward;
     }
 
@@ -189,15 +193,17 @@ public class EditStatusAction extends BaseAction {
                 getShortValue(editStatusActionForm.getNewStatusId()),
                 getShortValue(editStatusActionForm.getAccountTypeId()));
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
-        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId()))
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())) {
             newStatusName = getAccountBusinessService().getStatusName(userContext.getLocaleId(),
                     AccountState.fromShort(getShortValue(editStatusActionForm.getNewStatusId())), accountBO.getType());
+        }
         SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, newStatusName, request);
         if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())
-                && isNewStatusIsCancel(getShortValue(editStatusActionForm.getNewStatusId())))
+                && isNewStatusIsCancel(getShortValue(editStatusActionForm.getNewStatusId()))) {
             flagName = getAccountBusinessService().getFlagName(userContext.getLocaleId(),
                     AccountStateFlag.getStatusFlag(getShortValue(editStatusActionForm.getFlagId())),
                     accountBO.getType());
+        }
         SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, flagName, request);
     }
 
@@ -222,11 +228,12 @@ public class EditStatusAction extends BaseAction {
 
     private void checkPermission(AccountBO accountBO, UserContext userContext, Short newStatusId, Short flagId)
             throws Exception {
-        if (null != accountBO.getPersonnel())
+        if (null != accountBO.getPersonnel()) {
             getAccountBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
                     accountBO.getOffice().getOfficeId(), accountBO.getPersonnel().getPersonnelId());
-        else
+        } else {
             getAccountBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
                     accountBO.getOffice().getOfficeId(), userContext.getId());
+        }
     }
 }

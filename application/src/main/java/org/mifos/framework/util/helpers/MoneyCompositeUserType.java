@@ -64,10 +64,11 @@ public class MoneyCompositeUserType implements CompositeUserType {
 
     public Object getPropertyValue(Object component, int property) throws HibernateException {
         Money money = (Money) component;
-        if (property == 0)
+        if (property == 0) {
             return money.getCurrency();
-        else
+        } else {
             return money.getAmount();
+        }
     }
 
     public void setPropertyValue(Object component, int property, Object value) throws HibernateException {
@@ -79,10 +80,12 @@ public class MoneyCompositeUserType implements CompositeUserType {
     }
 
     public boolean equals(Object money1, Object money2) throws HibernateException {
-        if (money1 == money2)
+        if (money1 == money2) {
             return true;
-        if (money1 == null || money2 == null)
+        }
+        if (money1 == null || money2 == null) {
             return false;
+        }
         return money1.equals(money2);
     }
 
@@ -93,8 +96,9 @@ public class MoneyCompositeUserType implements CompositeUserType {
     public Object nullSafeGet(ResultSet resultSet, String[] names, SessionImplementor session, Object owner)
             throws HibernateException, SQLException {
         MifosCurrency currency = null;
-        if (resultSet == null)
+        if (resultSet == null) {
             return null;
+        }
         Short currencyId = resultSet.getShort(names[0]);
         MifosCurrency configCurrency = Configuration.getInstance().getSystemConfig().getCurrency();
         // If currency id retrieved has a value of 0 or is null then the default

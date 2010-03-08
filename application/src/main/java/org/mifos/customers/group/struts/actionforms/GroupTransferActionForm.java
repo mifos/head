@@ -64,8 +64,9 @@ public class GroupTransferActionForm extends BaseActionForm {
             }
 
         }
-        if (method != null && !method.equals(Methods.validate.toString()))
+        if (method != null && !method.equals(Methods.validate.toString())) {
             request.setAttribute(GroupConstants.METHODCALLED, method);
+        }
         return errors;
     }
 

@@ -111,8 +111,9 @@ public class LoanService implements Service {
 
     protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
             Short officeId, Short loanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true))
+        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true)) {
             throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(Short newSate, UserContext userContext, Short officeId, Short loanOfficerId,

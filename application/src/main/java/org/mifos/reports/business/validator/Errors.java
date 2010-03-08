@@ -58,8 +58,9 @@ public class Errors {
 
     public ErrorEntry getFieldError(String fieldName) {
         for (ErrorEntry errorEntry : errors) {
-            if (errorEntry.fieldName.equals(fieldName))
+            if (errorEntry.fieldName.equals(fieldName)) {
                 return errorEntry;
+            }
         }
         return null;
     }

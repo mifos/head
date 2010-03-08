@@ -186,8 +186,9 @@ public class LatestTestAfterCheckpointIntegrationTest {
     private void upgradeNextVersion(int nextVersion) throws Exception {
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
         Upgrade upgrade = persistence.findUpgrade(nextVersion);
-        if (upgrade instanceof SqlUpgrade)
+        if (upgrade instanceof SqlUpgrade) {
             assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
+        }
 
         upgrade.upgrade(connection);
     }

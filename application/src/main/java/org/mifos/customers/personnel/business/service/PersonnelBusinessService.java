@@ -121,8 +121,9 @@ public class PersonnelBusinessService implements BusinessService {
         PersonnelBO personnel = null;
         try {
             personnel = new PersonnelPersistence().getPersonnelByUserName(personnelName);
-            if (personnel == null)
+            if (personnel == null) {
                 throw new ServiceException(LoginConstants.KEYINVALIDUSER);
+            }
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

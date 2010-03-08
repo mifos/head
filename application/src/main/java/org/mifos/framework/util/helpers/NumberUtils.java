@@ -39,17 +39,20 @@ public class NumberUtils {
     }
 
     public static boolean isDigits(String number) {
-        if (number == null)
+        if (number == null) {
             return false;
-        if (number.startsWith("-"))
+        }
+        if (number.startsWith("-")) {
             number = number.substring(1);
+        }
         return org.apache.commons.lang.math.NumberUtils.isDigits(number);
     }
 
     public static BigDecimal getPercentage(Number part, Number full) {
         float fullValue = full.floatValue();
-        if (fullValue == 0.0)
+        if (fullValue == 0.0) {
             return BigDecimal.ZERO;
+        }
         return BigDecimal.valueOf(part.floatValue() / fullValue * 100f);
     }
 
@@ -58,8 +61,9 @@ public class NumberUtils {
     }
 
     public static Integer nullSafeValue(Integer value, int defaultValue) {
-        if (value == null)
+        if (value == null) {
             return defaultValue;
+        }
         return value;
     }
 

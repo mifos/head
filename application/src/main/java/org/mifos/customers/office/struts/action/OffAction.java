@@ -89,10 +89,11 @@ public class OffAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         OffActionForm offActionForm = (OffActionForm) form;
         loadParents(request, offActionForm);
-        if (offActionForm.getInput() != null && offActionForm.getInput().equals("edit"))
+        if (offActionForm.getInput() != null && offActionForm.getInput().equals("edit")) {
             return mapping.findForward(ActionForwards.edit_success.toString());
-        else
+        } else {
             return mapping.findForward(ActionForwards.load_success.toString());
+        }
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -163,8 +164,9 @@ public class OffAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         OffActionForm actionForm = (OffActionForm) form;
         OfficeBO officeBO = null;
-        if (StringUtils.isBlank(actionForm.getOfficeId()))
+        if (StringUtils.isBlank(actionForm.getOfficeId())) {
             throw new OfficeException(OfficeConstants.KEYGETFAILED);
+        }
         officeBO = ((OfficeBusinessService) getService()).getOffice(Short.valueOf(actionForm.getOfficeId()));
         actionForm.clear();
         loadCustomFieldDefinitions(request);
@@ -216,18 +218,21 @@ public class OffAction extends BaseAction {
         office.setVersionNo(sessionOffice.getVersionNo());
         office.setUserContext(getUserContext(request));
         OfficeStatus newStatus = null;
-        if (getShortValue(offActionForm.getOfficeStatus()) != null)
+        if (getShortValue(offActionForm.getOfficeStatus()) != null) {
             newStatus = OfficeStatus.getOfficeStatus(getShortValue(offActionForm.getOfficeStatus()));
+        }
         OfficeLevel newlevel = OfficeLevel.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
         OfficeBO parentOffice = null;
-        if (getShortValue(offActionForm.getParentOfficeId()) != null)
+        if (getShortValue(offActionForm.getParentOfficeId()) != null) {
             parentOffice = ((OfficeBusinessService) getService()).getOffice(getShortValue(offActionForm
                     .getParentOfficeId()));
+        }
 
-        if (parentOffice != null && !office.getParentOffice().getOfficeId().equals(parentOffice.getOfficeId()))
+        if (parentOffice != null && !office.getParentOffice().getOfficeId().equals(parentOffice.getOfficeId())) {
             forward = mapping.findForward(ActionForwards.update_cache_success.toString());
-        else
+        } else {
             forward = mapping.findForward(ActionForwards.update_success.toString());
+        }
 
         office.update(offActionForm.getOfficeName(), offActionForm.getShortName(), newStatus, newlevel, parentOffice,
                 offActionForm.getAddress(), offActionForm.getCustomFields());
@@ -244,11 +249,12 @@ public class OffAction extends BaseAction {
         // get the office
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         List<CustomFieldView> customfields = new ArrayList<CustomFieldView>();
-        if (office.getCustomFields() != null && office.getCustomFields().size() > 0)
+        if (office.getCustomFields() != null && office.getCustomFields().size() > 0) {
             for (OfficeCustomFieldEntity customField : office.getCustomFields()) {
                 customfields.add(new CustomFieldView(customField.getFieldId(), customField.getFieldValue(),
                         CustomFieldType.NONE));
             }
+        }
         offActionForm.setCustomFields(customfields);
     }
 
@@ -260,8 +266,9 @@ public class OffAction extends BaseAction {
                     newOfficeList.add(officeBO);
                 }
             }
-            if (newOfficeList.isEmpty())
+            if (newOfficeList.isEmpty()) {
                 return null;
+            }
             return newOfficeList;
         }
         return null;
@@ -287,14 +294,14 @@ public class OffAction extends BaseAction {
                     request).getLocaleId());
             OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-            if (form.getInput() != null && form.getInput().equals("edit") && office != null)
-
+            if (form.getInput() != null && form.getInput().equals("edit") && office != null) {
                 for (int i = 0; i < parents.size(); i++) {
                     OfficeView view = parents.get(i);
                     if (view.getOfficeId().equals(office.getOfficeId())) {
                         parents.remove(view);
                     }
                 }
+            }
             SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, parents, request);
         }
     }

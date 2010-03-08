@@ -347,8 +347,9 @@ public class MifosMasterTag extends BodyTagSupport {
     protected String getJavaScriptSource() {
         StringBuffer result = new StringBuffer();
         result.append("<script src=\"");
-        if (getScriptSrc() != null)
+        if (getScriptSrc() != null) {
             result.append(getScriptSrc());
+        }
         result.append("\"></script>");
         return result.toString();
     }

@@ -41,11 +41,12 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
         Money principalAmountNotRounded = loanTrxn.getPrincipalAmount();
         Money amountToPost = null;
 
-        if (((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId()))
+        if (((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId())) {
             amountToPost = Money.round(loanTrxn.getPrincipalAmount(), loanTrxn.getPrincipalAmount().getCurrency().getRoundingAmount(),
                     AccountingRules.getCurrencyRoundingMode());
-        else
+        } else {
             amountToPost = principalAmountNotRounded;
+        }
 
         FinancialActionBO finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);

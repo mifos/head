@@ -104,10 +104,12 @@ public class ReportsParamsAction extends BaseAction {
         logger.debug("In ReportsParamsAction:loadView Method: ");
         ReportsParamsActionForm actionForm = (ReportsParamsActionForm) form;
         String strParameterId = request.getParameter("parameterId");
-        if (strParameterId == null)
+        if (strParameterId == null) {
             strParameterId = actionForm.getParameterId() + "";
-        if (strParameterId == null || strParameterId.equals(""))
+        }
+        if (strParameterId == null || strParameterId.equals("")) {
             strParameterId = "0";
+        }
         int parameterId = Integer.parseInt(strParameterId);
         actionForm.setParameterId(parameterId);
         request.getSession().setAttribute("viewParams", reportsPersistence.viewParameter(parameterId));
@@ -132,10 +134,11 @@ public class ReportsParamsAction extends BaseAction {
         String error = reportsBusinessService.createReportsParams(objParams);
         request.getSession().setAttribute("addError", error);
         String forward = "";
-        if (error != null && !error.equals(""))
+        if (error != null && !error.equals("")) {
             forward = "reportparamsadd_path";
-        else
+        } else {
             forward = "reportparams_path";
+        }
         return mapping.findForward(forward);
     }
 

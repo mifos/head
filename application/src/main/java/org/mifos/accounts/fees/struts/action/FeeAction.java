@@ -233,10 +233,12 @@ public class FeeAction extends BaseAction {
         List<FeeBO> customerFees = getFeeBusinessService().retrieveCustomerFees();
         List<FeeBO> productFees = getFeeBusinessService().retrieveProductFees();
 
-        for (FeeBO fee : customerFees)
+        for (FeeBO fee : customerFees) {
             setLocaleForMasterEntities(fee, localeId);
-        for (FeeBO fee : productFees)
+        }
+        for (FeeBO fee : productFees) {
             setLocaleForMasterEntities(fee, localeId);
+        }
 
         SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);
         SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees, request);
@@ -317,9 +319,11 @@ public class FeeAction extends BaseAction {
 
     private List<MasterDataEntity> getTimeOfChargeForCustomer(List<MasterDataEntity> timeOfCharges) {
         List<MasterDataEntity> customerTimeOfCharges = new ArrayList<MasterDataEntity>();
-        for (MasterDataEntity entity : timeOfCharges)
-            if (entity.getId().equals(FeePayment.UPFRONT.getValue()))
+        for (MasterDataEntity entity : timeOfCharges) {
+            if (entity.getId().equals(FeePayment.UPFRONT.getValue())) {
                 customerTimeOfCharges.add(entity);
+            }
+        }
         return customerTimeOfCharges;
     }
 
@@ -354,27 +358,33 @@ public class FeeAction extends BaseAction {
         fee.getCategoryType().setLocaleId(localeId);
         fee.getFeeFrequency().getFeeFrequencyType().setLocaleId(localeId);
         fee.getFeeStatus().setLocaleId(localeId);
-        if (fee.isOneTime())
+        if (fee.isOneTime()) {
             fee.getFeeFrequency().getFeePayment().setLocaleId(localeId);
-        if (fee.getFeeType().equals(RateAmountFlag.RATE))
+        }
+        if (fee.getFeeType().equals(RateAmountFlag.RATE)) {
             ((RateFeeBO) fee).getFeeFormula().setLocaleId(localeId);
+        }
     }
 
     private MasterDataEntity findMasterEntity(HttpServletRequest request, String collectionName, Short value)
             throws PageExpiredException {
         List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils.getAttribute(collectionName, request);
-        for (MasterDataEntity entity : entities)
-            if (entity.getId().equals(value))
+        for (MasterDataEntity entity : entities) {
+            if (entity.getId().equals(value)) {
                 return entity;
+            }
+        }
         return null;
     }
 
     private GLCodeEntity findGLCodeEntity(HttpServletRequest request, String collectionName, Short value)
             throws PageExpiredException {
         List<GLCodeEntity> glCodeList = (List<GLCodeEntity>) SessionUtils.getAttribute(collectionName, request);
-        for (GLCodeEntity glCode : glCodeList)
-            if (glCode.getGlcodeId().equals(value))
+        for (GLCodeEntity glCode : glCodeList) {
+            if (glCode.getGlcodeId().equals(value)) {
                 return glCode;
+            }
+        }
         return null;
     }
 

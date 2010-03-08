@@ -94,8 +94,9 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
     }
 
     protected void makePayment(Money feePaid) {
-        if (getFeeAmountPaid() == null)
+        if (getFeeAmountPaid() == null) {
             setFeeAmountPaid(new Money(accountFee.getAccount().getCurrency()));
+        }
         this.feeAmountPaid = getFeeAmountPaid().add(feePaid);
     }
 

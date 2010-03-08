@@ -61,9 +61,9 @@ public class MifosAlphaNumTextTag extends ELTextTag {
      */
     @Override
     public int doStartTag() throws JspException {
-        if (fieldConfig.isFieldHidden(getKeyhm()))
+        if (fieldConfig.isFieldHidden(getKeyhm())) {
             return EVAL_PAGE;
-        else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm())) {
+        } else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm())) {
             TagUtils.getInstance().write(this.pageContext, renderFieldHiddenMandatory());
         }
         // get User Preferred Locale

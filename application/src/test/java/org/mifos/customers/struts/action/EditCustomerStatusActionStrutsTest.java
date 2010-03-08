@@ -928,10 +928,12 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         addRequestParameter("method", Methods.previewStatus.toString());
         addRequestParameter("notes", "Test");
         addRequestParameter("levelId", group.getCustomerLevel().getId().toString());
-        if (groupStatus != null)
+        if (groupStatus != null) {
             addRequestParameter("newStatusId", groupStatus.getValue().toString());
-        if (groupStatusFlag != null)
+        }
+        if (groupStatusFlag != null) {
             addRequestParameter("flagId", groupStatusFlag.getValue().toString());
+        }
         actionPerform();
         verifyForward(ActionForwards.previewStatus_success.toString());
     }
@@ -1033,8 +1035,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         List<CustomerStatusEntity> customerStatusList = (List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request);
         for (CustomerStatusEntity custStatus : customerStatusList) {
-            if (customerStatus.getValue().equals(custStatus.getId()))
+            if (customerStatus.getValue().equals(custStatus.getId())) {
                 return custStatus.getName();
+            }
         }
         return null;
     }

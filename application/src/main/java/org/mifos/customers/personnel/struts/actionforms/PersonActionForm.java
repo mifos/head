@@ -402,8 +402,9 @@ public class PersonActionForm extends BaseActionForm {
     public String getAge() {
         if (getDob() != null) {
             return String.valueOf(DateUtils.DateDiffInYears(new java.sql.Date(DateUtils.getDate(getDob()).getTime())));
-        } else
+        } else {
             return "";
+        }
     }
 
     public Name getName() {
@@ -464,7 +465,7 @@ public class PersonActionForm extends BaseActionForm {
             List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST,
                     request);
 
-            if (masterList != null)
+            if (masterList != null) {
                 for (RoleBO role : masterList) {
                     for (String roleId : personnelRoles) {
                         if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
@@ -473,11 +474,13 @@ public class PersonActionForm extends BaseActionForm {
                         }
                     }
                 }
+            }
         }
-        if (addFlag)
+        if (addFlag) {
             SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
-        else
+        } else {
             SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, null, request);
+        }
 
         personnelRoles = null;
     }
@@ -503,12 +506,14 @@ public class PersonActionForm extends BaseActionForm {
             errors.add(PersonnelConstants.PASSWORD, new ActionMessage(PersonnelConstants.VALID_PASSWORD, password));
         }
         if (input.equals(PersonnelConstants.CREATE_USER)
-                && (StringUtils.isBlank(userPassword) || StringUtils.isBlank(passwordRepeat)))
+                && (StringUtils.isBlank(userPassword) || StringUtils.isBlank(passwordRepeat))) {
             errors.add(PersonnelConstants.PASSWORD, new ActionMessage(PersonnelConstants.VALID_PASSWORD, password));
+        }
         if (input.equals(PersonnelConstants.CREATE_USER) && (StringUtils.isNotBlank(userPassword))) {
-            if (userPassword.length() < 6)
+            if (userPassword.length() < 6) {
                 errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
                         PersonnelConstants.ERROR_PASSWORD_LENGTH));
+            }
         }
 
         if (input.equals(PersonnelConstants.MANAGE_USER)) {
@@ -649,17 +654,19 @@ public class PersonActionForm extends BaseActionForm {
         for (CustomFieldView customField : customFields) {
             boolean isErrorFound = false;
             for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory())
+                if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
                     if (StringUtils.isBlank(customField.getFieldValue())) {
                         errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
                                 PersonnelConstants.ERROR_CUSTOMfIELD));
                         isErrorFound = true;
                         break;
                     }
+                }
 
             }
-            if (isErrorFound)
+            if (isErrorFound) {
                 break;
+            }
         }
     }
 

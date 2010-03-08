@@ -154,13 +154,15 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
             }
 
             ActionErrors dateError = validateDate(this.trxnDate, resources.getString("Savings.dateOfTrxn"), userContext);
-            if (dateError != null && !dateError.isEmpty())
+            if (dateError != null && !dateError.isEmpty()) {
                 errors.add(dateError);
+            }
 
             if (this.getReceiptDate() != null && !this.getReceiptDate().equals("")) {
                 dateError = validateDate(getReceiptDate(), resources.getString("Savings.receiptDate"), userContext);
-                if (dateError != null && !dateError.isEmpty())
+                if (dateError != null && !dateError.isEmpty()) {
                     errors.add(dateError);
+                }
             }
             if (StringUtils.isBlank(getCustomerId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,

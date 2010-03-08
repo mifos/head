@@ -81,8 +81,9 @@ public class ApplyAdjustmentActionForm extends ValidatorActionForm {
 
     @Override
     public ActionErrors validate(ActionMapping actionMapping, HttpServletRequest request) {
-        if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+        if (null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        }
         ActionErrors actionErrors = new ActionErrors();
         String method = request.getParameter("method");
         if (null != method && method.equals("previewAdjustment")) {

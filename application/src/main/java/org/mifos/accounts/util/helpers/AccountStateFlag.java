@@ -35,9 +35,11 @@ public enum AccountStateFlag {
     }
 
     public static AccountStateFlag getStatusFlag(Short value) {
-        for (AccountStateFlag statusFlag : AccountStateFlag.values())
-            if (statusFlag.getValue().equals(value))
+        for (AccountStateFlag statusFlag : AccountStateFlag.values()) {
+            if (statusFlag.getValue().equals(value)) {
                 return statusFlag;
+            }
+        }
         return null;
     }
 }

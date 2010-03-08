@@ -36,9 +36,11 @@ public enum FeeCategory {
     }
 
     public static FeeCategory getFeeCategory(Short value) throws PropertyNotFoundException {
-        for (FeeCategory feeCategory : FeeCategory.values())
-            if (feeCategory.getValue().equals(value))
+        for (FeeCategory feeCategory : FeeCategory.values()) {
+            if (feeCategory.getValue().equals(value)) {
                 return feeCategory;
+            }
+        }
         throw new PropertyNotFoundException("FeeCategory");
     }
 }

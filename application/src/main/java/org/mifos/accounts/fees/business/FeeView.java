@@ -57,8 +57,9 @@ public class FeeView extends View {
     }
 
     public FeeView(UserContext userContext, FeeBO fee) {
-        if (userContext != null)
+        if (userContext != null) {
             localeId = userContext.getLocaleId();
+        }
         this.feeId = fee.getFeeId().toString();
         this.feeType = fee.getFeeType();
         this.feeName = fee.getFeeName();
@@ -75,12 +76,13 @@ public class FeeView extends View {
         if (fee.isPeriodic()) {
             MeetingBO feeMeeting = fee.getFeeFrequency().getFeeMeetingFrequency();
             this.feeSchedule = new MeetingHelper().getMessageWithFrequency(feeMeeting, userContext);
-            if (feeMeeting.isMonthly())
+            if (feeMeeting.isMonthly()) {
                 this.frequencyType = RecurrenceType.MONTHLY;
-            else if (feeMeeting.isWeekly())
+            } else if (feeMeeting.isWeekly()) {
                 this.frequencyType = RecurrenceType.WEEKLY;
-            else
+            } else {
                 this.frequencyType = RecurrenceType.DAILY;
+            }
         }
         this.feeRemoved = YesNoFlag.NO.getValue();
     }

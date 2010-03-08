@@ -142,8 +142,9 @@ public class RoleBO extends BusinessObject {
         List<Short> activityIds = getActivityIds(activityList);
         for (Iterator<RoleActivityEntity> iter = activities.iterator(); iter.hasNext();) {
             RoleActivityEntity roleActivityEntity = iter.next();
-            if (!activityIds.contains(roleActivityEntity.getActivity().getId()))
+            if (!activityIds.contains(roleActivityEntity.getActivity().getId())) {
                 iter.remove();
+            }
 
         }
         // Adding activities
@@ -158,8 +159,9 @@ public class RoleBO extends BusinessObject {
 
     private List<Short> getActivityIds(List<ActivityEntity> activityList) {
         List<Short> activityIds = new ArrayList<Short>();
-        for (ActivityEntity activityEntity : activityList)
+        for (ActivityEntity activityEntity : activityList) {
             activityIds.add(activityEntity.getId());
+        }
         return activityIds;
     }
 
@@ -172,13 +174,16 @@ public class RoleBO extends BusinessObject {
 
     private void validateRoleName(String roleName) throws RolesPermissionException {
         logger.info("Checking rolename for empty or null");
-        if (StringUtils.isBlank(roleName))
+        if (StringUtils.isBlank(roleName)) {
             throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED);
+        }
         logger.info("Checking for duplicate rolename");
         try {
-            if (name == null || !name.trim().equalsIgnoreCase(roleName.trim()))
-                if (rolesPermissionPersistence.getRole(roleName.trim()) != null)
+            if (name == null || !name.trim().equalsIgnoreCase(roleName.trim())) {
+                if (rolesPermissionPersistence.getRole(roleName.trim()) != null) {
                     throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEALREADYEXIST);
+                }
+            }
         } catch (PersistenceException e) {
             throw new RolesPermissionException(e);
         }
@@ -187,15 +192,17 @@ public class RoleBO extends BusinessObject {
 
     private void validateActivities(List<ActivityEntity> activityList) throws RolesPermissionException {
         logger.info("Validating activities");
-        if (null == activityList || activityList.size() == 0)
+        if (null == activityList || activityList.size() == 0) {
             throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEWITHNOACTIVITIES);
+        }
         logger.info("Activities validated");
     }
 
     private void validateIfRoleAssignedToPersonnel() throws RolesPermissionException {
         logger.info("Validating if role is assigned to personnel");
-        if (isRoleAssignedToPersonnel())
+        if (isRoleAssignedToPersonnel()) {
             throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEASSIGNEDTOPERSONNEL);
+        }
         logger.info("Validation done for role assigned to personnel");
     }
 
@@ -220,23 +227,30 @@ public class RoleBO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final RoleBO other = (RoleBO) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         return true;
     }
 }

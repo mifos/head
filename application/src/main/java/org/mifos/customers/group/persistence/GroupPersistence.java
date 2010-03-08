@@ -212,8 +212,9 @@ public class GroupPersistence extends Persistence {
             connection.commit();
             result = true;
         } catch (Exception ex) {
-            if (connection != null)
+            if (connection != null) {
                 connection.rollback();
+            }
             throw new PersistenceException(ex);
         } finally {
             if (connection != null) {
@@ -229,8 +230,9 @@ public class GroupPersistence extends Persistence {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         customerPersistence.saveCustomer(groupBo);
         try {
-            if (groupBo.getParentCustomer() != null)
+            if (groupBo.getParentCustomer() != null) {
                 customerPersistence.createOrUpdate(groupBo.getParentCustomer());
+            }
         } catch (PersistenceException pe) {
             throw new CustomerException(CustomerConstants.CREATE_FAILED_EXCEPTION, pe);
         }

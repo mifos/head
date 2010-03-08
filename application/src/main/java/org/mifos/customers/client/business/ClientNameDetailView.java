@@ -107,8 +107,9 @@ public class ClientNameDetailView {
 
     private void appendToName(StringBuilder displayName, String valueToBeAppend, boolean isBlankRequired) {
         if (!ValidateMethods.isNullOrBlank(valueToBeAppend)) {
-            if (isBlankRequired)
+            if (isBlankRequired) {
                 displayName.append(CustomerConstants.BLANK);
+            }
             displayName.append(valueToBeAppend);
         }
     }

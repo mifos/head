@@ -100,8 +100,9 @@ public class GroupCustActionForm extends CustomerActionForm {
 
     @Override
     protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
-        if (parentCustomer != null)
+        if (parentCustomer != null) {
             return parentCustomer.getCustomerMeeting().getMeeting();
+        }
         return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
     }
 }

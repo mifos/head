@@ -92,8 +92,9 @@ public class CustHistoricalDataAction extends BaseAction {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
         setTypeForGet(customerBO, form);
         CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO.getHistoricalData();
-        if (customerHistoricalDataEntity == null)
+        if (customerHistoricalDataEntity == null) {
             customerHistoricalDataEntity = new CustomerHistoricalDataEntity(customerBO);
+        }
         String currentDate = DateUtils.getCurrentDate(getUserContext(request).getPreferredLocale());
         SessionUtils.setAttribute(CustomerConstants.MFIJOININGDATE,
                 (customerHistoricalDataEntity.getMfiJoiningDate() == null ? DateUtils.getLocaleDate(getUserContext(
@@ -140,12 +141,13 @@ public class CustHistoricalDataAction extends BaseAction {
         customerBOInSession = null;
         setInitialObjectForAuditLogging(customerBO);
         CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO.getHistoricalData();
-        if (customerBO.getPersonnel() != null)
+        if (customerBO.getPersonnel() != null) {
             checkPermissionForAddingHistoricalData(customerBO.getLevel(), getUserContext(request), customerBO
                     .getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
-        else
+        } else {
             checkPermissionForAddingHistoricalData(customerBO.getLevel(), getUserContext(request), customerBO
                     .getOffice().getOfficeId(), getUserContext(request).getId());
+        }
         // Integer oldLoanCycleNo = 0;
         if (customerHistoricalDataEntity == null) {
             customerHistoricalDataEntity = new CustomerHistoricalDataEntity(customerBO);
@@ -175,28 +177,31 @@ public class CustHistoricalDataAction extends BaseAction {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.previewHistoricalData.toString()))
+            if (method.equals(Methods.previewHistoricalData.toString())) {
                 forward = ActionForwards.previewHistoricalData_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }
 
     private void setTypeForGet(CustomerBO customerBO, ActionForm form) {
         CustHistoricalDataActionForm actionForm = (CustHistoricalDataActionForm) form;
-        if (customerBO instanceof ClientBO)
+        if (customerBO instanceof ClientBO) {
             actionForm.setType("Client");
-        else if (customerBO instanceof GroupBO)
+        } else if (customerBO instanceof GroupBO) {
             actionForm.setType("Group");
+        }
     }
 
     private String getDetailAccountPage(ActionForm form) {
         CustHistoricalDataActionForm actionForm = (CustHistoricalDataActionForm) form;
         String type = actionForm.getType();
         String forward = null;
-        if (type.equals("Group"))
+        if (type.equals("Group")) {
             forward = ActionForwards.group_detail_page.toString();
-        else if (type.equals("Client"))
+        } else if (type.equals("Client")) {
             forward = ActionForwards.client_detail_page.toString();
+        }
         return forward;
     }
 
@@ -237,8 +242,9 @@ public class CustHistoricalDataAction extends BaseAction {
 
     private void checkPermissionForAddingHistoricalData(CustomerLevel customerLevel, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(customerLevel, userContext, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId,

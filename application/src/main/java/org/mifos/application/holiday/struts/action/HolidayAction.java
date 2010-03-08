@@ -213,8 +213,9 @@ public class HolidayAction extends BaseAction {
                 .getHolidayName(), repaymentRuleEntity);
 
         accountHoliday.update(holidayPK, holidayActionForm.getThruDate(), holidayActionForm.getHolidayName());
-        if (null != request.getParameter(Constants.CURRENTFLOWKEY))
+        if (null != request.getParameter(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
+        }
 
         FlowManager flowManager = new FlowManager();
         Flow flow = new Flow();

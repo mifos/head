@@ -44,8 +44,9 @@ public class AddAccountAction extends Upgrade {
      */
     public AddAccountAction(int higherVersion, int action, Short locale, String message) {
         super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
             throw new RuntimeException(wrongConstructor);
+        }
         this.action = action;
         this.locale = locale;
         this.message = message;
@@ -58,8 +59,9 @@ public class AddAccountAction extends Upgrade {
      */
     public AddAccountAction(int higherVersion, int action, String lookupValueKey) {
         super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, lookupValueKey))
+        if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
+        }
         this.action = action;
         this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.lookupValueKey = lookupValueKey;

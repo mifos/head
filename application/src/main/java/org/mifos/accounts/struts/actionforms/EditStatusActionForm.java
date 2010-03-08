@@ -186,8 +186,9 @@ public class EditStatusActionForm extends BaseActionForm {
             selectedItems = null;
         }
         if (chklistSize != null) {
-            if (isCheckListNotComplete(chklistSize))
+            if (isCheckListNotComplete(chklistSize)) {
                 addError(errors, LoanConstants.INCOMPLETE_CHECKLIST, LoanConstants.INCOMPLETE_CHECKLIST);
+            }
         }
         return errors;
     }
@@ -198,15 +199,17 @@ public class EditStatusActionForm extends BaseActionForm {
         String notesString = resources.getString("Account.Notes");
         String status = resources.getString("accounts.status");
         String flag = resources.getString("accounts.flag");
-        if (newStatusId == null)
+        if (newStatusId == null) {
             addError(errors, LoanConstants.MANDATORY, LoanConstants.MANDATORY, status);
-        else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId))
+        } else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId)) {
             addError(errors, LoanConstants.MANDATORY_SELECT, LoanConstants.MANDATORY_SELECT, flag);
-        if (StringUtils.isBlank(notes))
+        }
+        if (StringUtils.isBlank(notes)) {
             addError(errors, LoanConstants.MANDATORY_TEXTBOX, LoanConstants.MANDATORY_TEXTBOX, notesString);
-        else if (notes.length() > LoanConstants.COMMENT_LENGTH)
+        } else if (notes.length() > LoanConstants.COMMENT_LENGTH) {
             addError(errors, LoanConstants.MAX_LENGTH, LoanConstants.MAX_LENGTH, notesString, String
                     .valueOf(LoanConstants.COMMENT_LENGTH));
+        }
         return errors;
     }
 

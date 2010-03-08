@@ -393,9 +393,11 @@ public class LoanPrdAction extends BaseAction {
         if (value != null) {
             List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils.getAttribute(collectionName,
                     request);
-            for (MasterDataEntity entity : entities)
-                if (entity.getId().equals(value))
+            for (MasterDataEntity entity : entities) {
+                if (entity.getId().equals(value)) {
                     return entity;
+                }
+            }
         }
         return null;
     }
@@ -404,17 +406,20 @@ public class LoanPrdAction extends BaseAction {
             throws PageExpiredException {
         prdDefLogger.debug("start findGLCodeEntity method of Loan Product Action ");
         List<GLCodeEntity> glCodeList = (List<GLCodeEntity>) SessionUtils.getAttribute(collectionName, request);
-        for (GLCodeEntity glCode : glCodeList)
-            if (glCode.getGlcodeId().equals(getShortValue(value)))
+        for (GLCodeEntity glCode : glCodeList) {
+            if (glCode.getGlcodeId().equals(getShortValue(value))) {
                 return glCode;
+            }
+        }
         return null;
     }
 
     private ProductCategoryBO getProductCategory(List<ProductCategoryBO> productCategories, Short productCategoryId) {
         prdDefLogger.debug("start getProductCategory method of Loan Product Action ");
         for (ProductCategoryBO productCategory : productCategories) {
-            if (productCategory.getProductCategoryID().equals(productCategoryId))
+            if (productCategory.getProductCategoryID().equals(productCategoryId)) {
                 return productCategory;
+            }
         }
         return null;
     }
@@ -425,8 +430,9 @@ public class LoanPrdAction extends BaseAction {
         if (fundsSelected != null && fundsSelected.length > 0 && funds != null && funds.size() > 0) {
             for (String fundSelected : fundsSelected) {
                 FundBO fund = getFundFromList(funds, fundSelected);
-                if (fund != null)
+                if (fund != null) {
                     fundList.add(fund);
+                }
             }
         }
         prdDefLogger.debug("getFundsFromList method of Loan Product Action called");
@@ -435,9 +441,11 @@ public class LoanPrdAction extends BaseAction {
 
     private FundBO getFundFromList(List<FundBO> funds, String fundSelected) {
         prdDefLogger.debug("start getFundFromList method of Loan Product Action ");
-        for (FundBO fund : funds)
-            if (fund.getFundId().equals(getShortValue(fundSelected)))
+        for (FundBO fund : funds) {
+            if (fund.getFundId().equals(getShortValue(fundSelected))) {
                 return fund;
+            }
+        }
         return null;
     }
 
@@ -459,8 +467,9 @@ public class LoanPrdAction extends BaseAction {
         if (feesSelected != null && feesSelected.length > 0 && fees != null && fees.size() > 0) {
             for (String feeSelected : feesSelected) {
                 FeeBO fee = getFeeFromList(fees, feeSelected);
-                if (fee != null)
+                if (fee != null) {
                     feeList.add(fee);
+                }
             }
         }
         prdDefLogger.debug("getFeeList method of Loan Product Action called");
@@ -469,9 +478,11 @@ public class LoanPrdAction extends BaseAction {
 
     private FeeBO getFeeFromList(List<FeeBO> fees, String feeSelected) {
         prdDefLogger.debug("start getFeeFromList method of Loan Product Action ");
-        for (FeeBO fee : fees)
-            if (fee.getFeeId().equals(getShortValue(feeSelected)))
+        for (FeeBO fee : fees) {
+            if (fee.getFeeId().equals(getShortValue(feeSelected))) {
                 return fee;
+            }
+        }
         return null;
     }
 

@@ -172,10 +172,12 @@ public class MifosMasterButtonTag extends ButtonTag {
 
         // Acquire the label value we will be generating
         String label = value;
-        if ((label == null) && (text != null))
+        if ((label == null) && (text != null)) {
             label = text;
-        if ((label == null) || (label.length() < 1))
+        }
+        if ((label == null) || (label.length() < 1)) {
             label = getDefaultValue();
+        }
 
         prepareAttribute(results, "value", label);
 

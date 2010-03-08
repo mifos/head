@@ -106,53 +106,72 @@ public class BranchReportLoanDetailsBO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchReportLoanDetailsBO other = (BranchReportLoanDetailsBO) obj;
         if (loanAmountIssued == null) {
-            if (other.loanAmountIssued != null)
+            if (other.loanAmountIssued != null) {
                 return false;
-        } else if (!loanAmountIssued.equals(other.loanAmountIssued))
+            }
+        } else if (!loanAmountIssued.equals(other.loanAmountIssued)) {
             return false;
+        }
         if (loanAmountOutstanding == null) {
-            if (other.loanAmountOutstanding != null)
+            if (other.loanAmountOutstanding != null) {
                 return false;
-        } else if (!loanAmountOutstanding.equals(other.loanAmountOutstanding))
+            }
+        } else if (!loanAmountOutstanding.equals(other.loanAmountOutstanding)) {
             return false;
+        }
         if (loanDetailsId == null) {
-            if (other.loanDetailsId != null)
+            if (other.loanDetailsId != null) {
                 return false;
-        } else if (!loanDetailsId.equals(other.loanDetailsId))
+            }
+        } else if (!loanDetailsId.equals(other.loanDetailsId)) {
             return false;
+        }
         if (loanInterestIssued == null) {
-            if (other.loanInterestIssued != null)
+            if (other.loanInterestIssued != null) {
                 return false;
-        } else if (!loanInterestIssued.equals(other.loanInterestIssued))
+            }
+        } else if (!loanInterestIssued.equals(other.loanInterestIssued)) {
             return false;
+        }
         if (loanInterestOutstanding == null) {
-            if (other.loanInterestOutstanding != null)
+            if (other.loanInterestOutstanding != null) {
                 return false;
-        } else if (!loanInterestOutstanding.equals(other.loanInterestOutstanding))
+            }
+        } else if (!loanInterestOutstanding.equals(other.loanInterestOutstanding)) {
             return false;
+        }
         if (numberOfLoansIssued == null) {
-            if (other.numberOfLoansIssued != null)
+            if (other.numberOfLoansIssued != null) {
                 return false;
-        } else if (!numberOfLoansIssued.equals(other.numberOfLoansIssued))
+            }
+        } else if (!numberOfLoansIssued.equals(other.numberOfLoansIssued)) {
             return false;
+        }
         if (numberOfLoansOutstanding == null) {
-            if (other.numberOfLoansOutstanding != null)
+            if (other.numberOfLoansOutstanding != null) {
                 return false;
-        } else if (!numberOfLoansOutstanding.equals(other.numberOfLoansOutstanding))
+            }
+        } else if (!numberOfLoansOutstanding.equals(other.numberOfLoansOutstanding)) {
             return false;
+        }
         if (productName == null) {
-            if (other.productName != null)
+            if (other.productName != null) {
                 return false;
-        } else if (!productName.equals(other.productName))
+            }
+        } else if (!productName.equals(other.productName)) {
             return false;
+        }
         return true;
     }
 }

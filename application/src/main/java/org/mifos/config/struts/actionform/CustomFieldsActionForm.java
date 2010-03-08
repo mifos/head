@@ -156,8 +156,9 @@ public class CustomFieldsActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         if ((method.equals(Methods.preview.toString())) || (method.equals(Methods.editPreview.toString()))) {
             errors = super.validate(mapping, request);
-            if (StringUtils.isNotBlank(defaultValue))
+            if (StringUtils.isNotBlank(defaultValue)) {
                 validateDefaultValue(errors, request);
+            }
         }
 
         if (!errors.isEmpty()) {

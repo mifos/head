@@ -52,8 +52,9 @@ public class AddAccountStateFlag extends Upgrade {
      */
     public AddAccountStateFlag(int higherVersion, int newFlagId, String description, Short locale, String message) {
         super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
             throw new RuntimeException(wrongConstructor);
+        }
         this.newFlagId = newFlagId;
         this.description = description;
         this.locale = locale;
@@ -68,8 +69,9 @@ public class AddAccountStateFlag extends Upgrade {
 
     public AddAccountStateFlag(int higherVersion, int newFlagId, String description, String lookupValueKey) {
         super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, lookupValueKey))
+        if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
+        }
         this.newFlagId = newFlagId;
         this.description = description;
         this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;

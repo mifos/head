@@ -77,20 +77,26 @@ public class PaymentTypeDto {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         PaymentTypeDto other = (PaymentTypeDto) obj;
         if (this.name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!this.name.equals(other.name))
+            }
+        } else if (!this.name.equals(other.name)) {
             return false;
-        if (this.value != other.value)
+        }
+        if (this.value != other.value) {
             return false;
+        }
         return true;
     }
 

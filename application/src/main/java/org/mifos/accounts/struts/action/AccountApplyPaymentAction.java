@@ -230,8 +230,9 @@ public class AccountApplyPaymentAction extends BaseAction {
     }
 
     private AccountBusinessService getAccountBusinessService() {
-        if (accountBusinessService == null)
+        if (accountBusinessService == null) {
             accountBusinessService = new AccountBusinessService();
+        }
         return accountBusinessService;
     }
 

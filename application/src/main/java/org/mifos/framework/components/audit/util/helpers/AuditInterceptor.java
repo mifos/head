@@ -56,20 +56,23 @@ public class AuditInterceptor extends EmptyInterceptor {
     }
 
     public void createChangeValueMap(Object object) {
-        if (interceptHelper.getEntityName().equals(AuditConfigurtion.getEntityToClassPath(object.getClass().getName())))
+        if (interceptHelper.getEntityName().equals(AuditConfigurtion.getEntityToClassPath(object.getClass().getName()))) {
             interceptHelper.hibernateMeta(object, AuditConstants.TRANSACTIONEND);
+        }
     }
 
     public boolean isAuditLogRequired() {
-        if (interceptHelper.isInitialValueMapEmpty())
+        if (interceptHelper.isInitialValueMapEmpty()) {
             return false;
+        }
         return true;
     }
 
     @Override
     public void afterTransactionCompletion(Transaction tx) {
-        if (tx != null && tx.wasCommitted() && !tx.wasRolledBack())
+        if (tx != null && tx.wasCommitted() && !tx.wasRolledBack()) {
             flag = true;
+        }
         if (flag
                 && ((interceptHelper.getInitialValueMap() != null && interceptHelper.getInitialValueMap().size() > 0) || (interceptHelper
                         .getChangeValueMap() != null && interceptHelper.getChangeValueMap().size() > 0))) {

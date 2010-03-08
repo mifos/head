@@ -201,10 +201,11 @@ public class CustomFieldsAction extends BaseAction {
         logger.debug("Inside viewCategory method");
         CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
         String category = null;
-        if (request.getParameter("category") != null)
+        if (request.getParameter("category") != null) {
             category = request.getParameter("category");
-        else
+        } else {
             category = actionForm.getCategory();
+        }
         request.setAttribute("category", category);
         String categoryName = MessageLookup.getInstance().lookupLabel(category);
         request.setAttribute("categoryName", categoryName);
@@ -227,15 +228,17 @@ public class CustomFieldsAction extends BaseAction {
         CustomFieldDefinitionEntity customField = (CustomFieldDefinitionEntity) SessionUtils.getAttribute(
                 ConfigurationConstants.CURRENT_CUSTOM_FIELD, request);
         Short dataType = Short.parseShort(actionForm.getDataType());
-        if (dataType.equals(CustomFieldType.DATE.getValue()))
+        if (dataType.equals(CustomFieldType.DATE.getValue())) {
             customField.setDefaultValue(changeDefaultValueDateToDBFormat(actionForm.getDefaultValue(), locale));
-        else
+        } else {
             customField.setDefaultValue(actionForm.getDefaultValue());
+        }
         YesNoFlag flag = null;
-        if (actionForm.isMandatoryField())
+        if (actionForm.isMandatoryField()) {
             flag = YesNoFlag.YES;
-        else
+        } else {
             flag = YesNoFlag.NO;
+        }
         customField.setMandatoryFlag(flag.getValue());
         Short localeId = getUserContext(request).getLocaleId();
         String labelName = actionForm.getLabelName();
@@ -256,14 +259,15 @@ public class CustomFieldsAction extends BaseAction {
      * may be changed when business knows what exactly the level id is
      */
     private Short getLevelId(EntityType categoryType) {
-        if (categoryType.equals(EntityType.CENTER))
+        if (categoryType.equals(EntityType.CENTER)) {
             return CustomerLevel.CENTER.getValue();
-        else if (categoryType.equals(EntityType.GROUP))
+        } else if (categoryType.equals(EntityType.GROUP)) {
             return CustomerLevel.GROUP.getValue();
-        else if (categoryType.equals(EntityType.CLIENT))
+        } else if (categoryType.equals(EntityType.CLIENT)) {
             return CustomerLevel.CLIENT.getValue();
-        else
+        } else {
             return null;
+        }
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
@@ -274,16 +278,18 @@ public class CustomFieldsAction extends BaseAction {
         EntityType categoryTypeEntity = EntityType.fromInt(Integer.parseInt(categoryType));
         CustomFieldType fieldType = CustomFieldType.fromInt(Integer.parseInt(actionForm.getDataType()));
         String defaultValue = actionForm.getDefaultValue();
-        if (fieldType.equals(CustomFieldType.DATE))
+        if (fieldType.equals(CustomFieldType.DATE)) {
             defaultValue = changeDefaultValueDateToDBFormat(defaultValue, getUserLocale(request));
+        }
 
         String label = actionForm.getLabelName();
         Short levelId = getLevelId(categoryTypeEntity);
         YesNoFlag mandatory = null;
-        if (actionForm.isMandatoryField())
+        if (actionForm.isMandatoryField()) {
             mandatory = YesNoFlag.YES;
-        else
+        } else {
             mandatory = YesNoFlag.NO;
+        }
         Short localeId = getUserContext(request).getLocaleId();
         CustomFieldDefinitionEntity customField = new CustomFieldDefinitionEntity(label, levelId, fieldType,
                 categoryTypeEntity, defaultValue, mandatory);
@@ -312,10 +318,11 @@ public class CustomFieldsAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
         YesNoFlag flag = null;
-        if (actionForm.isMandatoryField())
+        if (actionForm.isMandatoryField()) {
             flag = YesNoFlag.YES;
-        else
+        } else {
             flag = YesNoFlag.NO;
+        }
         Locale locale = getUserLocale(request);
         String mandatoryStringValue = CustomFieldDefinitionEntity.getMandatoryStringValue(locale, flag.getValue());
         actionForm.setMandatoryStringValue(mandatoryStringValue);
@@ -329,10 +336,11 @@ public class CustomFieldsAction extends BaseAction {
         CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
         request.setAttribute("category", actionForm.getCategory());
         YesNoFlag flag = null;
-        if (actionForm.isMandatoryField())
+        if (actionForm.isMandatoryField()) {
             flag = YesNoFlag.YES;
-        else
+        } else {
             flag = YesNoFlag.NO;
+        }
         Locale locale = getUserLocale(request);
         String mandatoryStringValue = CustomFieldDefinitionEntity.getMandatoryStringValue(locale, flag.getValue());
         actionForm.setMandatoryStringValue(mandatoryStringValue);
@@ -389,10 +397,11 @@ public class CustomFieldsAction extends BaseAction {
         String dataTypeName = getDataType(customField.getFieldType(), locale);
         Short fieldType = customField.getFieldType();
         String defaultValue = customField.getDefaultValue();
-        if (fieldType.equals(CustomFieldType.DATE.getValue()) && StringUtils.isNotBlank(defaultValue))
+        if (fieldType.equals(CustomFieldType.DATE.getValue()) && StringUtils.isNotBlank(defaultValue)) {
             actionForm.setDefaultValue(DateUtils.getUserLocaleDate(locale, defaultValue));
-        else
+        } else {
             actionForm.setDefaultValue(defaultValue);
+        }
         actionForm.setDataType(fieldType.toString());
         actionForm.setMandatoryField(customField.isMandatory());
         actionForm.setMandatoryStringValue(customField.getMandatoryStringValue(locale));
@@ -417,8 +426,9 @@ public class CustomFieldsAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("start manage method of Fund Action");
         CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
-        if (StringUtils.isBlank(actionForm.getCustomFieldIdStr()))
+        if (StringUtils.isBlank(actionForm.getCustomFieldIdStr())) {
             throw new Exception("Error! No custom field id is null.");
+        }
         Short editedCustomFieldId = Short.parseShort(actionForm.getCustomFieldIdStr());
         setFormAttributes(actionForm, editedCustomFieldId, request);
         String flow = request.getParameter(Constants.CURRENTFLOWKEY).toString();

@@ -113,16 +113,18 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             ActionErrors errors2 = validateDate(getTransactionDate(), resources.getString("accounts.date_of_trxn"),
                     request);
 
-            if (null != errors2 && !errors2.isEmpty())
+            if (null != errors2 && !errors2.isEmpty()) {
                 errors.add(errors2);
+            }
             if (StringUtils.isEmpty(getPaymentTypeId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                         resources.getString("accounts.mode_of_payment")));
             }
             if (getReceiptDate() != null && !getReceiptDate().equals("")) {
                 errors2 = validateDate(getReceiptDate(), resources.getString("accounts.receiptdate"), request);
-                if (null != errors2 && !errors2.isEmpty())
+                if (null != errors2 && !errors2.isEmpty()) {
                     errors.add(errors2);
+                }
             }
             String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
             if (accountType != null && accountType.equals(AccountTypeDto.LOAN_ACCOUNT.name())) {
@@ -234,14 +236,16 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         if (StringUtils.isNotBlank(transactionDateDD) && StringUtils.isNotBlank(transactionDateMM)
                 && StringUtils.isNotBlank(transactionDateYY)) {
             String transactionDate = "";
-            if (transactionDateDD.length() < 2)
+            if (transactionDateDD.length() < 2) {
                 transactionDate = transactionDate + "0" + transactionDateDD;
-            else
+            } else {
                 transactionDate = transactionDate + transactionDateDD;
-            if (transactionDateMM.length() < 2)
+            }
+            if (transactionDateMM.length() < 2) {
                 transactionDate = transactionDate + "/" + "0" + transactionDateMM;
-            else
+            } else {
                 transactionDate = transactionDate + "/" + transactionDateMM;
+            }
             transactionDate = transactionDate + "/" + transactionDateYY;
             return transactionDate;
         }

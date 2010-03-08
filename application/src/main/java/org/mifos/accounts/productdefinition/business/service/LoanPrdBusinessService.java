@@ -69,8 +69,9 @@ public class LoanPrdBusinessService implements BusinessService {
             if (applList != null) {
                 for (Iterator<MasterDataEntity> iter = applList.iterator(); iter.hasNext();) {
                     MasterDataEntity masterData = iter.next();
-                    if (masterData.getId().equals(ApplicableTo.CENTERS.getValue()))
+                    if (masterData.getId().equals(ApplicableTo.CENTERS.getValue())) {
                         iter.remove();
+                    }
                 }
             }
             return applList;

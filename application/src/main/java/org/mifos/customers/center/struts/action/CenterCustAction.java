@@ -200,10 +200,11 @@ public class CenterCustAction extends CustAction {
 
     private void setValuesInActionForm(CenterCustActionForm actionForm, HttpServletRequest request) throws Exception {
         CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        if (center.getPersonnel() != null)
+        if (center.getPersonnel() != null) {
             actionForm.setLoanOfficerId(center.getPersonnel().getPersonnelId().toString());
-        else
+        } else {
             actionForm.setLoanOfficerId(null);
+        }
         actionForm.setCustomerId(center.getCustomerId().toString());
         actionForm.setGlobalCustNum(center.getGlobalCustNum());
         actionForm.setExternalId(center.getExternalId());
@@ -240,9 +241,10 @@ public class CenterCustAction extends CustAction {
         CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         Date mfiJoiningDate = null;
-        if (actionForm.getMfiJoiningDate() != null)
+        if (actionForm.getMfiJoiningDate() != null) {
             mfiJoiningDate = getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request)
                     .getPreferredLocale());
+        }
         CenterBO centerBO = ((CenterBusinessService) getService()).findBySystemId(center.getGlobalCustNum());
         checkVersionMismatch(center.getVersionNo(), centerBO.getVersionNo());
         centerBO.setVersionNo(center.getVersionNo());
@@ -266,10 +268,11 @@ public class CenterCustAction extends CustAction {
             HttpServletResponse response) {
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         ActionForwards forward = null;
-        if (actionForm.getInput().equals(Methods.create.toString()))
+        if (actionForm.getInput().equals(Methods.create.toString())) {
             forward = ActionForwards.cancel_success;
-        else if (actionForm.getInput().equals(Methods.manage.toString()))
+        } else if (actionForm.getInput().equals(Methods.manage.toString())) {
             forward = ActionForwards.editcancel_success;
+        }
         return mapping.findForward(forward.toString());
     }
 
@@ -392,13 +395,15 @@ public class CenterCustAction extends CustAction {
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         String searchString = actionForm.getSearchString();
         UserContext userContext = getUserContext(request);
-        if (searchString == null)
+        if (searchString == null) {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
+        }
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
         searchString = org.mifos.framework.util.helpers.SearchUtils.normalizeSearchString(searchString);
-        if (searchString.equals(""))
+        if (searchString.equals("")) {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
+        }
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new CenterBusinessService().search(searchString,
                 userContext.getId()), request);
     }

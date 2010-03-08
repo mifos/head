@@ -65,8 +65,9 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
     private String getDefaultValue(CustomFieldDefinitionEntity customField, UserContext userContext) {
         String defaultValue = customField.getDefaultValue();
         if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                && StringUtils.isNotBlank(defaultValue))
+                && StringUtils.isNotBlank(defaultValue)) {
             defaultValue = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), defaultValue);
+        }
         return defaultValue;
     }
 

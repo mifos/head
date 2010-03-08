@@ -114,12 +114,13 @@ public class PersonnelNoteAction extends SearchAction {
         PersonnelBO personnel = getPersonnelBizService().getPersonnel(
                 getShortValue(((PersonnelNoteActionForm) form).getPersonnelId()));
         PersonnelBO officer = getPersonnelBizService().getPersonnel(getUserContext(request).getId());
-        if (personnel != null)
+        if (personnel != null) {
             checkPermissionForAddingNotesToPersonnel(getUserContext(request), personnel.getOffice().getOfficeId(),
                     personnel.getPersonnelId());
-        else
+        } else {
             checkPermissionForAddingNotesToPersonnel(getUserContext(request), personnel.getOffice().getOfficeId(),
                     getUserContext(request).getId());
+        }
         PersonnelNotesEntity personnelNote = new PersonnelNotesEntity(actionForm.getComment(), officer, personnel);
         personnel.addNotes(getUserContext(request).getId(), personnelNote);
         personnel = null;
@@ -133,10 +134,11 @@ public class PersonnelNoteAction extends SearchAction {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.preview.toString()))
+            if (method.equals(Methods.preview.toString())) {
                 forward = ActionForwards.preview_failure.toString();
-            else if (method.equals(Methods.create.toString()))
+            } else if (method.equals(Methods.create.toString())) {
                 forward = ActionForwards.create_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }
@@ -167,8 +169,9 @@ public class PersonnelNoteAction extends SearchAction {
 
     private void checkPermissionForAddingNotesToPersonnel(UserContext userContext, Short recordOfficeId,
             Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(userContext, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(userContext, recordOfficeId, recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {

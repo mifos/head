@@ -64,13 +64,14 @@ public class FieldConfig {
     }
 
     public boolean isFieldHidden(String labelName) {
-        if (labelName == null || labelName.equals("") || labelName.indexOf(".") == -1)
+        if (labelName == null || labelName.equals("") || labelName.indexOf(".") == -1) {
             return false;
+        }
         labelName = labelName.trim();
         String entityName = labelName.substring(0, labelName.indexOf("."));
         String fieldName = labelName.substring(labelName.indexOf(".") + 1);
         List<FieldConfigurationEntity> fieldList = getEntityFieldMap().get(getEntityMap().get(entityName));
-        if (fieldList != null && fieldList.size() > 0)
+        if (fieldList != null && fieldList.size() > 0) {
             for (FieldConfigurationEntity fieldConfigurationEntity : fieldList) {
                 FieldConfigurationEntity parentfieldConfigurationEntity = fieldConfigurationEntity
                         .getParentFieldConfig();
@@ -80,17 +81,19 @@ public class FieldConfig {
                     return true;
                 }
             }
+        }
         return false;
     }
 
     public boolean isFieldManadatory(String labelName) {
-        if (labelName == null || labelName.equals("") || labelName.indexOf(".") == -1)
+        if (labelName == null || labelName.equals("") || labelName.indexOf(".") == -1) {
             return false;
+        }
         labelName = labelName.trim();
         String entityName = labelName.substring(0, labelName.indexOf("."));
         String fieldName = labelName.substring(labelName.indexOf(".") + 1);
         List<FieldConfigurationEntity> fieldList = getEntityFieldMap().get(getEntityMap().get(entityName));
-        if (fieldList != null && fieldList.size() > 0)
+        if (fieldList != null && fieldList.size() > 0) {
             for (FieldConfigurationEntity fieldConfigurationEntity : fieldList) {
                 FieldConfigurationEntity parentfieldConfigurationEntity = fieldConfigurationEntity
                         .getParentFieldConfig();
@@ -112,6 +115,7 @@ public class FieldConfig {
                     return true;
                 }
             }
+        }
         return false;
     }
 

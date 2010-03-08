@@ -118,8 +118,9 @@ public class SurveysPersistence extends Persistence {
             throws PersistenceException {
         List<Question> filteredQuestions = new ArrayList<Question>();
         for (Question question : questions) {
-            if (question.getQuestionType() == questionType)
+            if (question.getQuestionType() == questionType) {
                 filteredQuestions.add(question);
+            }
         }
         return filteredQuestions;
     }

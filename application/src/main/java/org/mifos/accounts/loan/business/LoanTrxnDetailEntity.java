@@ -151,10 +151,11 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                 "Inside generate reverse transaction method of loan trxn detail");
         String comment = null;
-        if (null == adjustmentComment)
+        if (null == adjustmentComment) {
             comment = getComments();
-        else
+        } else {
             comment = adjustmentComment;
+        }
 
         LoanTrxnDetailEntity reverseAccntTrxn;
 

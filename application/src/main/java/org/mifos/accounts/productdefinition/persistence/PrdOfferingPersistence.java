@@ -108,10 +108,11 @@ public class PrdOfferingPersistence extends Persistence {
     public List<PrdOfferingBO> getAllPrdOffringByType(String prdType) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE, Short.valueOf(prdType));
-        if (prdType.equals(ProductType.LOAN.getValue().toString()))
+        if (prdType.equals(ProductType.LOAN.getValue().toString())) {
             queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
-        else if (prdType.equals(ProductType.SAVINGS.getValue().toString()))
+        } else if (prdType.equals(ProductType.SAVINGS.getValue().toString())) {
             queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+        }
 
         return executeNamedQuery(NamedQueryConstants.PRD_BYTYPE, queryParameters);
 
@@ -123,10 +124,11 @@ public class PrdOfferingPersistence extends Persistence {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE, Short.valueOf(prdType));
         queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));
-        if (prdType.equals(ProductType.LOAN.getValue().toString()))
+        if (prdType.equals(ProductType.LOAN.getValue().toString())) {
             queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
-        else if (prdType.equals(ProductType.SAVINGS.getValue().toString()))
+        } else if (prdType.equals(ProductType.SAVINGS.getValue().toString())) {
             queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+        }
 
         return executeNamedQuery(NamedQueryConstants.ALLOWED_PRD_OFFERING_BYTYPE, queryParameters);
 
@@ -139,10 +141,11 @@ public class PrdOfferingPersistence extends Persistence {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE, Short.valueOf(prdType));
         queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));
-        if (prdType.equals(ProductType.LOAN.getValue().toString()))
+        if (prdType.equals(ProductType.LOAN.getValue().toString())) {
             queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
-        else if (prdType.equals(ProductType.SAVINGS.getValue().toString()))
+        } else if (prdType.equals(ProductType.SAVINGS.getValue().toString())) {
             queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+        }
         return executeNamedQuery(NamedQueryConstants.ALLOWED_PRD_OFFERING_FOR_MIXPRODUCT, queryParameters);
 
     }

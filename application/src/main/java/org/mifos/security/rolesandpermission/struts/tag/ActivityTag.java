@@ -98,8 +98,9 @@ public class ActivityTag extends TagSupport {
             }
         }
         for (ActivityEntity activityEntity : activityList) {
-            if (ids.contains(activityEntity.getId()))
+            if (ids.contains(activityEntity.getId())) {
                 newActivityList.add(activityEntity);
+            }
         }
         return newActivityList;
     }

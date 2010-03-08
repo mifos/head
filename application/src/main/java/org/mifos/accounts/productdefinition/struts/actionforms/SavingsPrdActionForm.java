@@ -400,8 +400,9 @@ public class SavingsPrdActionForm extends BaseActionForm {
             addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
         }
       //validate end date
-        if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0)
+        if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0) {
             addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
+        }
 
         validateRecommendedAmount(errors, request);
         validateMaxAmntWithdrawl(errors, request);
@@ -482,10 +483,11 @@ public class SavingsPrdActionForm extends BaseActionForm {
             try {
                 Double intRate = getInterestRateValue();
                 // FIXME: hardcoded limit for maximum interest rate.
-                if (intRate != null && intRate > 100)
+                if (intRate != null && intRate > 100) {
                     addError(errors, "interestRate", ProductDefinitionConstants.ERRORINTRATE, getLabel(
                             ConfigurationConstants.INTEREST, request)
                             + " " + prdrate);
+                }
             } catch (NumberFormatException nfe) {
                 addError(errors, "interestRate", ProductDefinitionConstants.ERRORINTRATE, getLabel(
                         ConfigurationConstants.INTEREST, request)
@@ -499,26 +501,29 @@ public class SavingsPrdActionForm extends BaseActionForm {
                                 FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE));
             }
         }
-        if (StringUtils.isBlank(getInterestCalcType()))
+        if (StringUtils.isBlank(getInterestCalcType())) {
             addError(errors, "interestCalcType", ProductDefinitionConstants.ERROR_SELECT, balanceInterest
                     + getLabel(ConfigurationConstants.INTEREST, request) + " " + calculation);
+        }
         if (StringUtils.isBlank(getTimeForInterestCacl())) {
             addError(errors, "timeForInterestCacl", ProductDefinitionConstants.ERROR_MANDATORY, timePeriodString
                     + getLabel(ConfigurationConstants.INTEREST, request) + " " + calculation);
         } else {
             int timePeriod = getTimeForInterestCalcValue();
-            if (timePeriod <= 0 || timePeriod > 32767)
+            if (timePeriod <= 0 || timePeriod > 32767) {
                 addError(errors, "timeForInterestCacl", ProductDefinitionConstants.ERRORINTRATE, timePeriodString
                         + getLabel(ConfigurationConstants.INTEREST, request) + " " + calculation);
+            }
         }
         if (StringUtils.isBlank(getFreqOfInterest())) {
             addError(errors, "freqOfInterest", ProductDefinitionConstants.ERROR_MANDATORY, frequencyString
                     + getLabel(ConfigurationConstants.INTEREST, request) + " " + postingAccounts);
         } else {
             int frequency = getFreqOfInterestValue();
-            if (frequency <= 0 || frequency > 32767)
+            if (frequency <= 0 || frequency > 32767) {
                 addError(errors, "freqOfInterest", ProductDefinitionConstants.ERRORINTRATE, frequencyString
                         + getLabel(ConfigurationConstants.INTEREST, request) + " " + postingAccounts);
+            }
         }
 
     }

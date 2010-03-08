@@ -45,8 +45,9 @@ public class SearchUtils {
 
     public static String normalizeSearchString(String searchString) {
         String searchStr = searchString.trim();
-        if (searchString.contains("%") && searchString.length() > 1)
+        if (searchString.contains("%") && searchString.length() > 1) {
             return searchStr.replace("%", "\\%");
+        }
         return searchStr;
     }
 
@@ -65,8 +66,9 @@ public class SearchUtils {
     public static String generateLookupName(String type, String newElementText) {
         String name = type + "." + camelCase(newElementText) + "."
                 + new DateTimeService().getCurrentDateTime().getMillis();
-        if (name.length() > LookUpNameLength)
+        if (name.length() > LookUpNameLength) {
             name = name.substring(0, LookUpNameLength);
+        }
         return name;
     }
 }

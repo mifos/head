@@ -56,8 +56,9 @@ public class RoleActivityEntity extends PersistentObject {
 
         RoleActivityEntity roleActivityEntity = (RoleActivityEntity) arg0;
         if (this.getRole().getId() == null || roleActivityEntity.getRole().getId() == null
-                || this.getActivity().getId() == null || roleActivityEntity.getActivity().getId() == null)
+                || this.getActivity().getId() == null || roleActivityEntity.getActivity().getId() == null) {
             return false;
+        }
         if (this.getRole().getId().equals(roleActivityEntity.getRole().getId())
                 && this.getActivity().getId().equals(roleActivityEntity.getActivity().getId())) {
             return true;

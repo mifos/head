@@ -105,8 +105,9 @@ public class ClientPersistence extends Persistence {
 
         // if government id is null or empty, do not match against closed
         // client's government id, doesn't make sense
-        if (StringUtils.isBlank(governmentId))
+        if (StringUtils.isBlank(governmentId)) {
             return false;
+        }
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
@@ -189,8 +190,9 @@ public class ClientPersistence extends Persistence {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         customerPersistence.saveCustomer(clientBO);
         try {
-            if (clientBO.getParentCustomer() != null)
+            if (clientBO.getParentCustomer() != null) {
                 customerPersistence.createOrUpdate(clientBO.getParentCustomer());
+            }
             // seems fishy... why do savings accounts need updating here?
             new SavingsPersistence().persistSavingAccounts(clientBO);
         } catch (PersistenceException pe) {

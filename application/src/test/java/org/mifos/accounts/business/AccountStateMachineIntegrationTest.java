@@ -100,8 +100,9 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
             if (accountState.getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
                Assert.assertEquals(3, accountState.getFlagSet().size());
                 for (AccountStateFlagEntity accountStateFlag : accountState.getFlagSet()) {
-                    if (accountStateFlag.getId().equals(AccountStateFlag.LOAN_REVERSAL.getValue()))
+                    if (accountStateFlag.getId().equals(AccountStateFlag.LOAN_REVERSAL.getValue())) {
                         Assert.fail();
+                    }
                 }
             }
         }

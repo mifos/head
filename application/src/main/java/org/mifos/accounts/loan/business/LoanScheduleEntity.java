@@ -358,8 +358,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
                 break;
             }
         }
-        if (objectToRemove != null)
+        if (objectToRemove != null) {
             this.removeAccountFeesActionDetailEntity(objectToRemove);
+        }
         return feeAmount;
     }
 
@@ -396,10 +397,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     void applyMiscCharge(Short chargeType, Money charge) {
-        if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+        if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES))) {
             setMiscFee(getMiscFee().add(charge));
-        else if (chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+        } else if (chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
             setMiscPenalty(getMiscPenalty().add(charge));
+        }
     }
 
     public boolean isPrincipalZero() {
@@ -408,8 +410,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     public boolean isFeeAlreadyAttatched(Short feeId) {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : this.getAccountFeesActionDetails()) {
-            if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId))
+            if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)) {
                 return true;
+            }
         }
         return false;
     }

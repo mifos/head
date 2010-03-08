@@ -86,20 +86,23 @@ public class SavingsPerformanceEntity extends PersistentObject {
     }
 
     void setPaymentDetails(Money totalAmount) {
-        if (totalDeposits == null)
+        if (totalDeposits == null) {
             totalDeposits = new Money(savings.getCurrency());
+        }
         totalDeposits = totalDeposits.add(totalAmount);
     }
 
     void setWithdrawDetails(Money totalAmount) {
-        if (totalWithdrawals == null)
+        if (totalWithdrawals == null) {
             totalWithdrawals = new Money(savings.getCurrency());
+        }
         totalWithdrawals = totalWithdrawals.add(totalAmount);
     }
 
     void setTotalInterestDetails(Money totalAmount) {
-        if (totalInterestEarned == null)
+        if (totalInterestEarned == null) {
             totalInterestEarned = new Money(savings.getCurrency());
+        }
         totalInterestEarned = totalInterestEarned.add(totalAmount);
     }
 

@@ -45,8 +45,9 @@ public class AddRepaymentRule extends Upgrade {
      */
     public AddRepaymentRule(int higherVersion, RepaymentRuleTypes type, short locale, String message) {
         super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
             throw new RuntimeException(wrongConstructor);
+        }
         this.type = type;
         this.locale = locale;
         this.message = message;
@@ -59,8 +60,9 @@ public class AddRepaymentRule extends Upgrade {
      */
     public AddRepaymentRule(int higherVersion, RepaymentRuleTypes type, String lookupKey) {
         super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, lookupKey))
+        if (!validateLookupValueKey(keyFormat, lookupKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
+        }
         this.type = type;
         this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.lookupKey = lookupKey;

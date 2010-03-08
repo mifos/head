@@ -143,7 +143,8 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
         List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>) SessionUtils.getAttribute(
                 SavingsConstants.TRXN_HISTORY_LIST, request);
-        for (TransactionHistoryView transactionHistoryView : trxnHistoryList)
-           Assert.assertEquals(accountBO.getUserContext().getName(), transactionHistoryView.getPostedBy());
+        for (TransactionHistoryView transactionHistoryView : trxnHistoryList) {
+            Assert.assertEquals(accountBO.getUserContext().getName(), transactionHistoryView.getPostedBy());
+        }
     }
 }

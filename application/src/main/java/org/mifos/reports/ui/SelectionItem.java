@@ -76,23 +76,30 @@ public class SelectionItem implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final SelectionItem other = (SelectionItem) obj;
         if (displayName == null) {
-            if (other.displayName != null)
+            if (other.displayName != null) {
                 return false;
-        } else if (!displayName.equals(other.displayName))
+            }
+        } else if (!displayName.equals(other.displayName)) {
             return false;
+        }
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         return true;
     }
 

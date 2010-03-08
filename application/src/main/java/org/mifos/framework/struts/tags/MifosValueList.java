@@ -234,8 +234,9 @@ public class MifosValueList extends BodyTagSupport {
      */
     private static String mapCustomValueListElementToString(CustomValueListElement element) {
         Integer id = element.getLookUpId();
-        if (id == null)
+        if (id == null) {
             id = 0;
+        }
         return "" + id + ";" + element.getLookUpValue();
     }
 

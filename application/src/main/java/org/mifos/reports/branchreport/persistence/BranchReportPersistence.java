@@ -146,9 +146,10 @@ public class BranchReportPersistence extends Persistence {
         params.put(NOT_LESS_THAN_DAYS, period.getNotLessThanDays());
         params.put(CUSTOMER_LEVEL_ID, CLIENT.getValue());
         List queryResult = executeNamedQuery(EXTRACT_BRANCH_REPORT_LOAN_ARREARS_IN_PERIOD, params);
-        if (queryResult.isEmpty())
+        if (queryResult.isEmpty()) {
             return new BranchReportLoanArrearsAgingBO(period, INTEGER_ZERO, INTEGER_ZERO, zero(currency), zero(currency),
                     zero(currency));
+        }
         Object[] resultSet = (Object[]) queryResult.get(0);
         return new BranchReportLoanArrearsAgingBO(period, (Integer) resultSet[0], (Integer) resultSet[1], createMoney(
                 currency, (BigDecimal) resultSet[2]), createMoney(currency, (BigDecimal) resultSet[3]), createMoney(
@@ -180,8 +181,9 @@ public class BranchReportPersistence extends Persistence {
         // MySql can't handle empty list in "IN clause"
         // See
         // http://opensource.atlassian.com/projects/hibernate/browse/HHH-2045
-        if (staffSummaries.isEmpty())
+        if (staffSummaries.isEmpty()) {
             return;
+        }
         Query query = populateQueryWithPersonnelIds(
                 NamedQueryConstants.EXTRACT_BRANCH_REPORT_TOTAL_CLIENTS_ENROLLED_BY_PERSONNEL, staffSummaries);
         runStaffSummaryQueryClosure(query, new TotalClientsFormedByPersonnelClosure(staffSummaries));
@@ -191,8 +193,9 @@ public class BranchReportPersistence extends Persistence {
         // MySql can't handle empty list in "IN clause"
         // See
         // http://opensource.atlassian.com/projects/hibernate/browse/HHH-2045
-        if (staffSummaries.isEmpty())
+        if (staffSummaries.isEmpty()) {
             return;
+        }
         Query query = populateQueryWithPersonnelIds(
                 NamedQueryConstants.EXTRACT_BRANCH_REPORT_CLIENTS_ENROLLED_BY_PERSONNEL_THIS_MONTH, staffSummaries);
         runStaffSummaryQueryClosure(query, new ClientsFormedByPersonnelThisMonthClosure(staffSummaries));
@@ -203,8 +206,9 @@ public class BranchReportPersistence extends Persistence {
         // MySql can't handle empty list in "IN clause"
         // See
         // http://opensource.atlassian.com/projects/hibernate/browse/HHH-2045
-        if (staffSummaries.isEmpty())
+        if (staffSummaries.isEmpty()) {
             return;
+        }
         Query query = populateQueryWithPersonnelIds(
                 NamedQueryConstants.EXTRACT_BRANCH_REPORT_LOAN_ARREARS_AMOUNT_FOR_PERSONNEL, staffSummaries);
         runStaffSummaryQueryClosure(query, new LoanArrearsAmountForPersonnel(staffSummaries, currency));

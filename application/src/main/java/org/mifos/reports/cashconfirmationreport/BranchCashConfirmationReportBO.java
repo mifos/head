@@ -98,28 +98,37 @@ public class BranchCashConfirmationReportBO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchCashConfirmationReportBO other = (BranchCashConfirmationReportBO) obj;
         if (branchCashConfirmationReportId == null) {
-            if (other.branchCashConfirmationReportId != null)
+            if (other.branchCashConfirmationReportId != null) {
                 return false;
-        } else if (!branchCashConfirmationReportId.equals(other.branchCashConfirmationReportId))
+            }
+        } else if (!branchCashConfirmationReportId.equals(other.branchCashConfirmationReportId)) {
             return false;
+        }
         if (branchId == null) {
-            if (other.branchId != null)
+            if (other.branchId != null) {
                 return false;
-        } else if (!branchId.equals(other.branchId))
+            }
+        } else if (!branchId.equals(other.branchId)) {
             return false;
+        }
         if (runDate == null) {
-            if (other.runDate != null)
+            if (other.runDate != null) {
                 return false;
-        } else if (!runDate.equals(other.runDate))
+            }
+        } else if (!runDate.equals(other.runDate)) {
             return false;
+        }
         return true;
     }
 }

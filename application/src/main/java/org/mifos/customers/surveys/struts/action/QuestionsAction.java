@@ -236,12 +236,13 @@ public class QuestionsAction extends PersistenceAction {
             questionNames.add(q.getShortName());
         }
         String shortName = actionForm.getValue("shortName");
-        if (questionNames.contains(shortName))
+        if (questionNames.contains(shortName)) {
             errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
-        else {
+        } else {
             List<Question> retrievedQuestions = surveysPersistence.retrieveQuestionsByName(shortName);
-            if (retrievedQuestions.size() > 0)
+            if (retrievedQuestions.size() > 0) {
                 errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
+            }
         }
 
         AnswerType type = AnswerType.fromInt(Integer.parseInt(actionForm.getValue("answerType")));

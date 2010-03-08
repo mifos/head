@@ -65,8 +65,9 @@ public class ClientFamilyDetailView {
     }
 
     public String getDateOfBirthForBrowser() {
-        if(getDateOfBirth()!=null)
+        if(getDateOfBirth()!=null) {
             return DateUtils.makeDateAsSentFromBrowser(getDateOfBirth());
+        }
         return null;
     }
 

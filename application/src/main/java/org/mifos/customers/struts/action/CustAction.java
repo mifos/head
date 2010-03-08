@@ -185,15 +185,17 @@ public class CustAction extends SearchAction {
         FeeBusinessService feeService = (FeeBusinessService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.FeesService);
         List<FeeBO> fees = feeService.retrieveCustomerFeesByCategaroyType(feeCategory);
-        if (meeting != null)
+        if (meeting != null) {
             fees = removeMismatchPeriodicFee(fees, meeting);
+        }
         List<FeeView> additionalFees = new ArrayList<FeeView>();
         List<FeeView> defaultFees = new ArrayList<FeeView>();
         for (FeeBO fee : fees) {
-            if (fee.isCustomerDefaultFee())
+            if (fee.isCustomerDefaultFee()) {
                 defaultFees.add(new FeeView(getUserContext(request), fee));
-            else
+            } else {
                 additionalFees.add(new FeeView(getUserContext(request), fee));
+            }
         }
         actionForm.setDefaultFees(defaultFees);
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, additionalFees, request);
@@ -202,8 +204,9 @@ public class CustAction extends SearchAction {
     private List<FeeBO> removeMismatchPeriodicFee(List<FeeBO> feeList, MeetingBO meeting) {
         List<FeeBO> fees = new ArrayList<FeeBO>();
         for (FeeBO fee : feeList) {
-            if (fee.isOneTime() || (fee.isPeriodic() && isFrequencyMatches(fee, meeting)))
+            if (fee.isOneTime() || (fee.isPeriodic() && isFrequencyMatches(fee, meeting))) {
                 fees.add(fee);
+            }
         }
         return fees;
     }
@@ -234,15 +237,17 @@ public class CustAction extends SearchAction {
     protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
         for (CustomFieldView customField : customFields) {
             if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNotBlank(customField.getFieldValue()))
+                    && StringUtils.isNotBlank(customField.getFieldValue())) {
                 customField.convertDateToUniformPattern(locale);
+            }
         }
     }
 
     protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
             Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     protected boolean isPermissionAllowed(Short newState, UserContext userContext, Short flagSelected,
@@ -256,16 +261,18 @@ public class CustAction extends SearchAction {
         List<PositionEntity> positions = (List<PositionEntity>) SessionUtils.getAttribute(CustomerConstants.POSITIONS,
                 request);
         List<CustomerPositionView> customerPositions = new ArrayList<CustomerPositionView>();
-        for (PositionEntity position : positions)
+        for (PositionEntity position : positions) {
             for (CustomerPositionEntity entity : custPosEntities) {
                 if (position.getId().equals(entity.getPosition().getId())) {
-                    if (entity.getCustomer() != null)
+                    if (entity.getCustomer() != null) {
                         customerPositions.add(new CustomerPositionView(entity.getCustomer().getCustomerId(), entity
                                 .getPosition().getId()));
-                    else
+                    } else {
                         customerPositions.add(new CustomerPositionView(null, entity.getPosition().getId()));
+                    }
                 }
             }
+        }
         return customerPositions;
     }
 
@@ -286,12 +293,13 @@ public class CustAction extends SearchAction {
 
     private String getCustomerDetailPage(String input) {
         String forward = null;
-        if (input.equals("center"))
+        if (input.equals("center")) {
             forward = ActionForwards.center_detail_page.toString();
-        else if (input.equals("group"))
+        } else if (input.equals("group")) {
             forward = ActionForwards.group_detail_page.toString();
-        else if (input.equals("client"))
+        } else if (input.equals("client")) {
             forward = ActionForwards.client_detail_page.toString();
+        }
         return forward;
     }
 

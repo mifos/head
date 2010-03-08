@@ -118,9 +118,9 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
             Short activityId = null;
             if (null != method
                     && (method.equals("cancel") || method.equals("validate") || method.equals("searchPrev") || method
-                            .equals("searchNext")))
+                            .equals("searchNext"))) {
                 return true;
-            else {
+            } else {
                 String activityKey = null;
 
                 if (isReportRequest(request)) {
@@ -141,10 +141,11 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
                     activityKey = key + "-" + session.getAttribute(SecurityConstants.SECURITY_PARAM);
                     activityId = activityMapper.getActivityId(activityKey);
                 }
-                if (null == activityId)
+                if (null == activityId) {
                     return false;
-                else if (activityId.shortValue() == 0)
+                } else if (activityId.shortValue() == 0) {
                     return true;
+                }
             }
             returnValue = AuthorizationManager.getInstance().isActivityAllowed(
                     (UserContext) session.getAttribute("UserContext"),
@@ -208,8 +209,9 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
             }
 
             // set the last forward in the activity context
-            if (activityContext != null)
+            if (activityContext != null) {
                 activityContext.setLastForward(forward);
+            }
 
             // read the request and add the values to the PreviousRequestValues
             // object. this will set every thing in the request apart from
@@ -231,8 +233,9 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
             forward = (processException(request, response, e, form, mapping));
 
             // set the last forward in the activity context
-            if (activityContext != null)
+            if (activityContext != null) {
                 activityContext.setLastForward(forward);
+            }
             populateTheRequestFromPreviousValues(request, previousRequestValues);
 
         } finally {

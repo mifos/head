@@ -70,8 +70,9 @@ public class AccountCheckListBO extends CheckListBO {
             Short checkListStatus, List<String> details, Short prefferedLocale, Short userId) throws CheckListException {
         super.update(name, checkListStatus, details, prefferedLocale, userId);
         if (!this.productTypeEntity.getProductTypeID().equals(productTypeEntity.getProductTypeID())
-                || !this.accountStateEntity.getId().equals(accountStateEntity.getId()))
+                || !this.accountStateEntity.getId().equals(accountStateEntity.getId())) {
             validateCheckListState(productTypeEntity.getProductTypeID(), accountStateEntity.getId(), false);
+        }
         this.productTypeEntity = productTypeEntity;
         this.accountStateEntity = accountStateEntity;
         try {

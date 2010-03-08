@@ -209,16 +209,18 @@ public class SystemInfo implements Serializable {
     }
 
     public String getDatabasePort() {
-        if (infoURL.getPort() < 0)
+        if (infoURL.getPort() < 0) {
             return "unknown";
-        else
+        } else {
             return "" + infoURL.getPort();
+        }
     }
 
     public String getDatabaseName() {
         String path = infoURL.getPath();
-        if (path != null) // database name is not required
+        if (path != null) {
             path = path.replaceFirst("/", "");
+        }
         return path;
     }
 

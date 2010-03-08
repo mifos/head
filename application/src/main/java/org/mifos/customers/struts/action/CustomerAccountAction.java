@@ -80,12 +80,15 @@ public class CustomerAccountAction extends AccountAppAction {
     }
 
     private ActionForwards getForward(CustomerBO customerBO) {
-        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()))
+        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())) {
             return ActionForwards.client_detail_page;
-        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue()))
+        }
+        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())) {
             return ActionForwards.group_detail_page;
-        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CENTER.getValue()))
+        }
+        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CENTER.getValue())) {
             return ActionForwards.center_detail_page;
+        }
         return null;
     }
 }

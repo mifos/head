@@ -39,8 +39,9 @@ public class MeetingPersistence extends Persistence {
         List<MasterDataEntity> weekDaysList = new MasterPersistence().retrieveMasterEntities(WeekDaysEntity.class,
                 localeId);
         for (MasterDataEntity weekDay : weekDaysList) {
-            if (((WeekDaysEntity) weekDay).isWorkingDay())
+            if (((WeekDaysEntity) weekDay).isWorkingDay()) {
                 workingDays.add((WeekDaysEntity) weekDay);
+            }
         }
         return workingDays;
     }

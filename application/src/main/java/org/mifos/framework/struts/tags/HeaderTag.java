@@ -62,10 +62,11 @@ public class HeaderTag extends TagSupport {
         }
         try {
             String linkStr;
-            if (selfLink != null && selfLink != "")
+            if (selfLink != null && selfLink != "") {
                 linkStr = TagGenerator.createHeaderLinks(obj, Boolean.getBoolean(selfLink), randomNum);
-            else
+            } else {
                 linkStr = TagGenerator.createHeaderLinks(obj, true, randomNum);
+            }
 
             pageContext.getOut().write(linkStr);
         }

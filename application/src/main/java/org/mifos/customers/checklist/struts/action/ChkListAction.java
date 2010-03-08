@@ -332,14 +332,18 @@ public class ChkListAction extends BaseAction {
             HttpServletResponse httpservletresponse) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
 
-        if (method.equalsIgnoreCase(Methods.preview.toString()))
+        if (method.equalsIgnoreCase(Methods.preview.toString())) {
             return mapping.findForward(ActionForwards.load_success.toString());
-        if (method.equalsIgnoreCase(Methods.managePreview.toString()))
+        }
+        if (method.equalsIgnoreCase(Methods.managePreview.toString())) {
             return mapping.findForward(ActionForwards.manage_success.toString());
-        if (method.equalsIgnoreCase(Methods.create.toString()))
+        }
+        if (method.equalsIgnoreCase(Methods.create.toString())) {
             return mapping.findForward(ActionForwards.preview_success.toString());
-        if (method.equalsIgnoreCase(Methods.update.toString()))
+        }
+        if (method.equalsIgnoreCase(Methods.update.toString())) {
             return mapping.findForward(ActionForwards.managepreview_success.toString());
+        }
         return null;
     }
 
@@ -410,25 +414,28 @@ public class ChkListAction extends BaseAction {
             form.setStateId(getStringValue(((AccountCheckListBO) checkList).getAccountStateEntity().getId()));
             form.setIsCustomer(false);
         }
-        if (checkList.getChecklistStatus().equals(CheckListConstants.STATUS_ACTIVE))
+        if (checkList.getChecklistStatus().equals(CheckListConstants.STATUS_ACTIVE)) {
             form.setChecklistStatus(getStringValue(CheckListConstants.STATUS_ACTIVE));
-        else
+        } else {
             form.setChecklistStatus(getStringValue(CheckListConstants.STATUS_INACTIVE));
+        }
         List<String> details = new ArrayList<String>();
-        for (CheckListDetailEntity checkListDetailEntity : checkList.getChecklistDetails())
+        for (CheckListDetailEntity checkListDetailEntity : checkList.getChecklistDetails()) {
             details.add(checkListDetailEntity.getDetailText());
+        }
         form.setDetailsList(details);
     }
 
     private List<CheckListStatesView> getStates(ChkListActionForm chkListActionForm, HttpServletRequest request)
             throws Exception {
         List<CheckListStatesView> states = new ArrayList<CheckListStatesView>();
-        if (chkListActionForm.getIsCustomer())
+        if (chkListActionForm.getIsCustomer()) {
             states = ((CheckListBusinessService) getService()).getCustomerStates(getShortValue(chkListActionForm
                     .getMasterTypeId()), getUserContext(request).getLocaleId());
-        else
+        } else {
             states = ((CheckListBusinessService) getService()).getAccountStates(getShortValue(chkListActionForm
                     .getMasterTypeId()), getUserContext(request).getLocaleId());
+        }
         return states;
     }
 

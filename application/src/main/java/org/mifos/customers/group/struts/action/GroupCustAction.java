@@ -137,8 +137,9 @@ public class GroupCustAction extends CustAction {
                     GroupConstants.CREATE_NEW_GROUP);
             SessionUtils.setAttribute(GroupConstants.CENTER_SEARCH_INPUT, searchInputs, request.getSession());
             actionForward = ActionForwards.loadCenterSearch;
-        } else
+        } else {
             actionForward = ActionForwards.loadCreateGroup;
+        }
 
         return mapping.findForward(actionForward.toString());
     }
@@ -197,10 +198,11 @@ public class GroupCustAction extends CustAction {
                 request);
 
         GroupBO group;
-        if (isCenterHierarchyExists)
+        if (isCenterHierarchyExists) {
             group = createGroupWithCenter(actionForm, request);
-        else
+        } else {
             group = createGroupWithoutCenter(actionForm, request);
+        }
 
         new GroupPersistence().saveGroup(group);
         actionForm.setCustomerId(group.getCustomerId().toString());
@@ -282,8 +284,9 @@ public class GroupCustAction extends CustAction {
         GroupBO group = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         Date trainedDate = null;
-        if (actionForm.getTrainedDate() != null)
+        if (actionForm.getTrainedDate() != null) {
             trainedDate = getDateFromString(actionForm.getTrainedDate(), getUserContext(request).getPreferredLocale());
+        }
 
         GroupBO groupBO;
         groupBO = getGroupBusinessService().findBySystemId(actionForm.getGlobalCustNum());
@@ -305,8 +308,9 @@ public class GroupCustAction extends CustAction {
         String fromPage = actionForm.getInput();
         if (fromPage.equals(GroupConstants.MANAGE_GROUP) || fromPage.equals(GroupConstants.PREVIEW_MANAGE_GROUP)) {
             forward = ActionForwards.cancelEdit_success;
-        } else if (fromPage.equals(GroupConstants.CREATE_GROUP))
+        } else if (fromPage.equals(GroupConstants.CREATE_GROUP)) {
             forward = ActionForwards.cancelCreate_success;
+        }
         return mapping.findForward(forward.toString());
     }
 
@@ -316,15 +320,17 @@ public class GroupCustAction extends CustAction {
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         actionForm.setSearchString(null);
         cleanUpSearch(request);
-        if (ClientRules.getClientCanExistOutsideGroup())
+        if (ClientRules.getClientCanExistOutsideGroup()) {
             SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED, CustomerConstants.NO, request);
-        else
+        } else {
             SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED, CustomerConstants.YES, request);
+        }
 
-        if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
+        if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER)) {
             return mapping.findForward(ActionForwards.loadTransferSearch_success.toString());
-        else
+        } else {
             return mapping.findForward(ActionForwards.loadSearch_success.toString());
+        }
     }
 
     @Override
@@ -335,33 +341,35 @@ public class GroupCustAction extends CustAction {
         UserContext userContext = getUserContext(request);
         ActionForward actionForward = super.search(mapping, form, request, response);
         String searchString = actionForm.getSearchString();
-        if (searchString == null)
+        if (searchString == null) {
             checkSearchString(actionForm, request);
+        }
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
         searchString = SearchUtils.normalizeSearchString(searchString);
-        if (searchString.equals(""))
+        if (searchString.equals("")) {
             checkSearchString(actionForm, request);
+        }
 
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new GroupBusinessService().search(searchString,
                 userContext.getId()), request);
 
-        if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
+        if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER)) {
             return mapping.findForward(ActionForwards.transferSearch_success.toString());
-        else if (actionForm.getInput() != null
+        } else if (actionForm.getInput() != null
                 && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_ADD_CLIENTS_TO_GROUPS)) {
             SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new GroupBusinessService()
                     .searchForAddingClientToGroup(searchString, userContext.getId()), request);
             return mapping.findForward(ActionForwards.addGroupSearch_success.toString());
-        } else
-
+        } else {
             return actionForward;
+        }
     }
 
     private void checkSearchString(GroupCustActionForm actionForm, HttpServletRequest request) throws CustomerException {
-        if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
+        if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER)) {
             request.setAttribute(Constants.INPUT, CenterConstants.INPUT_SEARCH_TRANSFERGROUP);
-        else {
+        } else {
             request.setAttribute(Constants.INPUT, null);
         }
         throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
@@ -399,20 +407,23 @@ public class GroupCustAction extends CustAction {
         if (!isCenterHierarchyExists) {
             loadLoanOfficers(actionForm.getOfficeIdValue(), request);
             loadFees(actionForm, request, FeeCategory.GROUP, null);
-        } else
+        } else {
             loadFees(actionForm, request, FeeCategory.GROUP, actionForm.getParentCustomer().getCustomerMeeting()
                     .getMeeting());
+        }
         loadFormedByPersonnel(actionForm.getOfficeIdValue(), request);
     }
 
     private void setLocaleIdToLoanStatus(List<LoanBO> accountList, Short localeId) {
-        for (LoanBO accountBO : accountList)
+        for (LoanBO accountBO : accountList) {
             setLocaleForAccount(accountBO, localeId);
+        }
     }
 
     private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList, Short localeId) {
-        for (SavingsBO accountBO : accountList)
+        for (SavingsBO accountBO : accountList) {
             setLocaleForAccount(accountBO, localeId);
+        }
     }
 
     private void setLocaleForAccount(AccountBO account, Short localeId) {
@@ -420,10 +431,12 @@ public class GroupCustAction extends CustAction {
     }
 
     private void setLocaleForMasterEntities(GroupBO groupBO, Short localeId) {
-        for (CustomerPositionEntity customerPositionEntity : groupBO.getCustomerPositions())
+        for (CustomerPositionEntity customerPositionEntity : groupBO.getCustomerPositions()) {
             customerPositionEntity.getPosition().setLocaleId(localeId);
-        for (CustomerFlagDetailEntity customerFlag : groupBO.getCustomerFlags())
+        }
+        for (CustomerFlagDetailEntity customerFlag : groupBO.getCustomerFlags()) {
             customerFlag.getStatusFlag().setLocaleId(localeId);
+        }
     }
 
     private GroupBusinessService getGroupBusinessService() {
@@ -454,10 +467,11 @@ public class GroupCustAction extends CustAction {
         actionForm.setAddress(group.getAddress());
         actionForm.setCustomerPositions(createCustomerPositionViews(group.getCustomerPositions(), request));
         actionForm.setCustomFields(createCustomFieldViews(group.getCustomFields(), request));
-        if (group.isTrained())
+        if (group.isTrained()) {
             actionForm.setTrained(GroupConstants.TRAINED);
-        else
+        } else {
             actionForm.setTrained(GroupConstants.NOT_TRAINED);
+        }
         if (group.getTrainedDate() != null) {
             actionForm.setTrainedDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), group
                     .getTrainedDate().toString()));

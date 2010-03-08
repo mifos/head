@@ -35,8 +35,9 @@ public enum ApplicableTo {
 
     public static ApplicableTo fromInt(int value) {
         for (ApplicableTo candidate : ApplicableTo.values()) {
-            if (candidate.getValue() == value)
+            if (candidate.getValue() == value) {
                 return candidate;
+            }
         }
         throw new RuntimeException("no applicable master for " + value);
     }

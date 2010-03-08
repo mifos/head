@@ -63,8 +63,9 @@ public class AddActivity extends Upgrade {
      */
     public AddActivity(int higherVersion, short newActivityId, Short parentActivity, Short locale, String activityName) {
         super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
             throw new RuntimeException(wrongConstructor);
+        }
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;
         this.locale = locale;
@@ -81,8 +82,9 @@ public class AddActivity extends Upgrade {
      */
     public AddActivity(int higherVersion, String activityNameKey, short newActivityId, Short parentActivity) {
         super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, activityNameKey))
+        if (!validateLookupValueKey(keyFormat, activityNameKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
+        }
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;
         this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;

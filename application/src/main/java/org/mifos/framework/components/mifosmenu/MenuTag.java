@@ -55,9 +55,10 @@ public class MenuTag extends BaseHandlerTag {
             if (leftMenu == null) {
                 MenuBuilder.buildMenuForLocale(pageContext);
                 leftMenu = menuRepository.getMenuForTabAndLocale(topMenuTab, locale);
-                if (leftMenu == null) // TODO: to be modified for exception from
-                                      // resource bundle
+                if (leftMenu == null) {
+                    // resource bundle
                     ;// System.out.println("error: menu could not built for locale");
+                }
             }
         } catch (SystemException mpe) {
             throw new JspException(mpe);

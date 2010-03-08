@@ -116,8 +116,9 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     private List<ProductTypeEntity> getProductTypes(UserContext userContext) throws Exception {
         List<ProductTypeEntity> productTypeList = ((ProductMixBusinessService) ServiceFactory.getInstance()
                 .getBusinessService(BusinessServiceName.PrdMix)).getProductTypes();
-        for (ProductTypeEntity productTypeEntity : productTypeList)
+        for (ProductTypeEntity productTypeEntity : productTypeList) {
             productTypeEntity.setUserContext(userContext);
+        }
         return productTypeList;
     }
 
@@ -169,10 +170,11 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
-        if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString()))
+        if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString())) {
             uploadForm.setAccountTypeName("LOAN");
-        else
+        } else {
             uploadForm.setAccountTypeName("SAVINGS");
+        }
 
         updateSelectedStatus(request, uploadForm);
 
@@ -184,10 +186,11 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward editpreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
-        if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString()))
+        if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString())) {
             uploadForm.setAccountTypeName("LOAN");
-        else
+        } else {
             uploadForm.setAccountTypeName("SAVINGS");
+        }
 
         updateSelectedStatus(request, uploadForm);
 
@@ -246,10 +249,11 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
          * not produce any sort of file that can be retirieved. !! it only
          * allows us to perform the upload action.
          */
-        if (getServletRoot(getServlet()) != null)
+        if (getServletRoot(getServlet()) != null) {
             os = new FileOutputStream(file);
-        else
+        } else {
             os = new ByteArrayOutputStream();
+        }
         byte[] buffer = new byte[4096];
         int bytesRead = 0;
         while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {

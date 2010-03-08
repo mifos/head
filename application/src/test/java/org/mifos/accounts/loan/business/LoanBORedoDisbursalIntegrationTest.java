@@ -121,12 +121,15 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Override
     public void tearDown() throws Exception {
         // TestObjectFactory.removeObject(loanOffering);
-        if (loanBO != null)
+        if (loanBO != null) {
             loanBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, loanBO.getAccountId());
-        if (group != null)
+        }
+        if (group != null) {
             group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
-        if (center != null)
+        }
+        if (center != null) {
             center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+        }
         TestObjectFactory.cleanUp(loanBO);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);

@@ -63,8 +63,9 @@ public class Localization {
     }
 
     public Locale getMainLocale() {
-        if (mainLocale == null)
+        if (mainLocale == null) {
             mainLocale = getLocaleFromConfig();
+        }
         return mainLocale;
     }
 
@@ -75,9 +76,9 @@ public class Localization {
     }
 
     public String getCountryCode() {
-        if (mainLocale != null)
+        if (mainLocale != null) {
             return mainLocale.getCountry();
-        else {
+        } else {
             mainLocale = getConfiguredLocale();
             return mainLocale.getCountry();
         }
@@ -100,9 +101,9 @@ public class Localization {
     }
 
     public String getLanguageCode() {
-        if (mainLocale != null)
+        if (mainLocale != null) {
             return mainLocale.getLanguage();
-        else {
+        } else {
             mainLocale = getConfiguredLocale();
             return mainLocale.getLanguage();
         }
@@ -111,9 +112,9 @@ public class Localization {
 
     public String getLanguageName() {
 
-        if (mainLocale != null)
+        if (mainLocale != null) {
             return mainLocale.getDisplayLanguage();
-        else {
+        } else {
             mainLocale = getConfiguredLocale();
             return mainLocale.getDisplayLanguage();
         }
@@ -121,9 +122,9 @@ public class Localization {
 
     public String getCountryName() {
 
-        if (mainLocale != null)
+        if (mainLocale != null) {
             return mainLocale.getDisplayCountry();
-        else {
+        } else {
             mainLocale = getConfiguredLocale();
             return mainLocale.getDisplayCountry();
         }
@@ -131,16 +132,17 @@ public class Localization {
     }
 
     public Short getLocaleId() {
-        if (localeId > -1)
+        if (localeId > -1) {
             return localeId;
+        }
         localeId = getConfiguredLocaleId();
         return localeId;
     }
 
     public Locale getConfiguredLocale() {
-        if (mainLocale != null)
+        if (mainLocale != null) {
             return mainLocale;
-        else {
+        } else {
             mainLocale = getLocaleFromConfig();
             return mainLocale;
         }
@@ -150,8 +152,9 @@ public class Localization {
     private short getConfiguredLocaleId() {
         short localeId = -1;
         Object[] locales = localeCache.values().toArray();
-        if (locales.length == 0)
+        if (locales.length == 0) {
             localeId = 1; // default to English at the beginning when cache is
+        }
         // not ready
         for (Object locale : locales) {
             SupportedLocalesEntity localeEntity = (SupportedLocalesEntity) locale;
@@ -171,13 +174,15 @@ public class Localization {
      */
     private Locale getLocaleFromConfig() {
 
-        if (configLocale == null)
+        if (configLocale == null) {
             configLocale = new ConfigLocale();
+        }
         // need to check if this configLocale is supported by Mifos
-        if ((localeId = getConfiguredLocaleId()) == -1)
+        if ((localeId = getConfiguredLocaleId()) == -1) {
             // FIXME: should not throw raw exception type
             throw new MifosRuntimeException("This configured locale: language code " + configLocale.getLanguageCode()
                     + ", country code " + configLocale.getCountryCode() + " is not supported by Mifos.");
+        }
         Locale locale = new Locale(configLocale.getLanguageCode().toLowerCase(), configLocale.getCountryCode()
                 .toUpperCase());
         return locale;

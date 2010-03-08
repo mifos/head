@@ -89,10 +89,11 @@ public class CustSearchAction extends SearchAction {
                     .getLoanOfficerId())), request);
         }
         String officeName = null;
-        if (actionForm.getOfficeId() != null && !actionForm.getOfficeId().equals(""))
+        if (actionForm.getOfficeId() != null && !actionForm.getOfficeId().equals("")) {
             officeName = new OfficeBusinessService().getOffice(getShortValue(actionForm.getOfficeId())).getOfficeName();
-        else
+        } else {
             officeName = new OfficeBusinessService().getOffice(getUserContext(request).getBranchId()).getOfficeName();
+        }
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName, request);
 
         SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
@@ -113,10 +114,11 @@ public class CustSearchAction extends SearchAction {
             SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST, personnelList, request);
         }
         String officeName = null;
-        if (actionForm.getOfficeId() != null && !actionForm.getOfficeId().equals(""))
+        if (actionForm.getOfficeId() != null && !actionForm.getOfficeId().equals("")) {
             officeName = new OfficeBusinessService().getOffice(getShortValue(actionForm.getOfficeId())).getOfficeName();
-        else
+        } else {
             officeName = new OfficeBusinessService().getOffice(getUserContext(request).getBranchId()).getOfficeName();
+        }
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName, request);
 
         SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
@@ -211,15 +213,17 @@ public class CustSearchAction extends SearchAction {
             return mapping.findForward(ActionForwards.mainSearch_success.toString());
         }
 
-        if (officeId != null && officeId != 0)
+        if (officeId != null && officeId != 0) {
             addSeachValues(searchString, officeId.toString(), new OfficeBusinessService().getOffice(officeId)
                     .getOfficeName(), request);
-        else
+        } else {
             addSeachValues(searchString, officeId.toString(), new OfficeBusinessService().getOffice(
                     userContext.getBranchId()).getOfficeName(), request);
+        }
         searchString = SearchUtils.normalizeSearchString(searchString);
-        if (searchString.equals(""))
+        if (searchString.equals("")) {
             throw new CustomerException(CustomerSearchConstants.NAMEMANDATORYEXCEPTION);
+        }
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getCustomerBusinessService().search(
                 searchString, officeId, userContext.getId(), userContext.getBranchId()), request);
         return mapping.findForward(ActionForwards.mainSearch_success.toString());
@@ -255,10 +259,11 @@ public class CustSearchAction extends SearchAction {
 
         boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
 
-        if (isCenterHierarchyExist)
+        if (isCenterHierarchyExist) {
             customerList = getCustomerBusinessService().getListOfActiveCentersUnderUser(personnel);
-        else
+        } else {
             customerList = getCustomerBusinessService().getListOfGroupsUnderUser(personnel);
+        }
         SessionUtils.setCollectionAttribute(CustomerSearchConstants.CUSTOMERLIST, customerList, request);
         SessionUtils.setAttribute("GrpHierExists", isCenterHierarchyExist, request);
         SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDLOANOFFICER,
@@ -277,10 +282,11 @@ public class CustSearchAction extends SearchAction {
 
         boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
 
-        if (isCenterHierarchyExist)
+        if (isCenterHierarchyExist) {
             customerList = getCustomerBusinessService().getActiveCentersUnderUser(personnel);
-        else
+        } else {
             customerList = getCustomerBusinessService().getGroupsUnderUser(personnel);
+        }
         SessionUtils.setCollectionAttribute(CustomerSearchConstants.CUSTOMERLIST, customerList, request);
         SessionUtils.setAttribute("GrpHierExists", isCenterHierarchyExist, request);
         SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDLOANOFFICER,
@@ -319,19 +325,22 @@ public class CustSearchAction extends SearchAction {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
         UserContext userContext = getUserContext(request);
         String searchString = actionForm.getSearchString();
-        if (searchString == null)
+        if (searchString == null) {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
+        }
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
         searchString = SearchUtils.normalizeSearchString(searchString);
-        if (searchString.equals(""))
+        if (searchString.equals("")) {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
-        if (actionForm.getInput() != null && actionForm.getInput().equals("loan"))
+        }
+        if (actionForm.getInput() != null && actionForm.getInput().equals("loan")) {
             SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getCustomerBusinessService()
                     .searchGroupClient(searchString, userContext.getId()), request);
-        else if (actionForm.getInput() != null && actionForm.getInput().equals("savings"))
+        } else if (actionForm.getInput() != null && actionForm.getInput().equals("savings")) {
             SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getCustomerBusinessService()
                     .searchCustForSavings(searchString, userContext.getId()), request);
+        }
         if (request.getParameter("perspective") != null) {
             request.setAttribute("perspective", request.getParameter("perspective"));
         }

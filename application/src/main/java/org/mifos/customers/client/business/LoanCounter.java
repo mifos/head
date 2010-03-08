@@ -79,10 +79,11 @@ public class LoanCounter extends PersistentObject {
     }
 
     void updateLoanCounter(YesNoFlag counterFlag) {
-        if (counterFlag.yes())
+        if (counterFlag.yes()) {
             this.loanCycleCounter++;
-        else
+        } else {
             this.loanCycleCounter--;
+        }
     }
 
     public boolean isOfSameProduct(PrdOfferingBO prdOffering) {

@@ -80,10 +80,12 @@ public class ReportsParamsMapAction extends BaseAction {
         request.getSession().setAttribute("listOfAllParameters", new ReportsPersistence().getAllReportParams());
         ReportsParamsMapActionForm actionForm = (ReportsParamsMapActionForm) form;
         String strReportId = request.getParameter("reportId");
-        if (strReportId == null)
+        if (strReportId == null) {
             strReportId = actionForm.getReportId() + "";
-        if (strReportId == null || strReportId.equals(""))
+        }
+        if (strReportId == null || strReportId.equals("")) {
             strReportId = "0";
+        }
         int reportId = Integer.parseInt(strReportId);
         actionForm.setReportId(reportId);
         request.getSession().setAttribute("listOfAllParametersForReportId",

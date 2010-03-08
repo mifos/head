@@ -130,17 +130,20 @@ public class LoanAccountsProductView extends View {
     }
 
     public boolean isDisburseLoanAccountPresent() {
-        for (LoanAccountView loanAccountView : loanAccountViews)
-            if (loanAccountView.isDisbursalAccount())
+        for (LoanAccountView loanAccountView : loanAccountViews) {
+            if (loanAccountView.isDisbursalAccount()) {
                 return true;
+            }
+        }
         return false;
     }
 
     public Double getTotalDisbursalAmountDue() {
         Double totalAmount = 0.0;
         for (LoanAccountView loanAccountView : loanAccountViews) {
-            if (loanAccountView.isDisbursalAccount())
+            if (loanAccountView.isDisbursalAccount()) {
                 totalAmount = totalAmount + loanAccountView.getTotalAmountDue();
+            }
         }
         return totalAmount;
     }

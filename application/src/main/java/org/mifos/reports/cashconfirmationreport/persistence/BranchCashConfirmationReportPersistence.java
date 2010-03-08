@@ -75,8 +75,9 @@ public class BranchCashConfirmationReportPersistence extends Persistence {
         Query query = createdNamedQuery(EXTRACT_BRANCH_CASH_CONFIRMATION_CENTER_RECOVERIES);
         populateQueryParams(query, actionDate, accountType, prdOfferingIdsForRecovery, currency);
         List<Object[]> resultSet = runQuery(query);
-        if (resultSet == null)
+        if (resultSet == null) {
             return new ArrayList<BranchCashConfirmationReportBO>();
+        }
 
         HashMap<Short, BranchCashConfirmationReportBO> reportMap = new HashMap<Short, BranchCashConfirmationReportBO>();
         for (Object[] result : resultSet) {

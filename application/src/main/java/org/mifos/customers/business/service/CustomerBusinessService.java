@@ -177,8 +177,9 @@ public class CustomerBusinessService implements BusinessService {
         int count = 0;
         for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
             customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
-            if (++count == 3)
+            if (++count == 3) {
                 break;
+            }
         }
         return customerActivityViewList;
     }
@@ -350,8 +351,9 @@ public class CustomerBusinessService implements BusinessService {
 
     public void checkPermissionForStatusChange(Short newState, UserContext userContext, Short flagSelected,
             Short recordOfficeId, Short recordLoanOfficerId) throws ServiceException {
-        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId)) {
             throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     public boolean isPermissionAllowed(Short newState, UserContext userContext, Short flagSelected,
@@ -567,18 +569,21 @@ public class CustomerBusinessService implements BusinessService {
         customerRecentActivityView.setActivityDate(customerActivityEntity.getCreatedDate());
         customerRecentActivityView.setDescription(customerActivityEntity.getDescription());
         Money amount = removeSign(customerActivityEntity.getAmount());
-        if (amount.isZero())
+        if (amount.isZero()) {
             customerRecentActivityView.setAmount("-");
-        else
+        } else {
             customerRecentActivityView.setAmount(amount.toString());
-        if (customerActivityEntity.getPersonnel() != null)
+        }
+        if (customerActivityEntity.getPersonnel() != null) {
             customerRecentActivityView.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
+        }
         return customerRecentActivityView;
     }
 
     private Money removeSign(Money amount) {
-        if (amount != null && amount.isLessThanZero())
+        if (amount != null && amount.isLessThanZero()) {
             return amount.negate();
+        }
         return amount;
     }
 

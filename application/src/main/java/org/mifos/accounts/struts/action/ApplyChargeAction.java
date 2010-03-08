@@ -95,14 +95,16 @@ public class ApplyChargeAction extends BaseAction {
         accountBO.setUserContext(userContext);
 
         CustomerLevel customerLevel = null;
-        if (accountBO.getType().equals(AccountTypes.CUSTOMER_ACCOUNT))
+        if (accountBO.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             customerLevel = accountBO.getCustomer().getLevel();
-        if (accountBO.getPersonnel() != null)
+        }
+        if (accountBO.getPersonnel() != null) {
             checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext, accountBO.getOffice()
                     .getOfficeId(), accountBO.getPersonnel().getPersonnelId());
-        else
+        } else {
             checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext, accountBO.getOffice()
                     .getOfficeId(), userContext.getId());
+        }
 
         accountBO.applyCharge(feeId, chargeAmount);
         accountBO.update();
@@ -135,8 +137,9 @@ public class ApplyChargeAction extends BaseAction {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.update.toString()))
+            if (method.equals(Methods.update.toString())) {
                 forward = ActionForwards.update_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }
@@ -157,8 +160,9 @@ public class ApplyChargeAction extends BaseAction {
 
     private void checkPermissionForApplyCharges(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(accountTypes, customerLevel, userContext, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(accountTypes, customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(AccountTypes accountTypes, CustomerLevel customerLevel,

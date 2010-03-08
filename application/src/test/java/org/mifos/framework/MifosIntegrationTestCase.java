@@ -60,8 +60,9 @@ public class MifosIntegrationTestCase extends TestCase {
     private StatisticsService statisticsService;
 
     protected void assertEquals(String s, Money one, Money two) {
-        if (one.equals(two))
+        if (one.equals(two)) {
             return;
+        }
         throw new ComparisonFailure(s, one.toString(), two.toString());
     }
 

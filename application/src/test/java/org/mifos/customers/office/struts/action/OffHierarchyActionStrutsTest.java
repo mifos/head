@@ -115,10 +115,11 @@ public class OffHierarchyActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals(OFFICE_LEVELS, officeLevels.size());
         for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-            if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE))
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE)) {
                 Assert.assertFalse(officeLevelEntity.isConfigured());
-            else
-               Assert.assertTrue(officeLevelEntity.isConfigured());
+            } else {
+                Assert.assertTrue(officeLevelEntity.isConfigured());
+            }
         }
 
         resetData();

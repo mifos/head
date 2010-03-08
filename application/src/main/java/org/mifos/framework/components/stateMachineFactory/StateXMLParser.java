@@ -142,8 +142,9 @@ public class StateXMLParser {
 
                 }
 
-                if (currentState != null)
+                if (currentState != null) {
                     transitionMap.put(currentState, currntPossibleStates);
+                }
             }
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);

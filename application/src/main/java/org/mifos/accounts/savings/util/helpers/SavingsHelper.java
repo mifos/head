@@ -123,8 +123,9 @@ public class SavingsHelper {
     private Date getFirstDate(MeetingBO meeting, Date accountActivationDate) throws MeetingException {
         Date date = null;
         for (date = meeting.getNextScheduleDateAfterRecurrence(getFiscalStartDate()); date
-                .compareTo(accountActivationDate) <= 0; date = meeting.getNextScheduleDateAfterRecurrence(date))
+                .compareTo(accountActivationDate) <= 0; date = meeting.getNextScheduleDateAfterRecurrence(date)) {
             ;
+        }
         return date;
     }
 
@@ -183,8 +184,9 @@ public class SavingsHelper {
             PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy) {
         AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, paymentTypeEntity,
                 new DateTimeService().getCurrentJavaDateTime());
-        if (createdBy != null)
+        if (createdBy != null) {
             payment.setCreatedBy(createdBy.getPersonnelId());
+        }
         payment.setCreatedDate(getCurrentDate());
         payment.setAmount(amount);
         return payment;
@@ -192,8 +194,9 @@ public class SavingsHelper {
 
     public Short getPaymentActionType(AccountPaymentEntity payment) {
         for (AccountTrxnEntity accntTrxn : payment.getAccountTrxns()) {
-            if (!accntTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()))
+            if (!accntTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
                 return accntTrxn.getAccountActionEntity().getId();
+            }
         }
         return null;
     }

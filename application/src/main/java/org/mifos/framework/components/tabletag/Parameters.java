@@ -150,8 +150,9 @@ public class Parameters {
                     }
                 }
                 paramString[0] = str.toString();
-            } else
+            } else {
                 paramString[0] = null;
+            }
         }
         return paramString;
     }

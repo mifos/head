@@ -91,10 +91,12 @@ public class ChkListActionForm extends BaseActionForm {
     }
 
     public void setDetailsList(int i, String string) {
-        if (StringUtils.isBlank(string))
+        if (StringUtils.isBlank(string)) {
             return;
-        while (this.detailsList.size() <= i)
+        }
+        while (this.detailsList.size() <= i) {
             this.detailsList.add(new String());
+        }
         this.detailsList.set(i, string);
     }
 
@@ -172,9 +174,11 @@ public class ChkListActionForm extends BaseActionForm {
 
     public List<String> getValidCheckListDetails() {
         List<String> validCheckList = new ArrayList<String>();
-        for (String detail : getDetailsList())
-            if (StringUtils.isNotBlank(detail))
+        for (String detail : getDetailsList()) {
+            if (StringUtils.isNotBlank(detail)) {
                 validCheckList.add(detail);
+            }
+        }
         return validCheckList;
     }
 
@@ -186,15 +190,18 @@ public class ChkListActionForm extends BaseActionForm {
         String checklistStatus = resources.getString(CheckListConstants.CHECKLIST_STATUS_RESOURCE);
         ActionErrors errors = new ActionErrors();
         String method = request.getParameter("method");
-        if (method.equals(Methods.preview.toString()))
+        if (method.equals(Methods.preview.toString())) {
             errors = validateFields(locale);
+        }
         if (method.equals(Methods.managePreview.toString())) {
             errors = validateFields(locale);
-            if (StringUtils.isBlank(getChecklistStatus()))
+            if (StringUtils.isBlank(getChecklistStatus())) {
                 addError(errors, "checklistStatus", CheckListConstants.MANDATORY, checklistStatus);
+            }
         }
-        if (!method.equals(Methods.validate.toString()))
+        if (!method.equals(Methods.validate.toString())) {
             request.setAttribute("methodCalled", method);
+        }
         return errors;
     }
 
@@ -207,19 +214,25 @@ public class ChkListActionForm extends BaseActionForm {
         String state = resources.getString(CheckListConstants.CHECKLIST_DISPLAY_STATUS_RESOURCE);
         String details = resources.getString(CheckListConstants.CHECKLIST_DETAIL_RESOURCE);
         ActionErrors errors = new ActionErrors();
-        if (StringUtils.isBlank(getChecklistName()))
+        if (StringUtils.isBlank(getChecklistName())) {
             addError(errors, "checklistName", CheckListConstants.MANDATORY, checklistName);
-        else if (getChecklistName().length() > 100)
+        } else if (getChecklistName().length() > 100) {
             addError(errors, "checklistName", CheckListConstants.MAX_LENGTH, checklistName, "100");
-        for (String items : getDetailsList())
-            if (items.length() > 250)
+        }
+        for (String items : getDetailsList()) {
+            if (items.length() > 250) {
                 addError(errors, "details", CheckListConstants.MAX_LENGTH, itemsStr, "250");
-        if (StringUtils.isBlank(getMasterTypeId()))
+            }
+        }
+        if (StringUtils.isBlank(getMasterTypeId())) {
             addError(errors, "masterTypeId", CheckListConstants.MANDATORY, type);
-        if (StringUtils.isBlank(getStateId()))
+        }
+        if (StringUtils.isBlank(getStateId())) {
             addError(errors, "stateId", CheckListConstants.MANDATORY, state);
-        if (getValidCheckListDetails().size() == 0)
+        }
+        if (getValidCheckListDetails().size() == 0) {
             addError(errors, "detailsList", CheckListConstants.MANDATORY, details);
+        }
         return errors;
     }
 
@@ -234,8 +247,9 @@ public class ChkListActionForm extends BaseActionForm {
             detailsList = new ArrayList<String>();
         }
         try {
-            if (null != request.getParameter(Constants.CURRENTFLOWKEY))
+            if (null != request.getParameter(Constants.CURRENTFLOWKEY)) {
                 request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
+            }
             SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, detailsList, request);
         } catch (PageExpiredException pee) {
         }

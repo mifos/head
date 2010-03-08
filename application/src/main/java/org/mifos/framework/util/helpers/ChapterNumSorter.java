@@ -65,8 +65,9 @@ public class ChapterNumSorter {
         // "1.4.1" becomes [1, 4, 1].
         for (String s : unsorted) {
             ChapterNum chapterNum = ChapterNum.fromString(s);
-            if (null != chapterNum)
+            if (null != chapterNum) {
                 allChaps.add(chapterNum);
+            }
         }
 
         Collections.sort(allChaps);
@@ -80,8 +81,9 @@ public class ChapterNumSorter {
 
         // if we didn't find anything worthwile, return an empty array rather
         // than a null
-        if (null == sorted)
+        if (null == sorted) {
             sorted = new String[0];
+        }
 
         return sorted;
     }

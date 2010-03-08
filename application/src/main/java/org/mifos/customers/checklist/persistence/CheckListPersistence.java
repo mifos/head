@@ -96,10 +96,11 @@ public class CheckListPersistence extends MasterPersistence {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", levelId);
         queryParameters.put("stateId", stateId);
-        if (isCustomer)
+        if (isCustomer) {
             return (Long) execUniqueResultNamedQuery(NamedQueryConstants.CUSTOMER_VALIDATESTATE, queryParameters);
-        else
+        } else {
             return (Long) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
+        }
     }
 
     public List<CustomerCheckListBO> retreiveAllCustomerCheckLists() throws PersistenceException {

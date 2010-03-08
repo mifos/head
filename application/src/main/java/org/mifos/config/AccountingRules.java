@@ -89,9 +89,10 @@ public class AccountingRules {
 
     public static MifosCurrency getMifosCurrency(String currencyCode,ConfigurationPersistence configurationPersistence) {
         MifosCurrency currency = configurationPersistence.getCurrency(currencyCode);
-        if (currency == null)
+        if (currency == null) {
             throw new RuntimeException("Can't find in the database the currency define in the config file "
                     + currencyCode);
+        }
         Short digitsAfterDecimal = getDigitsAfterDecimal(currency);
         BigDecimal amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
         return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(),
@@ -197,18 +198,20 @@ public class AccountingRules {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         if (configMgr.containsKey(AccountingRulesConstants.ROUNDING_RULE)) {
             String returnStr = configMgr.getString(AccountingRulesConstants.ROUNDING_RULE);
-            if (returnStr.equals("FLOOR"))
+            if (returnStr.equals("FLOOR")) {
                 mode = MifosCurrency.FLOOR_MODE;
-            else if (returnStr.equals("CEILING"))
+            } else if (returnStr.equals("CEILING")) {
                 mode = MifosCurrency.CEILING_MODE;
-            else if (returnStr.equals("HALF_UP"))
+            } else if (returnStr.equals("HALF_UP")) {
                 mode = MifosCurrency.HALF_UP_MODE;
-            else
+            } else {
                 throw new RuntimeException(
                         "The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
                                 + returnStr);
-        } else
+            }
+        } else {
             mode = defaultValue;
+        }
         return mode;
     }
 
@@ -217,8 +220,9 @@ public class AccountingRules {
      */
     public static Short getNumberOfInterestDays() {
         Short days = ConfigurationManager.getInstance().getShort(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
-        if ((days != 365) && (days != 360))
+        if ((days != 365) && (days != 360)) {
             throw new RuntimeException("Invalid number of interest days defined in property file " + days);
+        }
         return days;
     }
 

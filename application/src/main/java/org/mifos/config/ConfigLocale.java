@@ -73,14 +73,16 @@ public class ConfigLocale {
 
     private void load() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(LocalizationCountryCode))
+        if (configMgr.containsKey(LocalizationCountryCode)) {
             countryCode = configMgr.getString(LocalizationCountryCode);
-        else
+        } else {
             throw new RuntimeException("The country code is not defined in the config file.");
-        if (configMgr.containsKey(LocalizationLanguageCode))
+        }
+        if (configMgr.containsKey(LocalizationLanguageCode)) {
             languageCode = configMgr.getString(LocalizationLanguageCode);
-        else
+        } else {
             throw new RuntimeException("The language code is not defined in the config file.");
+        }
         direction = configMgr.getString(LocalizationDirection, DEFAULT_DIRECTION);
     }
 

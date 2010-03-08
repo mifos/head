@@ -277,14 +277,16 @@ public abstract class MifosLogger {
             // If the log statement doesnt have any placeholders then the
             // argument list contains only the userid and office id
             int length = 0;
-            if (args != null && args.length != 0)
+            if (args != null && args.length != 0) {
                 length = args.length;
+            }
 
             Object[] args1 = new Object[length + 2];
             // copies the list of arguments to new array and the userid and
             // office are attached
-            if (args != null && args.length != 0)
+            if (args != null && args.length != 0) {
                 System.arraycopy(args, 0, args1, 0, length);
+            }
 
             args1[length] = getUserID();
             args1[length + 1] = getOfficeID();

@@ -46,15 +46,17 @@ public class PPILikelihoodValidator implements Serializable {
     }
 
     private static void validateNoNulls(PPILikelihood likelihood) throws ValidationException {
-        if (likelihood == null)
+        if (likelihood == null) {
             throw new ValidationException("exception.validation.ppi.MissingLikelihoodChartRowException");
+        }
     }
 
     private static void validateNoScoreOverlaps(List<PPILikelihood> likelihoods, PPILikelihood likelihood)
             throws ValidationException {
         for (PPILikelihood l : likelihoods) {
-            if (likelihood != l && likelihood.getScore().overlapsRange(l.getScore()))
+            if (likelihood != l && likelihood.getScore().overlapsRange(l.getScore())) {
                 throw new ValidationException("Some score ranges overlap");
+            }
         }
     }
 
@@ -63,11 +65,13 @@ public class PPILikelihoodValidator implements Serializable {
         for (int i = 0; i <= 100; i++) {
             found = false;
             for (PPILikelihood likelihood : likelihoods) {
-                if (likelihood.getScore().containsInteger(i))
+                if (likelihood.getScore().containsInteger(i)) {
                     found = true;
+                }
             }
-            if (!found)
+            if (!found) {
                 throw new ValidationException("Not all scores are covered");
+            }
         }
     }
 

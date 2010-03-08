@@ -149,10 +149,11 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
 
         boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
-        if (isCenterHierarchyExists)
+        if (isCenterHierarchyExists) {
             verifyForward(ActionForwards.loadCenterSearch.toString());
-        else
+        } else {
             verifyForward(ActionForwards.loadCreateGroup.toString());
+        }
     }
 
     public void testLoad_FeeDifferentFrequecny() throws Exception {

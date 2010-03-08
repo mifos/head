@@ -62,16 +62,21 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         Assert.assertNotNull(checkListMasterDataView);
        Assert.assertEquals(checkListMasterDataView.size(), 5);
         for (CheckListMasterView view : checkListMasterDataView) {
-            if (view.getMasterTypeId().equals(CustomerLevel.CENTER))
-               Assert.assertEquals(true, view.getIsCustomer());
-            if (view.getMasterTypeId().equals(CustomerLevel.GROUP))
-               Assert.assertEquals(true, view.getIsCustomer());
-            if (view.getMasterTypeId().equals(CustomerLevel.CLIENT))
-               Assert.assertEquals(true, view.getIsCustomer());
-            if (view.getMasterTypeId().equals(ProductType.LOAN))
-               Assert.assertEquals(false, view.getIsCustomer());
-            if (view.getMasterTypeId().equals(ProductType.SAVINGS))
-               Assert.assertEquals(false, view.getIsCustomer());
+            if (view.getMasterTypeId().equals(CustomerLevel.CENTER)) {
+                Assert.assertEquals(true, view.getIsCustomer());
+            }
+            if (view.getMasterTypeId().equals(CustomerLevel.GROUP)) {
+                Assert.assertEquals(true, view.getIsCustomer());
+            }
+            if (view.getMasterTypeId().equals(CustomerLevel.CLIENT)) {
+                Assert.assertEquals(true, view.getIsCustomer());
+            }
+            if (view.getMasterTypeId().equals(ProductType.LOAN)) {
+                Assert.assertEquals(false, view.getIsCustomer());
+            }
+            if (view.getMasterTypeId().equals(ProductType.SAVINGS)) {
+                Assert.assertEquals(false, view.getIsCustomer());
+            }
         }
     }
 

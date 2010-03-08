@@ -338,10 +338,11 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         }
         actionPerform();
 
-        if (isCustomFieldMandatory)
-           Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        else
-           Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        if (isCustomFieldMandatory) {
+            Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        } else {
+            Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
+        }
 
     }
 

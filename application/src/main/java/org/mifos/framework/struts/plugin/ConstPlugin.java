@@ -108,12 +108,15 @@ public class ConstPlugin implements PlugIn {
     }
 
     public static void checkModifiers(Field field) throws ConstantsNotLoadedException {
-        if (!Modifier.isFinal(field.getModifiers()))
+        if (!Modifier.isFinal(field.getModifiers())) {
             throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as final");
-        if (!Modifier.isStatic(field.getModifiers()))
+        }
+        if (!Modifier.isStatic(field.getModifiers())) {
             throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as static");
-        if (!Modifier.isPublic(field.getModifiers()))
+        }
+        if (!Modifier.isPublic(field.getModifiers())) {
             throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as public");
+        }
     }
 
     /**

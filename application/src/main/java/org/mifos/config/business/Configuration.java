@@ -77,8 +77,9 @@ public class Configuration {
      * cache also.
      */
     public OfficeConfig getOfficeConfig(Short officeId) {
-        if (officeConfigMap.containsKey(officeId))
+        if (officeConfigMap.containsKey(officeId)) {
             return officeConfigMap.get(officeId);
+        }
         OfficeConfig officeConfig = new OfficeConfig(cacheRepo, officeId);
         officeConfigMap.put(officeId, officeConfig);
         return officeConfig;

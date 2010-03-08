@@ -34,9 +34,11 @@ public enum FeeLevel {
     }
 
     public static FeeLevel getFeeLevel(Short value) {
-        for (FeeLevel feeLevel : FeeLevel.values())
-            if (feeLevel.getValue().equals(value))
+        for (FeeLevel feeLevel : FeeLevel.values()) {
+            if (feeLevel.getValue().equals(value)) {
                 return feeLevel;
+            }
+        }
         return null;
     }
 }

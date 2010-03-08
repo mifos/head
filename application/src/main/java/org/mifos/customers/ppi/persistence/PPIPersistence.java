@@ -88,12 +88,13 @@ public class PPIPersistence extends SurveysPersistence {
         for (SurveyResponse response : list) {
             if (response.getQuestion().getAnswerType() == AnswerType.CHOICE.getValue()) {
                 PPIChoice ppiChoice = getPPIChoice(response.getChoiceValue().getChoiceId());
-                if (ppiChoice != null)
+                if (ppiChoice != null) {
                     try {
                         response.setChoiceValue(ppiChoice);
                     } catch (ApplicationException e) {
                         throw new PersistenceException(e);
                     }
+                }
             }
         }
         return list;

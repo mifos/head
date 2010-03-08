@@ -40,9 +40,11 @@ public enum EntityType {
     }
 
     public static Short getEntityValue(String entity) {
-        for (EntityType entityType : EntityType.values())
-            if (entityType.name().equals(entity))
+        for (EntityType entityType : EntityType.values()) {
+            if (entityType.name().equals(entity)) {
                 return entityType.getValue();
+            }
+        }
         return null;
     }
 

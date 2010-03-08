@@ -95,10 +95,12 @@ public class FundActionForm extends BaseActionForm {
         String fundName = resources.getString("funds.fundName");
         String fundCode = resources.getString("funds.fundCode");
         logger.debug("start validateForPreview method of Fund Action form method :" + fundName);
-        if (StringUtils.isBlank(getFundName()))
+        if (StringUtils.isBlank(getFundName())) {
             addError(errors, "fundName", FundConstants.ERROR_MANDATORY, fundName);
-        if (StringUtils.isBlank(getFundCode()))
+        }
+        if (StringUtils.isBlank(getFundCode())) {
             addError(errors, "fundCode", FundConstants.ERROR_SELECT, fundCode);
+        }
         logger.debug("validateForPreview method of Fund Action form method called :" + fundName);
     }
 

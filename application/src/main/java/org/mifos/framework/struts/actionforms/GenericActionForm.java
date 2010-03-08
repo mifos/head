@@ -65,8 +65,9 @@ public class GenericActionForm extends ActionForm {
         String month = getValue(keyPrefix + "_MM");
         String year = getValue(keyPrefix + "_YY");
 
-        if (StringUtils.isBlank(day) || StringUtils.isBlank(month) || StringUtils.isBlank(year))
+        if (StringUtils.isBlank(day) || StringUtils.isBlank(month) || StringUtils.isBlank(year)) {
             return null;
+        }
 
         return day + "/" + month + "/" + year;
     }
@@ -74,8 +75,9 @@ public class GenericActionForm extends ActionForm {
     public Map<String, String> getAll(String prefix) {
         Map<String, String> result = new HashMap<String, String>();
         for (String key : values.keySet()) {
-            if (key.startsWith(prefix))
+            if (key.startsWith(prefix)) {
                 result.put(key.substring(prefix.length()), values.get(key));
+            }
         }
         return result;
     }

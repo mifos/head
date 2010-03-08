@@ -55,8 +55,9 @@ public class HolidayBusinessService implements BusinessService {
     public void isValidHolidayState(final Short levelId, final Short stateId, final boolean isCustomer) throws ServiceException {
         try {
             Integer records = new HolidayPersistence().isValidHolidayState(levelId, stateId, isCustomer);
-            if (records.intValue() != 0)
+            if (records.intValue() != 0) {
                 throw new ServiceException(HolidayConstants.EXCEPTION_STATE_ALREADY_EXIST);
+            }
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

@@ -130,14 +130,16 @@ public class ChartOfAccountsConfig {
     public static String getCoaUri(Session session) {
         final boolean customCoaExists = (null != ClasspathResource.findResource(FilePaths.CHART_OF_ACCOUNTS_CUSTOM));
 
-        if (customCoaExists)
+        if (customCoaExists) {
             return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
+        }
 
         // if data exists in the database, the only way to add GL accounts is
         // to create a custom chart of accounts XML file and place it on the
         // classpath
-        if (isLoaded(session) && !customCoaExists)
+        if (isLoaded(session) && !customCoaExists) {
             return null;
+        }
 
         return FilePaths.CHART_OF_ACCOUNTS_DEFAULT;
     }
@@ -159,8 +161,9 @@ public class ChartOfAccountsConfig {
     public Set<GLAccount> getGLAccounts() {
         // LinkedHashSet satisfies ordering guarantee, above
         Set<GLAccount> glAccounts = new LinkedHashSet<GLAccount>();
-        for (GLCategoryType category : GLCategoryType.values())
+        for (GLCategoryType category : GLCategoryType.values()) {
             glAccounts.addAll(traverse(getCategory(category), null));
+        }
         return glAccounts;
     }
 
@@ -172,14 +175,15 @@ public class ChartOfAccountsConfig {
         // these could also be placed in a HashTable, but with only four
         // choices, this seemed easier to maintain. Consider initializing a
         // table in the #load() method if this becomes unwieldy.
-        if (category == GLCategoryType.ASSET)
+        if (category == GLCategoryType.ASSET) {
             return coaDocument.getElementsByTagName(ASSETS_CATEGORY).item(0);
-        else if (category == GLCategoryType.LIABILITY)
+        } else if (category == GLCategoryType.LIABILITY) {
             return coaDocument.getElementsByTagName(LIABILITIES_CATEGORY).item(0);
-        else if (category == GLCategoryType.INCOME)
+        } else if (category == GLCategoryType.INCOME) {
             return coaDocument.getElementsByTagName(INCOME_CATEGORY).item(0);
-        else if (category == GLCategoryType.EXPENDITURE)
+        } else if (category == GLCategoryType.EXPENDITURE) {
             return coaDocument.getElementsByTagName(EXPENDITURE_CATEGORY).item(0);
+        }
         throw new RuntimeException("invalid category type: " + category);
     }
 
@@ -189,14 +193,15 @@ public class ChartOfAccountsConfig {
         // these could also be placed in a HashTable, but with only four
         // choices, this seemed easier to maintain. Consider initializing a
         // table in the #load() method if this becomes unwieldy.
-        if (ASSETS_CATEGORY.equals(elementName))
+        if (ASSETS_CATEGORY.equals(elementName)) {
             return GLCategoryType.ASSET;
-        else if (LIABILITIES_CATEGORY.equals(elementName))
+        } else if (LIABILITIES_CATEGORY.equals(elementName)) {
             return GLCategoryType.LIABILITY;
-        else if (INCOME_CATEGORY.equals(elementName))
+        } else if (INCOME_CATEGORY.equals(elementName)) {
             return GLCategoryType.INCOME;
-        else if (EXPENDITURE_CATEGORY.equals(elementName))
+        } else if (EXPENDITURE_CATEGORY.equals(elementName)) {
             return GLCategoryType.EXPENDITURE;
+        }
         return null;
     }
 
@@ -237,8 +242,9 @@ public class ChartOfAccountsConfig {
             Node child = children.item(i);
 
             // necessary since children may be Node.TEXT_NODE type
-            if (Node.ELEMENT_NODE != child.getNodeType())
+            if (Node.ELEMENT_NODE != child.getNodeType()) {
                 continue;
+            }
 
             if (!glAccounts.addAll(traverse(child, glAccount.glCode))) {
                 // A duplicate exists. The exception will help us avoid any

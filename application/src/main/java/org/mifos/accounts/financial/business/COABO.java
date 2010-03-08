@@ -260,19 +260,24 @@ public class COABO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
+        }
         // if (getClass().)
-        if (!(obj instanceof COABO))
+        if (!(obj instanceof COABO)) {
             return false;
+        }
         COABO other = (COABO) obj;
         if (this.accountId == null) {
-            if (other.accountId != null)
+            if (other.accountId != null) {
                 return false;
-        } else if (!this.accountId.equals(other.accountId))
+            }
+        } else if (!this.accountId.equals(other.accountId)) {
             return false;
+        }
         return true;
     }
 

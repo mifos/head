@@ -161,48 +161,65 @@ public class BranchReportBO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchReportBO other = (BranchReportBO) obj;
         if (branchId == null) {
-            if (other.branchId != null)
+            if (other.branchId != null) {
                 return false;
-        } else if (!branchId.equals(other.branchId))
+            }
+        } else if (!branchId.equals(other.branchId)) {
             return false;
+        }
         if (branchReportId == null) {
-            if (other.branchReportId != null)
+            if (other.branchReportId != null) {
                 return false;
-        } else if (!branchReportId.equals(other.branchReportId))
+            }
+        } else if (!branchReportId.equals(other.branchReportId)) {
             return false;
+        }
         if (clientSummaries == null) {
-            if (other.clientSummaries != null)
+            if (other.clientSummaries != null) {
                 return false;
-        } else if (!clientSummaries.equals(other.clientSummaries))
+            }
+        } else if (!clientSummaries.equals(other.clientSummaries)) {
             return false;
+        }
         if (loanArrearsAging == null) {
-            if (other.loanArrearsAging != null)
+            if (other.loanArrearsAging != null) {
                 return false;
-        } else if (!loanArrearsAging.equals(other.loanArrearsAging))
+            }
+        } else if (!loanArrearsAging.equals(other.loanArrearsAging)) {
             return false;
+        }
         if (runDate == null) {
-            if (other.runDate != null)
+            if (other.runDate != null) {
                 return false;
-        } else if (!runDate.equals(other.runDate))
+            }
+        } else if (!runDate.equals(other.runDate)) {
             return false;
+        }
         if (staffSummaries == null) {
-            if (other.staffSummaries != null)
+            if (other.staffSummaries != null) {
                 return false;
-        } else if (!staffSummaries.equals(other.staffSummaries))
+            }
+        } else if (!staffSummaries.equals(other.staffSummaries)) {
             return false;
+        }
         if (staffingLevelSummaries == null) {
-            if (other.staffingLevelSummaries != null)
+            if (other.staffingLevelSummaries != null) {
                 return false;
-        } else if (!staffingLevelSummaries.equals(other.staffingLevelSummaries))
+            }
+        } else if (!staffingLevelSummaries.equals(other.staffingLevelSummaries)) {
             return false;
+        }
         return true;
     }
 }

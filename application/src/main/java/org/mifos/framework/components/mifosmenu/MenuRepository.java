@@ -89,8 +89,9 @@ public class MenuRepository {
      */
     public Menu getCrudeMenuForTab(String menuTabName) {
         for (Menu element : crudeMenuList) {
-            if (element.getTopMenuTabName().equalsIgnoreCase(menuTabName))
+            if (element.getTopMenuTabName().equalsIgnoreCase(menuTabName)) {
                 return element;
+            }
         }
         return null;
     }
@@ -103,8 +104,9 @@ public class MenuRepository {
      * @return array of locale specific Menu objects.
      */
     public Menu[] getMenuForLocale(Locale lc) {
-        if (localeMenuMap.containsKey(lc))
+        if (localeMenuMap.containsKey(lc)) {
             return (Menu[]) localeMenuMap.get(lc);
+        }
         return null;
     }
 
@@ -116,8 +118,9 @@ public class MenuRepository {
      * @return true if menu found, otherwise false
      */
     public boolean isMenuForLocale(Locale lc) {
-        if (localeMenuMap.containsKey(lc))
+        if (localeMenuMap.containsKey(lc)) {
             return true;
+        }
         return false;
     }
 
@@ -144,11 +147,13 @@ public class MenuRepository {
      */
     public Menu getMenuForTabAndLocale(String topTabName, Locale lc) {
         Menu[] leftMenus = getMenuForLocale(lc);
-        if (leftMenus == null)
+        if (leftMenus == null) {
             return null;
+        }
         for (Menu leftMenu : leftMenus) {
-            if (leftMenu.getTopMenuTabName().equalsIgnoreCase(topTabName))
+            if (leftMenu.getTopMenuTabName().equalsIgnoreCase(topTabName)) {
                 return leftMenu;
+            }
         }
         return null;
     }

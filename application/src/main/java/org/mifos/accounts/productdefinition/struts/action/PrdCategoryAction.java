@@ -176,14 +176,15 @@ public class PrdCategoryAction extends BaseAction {
         String method = (String) request.getAttribute(ProductDefinitionConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
-            if (method.equals(Methods.createPreview.toString()))
+            if (method.equals(Methods.createPreview.toString())) {
                 forward = ActionForwards.preview_failure.toString();
-            else if (method.equals(Methods.managePreview.toString()))
+            } else if (method.equals(Methods.managePreview.toString())) {
                 forward = ActionForwards.managepreview_failure.toString();
-            else if (method.equals(Methods.create.toString()))
+            } else if (method.equals(Methods.create.toString())) {
                 forward = ActionForwards.create_failure.toString();
-            else if (method.equals(Methods.update.toString()))
+            } else if (method.equals(Methods.update.toString())) {
                 forward = ActionForwards.update_failure.toString();
+            }
         }
         return mapping.findForward(forward);
     }
@@ -199,23 +200,27 @@ public class PrdCategoryAction extends BaseAction {
 
     private List<ProductTypeEntity> getProductTypes(UserContext userContext) throws Exception {
         List<ProductTypeEntity> productCategoryList = getBusinessService().getProductTypes();
-        for (ProductTypeEntity productTypeEntity : productCategoryList)
+        for (ProductTypeEntity productTypeEntity : productCategoryList) {
             productTypeEntity.setUserContext(userContext);
+        }
         return productCategoryList;
     }
 
     private List<PrdCategoryStatusEntity> getProductCategoryStatusList(UserContext userContext) throws Exception {
         List<PrdCategoryStatusEntity> productCategoryStatusList = getBusinessService().getProductCategoryStatusList();
-        for (PrdCategoryStatusEntity prdCategoryStatusEntity : productCategoryStatusList)
+        for (PrdCategoryStatusEntity prdCategoryStatusEntity : productCategoryStatusList) {
             prdCategoryStatusEntity.setLocaleId(userContext.getLocaleId());
+        }
         return productCategoryStatusList;
     }
 
     private ProductTypeEntity getProductType(List<ProductTypeEntity> productCategoryList, Short prdTypeId)
             throws Exception {
-        for (ProductTypeEntity productTypeEntity : productCategoryList)
-            if (productTypeEntity.getProductTypeID().equals(prdTypeId))
+        for (ProductTypeEntity productTypeEntity : productCategoryList) {
+            if (productTypeEntity.getProductTypeID().equals(prdTypeId)) {
                 return productTypeEntity;
+            }
+        }
         return null;
     }
 
@@ -232,9 +237,11 @@ public class PrdCategoryAction extends BaseAction {
 
     private PrdCategoryStatusEntity getProductCategoryStatus(List<PrdCategoryStatusEntity> prdCategoryStatusList,
             Short statusId) {
-        for (PrdCategoryStatusEntity prdCategoryStatusEntity : prdCategoryStatusList)
-            if (prdCategoryStatusEntity.getId().equals(statusId))
+        for (PrdCategoryStatusEntity prdCategoryStatusEntity : prdCategoryStatusList) {
+            if (prdCategoryStatusEntity.getId().equals(statusId)) {
                 return prdCategoryStatusEntity;
+            }
+        }
         return null;
     }
 

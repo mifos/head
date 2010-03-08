@@ -631,17 +631,18 @@ public class ActivityMapper {
 
     private short getActivityIdForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT))
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN;
-        else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT))
+        } else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT)) {
             activityId = SecurityConstants.SAVINGS_CAN_ADD_NOTES_TO_SAVINGS;
-        else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            if (customerLevel.equals(CustomerLevel.CENTER))
+        } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+            if (customerLevel.equals(CustomerLevel.CENTER)) {
                 activityId = SecurityConstants.CENTER_ADD_NOTE_TO_CENTER;
-            else if (customerLevel.equals(CustomerLevel.GROUP))
+            } else if (customerLevel.equals(CustomerLevel.GROUP)) {
                 activityId = SecurityConstants.GROUP_ADD_NOTE_TO_GROUP;
-            else if (customerLevel.equals(CustomerLevel.CLIENT))
+            } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
                 activityId = SecurityConstants.CLIENT_ADD_NOTE_TO_CLIENT;
+            }
         }
         return activityId;
     }
@@ -662,15 +663,16 @@ public class ActivityMapper {
 
     private short getActivityIdForApplyCharges(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT))
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_CAN_APPLY_CHARGES;
-        else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            if (customerLevel.equals(CustomerLevel.CENTER))
+        } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+            if (customerLevel.equals(CustomerLevel.CENTER)) {
                 activityId = SecurityConstants.CENTER_CAN_APPLY_CHARGES;
-            else if (customerLevel.equals(CustomerLevel.GROUP))
+            } else if (customerLevel.equals(CustomerLevel.GROUP)) {
                 activityId = SecurityConstants.GROUP_CAN_APPLY_CHARGES;
-            else if (customerLevel.equals(CustomerLevel.CLIENT))
+            } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
                 activityId = SecurityConstants.CLIENT_CAN_APPLY_CHARGES;
+            }
         }
         return activityId;
     }
@@ -685,17 +687,18 @@ public class ActivityMapper {
 
     private short getActivityIdForAdjustment(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT))
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_MAKE_ADJUSTMENT_ENTRY_TO_ACCOUNT;
-        else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT))
+        } else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT)) {
             activityId = SecurityConstants.SAVINGS_APPLY_ADJUSTMENT;
-        else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            if (customerLevel.equals(CustomerLevel.CENTER))
+        } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+            if (customerLevel.equals(CustomerLevel.CENTER)) {
                 activityId = SecurityConstants.CENTER_MAKE_ADJUSTMENT_ENTRIES_TO_CENTER_ACCOUNT;
-            else if (customerLevel.equals(CustomerLevel.GROUP))
+            } else if (customerLevel.equals(CustomerLevel.GROUP)) {
                 activityId = SecurityConstants.GROUP_MAKE_ADJUSTMENT_ENTRIES_TO_GROUP_ACCOUNT;
-            else if (customerLevel.equals(CustomerLevel.CLIENT))
+            } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
                 activityId = SecurityConstants.CIENT_MAKE_ADJUSTMENT_ENTRIES_TO_CLIENT_ACCOUNT;
+            }
         }
         return activityId;
     }
@@ -710,10 +713,11 @@ public class ActivityMapper {
 
     private short getActivityIdForAddingHistoricaldata(CustomerLevel customerLevel) {
         short activityId = -1;
-        if (customerLevel.equals(CustomerLevel.GROUP))
+        if (customerLevel.equals(CustomerLevel.GROUP)) {
             activityId = SecurityConstants.GROUP_ADD_EDIT_HISTORICAL_DATA;
-        else if (customerLevel.equals(CustomerLevel.CLIENT))
+        } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
             activityId = SecurityConstants.CIENT_ADD_EDIT_HISTORICAL_DATA;
+        }
         return activityId;
     }
 
@@ -728,17 +732,19 @@ public class ActivityMapper {
     private short getActivityIdForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
         if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
-            if (waiveEnum.equals(WaiveEnum.FEES))
+            if (waiveEnum.equals(WaiveEnum.FEES)) {
                 activityId = SecurityConstants.LOAN_WAIVE_FEE_INSTALLMENT;
-            else if (waiveEnum.equals(WaiveEnum.PENALTY))
+            } else if (waiveEnum.equals(WaiveEnum.PENALTY)) {
                 activityId = SecurityConstants.LOAN_WAIVE_PANELTY;
+            }
         } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            if (customerLevel.equals(CustomerLevel.CENTER))
+            if (customerLevel.equals(CustomerLevel.CENTER)) {
                 activityId = SecurityConstants.CENTER_WAIVE_DUE_AMOUNT;
-            else if (customerLevel.equals(CustomerLevel.GROUP))
+            } else if (customerLevel.equals(CustomerLevel.GROUP)) {
                 activityId = SecurityConstants.GROUP_WAIVE_DUE_AMOUNT;
-            else if (customerLevel.equals(CustomerLevel.CLIENT))
+            } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
                 activityId = SecurityConstants.CIENT_WAIVE_DUE_AMOUNT;
+            }
         }
         return activityId;
     }
@@ -753,15 +759,16 @@ public class ActivityMapper {
 
     private short getActivityIdForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT))
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_REMOVE_FEE_TYPE_ATTACHED_TO_ACCOUNT;
-        else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            if (customerLevel.equals(CustomerLevel.CENTER))
+        } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+            if (customerLevel.equals(CustomerLevel.CENTER)) {
                 activityId = SecurityConstants.CENTER_REMOVE_FEE_TYPE_FROM_CENTER_ACCOUNT;
-            else if (customerLevel.equals(CustomerLevel.GROUP))
+            } else if (customerLevel.equals(CustomerLevel.GROUP)) {
                 activityId = SecurityConstants.GROUP_REMOVE_FEE_TYPE_FROM_GROUP_ACCOUNT;
-            else if (customerLevel.equals(CustomerLevel.CLIENT))
+            } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
                 activityId = SecurityConstants.CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT;
+            }
         }
         return activityId;
     }
@@ -776,15 +783,16 @@ public class ActivityMapper {
 
     private short getActivityIdForPayment(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT))
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_MAKE_PAYMENT_TO_ACCOUNT;
-        else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            if (customerLevel.equals(CustomerLevel.CENTER))
+        } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+            if (customerLevel.equals(CustomerLevel.CENTER)) {
                 activityId = SecurityConstants.CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT;
-            else if (customerLevel.equals(CustomerLevel.GROUP))
+            } else if (customerLevel.equals(CustomerLevel.GROUP)) {
                 activityId = SecurityConstants.GROUP_MAKE_PAYMENT_TO_GROUP_ACCOUNT;
-            else if (customerLevel.equals(CustomerLevel.CLIENT))
+            } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
                 activityId = SecurityConstants.CIENT_MAKE_PAYMENT_TO_CLIENT_ACCOUNT;
+            }
         }
         return activityId;
     }
@@ -799,12 +807,13 @@ public class ActivityMapper {
 
     private short getActivityIdForEditMeetingSchedule(CustomerLevel customerLevel) {
         short activityId = -1;
-        if (customerLevel.equals(CustomerLevel.CENTER))
+        if (customerLevel.equals(CustomerLevel.CENTER)) {
             activityId = SecurityConstants.MEETING_UPDATE_CENTER_MEETING;
-        else if (customerLevel.equals(CustomerLevel.GROUP))
+        } else if (customerLevel.equals(CustomerLevel.GROUP)) {
             activityId = SecurityConstants.MEETING_UPDATE_GROUP_MEETING;
-        else if (customerLevel.equals(CustomerLevel.CLIENT))
+        } else if (customerLevel.equals(CustomerLevel.CLIENT)) {
             activityId = SecurityConstants.MEETING_UPDATE_CLIENT_MEETING;
+        }
         return activityId;
     }
 

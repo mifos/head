@@ -166,10 +166,12 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
        Assert.assertEquals(2, prdStatusList.size());
         for (PrdStatusEntity prdStatus : prdStatusList) {
-            if (prdStatus.getPrdState().equals("1"))
-               Assert.assertEquals("Active", prdStatus.getPrdState().getName());
-            if (prdStatus.getPrdState().equals("2"))
-               Assert.assertEquals("InActive", prdStatus.getPrdState().getName());
+            if (prdStatus.getPrdState().equals("1")) {
+                Assert.assertEquals("Active", prdStatus.getPrdState().getName());
+            }
+            if (prdStatus.getPrdState().equals("2")) {
+                Assert.assertEquals("InActive", prdStatus.getPrdState().getName());
+            }
         }
     }
 

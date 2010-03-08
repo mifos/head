@@ -37,9 +37,11 @@ public enum FeeChangeType {
     }
 
     public static FeeChangeType getFeeChangeType(Short value) throws PropertyNotFoundException {
-        for (FeeChangeType changeType : FeeChangeType.values())
-            if (changeType.getValue().equals(value))
+        for (FeeChangeType changeType : FeeChangeType.values()) {
+            if (changeType.getValue().equals(value)) {
                 return changeType;
+            }
+        }
         throw new PropertyNotFoundException("FeeChangeType");
     }
 

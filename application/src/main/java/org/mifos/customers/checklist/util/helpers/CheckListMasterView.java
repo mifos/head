@@ -41,10 +41,11 @@ public class CheckListMasterView implements Serializable {
     }
 
     public String getMasterTypeName() {
-        if (isCustomer)
+        if (isCustomer) {
             return MessageLookup.getInstance().lookupLabel(lookupKey);
-        else
+        } else {
             return MessageLookup.getInstance().lookup(lookupKey);
+        }
 
     }
 

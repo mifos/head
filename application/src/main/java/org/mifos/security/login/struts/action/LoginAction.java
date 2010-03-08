@@ -112,10 +112,11 @@ public class LoginAction extends BaseAction {
         PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
         UserContext userContext = personnelBO.login(password);
         setAttributes(userContext, request);
-        if (personnelBO.isPasswordChanged())
+        if (personnelBO.isPasswordChanged()) {
             setUserContextInSession(userContext, request);
-        else
+        } else {
             SessionUtils.setAttribute(Constants.TEMPUSERCONTEXT, userContext, request);
+        }
         setFlow(userContext.getPasswordChanged(), request);
         personnelBO = null;
         return mapping.findForward(getLoginForward(userContext.getPasswordChanged()));
@@ -162,10 +163,11 @@ public class LoginAction extends BaseAction {
         String oldPassword = loginActionForm.getOldPassword();
         String newpassword = loginActionForm.getNewPassword();
         PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
-        if (personnelBO.isPasswordChanged())
+        if (personnelBO.isPasswordChanged()) {
             userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-        else
+        } else {
             userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
+        }
         PersonnelBO personnelInit = ((PersonnelBusinessService) getService()).getPersonnel(Short.valueOf(personnelBO
                 .getPersonnelId()));
         checkVersionMismatch(personnelBO.getVersionNo(), personnelInit.getVersionNo());

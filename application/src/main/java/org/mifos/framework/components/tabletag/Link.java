@@ -63,8 +63,9 @@ public class Link {
         String flowKey = null;
         if (isFlowRequired) {
             flowKey = (String) pageContext.getRequest().getAttribute(Constants.CURRENTFLOWKEY);
-            if (flowKey == null)
+            if (flowKey == null) {
                 flowKey = pageContext.getRequest().getParameter(Constants.CURRENTFLOWKEY);
+            }
         }
         Object randomNumber = pageContext.getSession().getAttribute(Constants.RANDOMNUM);
         return createLink(name, parameters, bold, action, styleClass, flowKey, randomNumber);
@@ -84,8 +85,9 @@ public class Link {
                 stringbuilder.append("\"" + styleClass + "\">");
                 stringbuilder.append("<a href= ");
                 stringbuilder.append("\"" + action + "?" + parameters[i]);
-                if (flowKey != null)
+                if (flowKey != null) {
                     stringbuilder.append("&" + Constants.CURRENTFLOWKEY + "=" + flowKey);
+                }
                 stringbuilder.append("&" + Constants.RANDOMNUM + "=" + randomNumber);
                 stringbuilder.append("\">");
                 stringbuilder.append(MifosTagUtils.xmlEscape(name[i]) + "</a></span>");
@@ -94,8 +96,9 @@ public class Link {
                 stringbuilder.append("\"" + styleClass + "\">");
                 stringbuilder.append("<a href= ");
                 stringbuilder.append("\"" + action + "?" + parameters[i] + "\"");
-                if (flowKey != null)
+                if (flowKey != null) {
                     stringbuilder.append("&" + Constants.CURRENTFLOWKEY + "=" + flowKey);
+                }
                 stringbuilder.append("&" + Constants.RANDOMNUM + "=" + randomNumber);
                 stringbuilder.append("class=\"" + styleClass + "\"");
                 stringbuilder.append(">");
@@ -104,8 +107,9 @@ public class Link {
                 stringbuilder.append("<span>");
                 stringbuilder.append("<a href= ");
                 stringbuilder.append("\"" + action + "?" + parameters[i]);
-                if (flowKey != null)
+                if (flowKey != null) {
                     stringbuilder.append("&" + Constants.CURRENTFLOWKEY + "=" + flowKey);
+                }
                 stringbuilder.append("&" + Constants.RANDOMNUM + "=" + randomNumber);
                 // stringbuilder.append("class=");
                 // stringbuilder.append(bold.equalsIgnoreCase("true")?"\"headingblue\">"

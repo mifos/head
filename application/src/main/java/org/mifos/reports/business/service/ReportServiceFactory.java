@@ -41,8 +41,9 @@ public class ReportServiceFactory {
     }
 
     public static ICollectionSheetReportService getCacheEnabledCollectionSheetReportService() {
-        if (CACHE_ENABLED_INSTANCE == null)
+        if (CACHE_ENABLED_INSTANCE == null) {
             initCacheEnabledReportService();
+        }
         return CACHE_ENABLED_INSTANCE;
     }
 
@@ -52,8 +53,9 @@ public class ReportServiceFactory {
     }
 
     private static void initContextIfNull() {
-        if (classPathXmlApplicationContext == null)
+        if (classPathXmlApplicationContext == null) {
             classPathXmlApplicationContext = new ClassPathXmlApplicationContext(FilePaths.REPORT_SERVICE_BEAN_FILE);
+        }
     }
 
     public static ICollectionSheetReportService getCollectionSheetReportService() {

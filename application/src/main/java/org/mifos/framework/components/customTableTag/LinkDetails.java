@@ -48,8 +48,9 @@ public class LinkDetails {
         ActionParam[] actionParam = getActionParam();
         for (int i = 0; i < actionParam.length; i++) {
             actionParam[i].generateParameter(tableInfo, obj);
-            if (i + 1 != actionParam.length)
+            if (i + 1 != actionParam.length) {
                 tableInfo.append("&");
+            }
         }
         tableInfo.append("\"");
     }

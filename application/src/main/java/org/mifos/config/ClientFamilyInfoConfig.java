@@ -31,10 +31,11 @@ public class ClientFamilyInfoConfig{
         //default value is false
         Boolean required=false;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(AreFamilyDetailsRequired))
-             required= configMgr.getBoolean(AreFamilyDetailsRequired);
-        else
+        if (configMgr.containsKey(AreFamilyDetailsRequired)) {
+            required= configMgr.getBoolean(AreFamilyDetailsRequired);
+        } else {
             throw new ConfigurationException("The property are family details required is not set in "+ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+        }
         return required;
     }
 
@@ -42,10 +43,11 @@ public class ClientFamilyInfoConfig{
         //default value is 15
         int familyMembers=15;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(MaximumNumberOfFamilyMembers))
-             familyMembers= configMgr.getInt(MaximumNumberOfFamilyMembers);
-        else
+        if (configMgr.containsKey(MaximumNumberOfFamilyMembers)) {
+            familyMembers= configMgr.getInt(MaximumNumberOfFamilyMembers);
+        } else {
             throw new ConfigurationException("The Maximum Number of Family Members are not defined in "+ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+        }
         return familyMembers;
     }
 

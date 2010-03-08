@@ -80,9 +80,10 @@ public class LoanPaymentData extends AccountPaymentData {
         if (accountFeesActionDetails != null && accountFeesActionDetails.size() > 0) {
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                 if (accountFeesActionDetailEntity.getFeeAmount() != null
-                        && accountFeesActionDetailEntity.getFeeAmount().isNonZero())
+                        && accountFeesActionDetailEntity.getFeeAmount().isNonZero()) {
                     feesPaid.put(accountFeesActionDetailEntity.getFee().getFeeId(), accountFeesActionDetailEntity
                             .getFeeDue());
+                }
             }
         }
         this.feesPaid = feesPaid;
@@ -92,10 +93,11 @@ public class LoanPaymentData extends AccountPaymentData {
     public LoanPaymentData(AccountActionDateEntity accountActionDate, Money totalPayment) {
         super(accountActionDate);
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-        if (totalPayment.isGreaterThanOrEqual(loanScheduleEntity.getTotalDueWithFees()))
+        if (totalPayment.isGreaterThanOrEqual(loanScheduleEntity.getTotalDueWithFees())) {
             setPaymentStatus(PaymentStatus.PAID.getValue());
-        else
+        } else {
             setPaymentStatus(PaymentStatus.UNPAID.getValue());
+        }
         miscPenaltyPaid = getLowest(totalPayment, loanScheduleEntity.getMiscPenaltyDue());
         Money total = totalPayment.subtract(getMiscPenaltyPaid());
 

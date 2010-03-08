@@ -38,23 +38,30 @@ public class HolidayPK implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final HolidayPK other = (HolidayPK) obj;
         if (holidayFromDate == null) {
-            if (other.holidayFromDate != null)
+            if (other.holidayFromDate != null) {
                 return false;
-        } else if (!holidayFromDate.equals(other.holidayFromDate))
+            }
+        } else if (!holidayFromDate.equals(other.holidayFromDate)) {
             return false;
+        }
         if (officeId == null) {
-            if (other.officeId != null)
+            if (other.officeId != null) {
                 return false;
-        } else if (!officeId.equals(other.officeId))
+            }
+        } else if (!officeId.equals(other.officeId)) {
             return false;
+        }
         return true;
     }
 

@@ -115,8 +115,9 @@ public class TableTagUtils {
                 getList = obj.getClass()
                         .getDeclaredMethod("get" + c.toUpperCase() + label.substring(1), (Class[]) null);
                 labelValue = getList.invoke(obj, (Object[]) null);
-                if (null != labelValue)
+                if (null != labelValue) {
                     labelValue = DateUtils.getUserLocaleDate(locale, labelValue.toString());
+                }
             } catch (SecurityException se) {
                 throw new TableTagException(se);
             } catch (NoSuchMethodException nsme) {

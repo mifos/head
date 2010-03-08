@@ -47,8 +47,9 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
     /** Set the query inputs which will be used for query execution */
     @Override
     public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException {
-        if (queryInputs == null)
+        if (queryInputs == null) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
+        }
 
         if (queryInputs.getBuildDTO()) {
             this.queryInputs = queryInputs;
@@ -113,8 +114,9 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
             logger.debug("\n\nInside get of QueryResultSearchDTOImpl.java . size of count query=" + resultSetCount);
             this.queryInputs.setTypes(query.getReturnTypes());
             dtoBuilder.setInputs(queryInputs);
-            if (resultSetCount != null && resultSetCount > 0)
+            if (resultSetCount != null && resultSetCount > 0) {
                 size = resultSetCount;
+            }
             QuerySession.closeSession(session);
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);

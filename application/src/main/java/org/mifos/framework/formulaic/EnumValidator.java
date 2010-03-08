@@ -56,10 +56,11 @@ public class EnumValidator extends IsInstanceValidator {
             String inputString = ((String) input).toUpperCase();
             return Enum.valueOf(enumType, inputString);
         } catch (IllegalArgumentException e) {
-            if (fieldName == null)
+            if (fieldName == null) {
                 throw makeError(input, ErrorType.INVALID_ENUM);
-            else
+            } else {
                 throw makeError(input, ErrorType.INVALID_ENUM, fieldName);
+            }
         }
 
     }

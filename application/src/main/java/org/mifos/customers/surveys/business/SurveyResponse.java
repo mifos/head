@@ -55,8 +55,9 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
     }
 
     public Question getQuestion() {
-        if (getSurveyQuestion() == null)
+        if (getSurveyQuestion() == null) {
             return null;
+        }
         return getSurveyQuestion().getQuestion();
     }
 
@@ -213,8 +214,9 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
                     break;
                 }
             }
-            if (choice == null)
+            if (choice == null) {
                 throw new ApplicationException(SurveyExceptionConstants.NOT_CHOICE_TYPE);
+            }
 
             setChoiceValue(choice);
         }

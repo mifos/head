@@ -204,7 +204,7 @@ public class MessageLookup implements MessageSourceAware {
         Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
         if ((lookUpValueLocales != null) && StringUtils.isNotBlank(newValue)) {
             MasterPersistence masterPersistence = new MasterPersistence();
-            for (LookUpValueLocaleEntity entity : lookUpValueLocales)
+            for (LookUpValueLocaleEntity entity : lookUpValueLocales) {
                 if (entity.getLookUpId().equals(lookupValueEntity.getLookUpId())
                         && (entity.getLookUpValue() == null || !entity.getLookUpValue().equals(newValue))) {
                     entity.setLookUpValue(newValue);
@@ -216,6 +216,7 @@ public class MessageLookup implements MessageSourceAware {
                     MessageLookup.getInstance().updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
                     break;
                 }
+            }
         }
     }
 

@@ -144,9 +144,10 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
        Assert.assertEquals(helper.getDate("30/04/2006"), savings1.getNextIntPostDate());
 
        Assert.assertEquals(1, savings1.getSavingsActivityDetails().size());
-        for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails())
-           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
-                    .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
+        for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails()) {
+            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
+                        .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
+        }
 
        Assert.assertEquals(TestUtils.createMoney(1050.4), savings4.getSavingsBalance());
        Assert.assertEquals(TestUtils.createMoney(), savings4.getInterestToBePosted());
@@ -157,9 +158,10 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
        Assert.assertEquals(helper.getDate("30/04/2006"), savings4.getNextIntPostDate());
 
        Assert.assertEquals(1, savings1.getSavingsActivityDetails().size());
-        for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails())
-           Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
-                    .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
+        for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails()) {
+            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
+                        .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
+        }
 
        Assert.assertEquals(0, savings2.getAccountPayments().size());
        Assert.assertEquals(0, savings3.getAccountPayments().size());

@@ -185,8 +185,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     boolean dueInstallments = false;
                     if (!installment.isPaid()
                             && installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
-                                    .getTime())
+                                    .getTime()) {
                         dueInstallments = true;
+                    }
 
                     if (dueInstallments) {
                         html1.startTag("tr");
@@ -207,8 +208,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     boolean futureInstallments = false;
                     if (!installment.isPaid()
                             && installment.getActionDate().getTime() > new DateTimeService().getCurrentJavaDateTime()
-                                    .getTime())
+                                    .getTime()) {
                         futureInstallments = true;
+                    }
                     if (futureInstallments) {
                         html1.startTag("tr");
                         html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");

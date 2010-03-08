@@ -63,14 +63,16 @@ public class AccountStatusActionForm extends BaseActionForm {
     }
 
     public String getAccountRecords(int i) {
-        while (i >= accountRecords.size())
+        while (i >= accountRecords.size()) {
             accountRecords.add("");
+        }
         return accountRecords.get(i).toString();
     }
 
     public void setAccountRecords(int i, String string) {
-        while (this.accountRecords.size() <= i)
+        while (this.accountRecords.size() <= i) {
             this.accountRecords.add(new String());
+        }
         this.accountRecords.set(i, string);
     }
 
@@ -144,9 +146,11 @@ public class AccountStatusActionForm extends BaseActionForm {
 
     private List<String> getApplicableAccountRecords() {
         List<String> applicableRecords = new ArrayList<String>();
-        for (String accountId : getAccountRecords())
-            if (accountId != "")
+        for (String accountId : getAccountRecords()) {
+            if (accountId != "") {
                 applicableRecords.add(accountId);
+            }
+        }
         return applicableRecords;
     }
 
@@ -161,26 +165,32 @@ public class AccountStatusActionForm extends BaseActionForm {
             String branch = resources.getString("loan.branch");
             String loanOfficer = resources.getString("loan.loanOfficer");
             String currentStatus = resources.getString("loan.currentStatus");
-            if (StringUtils.isBlank(getOfficeId()))
+            if (StringUtils.isBlank(getOfficeId())) {
                 addError(errors, "officeId", "errors.mandatoryselect", branch);
-            if (StringUtils.isBlank(getPersonnelId()))
+            }
+            if (StringUtils.isBlank(getPersonnelId())) {
                 addError(errors, "loanOfficer", "errors.mandatoryselect", loanOfficer);
-            if (StringUtils.isBlank(getCurrentStatus()))
+            }
+            if (StringUtils.isBlank(getCurrentStatus())) {
                 addError(errors, "currentStatus", "errors.mandatoryselect", currentStatus);
+            }
         }
         if (method.equals(Methods.update.toString())) {
             String account = resources.getString("loan.account");
             String notes = resources.getString("loan.notes");
             String note = resources.getString("loan.note");
-            if (getApplicableAccountRecords().size() == 0)
+            if (getApplicableAccountRecords().size() == 0) {
                 addError(errors, "records", LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, account);
-            if (StringUtils.isBlank(getComments()))
+            }
+            if (StringUtils.isBlank(getComments())) {
                 addError(errors, "comments", "errors.mandatory", notes);
-            else if (getComments().length() > 500)
+            } else if (getComments().length() > 500) {
                 addError(errors, "comments", "errors.maximumlength", note, "500");
+            }
         }
-        if (!method.equals(Methods.validate.toString()))
+        if (!method.equals(Methods.validate.toString())) {
             request.setAttribute("methodCalled", method);
+        }
         return errors;
     }
 

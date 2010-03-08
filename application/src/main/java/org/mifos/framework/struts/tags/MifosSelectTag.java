@@ -49,9 +49,9 @@ public class MifosSelectTag extends ELSelectTag {
 
     @Override
     public int doStartTag() throws JspException {
-        if (fieldConfig.isFieldHidden(getKeyhm()))
+        if (fieldConfig.isFieldHidden(getKeyhm())) {
             return SKIP_BODY;
-        else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm())) {
+        } else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm())) {
             TagUtils.getInstance().write(this.pageContext, renderDoStartTag());
         }
         return super.doStartTag();
@@ -59,8 +59,9 @@ public class MifosSelectTag extends ELSelectTag {
 
     @Override
     public int doEndTag() throws JspException {
-        if (fieldConfig.isFieldHidden(getKeyhm()))
+        if (fieldConfig.isFieldHidden(getKeyhm())) {
             return EVAL_PAGE;
+        }
 
         String bundle = "UIResources";
         String name = org.mifos.framework.util.helpers.Constants.SELECTTAG;

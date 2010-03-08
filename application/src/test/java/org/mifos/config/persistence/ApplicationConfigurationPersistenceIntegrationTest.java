@@ -63,8 +63,9 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
             // Enforce that each entity has 0 or 1 labels and not more
            Assert.assertTrue(labels.size() <= 1);
             for (LookUpLabelEntity label : labels) {
-                if (entity.getEntityType().equals("Client"))
-                   Assert.assertEquals("Client", label.getLabelText());
+                if (entity.getEntityType().equals("Client")) {
+                    Assert.assertEquals("Client", label.getLabelText());
+                }
             }
         }
 

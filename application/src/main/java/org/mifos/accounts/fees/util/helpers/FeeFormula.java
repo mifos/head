@@ -40,9 +40,11 @@ public enum FeeFormula implements LocalizedTextLookup {
     }
 
     public static FeeFormula getFeeFormula(Short value) throws PropertyNotFoundException {
-        for (FeeFormula feeFormula : FeeFormula.values())
-            if (feeFormula.getValue().equals(value))
+        for (FeeFormula feeFormula : FeeFormula.values()) {
+            if (feeFormula.getValue().equals(value)) {
                 return feeFormula;
+            }
+        }
         throw new PropertyNotFoundException("FeeFormula");
     }
 

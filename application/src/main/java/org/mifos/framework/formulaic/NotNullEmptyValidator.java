@@ -54,13 +54,15 @@ public class NotNullEmptyValidator extends IsInstanceValidator {
     @Override
     public String validate(Object value) throws ValidationError {
         super.validate(value);
-        if (other != null)
+        if (other != null) {
             other.validate(value);
+        }
         if (((String) value).trim().equals("")) {
-            if (fieldName == null)
+            if (fieldName == null) {
                 throw makeError(value, ErrorType.MISSING);
-            else
+            } else {
                 throw makeError(value, ErrorType.MISSING_FIELD, fieldName);
+            }
         }
         return (String) value;
     }

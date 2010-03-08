@@ -36,9 +36,11 @@ public enum FeeFrequencyType {
     }
 
     public static FeeFrequencyType getFeeFrequencyType(Short value) throws PropertyNotFoundException {
-        for (FeeFrequencyType feeFrequencyType : FeeFrequencyType.values())
-            if (feeFrequencyType.getValue().equals(value))
+        for (FeeFrequencyType feeFrequencyType : FeeFrequencyType.values()) {
+            if (feeFrequencyType.getValue().equals(value)) {
                 return feeFrequencyType;
+            }
+        }
         throw new PropertyNotFoundException("FeeFrequencyType");
     }
 }

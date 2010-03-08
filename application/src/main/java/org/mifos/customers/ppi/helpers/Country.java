@@ -34,9 +34,11 @@ public enum Country {
     }
 
     public static Country fromInt(int id) {
-        for (Country country : Country.values())
-            if (country.getValue() == id)
+        for (Country country : Country.values()) {
+            if (country.getValue() == id) {
                 return country;
+            }
+        }
         throw new RuntimeException("No countries have id " + id);
     }
 }

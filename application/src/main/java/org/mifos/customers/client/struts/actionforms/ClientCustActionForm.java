@@ -216,7 +216,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     public String removeSpaces(String s) {
         StringTokenizer st = new StringTokenizer(s," ",false);
         String t="";
-        while (st.hasMoreElements()) t += st.nextElement();
+        while (st.hasMoreElements()) {
+            t += st.nextElement();
+        }
         return t;
       }
 
@@ -229,8 +231,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     public ClientCustActionForm() {
         super();
         selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
-        for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++)
+        for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++) {
             selectedOfferings.add(null);
+        }
 
         initializeFamilyMember();
         addFamilyMember();
@@ -341,8 +344,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setSavingsOffering(int i, Short value) {
-        if (i < ClientConstants.MAX_OFFERINGS_SIZE)
+        if (i < ClientConstants.MAX_OFFERINGS_SIZE) {
             selectedOfferings.set(i, value);
+        }
     }
 
 
@@ -359,8 +363,9 @@ public class ClientCustActionForm extends CustomerActionForm {
             validateClientNames(errors, resources);
             validateDateOfBirth(request, errors, resources);
             validateGender(errors, resources);
-            if(!ClientRules.isFamilyDetailsRequired())
+            if(!ClientRules.isFamilyDetailsRequired()) {
                 validateSpouseNames(errors, resources);
+            }
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
             validateCustomFields(request, errors);
             validatePicture(request, errors);
@@ -424,8 +429,9 @@ public class ClientCustActionForm extends CustomerActionForm {
             }
             if (!ValidateMethods.isNullOrBlank(fileName)) {
                 String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                if (!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg")))
+                if (!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg"))) {
                     errors.add(ClientConstants.PICTURE_EXCEPTION, new ActionMessage(ClientConstants.PICTURE_EXCEPTION));
+                }
             }
             if (picture.getFileSize() == 0 || picture.getFileSize() < 0) {
                 SessionUtils.setAttribute("noPicture", "Yes", request);
@@ -436,33 +442,40 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     private void validateGender(ActionErrors errors, ResourceBundle resources) {
-        if (clientDetailView.getGender() == null)
+        if (clientDetailView.getGender() == null) {
             errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.Gender")));
+        }
     }
 
     private void validateClientNames(ActionErrors errors, ResourceBundle resources) {
-        if (clientName.getSalutation() == null)
+        if (clientName.getSalutation() == null) {
             errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.Salutation")));
-        if (StringUtils.isBlank(clientName.getFirstName()))
+        }
+        if (StringUtils.isBlank(clientName.getFirstName())) {
             errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.FirstName")));
-        if (StringUtils.isBlank(clientName.getLastName()))
+        }
+        if (StringUtils.isBlank(clientName.getLastName())) {
             errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.LastName")));
+        }
     }
 
     private void validateSpouseNames(ActionErrors errors, ResourceBundle resources) {
-        if (spouseName.getNameType() == null)
+        if (spouseName.getNameType() == null) {
             errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.SpouseType")));
-        if (StringUtils.isBlank(spouseName.getFirstName()))
+        }
+        if (StringUtils.isBlank(spouseName.getFirstName())) {
             errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                     resources.getString("Customer.SpouseFirstName")));
-        if (StringUtils.isBlank(spouseName.getLastName()))
+        }
+        if (StringUtils.isBlank(spouseName.getLastName())) {
             errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                     resources.getString("Customer.SpouseLastName")));
+        }
     }
 
     void validateDateOfBirth(HttpServletRequest request, ActionErrors errors) {
@@ -515,10 +528,11 @@ public class ClientCustActionForm extends CustomerActionForm {
             Locale locale = userContext.getPreferredLocale();
             if (propertyName != null && !propertyName.equals("") && !propertyName.equalsIgnoreCase("picture")) {
                 String propertyValue = request.getParameter(propertyName);
-                if (propertyValue == null || propertyValue.equals(""))
+                if (propertyValue == null || propertyValue.equals("")) {
                     errors.add(fieldConfigurationEntity.getLabel(), new ActionMessage(
                             FieldConfigurationConstant.EXCEPTION_MANDATORY, FieldConfigurationHelper
                                     .getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(), userContext)));
+                }
             } else if (propertyName != null && !propertyName.equals("") && propertyName.equalsIgnoreCase("picture")) {
                 try {
                     if (getCustomerPicture() == null || getCustomerPicture().read() == -1) {
@@ -537,7 +551,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     private void validateSelectedOfferings(ActionErrors errors, HttpServletRequest request) {
         boolean duplicateFound = false;
         for (int i = 0; i < selectedOfferings.size() - 1; i++) {
-            for (int j = i + 1; j < selectedOfferings.size(); j++)
+            for (int j = i + 1; j < selectedOfferings.size(); j++) {
                 if (selectedOfferings.get(i) != null && selectedOfferings.get(j) != null
                         && selectedOfferings.get(i).equals(selectedOfferings.get(j))) {
                     String selectedOffering = "";
@@ -545,8 +559,9 @@ public class ClientCustActionForm extends CustomerActionForm {
                         List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
                                 ClientConstants.SAVINGS_OFFERING_LIST, request);
                         for (SavingsOfferingBO savingsOffering : offeringsList) {
-                            if (selectedOfferings.get(i).equals(savingsOffering.getPrdOfferingId()))
+                            if (selectedOfferings.get(i).equals(savingsOffering.getPrdOfferingId())) {
                                 selectedOffering = savingsOffering.getPrdOfferingName();
+                            }
                             break;
                         }
                     } catch (PageExpiredException pee) {
@@ -556,8 +571,10 @@ public class ClientCustActionForm extends CustomerActionForm {
                     duplicateFound = true;
                     break;
                 }
-            if (duplicateFound)
+            }
+            if (duplicateFound) {
                 break;
+            }
         }
     }
 
@@ -659,10 +676,11 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     @Override
     protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
-        if (groupFlag.equals(ClientConstants.YES) && parentGroup.getCustomerMeeting() != null)
+        if (groupFlag.equals(ClientConstants.YES) && parentGroup.getCustomerMeeting() != null) {
             return parentGroup.getCustomerMeeting().getMeeting();
-        else
+        } else {
             return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+        }
     }
 
     public String getDateOfBirth() {
@@ -759,8 +777,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyFirstName(int forMember, String value) {
-        if(forMember<familyFirstName.size())
+        if(forMember<familyFirstName.size()) {
             familyFirstName.set(forMember, value);
+        }
     }
 
     //RelationShip
@@ -776,8 +795,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyRelationship(int forMember, Short value) {
-        if(forMember<familyRelationship.size())
+        if(forMember<familyRelationship.size()) {
             familyRelationship.set(forMember, value);
+        }
     }
 
     //  MiddleName
@@ -794,8 +814,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyMiddleName(int forMember, String value) {
-        if(forMember<familyMiddleName.size())
+        if(forMember<familyMiddleName.size()) {
             familyMiddleName.set(forMember, value);
+        }
     }
 
 //LastName
@@ -811,8 +832,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyLastName(int forMember, String value) {
-        if(forMember<familyLastName.size())
+        if(forMember<familyLastName.size()) {
             familyLastName.set(forMember, value);
+        }
     }
 
 //DOB-DD
@@ -827,8 +849,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyDateOfBirthDD(int forMember, String value) {
-        if(forMember<familyDateOfBirthDD.size())
+        if(forMember<familyDateOfBirthDD.size()) {
             familyDateOfBirthDD.set(forMember, value);
+        }
     }
   //DOB-MM
     public List<String> getFamilyDateOfBirthMM() {
@@ -842,8 +865,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyDateOfBirthMM(int forMember, String value) {
-        if(forMember<familyDateOfBirthMM.size())
+        if(forMember<familyDateOfBirthMM.size()) {
             familyDateOfBirthMM.set(forMember, value);
+        }
     }
 //DOB-YY
     public List<String> getFamilyDateOfBirthYY() {
@@ -859,8 +883,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyDateOfBirthYY(int forMember, String value) {
-        if(forMember<familyDateOfBirthYY.size())
+        if(forMember<familyDateOfBirthYY.size()) {
             familyDateOfBirthYY.set(forMember, value);
+        }
     }
    //Gender
     public List<Short> getFamilyGender() {
@@ -874,8 +899,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyGender(int forMember, Short value) {
-        if(forMember<familyGender.size())
+        if(forMember<familyGender.size()) {
             familyGender.set(forMember, value);
+        }
     }
 
 //Living Status
@@ -891,8 +917,9 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     public void setFamilyLivingStatus(int forMember, Short value) {
-        if(forMember<familyLivingStatus.size())
+        if(forMember<familyLivingStatus.size()) {
             familyLivingStatus.set(forMember, value);
+        }
     }
 
     public List<Integer> getFamilyPrimaryKey() {

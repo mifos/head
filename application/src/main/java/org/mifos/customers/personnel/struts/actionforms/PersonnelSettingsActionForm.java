@@ -195,28 +195,33 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         String method = request.getParameter(Methods.method.toString());
         if (method.equals(Methods.preview.toString())) {
-            if (StringUtils.isBlank(getFirstName()))
+            if (StringUtils.isBlank(getFirstName())) {
                 addError(errors, PersonnelConstants.FIRSTNAME, PersonnelConstants.ERRORMANDATORY,
                         PersonnelConstants.FIRST_NAME);
-            else if (getFirstName().length() > PersonnelConstants.PERSONNELLENGTH)
+            } else if (getFirstName().length() > PersonnelConstants.PERSONNELLENGTH) {
                 addError(errors, PersonnelConstants.FIRSTNAME, PersonnelConstants.MAXIMUM_LENGTH,
                         PersonnelConstants.FIRST_NAME, PersonnelConstants.PERSONNELNAMELENGTH);
-            if (StringUtils.isBlank(getLastName()))
+            }
+            if (StringUtils.isBlank(getLastName())) {
                 addError(errors, PersonnelConstants.LASTNAME, PersonnelConstants.ERRORMANDATORY,
                         PersonnelConstants.LAST_NAME);
-            else if (getLastName().length() > PersonnelConstants.PERSONNELLENGTH)
+            } else if (getLastName().length() > PersonnelConstants.PERSONNELLENGTH) {
                 addError(errors, PersonnelConstants.LASTNAME, PersonnelConstants.MAXIMUM_LENGTH,
                         PersonnelConstants.LAST_NAME, PersonnelConstants.PERSONNELNAMELENGTH);
-            if (StringUtils.isBlank(getGender()))
+            }
+            if (StringUtils.isBlank(getGender())) {
                 addError(errors, PersonnelConstants.GENDERVALUE, PersonnelConstants.MANDATORYSELECT,
                         PersonnelConstants.GENDERVALUE);
-            if (getDisplayName().length() > PersonnelConstants.PERSONNELDISPLAYNAMELENGTH)
+            }
+            if (getDisplayName().length() > PersonnelConstants.PERSONNELDISPLAYNAMELENGTH) {
                 addError(errors, PersonnelConstants.DISPLAYNAME, PersonnelConstants.MAXIMUM_LENGTH,
                         PersonnelConstants.DISPLAY_NAME, PersonnelConstants.PERSONNELDISPLAYLENGTH);
+            }
             validateEmail(errors);
         }
-        if (!method.equals(Methods.validate.toString()))
+        if (!method.equals(Methods.validate.toString())) {
             request.setAttribute("methodCalled", method);
+        }
         return errors;
     }
 

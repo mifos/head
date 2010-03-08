@@ -123,15 +123,17 @@ public class TableTag extends BodyTagSupport {
                 throw new JspException();
             }
             List obj = null;
-            if (scope.equalsIgnoreCase("session"))
+            if (scope.equalsIgnoreCase("session")) {
                 obj = (List) pageContext.getSession().getAttribute(source);
-            else if (scope.equalsIgnoreCase("request"))
+            } else if (scope.equalsIgnoreCase("request")) {
                 obj = (List) pageContext.getRequest().getAttribute(source);
-            if (obj == null)
+            }
+            if (obj == null) {
                 try {
                     obj = (List) SessionUtils.getAttribute(source, (HttpServletRequest) pageContext.getRequest());
                 } catch (PageExpiredException e) {
                 }
+            }
 
             if (obj == null || obj.isEmpty()) {
                 return super.doStartTag();

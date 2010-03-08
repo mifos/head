@@ -81,10 +81,11 @@ public class PrdCategoryActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {
-            if (Methods.createPreview.toString().equals(methodCalled))
+            if (Methods.createPreview.toString().equals(methodCalled)) {
                 errors.add(super.validate(mapping, request));
-            else if (Methods.managePreview.toString().equals(methodCalled))
+            } else if (Methods.managePreview.toString().equals(methodCalled)) {
                 errors.add(super.validate(mapping, request));
+            }
         }
         if (null != errors && !errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);

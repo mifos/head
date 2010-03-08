@@ -185,8 +185,9 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         verify(branchReportPersistenceMock);
         BranchReportStaffingLevelSummaryBO lastBO = null;
         for (BranchReportStaffingLevelSummaryBO summaryBO : retrievedStaffingLevel) {
-            if (lastBO != null)
-               Assert.assertEquals(1, summaryBO.compareTo(lastBO));
+            if (lastBO != null) {
+                Assert.assertEquals(1, summaryBO.compareTo(lastBO));
+            }
             lastBO = summaryBO;
         }
        Assert.assertEquals(0, totalStaffSummaryBO.compareTo(lastBO));

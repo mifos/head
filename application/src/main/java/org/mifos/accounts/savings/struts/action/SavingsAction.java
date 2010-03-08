@@ -421,10 +421,12 @@ public class SavingsAction extends AccountAppAction {
                             .valueOf(removeSign(((SavingsTrxnDetailEntity) accountTrxnEntity).getBalance())));
                     savingsTransactionHistoryView.setClientName(accountTrxnEntity.getCustomer().getDisplayName());
                     savingsTransactionHistoryView.setPostedDate(financialTransactionBO.getPostedDate());
-                    if (accountTrxnEntity.getPersonnel() != null)
+                    if (accountTrxnEntity.getPersonnel() != null) {
                         savingsTransactionHistoryView.setPostedBy(accountTrxnEntity.getPersonnel().getDisplayName());
-                    if (financialTransactionBO.getNotes() != null && !financialTransactionBO.getNotes().equals(""))
+                    }
+                    if (financialTransactionBO.getNotes() != null && !financialTransactionBO.getNotes().equals("")) {
                         savingsTransactionHistoryView.setNotes(financialTransactionBO.getNotes());
+                    }
                     savingsTransactionHistoryViewList.add(savingsTransactionHistoryView);
                 }
             }
@@ -458,14 +460,15 @@ public class SavingsAction extends AccountAppAction {
         logger.debug("In SavingsAction::validate(), method: " + method);
         String forward = null;
         if (method != null) {
-            if (method.equals("preview"))
+            if (method.equals("preview")) {
                 forward = "preview_faliure";
-            else if (method.equals("editPreview"))
+            } else if (method.equals("editPreview")) {
                 forward = "editPreview_faliure";
-            else if (method.equals("load"))
+            } else if (method.equals("load")) {
                 forward = "load_faliure";
-            else if (method.equals("reLoad"))
+            } else if (method.equals("reLoad")) {
                 forward = "reLoad_faliure";
+            }
         }
         return mapping.findForward(forward);
     }
@@ -476,8 +479,9 @@ public class SavingsAction extends AccountAppAction {
         logger.debug("In SavingsAction::getDepositDueDetails()");
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SavingsBO savings = savingsService.findBySystemId(((SavingsActionForm) form).getGlobalAccountNum());
-        for (AccountActionDateEntity actionDate : savings.getAccountActionDates())
+        for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {
             savingsService.initialize(actionDate);
+        }
 
         savingsService.initialize(savings.getAccountNotes());
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
@@ -527,16 +531,18 @@ public class SavingsAction extends AccountAppAction {
     }
 
     private String removeSign(Money amount) {
-        if (amount.isLessThanZero())
+        if (amount.isLessThanZero()) {
             return amount.negate().toString();
-        else
+        } else {
             return amount.toString();
+        }
     }
 
     protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
             Short officeId, Short loanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true))
+        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true)) {
             throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     private boolean isPermissionAllowed(Short newSate, UserContext userContext, Short officeId, Short loanOfficerId,

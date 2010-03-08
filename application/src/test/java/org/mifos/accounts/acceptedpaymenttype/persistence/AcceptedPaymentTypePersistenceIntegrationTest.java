@@ -79,16 +79,18 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 
     private boolean Find(PaymentTypes paymentType, List<AcceptedPaymentType> acceptedPaymentTypes) {
         for (AcceptedPaymentType acceptedPaymentType : acceptedPaymentTypes) {
-            if (acceptedPaymentType.getPaymentTypeEntity().getId().shortValue() == paymentType.getValue().shortValue())
+            if (acceptedPaymentType.getPaymentTypeEntity().getId().shortValue() == paymentType.getValue().shortValue()) {
                 return true;
+            }
         }
         return false;
     }
 
     private List<AcceptedPaymentType> GetSavePaymentTypes(TrxnTypes transType) {
         for (TransactionAcceptedPaymentTypes transactionAcceptedPaymentTypes : allAcceptedPaymentTypes) {
-            if (transType.equals(transactionAcceptedPaymentTypes.getTransactionType()))
+            if (transType.equals(transactionAcceptedPaymentTypes.getTransactionType())) {
                 return transactionAcceptedPaymentTypes.getAcceptedPaymentTypes();
+            }
         }
         return null;
     }
@@ -103,7 +105,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
                 List<AcceptedPaymentType> acceptedPaymentTypes = transactionAcceptedPaymentTypes
                         .getAcceptedPaymentTypes();
                 if ((acceptedPaymentTypes != null) && (acceptedPaymentTypes.size() > 0)) {
-                    for (PaymentTypes paymentType : PaymentTypes.values())
+                    for (PaymentTypes paymentType : PaymentTypes.values()) {
                         if (Find(paymentType, acceptedPaymentTypes) == false) {
                             AcceptedPaymentType acceptedPaymentType = new AcceptedPaymentType();
                             Short paymentTypeId = paymentType.getValue();
@@ -115,6 +117,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
                             addAcceptedPaymentTypes.add(acceptedPaymentType);
                             paymentTypes.add(acceptedPaymentType);
                         }
+                    }
                 }
             }
         }
@@ -130,32 +133,38 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 
     private boolean FindAcceptedPaymentType(AcceptedPaymentType acceptedPaymentType,
             List<AcceptedPaymentType> acceptedPaymentTypes) {
-        for (AcceptedPaymentType newAcceptedPaymentType : acceptedPaymentTypes)
+        for (AcceptedPaymentType newAcceptedPaymentType : acceptedPaymentTypes) {
             if ((newAcceptedPaymentType.getTransactionTypeEntity().getTransactionId().shortValue() == acceptedPaymentType
                     .getTransactionTypeEntity().getTransactionId().shortValue())
                     && (newAcceptedPaymentType.getPaymentTypeEntity().getId().shortValue()) == acceptedPaymentType
-                            .getPaymentTypeEntity().getId().shortValue())
+                            .getPaymentTypeEntity().getId().shortValue()) {
                 return true;
+            }
+        }
         return false;
     }
 
     private List<AcceptedPaymentType> GetBeforeTestPaymentTypes(TrxnTypes transType) {
         for (TransactionAcceptedPaymentTypes transactionAcceptedPaymentTypes : currentAcceptedPaymentTypes) {
-            if (transType.equals(transactionAcceptedPaymentTypes.getTransactionType()))
+            if (transType.equals(transactionAcceptedPaymentTypes.getTransactionType())) {
                 return transactionAcceptedPaymentTypes.getAcceptedPaymentTypes();
+            }
         }
         return null;
     }
 
     private boolean IsDeleted(AcceptedPaymentType a, List<AcceptedPaymentType> list) {
-        if ((list == null) || (list.size() == 0))
+        if ((list == null) || (list.size() == 0)) {
             return true;
-        for (AcceptedPaymentType type : list)
+        }
+        for (AcceptedPaymentType type : list) {
             if ((type.getTransactionTypeEntity().getTransactionId().shortValue() == a.getTransactionTypeEntity()
                     .getTransactionId().shortValue())
                     && (type.getPaymentTypeEntity().getId().shortValue() == a.getPaymentTypeEntity().getId()
-                            .shortValue()))
+                            .shortValue())) {
                 return false;
+            }
+        }
         return true;
     }
 
@@ -166,8 +175,9 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
                 .getAcceptedPaymentTypesForATransaction(transactionType.getValue());
         List<AcceptedPaymentType> acceptedPaymentTypes = GetBeforeTestPaymentTypes(transactionType);
         for (AcceptedPaymentType a : acceptedPaymentTypesFromDB) {
-            if (IsDeleted(a, acceptedPaymentTypes))
+            if (IsDeleted(a, acceptedPaymentTypes)) {
                 deleteAcceptedPaymentTypes.add(a);
+            }
         }
 
     }
@@ -178,8 +188,9 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             addAcceptedPaymentTypeForATransaction(addAcceptedPaymentTypes, transactionType);
         }
-        if (addAcceptedPaymentTypes.size() > 0)
+        if (addAcceptedPaymentTypes.size() > 0) {
             acceptedPaymentTypePersistence.addAcceptedPaymentTypes(addAcceptedPaymentTypes);
+        }
         // verify results
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
@@ -193,8 +204,9 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             deleteAcceptedPaymentTypeForATransaction(deleteAcceptedPaymentTypes, transactionType);
         }
-        if (deleteAcceptedPaymentTypes.size() > 0)
+        if (deleteAcceptedPaymentTypes.size() > 0) {
             acceptedPaymentTypePersistence.deleteAcceptedPaymentTypes(deleteAcceptedPaymentTypes);
+        }
         // verify results
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
@@ -206,16 +218,19 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     }
 
     private boolean FindEntity(List<PaymentTypeEntity> entityList, PaymentTypeEntity entity) {
-        for (PaymentTypeEntity e : entityList)
-            if ((e.getId().shortValue() == entity.getId().shortValue()) && (e.getName().equals(entity.getName())))
+        for (PaymentTypeEntity e : entityList) {
+            if ((e.getId().shortValue() == entity.getId().shortValue()) && (e.getName().equals(entity.getName()))) {
                 return true;
+            }
+        }
         return false;
     }
 
     private void compare(List<PaymentTypeEntity> entityList, List<AcceptedPaymentType> acceptedPaymentTypeList) {
        Assert.assertTrue(entityList.size() == acceptedPaymentTypeList.size());
-        for (AcceptedPaymentType acceptedPaymentType : acceptedPaymentTypeList)
-           Assert.assertTrue(FindEntity(entityList, acceptedPaymentType.getPaymentTypeEntity()));
+        for (AcceptedPaymentType acceptedPaymentType : acceptedPaymentTypeList) {
+            Assert.assertTrue(FindEntity(entityList, acceptedPaymentType.getPaymentTypeEntity()));
+        }
 
     }
 

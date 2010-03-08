@@ -114,10 +114,12 @@ public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
 
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        if (!(customer == "Center"))
+        if (!(customer == "Center")) {
             group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        if (!(customer == "Center" || customer == "Group"))
+        }
+        if (!(customer == "Center" || customer == "Group")) {
             client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        }
         setPath();
     }
 

@@ -54,28 +54,31 @@ public class LoanUIHelperFn {
     }
 
     public static String getDoubleValue(Double value) {
-        if (value != null)
+        if (value != null) {
             return BigDecimal.valueOf(value).toString();
+        }
         return "0.0";
     }
 
     static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState,
             ConfigurationBusinessService configService) {
         try {
-            if (!configService.isGlimEnabled())
+            if (!configService.isGlimEnabled()) {
                 return false;
+            }
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
-        if (accountState == null)
+        if (accountState == null) {
             return false;
+        }
 
         if (Arrays.asList(AccountState.LOAN_PARTIAL_APPLICATION, AccountState.LOAN_PENDING_APPROVAL).contains(
                 accountState)) {
             return false;
         }
         if (Arrays.asList(AccountState.LOAN_APPROVED, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState))
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState)) {
             // disabling only the GLIM parts of the loan
             return Arrays.asList("clientDetails.loanAmount", "clientDetails.clientId"
             // ,"noOfInstallments",
@@ -86,6 +89,7 @@ public class LoanUIHelperFn {
                     // "customField","disbursementDate",
                     // "weekDayId", "ordinalOfMonth"
                     ).contains(fieldName);
+        }
         return true;
     }
 

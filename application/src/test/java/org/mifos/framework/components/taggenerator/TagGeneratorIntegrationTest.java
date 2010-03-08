@@ -130,16 +130,19 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
     public void testTagGeneratorFactory() throws Exception {
         createInitialObjectsForSavings();
         TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(center);
-        if (tagGenerator instanceof CustomerTagGenerator)
-           Assert.assertTrue(true);
+        if (tagGenerator instanceof CustomerTagGenerator) {
+            Assert.assertTrue(true);
+        }
 
         tagGenerator = TagGeneratorFactory.getInstance().getGenerator(group);
-        if (tagGenerator instanceof CustomerTagGenerator)
-           Assert.assertTrue(true);
+        if (tagGenerator instanceof CustomerTagGenerator) {
+            Assert.assertTrue(true);
+        }
 
         tagGenerator = TagGeneratorFactory.getInstance().getGenerator(savings);
-        if (tagGenerator instanceof AccountTagGenerator)
-           Assert.assertTrue(true);
+        if (tagGenerator instanceof AccountTagGenerator) {
+            Assert.assertTrue(true);
+        }
 
     }
 
@@ -157,8 +160,9 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
         TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(personnel);
         tagGenerator = TagGeneratorFactory.getInstance().getGenerator(personnel);
-        if (tagGenerator instanceof PersonnelTagGenerator)
-           Assert.assertTrue(true);
+        if (tagGenerator instanceof PersonnelTagGenerator) {
+            Assert.assertTrue(true);
+        }
     }
 
     private void createInitialObjectsForSavings() throws Exception {

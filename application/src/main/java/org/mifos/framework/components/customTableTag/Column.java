@@ -103,10 +103,11 @@ public class Column {
         tableInfo.append(" width=\"" + getColumnDetails().getColWidth() + "%\"");
         tableInfo.append(" align=\"" + getColumnDetails().getAlign() + "\" ");
         tableInfo.append(">");
-        if (getLabel().replaceAll("", "").equals("") || getLabel() == null)
+        if (getLabel().replaceAll("", "").equals("") || getLabel() == null) {
             tableInfo.append("&nbsp;");
-        else
+        } else {
             tableInfo.append("<b>" + getLabelText(pageContext, getLabel(), bundle) + "</b>");
+        }
         tableInfo.append("</td>");
     }
 
@@ -196,14 +197,16 @@ public class Column {
         UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
         LabelTagUtils labelTagUtils = LabelTagUtils.getInstance();
         String labelText = null;
-        if (labelText == null)
+        if (labelText == null) {
             try {
                 labelText = labelTagUtils.getLabel(pageContext, bundle, userContext.getPreferredLocale(), key, null);
             } catch (Exception e) {
             }
-        if (labelText == null)
+        }
+        if (labelText == null) {
             labelText = MessageLookup.getInstance().lookup(key);
-        if (labelText == null)
+        }
+        if (labelText == null) {
             try {
                 char[] charArray = bundle.toCharArray();
                 charArray[0] = Character.toUpperCase(charArray[0]);
@@ -214,6 +217,7 @@ public class Column {
                 labelText = key;
 
             }
+        }
         return labelText;
     }
 

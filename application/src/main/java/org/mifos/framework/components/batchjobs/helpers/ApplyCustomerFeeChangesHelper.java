@@ -76,8 +76,9 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
                 }
             }
         }
-        if (errorList.size() > 0)
+        if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
     }
 
     private void updateAccountFee(AccountBO account, FeeBO feesBO) throws BatchJobException {

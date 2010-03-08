@@ -48,8 +48,9 @@ public class LocalizationConverterTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         char sep = '.';
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
+        }
         converter.setCurrentLocale(new Locale("IS", "is"));
         sep = ',';
         Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
@@ -63,8 +64,9 @@ public class LocalizationConverterTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleStringForMoney(dValue);
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
+        }
         converter.setCurrentLocale(new Locale("IS", "is"));
         doubleValueString = "2,5";
         dString = converter.getDoubleStringForMoney(dValue);
@@ -79,8 +81,9 @@ public class LocalizationConverterTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleStringForInterest(dValue);
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
+        }
         converter.setCurrentLocale(new Locale("IS", "is"));
         doubleValueString = "2123,12345";
         dString = converter.getDoubleStringForInterest(dValue);
@@ -95,8 +98,9 @@ public class LocalizationConverterTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleValueString(dValue);
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
+        }
         converter.setCurrentLocale(new Locale("IS", "is"));
         doubleValueString = "2,59";
         dString = converter.getDoubleValueString(dValue);
@@ -114,8 +118,9 @@ public class LocalizationConverterTest extends TestCase {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
         String dateSeparator = converter.getDateSeparatorForCurrentLocale();
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(separator, dateSeparator);
+        }
         converter.setCurrentLocale(new Locale("IS", "is"));
         dateSeparator = converter.getDateSeparatorForCurrentLocale();
         Assert.assertEquals(".", dateSeparator);

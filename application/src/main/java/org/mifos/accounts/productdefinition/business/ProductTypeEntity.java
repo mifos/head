@@ -90,10 +90,11 @@ public class ProductTypeEntity extends BusinessObject {
 
     public void update(Short latenessDormancy) throws ProductDefinitionException {
 
-        if (productTypeID.equals(ProductType.LOAN.getValue()))
+        if (productTypeID.equals(ProductType.LOAN.getValue())) {
             this.latenessDays = latenessDormancy;
-        else
+        } else {
             this.dormancyDays = latenessDormancy;
+        }
         try {
             new LoanPrdPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {

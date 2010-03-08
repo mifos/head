@@ -111,8 +111,9 @@ public class ClientRules {
      * class.
      */
     public static void init() throws ConfigurationException {
-        if (!isValidNameSequence())
+        if (!isValidNameSequence()) {
             throw new ConfigurationException("error in configured value for " + ClientRulesNameSequence);
+        }
         // If the configuration is invalid with respect to Client Rules, this
         // will force discovery of the problem upon initialization
         refresh();
@@ -134,21 +135,24 @@ public class ClientRules {
     }
 
     public static Boolean getCenterHierarchyExists() {
-        if (centerHierarchyExists == null)
+        if (centerHierarchyExists == null) {
             centerHierarchyExists = getCenterHierarchyExistsFromConfig();
+        }
         return centerHierarchyExists;
     }
 
     /** Can group loans exist? */
     public static Boolean getGroupCanApplyLoans() throws ConfigurationException {
-        if (groupCanApplyLoans == null)
+        if (groupCanApplyLoans == null) {
             groupCanApplyLoans = getGroupCanApplyLoansFromConfig();
+        }
         return groupCanApplyLoans;
     }
 
     public static Boolean getClientCanExistOutsideGroup() throws ConfigurationException {
-        if (clientCanExistOutsideGroup == null)
+        if (clientCanExistOutsideGroup == null) {
             clientCanExistOutsideGroup = getClientCanExistOutsideGroupFromConfig();
+        }
         return clientCanExistOutsideGroup;
     }
 
@@ -326,16 +330,18 @@ public class ClientRules {
     public static int getMinimumAge() throws ConfigurationException {
         int minimumAge = 0;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(ClientRules.MinimumAgeForNewClients))
+        if (configMgr.containsKey(ClientRules.MinimumAgeForNewClients)) {
             minimumAge = Integer.parseInt(configMgr.getString(ClientRules.MinimumAgeForNewClients));
-        else
+        } else {
             throw new ConfigurationException("The Minimum Age for a client is not defined in "
                     + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+        }
 
-        if (minimumAge < 0 || minimumAge > 150)
+        if (minimumAge < 0 || minimumAge > 150) {
             throw new ConfigurationException("The Minimum Age defined in the "
                     + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
                     + "is not within the acceptable range (0 to 150)");
+        }
 
         return minimumAge;
 
@@ -348,16 +354,18 @@ public class ClientRules {
     public static int getMaximumAge() throws ConfigurationException {
         int maximumAge = 0;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(ClientRules.MaximumAgeForNewClients))
+        if (configMgr.containsKey(ClientRules.MaximumAgeForNewClients)) {
             maximumAge = Integer.parseInt(configMgr.getString(ClientRules.MaximumAgeForNewClients));
-        else
+        } else {
             throw new ConfigurationException("The Maximum Age for a client is not defined in "
                     + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+        }
 
-        if (maximumAge > 150 || maximumAge < 0)
+        if (maximumAge > 150 || maximumAge < 0) {
             throw new ConfigurationException("The Maximum Age defined in the "
                     + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
                     + "is not within the acceptable range (0 to 150)");
+        }
         return maximumAge;
 
     }

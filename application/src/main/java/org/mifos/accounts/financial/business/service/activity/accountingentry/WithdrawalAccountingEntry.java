@@ -63,12 +63,13 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
         if (!roundedAmount.equals(savingsTrxn.getWithdrawlAmount())) {
             FinancialActionBO finActionRounding = FinancialActionCache
                     .getFinancialAction(FinancialActionConstants.ROUNDING);
-            if (roundedAmount.isGreaterThan(savingsTrxn.getWithdrawlAmount()))
+            if (roundedAmount.isGreaterThan(savingsTrxn.getWithdrawlAmount())) {
                 addEntriesForIncreasedAmount(savings, finActionRounding, roundedAmount, savingsTrxn
                         .getWithdrawlAmount());
-            else
+            } else {
                 addEntriesForDecreasedAmount(savings, finActionRounding, roundedAmount, savingsTrxn
                         .getWithdrawlAmount());
+            }
 
             // savingsTrxn.setWithdrawlAmount(roundedAmount);
         }

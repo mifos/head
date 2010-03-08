@@ -57,25 +57,30 @@ public class LoanDao implements DataAccessObject {
             List<FeeView> feeViews, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
             Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
 
-        if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate))
+        if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
+        }
 
         if (!customer.isActive()) {
 
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
         }
 
-        if (!loanOffering.isActive())
+        if (!loanOffering.isActive()) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
+        }
 
-        if (isDisbursementDateLessThanCurrentDate(disbursementDate))
+        if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
             throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+        }
 
-        if (!isDisbursementDateValid(customer, disbursementDate))
+        if (!isDisbursementDateValid(customer, disbursementDate)) {
             throw new AccountException(LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+        }
 
-        if (interestDeductedAtDisbursement == true && noOfinstallments.shortValue() <= 1)
+        if (interestDeductedAtDisbursement == true && noOfinstallments.shortValue() <= 1) {
             throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
+        }
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
@@ -88,8 +93,9 @@ public class LoanDao implements DataAccessObject {
     }
 
     private boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
-        if (DateUtils.dateFallsBeforeDate(disbursementDate, DateUtils.getCurrentDateWithoutTimeStamp()))
+        if (DateUtils.dateFallsBeforeDate(disbursementDate, DateUtils.getCurrentDateWithoutTimeStamp())) {
             return true;
+        }
         return false;
     }
 

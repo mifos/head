@@ -53,8 +53,9 @@ public class AddInterestCalcRule extends Upgrade {
     public AddInterestCalcRule(int higherVersion, int newRuleId, int categoryId, String lookupName, String description,
             Short locale, String message) {
         super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
             throw new RuntimeException(wrongConstructor);
+        }
         this.newRuleId = newRuleId;
         this.lookupName = lookupName;
         this.categoryId = categoryId;
@@ -69,8 +70,9 @@ public class AddInterestCalcRule extends Upgrade {
      */
     public AddInterestCalcRule(int higherVersion, int newRuleId, int categoryId, String lookupName, String description) {
         super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, lookupName))
+        if (!validateLookupValueKey(keyFormat, lookupName)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
+        }
         this.newRuleId = newRuleId;
         this.lookupName = lookupName;
         this.categoryId = categoryId;

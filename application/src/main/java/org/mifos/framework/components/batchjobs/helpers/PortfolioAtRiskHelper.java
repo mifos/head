@@ -91,8 +91,9 @@ public class PortfolioAtRiskHelper extends TaskHelper {
                                 + e.getMessage() + " at group " + groupId.toString(), e);
 
                 StaticHibernateUtil.rollbackTransaction();
-                if (groupId != null)
+                if (groupId != null) {
                     errorList.add(groupId.toString());
+                }
             } finally {
                 StaticHibernateUtil.closeSession();
             }
@@ -101,8 +102,9 @@ public class PortfolioAtRiskHelper extends TaskHelper {
         long time2 = new DateTimeService().getCurrentDateTime().getMillis();
         getLogger().info("PortfolioAtRiskTask ran in " + (time2 - time1) + " milliseconds");
 
-        if (errorList.size() > 0)
+        if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
     }
 
     @Override

@@ -74,8 +74,9 @@ public class TagGeneratorFactory {
     public TagGenerator getGenerator(BusinessObject bo) throws PageExpiredException {
         try {
 
-            if (bo == null)
+            if (bo == null) {
                 throw new PageExpiredException();
+            }
             return (TagGenerator) Class.forName(getGeneratorNames().get(getClassName(bo))).newInstance();
         } catch (ClassNotFoundException e) {
             throw new FrameworkRuntimeException(e);
@@ -87,29 +88,40 @@ public class TagGeneratorFactory {
     }
 
     private String getClassName(BusinessObject bo) {
-        if (bo instanceof CenterBO)
+        if (bo instanceof CenterBO) {
             return "org.mifos.customers.center.business.CenterBO";
-        if (bo instanceof GroupBO)
+        }
+        if (bo instanceof GroupBO) {
             return "org.mifos.customers.group.business.GroupBO";
-        if (bo instanceof ClientBO)
+        }
+        if (bo instanceof ClientBO) {
             return "org.mifos.customers.client.business.ClientBO";
-        if (bo instanceof SavingsBO)
+        }
+        if (bo instanceof SavingsBO) {
             return "org.mifos.accounts.savings.business.SavingsBO";
-        if (bo instanceof LoanBO)
+        }
+        if (bo instanceof LoanBO) {
             return "org.mifos.accounts.loan.business.LoanBO";
-        if (bo instanceof CustomerAccountBO)
+        }
+        if (bo instanceof CustomerAccountBO) {
             return "org.mifos.accounts.business.CustomerAccountBO";
-        if (bo instanceof OfficeBO)
+        }
+        if (bo instanceof OfficeBO) {
             return "org.mifos.customers.office.business.OfficeBO";
-        if (bo instanceof PersonnelBO)
+        }
+        if (bo instanceof PersonnelBO) {
             return "org.mifos.customers.personnel.business.PersonnelBO";
+        }
         if (bo instanceof CustomerBO) {
-            if (((CustomerBO) bo).getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()))
+            if (((CustomerBO) bo).getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())) {
                 return "org.mifos.customers.client.business.ClientBO";
-            if (((CustomerBO) bo).getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue()))
+            }
+            if (((CustomerBO) bo).getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())) {
                 return "org.mifos.customers.group.business.GroupBO";
-            if (((CustomerBO) bo).getCustomerLevel().getId().equals(CustomerLevel.CENTER.getValue()))
+            }
+            if (((CustomerBO) bo).getCustomerLevel().getId().equals(CustomerLevel.CENTER.getValue())) {
                 return "org.mifos.customers.center.business.CenterBO";
+            }
         }
         return null;
     }

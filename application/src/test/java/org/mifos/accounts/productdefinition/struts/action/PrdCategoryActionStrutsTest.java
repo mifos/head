@@ -282,8 +282,9 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
     private List<ProductTypeEntity> getProductTypes(UserContext userContext) throws PersistenceException {
         List<ProductTypeEntity> productCategoryList = productCategoryPersistence.getProductTypes();
-        for (ProductTypeEntity productTypeEntity : productCategoryList)
+        for (ProductTypeEntity productTypeEntity : productCategoryList) {
             productTypeEntity.setUserContext(userContext);
+        }
         return productCategoryList;
     }
 
@@ -291,8 +292,9 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
             throws PersistenceException {
         List<PrdCategoryStatusEntity> productCategoryStatusList = productCategoryPersistence
                 .getProductCategoryStatusList();
-        for (PrdCategoryStatusEntity prdCategoryStatusEntity : productCategoryStatusList)
+        for (PrdCategoryStatusEntity prdCategoryStatusEntity : productCategoryStatusList) {
             prdCategoryStatusEntity.setLocaleId(userContext.getLocaleId());
+        }
         return productCategoryStatusList;
     }
 

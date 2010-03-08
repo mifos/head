@@ -46,8 +46,9 @@ public class ModifiableParameterServletRequest extends HttpServletRequestWrapper
 
     @Override
     public String getParameter(String arg0) {
-        if (removedParameterList.contains(arg0))
+        if (removedParameterList.contains(arg0)) {
             return null;
+        }
         return getRequest().getParameter(arg0);
     }
 
@@ -80,8 +81,9 @@ public class ModifiableParameterServletRequest extends HttpServletRequestWrapper
 
     @Override
     public String[] getParameterValues(String arg0) {
-        if (removedParameterList.contains(arg0))
+        if (removedParameterList.contains(arg0)) {
             return null;
+        }
         return getRequest().getParameterValues(arg0);
     }
 }

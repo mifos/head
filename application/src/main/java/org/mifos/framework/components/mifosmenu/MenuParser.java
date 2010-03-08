@@ -127,19 +127,22 @@ public class MenuParser {
                 menuItem[j].setDisplayName(getDisplayName((Element) menuItemNodeList.item(i)));
                 menuItem[j].setLinkValue(getLinkValue((Element) menuItemNodeList.item(i)));
                 j++;
-            } else
+            } else {
                 hiddenItems++;
+            }
         }
-        if (hiddenItems > 0)
+        if (hiddenItems > 0) {
             menuItem = removeEmptyMenuItems(menuItem, hiddenItems);
+        }
         return menuItem;
     }
 
     private static MenuItem[] removeEmptyMenuItems(MenuItem menuItems[], int hiddenItems) {
         MenuItem newMenuItems[] = new MenuItem[menuItems.length - hiddenItems];
         for (int i = 0, j = 0; i < menuItems.length; i++) {
-            if (menuItems[i] != null)
+            if (menuItems[i] != null) {
                 newMenuItems[j++] = menuItems[i];
+            }
         }
         return newMenuItems;
     }

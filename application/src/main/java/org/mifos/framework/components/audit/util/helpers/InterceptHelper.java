@@ -69,8 +69,9 @@ public class InterceptHelper {
     }
 
     public boolean isInitialValueMapEmpty() {
-        if (initialValues == null || initialValues.size() == 0)
+        if (initialValues == null || initialValues.size() == 0) {
             return true;
+        }
         return false;
     }
 
@@ -203,8 +204,9 @@ public class InterceptHelper {
                 } else if (propertyValues[i].getClass().getName().startsWith(personnelLevelName)) {
                     Short id = ((PersonnelLevelEntity) propertyValues[i]).getId();
                     populateValueForObjectsOfTypeMasterDataEntity(id, state, propertyNames[i]);
-                } else
+                } else {
                     populateValueForObjectsOfTypeMasterDataEntity(propertyValues[i], state, propertyNames[i]);
+                }
             }
 
             // Reading Collection Types
@@ -226,10 +228,12 @@ public class InterceptHelper {
                             if (propertyNames[i].equalsIgnoreCase("loanOfferingFees")
                                     && loanOfferingFeesEntity.getPrdOfferingFeeId() != null) {
                                 readLoanOfferingFeesCollection(loanOfferingFeesEntity, state);
-                            } else
+                            } else {
                                 readFurtherMetaForCollectionType(obj, propertyNames[i], state);
-                        } else
+                            }
+                        } else {
                             readFurtherMetaForCollectionType(obj, propertyNames[i], state);
+                        }
                     }
                 }
             }
@@ -325,10 +329,12 @@ public class InterceptHelper {
                         MeetingBO meeting = (MeetingBO) obj1;
                         if (propertyNames[i].equalsIgnoreCase("meeting") && meeting.getMeetingId() != null) {
                             readMeetingEntity(meeting, propertyNames[i], state);
-                        } else
+                        } else {
                             readFurtherMeta(obj1, propertyNames[i], state);
-                    } else
+                        }
+                    } else {
                         readFurtherMeta(obj1, propertyNames[i], state);
+                    }
                 }
             }
 
@@ -373,10 +379,11 @@ public class InterceptHelper {
                     + meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
             String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting.getMeetingDetails()
                     .getRecurrenceType().getRecurrenceId(), localeId);
-            if (!value.equals(""))
+            if (!value.equals("")) {
                 initialValues.put(name, value);
-            else
+            } else {
                 initialValues.put(name, meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+            }
             columnName = AuditConfigurtion.getColumnNameForPropertyName(entityName, name);
             if (columnName != null && !columnName.equals("")) {
                 columnNames.put(name, columnName);
@@ -412,10 +419,11 @@ public class InterceptHelper {
                     + meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
             String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting.getMeetingDetails()
                     .getRecurrenceType().getRecurrenceId(), localeId);
-            if (!value.equals(""))
+            if (!value.equals("")) {
                 changedValues.put(name, value);
-            else
+            } else {
                 changedValues.put(name, meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+            }
             columnName = AuditConfigurtion.getColumnNameForPropertyName(entityName, name);
             if (columnName != null && !columnName.equals("")) {
                 columnNames.put(name, columnName);
@@ -439,26 +447,30 @@ public class InterceptHelper {
     private void readFurtherMoneyType(Object obj, String name, String state) {
         if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
             logger.debug("i readFurtherMoneyType " + name + " : " + obj);
-            if (obj.toString().equalsIgnoreCase("0.0"))
+            if (obj.toString().equalsIgnoreCase("0.0")) {
                 initialValues.put(name, "");
-            else
+            } else {
                 initialValues.put(name, obj.toString());
+            }
             String columnName = AuditConfigurtion.getColumnNameForPropertyName(entityName, name);
-            if (columnName != null && !columnName.equals(""))
+            if (columnName != null && !columnName.equals("")) {
                 columnNames.put(name, columnName);
-            else
+            } else {
                 columnNames.put(name, name);
+            }
         } else {
             logger.debug("c readFurtherMoneyType " + name + " : " + obj);
-            if (obj.toString().equalsIgnoreCase("0.0"))
+            if (obj.toString().equalsIgnoreCase("0.0")) {
                 changedValues.put(name, "");
-            else
+            } else {
                 changedValues.put(name, obj.toString());
+            }
             String columnName = AuditConfigurtion.getColumnNameForPropertyName(entityName, name);
-            if (columnName != null && !columnName.equals(""))
+            if (columnName != null && !columnName.equals("")) {
                 columnNames.put(name, columnName);
-            else
+            } else {
                 columnNames.put(name, name);
+            }
         }
     }
 
@@ -793,10 +805,12 @@ public class InterceptHelper {
                         MeetingBO meeting = (MeetingBO) object;
                         if (propertyNames[i].equalsIgnoreCase("meeting") && meeting.getMeetingId() != null) {
                             readMeetingCollection(meeting, propertyNames[i], state);
-                        } else
+                        } else {
                             readFurtherMetaForCollectionType(object, propertyNames[i], state);
-                    } else
+                        }
+                    } else {
                         readFurtherMetaForCollectionType(object, propertyNames[i], state);
+                    }
                 }
 
             }
@@ -957,17 +971,20 @@ public class InterceptHelper {
                         if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                             String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name,
                                     propertyValues[i], localeId);
-                            if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                            if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                                 initialArray.append(value);
-                            else if (value.trim().length() != 0)
+                            } else if (value.trim().length() != 0) {
                                 initialArray.append("-").append(value);
+                            }
                         } else {
-                            if (propertyValues[i] != null)
+                            if (propertyValues[i] != null) {
                                 if (initialArray.toString().trim().length() == 0
-                                        || initialArray.toString().endsWith(","))
+                                        || initialArray.toString().endsWith(",")) {
                                     initialArray.append(propertyValues[i]);
-                                else if (propertyValues[i].toString().trim().length() != 0)
+                                } else if (propertyValues[i].toString().trim().length() != 0) {
                                     initialArray.append("-").append(propertyValues[i]);
+                                }
+                            }
 
                         }
                     }
@@ -978,16 +995,19 @@ public class InterceptHelper {
                         if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                             String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name,
                                     propertyValues[i], localeId);
-                            if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                            if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                                 changeArray.append(value);
-                            else if (value.trim().length() != 0)
+                            } else if (value.trim().length() != 0) {
                                 changeArray.append("-").append(value);
+                            }
                         } else {
-                            if (propertyValues[i] != null)
-                                if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                            if (propertyValues[i] != null) {
+                                if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                                     changeArray.append(propertyValues[i]);
-                                else if (propertyValues[i].toString().trim().length() != 0)
+                                } else if (propertyValues[i].toString().trim().length() != 0) {
                                     changeArray.append("-").append(propertyValues[i]);
+                                }
+                            }
                         }
                     }
                 }
@@ -1009,10 +1029,12 @@ public class InterceptHelper {
                         MeetingBO meeting = (MeetingBO) object;
                         if (propertyNames[i].equalsIgnoreCase("meeting") && meeting.getMeetingId() != null) {
                             readAndMergeMeetingCollection(meeting, propertyNames[i], state);
-                        } else
+                        } else {
                             readAndMergeCollectionTypes(object, propertyNames[i], firstName, state);
-                    } else
+                        }
+                    } else {
                         readAndMergeCollectionTypes(object, propertyNames[i], firstName, state);
+                    }
 
                 }
             }
@@ -1047,16 +1069,19 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting
                             .getMeetingPlace(), localeId);
-                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                         initialArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         initialArray.append("-").append(value);
+                    }
                 } else {
-                    if (meeting.getMeetingPlace() != null)
-                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (meeting.getMeetingPlace() != null) {
+                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                             initialArray.append(meeting.getMeetingPlace());
-                        else if (meeting.getMeetingPlace().toString().trim().length() != 0)
+                        } else if (meeting.getMeetingPlace().toString().trim().length() != 0) {
                             initialArray.append("-").append(meeting.getMeetingPlace());
+                        }
+                    }
 
                 }
             }
@@ -1069,18 +1094,21 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting
                             .getMeetingDetails().getRecurrenceType().getRecurrenceId(), localeId);
-                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                         initialArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         initialArray.append("-").append(value);
+                    }
                 } else {
-                    if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId() != null)
-                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId() != null) {
+                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                             initialArray.append(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
-                        else if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().toString().trim()
-                                .length() != 0)
+                        } else if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().toString().trim()
+                                .length() != 0) {
                             initialArray.append("-").append(
                                     meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+                        }
+                    }
 
                 }
             }
@@ -1092,16 +1120,19 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting
                             .getMeetingDetails().getRecurAfter(), localeId);
-                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                         initialArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         initialArray.append("-").append(value);
+                    }
                 } else {
-                    if (meeting.getMeetingDetails().getRecurAfter() != null)
-                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (meeting.getMeetingDetails().getRecurAfter() != null) {
+                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                             initialArray.append(meeting.getMeetingDetails().getRecurAfter());
-                        else if (meeting.getMeetingDetails().getRecurAfter().toString().trim().length() != 0)
+                        } else if (meeting.getMeetingDetails().getRecurAfter().toString().trim().length() != 0) {
                             initialArray.append("-").append(meeting.getMeetingDetails().getRecurAfter());
+                        }
+                    }
 
                 }
             }
@@ -1113,16 +1144,19 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting
                             .getMeetingPlace(), localeId);
-                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                         changeArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         changeArray.append("-").append(value);
+                    }
                 } else {
-                    if (meeting.getMeetingPlace() != null)
-                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (meeting.getMeetingPlace() != null) {
+                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                             changeArray.append(meeting.getMeetingPlace());
-                        else if (meeting.getMeetingPlace().toString().trim().length() != 0)
+                        } else if (meeting.getMeetingPlace().toString().trim().length() != 0) {
                             changeArray.append("-").append(meeting.getMeetingPlace());
+                        }
+                    }
 
                 }
             }
@@ -1134,18 +1168,21 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting
                             .getMeetingDetails().getRecurrenceType().getRecurrenceId(), localeId);
-                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                         changeArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         changeArray.append("-").append(value);
+                    }
                 } else {
-                    if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId() != null)
-                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId() != null) {
+                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                             changeArray.append(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
-                        else if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().toString().trim()
-                                .length() != 0)
+                        } else if (meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().toString().trim()
+                                .length() != 0) {
                             changeArray.append("-").append(
                                     meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+                        }
+                    }
 
                 }
             }
@@ -1157,16 +1194,19 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, meeting
                             .getMeetingDetails().getRecurAfter(), localeId);
-                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                         changeArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         changeArray.append("-").append(value);
+                    }
                 } else {
-                    if (meeting.getMeetingDetails().getRecurAfter() != null)
-                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (meeting.getMeetingDetails().getRecurAfter() != null) {
+                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                             changeArray.append(meeting.getMeetingDetails().getRecurAfter());
-                        else if (meeting.getMeetingDetails().getRecurAfter().toString().trim().length() != 0)
+                        } else if (meeting.getMeetingDetails().getRecurAfter().toString().trim().length() != 0) {
                             changeArray.append("-").append(meeting.getMeetingDetails().getRecurAfter());
+                        }
+                    }
 
                 }
             }
@@ -1191,16 +1231,19 @@ public class InterceptHelper {
                     if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                         String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, propertyValues[i],
                                 localeId);
-                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                        if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                             initialArray.append(value);
-                        else if (value.trim().length() != 0)
+                        } else if (value.trim().length() != 0) {
                             initialArray.append("-").append(value);
+                        }
                     } else {
-                        if (propertyValues[i] != null)
-                            if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                        if (propertyValues[i] != null) {
+                            if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                                 initialArray.append(propertyValues[i]);
-                            else if (propertyValues[i].toString().trim().length() != 0)
+                            } else if (propertyValues[i].toString().trim().length() != 0) {
                                 initialArray.append("-").append(propertyValues[i]);
+                            }
+                        }
 
                     }
                 }
@@ -1211,16 +1254,19 @@ public class InterceptHelper {
                     if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                         String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, propertyValues[i],
                                 localeId);
-                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                        if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                             changeArray.append(value);
-                        else if (value.trim().length() != 0)
+                        } else if (value.trim().length() != 0) {
                             changeArray.append("-").append(value);
+                        }
                     } else {
-                        if (propertyValues[i] != null)
-                            if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                        if (propertyValues[i] != null) {
+                            if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                                 changeArray.append(propertyValues[i]);
-                            else if (propertyValues[i].toString().trim().length() != 0)
+                            } else if (propertyValues[i].toString().trim().length() != 0) {
                                 changeArray.append("-").append(propertyValues[i]);
+                            }
+                        }
                     }
                 }
             }
@@ -1435,15 +1481,17 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, customMeta
                             .getIdentifier(obj, EntityMode.POJO), localeId);
-                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                         initialArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         initialArray.append("-").append(value);
+                    }
                 } else {
-                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(","))
+                    if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                         initialArray.append(customMeta.getIdentifier(obj, EntityMode.POJO));
-                    else if (customMeta.getIdentifier(obj, EntityMode.POJO).toString().trim().length() != 0)
+                    } else if (customMeta.getIdentifier(obj, EntityMode.POJO).toString().trim().length() != 0) {
                         initialArray.append("-").append(customMeta.getIdentifier(obj, EntityMode.POJO));
+                    }
                 }
             }
         } else {
@@ -1453,15 +1501,17 @@ public class InterceptHelper {
                 if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, customMeta
                             .getIdentifier(obj, EntityMode.POJO), localeId);
-                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                         changeArray.append(value);
-                    else if (value.trim().length() != 0)
+                    } else if (value.trim().length() != 0) {
                         changeArray.append("-").append(value);
+                    }
                 } else {
-                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(","))
+                    if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                         changeArray.append(customMeta.getIdentifier(obj, EntityMode.POJO));
-                    else if (customMeta.getIdentifier(obj, EntityMode.POJO).toString().trim().length() != 0)
+                    } else if (customMeta.getIdentifier(obj, EntityMode.POJO).toString().trim().length() != 0) {
                         changeArray.append("-").append(customMeta.getIdentifier(obj, EntityMode.POJO));
+                    }
                 }
             }
         }
@@ -1604,38 +1654,43 @@ public class InterceptHelper {
         }
         if (parentName != null
                 && AuditConfigurtion.getColumnNameForPropertyName(entityName, parentName.concat(propertyName))
-                        .equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY))
+                        .equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY)) {
             return false;
-        else if (AuditConfigurtion.getColumnNameForPropertyName(entityName, propertyName).equalsIgnoreCase(
-                XMLConstants.DONOTLOGTHISPROPERTY))
+        } else if (AuditConfigurtion.getColumnNameForPropertyName(entityName, propertyName).equalsIgnoreCase(
+                XMLConstants.DONOTLOGTHISPROPERTY)) {
             return false;
+        }
         return true;
     }
 
     private void populateAndMergeCollectionTypes(String state, Object propertyValue, String propertyName,
             String parentName) {
-        if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN))
+        if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
             initialArray = new StringBuilder();
-        else
+        } else {
             changeArray = new StringBuilder();
+        }
         Iterator iterator = ((Set) propertyValue).iterator();
         while (iterator.hasNext()) {
             Object obj = iterator.next();
             readAndMergeCollectionTypes(obj, propertyName, parentName, state);
-            if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN))
+            if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
                 initialArray.append(",");
-            else
+            } else {
                 changeArray.append(",");
+            }
         }
         if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
             initialValues.put(propertyName, initialArray);
-            if (parentName != null)
+            if (parentName != null) {
                 propertyName = parentName.concat(propertyName);
+            }
             columnNames.put(propertyName, AuditConfigurtion.getColumnNameForPropertyName(entityName, propertyName));
         } else {
             changedValues.put(propertyName, changeArray);
-            if (parentName != null)
+            if (parentName != null) {
                 propertyName = parentName.concat(propertyName);
+            }
             columnNames.put(propertyName, AuditConfigurtion.getColumnNameForPropertyName(entityName, propertyName));
         }
     }

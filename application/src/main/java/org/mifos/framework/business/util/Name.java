@@ -78,14 +78,18 @@ public class Name {
 
     public String getDisplayName() {
         StringBuffer displayName = new StringBuffer("");
-        if (StringUtils.isNotBlank(firstName))
+        if (StringUtils.isNotBlank(firstName)) {
             displayName.append(firstName);
-        if (StringUtils.isNotBlank(middleName))
+        }
+        if (StringUtils.isNotBlank(middleName)) {
             displayName.append(" ").append(middleName);
-        if (StringUtils.isNotBlank(secondLastName))
+        }
+        if (StringUtils.isNotBlank(secondLastName)) {
             displayName.append(" ").append(secondLastName);
-        if (StringUtils.isNotBlank(lastName))
+        }
+        if (StringUtils.isNotBlank(lastName)) {
             displayName.append(" ").append(lastName);
+        }
         return displayName.toString();
     }
 }

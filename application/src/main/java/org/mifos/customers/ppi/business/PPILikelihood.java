@@ -134,18 +134,21 @@ public class PPILikelihood implements Serializable {
 
     private void checkRange(Range score) throws ValidationException {
         int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
-        if (score.getMinimumInteger() < 0 || score.getMaximumInteger() > maxPoints)
+        if (score.getMinimumInteger() < 0 || score.getMaximumInteger() > maxPoints) {
             throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
+        }
     }
 
     private void checkLimits(double aPercent) throws ValidationException {
-        if (aPercent < 0.0 || aPercent > 100.0)
+        if (aPercent < 0.0 || aPercent > 100.0) {
             throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
+        }
     }
 
     private void checkSum(double pct1, double pct2) throws ValidationException {
-        if (pct1 + pct2 > 100.0)
+        if (pct1 + pct2 > 100.0) {
             throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
+        }
     }
 
     public Survey getSurvey() {

@@ -44,17 +44,20 @@ public class ChapterNum extends ArrayList<Integer> implements Comparable<List<In
         int i = 0, z = 1;
 
         // lists are equal length, and all elements are equal.
-        if (this.equals(o))
+        if (this.equals(o)) {
             return 0;
+        }
 
         // must compare every element one by one
         while (true) {
             // the first number we encounter that is unequal immediately
             // indicates sort order
-            if (this.get(i) < o.get(i))
+            if (this.get(i) < o.get(i)) {
                 return -1;
-            if (this.get(i) > o.get(i))
+            }
+            if (this.get(i) > o.get(i)) {
                 return 1;
+            }
 
             // at end of both arrays and we're equal. Both must be equal.
             // This case is covered by the above call to the parent class
@@ -64,13 +67,15 @@ public class ChapterNum extends ArrayList<Integer> implements Comparable<List<In
 
             // we're at the end of this array and we're equal so far. Other
             // must have more digits, hence, must be greater.
-            if (this.size() == z)
+            if (this.size() == z) {
                 return -1;
+            }
 
             // we're at the end of the other array and we're equal so far.
             // Other must have less digits, hence, must be less.
-            if (o.size() == z)
+            if (o.size() == z) {
                 return 1;
+            }
 
             // we're equal so far, and both lists have more numbers to
             // compare. increment and continue.
@@ -88,8 +93,9 @@ public class ChapterNum extends ArrayList<Integer> implements Comparable<List<In
         Iterator<Integer> numiter = this.iterator();
         while (numiter.hasNext()) {
             s += numiter.next();
-            if (numiter.hasNext())
+            if (numiter.hasNext()) {
                 s += '.';
+            }
         }
         return s;
     }
@@ -111,8 +117,9 @@ public class ChapterNum extends ArrayList<Integer> implements Comparable<List<In
      *         number.
      */
     public static ChapterNum fromString(String s) {
-        if (null == s || s.length() < 1 || !s.matches("^\\d+(\\.\\d+)*$"))
+        if (null == s || s.length() < 1 || !s.matches("^\\d+(\\.\\d+)*$")) {
             return null;
+        }
 
         // extract digits
         String[] ints = s.split("\\.");

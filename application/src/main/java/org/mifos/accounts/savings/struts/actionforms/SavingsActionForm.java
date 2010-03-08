@@ -185,8 +185,9 @@ public class SavingsActionForm extends AccountAppActionForm {
                         }
                     }
                 }
-                if (isErrorFound)
+                if (isErrorFound) {
                     break;
+                }
             }
         } catch (PageExpiredException pee) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(

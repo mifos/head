@@ -176,8 +176,9 @@ public class FundAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute(ProductDefinitionConstants.METHODCALLED);
         logger.debug("start validate method of Fund Action" + method);
-        if (method != null)
+        if (method != null) {
             return mapping.findForward(method + "_failure");
+        }
         return mapping.findForward(ActionForwards.preview_failure.toString());
     }
 
@@ -210,8 +211,9 @@ public class FundAction extends BaseAction {
         List<FundCodeEntity> fundList = (List<FundCodeEntity>) SessionUtils.getAttribute(FundConstants.ALL_FUNDLIST,
                 request);
         for (FundCodeEntity fundCodeEntity : fundList) {
-            if (fundCodeEntity.getFundCodeId().equals(getShortValue(fundCode)))
+            if (fundCodeEntity.getFundCodeId().equals(getShortValue(fundCode))) {
                 return fundCodeEntity;
+            }
         }
         return null;
     }

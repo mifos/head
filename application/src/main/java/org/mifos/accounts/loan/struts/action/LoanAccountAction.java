@@ -1283,8 +1283,9 @@ public class LoanAccountAction extends AccountAppAction {
         FundBO fund = null;
         if (!StringUtils.isBlank(loanAccountActionForm.getLoanOfferingFund())) {
             Short fundId = loanAccountActionForm.getLoanOfferingFundValue();
-            if (fundId != 0)
+            if (fundId != 0) {
                 fund = new FundPersistence().getFund(fundId);
+            }
         }
         return fund;
     }

@@ -62,7 +62,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
         } catch (Exception e) {
             throw new BatchJobException(e);
         }
-        if (customerIds != null && !customerIds.isEmpty())
+        if (customerIds != null && !customerIds.isEmpty()) {
             for (Integer customerId : customerIds) {
                 try {
                     handleChangeInMeetingSchedule(customerId, workingDays, orderedUpcomingHolidays);
@@ -74,6 +74,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
                     StaticHibernateUtil.closeSession();
                 }
             }
+        }
 
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
@@ -90,13 +91,14 @@ public class RegenerateScheduleHelper extends TaskHelper {
         CustomerBO customer = customerPersistence.getCustomer(customerId);
 
         Set<AccountBO> accounts = customer.getAccounts();
-        if (accounts != null && !accounts.isEmpty())
+        if (accounts != null && !accounts.isEmpty()) {
             for (AccountBO account : accounts) {
                 if (!accountList.contains(account.getAccountId())) {
                     account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
                     accountList.add(account.getAccountId());
                 }
             }
+        }
         List<Integer> customerIds = customerPersistence.getChildrenForParent(customer.getSearchId(), customer
                 .getOffice().getOfficeId());
         if (customerIds != null && !customerIds.isEmpty()) {

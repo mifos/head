@@ -47,8 +47,9 @@ public class CenterCustActionForm extends CustomerActionForm {
     @Override
     public String getMfiJoiningDate() {
         if (StringUtils.isBlank(mfiJoiningDateDD) || StringUtils.isBlank(mfiJoiningDateMM)
-                || StringUtils.isBlank(mfiJoiningDateYY))
+                || StringUtils.isBlank(mfiJoiningDateYY)) {
             return null;
+        }
 
         String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
         return mfiJoiningDateDD + dateSeparator + mfiJoiningDateMM + dateSeparator + mfiJoiningDateYY;
@@ -104,8 +105,9 @@ public class CenterCustActionForm extends CustomerActionForm {
             validateMeeting(request, errors);
         } else if (method.equals(Methods.editPreview.toString())) {
             CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-            if (center.isActive())
+            if (center.isActive()) {
                 validateLO(errors);
+            }
         }
 
         if (method.equals(Methods.preview.toString()) || method.equals(Methods.editPreview.toString())) {

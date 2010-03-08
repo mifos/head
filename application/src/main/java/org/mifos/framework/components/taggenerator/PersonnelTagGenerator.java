@@ -39,16 +39,18 @@ public class PersonnelTagGenerator extends TagGenerator {
     protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum) {
         PersonnelBO personnel = (PersonnelBO) obj;
         StringBuilder strBuilder = getAssociatedGenerator().build(personnel.getOffice(), randomNum);
-        if (strBuilder == null)
+        if (strBuilder == null) {
             strBuilder = new StringBuilder();
+        }
 
         buildLink(strBuilder, personnel, selfLinkRequired, randomNum);
         return strBuilder;
     }
 
     private void buildLink(StringBuilder strBuilder, PersonnelBO personnel, boolean selfLinkRequired, Object randomNum) {
-        if (personnel == null)
+        if (personnel == null) {
             return;
+        }
         strBuilder.append(" / ");
         if (selfLinkRequired) {
             createPersonnelLink(strBuilder, personnel, randomNum);

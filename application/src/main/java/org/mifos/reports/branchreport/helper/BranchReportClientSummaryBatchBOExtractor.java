@@ -94,8 +94,9 @@ public class BranchReportClientSummaryBatchBOExtractor {
 
     public Predicate matchAllPredicates(Set<BranchReportClientSummaryBO> branchReportClientSummaries) {
         for (Predicate predicate : ClientSummaryPredicates.values()) {
-            if (!CollectionUtils.exists(branchReportClientSummaries, predicate))
+            if (!CollectionUtils.exists(branchReportClientSummaries, predicate)) {
                 return predicate;
+            }
         }
         return null;
     }

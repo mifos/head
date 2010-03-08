@@ -70,43 +70,57 @@ public class BranchReportStaffingLevelSummaryBO extends BusinessObject implement
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchReportStaffingLevelSummaryBO other = (BranchReportStaffingLevelSummaryBO) obj;
         if (personnelCount == null) {
-            if (other.personnelCount != null)
+            if (other.personnelCount != null) {
                 return false;
-        } else if (!personnelCount.equals(other.personnelCount))
+            }
+        } else if (!personnelCount.equals(other.personnelCount)) {
             return false;
+        }
         if (roleId == null) {
-            if (other.roleId != null)
+            if (other.roleId != null) {
                 return false;
-        } else if (!roleId.equals(other.roleId))
+            }
+        } else if (!roleId.equals(other.roleId)) {
             return false;
+        }
         if (roleName == null) {
-            if (other.roleName != null)
+            if (other.roleName != null) {
                 return false;
-        } else if (!roleName.equals(other.roleName))
+            }
+        } else if (!roleName.equals(other.roleName)) {
             return false;
+        }
         if (staffingLevelSummaryId == null) {
-            if (other.staffingLevelSummaryId != null)
+            if (other.staffingLevelSummaryId != null) {
                 return false;
-        } else if (!staffingLevelSummaryId.equals(other.staffingLevelSummaryId))
+            }
+        } else if (!staffingLevelSummaryId.equals(other.staffingLevelSummaryId)) {
             return false;
+        }
         return true;
     }
 
     public int compareTo(BranchReportStaffingLevelSummaryBO o) {
-        if (roleId.equals(o.roleId))
+        if (roleId.equals(o.roleId)) {
             return 0;
-        if (roleId.equals(TOTAL_STAFF_ROLE_ID))
+        }
+        if (roleId.equals(TOTAL_STAFF_ROLE_ID)) {
             return 1;
-        if (o.roleId.equals(TOTAL_STAFF_ROLE_ID))
+        }
+        if (o.roleId.equals(TOTAL_STAFF_ROLE_ID)) {
             return -1;
+        }
         return roleId - o.roleId;
     }
 

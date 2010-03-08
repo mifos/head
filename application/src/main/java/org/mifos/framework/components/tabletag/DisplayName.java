@@ -162,8 +162,9 @@ public class DisplayName {
                     stringbuilder.append(getData(fragment[i], stringArray[i], span));
                 }
                 string[0] = stringbuilder.toString();
-            } else
+            } else {
                 string[0] = null;
+            }
         }
         return string;
     }

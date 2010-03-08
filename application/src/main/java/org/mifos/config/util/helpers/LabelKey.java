@@ -44,14 +44,15 @@ public class LabelKey {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof LabelKey))
+        if (obj == null || !(obj instanceof LabelKey)) {
             return false;
-        else {
+        } else {
             LabelKey newObj = (LabelKey) obj;
-            if (newObj.localeId.shortValue() == this.localeId.shortValue() && newObj.key.equalsIgnoreCase(this.key))
+            if (newObj.localeId.shortValue() == this.localeId.shortValue() && newObj.key.equalsIgnoreCase(this.key)) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         }
     }
 

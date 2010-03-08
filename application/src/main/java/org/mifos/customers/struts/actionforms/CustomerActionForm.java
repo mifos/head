@@ -298,18 +298,23 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     public List<FeeView> getFeesToApply() {
         List<FeeView> feesToApply = new ArrayList<FeeView>();
-        for (FeeView fee : getAdditionalFees())
-            if (fee.getFeeIdValue() != null)
+        for (FeeView fee : getAdditionalFees()) {
+            if (fee.getFeeIdValue() != null) {
                 feesToApply.add(fee);
-        for (FeeView fee : getDefaultFees())
-            if (!fee.isRemoved())
+            }
+        }
+        for (FeeView fee : getDefaultFees()) {
+            if (!fee.isRemoved()) {
                 feesToApply.add(fee);
+            }
+        }
         return feesToApply;
     }
 
     public FeeView getSelectedFee(int index) {
-        while (index >= additionalFees.size())
+        while (index >= additionalFees.size()) {
             additionalFees.add(new FeeView());
+        }
         return additionalFees.get(index);
     }
 
@@ -345,8 +350,9 @@ public abstract class CustomerActionForm extends BaseActionForm {
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
-        if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+        if (null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        }
         ActionErrors errors = null;
         try {
             errors = validateFields(request, method);
@@ -367,25 +373,29 @@ public abstract class CustomerActionForm extends BaseActionForm {
             throws ApplicationException;
 
     protected void validateName(ActionErrors errors) {
-        if (StringUtils.isBlank(getDisplayName()))
+        if (StringUtils.isBlank(getDisplayName())) {
             errors.add(CustomerConstants.NAME, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_NAME));
+        }
     }
 
     protected void validateLO(ActionErrors errors) {
-        if (StringUtils.isBlank(getLoanOfficerId()))
+        if (StringUtils.isBlank(getLoanOfficerId())) {
             errors.add(CustomerConstants.LOAN_OFFICER, new ActionMessage(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER));
+        }
     }
 
     protected void validateFormedByPersonnel(ActionErrors errors) {
-        if (StringUtils.isBlank(getFormedByPersonnel()))
+        if (StringUtils.isBlank(getFormedByPersonnel())) {
             errors.add(CustomerConstants.FORMED_BY_LOANOFFICER, new ActionMessage(
                     CustomerConstants.FORMEDBY_LOANOFFICER_BLANK_EXCEPTION));
+        }
     }
 
     protected void validateMeeting(HttpServletRequest request, ActionErrors errors) throws ApplicationException {
         MeetingBO meeting = getCustomerMeeting(request);
-        if (meeting == null)
+        if (meeting == null) {
             errors.add(CustomerConstants.MEETING, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_MEETING));
+        }
     }
 
     protected void validateConfigurableMandatoryFields(HttpServletRequest request, ActionErrors errors,
@@ -409,8 +419,9 @@ public abstract class CustomerActionForm extends BaseActionForm {
                         }
                     }
                 }
-                if (isErrorFound)
+                if (isErrorFound) {
                     break;
+                }
             }
         } catch (PageExpiredException pee) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
@@ -498,8 +509,9 @@ public abstract class CustomerActionForm extends BaseActionForm {
             for (FeeView duplicateSelectedfee : getAdditionalFees()) {
                 if (selectedFee.getFeeIdValue() != null
                         && selectedFee.getFeeId().equals(duplicateSelectedfee.getFeeId())) {
-                    if (isSelectedFeePeriodic(selectedFee, additionalFeeList))
+                    if (isSelectedFeePeriodic(selectedFee, additionalFeeList)) {
                         count++;
+                    }
                 }
             }
             if (count > 1) {
@@ -535,9 +547,11 @@ public abstract class CustomerActionForm extends BaseActionForm {
     }
 
     private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList) {
-        for (FeeView fee : additionalFeeList)
-            if (fee.getFeeId().equals(selectedFee.getFeeId()))
+        for (FeeView fee : additionalFeeList) {
+            if (fee.getFeeId().equals(selectedFee.getFeeId())) {
                 return fee.isPeriodic();
+            }
+        }
         return false;
     }
 

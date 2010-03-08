@@ -84,8 +84,9 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
                 || loan.getAccountState().getId().equals(AccountStates.LOANACC_RESCHEDULED)
                 || loan.getAccountState().getId().equals(AccountStates.LOANACC_BADSTANDING)) {
             List<AccountActionDateEntity> accountActionDateList = loan.getDetailsOfInstallmentsInArrears();
-            if (!accountActionDateList.isEmpty())
+            if (!accountActionDateList.isEmpty()) {
                 noOfMissedPayments = +accountActionDateList.size();
+            }
             noOfMissedPayments = noOfMissedPayments + getNoOfBackDatedPayments();
         }
         return noOfMissedPayments;

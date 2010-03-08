@@ -317,8 +317,9 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
                     .getDateWithoutTimeStamp(outputDate.getTime()).getTime());
 
             // Clean up the Holiday that was created
-            for (HolidayBO holiday : holidays)
+            for (HolidayBO holiday : holidays) {
                 TestObjectFactory.cleanUp(holiday);
+            }
         }
     }
 

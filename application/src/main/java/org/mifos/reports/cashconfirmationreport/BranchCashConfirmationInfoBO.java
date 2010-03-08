@@ -64,28 +64,37 @@ public abstract class BranchCashConfirmationInfoBO extends BranchCashConfirmatio
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!super.equals(obj))
+        }
+        if (!super.equals(obj)) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final BranchCashConfirmationInfoBO other = (BranchCashConfirmationInfoBO) obj;
         if (actual == null) {
-            if (other.actual != null)
+            if (other.actual != null) {
                 return false;
-        } else if (!actual.equals(other.actual))
+            }
+        } else if (!actual.equals(other.actual)) {
             return false;
+        }
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         if (productOffering == null) {
-            if (other.productOffering != null)
+            if (other.productOffering != null) {
                 return false;
-        } else if (!productOffering.equals(other.productOffering))
+            }
+        } else if (!productOffering.equals(other.productOffering)) {
             return false;
+        }
         return true;
     }
 

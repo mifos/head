@@ -91,8 +91,9 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
                 i++;
             } while (i < installmentsInArrears.size()
                     && actionDate.equals(installmentsInArrears.get(i).getActionDate()));
-            if (totalAmount.isGreaterThanZero())
+            if (totalAmount.isGreaterThanZero()) {
                 builder.append(buildDepositDueUIRow(locale, actionDate, totalAmount));
+            }
         }
         return builder;
     }

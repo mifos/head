@@ -185,8 +185,9 @@ public class Question implements Serializable, Comparable<Question> {
     public int getQuestionType() {
         if (answerType == AnswerType.CHOICE) {
             for (QuestionChoice choice : choices) {
-                if (choice instanceof PPIChoice)
+                if (choice instanceof PPIChoice) {
                     return SurveysConstants.QUESTION_TYPE_PPI;
+                }
             }
         }
         return SurveysConstants.QUESTION_TYPE_GENERAL;

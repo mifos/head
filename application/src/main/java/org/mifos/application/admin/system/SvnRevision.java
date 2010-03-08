@@ -35,8 +35,9 @@ public class SvnRevision extends Properties {
     }
 
     public SvnRevision(String versionFile) {
-        if (versionFile != null)
+        if (versionFile != null) {
             readVersionFile(versionFile);
+        }
     }
 
     private void readVersionFile(String versionFile) {

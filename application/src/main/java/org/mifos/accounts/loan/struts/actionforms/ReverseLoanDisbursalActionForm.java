@@ -94,11 +94,12 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
     private void checkValidationForPreview(ActionErrors errors, Locale userLocale) {
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
         String note = resources.getString("loan.note");
-        if (StringUtils.isBlank(getNote()))
+        if (StringUtils.isBlank(getNote())) {
             addError(errors, LoanConstants.NOTE, LoanConstants.MANDATORY, note);
-        else if (getNote().length() > 500)
+        } else if (getNote().length() > 500) {
             addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH, note, String
                     .valueOf(LoanConstants.COMMENT_LENGTH));
+        }
     }
 
 }

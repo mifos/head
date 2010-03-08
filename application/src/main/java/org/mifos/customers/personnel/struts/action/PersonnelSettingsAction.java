@@ -102,8 +102,9 @@ public class PersonnelSettingsAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         PersonnelSettingsActionForm personnelactionForm = (PersonnelSettingsActionForm) form;
         Integer prefeeredLocaleId = null;
-        if (personnelactionForm.getPreferredLocaleValue() != null)
+        if (personnelactionForm.getPreferredLocaleValue() != null) {
             prefeeredLocaleId = personnelactionForm.getPreferredLocaleValue().intValue();
+        }
         setDetailsData(request, getUserContext(request).getLocaleId(), personnelactionForm.getGenderValue(),
                 personnelactionForm.getMaritalStatusValue(), prefeeredLocaleId);
         return mapping.findForward(ActionForwards.preview_success.toString());

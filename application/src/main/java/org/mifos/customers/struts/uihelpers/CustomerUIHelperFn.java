@@ -68,17 +68,20 @@ public class CustomerUIHelperFn {
             }
             stringBuilder.append("(");
             for (int j = 0; j < positionNames.length; j++) {
-                if (positionNames[j] != null && positionNames[j] != "")
+                if (positionNames[j] != null && positionNames[j] != "") {
                     stringBuilder.append(positionNames[j]);
-                if (j + 1 < positionNames.length && positionNames[j + 1] != null && positionNames[j + 1] != "")
+                }
+                if (j + 1 < positionNames.length && positionNames[j + 1] != null && positionNames[j + 1] != "") {
                     stringBuilder.append(",");
+                }
             }
             stringBuilder.append(")");
         }
-        if (stringBuilder.toString().equals("()"))
+        if (stringBuilder.toString().equals("()")) {
             return "";
-        else
+        } else {
             return stringBuilder.toString();
+        }
     }
 
     public static String getMeetingSchedule(Object meeting, Object userContext) {

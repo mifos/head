@@ -124,10 +124,12 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         List<SavingsOfferingBO> offerings = service.retrieveOfferingsApplicableToClient();
        Assert.assertEquals(2, offerings.size());
         for (SavingsOfferingBO offering : offerings) {
-            if (offering.getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId()))
-               Assert.assertTrue(true);
-            if (offering.getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId()))
-               Assert.assertTrue(true);
+            if (offering.getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId())) {
+                Assert.assertTrue(true);
+            }
+            if (offering.getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId())) {
+                Assert.assertTrue(true);
+            }
         }
         StaticHibernateUtil.closeSession();
     }

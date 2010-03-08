@@ -123,10 +123,10 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
 
         Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
         for (AccountFeesEntity periodicFees : periodicFeeSet) {
-            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
-               Assert.assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
-                        .getTime()));
-            else {
+            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee")) {
+                Assert.assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
+                            .getTime()));
+            } else {
                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(offSetDate(lastAppliedFeeDate, -7).getTime()), DateUtils
                         .getDateWithoutTimeStamp(periodicFees.getLastAppliedDate().getTime()));
             }
@@ -187,9 +187,10 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
         }
         Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
         for (AccountFeesEntity periodicFees : periodicFeeSet) {
-            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
-               Assert.assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
-                        .getTime()));
+            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee")) {
+                Assert.assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
+                            .getTime()));
+            }
         }
     }
 

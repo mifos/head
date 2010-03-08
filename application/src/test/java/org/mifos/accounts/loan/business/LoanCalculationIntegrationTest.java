@@ -176,15 +176,19 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     @Override
     public void tearDown() throws Exception {
         TestObjectFactory.removeObject(loanOffering);
-        if (accountBO != null)
+        if (accountBO != null) {
             accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        if (badAccountBO != null)
+        }
+        if (badAccountBO != null) {
             badAccountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
                     badAccountBO.getAccountId());
-        if (group != null)
+        }
+        if (group != null) {
             group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
-        if (center != null)
+        }
+        if (center != null) {
             center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+        }
         TestObjectFactory.cleanUp(accountBO);
         TestObjectFactory.cleanUp(badAccountBO);
         TestObjectFactory.cleanUp(client);
@@ -233,8 +237,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                                     testCaseData.getExpectedResult().getAccount999())) {
                         transactionCount++;
                         String debitOrCredit = "Credit";
-                        if (financialTransaction.getDebitCreditFlag() == 0)
+                        if (financialTransaction.getDebitCreditFlag() == 0) {
                             debitOrCredit = "Debit";
+                        }
                         if (isAllConsoleOutputEnabled()) {
                             System.out.println("Posted amount: "
                                     + financialTransaction.getPostedAmount() + " Debit/Credit: "
@@ -275,8 +280,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                                     testCaseData.getExpectedResult().getAccount999())) {
                         transactionCount++;
                         String debitOrCredit = "Credit";
-                        if (financialTransaction.getDebitCreditFlag() == 0)
+                        if (financialTransaction.getDebitCreditFlag() == 0) {
                             debitOrCredit = "Debit";
+                        }
                         if (isAllConsoleOutputEnabled()) {
                             System.out.println("Posted amount: "
                                     + financialTransaction.getPostedAmount() + " Debit/Credit: "
@@ -445,8 +451,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO
                 .getAccountId());
         // every payment is reversed so amount is 0
-        for (AccountPaymentEntity payment : accountPayments)
-           Assert.assertEquals(payment.getAmount(), new Money(getCurrency(), "0"));
+        for (AccountPaymentEntity payment : accountPayments) {
+            Assert.assertEquals(payment.getAmount(), new Money(getCurrency(), "0"));
+        }
 
     }
 
@@ -519,8 +526,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
                     .getActionDate());
             loan.applyPayment(paymentData, true);
-            if (i == (paymentToReverse - 1))
+            if (i == (paymentToReverse - 1)) {
                 break;
+            }
         }
 
         boolean lastPayment = paymentToReverse == paymentsArray.length;
@@ -553,8 +561,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
                     .getActionDate());
             loan.applyPayment(paymentData, true);
-            if (i == (paymentToReverse - 1))
+            if (i == (paymentToReverse - 1)) {
                 break;
+            }
         }
 
         boolean lastPayment = paymentToReverse == paymentsArray.length;
@@ -1076,8 +1085,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void printLoanScheduleEntities(LoanScheduleEntity[] loanSchedules) {
-        if (!isAllConsoleOutputEnabled())
+        if (!isAllConsoleOutputEnabled()) {
             return;
+        }
 
         for (int i = 0; i < loanSchedules.length; i++) {
             System.out.println("Loan Schedule #: " + (i + 1));
@@ -1451,8 +1461,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void printResults(Results expectedResult, Results calculatedResult, String testName) {
-        if (!isAllConsoleOutputEnabled())
+        if (!isAllConsoleOutputEnabled()) {
             return;
+        }
 
         // System.out.println("Running test: " + testName);
         System.out.println("Results are (Expected : Calculated : Difference)");
@@ -1500,8 +1511,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void printComparison(String label, Money expected, Money calculated) {
-        if (!isAllConsoleOutputEnabled())
+        if (!isAllConsoleOutputEnabled()) {
             return;
+        }
 
         System.out.println(label + expected + " : " + calculated + " : " + expected.subtract(calculated));
     }
@@ -1661,22 +1673,23 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String[] tokens = tempLine.split(",");
         for (String token : tokens) {
             if (StringUtils.isNotBlank(token)) {
-                if ((paramType.indexOf(principal) >= 0) && (loanParams.getPrincipal() == null))
+                if ((paramType.indexOf(principal) >= 0) && (loanParams.getPrincipal() == null)) {
                     loanParams.setPrincipal(token);
-                else if (paramType.indexOf(loanType) >= 0) {
+                } else if (paramType.indexOf(loanType) >= 0) {
                     InterestType interestType = null;
-                    if (token.equals("Fixed Principal"))
+                    if (token.equals("Fixed Principal")) {
                         interestType = InterestType.DECLINING_EPI;
-                    else
+                    } else {
                         interestType = InterestType.valueOf(token.toUpperCase());
+                    }
                     loanParams.setLoanType(interestType);
                 } else if (paramType.indexOf(annualInterest) >= 0) {
                     int pos = token.indexOf("%");
                     String interest = token.substring(0, pos);
                     loanParams.setAnnualInterest(interest);
-                } else if (paramType.indexOf(numberOfPayments) >= 0)
+                } else if (paramType.indexOf(numberOfPayments) >= 0) {
                     loanParams.setNumberOfPayments(Short.parseShort(token));
-                else if (paramType.indexOf(paymentFrequency) >= 0) {
+                } else if (paramType.indexOf(paymentFrequency) >= 0) {
                     RecurrenceType recurrenceType = RecurrenceType.valueOf(token.toUpperCase());
                     loanParams.setPaymentFrequency(recurrenceType);
                 }
@@ -1695,8 +1708,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String token = null;
         for (String token2 : tokens) {
             token = token2;
-            if (StringUtils.isNotBlank(token))
+            if (StringUtils.isNotBlank(token)) {
                 break;
+            }
         }
         return token;
     }
@@ -1711,27 +1725,29 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
                     config.setInitialRoundingMode(mode);
                     token = getToken(tempLine, feeFrequency);
-                    if (token.toUpperCase().equals("PERIODIC"))
+                    if (token.toUpperCase().equals("PERIODIC")) {
                         config.setFeeFrequency(FeeFrequencyType.PERIODIC);
-                    else if (token.toUpperCase().equals("ONETIME"))
+                    } else if (token.toUpperCase().equals("ONETIME")) {
                         config.setFeeFrequency(FeeFrequencyType.ONETIME);
-                    else
+                    } else {
                         config.setFeeFrequency(null);
+                    }
                 } else if (paramType.indexOf(initialRoundOffMultiple) >= 0) {
                     config.setInitialRoundOffMultiple(token);
                     token = getToken(tempLine, feeType);
                     config.setIsFeeRateBased(true);
-                    if (token.equals(feeTypePrincipalPlusInterest))
+                    if (token.equals(feeTypePrincipalPlusInterest)) {
                         config.setFeeType(FeeFormula.AMOUNT_AND_INTEREST);
-                    else if (token.equals(feeTypeInterest))
+                    } else if (token.equals(feeTypeInterest)) {
                         config.setFeeType(FeeFormula.INTEREST);
-                    else if (token.equals(feeTypePrincipal))
+                    } else if (token.equals(feeTypePrincipal)) {
                         config.setFeeType(FeeFormula.AMOUNT);
-                    else if (token.equals(feeTypeValue)) // Not rate-based,
+                    } else if (token.equals(feeTypeValue)) {
                         // don't use FeeFormula
                         config.setIsFeeRateBased(false);
-                    else
+                    } else {
                         throw new RuntimeException("Unrecognized fee type: " + token);
+                    }
                 } else if (paramType.indexOf(finalRoundingMode) >= 0) {
                     RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
                     config.setFinalRoundingMode(mode);
@@ -1748,12 +1764,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     config.setCurrencyRoundingMode(mode);
                     token = getToken(tempLine, gracePeriodType);
                     GraceType type = null;
-                    if (token.toUpperCase().equals("ALL"))
+                    if (token.toUpperCase().equals("ALL")) {
                         type = GraceType.GRACEONALLREPAYMENTS;
-                    else if (token.toUpperCase().equals("PRINCIPAL"))
+                    } else if (token.toUpperCase().equals("PRINCIPAL")) {
                         type = GraceType.PRINCIPALONLYGRACE;
-                    else
+                    } else {
                         type = GraceType.NONE;
+                    }
 
                     config.setGracePeriodType(type);
 
@@ -1810,8 +1827,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     result.setTotalPrincipal(new Money(getCurrency(), token));
                     totalPrincipals = true;
                     totalInterests = false;
-                } else
+                } else {
                     return;
+                }
 
             }
         }
@@ -1823,8 +1841,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         int index = tempLine.indexOf(paramType);
         tempLine = tempLine.substring(index + paramType.length(), tempLine.length() - 1);
         String[] tokens = tempLine.split(",");
-        if (tokens.length < 2)
+        if (tokens.length < 2) {
             return;
+        }
         result.setAccount999(new Money(getCurrency(), tokens[1]).negate());
 
     }
@@ -1834,8 +1853,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         int index = tempLine.indexOf(paramType);
         tempLine = tempLine.substring(index + paramType.length(), tempLine.length() - 1);
         String[] tokens = tempLine.split(",");
-        if (tokens.length < 8)
+        if (tokens.length < 8) {
             return;
+        }
         result.setRoundedTotalInterest(new Money(getCurrency(), tokens[3]));
 
     }
@@ -1858,9 +1878,10 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 if (paymentIndex == false) {
                     int paymentNumber = Integer.parseInt(token);
                     int expectedPaymentNumber = result.getPayments().size() + 1;
-                    if (paymentNumber != expectedPaymentNumber)
+                    if (paymentNumber != expectedPaymentNumber) {
                         throw new RuntimeException("Parsing error. paymentNumber " + paymentNumber + " Expected: "
                                 + expectedPaymentNumber);
+                    }
                     paymentIndex = true;
                     payment = false;
                 } else if (payment == false) {
@@ -1930,13 +1951,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                         {
                             parseConfigParams(token, line, config);
                             break;
-                        } else if (token.indexOf(calculatedTotals) == 0)
+                        } else if (token.indexOf(calculatedTotals) == 0) {
                             parseRoundedTotalInterest(token, line, expectedResult);
-                        else if (token.indexOf(account999) == 0)
+                        } else if (token.indexOf(account999) == 0) {
                             parse999Account(token, line, expectedResult);
-                        else if (token.indexOf(totals) >= 0)
+                        } else if (token.indexOf(totals) >= 0) {
                             parseTotals(token, line, expectedResult);
-                        else if (token.indexOf(start) >= 0) {
+                        } else if (token.indexOf(start) >= 0) {
                             startPayment = true;
                             break;
                         } else if (startPayment) {
@@ -1956,12 +1977,15 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 }
 
             }
-            if (fileInputStream != null)
+            if (fileInputStream != null) {
                 fileInputStream.close();
-            if (inputStreamReader != null)
+            }
+            if (inputStreamReader != null) {
                 inputStreamReader.close();
-            if (bufferedReader != null)
+            }
+            if (bufferedReader != null) {
                 bufferedReader.close();
+            }
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -2010,8 +2034,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         // String[] dataFileNames = {"testcases-2008-04-22.set1.01.csv"};
         String[] dataFileNames = { "loan-repayment-master-test1.csv" };
-        for (String dataFileName : dataFileNames)
+        for (String dataFileName : dataFileNames) {
             runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
+        }
     }
 
     public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
@@ -2019,8 +2044,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
         String[] dataFileNames = { "loan-repayment-master-issue1623.csv" };
-        for (String dataFileName : dataFileNames)
+        for (String dataFileName : dataFileNames) {
             runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
+        }
 
     }
 
@@ -2174,8 +2200,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     private boolean fileNameContains(String fileName, String[] testNumbers) {
         for (String testNumber : testNumbers) {
-            if (fileName.contains(testNumber))
+            if (fileName.contains(testNumber)) {
                 return true;
+            }
         }
         return false;
     }

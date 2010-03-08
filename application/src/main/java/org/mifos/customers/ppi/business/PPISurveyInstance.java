@@ -71,8 +71,9 @@ public class PPISurveyInstance extends SurveyInstance {
             sum += response.getPoints();
         }
         int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
-        if (sum > maxPoints)
+        if (sum > maxPoints) {
             throw new RuntimeException("Score is larger than " + maxPoints);
+        }
         return sum;
     }
 

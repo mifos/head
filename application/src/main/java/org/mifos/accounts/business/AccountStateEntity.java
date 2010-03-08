@@ -91,10 +91,11 @@ public class AccountStateEntity extends StateEntity implements LocalizedTextLook
      * "setOptional(boolean)" because hibernate gets confused.
      */
     public void setIsOptional(boolean optional) {
-        if (optional)
+        if (optional) {
             setOptional(YesNoFlag.YES.getValue());
-        else
+        } else {
             setOptional(YesNoFlag.NO.getValue());
+        }
     }
 
     public String getPropertiesKey() {
