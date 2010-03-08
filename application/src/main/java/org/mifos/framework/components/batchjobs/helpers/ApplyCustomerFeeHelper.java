@@ -31,6 +31,18 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
+/*
+ * Current understanding of this class is that generates the next
+ * fee(s) due for client accounts.  It checks for
+ * customer accounts that had a meeting yesterday and for each of
+ * then generates a new set of periodic fees due for the next
+ * "installment" (the next time the fee is scheduled to be due).
+ *
+ *  It appears that if this batch job does not run on a given day
+ *  that then, there will be no fees generated for clients who
+ *  had their meetings yesterday.  It does not make up for any
+ *  days when it didn't run for some reason-- but it should.
+ */
 public class ApplyCustomerFeeHelper extends TaskHelper {
 
     private AccountPersistence accountPersistence;
