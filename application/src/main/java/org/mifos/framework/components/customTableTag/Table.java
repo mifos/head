@@ -72,8 +72,8 @@ public class Table {
         if (getRow().getBottomLineRequired().equalsIgnoreCase("true")) {
             tableInfo.append("<tr>");
             Column[] column = getRow().getColumn();
-            for (int i = 0; i < column.length; i++) {
-                tableInfo.append("<td class=\"" + column[i].getColumnDetails().getRowStyle() + "\">&nbsp;</td>");
+            for (Column element : column) {
+                tableInfo.append("<td class=\"" + element.getColumnDetails().getRowStyle() + "\">&nbsp;</td>");
             }
             tableInfo.append("</tr>");
         }

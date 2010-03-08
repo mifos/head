@@ -31,7 +31,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -109,8 +108,8 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
         accountFeeSet.add(accountPeriodicFee);
         Date lastAppliedFeeDate = offSetDate(new Date(System.currentTimeMillis()), 1);
        Assert.assertEquals(2, accountFeeSet.size());
-        for (Iterator iter = accountFeeSet.iterator(); iter.hasNext();) {
-            AccountFeesEntity accountFeesEntity = (AccountFeesEntity) iter.next();
+        for (Object element : accountFeeSet) {
+            AccountFeesEntity accountFeesEntity = (AccountFeesEntity) element;
             accountFeesEntity.setLastAppliedDate(offSetDate(new Date(System.currentTimeMillis()), 1));
         }
         TestObjectFactory.updateObject(center);

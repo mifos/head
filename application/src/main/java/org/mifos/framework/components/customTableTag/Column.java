@@ -141,30 +141,30 @@ public class Column {
     public void getTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale prefferedLocale,
             Locale mfiLocale) throws TableTagParseException {
         Method[] methods = obj.getClass().getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equalsIgnoreCase("get".concat(getValue()))) {
+        for (Method method : methods) {
+            if (method.getName().equalsIgnoreCase("get".concat(getValue()))) {
                 try {
-                    tableInfo.append(methods[i].invoke(obj, new Object[] {}));
+                    tableInfo.append(method.invoke(obj, new Object[] {}));
                 } catch (IllegalAccessException e) {
                     throw new TableTagParseException(e);
                 } catch (InvocationTargetException ex) {
                     throw new TableTagParseException(ex);
                 }
             }
-            if (methods[i].getName().equalsIgnoreCase("setLocale") && locale != null) {
+            if (method.getName().equalsIgnoreCase("setLocale") && locale != null) {
                 try {
                     Object[] argumentLocale = new Object[] { locale };
-                    methods[i].invoke(obj, argumentLocale);
+                    method.invoke(obj, argumentLocale);
                 } catch (IllegalAccessException e) {
                     throw new TableTagParseException(e);
                 } catch (InvocationTargetException ex) {
                     throw new TableTagParseException(ex);
                 }
             }
-            if (methods[i].getName().equalsIgnoreCase("setMfiLocale") && mfiLocale != null) {
+            if (method.getName().equalsIgnoreCase("setMfiLocale") && mfiLocale != null) {
                 try {
                     Object[] argumentLocale = new Object[] { mfiLocale };
-                    methods[i].invoke(obj, argumentLocale);
+                    method.invoke(obj, argumentLocale);
                 } catch (IllegalAccessException e) {
                     throw new TableTagParseException(e);
                 } catch (InvocationTargetException ex) {

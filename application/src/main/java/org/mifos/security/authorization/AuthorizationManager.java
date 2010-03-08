@@ -25,7 +25,6 @@ import static org.mifos.security.authorization.HierarchyManager.BranchLocation.S
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,8 +130,7 @@ public class AuthorizationManager {
     public void addRole(RoleBO role) {
         List<Short> activityIds = role.getActivityIds();
         Set<Short> keys = activityToRolesCacheMap.keySet();
-        for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
-            Short activityId = iter.next();
+        for (Short activityId : keys) {
             // see if for role has this activityId assingned. If it is, add it
             // to the cache
             if (activityIds.contains(activityId)) {
@@ -146,8 +144,7 @@ public class AuthorizationManager {
         List<Short> activityIds = role.getActivityIds();
         Set<Short> keys = activityToRolesCacheMap.keySet();
         synchronized (activityToRolesCacheMap) {
-            for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
-                Short activityId = iter.next();
+            for (Short activityId : keys) {
                 // see if for this activity role activitySet has anything in
                 // it If there is not any remove it from the cache
                 Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
@@ -164,8 +161,7 @@ public class AuthorizationManager {
         List<Short> activityIds = role.getActivityIds();
         Set<Short> keys = activityToRolesCacheMap.keySet();
         synchronized (activityToRolesCacheMap) {
-            for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
-                Short activityId = iter.next();
+            for (Short activityId : keys) {
                 // see if for this activity role activitySet has anything in
                 // it If there is any remove it from the cache
                 if (activityIds.contains(activityId)) {

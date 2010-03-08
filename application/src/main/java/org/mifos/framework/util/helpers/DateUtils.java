@@ -220,16 +220,16 @@ public class DateUtils {
         boolean m = false;
         boolean y = false;
         String separator = dateSeparator;
-        for (int i = 0; i < chArray.length; i++) {
-            if ((chArray[i] == 'd' || chArray[i] == 'D') && !d) {
+        for (char element : chArray) {
+            if ((element == 'd' || element == 'D') && !d) {
                 fmt.append("dd");
                 d = true;
                 fmt.append(separator);
-            } else if ((chArray[i] == 'm' || chArray[i] == 'M') && !m) {
+            } else if ((element == 'm' || element == 'M') && !m) {
                 fmt.append("MM");
                 m = true;
                 fmt.append(separator);
-            } else if ((chArray[i] == 'y' || chArray[i] == 'Y') && !y) {
+            } else if ((element == 'y' || element == 'Y') && !y) {
                 fmt.append("yyyy");
                 y = true;
                 fmt.append(separator);
@@ -374,14 +374,14 @@ public class DateUtils {
         boolean d = false;
         boolean m = false;
         boolean y = false;
-        for (int i = 0; i < chArray.length; i++) {
-            if ((chArray[i] == 'd' || chArray[i] == 'D') && !d) {
+        for (char element : chArray) {
+            if ((element == 'd' || element == 'D') && !d) {
                 fmt.append("D" + separator);
                 d = true;
-            } else if ((chArray[i] == 'm' || chArray[i] == 'M') && !m) {
+            } else if ((element == 'm' || element == 'M') && !m) {
                 fmt.append("M" + separator);
                 m = true;
-            } else if ((chArray[i] == 'y' || chArray[i] == 'Y') && !y) {
+            } else if ((element == 'y' || element == 'Y') && !y) {
                 fmt.append("Y" + separator);
                 y = true;
             }
@@ -392,10 +392,10 @@ public class DateUtils {
 
     public static String getSeparator(String pattern) {
         char chArray[] = pattern.toCharArray();
-        for (int i = 0; i < chArray.length; i++) {
-            if (chArray[i] != 'd' && chArray[i] != 'D' && chArray[i] != 'm' && chArray[i] != 'M' && chArray[i] != 'y'
-                    && chArray[i] != 'Y') {
-                return String.valueOf(chArray[i]);
+        for (char element : chArray) {
+            if (element != 'd' && element != 'D' && element != 'm' && element != 'M' && element != 'y'
+                    && element != 'Y') {
+                return String.valueOf(element);
             }
         }
         return "";

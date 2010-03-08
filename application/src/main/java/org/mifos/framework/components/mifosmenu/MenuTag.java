@@ -65,8 +65,8 @@ public class MenuTag extends BaseHandlerTag {
 
         output.append("<td class=\"leftpanelinks\" colspan=\"2\">");
         MenuGroup menuGroups[] = leftMenu.getMenuGroups();
-        for (int i = 0; i < menuGroups.length; i++) {
-            prepareMenu(output, menuGroups[i]);
+        for (MenuGroup menuGroup : menuGroups) {
+            prepareMenu(output, menuGroup);
         }
         output.append("</td>");
         TagUtils.getInstance().write(pageContext, output.toString());
@@ -104,8 +104,8 @@ public class MenuTag extends BaseHandlerTag {
         output.append("<span class=\"fontnormalbold\" >");
         output.append(menuGroup.getDisplayName()[0].toString() + "</span><br>");
         MenuItem menuItems[] = menuGroup.getMenuItems();
-        for (int i = 0; i < menuItems.length; i++) {
-            output.append(getLink(menuItems[i]));
+        for (MenuItem menuItem : menuItems) {
+            output.append(getLink(menuItem));
         }
         output.append("<br>");
     }

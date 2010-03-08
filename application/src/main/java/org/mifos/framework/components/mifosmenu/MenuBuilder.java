@@ -140,8 +140,8 @@ public class MenuBuilder {
      */
     private static String[] parseDisplayName(String[] displayNameKeys) throws JspException {
         StringBuffer displayNameValue = new StringBuffer();
-        for (int i = 0; i < displayNameKeys.length; i++) {
-            String value = getLabel(displayNameKeys[i]);
+        for (String displayNameKey : displayNameKeys) {
+            String value = getLabel(displayNameKey);
             displayNameValue.append(value);
             displayNameValue.append(MenuConstants.SPACE);
         }

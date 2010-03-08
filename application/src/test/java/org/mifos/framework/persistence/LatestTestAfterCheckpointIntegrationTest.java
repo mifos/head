@@ -194,11 +194,11 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
         String[] sqlStatements = SqlExecutor.readFile((InputStream) upgrade.sql().getContent());
-        for (int i = 0; i < sqlStatements.length; i++) {
+        for (String sqlStatement : sqlStatements) {
             Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues
-                    .checkLookupValue(sqlStatements[i]));
+                    .checkLookupValue(sqlStatement));
             Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup value locales", HardcodedValues
-                    .checkLookupValueLocale(sqlStatements[i]));
+                    .checkLookupValueLocale(sqlStatement));
         }
     }
 

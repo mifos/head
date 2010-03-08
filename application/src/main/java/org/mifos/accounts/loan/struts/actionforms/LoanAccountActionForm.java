@@ -26,7 +26,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -561,9 +560,9 @@ public class LoanAccountActionForm extends BaseActionForm {
             throw new IllegalArgumentException("bad UserContext id");
         }
 
-        for (Iterator<RepaymentScheduleInstallment> iter = installments.iterator(); iter.hasNext();) {
+        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
             this.paymentDataBeans
-                    .add(new PaymentDataHtmlBean(userContext.getPreferredLocale(), personnel, iter.next()));
+                    .add(new PaymentDataHtmlBean(userContext.getPreferredLocale(), personnel, repaymentScheduleInstallment));
         }
     }
 
@@ -812,8 +811,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private List<String> extractClientIdsFromRequest(HttpServletRequest request, Collection<?> paramsStartingWithClients) {
         List<String> clientIds = new ArrayList<String>();
-        for (Iterator<?> iter = paramsStartingWithClients.iterator(); iter.hasNext();) {
-            String element = (String) iter.next();
+        for (Object name : paramsStartingWithClients) {
+            String element = (String) name;
             clientIds.add(request.getParameter(element));
         }
         return clientIds;

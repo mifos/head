@@ -63,8 +63,8 @@ public class Row {
 
     public void getRowHeader(StringBuilder tableInfo, PageContext pageContext, String bundle) throws JspException {
         Column[] column = getColumn();
-        for (int i = 0; i < column.length; i++) {
-            column[i].getColumnHeader(tableInfo, pageContext, bundle);
+        for (Column element : column) {
+            element.getColumnHeader(tableInfo, pageContext, bundle);
         }
     }
 
@@ -75,8 +75,8 @@ public class Row {
         while (it.hasNext()) {
             tableInfo.append("<tr>");
             Object objValue = it.next();
-            for (int i = 0; i < column.length; i++) {
-                column[i].generateTableColumn(tableInfo, objValue, locale, prefferedLocale, mfiLocale);
+            for (Column element : column) {
+                element.generateTableColumn(tableInfo, objValue, locale, prefferedLocale, mfiLocale);
             }
             tableInfo.append("</tr>");
         }

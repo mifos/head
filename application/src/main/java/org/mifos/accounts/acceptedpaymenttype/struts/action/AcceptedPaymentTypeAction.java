@@ -152,8 +152,8 @@ public class AcceptedPaymentTypeAction extends BaseAction {
         if (paymentTypes == null)
             return true;
         Short paymentTypeId = paymentType.getId();
-        for (int i = 0; i < paymentTypes.length; i++) {
-            Short paymentId = Short.parseShort(paymentTypes[i]);
+        for (String paymentType2 : paymentTypes) {
+            Short paymentId = Short.parseShort(paymentType2);
             if (paymentId.shortValue() == paymentTypeId.shortValue())
                 return false;
         }
@@ -183,8 +183,8 @@ public class AcceptedPaymentTypeAction extends BaseAction {
             }
         }
         if (selectedPaymentTypes != null) {
-            for (int i = 0; i < selectedPaymentTypes.length; i++) {
-                Short paymentTypeId = Short.parseShort(selectedPaymentTypes[i]);
+            for (String selectedPaymentType : selectedPaymentTypes) {
+                Short paymentTypeId = Short.parseShort(selectedPaymentType);
                 if (FindNew(paymentTypeId, outList)) {
                     acceptedPaymentType = new AcceptedPaymentType();
                     PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity(paymentTypeId);

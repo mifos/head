@@ -3564,8 +3564,8 @@ public class LoanBO extends AccountBO {
 
     private Money getExactTotalPaymentDue_v2(final List<AccountActionDateEntity> unpaidInstallments) {
         Money sum = new Money(getCurrency(), "0");
-        for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
-            sum = sum.add(((LoanScheduleEntity) it.next()).getTotalPaymentDue());
+        for (Object element : unpaidInstallments) {
+            sum = sum.add(((LoanScheduleEntity) element).getTotalPaymentDue());
         }
         return sum;
     }
@@ -3635,8 +3635,8 @@ public class LoanBO extends AccountBO {
             for (AccountFeesActionDetailEntity e : feeDetails) {
                 lastInstallmentFeeSum = lastInstallmentFeeSum.add(e.getFeeAmount());
             }
-            for (Iterator it = feeDetails.iterator(); it.hasNext();) {
-                AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) it.next();
+            for (Object element : feeDetails) {
+                AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) element;
                 e.adjustFeeAmount(totals.roundedAccountFeesDue.subtract(totals.runningAccountFees).subtract(
                         lastInstallmentFeeSum));
                 // just adjust the first fee
@@ -3671,8 +3671,8 @@ public class LoanBO extends AccountBO {
             exactTotalPrincipalDue = exactTotalPrincipalDue.subtract(installment.getPrincipalPaid());
         }
 
-        for (Iterator it = installmentsToBeRounded.iterator(); it.hasNext();) {
-            LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();
+        for (Object element : installmentsToBeRounded) {
+            LoanScheduleEntity currentInstallment = (LoanScheduleEntity) element;
             exactTotalInterestDue = exactTotalInterestDue.add(currentInstallment.getInterestDue());
             exactTotalAccountFeesDue = exactTotalAccountFeesDue.add(currentInstallment.getTotalFeeDue());
             exactTotalMiscFeesDue = exactTotalMiscFeesDue.add(currentInstallment.getMiscFeeDue());
@@ -3696,8 +3696,8 @@ public class LoanBO extends AccountBO {
 
     private void roundInstallmentAccountFeesDue_v2(final LoanScheduleEntity installment) {
 
-        for (Iterator feeActionIt = installment.getAccountFeesActionDetails().iterator(); feeActionIt.hasNext();) {
-            AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) feeActionIt.next();
+        for (Object element : installment.getAccountFeesActionDetails()) {
+            AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) element;
             e.roundFeeAmount(MoneyUtils.currencyRound(e.getFeeDue().add(e.getFeeAmountPaid())));
         }
 
@@ -3706,8 +3706,8 @@ public class LoanBO extends AccountBO {
     private Money getExactTotalFeesDue_v2(final List<AccountActionDateEntity> installments) {
 
         Money totalFees = new Money(getCurrency(), "0");
-        for (Iterator it = installments.iterator(); it.hasNext();) {
-            LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();
+        for (Object element : installments) {
+            LoanScheduleEntity currentInstallment = (LoanScheduleEntity) element;
             totalFees = totalFees.add(currentInstallment.getTotalFeeDue());
         }
         return totalFees;

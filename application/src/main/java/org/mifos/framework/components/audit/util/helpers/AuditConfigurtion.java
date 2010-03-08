@@ -82,11 +82,11 @@ public class AuditConfigurtion {
     private void createEntityValueMap() throws SystemException {
         ColumnPropertyMapping columnPropertyMapping = XMLParser.getInstance().parser();
         EntityType[] entityTypes = columnPropertyMapping.getEntityTypes();
-        for (int i = 0; i < entityTypes.length; i++) {
-            entityToClassPath.put(entityTypes[i].getClassPath(), entityTypes[i].getName());
-            entityMapForColumn.put(entityTypes[i].getName(), createColumnNames(entityTypes[i]));
-            entityMap.put(entityTypes[i].getName(), createPropertyNames(entityTypes[i].getPropertyNames()));
-            entitiesToLog.put(entityTypes[i].getName(), entityTypes[i].getEntitiesToLog());
+        for (EntityType entityType : entityTypes) {
+            entityToClassPath.put(entityType.getClassPath(), entityType.getName());
+            entityMapForColumn.put(entityType.getName(), createColumnNames(entityType));
+            entityMap.put(entityType.getName(), createPropertyNames(entityType.getPropertyNames()));
+            entitiesToLog.put(entityType.getName(), entityType.getEntitiesToLog());
         }
     }
 
@@ -204,17 +204,17 @@ public class AuditConfigurtion {
             }
         }
         PropertyName[] propertyNames = entityType.getPropertyNames();
-        for (int i = 0; i < propertyNames.length; i++) {
+        for (PropertyName propertyName2 : propertyNames) {
             String propertyName = null;
-            if (propertyNames[i].getParentName() != null) {
-                propertyName = propertyNames[i].getParentName().concat(propertyNames[i].getName());
+            if (propertyName2.getParentName() != null) {
+                propertyName = propertyName2.getParentName().concat(propertyName2.getName());
             } else {
-                propertyName = propertyNames[i].getName();
+                propertyName = propertyName2.getName();
             }
-            if (propertyNames[i].getDoNotLog().equalsIgnoreCase(XMLConstants.YES)) {
+            if (propertyName2.getDoNotLog().equalsIgnoreCase(XMLConstants.YES)) {
                 columnPropertyMap.put(propertyName, XMLConstants.DONOTLOGTHISPROPERTY);
             } else {
-                columnPropertyMap.put(propertyName, getColumnName(propertyNames[i].getDisplayKey()));
+                columnPropertyMap.put(propertyName, getColumnName(propertyName2.getDisplayKey()));
             }
         }
         return columnPropertyMap;
@@ -222,29 +222,29 @@ public class AuditConfigurtion {
 
     private Map<String, Map> createPropertyNames(PropertyName[] propertyNames) throws SystemException {
         propertyMap = new HashMap<String, Map>();
-        for (int i = 0; i < propertyNames.length; i++) {
-            if (propertyNames[i].getLookUp().equalsIgnoreCase(XMLConstants.YES)
-                    && propertyNames[i].getMethodName() == null) {
+        for (PropertyName propertyName : propertyNames) {
+            if (propertyName.getLookUp().equalsIgnoreCase(XMLConstants.YES)
+                    && propertyName.getMethodName() == null) {
                 for (Short localeId : locales) {
-                    if (propertyNames[i].getParentName() != null) {
-                        propertyMap.put(propertyNames[i].getParentName().concat(propertyNames[i].getName()).concat(
-                                "_" + String.valueOf(localeId)), createValueMap(propertyNames[i].getEntityName(),
+                    if (propertyName.getParentName() != null) {
+                        propertyMap.put(propertyName.getParentName().concat(propertyName.getName()).concat(
+                                "_" + String.valueOf(localeId)), createValueMap(propertyName.getEntityName(),
                                 localeId));
                     } else {
-                        propertyMap.put(propertyNames[i].getName().concat("_" + String.valueOf(localeId)),
-                                createValueMap(propertyNames[i].getEntityName(), localeId));
+                        propertyMap.put(propertyName.getName().concat("_" + String.valueOf(localeId)),
+                                createValueMap(propertyName.getEntityName(), localeId));
                     }
                 }
-            } else if (propertyNames[i].getLookUp().equalsIgnoreCase(XMLConstants.YES)
-                    && propertyNames[i].getMethodName() != null) {
+            } else if (propertyName.getLookUp().equalsIgnoreCase(XMLConstants.YES)
+                    && propertyName.getMethodName() != null) {
                 for (Short localeId : locales) {
-                    if (propertyNames[i].getParentName() != null) {
-                        propertyMap.put(propertyNames[i].getParentName().concat(propertyNames[i].getName()).concat(
-                                "_" + String.valueOf(localeId)), callMethodToCreateValueMap(propertyNames[i]
+                    if (propertyName.getParentName() != null) {
+                        propertyMap.put(propertyName.getParentName().concat(propertyName.getName()).concat(
+                                "_" + String.valueOf(localeId)), callMethodToCreateValueMap(propertyName
                                 .getMethodName(), localeId));
                     } else {
-                        propertyMap.put(propertyNames[i].getName().concat("_" + String.valueOf(localeId)),
-                                callMethodToCreateValueMap(propertyNames[i].getMethodName(), localeId));
+                        propertyMap.put(propertyName.getName().concat("_" + String.valueOf(localeId)),
+                                callMethodToCreateValueMap(propertyName.getMethodName(), localeId));
                     }
                 }
             }
@@ -255,10 +255,10 @@ public class AuditConfigurtion {
     private Map<String, String> callMethodToCreateValueMap(String methodName, Short localeId) throws SystemException {
         valueMap = new HashMap<String, String>();
         Method[] methods = AuditConfigurationPersistence.class.getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equalsIgnoreCase(methodName)) {
+        for (Method method : methods) {
+            if (method.getName().equalsIgnoreCase(methodName)) {
                 try {
-                    valueMap = (Map<String, String>) methods[i].invoke(new AuditConfigurationPersistence(),
+                    valueMap = (Map<String, String>) method.invoke(new AuditConfigurationPersistence(),
                             new Object[] { localeId });
                 } catch (Exception e) {
                     throw new SystemException(e);
@@ -306,12 +306,12 @@ public class AuditConfigurtion {
         String keys[] = getKeys(DisplayKey);
 
         String columnName = "";
-        for (int i = 0; i < keys.length; i++) {
-            if (keys[i].contains("."))
-                columnName = columnName + " " + columnNames.getString(keys[i]);
+        for (String key : keys) {
+            if (key.contains("."))
+                columnName = columnName + " " + columnNames.getString(key);
             else
                 try {
-                    columnName = columnName + " " + labelConfig.getLabel(keys[i], locale);
+                    columnName = columnName + " " + labelConfig.getLabel(key, locale);
                 } catch (ConfigurationException ce) {
                     // ignore it user may not see the label
                 }

@@ -88,9 +88,9 @@ public class MenuRepository {
      * @return crude Menu object for a topMenuTab
      */
     public Menu getCrudeMenuForTab(String menuTabName) {
-        for (int i = 0; i < crudeMenuList.length; i++) {
-            if (crudeMenuList[i].getTopMenuTabName().equalsIgnoreCase(menuTabName))
-                return crudeMenuList[i];
+        for (Menu element : crudeMenuList) {
+            if (element.getTopMenuTabName().equalsIgnoreCase(menuTabName))
+                return element;
         }
         return null;
     }
@@ -146,9 +146,9 @@ public class MenuRepository {
         Menu[] leftMenus = getMenuForLocale(lc);
         if (leftMenus == null)
             return null;
-        for (int i = 0; i < leftMenus.length; i++) {
-            if (leftMenus[i].getTopMenuTabName().equalsIgnoreCase(topTabName))
-                return leftMenus[i];
+        for (Menu leftMenu : leftMenus) {
+            if (leftMenu.getTopMenuTabName().equalsIgnoreCase(topTabName))
+                return leftMenu;
         }
         return null;
     }

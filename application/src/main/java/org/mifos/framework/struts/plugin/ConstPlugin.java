@@ -141,10 +141,10 @@ public class ConstPlugin implements PlugIn {
             Map<String, Object> constantsMap = new HashMap<String, Object>();
             Field[] fields = constantClass.getDeclaredFields();
             try {
-                for (int i = 0; i < fields.length; i++) {
-                    checkModifiers(fields[i]);
-                    String fieldName = fields[i].getName();
-                    Object fieldValue = fields[i].get(null);
+                for (Field field : fields) {
+                    checkModifiers(field);
+                    String fieldName = field.getName();
+                    Object fieldValue = field.get(null);
                     constantsMap.put(fieldName, fieldValue);
                 }
             } catch (IllegalAccessException iae) {

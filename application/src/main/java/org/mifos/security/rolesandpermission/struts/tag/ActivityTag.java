@@ -23,7 +23,6 @@ package org.mifos.security.rolesandpermission.struts.tag;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,8 +75,7 @@ public class ActivityTag extends TagSupport {
 
     static Set<Short> convertToIdSet(List<ActivityEntity> activityList) {
         Set<Short> activities = new HashSet<Short>();
-        for (Iterator<ActivityEntity> iter = activityList.iterator(); iter.hasNext();) {
-            ActivityEntity activityEntity = iter.next();
+        for (ActivityEntity activityEntity : activityList) {
             activities.add(activityEntity.getId());
         }
         return activities;

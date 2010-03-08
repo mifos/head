@@ -91,9 +91,9 @@ public class Row {
             throws TableTagException {
         StringBuilder row = new StringBuilder();
         StringBuilder columns = new StringBuilder();
-        for (int i = 0; i < column.length; i++) {
+        for (Column element : column) {
             // Used to get the string for each column in a row
-            String columnString = (column[i].getColumn(pageContext, obj, locale, isFlowRequired));
+            String columnString = (element.getColumn(pageContext, obj, locale, isFlowRequired));
             if (!columnString.trim().equals("")) {
                 columns.append(columnString).append("	");
             }

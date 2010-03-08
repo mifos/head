@@ -80,8 +80,8 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         List<ReportsCategoryBO> listOfReportCategories = reportsPersistence.getAllReportCategories();
         Set<ReportsBO> reportsSet = listOfReportCategories.get(0).getReportsSet();
 
-        for (Iterator iter = reportsSet.iterator(); iter.hasNext();) {
-            ReportsBO reports = (ReportsBO) iter.next();
+        for (Object element : reportsSet) {
+            ReportsBO reports = (ReportsBO) element;
             if (reports.getReportId().equals("1")) {
                Assert.assertEquals("Client Detail", reports.getReportName());
             } else if (reports.getReportId().equals("2")) {
@@ -111,8 +111,7 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         List<ReportsCategoryBO> listOfReportCategories = reportsPersistence.getAllReportCategories();
         Set<ReportsBO> reportsSet = listOfReportCategories.get(0).getReportsSet();
 
-        for (Iterator<ReportsBO> iter = reportsSet.iterator(); iter.hasNext();) {
-            ReportsBO reports = iter.next();
+        for (ReportsBO reports : reportsSet) {
             if (reports.getReportId().equals("1"))
                Assert.assertEquals("report_designer", reports.getReportIdentifier());
         }

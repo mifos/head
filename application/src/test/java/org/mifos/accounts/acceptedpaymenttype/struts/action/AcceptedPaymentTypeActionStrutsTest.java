@@ -371,8 +371,8 @@ public class AcceptedPaymentTypeActionStrutsTest extends MifosMockStrutsTestCase
     }
 
     private boolean Find(Short paymentId, String[] payments) {
-        for (int i = 0; i < payments.length; i++) {
-            Short id = Short.parseShort(payments[i]);
+        for (String payment : payments) {
+            Short id = Short.parseShort(payment);
             if (id.shortValue() == paymentId.shortValue())
                 return true;
         }

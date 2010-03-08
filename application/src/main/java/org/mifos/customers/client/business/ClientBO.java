@@ -247,8 +247,8 @@ public class ClientBO extends CustomerBO {
     public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView, final List<ClientFamilyDetailView> familyDetailView) {
         Iterator iterator2=familyDetailView.iterator();
         familyDetailSet=new HashSet<ClientFamilyDetailEntity>();
-        for (Iterator iterator = familyNameDetailView.iterator(); iterator.hasNext();) {
-            ClientNameDetailView clientNameDetailView2 = (ClientNameDetailView) iterator.next();
+        for (Object element : familyNameDetailView) {
+            ClientNameDetailView clientNameDetailView2 = (ClientNameDetailView) element;
             ClientFamilyDetailView clientFamilyDetailView2= (ClientFamilyDetailView) iterator2.next();
             ClientNameDetailEntity nameEntity=new ClientNameDetailEntity(this, null,clientNameDetailView2);
             this.addNameDetailSet(nameEntity);

@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -2069,8 +2068,7 @@ public class TestObjectFactory {
         List<AuditLog> auditLogList = session
                 .createQuery("from org.mifos.framework.components.audit.business.AuditLog").list();
         if (auditLogList != null) {
-            for (Iterator<AuditLog> iter = auditLogList.iterator(); iter.hasNext();) {
-                AuditLog auditLog = iter.next();
+            for (AuditLog auditLog : auditLogList) {
                 session.delete(auditLog);
             }
         }

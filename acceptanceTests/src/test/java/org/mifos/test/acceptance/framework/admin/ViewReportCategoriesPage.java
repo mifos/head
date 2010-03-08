@@ -25,8 +25,7 @@ public class ViewReportCategoriesPage extends MifosPage {
 
     public void verifyReportCategoriesExist(String[] expectedData) {
         int start = CATEGORY_NAMES_START_ROW;
-        for (int i = 0; i < expectedData.length; i++) {
-            String expectedCellData = expectedData[i];
+        for (String expectedCellData : expectedData) {
             String actualCellData = selenium.getTable(REPORT_CATEGORIES_TABLE_ID + "." + (start++) + ".0");
             Assert.assertEquals(actualCellData, expectedCellData);
         }

@@ -98,10 +98,10 @@ public class Table {
             throws TableTagException {
 
         StringBuilder table = new StringBuilder();
-        for (int i = 0; i < row.length; i++) {
+        for (Row element : row) {
 
             // Used to store a complete row
-            String foundRow = row[i].getRow(pageContext, obj, locale, isFlowRequired);
+            String foundRow = element.getRow(pageContext, obj, locale, isFlowRequired);
             table.append(foundRow);
             if (!((foundRow == null) || (foundRow == ""))) {
                 table.append("<br>");
@@ -117,9 +117,9 @@ public class Table {
      * @return path
      */
     public Path findPath(String key) {
-        for (int i = 0; i < path.length; i++) {
-            if (path[i].getKey().equalsIgnoreCase(key)) {
-                return path[i];
+        for (Path element : path) {
+            if (element.getKey().equalsIgnoreCase(key)) {
+                return element;
             }
         }
         return null;

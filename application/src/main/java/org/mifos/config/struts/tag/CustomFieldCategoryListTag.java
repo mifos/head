@@ -84,9 +84,9 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
         html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "0");
 
         CustomFieldCategory[] values = CustomFieldCategory.values();
-        for (int i = 0; i < values.length; i++) {
-            String category = MessageLookup.getInstance().lookupLabel(values[i].name());
-            html.append(getCategoryRow(values[i].name(), category));
+        for (CustomFieldCategory value : values) {
+            String category = MessageLookup.getInstance().lookupLabel(value.name());
+            html.append(getCategoryRow(value.name(), category));
         }
 
         html.endTag("table");

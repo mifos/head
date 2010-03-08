@@ -108,9 +108,8 @@ public class EnumPlugin implements PlugIn {
             Map<String, Object> constantsMap = new HashMap<String, Object>();
             Object[] fields = constantClass.getEnumConstants();
 
-            for (int i = 0; i < fields.length; i++) {
-                String fieldName = fields[i].toString();
-                Object fieldValue = fields[i];
+            for (Object fieldValue : fields) {
+                String fieldName = fieldValue.toString();
                 constantsMap.put(fieldName, fieldValue);
             }
             return constantsMap;

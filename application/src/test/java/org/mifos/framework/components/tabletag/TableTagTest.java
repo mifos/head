@@ -146,10 +146,10 @@ public class TableTagTest extends TestCase {
     public void testTableTagParser() throws Exception {
         Table table = TableTagParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/viewUsers.xml");
         Path path[] = table.getPath();
-        for (int i = 0; i < path.length; i++) {
-           Assert.assertEquals("PersonAction.do", path[i].getAction());
-           Assert.assertEquals("search_success", path[i].getForwardkey());
-           Assert.assertEquals("viewUsers", path[i].getKey());
+        for (Path element : path) {
+           Assert.assertEquals("PersonAction.do", element.getAction());
+           Assert.assertEquals("search_success", element.getForwardkey());
+           Assert.assertEquals("viewUsers", element.getKey());
 
         }
         for (Row row : table.getRow()) {

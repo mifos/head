@@ -317,8 +317,8 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
                     .getDateWithoutTimeStamp(outputDate.getTime()).getTime());
 
             // Clean up the Holiday that was created
-            for (int j = 0; j < holidays.length; j++)
-                TestObjectFactory.cleanUp(holidays[j]);
+            for (HolidayBO holiday : holidays)
+                TestObjectFactory.cleanUp(holiday);
         }
     }
 
@@ -342,10 +342,10 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
 
         startDate.setTime(loanRepaymentSchedule[0].getActionDate());
 
-        for (int i = 0; i < loanRepaymentSchedule.length; i++) {
+        for (LoanScheduleEntity element : loanRepaymentSchedule) {
             // System.out.println("[DATE] ActionDate     = " +
             // loanRepaymentSchedule[i].getActionDate().toLocaleString());
-           Assert.assertEquals(startDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
+           Assert.assertEquals(startDate, DateUtils.getCalendarDate(element.getActionDate().getTime()));
 
             startDate.add(Calendar.DAY_OF_MONTH, 7);
         }
@@ -434,10 +434,10 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
 
         startDate.setTime(savingSchedule[0].getActionDate());
 
-        for (int i = 0; i < savingSchedule.length; i++) {
+        for (AccountActionDateEntity element : savingSchedule) {
             // System.out.println("[SAVING] ActionDate = " +
             // savingSchedule[i].getActionDate().toLocaleString());
-           Assert.assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
+           Assert.assertEquals(startDate, DateUtils.getCalendarDate(element.getActionDate().getTime()));
             startDate.add(Calendar.DAY_OF_MONTH, 7);
         }
         // ///////////////////////////////////////////////////////////

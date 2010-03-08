@@ -74,8 +74,8 @@ public class DatasetVersionTest extends UiTestCaseBase {
         FileExtensionFilter filter = new FileExtensionFilter("", "dbunit.xml.zip");
         File[] acceptList = f.listFiles(filter);
 
-        for(int j=0; j<acceptList.length; j++) {
-            verifyDatabaseVersion(acceptList[j].getName());
+        for (File element : acceptList) {
+            verifyDatabaseVersion(element.getName());
         }
     }
 

@@ -246,10 +246,10 @@ public class MifosListBox extends BodyTagSupport {
         results.append(" <ul class=\"special_en\" style=\"" + "height: " + getHeight() + ";width: " + getWidth()
                 + "\" >");
 
-        for (int i = 0; i < inputList.length; i++) {
-            results.append(BuildHref(inputList[i], obj));
-            results.append("\" title= \" " + inputList[i] + "\" >");
-            results.append(inputList[i] + "</a></li>");
+        for (String element : inputList) {
+            results.append(BuildHref(element, obj));
+            results.append("\" title= \" " + element + "\" >");
+            results.append(element + "</a></li>");
         }
 
         TagUtils.getInstance().write(pageContext, results.toString());

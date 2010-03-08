@@ -90,10 +90,10 @@ public class PluginManager {
 
     private ArrayList<URL> getPluginURLs(File[] files) {
         ArrayList<URL> urls = new ArrayList<URL>();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].getName().endsWith(".jar")) {
+        for (File file : files) {
+            if (file.getName().endsWith(".jar")) {
                 try {
-                    urls.add(files[i].toURI().toURL());
+                    urls.add(file.toURI().toURL());
                 } catch (MalformedURLException e) {
                     LOG.log(Level.WARNING, this.getClass().getName(), e);
                 }

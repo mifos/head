@@ -53,9 +53,9 @@ public class FiscalCalendarRules {
     private static WeekDay findWeekDay(final String workingDay) {
         WeekDay[] weekDays = WeekDay.values(); // all weekdays
 
-        for (int i = 0; i < weekDays.length; i++) {
-            if (weekDays[i].name().toUpperCase().equals(workingDay.toUpperCase())) {
-                return weekDays[i];
+        for (WeekDay weekDay : weekDays) {
+            if (weekDay.name().toUpperCase().equals(workingDay.toUpperCase())) {
+                return weekDay;
             }
         }
         throw new RuntimeException("The configured working day " + workingDay + " is not a week day enum.");
@@ -65,8 +65,8 @@ public class FiscalCalendarRules {
     public List<WeekDay> getWeekDaysList() {
         WeekDay[] weekDays = WeekDay.values();
         List<WeekDay> list = new ArrayList();
-        for (int i = 0; i < weekDays.length; i++)
-            list.add(weekDays[i]);
+        for (WeekDay weekDay : weekDays)
+            list.add(weekDay);
         return list;
     }
 
@@ -74,8 +74,8 @@ public class FiscalCalendarRules {
         if (configWorkingDays == null)
             throw new RuntimeException("The working days are not defined in the config file.");
         List<WeekDay> workingDays = new ArrayList(); // returned working days
-        for (int i = 0; i < configWorkingDays.length; i++)
-            workingDays.add(findWeekDay(configWorkingDays[i]));
+        for (String configWorkingDay : configWorkingDays)
+            workingDays.add(findWeekDay(configWorkingDay));
 
         return workingDays;
     }
@@ -92,8 +92,8 @@ public class FiscalCalendarRules {
     }
 
     private boolean isWorkingDay(final WeekDay weekDay) {
-        for (int i = 0; i < configWorkingDays.length; i++)
-            if (configWorkingDays[i].toUpperCase().equals(weekDay.name().toUpperCase()))
+        for (String configWorkingDay : configWorkingDays)
+            if (configWorkingDay.toUpperCase().equals(weekDay.name().toUpperCase()))
                 return true;
         return false;
     }

@@ -77,8 +77,8 @@ public class ReportsBusinessService implements BusinessService {
         List<ReportsParams> reportsParams = new ReportsPersistence().getAllReportParams();
         Object[] obj = reportsParams.toArray();
         if (obj != null && obj.length > 0) {
-            for (int i = 0; i < obj.length; i++) {
-                ReportsParams rp = (ReportsParams) obj[i];
+            for (Object element : obj) {
+                ReportsParams rp = (ReportsParams) element;
                 if (rp.getName().equalsIgnoreCase(objParams.getName())) {
                     isInUse = true;
                     break;
@@ -153,8 +153,8 @@ public class ReportsBusinessService implements BusinessService {
 
         if (obj != null && obj.length > 0) {
 
-            for (int i = 0; i < obj.length; i++) {
-                ReportsParamsMap rp = (ReportsParamsMap) obj[i];
+            for (Object element : obj) {
+                ReportsParamsMap rp = (ReportsParamsMap) element;
                 String paramname = rp.getReportsParams().getName();
                 int para = 0;
                 double dblpara = 0;

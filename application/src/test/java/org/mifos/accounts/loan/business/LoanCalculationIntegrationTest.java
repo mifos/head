@@ -37,7 +37,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -224,13 +223,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int transactionCount = 0;
-        for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
-            AccountPaymentEntity payment = paymentIterator.next();
+        for (AccountPaymentEntity payment : paymentList) {
             Set<AccountTrxnEntity> transactionList = payment.getAccountTrxns();
             for (AccountTrxnEntity transaction : transactionList) {
                 Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
-                for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) {
-                    FinancialTransactionBO financialTransaction = iterator.next();
+                for (FinancialTransactionBO financialTransaction : list) {
                     if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
                             || financialTransaction.getPostedAmount().negate().equals(
                                     testCaseData.getExpectedResult().getAccount999())) {
@@ -268,13 +265,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int transactionCount = 0;
-        for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
-            AccountPaymentEntity payment = paymentIterator.next();
+        for (AccountPaymentEntity payment : paymentList) {
             Set<AccountTrxnEntity> transactionList = payment.getAccountTrxns();
             for (AccountTrxnEntity transaction : transactionList) {
                 Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
-                for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) {
-                    FinancialTransactionBO financialTransaction = iterator.next();
+                for (FinancialTransactionBO financialTransaction : list) {
                     if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
                             || financialTransaction.getPostedAmount().negate().equals(
                                     testCaseData.getExpectedResult().getAccount999())) {
@@ -331,8 +326,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
 
-        for (int i = 0; i < paymentsArray.length; i++) {
-            loanSchedule = paymentsArray[i];
+        for (LoanScheduleEntity element : paymentsArray) {
+            loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
             paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
                     .getActionDate());
@@ -428,8 +423,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
 
-        for (int i = 0; i < paymentsArray.length; i++) {
-            loanSchedule = paymentsArray[i];
+        for (LoanScheduleEntity element : paymentsArray) {
+            loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
             paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
                     .getActionDate());
@@ -640,13 +635,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // no 999 account is logged
         List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int i = 0;
-        for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
-            AccountPaymentEntity payment = paymentIterator.next();
+        for (AccountPaymentEntity payment : paymentList) {
             Set<AccountTrxnEntity> transactionList = payment.getAccountTrxns();
             for (AccountTrxnEntity transaction : transactionList) {
                 Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
-                for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) {
-                    FinancialTransactionBO financialTransaction = iterator.next();
+                for (FinancialTransactionBO financialTransaction : list) {
                     if (financialTransaction.getPostedAmount().equals(expectedResults.getAccount999())
                             || financialTransaction.getPostedAmount().negate().equals(expectedResults.getAccount999())) {
                         i++;
@@ -671,9 +664,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     public void testDecliningInterestEPITestCases() throws Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningEPI/";
         String[] dataFileNames = getCSVFiles(rootPath);
-        for (int i = 0; i < dataFileNames.length; i++) {
-            if (fileNameContains(dataFileNames[i], decliningEPIGraceFeeTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+        for (String dataFileName : dataFileNames) {
+            if (fileNameContains(dataFileName, decliningEPIGraceFeeTestCases)) {
+                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
                 tearDown();
                 setUp();
             }
@@ -723,9 +716,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             ApplicationException, URISyntaxException, Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningInterest/";
         String[] dataFileNames = getCSVFiles(rootPath);
-        for (int i = 0; i < dataFileNames.length; i++) {
-            if (dataFileNames[i].startsWith("testcase-2008-05-13-declining-grace-fee-set1")) {
-                runOne999AccountTestCaseLoanWithFees(rootPath + dataFileNames[i]);
+        for (String dataFileName : dataFileNames) {
+            if (dataFileName.startsWith("testcase-2008-05-13-declining-grace-fee-set1")) {
+                runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
                 tearDown();
                 setUp();
             }
@@ -736,9 +729,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             SystemException, ApplicationException, URISyntaxException, Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/flatInterest/";
         String[] dataFileNames = getCSVFiles(rootPath);
-        for (int i = 0; i < dataFileNames.length; i++) {
-            if (dataFileNames[i].startsWith("testcase") && dataFileNames[i].contains("flat-grace-fee-set")) {
-                runOne999AccountTestCaseLoanWithFees(rootPath + dataFileNames[i]);
+        for (String dataFileName : dataFileNames) {
+            if (dataFileName.startsWith("testcase") && dataFileName.contains("flat-grace-fee-set")) {
+                runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
                 tearDown();
                 setUp();
             }
@@ -882,8 +875,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
-        for (int i = 0; i < paymentsArray.length; i++) {
-            loanSchedule = paymentsArray[i];
+        for (LoanScheduleEntity element : paymentsArray) {
+            loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
             paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
                     .getActionDate());
@@ -947,8 +940,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
-        for (int i = 0; i < paymentsArray.length; i++) {
-            loanSchedule = paymentsArray[i];
+        for (LoanScheduleEntity element : paymentsArray) {
+            loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
             paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
                     .getActionDate());
@@ -980,8 +973,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         AccountPaymentEntity lastPmt = null;
         List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int i = 1;
-        for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
-            AccountPaymentEntity payment = paymentIterator.next();
+        for (AccountPaymentEntity payment : paymentList) {
             if (i == loanParams.getNumberOfPayments()) {
                 lastPmt = payment;
                 break;
@@ -991,8 +983,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountTrxnEntity> transactionList = lastPmt.getAccountTrxns();
         for (AccountTrxnEntity transaction : transactionList) {
             Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
-            for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) {
-                FinancialTransactionBO financialTransaction = iterator.next();
+            for (FinancialTransactionBO financialTransaction : list) {
                 if (financialTransaction.getGlcode().getGlcodeId() == 51) {
                    Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
                     Money postedAmount = financialTransaction.getPostedAmount();
@@ -1027,8 +1018,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         AccountPaymentEntity lastPmt = null;
         List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
         int i = 1;
-        for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) {
-            AccountPaymentEntity payment = paymentIterator.next();
+        for (AccountPaymentEntity payment : paymentList) {
             if (i == loanParams.getNumberOfPayments()) {
                 lastPmt = payment;
                 break;
@@ -1038,8 +1028,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountTrxnEntity> transactionList = lastPmt.getAccountTrxns();
         for (AccountTrxnEntity transaction : transactionList) {
             Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
-            for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) {
-                FinancialTransactionBO financialTransaction = iterator.next();
+            for (FinancialTransactionBO financialTransaction : list) {
                 if (financialTransaction.getGlcode().getGlcodeId() == 51) {
                    Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
                     Money postedAmount = financialTransaction.getPostedAmount();
@@ -1670,8 +1659,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private void parseLoanParams(String paramType, String line, LoanParameters loanParams) {
         String tempLine = line.substring(paramType.length(), line.length() - 1);
         String[] tokens = tempLine.split(",");
-        for (int i = 0; i < tokens.length; i++) {
-            String token = tokens[i];
+        for (String token : tokens) {
             if (StringUtils.isNotBlank(token)) {
                 if ((paramType.indexOf(principal) >= 0) && (loanParams.getPrincipal() == null))
                     loanParams.setPrincipal(token);
@@ -1705,8 +1693,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         String[] tokens = line.split(",");
         String token = null;
-        for (int j = 0; j < tokens.length; j++) {
-            token = tokens[j];
+        for (String token2 : tokens) {
+            token = token2;
             if (StringUtils.isNotBlank(token))
                 break;
         }
@@ -1716,8 +1704,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private void parseConfigParams(String paramType, String line, InternalConfiguration config) {
         String tempLine = line.substring(paramType.length(), line.length() - 1);
         String[] tokens = tempLine.split(",");
-        for (int i = 0; i < tokens.length; i++) {
-            String token = tokens[i];
+        for (String token2 : tokens) {
+            String token = token2;
             if (StringUtils.isNotBlank(token)) {
                 if (paramType.indexOf(initialRoundingMode) >= 0) {
                     RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
@@ -1804,8 +1792,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         boolean totalInterests = true;
         boolean totalFee = true;
         boolean totalPrincipals = true;
-        for (int i = 0; i < tokens.length; i++) {
-            String token = tokens[i].trim();
+        for (String token2 : tokens) {
+            String token = token2.trim();
             if (StringUtils.isNotBlank(token)) {
                 if (totalPayments == false) {
                     result.setTotalPayments(new Money(getCurrency(), token));
@@ -1864,8 +1852,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         boolean balance = true;
         boolean fee = true;
         PaymentDetail paymentDetail = new PaymentDetail();
-        for (int i = 0; i < tokens.length; i++) {
-            String token = tokens[i].trim();
+        for (String token2 : tokens) {
+            String token = token2.trim();
             if (StringUtils.isNotBlank(token)) {
                 if (paymentIndex == false) {
                     int paymentNumber = Integer.parseInt(token);
@@ -1926,8 +1914,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             expectedResult.setPayments(list);
             while ((line = bufferedReader.readLine()) != null) {
                 String[] tokens = line.split(",");
-                for (int i = 0; i < tokens.length; i++) {
-                    String token = tokens[i];
+                for (String token : tokens) {
                     if (StringUtils.isNotBlank(token)) {
                         if ((token.indexOf(principal) >= 0) || (token.indexOf(loanType) >= 0)
                                 || (token.indexOf(annualInterest) >= 0) || (token.indexOf(numberOfPayments) >= 0)
@@ -2023,8 +2010,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         // String[] dataFileNames = {"testcases-2008-04-22.set1.01.csv"};
         String[] dataFileNames = { "loan-repayment-master-test1.csv" };
-        for (int i = 0; i < dataFileNames.length; i++)
-            runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+        for (String dataFileName : dataFileNames)
+            runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
     }
 
     public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
@@ -2032,21 +2019,21 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
         String[] dataFileNames = { "loan-repayment-master-issue1623.csv" };
-        for (int i = 0; i < dataFileNames.length; i++)
-            runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+        for (String dataFileName : dataFileNames)
+            runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
 
     }
 
     public void testFlatInterestTestCases() throws Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/flatInterest/";
         String[] dataFileNames = getCSVFiles(rootPath);
-        for (int i = 0; i < dataFileNames.length; i++) {
+        for (String dataFileName : dataFileNames) {
             if (
             // dataFileNames[i].contains("set1.23")
 
-            fileNameContains(dataFileNames[i], flatGraceFeeTestCases)
-                    || fileNameContains(dataFileNames[i], flatNegativeLastPaymentTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+            fileNameContains(dataFileName, flatGraceFeeTestCases)
+                    || fileNameContains(dataFileName, flatNegativeLastPaymentTestCases)) {
+                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
                 tearDown();
                 setUp();
             }
@@ -2056,10 +2043,10 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     public void testDecliningInterestTestCases() throws Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningInterest/";
         String[] dataFileNames = getCSVFiles(rootPath);
-        for (int i = 0; i < dataFileNames.length; i++) {
-            if (fileNameContains(dataFileNames[i], decliningGraceFeeTestCases)
-                    || fileNameContains(dataFileNames[i], decliningNegativeLastPaymentTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+        for (String dataFileName : dataFileNames) {
+            if (fileNameContains(dataFileName, decliningGraceFeeTestCases)
+                    || fileNameContains(dataFileName, decliningNegativeLastPaymentTestCases)) {
+                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
                 tearDown();
                 setUp();
             }
@@ -2069,9 +2056,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     public void xtestAllDecliningInterestEdgeTestCases() throws Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningInterestedge/";
         String[] dataFileNames = getCSVFiles(rootPath);
-        for (int i = 0; i < dataFileNames.length; i++) {
-            if (dataFileNames[i].startsWith("testcase") && fileNameContains(dataFileNames[i], selectedCaseNumbers)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+        for (String dataFileName : dataFileNames) {
+            if (dataFileName.startsWith("testcase") && fileNameContains(dataFileName, selectedCaseNumbers)) {
+                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
                 tearDown();
                 setUp();
             }
@@ -2082,9 +2069,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     public void xtestAllFlatInterestEdgeTestCases() throws Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/flatinterestedge/";
         String[] dataFileNames = getCSVFiles(rootPath);
-        for (int i = 0; i < dataFileNames.length; i++) {
-            if (dataFileNames[i].startsWith("testcase") && fileNameContains(dataFileNames[i], flatTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+        for (String dataFileName : dataFileNames) {
+            if (dataFileName.startsWith("testcase") && fileNameContains(dataFileName, flatTestCases)) {
+                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
                 tearDown();
                 setUp();
             }
@@ -2186,8 +2173,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     };
 
     private boolean fileNameContains(String fileName, String[] testNumbers) {
-        for (int i = 0; i < testNumbers.length; i++) {
-            if (fileName.contains(testNumbers[i]))
+        for (String testNumber : testNumbers) {
+            if (fileName.contains(testNumber))
                 return true;
         }
         return false;

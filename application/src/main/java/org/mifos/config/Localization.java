@@ -153,8 +153,8 @@ public class Localization {
         if (locales.length == 0)
             localeId = 1; // default to English at the beginning when cache is
         // not ready
-        for (int i = 0; i < locales.length; i++) {
-            SupportedLocalesEntity localeEntity = (SupportedLocalesEntity) locales[i];
+        for (Object locale : locales) {
+            SupportedLocalesEntity localeEntity = (SupportedLocalesEntity) locale;
             if (localeEntity.getCountryCode().equalsIgnoreCase(configLocale.getCountryCode())
                     && localeEntity.getLanguageCode().equalsIgnoreCase(configLocale.getLanguageCode())) {
                 localeId = localeEntity.getLocaleId();
@@ -187,8 +187,8 @@ public class Localization {
     public ArrayList<Short> getSupportedLocaleIds() {
         ArrayList<Short> localeIds = new ArrayList<Short>();
         Object[] locales = localeCache.values().toArray();
-        for (int i = 0; i < locales.length; i++) {
-            SupportedLocalesEntity entity = (SupportedLocalesEntity) locales[i];
+        for (Object locale : locales) {
+            SupportedLocalesEntity entity = (SupportedLocalesEntity) locale;
             localeIds.add(entity.getLocaleId());
         }
         return localeIds;

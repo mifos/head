@@ -165,16 +165,15 @@ public class AuditInterceptor extends EmptyInterceptor {
         int initialCollectionCount = 0;
         int changedCollectionCount = 0;
         List<String> initialList = new ArrayList<String>();
-        for (int i = 0; i < initialCollectionOfStrings.length; i++) {
-            initialList.add(initialCollectionOfStrings[i]);
+        for (String initialCollectionOfString : initialCollectionOfStrings) {
+            initialList.add(initialCollectionOfString);
         }
         List<String> changeList = new ArrayList<String>();
-        for (int i = 0; i < changedCollectionOfStrings.length; i++) {
-            changeList.add(changedCollectionOfStrings[i]);
+        for (String changedCollectionOfString : changedCollectionOfStrings) {
+            changeList.add(changedCollectionOfString);
         }
 
-        for (Iterator<String> iter = initialList.iterator(); iter.hasNext();) {
-            String initialValue = iter.next();
+        for (String initialValue : initialList) {
             initialCollectionCount++;
             for (Iterator<String> iterator = changeList.iterator(); iterator.hasNext();) {
                 String changeValue = iterator.next();

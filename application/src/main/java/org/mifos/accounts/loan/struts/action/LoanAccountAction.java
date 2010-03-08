@@ -61,7 +61,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -874,8 +873,8 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     private Date getTheFirstRepaymentDay(final List<RepaymentScheduleInstallment> installments) {
-        for (Iterator<RepaymentScheduleInstallment> iter = installments.iterator(); iter.hasNext();) {
-            return iter.next().getDueDate();
+        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
+            return repaymentScheduleInstallment.getDueDate();
         }
         return null;
 

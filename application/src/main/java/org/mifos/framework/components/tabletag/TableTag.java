@@ -484,9 +484,9 @@ public class TableTag extends BodyTagSupport {
         Files file = TypeParser.getInstance().parser(getSingleFile());
         FileName[] fileName = file.getFileName();
         String str = (String) TableTagUtils.getInstance().helper(pageContext, "type", "method", object, locale);
-        for (int i = 0; i < fileName.length; i++) {
-            if (str.equalsIgnoreCase(fileName[i].getName())) {
-                return helperCache(fileName[i].getPath(), fileName[i].getName());
+        for (FileName element : fileName) {
+            if (str.equalsIgnoreCase(element.getName())) {
+                return helperCache(element.getPath(), element.getName());
             }
         }
         return null;

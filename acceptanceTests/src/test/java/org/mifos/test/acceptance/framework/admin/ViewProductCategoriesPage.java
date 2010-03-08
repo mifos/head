@@ -35,8 +35,7 @@ public class ViewProductCategoriesPage extends MifosPage {
     }
 
     public void verifyProductCategories(String[] expectedData) {
-        for (int i = 0; i < expectedData.length; i++) {
-            String expectedProductCategory = expectedData[i];
+        for (String expectedProductCategory : expectedData) {
             Assert.assertTrue(selenium.isTextPresent(expectedProductCategory), "Expected Product: " + expectedProductCategory);
         }
 

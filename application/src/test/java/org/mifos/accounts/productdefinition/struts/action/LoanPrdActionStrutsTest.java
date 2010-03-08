@@ -30,7 +30,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -959,9 +958,8 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals("Loan Product", product.getPrdOfferingName());
        Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
        Assert.assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
-        for (Iterator<LoanAmountSameForAllLoanBO> itr = product.getLoanAmountSameForAllLoan().iterator(); itr.hasNext();) {
-            LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-           Assert.assertEquals(new Double("11000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
+        for (LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO : product.getLoanAmountSameForAllLoan()) {
+            Assert.assertEquals(new Double("11000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
            Assert.assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
            Assert.assertEquals(new Double("5000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
         }
@@ -1013,23 +1011,19 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(loanOffering1.getGracePeriodType().getName());
         Assert.assertNotNull(loanOffering1.getGracePeriodDuration());
         Assert.assertNotNull(loanOffering1.getInterestTypes().getName());
-        for (Iterator<LoanAmountSameForAllLoanBO> itr = loanOffering1.getLoanAmountSameForAllLoan().iterator(); itr
-                .hasNext();) {
-            LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-            Assert.assertNotNull(loanAmountSameForAllLoanBO.getMaxLoanAmount());
-            Assert.assertNotNull(loanAmountSameForAllLoanBO.getMinLoanAmount());
-            Assert.assertNotNull(loanAmountSameForAllLoanBO.getDefaultLoanAmount());
-        }
+        for (LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO : loanOffering1.getLoanAmountSameForAllLoan()) {
+         Assert.assertNotNull(loanAmountSameForAllLoanBO.getMaxLoanAmount());
+         Assert.assertNotNull(loanAmountSameForAllLoanBO.getMinLoanAmount());
+         Assert.assertNotNull(loanAmountSameForAllLoanBO.getDefaultLoanAmount());
+      }
         Assert.assertNotNull(loanOffering1.getMaxInterestRate());
         Assert.assertNotNull(loanOffering1.getMinInterestRate());
         Assert.assertNotNull(loanOffering1.getDefInterestRate());
-        for (Iterator<NoOfInstallSameForAllLoanBO> itr = loanOffering1.getNoOfInstallSameForAllLoan().iterator(); itr
-                .hasNext();) {
-            NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO = itr.next();
-            Assert.assertNotNull(noOfInstallSameForAllLoanBO.getMaxNoOfInstall());
-            Assert.assertNotNull(noOfInstallSameForAllLoanBO.getMinNoOfInstall());
-            Assert.assertNotNull(noOfInstallSameForAllLoanBO.getDefaultNoOfInstall());
-        }
+        for (NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO : loanOffering1.getNoOfInstallSameForAllLoan()) {
+         Assert.assertNotNull(noOfInstallSameForAllLoanBO.getMaxNoOfInstall());
+         Assert.assertNotNull(noOfInstallSameForAllLoanBO.getMinNoOfInstall());
+         Assert.assertNotNull(noOfInstallSameForAllLoanBO.getDefaultNoOfInstall());
+      }
         Assert.assertNotNull(loanOffering1.isIntDedDisbursement());
         Assert.assertNotNull(loanOffering1.isPrinDueLastInst());
         Assert.assertNotNull(loanOffering1.isIncludeInLoanCounter());

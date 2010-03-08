@@ -1099,19 +1099,16 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(), product.getGracePeriodType().getId());
        Assert.assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
        Assert.assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes().getId());
-        for (Iterator<LoanAmountSameForAllLoanBO> itr = product.getLoanAmountSameForAllLoan().iterator(); itr.hasNext();) {
-            LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-           Assert.assertEquals(new Double("3000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
+        for (LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO : product.getLoanAmountSameForAllLoan()) {
+            Assert.assertEquals(new Double("3000"), loanAmountSameForAllLoanBO.getMaxLoanAmount());
            Assert.assertEquals(new Double("1000"), loanAmountSameForAllLoanBO.getMinLoanAmount());
            Assert.assertEquals(new Double("2000"), loanAmountSameForAllLoanBO.getDefaultLoanAmount());
         }
-        for (Iterator<NoOfInstallSameForAllLoanBO> itr = product.getNoOfInstallSameForAllLoan().iterator(); itr
-                .hasNext();) {
-            NoOfInstallSameForAllLoanBO noofInstallSameForAllLoanBO = itr.next();
-           Assert.assertEquals(new Short("12"), noofInstallSameForAllLoanBO.getMaxNoOfInstall());
-           Assert.assertEquals(new Short("1"), noofInstallSameForAllLoanBO.getMinNoOfInstall());
-           Assert.assertEquals(new Short("2"), noofInstallSameForAllLoanBO.getDefaultNoOfInstall());
-        }
+        for (NoOfInstallSameForAllLoanBO noofInstallSameForAllLoanBO : product.getNoOfInstallSameForAllLoan()) {
+         Assert.assertEquals(new Short("12"), noofInstallSameForAllLoanBO.getMaxNoOfInstall());
+         Assert.assertEquals(new Short("1"), noofInstallSameForAllLoanBO.getMinNoOfInstall());
+         Assert.assertEquals(new Short("2"), noofInstallSameForAllLoanBO.getDefaultNoOfInstall());
+      }
        Assert.assertEquals(2.0, product.getMinInterestRate(), DELTA);
        Assert.assertEquals(12.0, product.getMaxInterestRate(), DELTA);
        Assert.assertEquals(3.0, product.getDefInterestRate(), DELTA);

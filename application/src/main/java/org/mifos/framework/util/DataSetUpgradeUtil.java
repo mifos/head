@@ -104,9 +104,9 @@ public class DataSetUpgradeUtil {
             File[] listOfFiles = directory.listFiles();
 
             if (listOfFiles != null ) {
-                for (int fileIndex = 0; fileIndex < listOfFiles.length; fileIndex++) {
-                    String currentFilename = listOfFiles[fileIndex].getName();
-                    if (listOfFiles[fileIndex].isFile() &&
+                for (File listOfFile : listOfFiles) {
+                    String currentFilename = listOfFile.getName();
+                    if (listOfFile.isFile() &&
                             currentFilename.endsWith("dbunit.xml.zip")) {
                         String dataFileName = dataSetDirectoryName + File.separator + currentFilename;
                         upgrade(dataFileName);

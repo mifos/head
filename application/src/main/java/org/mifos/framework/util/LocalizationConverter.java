@@ -94,8 +94,8 @@ public class LocalizationConverter {
         Locale tempLocale = null;
         boolean find = false;
 
-        for (int i = 0; i < locales.length; i++) {
-            tempLocale = locales[i];
+        for (Locale locale2 : locales) {
+            tempLocale = locale2;
             if (tempLocale.getCountry().equals(locale.getCountry())
                     && (tempLocale.getLanguage().equals(locale.getLanguage()))) {
                 find = true;
@@ -304,9 +304,9 @@ public class LocalizationConverter {
         DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
         String now = format.format(new DateTimeService().getCurrentJavaDateTime());
         char chArray[] = now.toCharArray();
-        for (int i = 0; i < chArray.length; i++) {
-            if (Character.isDigit(chArray[i]) == false) {
-                separator = String.valueOf(chArray[i]);
+        for (char element : chArray) {
+            if (Character.isDigit(element) == false) {
+                separator = String.valueOf(element);
                 break;
             }
         }
