@@ -21,7 +21,6 @@
 package org.mifos.framework.util;
 
 import junit.framework.Assert;
-import junit.framework.JUnit4TestAdapter;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -96,10 +95,6 @@ public class DateTimeServiceTest {
         dateTimeService.setCurrentDateTimeFixed(dateTime);
         DateTime javaSqlDateTime = new DateTime(dateTimeService.getCurrentJavaSqlDate().getTime());
         Assert.assertEquals("Dates should be equal", dateTime.toLocalDate(), javaSqlDateTime.toLocalDate());
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DateTimeServiceTest.class);
     }
 
 }
