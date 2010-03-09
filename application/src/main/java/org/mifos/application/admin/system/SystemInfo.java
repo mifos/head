@@ -40,46 +40,37 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 
 /**
- * JDBC URL parsing code in this class is <a href="https://groups.google.com/group/comp.lang.java.programmer/browse_thread/thread/b7090860d6834bae"
- * >only known to work with MySQL JDBC URLs</a>. Once Mifos supports other
- * database backends, here are some ideas:
+ * JDBC URL parsing code in this class is <a
+ * href="https://groups.google.com/group/comp.lang.java.programmer/browse_thread/thread/b7090860d6834bae">only known to
+ * work with MySQL JDBC URLs</a>. Once Mifos supports other database backends, here are some ideas:
  * <ul>
- * <li>fallback to simply printing out the full JDBC URL rather than trying to
- * parse port, host, etc.</li>
+ * <li>fallback to simply printing out the full JDBC URL rather than trying to parse port, host, etc.</li>
  * <li>implement or reuse parsers for JDBC URLs specific to other databases</li>
  * </ul>
  */
 public class SystemInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private DatabaseMetaData databaseMetaData;
-    private ServletContext context;
+    private final DatabaseMetaData databaseMetaData;
     private Locale locale;
 
+    private String applicationServerInfo;
     private String javaVendor;
     private String javaVersion;
     private SvnRevision svnRevision;
     private String osName;
     private String osArch;
     private String osVersion;
+    private String osUser;
     private String customReportsDir;
 
     private String infoSource;
     private URI infoURL;
-    private String infoUserName;
+    private String databaseUser;
 
     // Note: make sure to close the connection that got the metadata!
-    public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource)
+    public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, boolean getInfoSource)
             throws Exception {
-        this(locale, getInfoSource);
-        this.databaseMetaData = databaseMetaData;
-        URI mysqlOnly = new URI(databaseMetaData.getURL());
-        this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
-        this.infoUserName = databaseMetaData.getUserName();
-        this.context = context;
-    }
-
-    public SystemInfo(Locale locale, boolean getInfoSource) {
         if (getInfoSource) {
             try {
                 this.infoSource = Arrays.toString(new StandardTestingService().getAllSettingsFilenames());
@@ -87,13 +78,19 @@ public class SystemInfo implements Serializable {
                 this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
             }
         }
-        this.locale = locale;
+        this.databaseMetaData = databaseMetaData;
+        final URI mysqlOnly = new URI(databaseMetaData.getURL());
+        this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
+
+        setDatabaseUser(databaseMetaData.getUserName());
+        setApplicationServerInfo(context.getServerInfo());
         setJavaVendor(System.getProperty("java.vendor"));
         setJavaVersion(System.getProperty("java.version"));
         setSvnRevision(new SvnRevision());
         setOsName(System.getProperty("os.name"));
         setOsArch(System.getProperty("os.arch"));
         setOsVersion(System.getProperty("os.version"));
+        setOsUser(System.getProperty("user.name"));
     }
 
     public int getApplicationVersion() {
@@ -141,7 +138,11 @@ public class SystemInfo implements Serializable {
     }
 
     public String getApplicationServerInfo() {
-        return context.getServerInfo();
+        return applicationServerInfo;
+    }
+
+    public void setApplicationServerInfo(String applicationServerInfo) {
+        this.applicationServerInfo = applicationServerInfo;
     }
 
     public String getSvnBranch() {
@@ -211,9 +212,8 @@ public class SystemInfo implements Serializable {
     public String getDatabasePort() {
         if (infoURL.getPort() < 0) {
             return "unknown";
-        } else {
-            return "" + infoURL.getPort();
         }
+        return "" + infoURL.getPort();
     }
 
     public String getDatabaseName() {
@@ -225,7 +225,11 @@ public class SystemInfo implements Serializable {
     }
 
     public String getDatabaseUser() {
-        return this.infoUserName;
+        return this.databaseUser;
+    }
+
+    public void setDatabaseUser(String databaseUser) {
+        this.databaseUser = databaseUser;
     }
 
     public String getInfoURL() {
@@ -234,14 +238,6 @@ public class SystemInfo implements Serializable {
 
     public void setInfoURL(URI infoURL) {
         this.infoURL = infoURL;
-    }
-
-    public String getInfoUserName() {
-        return infoUserName;
-    }
-
-    public void setInfoUserName(String infoUserName) {
-        this.infoUserName = infoUserName;
     }
 
     public DateTime getDateTime() {
@@ -256,5 +252,13 @@ public class SystemInfo implements Serializable {
     public String getDateTimeStringIso8601() {
         DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
         return formatter.print(getDateTime().getMillis());
+    }
+
+    public String getOsUser() {
+        return osUser;
+    }
+
+    public void setOsUser(String osUser) {
+        this.osUser = osUser;
     }
 }

@@ -21,7 +21,6 @@
 package org.mifos.application.admin.system;
 
 import java.net.URI;
-import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
@@ -41,7 +40,7 @@ public class SystemInfoTest extends TestCase {
     public void setUp() throws Exception {
         ServletContext servletContext = new ServletContextSimulator();
         MockDatabaseMetaData metaData = new MockDatabaseMetaData();
-        info = new SystemInfo(metaData, servletContext, Locale.US, false);
+        info = new SystemInfo(metaData, servletContext, false);
         info.setJavaVendor("Sun");
         info.setJavaVersion("1.5");
         info.setSvnRevision(new MockSvnRevision());
@@ -68,7 +67,7 @@ public class SystemInfoTest extends TestCase {
        Assert.assertEquals("localhost", info.getDatabaseServer());
        Assert.assertEquals("mifos", info.getDatabaseName());
        Assert.assertEquals("3305", info.getDatabasePort());
-        info.setInfoUserName("mysql");
+        info.setDatabaseUser("mysql");
        Assert.assertEquals("mysql", info.getDatabaseUser());
     }
 
