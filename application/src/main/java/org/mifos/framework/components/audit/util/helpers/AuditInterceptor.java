@@ -138,6 +138,10 @@ public class AuditInterceptor extends EmptyInterceptor {
                 } else {
                     oldValue = removeComma(interceptHelper.getInitialValue(key).toString());
                 }
+                if (AuditConstants.Audit_PASSWORD.equals(key)) {
+                    oldValue = "xxx";
+                    newValue = "xxx";
+                }
                 auditLogRecord = new AuditLogRecord(interceptHelper.getPropertyName(key).toString().trim(), oldValue,
                         newValue, auditLog);
                 auditLogRecords.add(auditLogRecord);
