@@ -180,10 +180,11 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
         client = TestObjectFactory.createClient("clientname", weeklyMeeting, CustomerStatus.CLIENT_CANCELLED);
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
+        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, new Short("3"),
+                getMeeting(), new Short("1"));
         try {
             client.validateBeforeAddingClientToGroup(group1);
-
+            fail();
         } catch (CustomerException expected) {
            Assert.assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
            Assert.assertTrue(true);
@@ -196,13 +197,14 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
                 MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
         client = TestObjectFactory.createClient("clientname", weeklyMeeting, CustomerStatus.CLIENT_CANCELLED);
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
+        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, new Short("3"),
+                getMeeting(), new Short("1"));
         try {
             client.validateBeforeAddingClientToGroup(group1);
             Assert.fail();
         } catch (CustomerException expected) {
-            // FIXME: so, what is really expected?
-            assertEquals(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
+            assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
+            assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
            Assert.assertTrue(true);
         }
 
