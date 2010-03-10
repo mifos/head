@@ -107,7 +107,7 @@ public class ReportsParamsAction extends BaseAction {
         if (strParameterId == null) {
             strParameterId = actionForm.getParameterId() + "";
         }
-        if (strParameterId == null || strParameterId.equals("")) {
+        if (strParameterId.equals("")) {
             strParameterId = "0";
         }
         int parameterId = Integer.parseInt(strParameterId);
