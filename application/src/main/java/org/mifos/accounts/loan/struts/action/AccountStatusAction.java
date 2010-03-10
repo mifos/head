@@ -30,7 +30,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.AccountStatusActionForm;
@@ -120,9 +119,6 @@ public class AccountStatusAction extends BaseAction {
                 .getPersonnelId(), accountStatusActionForm.getCurrentStatus());
         for (LoanBO loanBO : searchResults) {
             loanBO.getAccountState().setLocaleId(getUserContext(request).getLocaleId());
-        }
-        if (searchResults == null) {
-            throw new AccountException(LoanConstants.NOSEARCHRESULTS);
         }
         if (searchResults.size() == 0) {
             return mapping.findForward(ActionForwards.noresultfound.toString());
