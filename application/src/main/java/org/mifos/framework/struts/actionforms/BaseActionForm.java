@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -72,29 +73,58 @@ public class BaseActionForm extends ValidatorActionForm {
         }
     }
 
+    protected DoubleConversionResult parseDoubleForMoney(String doubleString, MifosCurrency currency) {
+        LocalizationConverter localizationConverter = new LocalizationConverter();
+        if (currency == null) {
+            localizationConverter = new LocalizationConverter();
+        } else {
+            localizationConverter = new LocalizationConverter(currency);
+        }
+        return localizationConverter.parseDoubleForMoney(doubleString);
+
+    }
+
     protected DoubleConversionResult parseDoubleForMoney(String doubleString) {
-        return new LocalizationConverter().parseDoubleForMoney(doubleString);
+        return parseDoubleForMoney(doubleString, null);
 
     }
 
     protected String getConversionErrorText(ConversionError error, Locale locale) {
+        return getConversionErrorText(error, locale, null);
+    }
 
+    protected String getConversionErrorText(ConversionError error, Locale locale, MifosCurrency currency) {
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.UI_RESOURCE_PROPERTYFILE, locale);
         String errorText = resources.getString(error.toString());
-        if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST)) {
-            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForInterest().toString());
-        } else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST)) {
-            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForInterest().toString());
-        } else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY)) {
+        switch (error) {
+        case EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY:
+            if (currency == null) {
+                errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimal().toString());
+            } else {
+                errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimal(currency).toString());
+            }
+            break;
+        case EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY:
             errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimal().toString());
-        } else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY)) {
-            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimal().toString());
-        } else if (error.equals(ConversionError.INTEREST_OUT_OF_RANGE)) {
+            break;
+        case EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST:
+            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForInterest().toString());
+            break;
+        case EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST:
+            errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForInterest().toString());
+            break;
+        case INTEREST_OUT_OF_RANGE:
             errorText = errorText.replaceFirst("%s1", AccountingRules.getMinInterest().toString());
             errorText = errorText.replaceFirst("%s2", AccountingRules.getMaxInterest().toString());
+            break;
+        case NOT_ALL_NUMBER:
+            break;
+        case NO_ERROR:
+            break;
+        case CONVERSION_ERROR:
+            break;
         }
         return errorText;
-
     }
 
     protected DoubleConversionResult parseDoubleForInterest(String doubleString) {
@@ -125,11 +155,11 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected String getDoubleStringForMoney(Double dNumber) {
-        return dNumber != null ? new LocalizationConverter().getDoubleStringForMoney(dNumber): null;
+        return dNumber != null ? new LocalizationConverter().getDoubleStringForMoney(dNumber) : null;
     }
 
     protected String getDoubleStringForInterest(Double dNumber) {
-        return dNumber != null ? new LocalizationConverter().getDoubleStringForInterest(dNumber): null;
+        return dNumber != null ? new LocalizationConverter().getDoubleStringForInterest(dNumber) : null;
     }
 
     protected String getStringValue(Short value) {
@@ -186,38 +216,30 @@ public class BaseActionForm extends ValidatorActionForm {
         return customFields.get(i);
     }
 
-    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors,
-            Locale locale, String propertyfileName) {
-        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
-        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale,
-                propertyfileName), errors, locale, conversionResult);
+    protected DoubleConversionResult validateAmount(String amountString, MifosCurrency currency,
+            String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName) {
+        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName);
+        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString, currency);
+        for (ConversionError error : conversionResult.getErrors()) {
+            addError(errors, fieldPropertyKey, "errors.generic", fieldName, getConversionErrorText(error, locale,
+                    currency));
+        }
         return conversionResult;
     }
 
-    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, String fieldName,
-            ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
-        addConversionResultErrors(fieldPropertyKey, fieldName, errors, locale, conversionResult);
-        return conversionResult;
+    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors,
+            Locale locale, String propertyfileName) {
+        return validateAmount(amountString, null, fieldPropertyKey, errors, locale, propertyfileName);
     }
 
     protected DoubleConversionResult validateInterest(String interestString, String fieldPropertyKey,
             ActionErrors errors, Locale locale, String propertyfileName) {
+        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName);
         DoubleConversionResult conversionResult = parseDoubleForInterest(interestString);
-        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale,
-                propertyfileName), errors, locale, conversionResult);
-        return conversionResult;
-    }
-
-    private void addConversionResultErrors(String fieldPropertyKey, String propertyName, ActionErrors errors,
-            Locale locale, DoubleConversionResult conversionResult) {
-        List<ConversionError> errorList = conversionResult.getErrors();
-        if (errorList.size() > 0) {
-            for (int i = 0; i < errorList.size(); i++) {
-                addError(errors, fieldPropertyKey, "errors.generic", propertyName, getConversionErrorText(errorList
-                        .get(i), locale));
-            }
+        for (ConversionError error : conversionResult.getErrors()) {
+            addError(errors, fieldPropertyKey, "errors.generic", fieldName, getConversionErrorText(error, locale));
         }
+        return conversionResult;
     }
 
     protected String lookupLocalizedPropertyValue(String key, Locale locale, String propertyFile) {

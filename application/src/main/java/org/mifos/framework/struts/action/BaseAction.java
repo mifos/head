@@ -334,11 +334,14 @@ public abstract class BaseAction extends DispatchAction {
             return "1";
         }
         return "0";
-
     }
 
     protected String getDoubleStringForMoney(Double dNumber) {
         return dNumber != null ? new LocalizationConverter().getDoubleStringForMoney(dNumber): null;
+    }
+
+    protected String getDoubleStringForMoney(Double dNumber, MifosCurrency currency) {
+        return dNumber != null ? new LocalizationConverter(currency).getDoubleStringForMoney(dNumber): null;
     }
 
     protected String getDoubleStringForInterest(Double dNumber) {
@@ -358,7 +361,7 @@ public abstract class BaseAction extends DispatchAction {
         StaticHibernateUtil.getInterceptor().createInitialValueMap(object);
     }
 
-    private ActionForward logout(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {
+    private ActionForward logout(ActionMapping mapping, HttpServletRequest request) {
         request.getSession(false).invalidate();
         ActionErrors error = new ActionErrors();
         error.add(LoginConstants.BATCH_JOB_RUNNING, new ActionMessage(LoginConstants.BATCH_JOB_RUNNING));
@@ -366,7 +369,7 @@ public abstract class BaseAction extends DispatchAction {
         return mapping.findForward(ActionForwards.load_main_page.toString());
     }
 
-    private ActionForward shutdown(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {
+    private ActionForward shutdown(ActionMapping mapping, HttpServletRequest request) {
         request.getSession(false).invalidate();
         ActionErrors error = new ActionErrors();
         error.add(LoginConstants.SHUTDOWN, new ActionMessage(LoginConstants.SHUTDOWN));

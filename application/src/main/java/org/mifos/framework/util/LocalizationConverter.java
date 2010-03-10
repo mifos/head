@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
@@ -56,11 +57,20 @@ public class LocalizationConverter {
     private Locale dateLocale;
 
     public LocalizationConverter() {
-        currentLocale = Localization.getInstance().getMainLocale();
         digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal();
+        initLocalizationConverter();
+    }
+
+    public LocalizationConverter(MifosCurrency currency) {
+        digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(currency);
+        initLocalizationConverter();
+    }
+
+    private void initLocalizationConverter() {
         digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
         digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
         digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
+        currentLocale = Localization.getInstance().getMainLocale();
         // for this 1.1. release this will be defaulted to the English locale
         // and
         // later on this will be the configured locale so these lines will be

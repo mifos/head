@@ -311,7 +311,7 @@ public class LoanAccountActionFormTest extends TestCase {
     public void testValidateLoanAmount()  {
         form.setLoanAmount("5000.0");
         ActionErrors errors = new ActionErrors();
-        form.validateLoanAmount(errors, Locale.ENGLISH);
+        form.validateLoanAmount(errors, Locale.ENGLISH, TestUtils.RUPEE);
         Assert.assertEquals("No Error was expected",0, errors.size());
     }
 
@@ -320,7 +320,7 @@ public class LoanAccountActionFormTest extends TestCase {
         AccountingRules.setDigitsAfterDecimal(Short.valueOf("0"));
         form.setDefaultFees(createDefaultFees());
         ActionErrors errors = new ActionErrors();
-        form.validateDefaultFee(errors, Locale.ENGLISH);
+        form.validateDefaultFee(errors, Locale.ENGLISH, TestUtils.RUPEE);
         Assert.assertEquals("No Error was expected",0, errors.size());
         AccountingRules.setDigitsAfterDecimal(saveDigitsAfterDecimal);
     }

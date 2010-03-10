@@ -1522,7 +1522,7 @@ public class LoanAccountAction extends AccountAppAction {
         LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer.getMaxLoanAmount(loanOffering),
                 customer.getMaxLoanCycleForProduct(loanOffering));
         loanAccountActionForm.setLoanAmountRange(eligibleLoanAmount);
-        loanAccountActionForm.setLoanAmount(getDoubleStringForMoney(eligibleLoanAmount.getDefaultLoanAmount()));
+        loanAccountActionForm.setLoanAmount(getDoubleStringForMoney(eligibleLoanAmount.getDefaultLoanAmount(), loanOffering.getCurrency()));
         LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                 .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
         loanAccountActionForm.setInstallmentRange(eligibleNoOfInstall);

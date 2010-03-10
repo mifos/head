@@ -55,6 +55,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
@@ -618,17 +619,18 @@ public class LoanAccountActionForm extends BaseActionForm {
         if (null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         }
+
         try {
             if (method.equals(Methods.getPrdOfferings.toString())) {
                 checkValidationForGetPrdOfferings(errors, userContext);
             } else if (method.equals(Methods.load.toString())) {
                 checkValidationForLoad(errors, userContext);
             } else if (method.equals(Methods.schedulePreview.toString())) {
-                checkValidationForSchedulePreview(errors, request);
+                checkValidationForSchedulePreview(errors, getCurrencyFromLoanOffering(request), request);
             } else if (method.equals(Methods.managePreview.toString())) {
-                checkValidationForManagePreview(errors, request);
+                checkValidationForManagePreview(errors, getCurrencyFromLoanOffering(request), request);
             } else if (method.equals(Methods.preview.toString())) {
-                checkValidationForPreview(errors, request);
+                checkValidationForPreview(errors, getCurrencyFromLoanOffering(request), request);
 
             }
         } catch (ApplicationException ae) {
@@ -643,9 +645,9 @@ public class LoanAccountActionForm extends BaseActionForm {
         return errors;
     }
 
-    protected void validateLoanAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), LoanConstants.LOAN_AMOUNT_KEY,
-                errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+    protected void validateLoanAmount(ActionErrors errors, Locale locale, MifosCurrency currency) {
+        DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), currency,
+                LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
@@ -663,10 +665,10 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    protected void validateDefaultFee(ActionErrors errors, Locale locale) {
+    protected void validateDefaultFee(ActionErrors errors, Locale locale, MifosCurrency currency) {
         for (FeeView defaultFee : defaultFees) {
             if (defaultFee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
-                DoubleConversionResult conversionResult = validateAmount(defaultFee.getAmount(),
+                DoubleConversionResult conversionResult = validateAmount(defaultFee.getAmount(), currency,
                         LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY,
@@ -687,15 +689,16 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    protected void validateAdditionalFee(ActionErrors errors, Locale locale, HttpServletRequest request)
+    protected void validateAdditionalFee(ActionErrors errors, Locale locale, MifosCurrency currency, HttpServletRequest request)
             throws PageExpiredException {
         List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
                 request);
         for (FeeView additionalFee : additionalFees) {
             if (additionalFee.getAmount() != null && !additionalFee.getAmount().equals("")) {
                 if (getAdditionalFeeType(additionalFeeList, additionalFee.getFeeId()).equals(RateAmountFlag.AMOUNT)) {
+
                     DoubleConversionResult conversionResult = validateAmount(additionalFee.getAmount(),
-                            LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale,
+                            currency, LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale,
                             FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
                     if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                         addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
@@ -747,22 +750,34 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    private void checkValidationForSchedulePreview(ActionErrors errors, HttpServletRequest request)
+    private MifosCurrency getCurrencyFromLoanOffering(HttpServletRequest request){
+        try {
+            LoanOfferingBO loanOfferingBO = ((LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
+            if (loanOfferingBO != null) {
+                return loanOfferingBO.getCurrency();
+            }
+        } catch (PageExpiredException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void checkValidationForSchedulePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
             throws ApplicationException {
         Locale locale = getUserContext(request).getPreferredLocale();
         checkValidationForPreviewBefore(errors, request);
         validateFees(request, errors);
         validateCustomFields(request, errors);
-        performGlimSpecificValidations(errors, request);
+        performGlimSpecificValidations(errors, currency, request);
         validateRepaymentDayRequired(errors);
         if (!configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
             validatePurposeOfLoanFields(errors, getMandatoryFields(request));
         }
         validateSourceOfFundFields(errors, getMandatoryFields(request));
-        validateLoanAmount(errors, locale);
+        validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
-        validateDefaultFee(errors, locale);
-        validateAdditionalFee(errors, locale, request);
+        validateDefaultFee(errors, locale, currency);
+        validateAdditionalFee(errors, locale, currency, request);
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
 
         }
@@ -774,12 +789,12 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    private void performGlimSpecificValidations(ActionErrors errors, HttpServletRequest request)
+    private void performGlimSpecificValidations(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
             throws PageExpiredException, ServiceException {
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
             Locale locale = getUserContext(request).getPreferredLocale();
             removeClientsNotCheckedInForm(request);
-            validateIndividualLoanFieldsForGlim(errors, locale);
+            validateIndividualLoanFieldsForGlim(errors, locale, currency);
             validateSelectedClients(errors);
             validatePurposeOfLoanForGlim(errors, getMandatoryFields(request));
         }
@@ -871,16 +886,16 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    private void checkValidationForPreview(ActionErrors errors, HttpServletRequest request) {
-        validateRedoLoanPayments(request, errors);
+    private void checkValidationForPreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request) {
+        validateRedoLoanPayments(request, errors, currency);
     }
 
-    private void checkValidationForManagePreview(ActionErrors errors, HttpServletRequest request)
+    private void checkValidationForManagePreview(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
             throws ApplicationException {
         Locale locale = getUserContext(request).getPreferredLocale();
         if (getState().equals(AccountState.LOAN_PARTIAL_APPLICATION)
                 || getState().equals(AccountState.LOAN_PENDING_APPROVAL)) {
-            checkValidationForPreview(errors, request);
+            checkValidationForPreview(errors, currency, request);
             // Only validate the disbursement date before a loan has been approved. After
             // approval, it cannot be edited.
             try {
@@ -894,11 +909,11 @@ public class LoanAccountActionForm extends BaseActionForm {
                 addError(errors, LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
             }
         }
-        performGlimSpecificValidations(errors, request);
+        performGlimSpecificValidations(errors, currency, request);
         validateCustomFields(request, errors);
         validateRepaymentDayRequired(errors);
         validateSourceOfFundFields(errors, getMandatoryFields(request));
-        validateLoanAmount(errors, locale);
+        validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
     }
 
@@ -1134,11 +1149,11 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     }
 
-    private void validateIndividualLoanFieldsForGlim(ActionErrors errors, Locale locale) {
+    private void validateIndividualLoanFieldsForGlim(ActionErrors errors, Locale locale, MifosCurrency currency) {
         int errorsBeforeLoanAmountsValidation = errors.size();
         for (LoanAccountDetailsViewHelper listDetail : clientDetails) {
             if (getClients().contains(listDetail.getClientId())) {
-                DoubleConversionResult conversionResult = validateAmount(listDetail.getLoanAmount(),
+                DoubleConversionResult conversionResult = validateAmount(listDetail.getLoanAmount(), currency,
                         LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
@@ -1192,7 +1207,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         return isMandatory;
     }
 
-    private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
+    private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors, MifosCurrency currency) {
         Locale locale = getUserContext(request).getPreferredLocale();
         try {
             if (paymentDataBeans == null || paymentDataBeans.size() <= 0) {
@@ -1213,7 +1228,7 @@ public class LoanAccountActionForm extends BaseActionForm {
                     continue;
                 }
 
-                validateTotalAmount(errors, template.getTotalAmount().toString(), locale);
+                validateTotalAmount(errors, template.getTotalAmount().toString(), locale, currency);
                 // User has enter a payment for future date
                 validateTransactionDate(errors, template, getDisbursementDateValue(locale));
             }
@@ -1232,8 +1247,8 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(amount, LoanConstants.LOAN_AMOUNT_KEY, errors, locale,
+    protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale, MifosCurrency currency) {
+        DoubleConversionResult conversionResult = validateAmount(amount, currency, LoanConstants.LOAN_AMOUNT_KEY, errors, locale,
                 FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
