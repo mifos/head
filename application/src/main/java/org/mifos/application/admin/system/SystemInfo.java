@@ -69,7 +69,7 @@ public class SystemInfo implements Serializable {
     private String databaseUser;
 
     // Note: make sure to close the connection that got the metadata!
-    public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, boolean getInfoSource)
+    public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource)
             throws Exception {
         if (getInfoSource) {
             try {
@@ -79,6 +79,7 @@ public class SystemInfo implements Serializable {
             }
         }
         this.databaseMetaData = databaseMetaData;
+        this.locale = locale;
         final URI mysqlOnly = new URI(databaseMetaData.getURL());
         this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
 

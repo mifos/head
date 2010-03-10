@@ -21,6 +21,7 @@
 package org.mifos.application.admin.system;
 
 import java.net.URI;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
@@ -40,7 +41,7 @@ public class SystemInfoTest extends TestCase {
     public void setUp() throws Exception {
         ServletContext servletContext = new ServletContextSimulator();
         MockDatabaseMetaData metaData = new MockDatabaseMetaData();
-        info = new SystemInfo(metaData, servletContext, false);
+        info = new SystemInfo(metaData, servletContext, Locale.US, false);
         info.setJavaVendor("Sun");
         info.setJavaVersion("1.5");
         info.setSvnRevision(new MockSvnRevision());

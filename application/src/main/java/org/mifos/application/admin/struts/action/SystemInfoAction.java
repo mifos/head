@@ -21,6 +21,7 @@
 package org.mifos.application.admin.struts.action;
 
 import java.sql.DatabaseMetaData;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -44,16 +45,17 @@ public class SystemInfoAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
-        ServletContext context = request.getSession().getServletContext();
-        SystemInfo systemInfo = new SystemInfo(metaData, context, true);
+        final DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
+        final ServletContext context = request.getSession().getServletContext();
+        final Locale locale = getUserContext(request).getCurrentLocale();
+        final SystemInfo systemInfo = new SystemInfo(metaData, context, locale, true);
         systemInfo.setCustomReportsDir(BirtReportsUploadAction.getCustomReportStorageDirectory());
         request.setAttribute("systemInfo", systemInfo);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("systemInfoAction");
+        final ActionSecurity security = new ActionSecurity("systemInfoAction");
         security.allow("load", SecurityConstants.CAN_VIEW_SYSTEM_INFO);
         return security;
     }
