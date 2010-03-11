@@ -111,10 +111,14 @@ function CalculateTotalLoanAmount(length){
 }
 
 /* float is an approximate representation of a real number.
- * Simple addition of float like 1.44 + 1.34 will result 2.7800000000000002
+ * Simple addition of floats like 1.44 + 1.34 will result 2.7800000000000002
  * http://en.wikipedia.org/wiki/Floating_point
  * this is workaround so that 1.44 + 1.34 with this method will give 2.78
+ * see http://mifosforge.jira.com/browse/MIFOS-2792
+ * 
+ * Amount stored in database is up to precision 4, 100000 (5 digit) is enough
+ * for rounding purpose
  */
 function round(n){
-	return Math.round(n*10000000000000)/10000000000000;
+	return Math.round(n*100000)/100000;
 }
