@@ -94,6 +94,11 @@ public class LoanTestHelper {
     }
 
     /**
+     * TODO: Create a helper for creating a GLIM loan account.
+     */
+
+
+    /**
      * Edits the loan account with id loanId and updates its settings with the ones in params.
      * @param loanId The account id.
      * @param params The status parameters.
@@ -164,7 +169,7 @@ public class LoanTestHelper {
      * Applies a payment to the loan account with id <tt>loanId</tt>.
      * @param loanId The account id.
      * @param paymentParams The payment parameters.
-     * @return The loan accout page for the loan account.
+     * @return The loan account page for the loan account.
      */
     public LoanAccountPage applyPayment(String loanId, PaymentParameters paymentParams) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);

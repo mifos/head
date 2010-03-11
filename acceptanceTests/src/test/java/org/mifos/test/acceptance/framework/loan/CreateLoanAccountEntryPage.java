@@ -78,6 +78,18 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     }
 
+    public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
+        selenium.click("loancreationdetails.button.continue");
+        waitForPageToLoad();
+        selenium.click("schedulePreview.button.preview");
+        waitForPageToLoad();
+        selenium.isVisible("createloanpreview.button.submitForApproval");
+        selenium.click("createloanpreview.button.submitForApproval");
+        waitForPageToLoad();
+        return new CreateLoanAccountConfirmationPage(selenium);
+
+    }
+
     public HomePage navigateToHomePage(){
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();
@@ -106,6 +118,18 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         selenium.select("clientDetails[1].businessActivity", "label=0010-Camel");
     }
 
+    public void selectGLIMClients(int clientNumber, String expectedClientName, String loanAmount) {
+        Assert.assertEquals(selenium.getText("GLIMLoanAccounts.clientName." + clientNumber), expectedClientName);
+        if (clientNumber <  1) {
+            selenium.check("glimLoanForm.input.select");
+            selenium.type("glimLoanForm.input.loanAmount", loanAmount);
+        } else {
+            selenium.check("clients[" + clientNumber + "]");
+            selenium.type("clientDetails[" + clientNumber + "].loanAmount", loanAmount);
+        }
+    }
+
+
     public void clickContinue(){
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
@@ -122,5 +146,16 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         waitForPageToLoad();
         return new CreateLoanAccountConfirmationPage(selenium);
 
+    }
+
+//    public CreateLoanAccountConfirmationPage clickContinue() {
+//        selenium.click("loancreationdetails.button.continue");
+//        waitForPageToLoad();
+//        selenium.isVisible("schedulePreview.button.preview");
+//        return new CreateLoanAccountConfirmationPage(selenium);
+//    }
+
+    public void checkTotalAmount(String expectedTotalAmount) {
+        Assert.assertEquals(selenium.getValue("sumLoanAmount"), expectedTotalAmount);
     }
 }

@@ -84,7 +84,7 @@ explanation of the license and how it is applied.
                     <td width="29%" valign="top" class="drawtablerow"><span
                         class="fontnormalbold"><mifos:mifoslabel
                         name="${ConfigurationConstants.CLIENT}"
-                        isColonRequired="Yes" /></span> <c:out
+                        isColonRequired="Yes" /></span> <span id="GLIMLoanAccounts.clientName.${indice}"><c:out
                         value="${client.displayName}" /> <br>
                         <span class="fontnormalbold"><mifos:mifoslabel
                             name="${ConfigurationConstants.CLIENT_ID}"
