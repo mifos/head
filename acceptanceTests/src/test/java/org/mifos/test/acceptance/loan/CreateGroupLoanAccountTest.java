@@ -27,6 +27,8 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +122,12 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
         loanAccountEntryPage.selectTwoClientsForGlim();
-        loanAccountEntryPage.clickContinue();
+        CreateLoanAccountConfirmationPage confirmationPage = loanAccountEntryPage.clickContinueAndNavigateToLoanAccountConfirmationPage();
+        confirmationPage.verifyPage();
+        LoanAccountPage loanAccountPage = confirmationPage.navigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyPage();
+        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+        editLoanAccountInformationPage.verifyPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

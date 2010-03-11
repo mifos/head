@@ -1234,18 +1234,20 @@ public class LoanAccountAction extends AccountAppAction {
             });
             if (loanAccount != null) {
                 final Integer businessActivityId = loanAccount.getBusinessActivityId();
-                clientDetail.setBusinessActivity(Integer.toString(businessActivityId));
+                if (businessActivityId != null) {
+                    clientDetail.setBusinessActivity(Integer.toString(businessActivityId));
 
-                ValueListElement businessActivityElement = (ValueListElement) CollectionUtils.find(businessActivities,
-                        new Predicate() {
+                    ValueListElement businessActivityElement = (ValueListElement) CollectionUtils.find(businessActivities,
+                            new Predicate() {
 
-                            public boolean evaluate(final Object object) {
-                                return ((ValueListElement) object).getId().equals(businessActivityId);
-                            }
+                                public boolean evaluate(final Object object) {
+                                    return ((ValueListElement) object).getId().equals(businessActivityId);
+                                }
 
-                        });
-                if (businessActivityElement != null) {
-                    clientDetail.setBusinessActivityName(businessActivityElement.getName());
+                            });
+                    if (businessActivityElement != null) {
+                        clientDetail.setBusinessActivityName(businessActivityElement.getName());
+                    }
                 }
 
                 clientDetail.setLoanAmount(loanAccount.getLoanAmount() != null ? loanAccount.getLoanAmount().toString()

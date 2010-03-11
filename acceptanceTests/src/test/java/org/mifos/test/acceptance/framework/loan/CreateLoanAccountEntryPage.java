@@ -111,4 +111,16 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         waitForPageToLoad();
         selenium.isVisible("schedulePreview.button.preview");
     }
+
+    public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
+        selenium.click("loancreationdetails.button.continue");
+        waitForPageToLoad();
+        selenium.click("schedulePreview.button.preview");
+        waitForPageToLoad();
+        selenium.isVisible("createloanpreview.button.submitForApproval");
+        selenium.click("createloanpreview.button.submitForApproval");
+        waitForPageToLoad();
+        return new CreateLoanAccountConfirmationPage(selenium);
+
+    }
 }
