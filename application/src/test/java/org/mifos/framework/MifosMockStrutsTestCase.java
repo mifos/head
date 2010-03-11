@@ -31,6 +31,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -71,6 +72,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
             setStrutsConfig();
             strutsConfigSet = true;
         }
+        getActionServlet().getServletContext().setAttribute(ShutdownManager.class.getName(), new ShutdownManager());
     }
 
     protected void addRequestDateParameter(String param, String dateStr) throws InvalidDateException {
@@ -106,6 +108,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        getActionServlet().getServletContext().removeAttribute(ShutdownManager.class.getName());
         doCleanUp(request);
         doCleanUp(request.getSession());
         TestObjectFactory.cleanUpTestObjects();

@@ -1,5 +1,5 @@
 <%--
-Copyright (c) 2005-2009 Grameen Foundation USA
+Copyright (c) 2005-2010 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
 
@@ -38,7 +38,7 @@ explanation of the license and how it is applied.
 					<tr><td colspan="2">&nbsp;</td></tr>
                     <tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.status" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="shutdown.text.status"><c:out value="${sessionScope.shutdownManager.status}"/></span></td>
+						<td><span class="fontnormal" id="shutdown.text.status"><c:out value="${requestScope.shutdownStatus}"/></span></td>
 					</tr>
                     <tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.timeout" bundle="adminUIResources" /></span></td>
@@ -48,7 +48,7 @@ explanation of the license and how it is applied.
 				<br>
                 <span class="headingorange"><mifos:mifoslabel name="admin.shutdown.users" bundle="adminUIResources" /></span>
                 <table width="95%">
-                    <c:forEach var="user" varStatus="loopStatus1" items="${sessionScope.loggedUsers}">
+                    <c:forEach var="user" varStatus="loopStatus1" items="${requestScope.activeSessions}">
                         <tr>
                             <td valign="top" class="drawtablerow">
                                 <span class="fontnormalbold">

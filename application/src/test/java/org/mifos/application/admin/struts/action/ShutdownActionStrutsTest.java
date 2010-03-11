@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2009 Grameen Foundation USA
+ * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,13 +24,11 @@ import junit.framework.Assert;
 
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
 
 public class ShutdownActionStrutsTest extends MifosMockStrutsTestCase {
     public ShutdownActionStrutsTest() throws Exception {
@@ -38,6 +36,7 @@ public class ShutdownActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private String flowKey;
+    private ShutdownManager shutdownManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -46,26 +45,27 @@ public class ShutdownActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         flowKey = createFlow(request, ShutdownAction.class);
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class.getName());
     }
 
     @Override
     protected void tearDown() throws Exception {
+        shutdownManager = null;
         StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
-    public void testVerifyAdminForward() throws PageExpiredException {
+    public void testVerifyAdminForward() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/shutdownAction.do");
         addRequestParameter("method", "load");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         performNoErrors();
         verifyForwardPath("/pages/application/admin/jsp/shutdown.jsp");
-        Assert.assertNotNull(SessionUtils.getAttribute("shutdownManager", request.getSession()));
-        Assert.assertFalse(ShutdownManager.isShutdownInProgress());
+        Assert.assertFalse(shutdownManager.isShutdownInProgress());
     }
 
-    public void testVerifyShutdownCancel() throws PageExpiredException {
+    public void testVerifyShutdownCancel() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/shutdownAction.do");
         addRequestParameter("method", "shutdown");
@@ -73,8 +73,8 @@ public class ShutdownActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         performNoErrors();
         verifyForwardPath("/pages/application/admin/jsp/shutdown.jsp");
-        Assert.assertNotNull(SessionUtils.getAttribute("shutdownManager", request.getSession()));
-        Assert.assertTrue(ShutdownManager.isShutdownInProgress());
+
+        Assert.assertTrue(shutdownManager.isShutdownInProgress());
 
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/shutdownAction.do");
@@ -82,7 +82,7 @@ public class ShutdownActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         performNoErrors();
         verifyForwardPath("/pages/application/admin/jsp/shutdown.jsp");
-        Assert.assertNotNull(SessionUtils.getAttribute("shutdownManager", request.getSession()));
-        Assert.assertFalse(ShutdownManager.isShutdownInProgress());
+
+        Assert.assertFalse(shutdownManager.isShutdownInProgress());
     }
 }

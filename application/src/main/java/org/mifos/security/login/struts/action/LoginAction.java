@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2009 Grameen Foundation USA
+ * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,6 +51,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.struts.actionforms.LoginActionForm;
@@ -98,7 +99,9 @@ public class LoginAction extends BaseAction {
         loginLogger.debug("Is Session Open?: " + StaticHibernateUtil.isSessionOpen());
         loginLogger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
 
-        if (ShutdownManager.isInShutdownCountdownNotificationThreshold()) {
+        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
+                .getName());
+        if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
             request.getSession(false).invalidate();
             ActionErrors error = new ActionErrors();
             error.add(LoginConstants.SHUTDOWN, new ActionMessage(LoginConstants.SHUTDOWN));

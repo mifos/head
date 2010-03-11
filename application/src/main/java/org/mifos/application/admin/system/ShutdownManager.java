@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2009 Grameen Foundation USA
+ * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,18 +34,16 @@ import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
 
-
 public class ShutdownManager implements Serializable {
-    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER);
-    private static Long shutdownTime;
-    private static Map<String, HttpSession> activeSessions = new HashMap<String, HttpSession>();
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER);
+    private Long shutdownTime;
+    private final Map<String, HttpSession> activeSessions = new HashMap<String, HttpSession>();
 
-    private Locale locale;
-
-    public String getStatus() {
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ADMIN_UI_PROPERTY_FILE, locale);
+    public synchronized String getStatus(Locale locale) {
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ADMIN_UI_PROPERTY_FILE, locale);
         if (isShutdownInProgress()) {
             String inProgressString = resources.getString("admin.shutdown.status.inprogress");
             long timeLeft = shutdownTime - System.currentTimeMillis();
@@ -66,64 +64,58 @@ public class ShutdownManager implements Serializable {
         return resources.getString("admin.shutdown.status.none");
     }
 
-    /* this should be a globally (application) scoped object */
-    private ShutdownManager(Locale locale) {
-        this.locale = locale;
-    }
-
-    public static boolean isShutdownInProgress() {
+    public synchronized boolean isShutdownInProgress() {
         return shutdownTime != null;
     }
 
-    public static boolean isShutdownDone() {
+    public synchronized boolean isShutdownDone() {
         return shutdownTime != null && shutdownTime <= System.currentTimeMillis();
     }
 
-    public static boolean isInShutdownCountdownNotificationThreshold() {
-        return shutdownTime != null && shutdownTime <= System.currentTimeMillis() + getShutdownCountdownNotificationThreshold();
+    public synchronized boolean isInShutdownCountdownNotificationThreshold() {
+        return shutdownTime != null
+                && shutdownTime <= System.currentTimeMillis() + getShutdownCountdownNotificationThreshold();
     }
 
-    public static void scheduleShutdown(long shutdownTimeout) {
+    public synchronized void scheduleShutdown(long shutdownTimeout) {
         if (shutdownTime != null) {
             return;
         }
-        shutdownTime = System.currentTimeMillis() + shutdownTimeout;
+        shutdownTime = new DateTimeService().getCurrentJavaDateTime().getTime() + shutdownTimeout;
         logger.warn(computeInterval(shutdownTimeout));
     }
 
-    public static void cancelShutdown() {
+    public synchronized void cancelShutdown() {
         shutdownTime = null;
     }
 
-    public static long getShutdownCountdownNotificationThreshold() {
+    public long getShutdownCountdownNotificationThreshold() {
         return ConfigurationManager.getInstance().getLong("GeneralConfig.ShutdownCountdownNotificationThreshold", 1800) * 1000;
     }
 
-    public static ShutdownManager getInstance(Locale locale) {
-        return new ShutdownManager(locale);
-    }
-
-    private static String computeInterval(long l) {
-        long hours, minutes, seconds;
+    private String computeInterval(long milliseconds) {
+        long hours, minutes, seconds, l = milliseconds;
         hours = l / 3600000;
         l %= 3600000;
         minutes = l / 60000;
         l %= 60000;
         seconds = l / 1000;
         l %= 1000;
-        return String.format("Mifos will be shutting down in %d hours, %d minutes, %d seconds.", hours, minutes, seconds);
+        // only used for a warning log message, so not externalized
+        return String.format("Mifos will be shutting down in %d hours, %d minutes, %d seconds.", hours, minutes,
+                seconds);
     }
 
-    public static synchronized void sessionCreated(HttpSessionEvent httpSessionEvent) {
+    public synchronized void sessionCreated(HttpSessionEvent httpSessionEvent) {
         HttpSession session = httpSessionEvent.getSession();
         activeSessions.put(session.getId(), session);
     }
 
-    public static synchronized void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
+    public synchronized void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
         activeSessions.remove(httpSessionEvent.getSession().getId());
     }
 
-    public static Collection<HttpSession> getActiveSessions() {
+    public synchronized Collection<HttpSession> getActiveSessions() {
         return activeSessions.values();
     }
 }

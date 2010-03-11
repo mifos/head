@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
@@ -66,8 +67,8 @@ import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
 
 /**
- * This class should prepare all the sub-systems that are required by the app.
- * Cleanup should also happen here when the application is shutdown.
+ * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
+ * application is shutdown.
  */
 public class ApplicationInitializer implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -107,9 +108,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             info += " from file(s): " + Arrays.toString(standardTestingService.getAllSettingsFilenames());
         } catch (IOException e) {
             /*
-             * not sure if we can actually do anything useful with this
-             * exception since we're likely running during container
-             * initialization
+             * not sure if we can actually do anything useful with this exception since we're likely running during
+             * container initialization
              */
             e.printStackTrace();
         }
@@ -131,10 +131,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 initializeHibernate();
 
                 /*
-                 * getLogger() cannot be called statically (ie: when
-                 * initializing LOG) because MifosLogManager.initializeLogger()
-                 * hasn't been called yet, so MifosLogManager.loggerRepository
-                 * will be null.
+                 * getLogger() cannot be called statically (ie: when initializing LOG) because
+                 * MifosLogManager.initializeLogger() hasn't been called yet, so MifosLogManager.loggerRepository will
+                 * be null.
                  */
                 LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
                 LOG.info("Logger has been initialised", false, null);
@@ -144,9 +143,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
                 try {
                     /*
-                     * This is an easy way to force an actual database query to
-                     * happen via Hibernate. Simply opening a Hibernate session
-                     * may not actually connect to the database.
+                     * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
+                     * Hibernate session may not actually connect to the database.
                      */
                     persistence.isVersioned();
                 } catch (Throwable t) {
@@ -190,11 +188,14 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     FinancialInitializer.initialize();
                     EntityMasterData.getInstance().init();
                     initializeEntityMaster();
+
+                    // FIXME: replace with Spring-managed beans
                     final MifosScheduler mifosScheduler = new MifosScheduler();
                     mifosScheduler.registerTasks();
-
+                    final ShutdownManager shutdownManager = new ShutdownManager();
                     if (null != ctx) {
                         ctx.getServletContext().setAttribute(MifosScheduler.class.getName(), mifosScheduler);
+                        ctx.getServletContext().setAttribute(ShutdownManager.class.getName(), shutdownManager);
                     }
 
                     Configuration.getInstance();
@@ -286,8 +287,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
 
         xml.startTag("p");
-        xml.startTag("a", "href",
-                "http://www.mifos.org/knowledge/support/deploying-mifos/configuration/guide");
+        xml.startTag("a", "href", "http://www.mifos.org/knowledge/support/deploying-mifos/configuration/guide");
         xml.text("More about configuring your database connection.");
         xml.endTag("a");
         xml.endTag("p");
@@ -318,8 +318,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     /**
-     * Initializes Hibernate by making it read the hibernate.cfg file and also
-     * setting the same with hibernate session factory.
+     * Initializes Hibernate by making it read the hibernate.cfg file and also setting the same with hibernate session
+     * factory.
      */
     public static void initializeHibernate() throws AppNotConfiguredException {
         try {
@@ -330,8 +330,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     /**
-     * This function initialize and bring up the authorization and
-     * authentication services
+     * This function initialize and bring up the authorization and authentication services
      *
      * @throws AppNotConfiguredException
      *             - IF there is any failures during init
@@ -363,17 +362,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         AuditConfigurtion.init(locale);
     }
 
-    public void contextDestroyed(ServletContextEvent ctx) {
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        ServletContext ctx = servletContextEvent.getServletContext();
         LOG.info("shutting down scheduler");
-        MifosScheduler mifosScheduler = null;
-        if (null != ctx) {
-            mifosScheduler = (MifosScheduler) ctx.getServletContext().getAttribute(MifosScheduler.class.getName());
-        }
-        if (null != mifosScheduler) {
-            ctx.getServletContext().removeAttribute(MifosScheduler.class.getName());
-            mifosScheduler.shutdown();
-            mifosScheduler = null;
-        }
+        final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
+        ctx.removeAttribute(MifosScheduler.class.getName());
+        mifosScheduler.shutdown();
     }
 
     public void requestDestroyed(ServletRequestEvent event) {
@@ -386,12 +380,16 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
-        ShutdownManager.sessionCreated(httpSessionEvent);
+        ServletContext ctx = httpSessionEvent.getSession().getServletContext();
+        final ShutdownManager shutdownManager = (ShutdownManager) ctx.getAttribute(ShutdownManager.class.getName());
+        shutdownManager.sessionCreated(httpSessionEvent);
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
-        ShutdownManager.sessionDestroyed(httpSessionEvent);
+        ServletContext ctx = httpSessionEvent.getSession().getServletContext();
+        final ShutdownManager shutdownManager = (ShutdownManager) ctx.getAttribute(ShutdownManager.class.getName());
+        shutdownManager.sessionDestroyed(httpSessionEvent);
     }
 
 }

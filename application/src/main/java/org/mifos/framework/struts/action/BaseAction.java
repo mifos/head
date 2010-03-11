@@ -73,6 +73,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
@@ -89,14 +90,12 @@ public abstract class BaseAction extends DispatchAction {
         if (MifosTask.isBatchJobRunning()) {
             return logout(mapping, request);
         }
-        if (ShutdownManager.isShutdownDone()) {
+        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class.getName());
+        if (shutdownManager.isShutdownDone()) {
             return shutdown(mapping, request);
         }
-        if (ShutdownManager.isInShutdownCountdownNotificationThreshold()) {
-            SessionUtils.setAttribute("shutdownIsImminent", true, request.getSession());
-        }
-        else {
-            SessionUtils.setAttribute("shutdownIsImminent", false, request.getSession());
+        if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
+            request.setAttribute("shutdownIsImminent", true);
         }
         if (StaticHibernateUtil.isSessionOpen()) {
             logger.warn("Hibernate session is about to be reused for new action:" + getClass().getName());

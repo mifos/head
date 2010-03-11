@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2009 Grameen Foundation USA
+ * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,10 @@ public class ServletUtils {
     public static String getParameter(HttpServletRequest request, String paramName) {
         return request.getParameter(paramName) != null ? request.getParameter(paramName) : request
                 .getAttribute(paramName) != null ? request.getAttribute(paramName).toString() : null;
+    }
+
+    public static Object getGlobal(HttpServletRequest request, String key) {
+        return request.getSession().getServletContext().getAttribute(key);
     }
 
 }

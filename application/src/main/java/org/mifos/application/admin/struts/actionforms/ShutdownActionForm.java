@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2009 Grameen Foundation USA
+ * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.SecurityConstants;
@@ -44,13 +43,7 @@ public class ShutdownActionForm extends BaseActionForm {
         if (null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         }
-        ActionErrors errors;
-        try {
-            errors = validateFields(method);
-        } catch (ApplicationException ae) {
-            errors = new ActionErrors();
-            errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae.getValues()));
-        }
+        ActionErrors errors = validateFields(method);
         if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", method);
@@ -59,7 +52,7 @@ public class ShutdownActionForm extends BaseActionForm {
         return errors;
     }
 
-    private ActionErrors validateFields(String method) throws ApplicationException {
+    private ActionErrors validateFields(String method) {
         ActionErrors errors = new ActionErrors();
         if (method.equals(Methods.shutdown.toString())) {
             validateTimeout(errors);
