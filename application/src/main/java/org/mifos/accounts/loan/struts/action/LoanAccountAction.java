@@ -992,7 +992,7 @@ public class LoanAccountAction extends AccountAppAction {
 
     private void loanDisbursementAndPayments(final LoanAccountActionForm loanActionForm,
             final HttpServletRequest request, final SaveLoan save, final LoanBO loan, final PersonnelBO personnel)
-            throws AccountException, PageExpiredException, ServiceException {
+            throws AccountException, PageExpiredException, ServiceException, PersistenceException {
         // We're assuming cash disbursal for this situation right now
         loan.disburseLoan(personnel, PaymentTypes.CASH.getValue(), save.equals(SaveLoan.YES));
 

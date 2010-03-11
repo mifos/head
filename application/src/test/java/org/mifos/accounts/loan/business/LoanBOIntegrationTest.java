@@ -55,6 +55,8 @@ import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -101,6 +103,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -119,6 +122,7 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -238,6 +242,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         AccountingRules.setFinalRoundingMode(savedFinalRoundingMode);
 
         StaticHibernateUtil.closeSession();
+        new DateTimeService().resetToCurrentSystemDateTime();
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 0);
+
         super.tearDown();
     }
 
@@ -275,6 +282,52 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         new HolidayPersistence().delete(holiday);
         StaticHibernateUtil.commitTransaction();
     }
+
+    // see issue MIFOS-2154
+    public void testVerifyNoDateShiftWhenDisbursingAnLsimLoanWithModifiedDisbursalDate() throws Exception {
+        short graceDuration = (short) 0;
+
+        new DateTimeService().setCurrentDateTime(new LocalDate(2010, 2, 25).toDateTimeAtStartOfDay());
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 1);
+
+         MeetingBO meeting = TestObjectFactory.createMeeting(new MeetingBuilder().buildMonthlyForDayNumber(1));
+         center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting,
+                 TestObjectFactory.SAMPLE_BRANCH_OFFICE, PersonnelConstants.TEST_USER, null);
+         group = TestObjectFactory.createNoFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                 CustomerStatus.GROUP_ACTIVE, center);
+         client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
+                 CustomerStatus.CLIENT_ACTIVE, group, null, (String) null, new Date(1222333444000L));
+         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.CLIENTS,
+                 new DateTimeService().getCurrentJavaDateTime(), PrdStatus.LOAN_ACTIVE, 300.0, 12.0,
+                 (short) 3, InterestType.DECLINING, center.getCustomerMeeting().getMeeting());
+         List<FeeView> feeViewList = new ArrayList<FeeView>();
+
+         boolean loanScheduleIndependentOfMeeting = true;
+         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, client,
+                 AccountState.LOAN_APPROVED, new Money(getCurrency(), "1000.0"), Short.valueOf("6"),
+                 new DateMidnight(2010, 3, 5).toDate(), false, // 6 installments
+                 12.0, graceDuration, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
+                 loanScheduleIndependentOfMeeting);
+         new TestObjectPersistence().persist(accountBO);
+         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
+
+         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
+         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
+         Assert.assertEquals(new LocalDate(2010,4,1), new LocalDate(paymentsArray[0].getActionDate().getTime()));
+
+         new DateTimeService().setCurrentDateTime(new LocalDate(2010, 3, 8).toDateTimeAtStartOfDay());
+         List<PaymentTypeEntity> paymentTypeEntities = new AcceptedPaymentTypeService().getAcceptedPaymentTypes(TestObjectFactory.TEST_LOCALE);
+
+         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO,
+                 new Money(Money.getDefaultCurrency(), new BigDecimal(1000)), "", new DateTimeService().getCurrentJavaDateTime(),
+                 paymentTypeEntities.get(0), new DateTimeService().getCurrentJavaDateTime());
+         ((LoanBO)accountBO).disburseLoan(accountPaymentEntity);
+
+         actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
+         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
+         Assert.assertEquals(new LocalDate(2010,4,1), new LocalDate(paymentsArray[0].getActionDate().getTime()));
+
+ }
 
     public void testCreateLoanAccountWithDecliningInterestGraceAllRepaymentsWithLsimOn() throws Exception {
            short graceDuration = (short) 2;

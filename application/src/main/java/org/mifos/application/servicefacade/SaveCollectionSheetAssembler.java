@@ -208,6 +208,10 @@ public class SaveCollectionSheetAssembler {
                             logger.warn("Disbursal of loan on account [" + globalAccountNum
                                     + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
                             failedLoanDisbursementAccountNumbers.add(globalAccountNum);
+                        } catch (PersistenceException e) {
+                            logger.warn("Disbursal of loan on account [" + globalAccountNum
+                                    + "] failed. Account changes will not be persisted due to: " + e.getMessage());
+                            failedLoanDisbursementAccountNumbers.add(globalAccountNum);
                         }
 
                     } else {

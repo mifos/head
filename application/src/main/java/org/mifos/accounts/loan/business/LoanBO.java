@@ -896,26 +896,28 @@ public class LoanBO extends AccountBO {
     }
 
     /**
+     * @throws PersistenceException
      * @deprecated use {@link LoanBO#disburseLoan(AccountPaymentEntity)}
      */
     @Deprecated
     public void disburseLoan(final String receiptNum, final Date transactionDate, final Short paymentTypeId,
-            final PersonnelBO personnel, final Date receiptDate, final Short rcvdPaymentTypeId) throws AccountException {
+            final PersonnelBO personnel, final Date receiptDate, final Short rcvdPaymentTypeId) throws AccountException, PersistenceException {
         disburseLoan(receiptNum, transactionDate, paymentTypeId, personnel, receiptDate, rcvdPaymentTypeId, true);
     }
 
     /**
+     * @throws PersistenceException
      * @deprecated use {@link LoanBO#disburseLoan(AccountPaymentEntity)}
      */
     @Deprecated
     public void disburseLoan(final PersonnelBO personnel, final Short rcvdPaymentTypeId, final boolean persistChange)
-            throws AccountException {
+            throws AccountException, PersistenceException {
         disburseLoan(null, getDisbursementDate(), rcvdPaymentTypeId, personnel, null, rcvdPaymentTypeId, persistChange);
     }
 
     private void disburseLoan(final String receiptNum, final Date transactionDate, final Short paymentTypeId,
             final PersonnelBO loggedInUser, final Date receiptDate, final Short rcvdPaymentTypeId,
-            final boolean persistChange) throws AccountException {
+            final boolean persistChange) throws AccountException, PersistenceException {
 
         addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL,
                 transactionDate));
@@ -925,7 +927,7 @@ public class LoanBO extends AccountBO {
         if (!DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime()).equals(
                 DateUtils.getDateWithoutTimeStamp(transactionDate.getTime()))) {
             this.disbursementDate = transactionDate;
-            regeneratePaymentSchedule(false, null);
+            regeneratePaymentSchedule(getConfigurationPersistence().isRepaymentIndepOfMeetingEnabled(), null);
         }
         this.disbursementDate = transactionDate;
 
@@ -990,7 +992,7 @@ public class LoanBO extends AccountBO {
      * During refactoring... the checks in here should be applied to any loan disbursal and the error msgs organised and
      * internationalised
      */
-    public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException {
+    public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
         if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
                 && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
