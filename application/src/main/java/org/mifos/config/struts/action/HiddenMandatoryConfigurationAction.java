@@ -290,8 +290,8 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientTrained()), getShortValue(actionForm
                     .getHideClientTrained()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.TRAINED_DATE)) {
-            fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientTrainedOn()), fieldConfiguration
-                    .getHiddenFlag());
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientTrainedOn()), getShortValue(actionForm
+                    .getHideClientTrained())); // hidden field from Trained is shared with TrainedDate (#MIFOS-2731)
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.BUSINESS_ACTIVITIES)) {
             fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(), getShortValue(actionForm
                     .getHideClientBusinessWorkActivities()));

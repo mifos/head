@@ -443,4 +443,37 @@ public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrut
         Assert.assertFalse(fieldConfig.isFieldHidden("Client.PovertyStatus"));
         Assert.assertTrue(fieldConfig.isFieldManadatory("Client.PovertyStatus"));
     }
+
+    public void testClientTrainedField() throws HibernateProcessException, PersistenceException {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideClientTrained", "1");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+
+        Assert.assertTrue(fieldConfig.isFieldHidden("Client.Trained"));
+        Assert.assertTrue(fieldConfig.isFieldHidden("Client.TrainedDate"));
+
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("hideClientTrained", "0");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+
+        Assert.assertFalse(fieldConfig.isFieldHidden("Client.Trained"));
+        Assert.assertFalse(fieldConfig.isFieldHidden("Client.TrainedDate"));
+    }
 }
