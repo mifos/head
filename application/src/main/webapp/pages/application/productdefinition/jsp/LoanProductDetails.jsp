@@ -138,9 +138,9 @@ explanation of the license and how it is applied.
 														</tr>	
 														<c:forEach items="${loanPrd.loanAmountSameForAllLoan}" var="loanAmountSameForAllLoan">	
 														<tr>							
-															<td class="fontnormal" width="20%"><c:out value="${loanAmountSameForAllLoan.minLoanAmount}"/></td>
-															<td class="fontnormal" width="20%" align="right"><c:out value="${loanAmountSameForAllLoan.maxLoanAmount}" /></td>
-															<td class="fontnormal" width="20%" align="right"><c:out value="${loanAmountSameForAllLoan.defaultLoanAmount}" /></td>																													
+															<td class="fontnormal" width="20%"><c:out value="${loanAmountSameForAllLoan.minLoanAmountString}"/></td>
+															<td class="fontnormal" width="20%" align="right"><c:out value="${loanAmountSameForAllLoan.maxLoanAmountString}" /></td>
+															<td class="fontnormal" width="20%" align="right"><c:out value="${loanAmountSameForAllLoan.defaultLoanAmountString}" /></td>																													
 														</tr>
 													</c:forEach>
 													</table>
@@ -161,9 +161,9 @@ explanation of the license and how it is applied.
 														<td class="fontnormal"> 
 															<c:out value="${loanAmountFromLastLoan.startRange}" />												
 														  -	<c:out value="${loanAmountFromLastLoan.endRange}" /></td>
-															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.minLoanAmount}" /></td>
-															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.maxLoanAmount}" /> </td>
-															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.defaultLoanAmount}" /></td>
+															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.minLoanAmountString}" /></td>
+															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.maxLoanAmountString}" /> </td>
+															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.defaultLoanAmountString}" /></td>
 														</tr>	
 													</c:forEach>
 													</table>
@@ -183,9 +183,9 @@ explanation of the license and how it is applied.
 														<c:forEach items="${loanPrd.loanAmountFromLoanCycle}" var="loanAmountFromLoanCycle">
 														<tr>	
 															<td class="fontnormal" width="10%"><c:out value="${loanAmountFromLoanCycle.rangeIndex}"/></td>
-															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.minLoanAmount}"/></td>
-															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.maxLoanAmount}" /></td>
-															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.defaultLoanAmount}" /></td>																													
+															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.minLoanAmountString}"/></td>
+															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.maxLoanAmountString}" /></td>
+															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.defaultLoanAmountString}" /></td>																													
 														</tr>
 														</c:forEach>
 													</table>

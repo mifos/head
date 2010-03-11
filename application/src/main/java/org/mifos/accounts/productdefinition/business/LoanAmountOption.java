@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.productdefinition.business;
 
+import org.mifos.framework.util.LocalizationConverter;
+
 public abstract class LoanAmountOption extends AmountRange {
     private Double defaultLoanAmount;
     private final LoanOfferingBO loanOffering;
@@ -33,6 +35,18 @@ public abstract class LoanAmountOption extends AmountRange {
 
     public Double getDefaultLoanAmount() {
         return defaultLoanAmount;
+    }
+
+    public String getDefaultLoanAmountString() {
+        return new LocalizationConverter(loanOffering.getCurrency()).getDoubleStringForMoney(getDefaultLoanAmount());
+    }
+
+    public String getMaxLoanAmountString() {
+        return new LocalizationConverter(loanOffering.getCurrency()).getDoubleStringForMoney(getMaxLoanAmount());
+    }
+
+    public String getMinLoanAmountString() {
+        return new LocalizationConverter(loanOffering.getCurrency()).getDoubleStringForMoney(getMinLoanAmount());
     }
 
     public void setDefaultLoanAmount(Double defaultLoanAmount) {
