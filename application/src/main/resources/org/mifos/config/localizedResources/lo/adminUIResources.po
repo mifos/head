@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-07 10:49+0200\n"
+"POT-Creation-Date: 2010-03-12 19:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -368,6 +368,10 @@ msgstr ""
 msgid "Schedule in"
 msgstr ""
 
+#: admin.sysadmin.title
+msgid "System Administration"
+msgstr ""
+
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
 msgstr ""
@@ -422,6 +426,10 @@ msgstr ""
 
 #: admin.sysinfo.operatingSystem
 msgid "Operating System / Arch / Version"
+msgstr ""
+
+#: admin.sysinfo.osUser
+msgid "Operating System User"
 msgstr ""
 
 #: admin.sysinfo.svnrevision

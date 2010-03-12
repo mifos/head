@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-07 10:48+0200\n"
+"POT-Creation-Date: 2010-03-12 19:53+0200\n"
 "PO-Revision-Date: 2009-11-09 12:41+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -366,6 +366,10 @@ msgstr ""
 msgid "Schedule in"
 msgstr ""
 
+#: admin.sysadmin.title
+msgid "System Administration"
+msgstr ""
+
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
 msgstr "MIFOS adatbázis verzió"
@@ -421,6 +425,10 @@ msgstr "Java szállító / verzió"
 #: admin.sysinfo.operatingSystem
 msgid "Operating System / Arch / Version"
 msgstr "Operációs rendszer / Arch / verzió"
+
+#: admin.sysinfo.osUser
+msgid "Operating System User"
+msgstr ""
 
 #: admin.sysinfo.svnrevision
 msgid "Subversion Revision Number"

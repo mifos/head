@@ -227,7 +227,7 @@ while(enn.hasMoreElements()){
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td>
-							<span class="headingorange"><mifos:mifoslabel name="admin.sysinfo.title" bundle="adminUIResources" /></span>
+							<span class="headingorange"><mifos:mifoslabel name="admin.sysadmin.title" bundle="adminUIResources" /></span>
 							<table width="90%" border="0" cellspacing="0" cellpadding="0">
 								<tr class="fontnormal">
 									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
