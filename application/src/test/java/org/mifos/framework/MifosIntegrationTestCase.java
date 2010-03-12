@@ -41,15 +41,17 @@ import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
- * Inheriting from this instead of TestCase is deprecated, generally speaking.
- * The reason is that TestCaseInitializer (a) runs too soon (it is more graceful
- * for a long delay to happen in setUp), and (b) initializes too much (most
- * tests don't need everything which is there).
+ *  All classes extending this class must be names as <b>*IntegrationTest.java</b> to support maven-surefire-plugin autofind
+ * feature.
+ * <br />
+ * <br />
+ * Inheriting from this instead of TestCase is deprecated, generally speaking. The reason is that TestCaseInitializer
+ * (a) runs too soon (it is more graceful for a long delay to happen in setUp), and (b) initializes too much (most tests
+ * don't need everything which is there).
  *
- * This base class initializes the database and various other things and so any
- * class derived from this is an integration test. If a test is not an
- * integration test and does not need the database, then it should not derive
- * from this class.
+ * This base class initializes the database and various other things and so any class derived from this is an
+ * integration test. If a test is not an integration test and does not need the database, then it should not derive from
+ * this class.
  */
 public class MifosIntegrationTestCase extends TestCase {
 

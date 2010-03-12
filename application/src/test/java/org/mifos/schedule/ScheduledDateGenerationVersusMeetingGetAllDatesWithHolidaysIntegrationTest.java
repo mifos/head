@@ -44,9 +44,9 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
-public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest extends MifosIntegrationTestCase {
+public class ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysIntegrationTest extends MifosIntegrationTestCase {
 
-    public ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysTest() throws Exception {
+    public ScheduledDateGenerationVersusMeetingGetAllDatesWithHolidaysIntegrationTest() throws Exception {
         super();
     }
 

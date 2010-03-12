@@ -45,6 +45,12 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import servletunit.struts.MockStrutsTestCase;
 
+/**
+ * All classes extending this class must be names as <b>*StrutsTest.java</b> to support maven-surefire-plugin autofind
+ * feature.
+ * <br />
+ * <br />
+ */
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
     protected MifosMockStrutsTestCase() throws Exception {
