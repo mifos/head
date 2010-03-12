@@ -42,7 +42,12 @@ explanation of the license and how it is applied.
 					</tr>
                     <tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.timeout" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="shutdown.text.timeout"><mifos:mifosnumbertext name="shutdownActionForm" property="shutdownTimeout" /></span></td>
+						<td>
+                            <span class="fontnormal" id="shutdown.text.timeout">
+                                <mifos:mifosnumbertext name="shutdownActionForm" property="shutdownTimeout" />
+                                <mifos:mifoslabel name="admin.shutdown.timeout.unit" bundle="adminUIResources" />
+                            </span>
+                        </td>
 					</tr>
 				</table>
 				<br>
