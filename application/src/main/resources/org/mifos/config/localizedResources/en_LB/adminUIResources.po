@@ -345,7 +345,7 @@ msgid "Welcome to the Mifos shutdown management area."
 msgstr ""
 
 #: admin.shutdown.users
-msgid "Logged users"
+msgid "Active sessions"
 msgstr ""
 
 #: admin.shutdown.status
