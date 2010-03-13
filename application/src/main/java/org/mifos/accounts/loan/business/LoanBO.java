@@ -1169,9 +1169,12 @@ public class LoanBO extends AccountBO {
         LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
                 .get(accountActionDateList.size() - 1);
         Money chargeWaived = accountActionDateEntity.waiveFeeCharges();
+        Money principal = new Money(getCurrency());
+        Money interest = new Money(getCurrency());
+        Money penalty = new Money(getCurrency());
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             updateTotalFeeAmount(chargeWaived);
-            updateAccountActivity(null, null, chargeWaived, null, userContext.getId(), LoanConstants.FEE_WAIVED);
+            updateAccountActivity(principal, interest, chargeWaived, penalty, userContext.getId(), LoanConstants.FEE_WAIVED);
         }
         try {
             getLoanPersistence().createOrUpdate(this);
@@ -1184,10 +1187,13 @@ public class LoanBO extends AccountBO {
         List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
         LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
                 .get(accountActionDateList.size() - 1);
+        Money principal = new Money(getCurrency());
+        Money interest = new Money(getCurrency());
+        Money fee = new Money(getCurrency());
         Money chargeWaived = accountActionDateEntity.waivePenaltyCharges();
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             updateTotalPenaltyAmount(chargeWaived);
-            updateAccountActivity(null, null, null, chargeWaived, userContext.getId(), LoanConstants.PENALTY_WAIVED);
+            updateAccountActivity(principal, interest, fee, chargeWaived, userContext.getId(), LoanConstants.PENALTY_WAIVED);
         }
         try {
             getLoanPersistence().createOrUpdate(this);
@@ -1198,6 +1204,9 @@ public class LoanBO extends AccountBO {
 
     private void waiveFeeAmountOverDue() throws AccountException {
         Money chargeWaived = new Money(getCurrency());
+        Money principal = new Money(getCurrency());
+        Money interest = new Money(getCurrency());
+        Money penalty = new Money(getCurrency());
         List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
         accountActionDateList.remove(accountActionDateList.size() - 1);
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
@@ -1205,7 +1214,7 @@ public class LoanBO extends AccountBO {
         }
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             updateTotalFeeAmount(chargeWaived);
-            updateAccountActivity(null, null, chargeWaived, null, userContext.getId(), AccountConstants.AMOUNT
+            updateAccountActivity(principal, interest, chargeWaived, penalty, userContext.getId(), AccountConstants.AMOUNT
                     + chargeWaived + AccountConstants.WAIVED);
         }
         try {
@@ -1217,6 +1226,9 @@ public class LoanBO extends AccountBO {
 
     private void waivePenaltyAmountOverDue() throws AccountException {
         Money chargeWaived = new Money(getCurrency());
+        Money principal = new Money(getCurrency());
+        Money interest = new Money(getCurrency());
+        Money fee = new Money(getCurrency());
         List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
         accountActionDateList.remove(accountActionDateList.size() - 1);
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
@@ -1224,7 +1236,7 @@ public class LoanBO extends AccountBO {
         }
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             updateTotalPenaltyAmount(chargeWaived);
-            updateAccountActivity(null, null, null, chargeWaived, userContext.getId(), AccountConstants.AMOUNT
+            updateAccountActivity(principal, interest, fee, chargeWaived, userContext.getId(), AccountConstants.AMOUNT
                     + chargeWaived + AccountConstants.WAIVED);
         }
         try {
