@@ -45,7 +45,7 @@ public class GlimLoanUpdater {
                 loanAccountActionForm.getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()), loan
                         .getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                 loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
-                new ArrayList<CustomFieldView>());
+                new ArrayList<CustomFieldView>(), true);
 
         individualLoan.setParentAccount(loan);
 

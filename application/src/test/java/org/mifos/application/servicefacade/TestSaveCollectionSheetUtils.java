@@ -212,7 +212,7 @@ public class TestSaveCollectionSheetUtils {
         try {
             loan = LoanBO.createIndividualLoan(userContext, loanOffering, client, AccountState.LOAN_APPROVED,
                     new Money(currency, "1200.0"), Short.valueOf("12"), date, false, false, 10.0, (short) 0, null,
-                    new ArrayList<FeeView>(), null);
+                    new ArrayList<FeeView>(), null, false);
 
         } catch (AccountException e) {
             throw new Exception(e);

@@ -817,7 +817,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createIndividualLoan(userContext, loanOffering, group, AccountState.LOAN_PARTIAL_APPLICATION,
                     TestUtils.createMoney("300.0"), Short.valueOf("1"), meetingDates.get(0), true, false, 10.0,
-                    (short) 0, null, new ArrayList<FeeView>(), null);
+                    (short) 0, null, new ArrayList<FeeView>(), null, false);
 
             Assert.fail();
         } catch (AccountException e) {

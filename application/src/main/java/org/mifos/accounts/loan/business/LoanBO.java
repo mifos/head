@@ -328,17 +328,22 @@ public class LoanBO extends AccountBO {
                 isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
 
+    /*
+     * The isUpdate field is used to indicate if this loan is being recreated as a result of an update.
+     * In this case, the disbursement date will be in the past, so the check for the disbursement
+     * date is skipped.
+     */
     public static LoanBO createIndividualLoan(final UserContext userContext, final LoanOfferingBO loanOffering,
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final boolean isRepaymentIndepOfMeetingEnabled, final Double interestRate, final Short gracePeriodDuration,
-            final FundBO fund, final List<FeeView> feeViews, final List<CustomFieldView> customFields)
+            final FundBO fund, final List<FeeView> feeViews, final List<CustomFieldView> customFields, boolean isUpdate)
             throws AccountException {
 
         commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
                 disbursementDate, interestRate, isRepaymentIndepOfMeetingEnabled, interestDeductedAtDisbursement);
 
-        if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
+        if (!isUpdate && isDisbursementDateLessThanCurrentDate(disbursementDate)) {
             throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
         }
 

@@ -1094,7 +1094,7 @@ public class LoanAccountAction extends AccountAppAction {
                             .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
                     loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                     loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
-                    new ArrayList<CustomFieldView>());
+                    new ArrayList<CustomFieldView>(), false);
         }
 
         individualLoan.setParentAccount(loan);
