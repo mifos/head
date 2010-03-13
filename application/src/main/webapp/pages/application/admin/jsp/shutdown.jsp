@@ -28,9 +28,20 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
         <span id="page.id" title="Shutdown" />
 		<html-el:form action="shutdownAction.do?method=shutdown">
-			<td align="left" valign="top" bgcolor="#FFFFFF"
-				style="padding-left:8px; padding-top:10px;">
-				<table width="95%">
+                <table width="95%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="bluetablehead05">
+                            <span class="fontnormal8pt">
+                                <a id="viewusers.link.admin" href="AdminAction.do?method=load">
+                                    <mifos:mifoslabel name="admin.shortname" bundle="adminUIResources"></mifos:mifoslabel></a> /
+                            </span>
+                            <span class="fontnormal8ptbold">
+                                <mifos:mifoslabel name="admin.shutdown.link" bundle="adminUIResources"></mifos:mifoslabel>
+                            </span></td>
+                    </tr>
+                </table>
+				<table width="95%" border="0" cellpadding="0" cellspacing="0"
+                       style="padding-left:8px; padding-top:10px;">
 					<tr>
 						<td colspan="2"><span class="headingorange"><mifos:mifoslabel name="admin.shutdown.title" bundle="adminUIResources" /></span><br />
 							<span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.welcome" bundle="adminUIResources" /></span></td>
@@ -103,7 +114,6 @@ explanation of the license and how it is applied.
 						</td>
 					</tr>
 				</table>
-			</td>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -58,7 +58,7 @@ explanation of the license and how it is applied.
           </c:choose>
         </tr>
       </table>
-        <c:if test="${sessionScope.shutdownIsImminent == true}">
+        <c:if test="${requestScope.shutdownIsImminent == true}">
             <span class="fontnormalRedBold"><mifos:mifoslabel name="admin.shutdown.status.imminent" bundle="adminUIResources" /></span>
         </c:if>
     </td>
