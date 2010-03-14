@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-12 21:26+0200\n"
+"POT-Creation-Date: 2010-03-13 17:38+0200\n"
 "PO-Revision-Date: 2009-09-08 20:51-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -337,6 +337,10 @@ msgstr ""
 
 #: admin.shutdown.button.cancel
 msgid "Cancel shutdown"
+msgstr ""
+
+#: admin.shutdown.button.refresh
+msgid "Refresh"
 msgstr ""
 
 #: admin.shutdown.welcome

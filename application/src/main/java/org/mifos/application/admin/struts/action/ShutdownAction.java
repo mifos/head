@@ -87,6 +87,7 @@ public class ShutdownAction extends BaseAction {
         Collections.sort(loggedUsers);
         request.setAttribute("activeSessions", loggedUsers);
         request.setAttribute("shutdownStatus", shutdownManager.getStatus(locale));
+        request.setAttribute("submitButtonDisabled", shutdownManager.isShutdownInProgress());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 

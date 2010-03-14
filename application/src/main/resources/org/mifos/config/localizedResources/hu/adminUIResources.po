@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-12 21:26+0200\n"
+"POT-Creation-Date: 2010-03-13 17:37+0200\n"
 "PO-Revision-Date: 2009-11-09 12:41+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -336,6 +336,10 @@ msgstr ""
 
 #: admin.shutdown.button.cancel
 msgid "Cancel shutdown"
+msgstr ""
+
+#: admin.shutdown.button.refresh
+msgid "Refresh"
 msgstr ""
 
 #: admin.shutdown.welcome

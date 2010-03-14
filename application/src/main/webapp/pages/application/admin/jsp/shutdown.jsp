@@ -33,10 +33,10 @@ explanation of the license and how it is applied.
                         <td class="bluetablehead05">
                             <span class="fontnormal8pt">
                                 <a id="viewusers.link.admin" href="AdminAction.do?method=load">
-                                    <mifos:mifoslabel name="admin.shortname" bundle="adminUIResources"></mifos:mifoslabel></a> /
+                                    <mifos:mifoslabel name="admin.shortname" bundle="adminUIResources" /></a> /
                             </span>
                             <span class="fontnormal8ptbold">
-                                <mifos:mifoslabel name="admin.shutdown.link" bundle="adminUIResources"></mifos:mifoslabel>
+                                <mifos:mifoslabel name="admin.shutdown.link" bundle="adminUIResources" />
                             </span></td>
                     </tr>
                 </table>
@@ -61,6 +61,50 @@ explanation of the license and how it is applied.
                         </td>
 					</tr>
 				</table>
+            <table width="98%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="blueline">&nbsp;</td>
+                </tr>
+            </table>
+            <br>
+            <table width="98%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center">
+                        <c:choose>
+                            <c:when test="${requestScope.submitButtonDisabled}">
+                                <html-el:submit styleId="admin.shutdown.button.shutdown" property="submitButton" styleClass="disabledbuttn" disabled="true">
+                                    <mifos:mifoslabel name="admin.shutdown.button.submit" bundle="adminUIResources"/>
+                                </html-el:submit>
+                            </c:when>
+                            <c:otherwise>
+                                <html-el:submit styleId="admin.shutdown.button.shutdown" property="submitButton" styleClass="buttn">
+                                    <mifos:mifoslabel name="admin.shutdown.button.submit" bundle="adminUIResources"/>
+                                </html-el:submit>
+                            </c:otherwise>
+                        </c:choose>
+                        &nbsp;
+                        <c:choose>
+                            <c:when test="${requestScope.submitButtonDisabled}">
+                                <html-el:button styleId="admin.shutdown.button.cancel" property="cancelButton"
+                                                onclick="location.href='shutdownAction.do?method=cancelShutdown'" styleClass="cancelbuttn">
+                                    <mifos:mifoslabel name="admin.shutdown.button.cancel" bundle="adminUIResources"/>
+                                </html-el:button>
+                            </c:when>
+                            <c:otherwise>
+                                <html-el:button styleId="admin.shutdown.button.cancel" property="cancelButton" disabled="true"
+                                                onclick="location.href='shutdownAction.do?method=cancelShutdown'" styleClass="disabledbuttn">
+                                    <mifos:mifoslabel name="admin.shutdown.button.cancel" bundle="adminUIResources"/>
+                                </html-el:button>
+                            </c:otherwise>
+                        </c:choose>
+                        &nbsp;
+                        <html-el:button styleId="admin.shutdown.button.refresh" property="refreshButton"
+                                        onclick="location.href='shutdownAction.do?method=load'" styleClass="buttn">
+                            <mifos:mifoslabel name="admin.shutdown.button.refresh" bundle="adminUIResources"/>
+                        </html-el:button>
+                    </td>
+                </tr>
+            </table>
 				<br>
                 <span class="headingorange"><mifos:mifoslabel name="admin.shutdown.users" bundle="adminUIResources" /></span>
                 <table width="95%">
@@ -93,27 +137,6 @@ explanation of the license and how it is applied.
                         </tr>
                     </c:forEach>
                 </table>
-                <table width="98%" border="0" cellpadding="0" cellspacing="0">
-					<tr>
-						<td class="blueline">
-							&nbsp;
-						</td>
-					</tr>
-				</table>
-				<br>
-				<table width="98%" border="0" cellpadding="0" cellspacing="0">
-					<tr>
-						<td align="center">
-							<html-el:submit styleId="admin.shutdown.button.shutdown" property="submitButton" styleClass="buttn">
-								<mifos:mifoslabel name="admin.shutdown.button.submit" bundle="adminUIResources"/>
-							</html-el:submit>
-							&nbsp;
-								<html-el:button styleId="admin.shutdown.button.cancel" property="cancelButton" onclick="location.href='shutdownAction.do?method=cancelShutdown'" styleClass="cancelbuttn">
-								<mifos:mifoslabel name="admin.shutdown.button.cancel" bundle="adminUIResources"/>
-							</html-el:button>
-						</td>
-					</tr>
-				</table>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
