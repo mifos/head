@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -64,4 +65,23 @@ public class DisburseLoanPage extends MifosPage {
         Assert.assertTrue(selenium.isEditable("paymentModeOfPayment"), message);
     }
 
+    public void verifyPaymentModesOfPaymentAreEmpty() {
+        Assert.assertEquals(selenium.getSelectedValue("DisburseLoan.input.paymentType"), "");
+        Assert.assertEquals(selenium.getSelectedValue("paymentModeOfPayment"), "");
+    }
+
+    public void setModesOfPaymentAndReviewTransaction() {
+        selenium.select("DisburseLoan.input.paymentType", "label=" + DisburseLoanParameters.CASH);
+        selenium.select("paymentModeOfPayment", "label=" + DisburseLoanParameters.CASH);
+
+        selenium.click("DisburseLoan.button.reviewTransaction");
+
+        waitForPageToLoad();
+    }
+
+    public HomePage navigateToHomePage() {
+        selenium.click("id=clientsAndAccountsHeader.link.home");
+        waitForPageToLoad();
+        return new HomePage(selenium);
+    }
 }

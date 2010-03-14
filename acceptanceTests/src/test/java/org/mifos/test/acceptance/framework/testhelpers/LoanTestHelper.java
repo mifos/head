@@ -291,4 +291,16 @@ public class LoanTestHelper {
         createLoanAccountEntryPage.verifyPage();
         return createLoanAccountEntryPage;
     }
+
+    public DisburseLoanPage prepareToDisburseLoanWithoutLogout(HomePage homePage, String loanId) {
+        SearchResultsPage searchResultsPage = homePage.search(loanId);
+        searchResultsPage.verifyPage();
+        LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(loanId);
+        loanAccountPage.verifyPage();
+        loanAccountPage.verifyPage();
+
+        DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
+        disburseLoanPage.verifyPage();
+        return disburseLoanPage;
+    }
 }

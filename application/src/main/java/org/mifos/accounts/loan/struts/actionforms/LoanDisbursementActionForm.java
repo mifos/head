@@ -106,6 +106,7 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {
     public void clear() throws InvalidDateException {
         super.clear();
         this.loanAmount = null;
+        this.paymentModeOfPayment = null;
     }
 
 }

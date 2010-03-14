@@ -25,6 +25,7 @@ import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
@@ -106,5 +107,24 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         DisburseLoanPage loanAccountPage = loanTestHelper.prepareToDisburseLoan("000100000000004");
         loanAccountPage.verifyPaymentModeOfPaymentIsEditable(
                 "payment mode of payment must be editable when a disbursal fee exists.");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void ensurePaymentModeOfPaymentTypeIsCleared() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService =
+            new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2010,2,12,1,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml.zip",
+                dataSource, selenium);
+
+        DisburseLoanPage loanAccountPage = loanTestHelper.prepareToDisburseLoan("000100000000004");
+        loanAccountPage.setModesOfPaymentAndReviewTransaction();
+
+        HomePage homePage = loanAccountPage.navigateToHomePage();
+        homePage.verifyPage();
+        loanAccountPage = loanTestHelper.prepareToDisburseLoanWithoutLogout(homePage, "000100000000004");
+        loanAccountPage.verifyPaymentModesOfPaymentAreEmpty();
     }
 }
