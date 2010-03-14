@@ -92,9 +92,10 @@ public class ShutdownAction extends BaseAction {
     }
 
     private String generateOfficeChain(OfficeBO office) {
+        /* MIFOS-2789: only list the branch offfice if there is one, and if no branch office then list the head office.
         if (office.getParentOffice() != null) {
             return generateOfficeChain(office.getParentOffice()) + " / " + office.getOfficeName();
-        }
+        }*/
         return office.getOfficeName();
     }
 
