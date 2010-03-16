@@ -90,6 +90,7 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -104,6 +105,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -1139,6 +1141,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testUpdateLoanForLogging() throws Exception {
+        FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
+                (short) 1);
+        FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        TestObjectFactory.cleanUpChangeLog();
+
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
@@ -1147,24 +1156,26 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO loanBO = (LoanBO) accountBO;
         ((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO.getInterestRate(), loanBO
                 .getNoOfInstallments(), newDate, (short) 2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, "Added note",
-                null, null, false, null, null);
+                null, null, false, null, fund);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOAN, accountBO.getAccountId());
-        // TODO restore this
-        // Assert.assertEquals(1, auditLogList.size());
+        Assert.assertEquals(1, auditLogList.size());
         for (int auditLogListIndex = 0; auditLogListIndex < auditLogList.size(); auditLogListIndex++) {
             auditLogList.get(auditLogListIndex).getAuditLogRecords();
         }
         Assert.assertEquals(EntityType.LOAN, auditLogList.get(0).getEntityTypeAsEnum());
-        Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+        Assert.assertEquals(4, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Collateral Notes")) {
                 Assert.assertEquals("-", auditLogRecord.getOldValue());
                 Assert.assertEquals("Added note", auditLogRecord.getNewValue());
+            } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Sources of funds")) {
+                Assert.assertEquals("-", auditLogRecord.getOldValue());
+                Assert.assertEquals("Fund1", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge deducted At Disbursement")) {
                 Assert.assertEquals("1", auditLogRecord.getOldValue());
                 Assert.assertEquals("0", auditLogRecord.getNewValue());

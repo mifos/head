@@ -9,6 +9,7 @@
 			<!-- <entity name="accountNotes"/>-->
 			<entity name="accountFlags"/>
 			<entity name="flag"  parentName="accountFlags"/>
+            <entity name="fund" />
 			<entity name="accountCustomFields" mergeProperties="yes"  displayKey="Account.customField.displayName"/>
 		</entitiesToLog>
 		<propertyName name="accountState" displayKey="Loan.accountState" doNotLog="No" lookUp="yes">
@@ -24,6 +25,8 @@
 		<propertyName name="businessActivityId" displayKey="Loan.Purposeof,Loan"  doNotLog="No" lookUp="yes">
 			<entityName name="Loan Purposes"/>
 		</propertyName>
+        <propertyName name="fundName" parentName="fund" displayKey="LoanProduct.fund.fundName" />
+        <propertyName name="fundId" parentName="fund" doNotLog="Yes" />
 		<propertyName name="collateralTypeId" displayKey="Loan.CollateralType" />
 		<propertyName name="collateralNote" displayKey="Loan.CollateralNote" />
 		<propertyName name="disbursementDate" displayKey="Loan.DisbursementDate" />
