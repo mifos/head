@@ -27,6 +27,7 @@ import static org.junit.Assert.assertThat;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.junit.Test;
 import org.mifos.framework.util.UnicodeUtil.UnicodeInputStream;
@@ -42,8 +43,8 @@ public class UnicodeUtilTest {
     static final String DEFAULT_ENCODING = System.getProperty("file.encoding");
 
     @Test
-    public void fileIsExpectedLength() throws IOException {
-        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).getFile();
+    public void fileIsExpectedLength() throws IOException, URISyntaxException {
+        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).toURI().getPath();
         FileInputStream in = new FileInputStream(filename);
         byte data[] = new byte[ONE_KIBIBYTE];
         int expectedFilesize = 26;
@@ -53,8 +54,8 @@ public class UnicodeUtilTest {
     }
 
     @Test
-    public void canDetectUtf16le() throws IOException {
-        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).getFile();
+    public void canDetectUtf16le() throws IOException, URISyntaxException {
+        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).toURI().getPath();
         FileInputStream in = new FileInputStream(filename);
         UnicodeInputStream uis = new UnicodeInputStream(in, DEFAULT_ENCODING);
         String detectedEncoding = uis.getEncoding();
@@ -64,8 +65,8 @@ public class UnicodeUtilTest {
     }
 
     @Test
-    public void canDecodeUtf16le() throws IOException {
-        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).getFile();
+    public void canDecodeUtf16le() throws IOException, URISyntaxException {
+        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).toURI().getPath();
         FileInputStream in = new FileInputStream(filename);
         byte data[] = new byte[ONE_KIBIBYTE];
         in.read(data);
@@ -75,8 +76,8 @@ public class UnicodeUtilTest {
     }
 
     @Test
-    public void canReadAndDecodeLineByLine() throws IOException {
-        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).getFile();
+    public void canReadAndDecodeLineByLine() throws IOException, URISyntaxException {
+        String filename = this.getClass().getResource(SAMPLE_UTF_16LE_TXT).toURI().getPath();
         BufferedReader reader = UnicodeUtil.getUnicodeAwareBufferedReader(filename);
         String read = reader.readLine();
         reader.close();
@@ -84,8 +85,8 @@ public class UnicodeUtilTest {
     }
 
     @Test
-    public void canDetectUtf8() throws IOException {
-        String filename = this.getClass().getResource("/sample_UTF-8.txt").getFile();
+    public void canDetectUtf8() throws IOException, URISyntaxException {
+        String filename = this.getClass().getResource("/sample_UTF-8.txt").toURI().getPath();
         FileInputStream in = new FileInputStream(filename);
         byte data[] = new byte[ONE_KIBIBYTE];
         int expectedFilesize = 12;
