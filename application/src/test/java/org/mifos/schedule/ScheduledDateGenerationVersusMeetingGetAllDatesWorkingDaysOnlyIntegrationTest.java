@@ -17,9 +17,9 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
-public class ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyTest extends MifosIntegrationTestCase {
+public class ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyIntegrationTest extends MifosIntegrationTestCase {
 
-    public ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyTest() throws Exception {
+    public ScheduledDateGenerationVersusMeetingGetAllDatesWorkingDaysOnlyIntegrationTest() throws Exception {
         super();
     }
 
