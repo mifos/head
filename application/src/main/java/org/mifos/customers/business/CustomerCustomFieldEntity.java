@@ -20,15 +20,24 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.customers.persistence.CustomerPersistence;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.util.UserContext;
 
 /**
  * This class encpsulate the custom field for the customer
  */
 public class CustomerCustomFieldEntity extends PersistentObject {
 
+    @SuppressWarnings("unused")
     private final Integer customFieldId;
 
     /*
@@ -38,6 +47,7 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 
     private String fieldValue;
 
+    @SuppressWarnings("unused")
     private final CustomerBO customer;
 
     public CustomerCustomFieldEntity(Short fieldId, String fieldValue, CustomerBO customer) {
@@ -70,7 +80,53 @@ public class CustomerCustomFieldEntity extends PersistentObject {
         this.fieldValue = fieldValue;
     }
 
-    public void save(CustomerCustomFieldEntity customerCustomFieldEntity) throws ApplicationException {
-        new CustomerPersistence().createOrUpdate(customerCustomFieldEntity);
+    public static List<CustomerCustomFieldEntity> fromDto(List<CustomFieldView> customFields, CustomerBO customer) {
+        List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
+        for (CustomFieldView customField : customFields) {
+            customerCustomFields.add(new CustomerCustomFieldEntity(customField.getFieldId(), customField
+                    .getFieldValue(), customer));
+        }
+        return customerCustomFields;
+    }
+    
+    public static List<CustomerCustomFieldEntity> fromCustomerCustomFieldEntity(List<CustomerCustomFieldEntity> customFields, CustomerBO customer) {
+        List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
+        for (CustomerCustomFieldEntity customField : customFields) {
+            customerCustomFields.add(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), customer));
+        }
+        return customerCustomFields;
+    }
+
+    public static List<CustomFieldView> toDto(Set<CustomerCustomFieldEntity> customFieldEntities,
+            List<CustomFieldDefinitionEntity> customFieldDefs, UserContext userContext) {
+
+        Locale locale = userContext.getPreferredLocale();
+
+        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+
+        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+
+            for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
+
+                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
+                    CustomFieldView customFieldView;
+                    if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+
+                        customFieldView = new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
+                                .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
+                                .getFieldType());
+                    } else {
+                        customFieldView = new CustomFieldView(customFieldEntity.getFieldId(),
+                                customFieldEntity.getFieldValue(), customFieldDef.getFieldType());
+                    }
+                    customFieldView.setMandatory(customFieldDef.isMandatory());
+                    customFieldView.setMandatoryString(customFieldDef.getMandatoryStringValue());
+                    customFieldView.setLookUpEntityType(customFieldDef.getEntityName());
+
+                    customFields.add(customFieldView);
+                }
+            }
+        }
+        return customFields;
     }
 }

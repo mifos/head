@@ -21,6 +21,7 @@ package org.mifos.application.collectionsheet.persistence;
 
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -33,7 +34,7 @@ import org.mifos.framework.util.helpers.Constants;
  *
  */
 public class CenterBuilder {
-
+    
     private CenterBO center;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Center";
@@ -43,7 +44,7 @@ public class CenterBuilder {
     private String searchId = "1.1";
     private final Short updatedFlag = Constants.NO;
     private final CustomerStatus customerStatus = CustomerStatus.CENTER_ACTIVE;
-
+    
     public CenterBO build() {
 
         final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
@@ -51,8 +52,8 @@ public class CenterBuilder {
                 searchId);
 
         // add relationship between customer account and customer.
-        customerAccountBuilder.withCustomer(center).withOffice(office).withLoanOfficer(loanOfficer).buildForIntegrationTests();
-
+        CustomerAccountBO customerAccount = customerAccountBuilder.withCustomer(center).withOffice(office).withLoanOfficer(loanOfficer).buildForIntegrationTests();
+        center.setCustomerAccount(customerAccount);
         return center;
     }
 

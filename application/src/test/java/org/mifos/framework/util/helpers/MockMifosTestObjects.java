@@ -42,9 +42,7 @@ import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -70,12 +68,9 @@ public class MockMifosTestObjects {
         PersonnelBO personnelBOMock = createMock(PersonnelBO.class);
         expect(personnelBOMock.getPersonnelId()).andReturn(Short.valueOf("1")).anyTimes();
         replay(personnelBOMock);
-        GroupPersistence groupPersistence = createMock(GroupPersistence.class);
-        OfficePersistence officePersistence = createMock(OfficePersistence.class);
         // TODO: Is CLIENT_ACTIVE right or should this be GROUP_ACTIVE?
         return new GroupBO(TestUtils.makeUserWithLocales(), groupName, CustomerStatus.CLIENT_ACTIVE, null, false, null,
-                null, TestObjectFactory.getCustomFields(), fees, personnelBOMock, parentCustomer, groupPersistence,
-                officePersistence);
+                null, TestObjectFactory.getCustomFields(), fees, personnelBOMock, parentCustomer);
 
     }
 

@@ -21,11 +21,22 @@
 package org.mifos.calendar;
 
 /**
- * Switch moratorium-handling on or off.
+ * Switch moratorium-handling on or off. By default, moratorium-handling is switched off.
  *
  */
 public class MoratoriumSwitch {
+    private boolean isOn = false;
 
-    public static boolean IS_ON = false;
+    public boolean isOn() {
+        return this.isOn;
+    }
+
+    public void turnOn() {
+        this.isOn = true;
+    }
+
+    public void turnOff() {
+        this.isOn = false;
+    }
 
 }

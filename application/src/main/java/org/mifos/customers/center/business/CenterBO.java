@@ -23,23 +23,22 @@ package org.mifos.customers.center.business;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistory;
 import org.mifos.customers.business.CustomerPositionView;
+import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.persistence.CenterPersistence;
-import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -54,30 +53,23 @@ public class CenterBO extends CustomerBO {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
 
-    /*
-     * Injected Persistence classes
-     *
-     * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     *
-     * The Persistence classes below are used by this class and can be injected
-     * via a setter for testing purposes. In order for this mechanism to work
-     * correctly, the getter must be used to access them because the getter will
-     * initialize the Persistence class if it has not been injected.
-     *
-     * Long term these references to Persistence classes should probably be
-     * eliminated.
-     */
-    private CenterPersistence centerPersistence = null;
+    public static CenterBO createNew(UserContext userContext, String centerName, DateTime mfiJoiningDate,
+            MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO centerOffice, int numberOfCustomersInOfficeAlready,
+            List<CustomerCustomFieldEntity> customerCustomFields, Address centerAddress, String externalId) {
 
-    public CenterPersistence getCenterPersistence() {
-        if (null == centerPersistence) {
-            centerPersistence = new CenterPersistence();
+        PersonnelBO formedBy = null;
+        CenterBO center = new CenterBO(userContext, centerName, mfiJoiningDate, meeting, loanOfficer, centerOffice,
+                numberOfCustomersInOfficeAlready, CustomerStatus.CENTER_ACTIVE, formedBy);
+
+        center.setExternalId(externalId);
+        center.updateAddress(centerAddress);
+
+        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity.fromCustomerCustomFieldEntity(customerCustomFields, center);
+        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+            center.addCustomField(customerCustomFieldEntity);
         }
-        return centerPersistence;
-    }
 
-    public void setCenterPersistence(final CenterPersistence centerPersistence) {
-        this.centerPersistence = centerPersistence;
+        return center;
     }
 
     /**
@@ -88,10 +80,22 @@ public class CenterBO extends CustomerBO {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
-     * minimal constructor for builder
+     * minimal legal constructor for {@link CenterBO}.
      */
+    public CenterBO(UserContext userContext, String centerName, DateTime mfiJoiningDate, MeetingBO meeting,
+            PersonnelBO loanOfficer, OfficeBO office, int numberOfCustomersInOfficeAlready,
+            CustomerStatus customerStatus, PersonnelBO formedBy) {
+        super(userContext, centerName, CustomerLevel.CENTER, customerStatus, mfiJoiningDate, office, meeting, loanOfficer, formedBy);
+
+        int searchIdCustomerValue = numberOfCustomersInOfficeAlready + 1;
+        this.setSearchId("1." + searchIdCustomerValue);
+        this.setCustomerActivationDate(this.getCreatedDate());
+    }
+
+    /**
+     * @deprecated - use static factory methods to create
+     */
+    @Deprecated
     public CenterBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
             final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
             final String searchId) {
@@ -100,6 +104,10 @@ public class CenterBO extends CustomerBO {
         this.setCustomerActivationDate(this.getCreatedDate());
     }
 
+    /**
+     * @deprecated - use static factory {@link CenterBO#createNew(UserContext, String, DateTime, MeetingBO, PersonnelBO, OfficeBO, int, List, Address, String)}.
+     */
+    @Deprecated
     public CenterBO(final UserContext userContext, final String displayName, final Address address, final List<CustomFieldView> customFields,
             final List<FeeView> fees, final String externalId, final Date mfiJoiningDate, final OfficeBO office, final MeetingBO meeting,
             final PersonnelBO loanOfficer, final CustomerPersistence customerPersistence) throws CustomerException {
@@ -116,11 +124,19 @@ public class CenterBO extends CustomerBO {
         this.setCustomerActivationDate(this.getCreatedDate());
     }
 
+    /**
+     * @deprecated - use builder pattern for tests.
+     */
+    @Deprecated
     public static CenterBO createInstanceForTest(final Integer customerId, final CustomerLevelEntity customerLevel,
             final PersonnelBO formedByPersonnel, final PersonnelBO personnel, final String displayName) {
         return new CenterBO(customerId, customerLevel, formedByPersonnel, personnel, displayName);
     }
 
+    /**
+     * @deprecated - use builder pattern for tests.
+     */
+    @Deprecated
     private CenterBO(final Integer customerId, final CustomerLevelEntity customerLevel, final PersonnelBO formedByPersonnel,
             final PersonnelBO personnel, final String displayName) {
         super(customerId, customerLevel, formedByPersonnel, personnel, displayName);
@@ -152,27 +168,10 @@ public class CenterBO extends CustomerBO {
         validateOffice(office);
     }
 
-    @Override
-    protected void validateStatusChange(final Short newStatusId) throws CustomerException {
-        logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
-        if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
-            if (isAnySavingsAccountOpen()) {
-                throw new CustomerException(CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
-            }
-            if (getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
-                throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
-                        new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                this.getUserContext()) });
-            }
-        } else if (newStatusId.equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
-            if (getPersonnel() == null || getPersonnel().getPersonnelId() == null) {
-                throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
-            }
-        }
-        logger.debug("In CenterBO::validateStatusChange(), successfully validated status, customerId: "
-                + getCustomerId());
-    }
-
+    /**
+     * @deprecated - delete - use {@link CustomerService#updateCenter(UserContext, org.mifos.application.servicefacade.CenterUpdate, CenterBO)}.
+     */
+    @Deprecated
     public void update(final UserContext userContext, final Short loanOfficerId, final String externalId, final Date mfiJoiningDate,
             final Address address, final List<CustomFieldView> customFields, final List<CustomerPositionView> customerPositions)
             throws Exception {
@@ -182,14 +181,14 @@ public class CenterBO extends CustomerBO {
         super.update(userContext, externalId, address, customFields, customerPositions);
     }
 
-    protected void validateFieldsForUpdate(final Short loanOfficerId) throws CustomerException {
+    private void validateFieldsForUpdate(final Short loanOfficerId) throws CustomerException {
         if (isActive()) {
             validateLO(loanOfficerId);
         }
     }
 
     @Override
-    protected boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
+    public boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
         return false;
     }
 
@@ -203,5 +202,19 @@ public class CenterBO extends CustomerBO {
         MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
         super.saveUpdatedMeeting(meeting);
         deleteMeeting(newMeeting);
+    }
+
+    // FIXME - keithw - remove persistence/dao from domain model.
+    private CenterPersistence centerPersistence = null;
+
+    public CenterPersistence getCenterPersistence() {
+        if (null == centerPersistence) {
+            centerPersistence = new CenterPersistence();
+        }
+        return centerPersistence;
+    }
+
+    public void setCenterPersistence(final CenterPersistence centerPersistence) {
+        this.centerPersistence = centerPersistence;
     }
 }

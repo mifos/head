@@ -44,7 +44,7 @@ import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.struts.actionforms.CustSearchActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerListDto;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -255,7 +255,7 @@ public class CustSearchAction extends SearchAction {
 
     private String loadLoanOfficerCustomerList(PersonnelBO personnel, HttpServletRequest request) throws Exception {
 
-        List<CustomerListDto> customerList = null;
+        List<CustomerDetailDto> customerList = null;
 
         boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
 

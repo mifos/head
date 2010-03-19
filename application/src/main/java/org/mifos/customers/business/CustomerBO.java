@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeView;
@@ -56,6 +57,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -83,6 +85,8 @@ import org.mifos.security.util.UserContext;
  */
 public abstract class CustomerBO extends BusinessObject {
 
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
+
     private final Integer customerId;
     private String globalCustNum;
     private String displayName;
@@ -100,6 +104,7 @@ public abstract class CustomerBO extends BusinessObject {
     private Set<CustomerFlagDetailEntity> customerFlags;
     private CustomerBO parentCustomer;
     private Set<AccountBO> accounts;
+    private CustomerAccountBO customerAccount;
     private final CustomerLevelEntity customerLevel;
     private PersonnelBO personnel;
     private final PersonnelBO formedByPersonnel;
@@ -109,60 +114,13 @@ public abstract class CustomerBO extends BusinessObject {
     private Set<CustomerHierarchyEntity> customerHierarchies;
     private Set<CustomerMovementEntity> customerMovements;
     private CustomerHistoricalDataEntity historicalData;
-    private Short blackListed = YesNoFlag.NO.getValue();
+    public Short blackListed = YesNoFlag.NO.getValue();
     private Set<CustomerNoteEntity> customerNotes;
-    private final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
     private Set<CustomerBO> children;
 
-    /*
-     * Injected Persistence classes
-     *
-     * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     *
-     * The Persistence classes below are used by this class and can be injected
-     * via a setter for testing purposes. In order for this mechanism to work
-     * correctly, the getter must be used to access them because the getter will
-     * initialize the Persistence class if it has not been injected.
-     *
-     * Long term these references to Persistence classes should probably be
-     * eliminated.
-     */
     private CustomerPersistence customerPersistence = null;
     private PersonnelPersistence personnelPersistence = null;
     private MasterPersistence masterPersistence = null;
-
-    public CustomerPersistence getCustomerPersistence() {
-        if (null == customerPersistence) {
-            customerPersistence = new CustomerPersistence();
-        }
-        return this.customerPersistence;
-    }
-
-    public void setCustomerPersistence(final CustomerPersistence customerPersistence) {
-        this.customerPersistence = customerPersistence;
-    }
-
-    public PersonnelPersistence getPersonnelPersistence() {
-        if (null == personnelPersistence) {
-            personnelPersistence = new PersonnelPersistence();
-        }
-        return personnelPersistence;
-    }
-
-    public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
-        this.personnelPersistence = personnelPersistence;
-    }
-
-    public MasterPersistence getMasterPersistence() {
-        if (null == masterPersistence) {
-            masterPersistence = new MasterPersistence();
-        }
-        return masterPersistence;
-    }
-
-    public void setMasterPersistence(final MasterPersistence masterPersistence) {
-        this.masterPersistence = masterPersistence;
-    }
 
     /**
      * default constructor for hibernate
@@ -173,10 +131,9 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
-     * minimal constructor for builder
+     * @deprecated - use minimal legal constructor or static factory methods of subclasses in builder
      */
+    @Deprecated
     public CustomerBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
             final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
             final CustomerBO parentCustomer) {
@@ -196,16 +153,16 @@ public abstract class CustomerBO extends BusinessObject {
 
         this.customerNotes = new HashSet<CustomerNoteEntity>();
         this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
-
-        // FIXME - keithw - not convinced UserContext is required along with
-        // Personnel and Office. inserting to satisfy id generation
         this.userContext = new UserContext();
         this.userContext.setBranchGlobalNum(office.getGlobalOfficeNum());
     }
 
+    /**
+     * @deprecated - use minimal legal constructor or static factory methods of subclasses in builder
+     */
+    @Deprecated
     protected CustomerBO(final Integer customerId, final CustomerLevelEntity customerLevel,
-            final PersonnelBO formedByPersonnel,
-            final PersonnelBO personnel, final String displayName) {
+            final PersonnelBO formedByPersonnel, final PersonnelBO personnel, final String displayName) {
         super();
         this.customerId = customerId;
         this.customerLevel = customerLevel;
@@ -214,17 +171,46 @@ public abstract class CustomerBO extends BusinessObject {
         this.displayName = displayName;
     }
 
+    /**
+     * minimal legal constructor for center, groups and clients.
+     */
+    public CustomerBO(UserContext userContext, String customerName, CustomerLevel customerLevel, CustomerStatus customerStatus,
+            DateTime mfiJoiningDate, OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer, PersonnelBO formedBy) {
+        super(userContext);
+        this.customerId = null;
+        this.customerHierarchies = new HashSet<CustomerHierarchyEntity>();
+        this.customerMovements = new HashSet<CustomerMovementEntity>();
+        this.customerPositions = new HashSet<CustomerPositionEntity>();
+        this.customFields = new HashSet<CustomerCustomFieldEntity>();
+        this.accounts = new HashSet<AccountBO>();
+        this.customerNotes = new HashSet<CustomerNoteEntity>();
+        this.mfiJoiningDate = mfiJoiningDate.toDate();
+        this.displayName = customerName;
+        this.customerLevel = new CustomerLevelEntity(customerLevel);
+        this.office = office;
+        this.customerMeeting = new CustomerMeetingEntity(this, meeting);
+        this.personnel = loanOfficer;
+        this.customerStatus = new CustomerStatusEntity(customerStatus);
+
+        this.formedByPersonnel = formedBy;
+    }
+
+    /**
+     * @deprecated use constructor above
+     */
+    @Deprecated
     protected CustomerBO(final UserContext userContext, final String displayName, final CustomerLevel customerLevel,
-            final CustomerStatus customerStatus, final String externalId, final Date mfiJoiningDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees, final PersonnelBO formedBy, final OfficeBO office,
-            final CustomerBO parentCustomer, final MeetingBO meeting, final PersonnelBO loanOfficer) throws CustomerException {
+            final CustomerStatus customerStatus, final String externalId, final Date mfiJoiningDate,
+            final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final PersonnelBO formedBy, final OfficeBO office, final CustomerBO parentCustomer,
+            final MeetingBO meeting, final PersonnelBO loanOfficer) throws CustomerException {
 
         super(userContext);
 
         customerHierarchies = new HashSet<CustomerHierarchyEntity>();
         customerMovements = new HashSet<CustomerMovementEntity>();
         customerPositions = new HashSet<CustomerPositionEntity>();
-        validateFields(displayName, customerStatus, parentCustomer);
+        validateFields(displayName, customerStatus);
         this.customFields = new HashSet<CustomerCustomFieldEntity>();
         this.accounts = new HashSet<AccountBO>();
         this.customerNotes = new HashSet<CustomerNoteEntity>();
@@ -257,6 +243,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.historicalData = null;
         this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
 
+        this.customerAccount = createCustomerAccount(fees);
         this.addAccount(createCustomerAccount(fees));
 
         this.setCreateDetails();
@@ -282,7 +269,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.personnel;
     }
 
-    protected void setPersonnel(final PersonnelBO personnel) {
+    public void setPersonnel(final PersonnelBO personnel) {
         this.personnel = personnel;
     }
 
@@ -290,19 +277,18 @@ public abstract class CustomerBO extends BusinessObject {
         return this.displayName;
     }
 
-    protected void setDisplayName(final String displayName) {
+    public void setDisplayName(final String displayName) {
         this.displayName = displayName;
     }
 
     /**
-     * Most callers will instead want an enum - call {@link #getStatus()} for
-     * that.
+     * Most callers will instead want an enum - call {@link #getStatus()} for that.
      */
     public CustomerStatusEntity getCustomerStatus() {
         return customerStatus;
     }
 
-    protected void setCustomerStatus(final CustomerStatusEntity customerStatus) {
+    public final void setCustomerStatus(final CustomerStatusEntity customerStatus) {
         this.customerStatus = customerStatus;
     }
 
@@ -338,7 +324,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.searchId;
     }
 
-    protected void setSearchId(final String searchId) {
+    public void setSearchId(final String searchId) {
         this.searchId = searchId;
     }
 
@@ -362,7 +348,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.customerActivationDate = customerActivationDate;
     }
 
-    protected void setParentCustomer(final CustomerBO parentCustomer) {
+    public void setParentCustomer(final CustomerBO parentCustomer) {
         this.parentCustomer = parentCustomer;
     }
 
@@ -398,7 +384,7 @@ public abstract class CustomerBO extends BusinessObject {
         return customerMeeting.getMeeting();
     }
 
-    protected void setCustomerMeeting(final CustomerMeetingEntity customerMeeting) {
+    public void setCustomerMeeting(final CustomerMeetingEntity customerMeeting) {
         this.customerMeeting = customerMeeting;
     }
 
@@ -456,7 +442,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.customerNotes.add(customerNote);
     }
 
-    protected void addCustomerFlag(final CustomerStatusFlagEntity customerStatusFlagEntity) {
+    public void addCustomerFlag(final CustomerStatusFlagEntity customerStatusFlagEntity) {
         CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(this, customerStatusFlagEntity, this
                 .getUserContext().getId(), new DateTimeService().getCurrentJavaDateTime());
         this.customerFlags.add(customerFlag);
@@ -480,9 +466,17 @@ public abstract class CustomerBO extends BusinessObject {
 
     public void generateGlobalCustomerNumber() throws CustomerException {
         globalCustNum = generateSystemId();
-        getCustomerAccount().generateCustomerAccountSystemId();
+
+        CustomerAccountBO customerAccount = getCustomerAccount();
+        if (customerAccount != null) {
+            customerAccount.generateCustomerAccountSystemId();
+        }
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao}.
+     */
+    @Deprecated
     public void update() throws CustomerException {
         try {
             setUpdateDetails();
@@ -492,6 +486,10 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao}.
+     */
+    @Deprecated
     protected void persist() throws CustomerException {
         try {
             getCustomerPersistence().createOrUpdate(this);
@@ -500,8 +498,13 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    public void update(final UserContext userContext, final String externalId, final Address address, final List<CustomFieldView> customFields,
-            final List<CustomerPositionView> customerPositions) throws CustomerException, InvalidDateException {
+    /**
+     * @deprecated - use {@link CustomerDao}.
+     */
+    @Deprecated
+    public void update(final UserContext userContext, final String externalId, final Address address,
+            final List<CustomFieldView> customFields, final List<CustomerPositionView> customerPositions)
+            throws CustomerException, InvalidDateException {
         this.setUserContext(userContext);
         this.setExternalId(externalId);
         updateAddress(address);
@@ -510,7 +513,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.update();
     }
 
-    public void updateAddress(final Address address) throws CustomerException {
+    public void updateAddress(final Address address) {
         if (getCustomerAddressDetail() == null) {
             setCustomerAddressDetail(new CustomerAddressDetailEntity(this, address));
         } else {
@@ -518,14 +521,6 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    /**
-     * FIXME - keithw - find {@link CustomerAccountBO} using DAO/Persistence
-     * rather than looping over all accounts (should it not be a one-to-one
-     * relationship anyway?)
-     *
-     * @deprecated
-     */
-    @Deprecated
     public CustomerAccountBO getCustomerAccount() {
         CustomerAccountBO customerAccount = null;
         for (AccountBO account : accounts) {
@@ -585,6 +580,10 @@ public abstract class CustomerBO extends BusinessObject {
         return historicalData;
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao}
+     */
+    @Deprecated
     public List<CustomerBO> getChildren(final CustomerLevel customerLevel, final ChildrenStateType stateType)
             throws CustomerException {
         try {
@@ -602,15 +601,13 @@ public abstract class CustomerBO extends BusinessObject {
     public abstract boolean isActive();
 
     /**
-     * Is this customer active (but based on level rather than discriminator
-     * columm)? (Is there any way this will ever be different from
-     * {@link #isActive()}? I suspect not, but I'm not sure).
+     * Is this customer active (but based on level rather than discriminator columm)? (Is there any way this will ever
+     * be different from {@link #isActive()}? I suspect not, but I'm not sure).
      */
     public boolean isActiveViaLevel() {
         return getCustomerLevel().isGroup() && getStatus() == CustomerStatus.GROUP_ACTIVE
-                || getCustomerLevel().isClient() && getStatus() == CustomerStatus.CLIENT_ACTIVE || getCustomerLevel()
-                .isCenter()
-                && getStatus() == CustomerStatus.CENTER_ACTIVE;
+                || getCustomerLevel().isClient() && getStatus() == CustomerStatus.CLIENT_ACTIVE
+                || getCustomerLevel().isCenter() && getStatus() == CustomerStatus.CENTER_ACTIVE;
     }
 
     public Money getBalanceForAccountsAtRiskForTask(MifosCurrency currency) {
@@ -664,7 +661,8 @@ public abstract class CustomerBO extends BusinessObject {
         for (AccountBO accountBO : getAccounts()) {
             if (accountBO.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) accountBO).isAccountActive()) {
                 amountOverDue = amountOverDue.add(((LoanBO) accountBO).getTotalPrincipalAmountInArrears());
-                totalOutStandingAmount = totalOutStandingAmount.add(((LoanBO) accountBO).getLoanSummary().getOriginalPrincipal());
+                totalOutStandingAmount = totalOutStandingAmount.add(((LoanBO) accountBO).getLoanSummary()
+                        .getOriginalPrincipal());
             }
         }
         if (totalOutStandingAmount.isNonZero()) {
@@ -703,60 +701,50 @@ public abstract class CustomerBO extends BusinessObject {
 
     /**
      * Most callers will want to call the enumified version
-     * {@link #changeStatus(CustomerStatus, CustomerStatusFlag, String)}
-     * instead.
+     * {@link #changeStatus(CustomerStatus, CustomerStatusFlag, String)} instead.
      */
-    public void changeStatus(final Short newStatusId, final Short flagId, final String comment) throws CustomerException {
-        Short oldStatusId = getCustomerStatus().getId();
-        validateStatusChange(newStatusId);
-        if (getPersonnel() != null) {
-            validateLoanOfficerAssigned();
-        }
-        if (checkStatusChangeCancelToPartial(CustomerStatus.fromInt(oldStatusId), CustomerStatus.fromInt(newStatusId))) {
-            if (!isBlackListed()) {
-                getCustomerFlags().clear();
-            }
-        }
-        CustomerStatusEntity customerStatus;
-        try {
-            customerStatus = (CustomerStatusEntity) getMasterPersistence().getPersistentObject(
-                    CustomerStatusEntity.class, newStatusId);
-        } catch (PersistenceException e) {
-            throw new CustomerException(e);
-        }
-        customerStatus.setLocaleId(this.getUserContext().getLocaleId());
-        CustomerStatusFlagEntity customerStatusFlagEntity = null;
-        if (flagId != null) {
-            try {
-                customerStatusFlagEntity = (CustomerStatusFlagEntity) getMasterPersistence().getPersistentObject(
-                        CustomerStatusFlagEntity.class, flagId);
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
-        }
-        CustomerNoteEntity customerNote = createCustomerNotes(comment);
-        this.setCustomerStatus(customerStatus);
-        this.addCustomerNotes(customerNote);
-        if (customerStatusFlagEntity != null) {
-            customerStatusFlagEntity.setLocaleId(this.getUserContext().getLocaleId());
-            this.addCustomerFlag(customerStatusFlagEntity);
-            if (customerStatusFlagEntity.isBlackListed()) {
-                blackListed = YesNoFlag.YES.getValue();
-            }
-        }
-
-        handleActiveForFirstTime(oldStatusId, newStatusId);
-        update();
-    }
-
-    protected void handleActiveForFirstTime(final Short oldStatusId, final Short newStatusId) throws CustomerException {
-        if (isActiveForFirstTime(oldStatusId, newStatusId)) {
-            try {
-                this.getCustomerAccount().generateCustomerFeeSchedule();
-            } catch (AccountException ae) {
-                throw new CustomerException(ae);
-            }
-        }
+    public void changeStatus(final Short newStatusId, final Short flagId, final String comment)
+            throws CustomerException {
+//        Short oldStatusId = getCustomerStatus().getId();
+//        validateStatusChange(newStatusId);
+//        if (getPersonnel() != null) {
+//            validateLoanOfficerAssigned();
+//        }
+//        if (checkStatusChangeCancelToPartial(CustomerStatus.fromInt(oldStatusId), CustomerStatus.fromInt(newStatusId))) {
+//            if (!isBlackListed()) {
+//                getCustomerFlags().clear();
+//            }
+//        }
+//        CustomerStatusEntity customerStatus;
+//        try {
+//            customerStatus = (CustomerStatusEntity) getMasterPersistence().getPersistentObject(
+//                    CustomerStatusEntity.class, newStatusId);
+//        } catch (PersistenceException e) {
+//            throw new CustomerException(e);
+//        }
+//        customerStatus.setLocaleId(this.getUserContext().getLocaleId());
+//        CustomerStatusFlagEntity customerStatusFlagEntity = null;
+//        if (flagId != null) {
+//            try {
+//                customerStatusFlagEntity = (CustomerStatusFlagEntity) getMasterPersistence().getPersistentObject(
+//                        CustomerStatusFlagEntity.class, flagId);
+//            } catch (PersistenceException e) {
+//                throw new CustomerException(e);
+//            }
+//        }
+//        CustomerNoteEntity customerNote = createCustomerNotes(comment);
+//        this.setCustomerStatus(customerStatus);
+//        this.addCustomerNotes(customerNote);
+//        if (customerStatusFlagEntity != null) {
+//            customerStatusFlagEntity.setLocaleId(this.getUserContext().getLocaleId());
+//            this.addCustomerFlag(customerStatusFlagEntity);
+//            if (customerStatusFlagEntity.isBlackListed()) {
+//                blackListed = YesNoFlag.YES.getValue();
+//            }
+//        }
+//
+//        handleActiveForFirstTime(oldStatusId, newStatusId);
+//        update();
     }
 
     public abstract void updateMeeting(MeetingBO meeting) throws CustomerException;
@@ -850,18 +838,9 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     private boolean sameRecurrence(final MeetingBO oldMeeting, final MeetingBO newMeeting) {
-        return oldMeeting.isWeekly() && newMeeting.isWeekly()
-                || oldMeeting.isMonthlyOnDate() && newMeeting.isMonthlyOnDate() || oldMeeting.isMonthly()
-                && !oldMeeting.isMonthlyOnDate() && newMeeting.isMonthly() && !newMeeting.isMonthlyOnDate();
-    }
-
-    private void validateLoanOfficerAssigned() throws CustomerException {
-        logger.debug("In CustomerBO::validateLoanOfficerAssigned()");
-        if (!personnel.isActive()
-                || !(personnel.getOffice().getOfficeId().equals(office.getOfficeId()) || !personnel.isLoanOfficer())) {
-            throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
-        }
-        logger.debug("In CustomerBO::validateLoanOfficerAssigned(), completed");
+        return oldMeeting.isWeekly() && newMeeting.isWeekly() || oldMeeting.isMonthlyOnDate()
+                && newMeeting.isMonthlyOnDate() || oldMeeting.isMonthly() && !oldMeeting.isMonthlyOnDate()
+                && newMeeting.isMonthly() && !newMeeting.isMonthlyOnDate();
     }
 
     public List<LoanBO> getOpenLoanAccounts() {
@@ -922,11 +901,11 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    void incrementChildCount() {
+    public void incrementChildCount() {
         this.maxChildCount = this.getMaxChildCount().intValue() + 1;
     }
 
-    void decrementChildCount() {
+    public void decrementChildCount() {
         this.maxChildCount = this.getMaxChildCount().intValue() - 1;
     }
 
@@ -946,25 +925,25 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void validateLO(final PersonnelBO loanOfficer) throws CustomerException {
+    public void validateLO(final PersonnelBO loanOfficer) throws CustomerException {
         if (loanOfficer == null || loanOfficer.getPersonnelId() == null) {
             throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
         }
     }
 
-    protected void validateLO(final Short loanOfficerId) throws CustomerException {
+    public void validateLO(final Short loanOfficerId) throws CustomerException {
         if (loanOfficerId == null) {
             throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
         }
     }
 
-    protected CustomerMeetingEntity createCustomerMeeting(final MeetingBO meeting) {
+    public CustomerMeetingEntity createCustomerMeeting(final MeetingBO meeting) {
         return meeting != null ? new CustomerMeetingEntity(this, meeting) : null;
     }
 
-    protected abstract boolean isActiveForFirstTime(Short oldStatus, Short newStatusId);
+    public abstract boolean isActiveForFirstTime(Short oldStatus, Short newStatusId);
 
-    private boolean checkStatusChangeCancelToPartial(final CustomerStatus oldStatus, final CustomerStatus newStatus) {
+    public boolean checkStatusChangeCancelToPartial(final CustomerStatus oldStatus, final CustomerStatus newStatus) {
         if ((oldStatus.equals(CustomerStatus.GROUP_CANCELLED) || oldStatus.equals(CustomerStatus.CLIENT_CANCELLED))
                 && (newStatus.equals(CustomerStatus.GROUP_PARTIAL) || newStatus.equals(CustomerStatus.CLIENT_PARTIAL))) {
             return true;
@@ -972,13 +951,15 @@ public abstract class CustomerBO extends BusinessObject {
         return false;
     }
 
-    protected abstract void validateStatusChange(Short newStatusId) throws CustomerException;
-
-    protected boolean isSameBranch(final OfficeBO officeObj) {
+    public final boolean isSameBranch(final OfficeBO officeObj) {
         return this.office.getOfficeId().equals(officeObj.getOfficeId());
     }
 
-    protected void updateCustomFields(final List<CustomFieldView> customFields) throws InvalidDateException {
+    public final boolean isDifferentBranch(final OfficeBO otherOffice) {
+        return !isSameBranch(otherOffice);
+    }
+
+    public void updateCustomFields(final List<CustomFieldView> customFields) throws InvalidDateException {
         if (customFields != null) {
             for (CustomFieldView fieldView : customFields) {
                 if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
@@ -995,7 +976,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void updateCustomerPositions(final List<CustomerPositionView> customerPositions) throws CustomerException {
+    public void updateCustomerPositions(final List<CustomerPositionView> customerPositions) throws CustomerException {
         if (customerPositions != null) {
             for (CustomerPositionView positionView : customerPositions) {
                 boolean isPositionFound = false;
@@ -1020,7 +1001,7 @@ public abstract class CustomerBO extends BusinessObject {
                 if (position.getCustomer() != null
                         && position.getCustomer().getCustomerId().intValue() == this.getCustomerId().intValue()) {
                     // position.getPosition().getId().shortValue()==new
-                                                                                                                // Short("1").shortValue())
+                    // Short("1").shortValue())
                     throw new CustomerException(CustomerConstants.CLIENT_IS_A_TITLE_HOLDER_EXCEPTION);
                 }
             }
@@ -1028,6 +1009,10 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao}
+     */
+    @Deprecated
     protected void updateLoanOfficer(final Short loanOfficerId) throws Exception {
 
         try {
@@ -1050,13 +1035,18 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    private boolean isLOChanged(final Short loanOfficerId) {
-        return getPersonnel() == null && loanOfficerId != null || getPersonnel() != null && loanOfficerId == null || getPersonnel() != null
-                && loanOfficerId != null && !getPersonnel().getPersonnelId().equals(loanOfficerId);
+    public void setLoanOfficer(PersonnelBO loanOfficer) {
+        this.personnel = loanOfficer;
+    }
+
+    public boolean isLOChanged(final Short loanOfficerId) {
+        return getPersonnel() == null && loanOfficerId != null || getPersonnel() != null && loanOfficerId == null
+                || getPersonnel() != null && loanOfficerId != null
+                && !getPersonnel().getPersonnelId().equals(loanOfficerId);
 
     }
 
-    protected void makeCustomerMovementEntries(final OfficeBO officeToTransfer) {
+    public void makeCustomerMovementEntries(final OfficeBO officeToTransfer) {
         CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
         if (currentCustomerMovement == null) {
             currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
@@ -1101,7 +1091,7 @@ public abstract class CustomerBO extends BusinessObject {
         return getOffice().getGlobalOfficeNum() + "-" + systemId + getCustomerId();
     }
 
-    private void handleParentTransfer() throws CustomerException {
+    protected void handleParentTransfer() {
         setPersonnel(getParentCustomer().getPersonnel());
         if (getParentCustomer().getCustomerMeeting() != null) {
             if (getCustomerMeeting() != null) {
@@ -1117,12 +1107,16 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void setUpdatedMeeting(final MeetingBO meeting) {
+    public void setUpdatedMeeting(final MeetingBO meeting) {
         getCustomerMeeting().setUpdatedMeeting(meeting);
         getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
     }
 
-    protected void deleteCustomerMeeting() throws CustomerException {
+    /**
+     * @deprecated - move methods that call persistence out of domain model.
+     */
+    @Deprecated
+    protected void deleteCustomerMeeting() {
         logger.debug("In CustomerBO::deleteCustomerMeeting(), customerId: " + getCustomerId());
         try {
             getCustomerPersistence().deleteCustomerMeeting(this);
@@ -1165,21 +1159,11 @@ public abstract class CustomerBO extends BusinessObject {
         this.addCustomerHierarchy(new CustomerHierarchyEntity(this, parentCustomer));
     }
 
-    private CustomerNoteEntity createCustomerNotes(final String comment) throws CustomerException {
-        try {
-            return new CustomerNoteEntity(comment, new DateTimeService().getCurrentJavaSqlDate(),
-                    getPersonnelPersistence().getPersonnel(getUserContext().getId()), this);
-        } catch (PersistenceException ae) {
-            throw new CustomerException(ae);
-        }
-    }
-
-    protected void addAccount(final AccountBO account) {
+    public void addAccount(final AccountBO account) {
         this.accounts.add(account);
     }
 
-    private void validateFields(final String displayName, final CustomerStatus customerStatus, final CustomerBO parentCustomer)
-            throws CustomerException {
+    private void validateFields(final String displayName, final CustomerStatus customerStatus) throws CustomerException {
         if (StringUtils.isBlank(displayName)) {
             throw new CustomerException(CustomerConstants.INVALID_NAME);
         }
@@ -1196,7 +1180,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void childAddedForParent(final CustomerBO parent) {
+    public void childAddedForParent(final CustomerBO parent) {
         parent.incrementChildCount();
     }
 
@@ -1204,14 +1188,7 @@ public abstract class CustomerBO extends BusinessObject {
         parent.decrementChildCount();
     }
 
-    protected void makeInactive(final CustomerBO newParent) {
-        CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-        currentHierarchy.makeInactive(userContext.getId());
-        this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-
-    }
-
-    protected void resetPositions(final CustomerBO newParent) {
+    public void resetPositions(final CustomerBO newParent) {
         newParent.resetPositionsAssignedToClient(this.getCustomerId());
     }
 
@@ -1274,7 +1251,7 @@ public abstract class CustomerBO extends BusinessObject {
         update();
     }
 
-    protected void handleAddClientToGroup() throws CustomerException {
+    protected void handleAddClientToGroup() {
         setPersonnel(getParentCustomer().getPersonnel());
         if (getCustomerMeeting() != null) {
             deleteCustomerMeeting();
@@ -1335,13 +1312,11 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     /**
-     * <code>searchId</code> should indicate the order in which clients became
-     * part of a group. This method was originally created for use in fixing <a
-     * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1417">bug
+     * <code>searchId</code> should indicate the order in which clients became part of a group. This method was
+     * originally created for use in fixing <a href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1417">bug
      * #1417</a>.
      *
-     * @return A {@link java.util.Comparator} useful for comparing customers by
-     *         searchId.
+     * @return A {@link java.util.Comparator} useful for comparing customers by searchId.
      */
     public static Comparator<CustomerBO> searchIdComparator() {
         return new Comparator<CustomerBO>() {
@@ -1351,22 +1326,66 @@ public abstract class CustomerBO extends BusinessObject {
         };
     }
 
-    public void updatePerformanceHistoryOnDisbursement(final LoanBO loan, final Money disburseAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnDisbursement(final LoanBO loan, final Money disburseAmount)
+            throws CustomerException {
     }
 
     public void updatePerformanceHistoryOnWriteOff(final LoanBO loan) throws CustomerException {
     }
 
-    public void updatePerformanceHistoryOnReversal(final LoanBO loan, final Money lastLoanAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnReversal(final LoanBO loan, final Money lastLoanAmount)
+            throws CustomerException {
     }
 
-    public void updatePerformanceHistoryOnRepayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnRepayment(final LoanBO loan, final Money totalAmount)
+            throws CustomerException {
     }
 
-    public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount)
+            throws CustomerException {
     }
 
     public void addCustomerAccount(final CustomerAccountBO customerAccount) {
         this.accounts.add(customerAccount);
+    }
+
+    public void setCustomerAccount(CustomerAccountBO customerAccount) {
+        this.customerAccount = customerAccount;
+        this.accounts.add(customerAccount);
+    }
+
+
+    // FIXME - keithw - remove persistence/dao from domain model.
+    public CustomerPersistence getCustomerPersistence() {
+        if (null == customerPersistence) {
+            customerPersistence = new CustomerPersistence();
+        }
+        return this.customerPersistence;
+    }
+
+    public void setCustomerPersistence(final CustomerPersistence customerPersistence) {
+        this.customerPersistence = customerPersistence;
+    }
+
+    public PersonnelPersistence getPersonnelPersistence() {
+        if (null == personnelPersistence) {
+            personnelPersistence = new PersonnelPersistence();
+        }
+        return personnelPersistence;
+    }
+
+    public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
+        this.personnelPersistence = personnelPersistence;
+    }
+
+    public MasterPersistence getMasterPersistence() {
+        if (null == masterPersistence) {
+            masterPersistence = new MasterPersistence();
+        }
+        return masterPersistence;
+    }
+
+    public void setMasterPersistence(final MasterPersistence masterPersistence) {
+        this.masterPersistence = masterPersistence;
     }
 }

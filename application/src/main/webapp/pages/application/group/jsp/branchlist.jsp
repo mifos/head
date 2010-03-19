@@ -23,6 +23,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <script language="javascript">
   function goToCancelPage(){
@@ -103,6 +104,7 @@ explanation of the license and how it is applied.
                   <mifos:mifoslabel name="Group.createpagehead3" bundle="GroupUIResources"/> </td>
                 </tr>
               </table>
+              <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOnlyOffices')}" var="branchOnlyOffices" />
               <office:OfficeListTag methodName="load" actionName="groupCustAction.do" flowKey="${requestScope.currentFlowKey}" onlyBranchOffices="yes"/>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>

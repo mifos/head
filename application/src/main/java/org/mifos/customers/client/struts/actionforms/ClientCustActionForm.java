@@ -142,7 +142,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     private int age;
 
-    private List<Short> selectedOfferings;
+    private final List<Short> selectedOfferings;
 
     private List familyNames;
 
@@ -367,7 +367,7 @@ public class ClientCustActionForm extends CustomerActionForm {
                 validateSpouseNames(errors, resources);
             }
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
-            validateCustomFields(request, errors);
+            validateCustomFieldsForCustomers(request, errors);
             validatePicture(request, errors);
         }
         if (method.equals(Methods.preview.toString()) && ClientConstants.INPUT_MFI_INFO.equals(input)) {

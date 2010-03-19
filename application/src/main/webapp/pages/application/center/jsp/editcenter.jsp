@@ -347,7 +347,7 @@ explanation of the license and how it is applied.
 										<c:if test="${customFieldDef.fieldId==cf.fieldId}">
 											<tr class="fontnormal">
 												<td width="26%" align="right">
-													<span id="editcenter.label.customField"><mifos:mifoslabel name="${customFieldDef.lookUpEntity.entityType}" mandatory="${customFieldDef.mandatoryStringValue}" bundle="CenterUIResources"></mifos:mifoslabel></span>
+													<span id="editcenter.label.customField"><mifos:mifoslabel name="${customFieldDef.lookUpEntityType}" mandatory="${customFieldDef.mandatoryString}" bundle="CenterUIResources"></mifos:mifoslabel></span>
 													:
 												</td>
 												<td width="74%">

@@ -21,10 +21,11 @@
 package org.mifos.customers.client.business.service;
 
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.util.UserContext;
 
 /**
  *
  */
 public interface ClientDetailsServiceFacade {
-    ClientInformationDto getClientInformationDto(String globalCustNum, Short levelId) throws ServiceException;
+    ClientInformationDto getClientInformationDto(String globalCustNum, UserContext userContext) throws ServiceException;
 }

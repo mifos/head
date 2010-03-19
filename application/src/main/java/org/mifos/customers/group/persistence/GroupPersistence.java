@@ -29,13 +29,14 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.config.ClientRules;
+import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.GroupTemplate;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -55,10 +56,13 @@ import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated - use {@link CustomerDao}
+ */
+@Deprecated
 public class GroupPersistence extends Persistence {
-    private CenterPersistence centerPersistence = new CenterPersistence();
-    private CustomerPersistence customerPersistence = new CustomerPersistence();
-    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final CenterPersistence centerPersistence = new CenterPersistence();
+    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
     public GroupBO createGroup(UserContext userContext, GroupTemplate template) throws CustomerException,
             PersistenceException, ValidationException {
@@ -76,7 +80,7 @@ public class GroupPersistence extends Persistence {
         }
         GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
                 .getExternalId(), template.isTrained(), template.getTrainedDate(), template.getAddress(), template
-                .getCustomFieldViews(), template.getFees(), loanOfficer, center, new GroupPersistence(), new OfficePersistence());
+                .getCustomFieldViews(), template.getFees(), loanOfficer, center);
         saveGroup(group);
         return group;
     }
@@ -90,14 +94,6 @@ public class GroupPersistence extends Persistence {
             group = queryResult.get(0);
         }
         return group;
-    }
-
-    public boolean isGroupExists(String name, Short officeId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
-        queryParameters.put(CustomerConstants.OFFICE_ID, officeId);
-        List queryResult = executeNamedQuery(NamedQueryConstants.GET_GROUP_COUNT_BY_NAME, queryParameters);
-        return ((Number) queryResult.get(0)).intValue() > 0;
     }
 
     public QueryResult search(String searchString, Short userId) throws PersistenceException {
@@ -226,6 +222,11 @@ public class GroupPersistence extends Persistence {
         return result;
     }
 
+    /**
+     * @deprecated - use {@link CustomerService#createGroup(GroupBO, org.mifos.application.meeting.business.MeetingBO, List)}.
+     * use {@link CustomerDao#save(org.mifos.customers.business.CustomerBO)}.
+     */
+    @Deprecated
     public void saveGroup(GroupBO groupBo) throws CustomerException {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         customerPersistence.saveCustomer(groupBo);

@@ -31,6 +31,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.exceptions.OfficeValidationException;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -68,6 +69,29 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
     private Set<OfficeCustomFieldEntity> customFields;
     private Set<OfficeBO> children;
 
+    public static List<OfficeHierarchyDto> convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(
+            List<OfficeBO> branchParents) {
+
+        List<OfficeHierarchyDto> hierarchy = new ArrayList<OfficeHierarchyDto>();
+
+        for (OfficeBO officeBO : branchParents) {
+
+            List<OfficeHierarchyDto> children = new ArrayList<OfficeHierarchyDto>();
+
+            Set<OfficeBO> branchOnlyChildren = officeBO.getBranchOnlyChildren();
+            if (branchOnlyChildren != null && !branchOnlyChildren.isEmpty()) {
+                children = convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(new ArrayList<OfficeBO>(
+                        branchOnlyChildren));
+            }
+            OfficeHierarchyDto officeHierarchy = new OfficeHierarchyDto(officeBO.getOfficeId(), officeBO
+                    .getOfficeName(), officeBO.getSearchId(), officeBO.isActive(), children);
+
+            hierarchy.add(officeHierarchy);
+        }
+
+        return hierarchy;
+    }
+
     /**
      * default constructor for hibernate usuage
      */
@@ -92,18 +116,18 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
     }
 
     /**
-     * For tests. Does not require that the names in question actually exist in
-     * the database.
+     * For tests. Does not require that the names in question actually exist in the database.
      */
-    public static OfficeBO makeForTest(final UserContext userContext, final OfficeLevel level, final OfficeBO parentOffice,
-            final String searchId, final List<CustomFieldView> customFields, final String officeName, final String shortName, final Address address,
-            final OperationMode operationMode, final OfficeStatus status) throws OfficeException {
+    public static OfficeBO makeForTest(final UserContext userContext, final OfficeLevel level,
+            final OfficeBO parentOffice, final String searchId, final List<CustomFieldView> customFields,
+            final String officeName, final String shortName, final Address address, final OperationMode operationMode,
+            final OfficeStatus status) throws OfficeException {
         return new OfficeBO(userContext, null, level, parentOffice, searchId, customFields, officeName, shortName,
                 address, operationMode, status);
     }
 
-    public static OfficeBO makeForTest(final UserContext userContext, final Short officeId, final String officeName, final String shortName)
-            throws OfficeException {
+    public static OfficeBO makeForTest(final UserContext userContext, final Short officeId, final String officeName,
+            final String shortName) throws OfficeException {
         return new OfficeBO(userContext, officeId, OfficeLevel.AREAOFFICE, null, null, null, officeName, shortName,
                 null, OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
     }
@@ -111,9 +135,10 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
     /**
      * Construct an object without validating it against the database.
      */
-    private OfficeBO(final UserContext userContext, final Short officeId, final OfficeLevel level, final OfficeBO parentOffice,
-            final String searchId, final List<CustomFieldView> customFields, final String officeName, final String shortName, final Address address,
-            final OperationMode operationMode, final OfficeStatus status) throws OfficeValidationException {
+    private OfficeBO(final UserContext userContext, final Short officeId, final OfficeLevel level,
+            final OfficeBO parentOffice, final String searchId, final List<CustomFieldView> customFields,
+            final String officeName, final String shortName, final Address address, final OperationMode operationMode,
+            final OfficeStatus status) throws OfficeValidationException {
         super(userContext);
         verifyFieldsNoDatabase(level, operationMode);
 
@@ -147,14 +172,16 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
      *             Thrown when there's a problem with the persistence layer
      */
     public OfficeBO(final UserContext userContext, final OfficeLevel level, final OfficeBO parentOffice,
-            final List<CustomFieldView> customFields, final String officeName, final String shortName, final Address address,
-            final OperationMode operationMode) throws OfficeValidationException, PersistenceException {
+            final List<CustomFieldView> customFields, final String officeName, final String shortName,
+            final Address address, final OperationMode operationMode) throws OfficeValidationException,
+            PersistenceException {
         this(userContext, null, level, parentOffice, null, customFields, officeName, shortName, address, operationMode,
                 OfficeStatus.ACTIVE);
         verifyFields(officeName, shortName, parentOffice);
     }
 
-    public OfficeBO(final Short officeId, final String officeName, final Integer maxChildCount, final Short operationMode) {
+    public OfficeBO(final Short officeId, final String officeName, final Integer maxChildCount,
+            final Short operationMode) {
         super();
         this.officeId = officeId;
         this.officeName = officeName;
@@ -348,8 +375,7 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
 
         try {
             /*
-             * TODO: Why not auto-increment? Fetching the max and adding one
-             * would seem to have a race condition.
+             * TODO: Why not auto-increment? Fetching the max and adding one would seem to have a race condition.
              */
             String officeGlobelNo = String.valueOf(new OfficePersistence().getMaxOfficeId().intValue() + 1);
             if (officeGlobelNo.length() > 4) {
@@ -444,8 +470,9 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
 
     }
 
-    public void update(final String newName, final String newShortName, final OfficeStatus newStatus, final OfficeLevel newLevel,
-            final OfficeBO newParent, final Address address, final List<CustomFieldView> customFileds) throws OfficeException {
+    public void update(final String newName, final String newShortName, final OfficeStatus newStatus,
+            final OfficeLevel newLevel, final OfficeBO newParent, final Address address,
+            final List<CustomFieldView> customFileds) throws OfficeException {
         changeOfficeName(newName);
         changeOfficeShortName(newShortName);
 

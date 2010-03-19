@@ -34,7 +34,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -401,13 +400,15 @@ public abstract class CustomerActionForm extends BaseActionForm {
         checkForMandatoryFields(entityType.getValue(), errors, request);
     }
 
-    protected void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
+    @SuppressWarnings("unchecked")
+    protected void validateCustomFieldsForCustomers(HttpServletRequest request, ActionErrors errors) {
         try {
-            List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                    .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+            List<CustomFieldView> customFieldDefs = (List<CustomFieldView>) SessionUtils.getAttribute(
+                    CustomerConstants.CUSTOM_FIELDS_LIST, request);
+
             for (CustomFieldView customField : customFields) {
                 boolean isErrorFound = false;
-                for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+                for (CustomFieldView customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
                         if (StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
@@ -417,9 +418,8 @@ public abstract class CustomerActionForm extends BaseActionForm {
                         }
                     }
                 }
-                if (isErrorFound) {
+                if (isErrorFound)
                     break;
-                }
             }
         } catch (PageExpiredException pee) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(

@@ -20,17 +20,23 @@
 
 package org.mifos.customers.group.struts.actionforms;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerPositionView;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.SessionUtils;
 
@@ -64,11 +70,6 @@ public class GroupCustActionForm extends CustomerActionForm {
         this.parentOfficeId = parentOfficeId;
     }
 
-    /*
-     * @Override public void setTrainedDate(String s) { throw new
-     * IllegalStateException(); }
-     */
-
     @Override
     protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
         ActionErrors errors = new ActionErrors();
@@ -77,13 +78,13 @@ public class GroupCustActionForm extends CustomerActionForm {
                 validateName(errors);
                 validateTrained(request, errors);
                 validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);
-                validateCustomFields(request, errors);
+                validateCustomFieldsForCustomers(request, errors);
             } else if (method.equals(Methods.preview.toString())) {
                 validateName(errors);
                 validateFormedByPersonnel(errors);
                 validateTrained(request, errors);
                 validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);
-                validateCustomFields(request, errors);
+                validateCustomFieldsForCustomers(request, errors);
                 validateFees(request, errors);
             }
         } catch (ApplicationException ae) {
@@ -104,5 +105,22 @@ public class GroupCustActionForm extends CustomerActionForm {
             return parentCustomer.getCustomerMeeting().getMeeting();
         }
         return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+    }
+    
+    public void cleanForm() {
+        setDefaultFees(new ArrayList<FeeView>());
+        setAdditionalFees(new ArrayList<FeeView>());
+        setCustomerPositions(new ArrayList<CustomerPositionView>());
+        setCustomFields(new ArrayList<CustomFieldView>());
+        setAddress(new Address());
+        setDisplayName(null);
+        setMfiJoiningDate(null);
+        setGlobalCustNum(null);
+        setCustomerId(null);
+        setExternalId(null);
+        setLoanOfficerId(null);
+        setTrained(null);
+        setTrainedDate(null);
+        setFormedByPersonnel(null);
     }
 }

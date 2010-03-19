@@ -25,9 +25,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.framework.exceptions.InvalidDateException;
+import org.mifos.framework.util.helpers.DateUtils;
 
 /**
  * Utility class contain side-effect free functions for processing date and calendar functionality.
@@ -248,5 +252,12 @@ public class CalendarUtils {
         }
 
         return convertedDates;
+    }
+
+    public static DateTime getDateFromString(String strDate, Locale locale) throws InvalidDateException {
+        if (StringUtils.isBlank(strDate)) {
+            throw new IllegalArgumentException("strDate cannot be null or empty");
+        }
+        return new DateTime(DateUtils.getLocaleDate(locale, strDate).getTime());
     }
 }

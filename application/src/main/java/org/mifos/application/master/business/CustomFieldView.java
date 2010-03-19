@@ -22,8 +22,10 @@ package org.mifos.application.master.business;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.business.View;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -35,6 +37,10 @@ public class CustomFieldView extends View {
     private String fieldValue;
 
     private Short fieldType;
+
+    private boolean mandatory;
+    private String lookUpEntityType;
+    private String mandatoryString;
 
     public CustomFieldView() {
         super();
@@ -115,4 +121,37 @@ public class CustomFieldView extends View {
         setFieldValue(DateUtils.convertUserToDbFmt(getFieldValue(), userfmt));
     }
 
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public boolean isMandatory() {
+        return this.mandatory;
+    }
+
+    public String getLookUpEntityType() {
+        return this.lookUpEntityType;
+    }
+
+    public void setLookUpEntityType(String lookUpEntityType) {
+        this.lookUpEntityType = lookUpEntityType;
+    }
+
+    public String getMandatoryString() {
+        return this.mandatoryString;
+    }
+
+    public void setMandatoryString(String mandatoryString) {
+        this.mandatoryString = mandatoryString;
+    }
+
+    public static void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale)
+            throws InvalidDateException {
+        for (CustomFieldView customField : customFields) {
+            if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
+                    && StringUtils.isNotBlank(customField.getFieldValue())) {
+                customField.convertDateToUniformPattern(locale);
+            }
+        }
+    }
 }

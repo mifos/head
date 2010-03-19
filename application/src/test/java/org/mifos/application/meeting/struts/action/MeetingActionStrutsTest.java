@@ -594,6 +594,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         group = createGroupUnderBranch(null);
         client1 = createClient("client1", group, CustomerStatus.CLIENT_PARTIAL);
         client2 = createClient("client2", group, CustomerStatus.CLIENT_PENDING);
+        StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         Assert.assertNull(group.getCustomerMeeting());
         Assert.assertNull(client1.getCustomerMeeting());

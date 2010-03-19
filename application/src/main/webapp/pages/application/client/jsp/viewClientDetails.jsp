@@ -46,14 +46,8 @@ explanation of the license and how it is applied.
 
 		<html-el:form action="clientCustAction.do">
 		<!-- The new way to send data is using a data transfer object -->
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientDetailsDto')}"
-			   var="clientDetailsDto" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-			   var="BusinessKey" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerPerformance')}"
-			   var="customerPerformance" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerPerformanceHistory')}"
-			   var="customerPerformanceHistory" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientInformationDto')}"
+			   var="clientInformationDto" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink
@@ -66,11 +60,11 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span id="viewClientDetails.heading"><c:out
-								value="${clientDetailsDto.displayName}" /></span></td>
+								value="${clientInformationDto.clientDisplay.displayName}" /></span></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
-								test="${clientDetailsDto.customerStatusId != 6}">
-								<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
+								test="${clientInformationDto.clientDisplay.customerStatusId != 6}">
+								<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${clientInformationDto.clientDisplay.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
 									<fmt:message key="client.editStatus">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 									</fmt:message>
@@ -85,37 +79,34 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage
-								id="${clientDetailsDto.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
-								value="${clientDetailsDto.customerStatusName}" /></span> <c:forEach
-								var="flagSet" items="${BusinessKey.customerFlags}">
+								id="${clientInformationDto.clientDisplay.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
+								value="${clientInformationDto.clientDisplay.customerStatusName}" /></span> <c:forEach
+								var="flagSet" items="${clientInformationDto.customerFlags}">
 								<span class="fontnormal"> <c:if
-									test="${BusinessKey.blackListed}">
+									test="${clientInformationDto.clientDisplay.blackListed}">
 									<mifos:MifosImage id="blackListed" moduleName="org.mifos.customers.client.util.resources.clientImages" />
-								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
+								</c:if> <c:out value="${flagSet.statusFlagName}" /> </span>
 							</c:forEach> </span><br>
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
 								name="client.SystemId" bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></span>
 							<span class="fontnormal"><c:out
-								value="${clientDetailsDto.globalCustNum}" /></span><br>
+								value="${clientInformationDto.clientDisplay.globalCustNum}" /></span><br>
 							<!-- Loan Officer of the client --> <span class="fontnormal"> <mifos:mifoslabel
 								name="client.LoanOff" bundle="ClientUIResources"></mifos:mifoslabel>
-							<c:out value="${BusinessKey.personnel.displayName}" /></span><br>
+							<c:out value="${clientInformationDto.clientDisplay.loanOfficerName}" /></span><br>
 						</tr>
 						<tr id="Client.BusinessActivities">
 							<td class="fontnormalbold"><span class="fontnormal"> <mifos:mifoslabel
 								name="client.BusinessActivities" bundle="ClientUIResources"
 								keyhm="Client.BusinessActivities"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
-								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntityName')}" /></span> <br>
+								<c:out value="${clientInformationDto.clientDisplay.businessActivities}" /></span> <br>
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"> 
-							<c:set var="custId" value="${BusinessKey.customerId}" />
-							<c:set var="custName"	value="${BusinessKey.personnel.displayName}" /> 	
-							<c:set var="pic"	value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPictureOnGet')}" /> 
-							<%-- <c:out value="pic val;ue: "/>
-							<c:out value="${pic}"/> --%>
-							<c:if test="${pic eq 'No'}">
+							<c:set var="custId" value="${clientInformationDto.clientDisplay.customerId}" />
+							<c:set var="custName"	value="${clientInformationDto.clientDisplay.loanOfficerName}" /> 	
+							<c:if test="${clientInformationDto.clientDisplay.isCustomerPicture}">
 								<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')"><mifos:mifoslabel
 								name="client.seephoto" bundle="ClientUIResources"></mifos:mifoslabel></a>
 							</c:if> </span><br>
@@ -130,20 +121,20 @@ explanation of the license and how it is applied.
 								name="client.AccountHeading" bundle="ClientUIResources"></mifos:mifoslabel></td>
 						</tr>
 						<!-- bug id 28004. Added if condition to show link to open accounts if only client is active-->
-						<c:if test="${clientDetailsDto.customerStatusId == 3}">
+						<c:if test="${clientInformationDto.clientDisplay.customerStatusId == 3}">
 							<tr align="right">
 								<td class="headingorange"><span class="fontnormal"><mifos:mifoslabel
 									name="client.AccountsLink" bundle="ClientUIResources"/>&nbsp; <html-el:link styleId="viewClientDetails.link.newLoanAccount"
-									href="loanAccountAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&randomNUm=${sessionScope.randomNUm}">
+									href="loanAccountAction.do?method=getPrdOfferings&customerId=${clientInformationDto.clientDisplay.customerId}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 								</html-el:link> &nbsp;|&nbsp; <html-el:link styleId="viewClientDetails.link.newSavingsAccount"
-									href="savingsAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+									href="savingsAction.do?method=getPrdOfferings&customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link> </span></td>
 							</tr>
 						</c:if>
 					</table>
-					<c:if test="${!empty clientDetailsDto.clientLoans}">
+					<c:if test="${!empty clientInformationDto.loanAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -158,7 +149,7 @@ explanation of the license and how it is applied.
 								<span class="fontnormal"></span>
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
-									<c:forEach items="${clientDetailsDto.clientLoans}"
+									<c:forEach items="${clientInformationDto.loanAccountsInUse}"
 										var="loan">
 										<tr>
 											<td>
@@ -166,8 +157,8 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewLoanAccount"
-														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${BusinessKey.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-														<c:out value="${loan.loanProductName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
+														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
@@ -201,7 +192,7 @@ explanation of the license and how it is applied.
 							</tr>
 						</table>
 					</c:if> <c:if
-						test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerSavingsAccountsInUse')}">
+						test="${!empty clientInformationDto.savingsAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -217,7 +208,7 @@ explanation of the license and how it is applied.
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
 									<c:forEach
-										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerSavingsAccountsInUse')}"
+										items="${clientInformationDto.savingsAccountsInUse}"
 										var="savings">
 										<tr>
 											<td>
@@ -226,13 +217,13 @@ explanation of the license and how it is applied.
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewSavingsAccount"
 														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-														<c:out value="${savings.savingsOffering.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
+														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
-														id="${savings.accountState.id}"
+														id="${savings.accountStateId}"
 														moduleName="org.mifos.accounts.savings.util.resources.savingsImages" /> <c:out
-														value="${savings.accountState.name}" /> </span></td>
+														value="${savings.accountStateName}" /> </span></td>
 												</tr>
 											</table>
 											<span class="fontnormal"><mifos:mifoslabel	name="Client.balance" /> <c:out
@@ -269,14 +260,14 @@ explanation of the license and how it is applied.
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="53%"><span class="fontnormal"> <a id="viewClientDetails.link.viewDetails"
-												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>">
+												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>">
 											<mifos:mifoslabel name="client.viewdetails"
 												bundle="ClientUIResources" /> </a> </span></td>
 										</tr>
 									</table>
 									<span class="fontnormal"><mifos:mifoslabel name="client.amtdue"
 										bundle="ClientUIResources" isColonRequired="yes"/> <c:out
-										value="${BusinessKey.customerAccount.nextDueAmount}" />
+										value="${clientInformationDto.customerAccountSummary.nextDueAmount}" />
 									</span></td>
 								</tr>
 
@@ -293,8 +284,8 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="69%" align="right" class="fontnormal">
 							<span class="fontnormal">
-								<c:if test="${clientDetailsDto.customerStatusId !=1 && clientDetailsDto.customerStatusId !=2}">
-									<html-el:link styleId="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<c:if test="${clientInformationDto.clientDisplay.customerStatusId !=1 && clientInformationDto.clientDisplay.customerStatusId !=2}">
+									<html-el:link styleId="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
                   						<mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" />
                   					</html-el:link>
                   				</c:if>
@@ -326,7 +317,7 @@ explanation of the license and how it is applied.
 								name="${ConfigurationConstants.EXTERNALID}"
 								keyhm="Client.ExternalId" isColonRequired="yes"
 								isManadatoryIndicationNotRequired="yes" /> <c:out
-								value="${BusinessKey.externalId}" /><br>
+								value="${clientInformationDto.clientDisplay.externalId}" /><br>
 							</span>
 						</tr>
 						<tr>
@@ -337,12 +328,12 @@ explanation of the license and how it is applied.
 								</fmt:message>:
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.customerActivationDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,clientInformationDto.clientDisplay.customerActivationDate)}" />
 							<br>
 							</span> <span class="fontnormal"><mifos:mifoslabel
 								name="client.FormedBy" bundle="ClientUIResources"></mifos:mifoslabel></span>
 							<span class="fontnormal"><c:out
-								value="${BusinessKey.customerFormedByPersonnel.displayName}" />
+								value="${clientInformationDto.clientDisplay.customerFormedByDisplayName}" />
 							</span><br>
 
 							<br>
@@ -358,7 +349,7 @@ explanation of the license and how it is applied.
 								keyhm="Client.TrainedDate"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.trainedDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,clientInformationDto.clientDisplay.trainedDate)}" />
 							</span> <span class="fontnormal"><br>
 							<br>
 							</span> <!-- Group Membership details --></td>
@@ -369,7 +360,7 @@ explanation of the license and how it is applied.
 								<tr>
 									<td width="61%" class="fontnormalbold">
 									<c:choose>
-										<c:when test="${BusinessKey.clientUnderGroup}">
+										<c:when test="${clientInformationDto.clientDisplay.clientUnderGroup}">
 											<fmt:message key="client.GroupMembershipDetails">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 											</fmt:message>
@@ -381,22 +372,22 @@ explanation of the license and how it is applied.
 										</c:otherwise></c:choose><br>
 									<span class="fontnormalRed"> <mifos:mifoslabel
 										name="client.MeetingsHeading" bundle="ClientUIResources" isColonRequired="yes"/>&nbsp;
-									<c:out value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,UserContext)}" /></span>									
-									<c:set var="updatedMeetingScheduleMessage" value="${customerfn:getUpdatedMeetingSchedule(BusinessKey.customerMeeting,UserContext)}" />
+									<c:out value="${clientInformationDto.customerMeeting.meetingSchedule}" /></span>									
+									<c:set var="updatedMeetingScheduleMessage" value="${clientInformationDto.customerMeeting.updatedMeetingScheduleMessage}" />
 									<c:if test="${!empty updatedMeetingScheduleMessage}"><span class="fontnormalRed"><br><c:out value="${updatedMeetingScheduleMessage}" /></span></c:if>
 									<span class="fontnormal"><br></span>
 									</span> <span class="fontnormal"> <c:if
-										test="${BusinessKey.customerMeeting.meeting.meetingPlace!=null && !empty BusinessKey.customerMeeting.meeting.meetingPlace}">
+										test="${clientInformationDto.customerMeeting.meetingPlace!=null && !empty clientInformationDto.customerMeeting.meetingPlace}">
 										<c:out
-											value="${BusinessKey.customerMeeting.meeting.meetingPlace}" />
+											value="${clientInformationDto.customerMeeting.meetingPlace}" />
 										<br>
 									</c:if> <c:choose>
-										<c:when test="${BusinessKey.clientUnderGroup}">
-									<c:out value="${BusinessKey.parentCustomer.displayName}" /><br></c:when>
-										<c:otherwise><c:out value="${BusinessKey.office.officeName}" /><br></c:otherwise></c:choose></span></td>
+										<c:when test="${clientInformationDto.clientDisplay.clientUnderGroup}">
+									<c:out value="${clientInformationDto.clientDisplay.parentCustomerDisplayName}" /><br></c:when>
+										<c:otherwise><c:out value="${clientInformationDto.clientDisplay.branchName}" /><br></c:otherwise></c:choose></span></td>
 									<td width="39%" align="right" valign="top"><!-- Editing group or branch membership based on whether client belongs to group or not -->
 									<c:choose>
-										<c:when test="${BusinessKey.clientUnderGroup}">
+										<c:when test="${clientInformationDto.clientDisplay.clientUnderGroup}">
 											<html-el:link styleId="viewClientDetails.link.editRemoveGroupMembership"
 												action="clientTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<fmt:message key="client.EditRemoveMembership">
@@ -416,7 +407,7 @@ explanation of the license and how it is applied.
 											<%--</c:if>--%>
 											<br>
 											<html-el:link styleId="viewClientDetails.link.editMeetingScheduleAddGroup"
-												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
+												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${clientInformationDto.clientDisplay.customerLevelId}">
 												<mifos:mifoslabel name="client.EditMeetingLink" bundle="ClientUIResources"/>
 												<mifos:mifoslabel name="client.Separator" bundle="ClientUIResources"/>
 												<mifos:mifoslabel name="client.AddGroup" bundle="ClientUIResources"/>												
@@ -452,8 +443,8 @@ explanation of the license and how it is applied.
 								name="client.DateOfBirth" bundle="ClientUIResources"></mifos:mifoslabel>
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<span id="viewClientDetails.text.dateOfBirth"><c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.dateOfBirth)}" /></span>;
-							<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'age')}" /> <mifos:mifoslabel
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,clientInformationDto.clientDisplay.dateOfBirth)}" /></span>;
+							<c:out value="${clientInformationDto.clientDisplay.age}" /> <mifos:mifoslabel
 								name="client.YearsOld" bundle="ClientUIResources"></mifos:mifoslabel><br></td>
 						</tr>
 						<tr id="Client.GovernmentId">
@@ -461,21 +452,21 @@ explanation of the license and how it is applied.
 								name="${ConfigurationConstants.GOVERNMENT_ID}"
 								keyhm="Client.GovernmentId" isColonRequired="yes"
 								isManadatoryIndicationNotRequired="yes" /> <c:out
-								value="${BusinessKey.governmentId}" /><br>
+								value="${clientInformationDto.clientDisplay.governmentId}" /><br>
 							</td>
 						</tr>
-						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
+						<c:if test="${!clientInformationDto.clientDisplay.areFamilyDetailsRequired}">
 						<tr>
-							<td colspan="2" class="fontnormal"><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntityName')}" />
+							<td colspan="2" class="fontnormal"><c:out value="${clientInformationDto.clientDisplay.maritalStatus}" />
 							<c:if
-								test="${!empty BusinessKey.customerDetail.maritalStatus}">;</c:if>
-							<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseFatherValue')}" />
+								test="${!empty clientInformationDto.clientDisplay.maritalStatus}">;</c:if>
+							<c:out value="${clientInformationDto.clientDisplay.spouseFatherValue}" />
 							<mifos:mifoslabel name="client.Name" bundle="ClientUIResources"></mifos:mifoslabel>
-							<span id="viewClientDetails.text.spouseFatherName"><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseFatherName')}" /></span>
+							<span id="viewClientDetails.text.spouseFatherName"><c:out value="${clientInformationDto.clientDisplay.spouseFatherName}" /></span>
 								<c:if
-								test="${!empty BusinessKey.customerDetail.numChildren}">;
+								test="${!empty clientInformationDto.clientDisplay.numChildren}">;
 								<c:out
-									value="${BusinessKey.customerDetail.numChildren}" />
+									value="${clientInformationDto.clientDisplay.numChildren}" />
 								<mifos:mifoslabel name="client.Children"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</c:if><br>
@@ -485,8 +476,8 @@ explanation of the license and how it is applied.
 						<tr id="Client.Ethinicity">
 							<td class="fontnormal">
 							<mifos:mifoslabel name="${ConfigurationConstants.ETHINICITY}" keyhm="Client.Ethinicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-							<c:if test="${!empty BusinessKey.customerDetail.ethinicity}">
-								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethinicityEntityName')}" />
+							<c:if test="${!empty clientInformationDto.clientDisplay.ethnicity}">
+								<c:out value="${clientInformationDto.clientDisplay.ethnicity}" />
 							</c:if>
 							<br>
 							</td>
@@ -494,8 +485,8 @@ explanation of the license and how it is applied.
 						<tr id="Client.EducationLevel">
 							<td class="fontnormal">
 							<mifos:mifoslabel name="client.EducationLevel" bundle="ClientUIResources" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/>
-							<c:if test="${!empty BusinessKey.customerDetail.educationLevel}">
-								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntityName')}" />
+							<c:if test="${!empty clientInformationDto.clientDisplay.educationLevel}">
+								<c:out value="${clientInformationDto.clientDisplay.educationLevel}" />
 							</c:if>
 							<br>
 							</td>
@@ -503,39 +494,35 @@ explanation of the license and how it is applied.
 						<tr id="Client.PovertyStatus">
 							<td class="fontnormal">
 							<mifos:mifoslabel name="client.PovertyStatus" bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"/>
-							<c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}">
-									<c:if test = "${povertyStatus.id == BusinessKey.customerDetail.povertyStatus}">
-										<span id="viewClientDetails.text.povertyStatus"><c:out value="${povertyStatus.name}"/></span>
-									</c:if>
-							</c:forEach>
+							<c:if test="${!empty clientInformationDto.clientDisplay.povertyStatus}">
+								<c:out value="${clientInformationDto.clientDisplay.povertyStatus}" />
+							</c:if>
 							<br>
 							</td>
 						</tr>
 						<tr id="Client.Citizenship">
 							<td class="fontnormal">
 							<mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-							<c:if test="${!empty BusinessKey.customerDetail.citizenship}">
-								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntityName')}" />
+							<c:if test="${!empty clientInformationDto.clientDisplay.citizenship}">
+								<c:out value="${clientInformationDto.clientDisplay.citizenship}" />
 							</c:if>
 							<br>
 							</td>
 						</tr>
 						<tr id="Client.Handicapped">
 							<td class="fontnormal"><c:if
-								test="${!empty BusinessKey.customerDetail.handicapped}">
+								test="${!empty clientInformationDto.clientDisplay.handicapped}">
 								<mifos:mifoslabel name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-								<span id="viewClientDetails.text.handicapped"><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntityName')}" /></span>
+								<span id="viewClientDetails.text.handicapped"><c:out value="${clientInformationDto.clientDisplay.handicapped}" /></span>
 							</c:if></td>
 						</tr>
 						<c:if
-							test="${not empty BusinessKey.customerAddressDetail.address.phoneNumber ||
-					    				  not empty BusinessKey.customerAddressDetail.address.line1 ||
-										  not empty BusinessKey.customerAddressDetail.address.line2 ||
-										  not empty BusinessKey.customerAddressDetail.address.line3 ||
-										  not empty BusinessKey.customerAddressDetail.address.city	 ||
-										  not empty BusinessKey.customerAddressDetail.address.state	 ||
-										  not empty BusinessKey.customerAddressDetail.address.country	 ||
-										  not empty BusinessKey.customerAddressDetail.address.zip }">
+							test="${not empty clientInformationDto.address.phoneNumber ||
+					    				  not empty clientInformationDto.address.displayAddress ||
+										  not empty clientInformationDto.address.city	 ||
+										  not empty clientInformationDto.address.state	 ||
+										  not empty clientInformationDto.address.country	 ||
+										  not empty clientInformationDto.address.zip }">
 							<tr id="Client.Address">
 								<td class="fontnormalbold"><br>
 								<mifos:mifoslabel name="client.Address"
@@ -543,40 +530,40 @@ explanation of the license and how it is applied.
 									isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
 									class="fontnormal"><br>
 								</span> <c:if
-									test="${!empty BusinessKey.customerAddressDetail.address.displayAddress}">
+									test="${!empty clientInformationDto.address.displayAddress}">
 									<span class="fontnormal"> <c:out
-										value="${BusinessKey.customerAddressDetail.address.displayAddress}" /> </span>
+										value="${clientInformationDto.address.displayAddress}" /> </span>
 								</c:if></td>
 							</tr>
 							<tr id="Client.City">
 								<td class="fontnormal"><c:if
-									test="${!empty BusinessKey.customerAddressDetail.address.city}">
+									test="${!empty clientInformationDto.address.city}">
 									<span class="fontnormal"><c:out
-										value="${BusinessKey.customerAddressDetail.address.city}" />
+										value="${clientInformationDto.address.city}" />
 									</span>
 								</c:if></td>
 							</tr>
 							<tr id="Client.State">
 								<td class="fontnormal"><c:if
-									test="${!empty BusinessKey.customerAddressDetail.address.state}">
+									test="${!empty clientInformationDto.address.state}">
 									<span class="fontnormal"> <c:out
-										value="${BusinessKey.customerAddressDetail.address.state}" />
+										value="${clientInformationDto.address.state}" />
 									</span>
 								</c:if></td>
 							</tr>
 							<tr id="Client.Country">
 								<td class="fontnormal"><c:if
-									test="${!empty BusinessKey.customerAddressDetail.address.country}">
+									test="${!empty clientInformationDto.address.country}">
 									<span class="fontnormal"><c:out
-										value="${BusinessKey.customerAddressDetail.address.country}" />
+										value="${clientInformationDto.address.country}" />
 									</span>
 								</c:if></td>
 							</tr>
 							<tr id="Client.PostalCode">
 								<td class="fontnormal"><c:if
-									test="${!empty BusinessKey.customerAddressDetail.address.zip}">
+									test="${!empty clientInformationDto.address.zip}">
 									<span class="fontnormal"><c:out
-										value="${BusinessKey.customerAddressDetail.address.zip}" />
+										value="${clientInformationDto.address.zip}" />
 
 									</span>
 								</c:if></td>
@@ -584,44 +571,40 @@ explanation of the license and how it is applied.
 							<tr id="Client.PhoneNumber">
 								<td class="fontnormal"><span class="fontnormal"> <c:set
 									var="phoneNumber"
-									value="${BusinessKey.customerAddressDetail.address.phoneNumber}" />
+									value="${clientInformationDto.address.phoneNumber}" />
 								<c:if test="${!empty phoneNumber}">
 									<br>
 									<mifos:mifoslabel name="client.Telephone"
 										bundle="ClientUIResources" keyhm="Client.PhoneNumber"
 										isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 									<c:out
-										value="${BusinessKey.customerAddressDetail.address.phoneNumber}" />
+										value="${clientInformationDto.address.phoneNumber}" />
 								</c:if></span> <br>
 						</c:if>
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><br>
-							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+							<c:if test="${!empty clientInformationDto.customFields}">
 								<span class="fontnormalbold"> <mifos:mifoslabel
 									name="client.AdditionalInformationHeading"
 									bundle="ClientUIResources"></mifos:mifoslabel> </span>
 							<span class="fontnormal"> <br>
-							<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-								<c:forEach var="customField" items="${BusinessKey.customFields}">
-									<c:if test="${cf.fieldId==customField.fieldId}">
+							<c:forEach var="customField" items="${clientInformationDto.customFields}">
 										<c:choose>
-											<c:when test="${cf.fieldType == 3}"> <%-- FIXME: use a constant here instead --%>
-												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
+											<c:when test="${customField.fieldType == 3}"> <%-- FIXME: use a constant here instead --%>
+												<mifos:mifoslabel name="${customField.lookUpEntityType}"
 													bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
 									         		<span class="fontnormal"><c:out
 													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,customField.fieldValue)}" />
 												</span>
 											</c:when>
 											<c:otherwise>
-												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
+												<mifos:mifoslabel name="${customField.lookUpEntityType}"
 													bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
 									         		<span class="fontnormal"><c:out
 													value="${customField.fieldValue}" /> </span>
 											</c:otherwise>
 										</c:choose>
 										<br>
-									</c:if>
-								</c:forEach>
 							</c:forEach> <br>
 							</span>
 							</c:if>
@@ -633,7 +616,7 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<!-- Family Details -->
-					<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
+					<c:if test="${clientInformationDto.clientDisplay.areFamilyDetailsRequired}">
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td width="50%" height="23" class="headingorange"><mifos:mifoslabel
@@ -715,10 +698,10 @@ explanation of the license and how it is applied.
 								</c:forEach>
   							</c:if>
 							<tr><td class="paddingL10"> <br>
-							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientDetailsDto.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
+							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
-							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
 							</html-el:link> <br>
   							</td></tr>
@@ -746,45 +729,45 @@ explanation of the license and how it is applied.
 								<fmt:message key="client.CycleNo" > 
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message>
-								<c:out value="${BusinessKey.performanceHistory.loanCycleNumber}" /></span></td>
+								<c:out value="${clientInformationDto.clientPerformanceHistory.loanCycleNumber}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
 								key="client.LastLoanAmount"> <fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}"/></fmt:param></fmt:message>:
 							<c:out
-								value="${BusinessKey.performanceHistory.lastLoanAmount}" /></span></td>
+								value="${clientInformationDto.clientPerformanceHistory.lastLoanAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><fmt:message
 								key="client.NoOfActive"> <fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}"/></fmt:param></fmt:message>:
 							<c:out
-								value="${BusinessKey.performanceHistory.noOfActiveLoans}" /></span></td>
+								value="${clientInformationDto.clientPerformanceHistory.noOfActiveLoans}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
 								name="client.DeliquentPortfolio" bundle="ClientUIResources" />
 							<c:out
-								value="${clientDetailsDto.delinquentPortfolioAmount}" /></span></td>
+								value="${clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
 								key="client.Total"> <fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}"/></fmt:param></fmt:message>
 							<c:out
-								value="${BusinessKey.performanceHistory.totalSavingsAmount}" /></span></td>
+								value="${clientInformationDto.clientPerformanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="client.MeetingsAttended" bundle="ClientUIResources" /> <c:out
-								value="${customerPerformance.meetingsAttended}" />
+								value="${clientInformationDto.clientPerformanceHistory.meetingsAttended}" />
 							</span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="client.MeetingsMissed" bundle="ClientUIResources" /> <c:out
-								value="${customerPerformanceHistory.meetingsMissed}" />
+								value="${clientInformationDto.clientPerformanceHistory.meetingsMissed}" />
 							</span></td>
 						</tr>
 						<tr>
@@ -795,7 +778,7 @@ explanation of the license and how it is applied.
 								</fmt:message>:
 							</span></td>
 						</tr>
-						<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanCycleCounter')}"
+						<c:forEach items="${clientInformationDto.clientPerformanceHistory.loanCycleCounters}"
 							var="loanCycle">
 							<tr>
 								<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out
@@ -810,7 +793,7 @@ explanation of the license and how it is applied.
 								height="8"></td>
 						</tr>
 					</table>
-          <c:if test="${surveyCount}">
+          <c:if test="${clientInformationDto.activeSurveys}">
           <table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
@@ -822,12 +805,12 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
             </tr>
-            <c:forEach items="${requestScope.customerSurveys}" var="surveyInstance">
+            <c:forEach items="${clientInformationDto.customerSurveys}" var="surveyInstance">
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
                     <a id="viewClientDetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
-                      <c:out value="${surveyInstance.survey.name}"/>
+                      <c:out value="${surveyInstance.surveyName}"/>
                     </a>
                   </span>
                 </td>
@@ -841,7 +824,7 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewClientDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${clientDetailsDto.globalCustNum}&surveyType=client">
+                  <a id="viewClientDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${clientInformationDto.clientDisplay.globalCustNum}&surveyType=client">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                   <a id="viewClientDetails.link.viewAllSurveys" href="surveysAction.do?method=mainpage">
@@ -870,8 +853,8 @@ explanation of the license and how it is applied.
 							<td class="paddingL10">
               <span id="viewClientDetails.text.notes">
                 <c:choose>
-                  <c:when test="${!empty BusinessKey.recentCustomerNotes}">
-                    <c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
+                  <c:when test="${!empty clientInformationDto.recentCustomerNotes}">
+                    <c:forEach var="note" items="${clientInformationDto.recentCustomerNotes}">
                       <span class="fontnormal8ptbold"> <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
                         <c:out
                         value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
@@ -894,14 +877,14 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="right" class="paddingleft05">
                 <span class="fontnormal8pt"> 
-                  <c:if test="${!empty BusinessKey.customerNotes}">
+                  <c:if test="${!empty clientInformationDto.recentCustomerNotes}">
                     <html-el:link styleId="viewClientDetails.link.seeAllNotes"
-                    href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${clientDetailsDto.globalCustNum}&customerName=${BusinessKey.displayName}&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                    href="customerNotesAction.do?method=search&customerId=${clientInformationDto.clientDisplay.customerId}&globalAccountNum=${clientInformationDto.clientDisplay.globalCustNum}&customerName=${clientInformationDto.clientDisplay.displayName}&levelId=${clientInformationDto.clientDisplay.customerLevelId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
                       <mifos:mifoslabel name="client.SeeAllNotesLink" bundle="ClientUIResources"/>
                     </html-el:link>
 								    <br/>
 							    </c:if> 
-                  <a id="viewClientDetails.link.notesLink" href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                  <a id="viewClientDetails.link.notesLink" href="customerNotesAction.do?method=load&customerId=<c:out value="${clientInformationDto.clientDisplay.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							      <mifos:mifoslabel name="client.NotesLink" bundle="ClientUIResources"/> 
                   </a> 
                 </span>
@@ -913,7 +896,7 @@ explanation of the license and how it is applied.
 				</tr>
 			</table>
 			<br>
-			<html-el:hidden property="globalAccountNum" value="${BusinessKey.customerAccount.globalAccountNum}" />
+			<html-el:hidden property="globalAccountNum" value="${clientInformationDto.customerAccountSummary.globalAccountNum}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -86,12 +86,27 @@ public class IntegrationTestObjectMother {
 
         return testUser;
     }
+    
+    public static void saveMeeting(final MeetingBO meeting) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(meeting);
+            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushAndClearSession();
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
 
     public static void saveCustomer(final CustomerBO center) {
         try {
             StaticHibernateUtil.startTransaction();
             customerPersistence.saveCustomer(center);
             StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushAndClearSession();
         } catch (CustomerException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
@@ -128,6 +143,15 @@ public class IntegrationTestObjectMother {
         }
     }
 
+
+    public static void cleanMeeting(MeetingBO weeklyMeeting) {
+        try {
+            TestObjectFactory.cleanUp(weeklyMeeting);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+    
     public static void cleanCustomerHierarchyWithMultipleClientsMeetingsAndFees(final ClientBO activeClient,
             final ClientBO inActiveClient, final GroupBO group, final CustomerBO center, final MeetingBO weeklyMeeting) {
         try {

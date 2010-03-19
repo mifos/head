@@ -33,6 +33,7 @@ import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -82,7 +83,7 @@ public class OfficeListTagTest extends TestCase {
     }
 
     public void testNoBranches() throws Exception {
-        new OfficeListTag().getBranchOffices(result, null, userContext, null, "Branch");
+        new OfficeListTag().getBranchOffices(result, null, userContext.getPreferredLocale(), null, "Branch");
         assertWellFormedFragment(result.toString());
     }
 
@@ -91,7 +92,12 @@ public class OfficeListTagTest extends TestCase {
        Assert.assertEquals(2, regional.getBranchOnlyChildren().size());
         List<OfficeBO> officeList = new ArrayList<OfficeBO>();
         officeList.add(regional);
-        new OfficeListTag().getBranchOffices(result, officeList, userContext, branch, "Branch");
+
+        List<OfficeHierarchyDto> officeHierarchy = OfficeBO
+                .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(officeList);
+
+        new OfficeListTag().getBranchOffices(result, officeHierarchy, userContext.getPreferredLocale(), branch
+                .getSearchId(), "Branch");
         String html = result.toString();
         assertWellFormedFragment(html);
         StringAssert.assertContains("Trinidad&amp;Tobago", html);
@@ -144,8 +150,12 @@ public class OfficeListTagTest extends TestCase {
         createSomeOffices();
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
         tag.setOnlyBranchOffices("onlybranchOffices");
-        String html = tag.getOfficeList(userContext, headRegionalBranch(), branch, Collections.singletonList(regional),
-                headRegional());
+
+        List<OfficeHierarchyDto> officeHierarchy = OfficeBO
+                .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(Collections.singletonList(regional));
+
+        String html = tag.getOfficeList(userContext.getPreferredLocale(), headRegionalBranch(), branch.getSearchId(),
+                officeHierarchy, headRegional());
         StringAssert.assertNotContains("East&amp;West Indies", html);
         StringAssert.assertContains("West Indies Only", html); // is this right?
         StringAssert.assertContains("Trinidad&amp;Tobago", html);
@@ -156,7 +166,12 @@ public class OfficeListTagTest extends TestCase {
         createSomeOffices();
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
         tag.setOnlyBranchOffices(null);
-        String html = tag.getOfficeList(userContext, headRegionalBranch(), branch, Collections.singletonList(regional),
+
+        List<OfficeHierarchyDto> officeHierarchy = OfficeBO
+                .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(Collections.singletonList(regional));
+
+        String html = tag.getOfficeList(userContext.getPreferredLocale(), headRegionalBranch(), branch.getSearchId(),
+                officeHierarchy,
                 headRegional());
         StringAssert.assertContains("East&amp;West Indies", html);
         StringAssert.assertContains("West Indies Only", html);

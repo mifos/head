@@ -20,14 +20,18 @@
 
 package org.mifos.application.master.business;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
@@ -157,7 +161,12 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
     public Short getEntityType() {
         return this.entityType;
     }
+    
+    public String getEntityName() {
+        return this.lookUpEntity.getEntityType();
+    }
 
+    @SuppressWarnings("unused")
     private Short getMandatoryFlag() {
         return this.mandatoryFlag;
     }
@@ -186,9 +195,9 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
                 && this.lookUpEntity.equals(customFieldDefinition.getLookUpEntity())
                 && this.fieldType.equals(customFieldDefinition.getFieldType())) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public static String getMandatoryStringValue(Locale locale, Short flag) {
@@ -223,5 +232,33 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
     @Override
     public int hashCode() {
         return entityType.hashCode() * levelId.hashCode() * fieldType.hashCode();
+    }
+
+    public static List<CustomFieldView> toDto(List<CustomFieldDefinitionEntity> customFieldsForCenter,
+            Locale preferredUserLocale) {
+
+        List<CustomFieldView> customFieldDtos = new ArrayList<CustomFieldView>();
+
+        for (CustomFieldDefinitionEntity fieldDef : customFieldsForCenter) {
+
+            CustomFieldView fieldView;
+            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
+                    && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+
+                fieldView = new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(
+                        preferredUserLocale, fieldDef.getDefaultValue()), fieldDef.getFieldType());
+            } else {
+                fieldView = new CustomFieldView(fieldDef.getFieldId(), fieldDef.getDefaultValue(),
+                        fieldDef.getFieldType());
+            }
+            
+            fieldView.setMandatory(fieldDef.isMandatory());
+            fieldView.setMandatoryString(fieldDef.getMandatoryStringValue());
+            fieldView.setLookUpEntityType(fieldDef.getEntityName());
+
+            customFieldDtos.add(fieldView);
+        }
+
+        return customFieldDtos;
     }
 }

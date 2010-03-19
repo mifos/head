@@ -60,6 +60,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
@@ -79,6 +80,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 
@@ -104,6 +106,42 @@ public class CustomerAccountBO extends AccountBO {
         this.feePersistence = feePersistence;
     }
 
+    public static CustomerAccountBO createNew(CustomerBO customer, List<AccountFeesEntity> accountFees,
+            List<DateTime> installmentDates) {
+
+        try {
+            List<InstallmentDate> withHolidayInstallmentDates = InstallmentDate.createInstallmentDates(installmentDates);
+
+            List<FeeInstallment> feeInstallmentList = FeeInstallment.createFeeInstallments(withHolidayInstallmentDates,
+                    accountFees);
+            List<FeeInstallment> mergedFeeInstallments = FeeInstallment.mergeFeeInstallments(feeInstallmentList);
+
+            CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
+
+            for (InstallmentDate installmentDate : withHolidayInstallmentDates) {
+
+                CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(customerAccount, customer,
+                        installmentDate.getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate()
+                                .getTime()), PaymentStatus.UNPAID);
+
+                customerAccount.addAccountActionDate(customerScheduleEntity);
+
+                for (FeeInstallment feeInstallment : mergedFeeInstallments) {
+                    if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())) {
+                        CustomerFeeScheduleEntity customerFeeScheduleEntity = new CustomerFeeScheduleEntity(
+                                customerScheduleEntity, feeInstallment.getAccountFeesEntity().getFees(), feeInstallment
+                                        .getAccountFeesEntity(), feeInstallment.getAccountFee());
+                        customerScheduleEntity.addAccountFeesAction(customerFeeScheduleEntity);
+                    }
+                }
+            }
+
+            return customerAccount;
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
     /**
      * default constructor for hibernate usage
      */
@@ -111,11 +149,18 @@ public class CustomerAccountBO extends AccountBO {
         super();
     }
 
+    private CustomerAccountBO(CustomerBO customer, List<AccountFeesEntity> accountFees) throws AccountException {
+        super(customer.getUserContext(), customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
+          for (AccountFeesEntity accountFee : accountFees) {
+              accountFee.setAccount(this);
+              this.addAccountFees(accountFee);
+          }
+    }
+
     /**
-     * TODO - keithw - work in progress
-     *
-     * minimal legal constructor
+     * @deprecated - use static factory methods for creating {@link CustomerAccountBO}.
      */
+    @Deprecated
     public CustomerAccountBO(final CustomerBO customer, final Set<AmountFeeBO> accountFees, final OfficeBO office,
             final PersonnelBO loanOfficer, final Date createdDate, final Short createdByUserId,
             final boolean buildForIntegrationTests) {
@@ -124,18 +169,14 @@ public class CustomerAccountBO extends AccountBO {
                 createdDate, createdByUserId);
         this.customer.addCustomerAccount(this);
 
-        // FIXME - keithw - userContext feels redundant
         this.userContext = customer.getUserContext();
 
-        // FIXME - keithw - ideally this setup is moved from constructor into
-        // factory method
         for (AmountFeeBO amountFee : accountFees) {
             AccountFeesEntity accountFeesEntity = new AccountFeesEntity(this, amountFee, amountFee.getFeeAmount()
                     .getAmountDoubleValue());
             this.addAccountFees(accountFeesEntity);
         }
 
-        // FIXME - keithw - generate schedule uses dao/persistence
         if (buildForIntegrationTests) {
             try {
                 generateCustomerFeeSchedule(customer);
@@ -145,6 +186,10 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
+    /**
+     * @deprecated - use static factory methods for creating {@link CustomerAccountBO}.
+     */
+    @Deprecated
     public CustomerAccountBO(final UserContext userContext, final CustomerBO customer, final List<FeeView> fees)
             throws AccountException {
         super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
@@ -165,6 +210,10 @@ public class CustomerAccountBO extends AccountBO {
         return AccountTypes.CUSTOMER_ACCOUNT;
     }
 
+    /**
+     * @deprecated - use static factory methods for creating {@link CustomerAccountBO} and inject in installments.
+     */
+    @Deprecated
     public void generateCustomerFeeSchedule() throws AccountException {
         generateCustomerFeeSchedule(getCustomer());
     }
@@ -349,6 +398,17 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
+    /**
+     * If the next installment has not been paid, apply any periodic fees to it that have not yet been
+     * applied for that date. To "apply" a fee means to add to the customer installment a fee installment for each
+     * periodic fee assigned to the customer. (These fee installments are persisted to table CUSTOMER_FEE_SCHEDULE).
+     *
+     * <p>This method "catches up" a fee installment: It adds to the total fee due one fee amount for each
+     * fee installment from the last date that the fee was applied, up to and including the next upcoming
+     * customer meeting.</p>
+     *
+     * @throws AccountException
+     */
     public void applyPeriodicFees() throws AccountException {
         if (isUpcomingInstallmentUnpaid()) {
             AccountActionDateEntity accountActionDate = getDetailsOfUpcomigInstallment();
@@ -491,7 +551,7 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         DateTime startFromDayAfterLastKnownSchedule = new DateTime(lastInstallmentDate).toDateMidnight().toDateTime().plusDays(1);
-        ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, orderedUpcomingHolidays);
+        ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, orderedUpcomingHolidays);
         List<DateTime> scheduledDates = scheduleGenerationStrategy.generateScheduledDates(10, startFromDayAfterLastKnownSchedule, scheduledEvent);
 
         int count = 1;
@@ -722,9 +782,6 @@ public class CustomerAccountBO extends AccountBO {
     public void generateCustomerAccountSystemId() throws CustomerException {
         try {
             if (getGlobalAccountNum() == null) {
-                // FIXME - keithw - Question - why get the branchGlobalNum from
-                // usercontext? why not the office globalbranchNum which is set
-                // in the userContext anyway...
                 this.setGlobalAccountNum(generateId(userContext.getBranchGlobalNum()));
             } else {
                 throw new CustomerException(AccountExceptionConstants.IDGenerationException);
@@ -773,6 +830,10 @@ public class CustomerAccountBO extends AccountBO {
         return feeInstallmentList;
     }
 
+    /**
+     * @deprecated - use static factory methods for creating {@link CustomerAccountBO} and inject in installment dates.
+     */
+    @Deprecated
     private void generateMeetingSchedule() throws AccountException {
         // generate dates that adjust for holidays
         List<InstallmentDate> installmentDates = getInstallmentDates(getCustomer().getCustomerMeeting().getMeeting(),
@@ -841,6 +902,10 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
+    /**
+     * @deprecated - use static factory methods for creating {@link CustomerAccountBO} and inject in installment dates
+     */
+    @Deprecated
     private void generateCustomerFeeSchedule(final CustomerBO customer) throws AccountException {
         if (customer.getCustomerMeeting() != null && customer.isActiveViaLevel()) {
             Date meetingStartDate = customer.getCustomerMeeting().getMeeting().getMeetingStartDate();

@@ -22,10 +22,12 @@ package org.mifos.customers.group.business.service;
 
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.util.UserContext;
 
 /**
  *
  */
 public interface GroupDetailsServiceFacade {
-    GroupInformationDto getGroupInformationDto(String globalCustNum) throws ServiceException, CustomerException;
+    GroupInformationDto getGroupInformationDto(String globalCustNum, UserContext userContext) throws ServiceException, CustomerException;
+
 }

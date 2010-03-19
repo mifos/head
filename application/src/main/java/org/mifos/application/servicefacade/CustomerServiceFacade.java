@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
+package org.mifos.application.servicefacade;
+
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
+import org.mifos.security.util.UserContext;
+
+public interface CustomerServiceFacade {
+
+    OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy(UserContext userContext);
+
+    CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation, UserContext userContext);
+
+    GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
+
+    ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext);
+
+    CenterDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext);
+
+    CenterDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext) throws CustomerException;
+
+    CenterDto retrieveCenterDetailsForUpdate(Integer centerId, UserContext userContext);
+
+    CenterDto retrieveGroupDetailsForUpdate(String globalCustNum, UserContext userContext);
+
+    void updateCenter(UserContext userContext, CenterUpdate centerUpdate);
+
+    void updateGroup(UserContext userContext, GroupUpdate groupUpdate);
+
+    CustomerSearch search(String searchString, UserContext userContext);
+
+    CenterHierarchySearchDto isCenterHierarchyConfigured(Short loggedInUserBranchId);
+
+    GroupBO transferGroupToCenter(String globalCustNum, String centerSystemId, UserContext userContext, Integer previousGroupVersionNo);
+
+    GroupBO transferGroupToBranch(String globalCustNum, Short officeIdValue, UserContext userContext, Integer previousGroupVersionNo);
+
+    void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId,
+            String notes, UserContext userContext) throws CustomerException;
+}

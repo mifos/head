@@ -42,6 +42,7 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -171,12 +172,15 @@ public class MasterPersistence extends Persistence {
         }
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao#retrieveCustomFieldsForCenter(org.mifos.security.util.UserContext)}
+     */
+    @Deprecated
     public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(final EntityType entityType)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, entityType.getValue());
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-
     }
 
     public CustomFieldDefinitionEntity retrieveOneCustomFieldDefinition(final Short fieldId) throws PersistenceException {
@@ -190,7 +194,10 @@ public class MasterPersistence extends Persistence {
     /**
      * This method is used to retrieve both custom and fixed value list
      * elements.
+     * @deprecated - use specific methods on {@link CustomerDao}
+     * @see CustomerDao#retrieveSalutations()
      */
+    @Deprecated
     public List<ValueListElement> retrieveMasterEntities(final String entityName, final Short localeId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("entityType", entityName);

@@ -909,6 +909,7 @@ public class SavingsBO extends AccountBO {
         return interestAmount;
     }
 
+    @Deprecated
     public void generateAndUpdateDepositActionsForClient(final ClientBO client, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
         if (client.getCustomerMeeting().getMeeting() != null) {
@@ -945,7 +946,8 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    private void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting, final List<Days> workingDays, final List<Holiday> holidays) {
+    @Deprecated
+    public void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting, final List<Days> workingDays, final List<Holiday> holidays) {
 
         DateTime startingFromtoday = new DateTime().toDateMidnight().toDateTime();
 

@@ -20,6 +20,7 @@
 
 package org.mifos.customers.struts.uihelpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -35,6 +36,8 @@ import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.struts.action.EditCustomerStatusAction;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -107,16 +110,25 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         for (CustomerPositionEntity customerPositionEntity2 : group.getCustomerPositions()) {
             customerPositionEntity2.getPosition().setLocaleId(TestObjectFactory.getContext().getLocaleId());
         }
-        String positionName = CustomerUIHelperFn.getClientPosition(group.getCustomerPositions(), client);
-       Assert.assertEquals("(Center Leader)", positionName);
+        CustomerDetailDto clientDetail = new CustomerDetailDto(client.getCustomerId(), client.getDisplayName(), client
+                .getSearchId(), client.getGlobalCustNum());
+        
+        List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
+        for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
+            customerPositions.add(new CustomerPositionDto(customerPosition.getPosition().getName(), customerPosition
+                    .getCustomer().getCustomerId(), customerPosition.getCustomer().getDisplayName()));
+        }
+        
+        String positionName = CustomerUIHelperFn.getClientPosition(customerPositions, clientDetail);
+        Assert.assertEquals("(Center Leader)", positionName);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
-                SavingsConstants.STATUS_LIST, request)).size());
+        Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
+                .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -167,16 +179,26 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group.setUserContext(TestObjectFactory.getContext());
-        String positionName = CustomerUIHelperFn.getClientPosition(group.getCustomerPositions(), client);
-       Assert.assertEquals("(Center Leader)", positionName);
+        CustomerDetailDto clientDetail = new CustomerDetailDto(client.getCustomerId(), client.getDisplayName(), client
+                .getSearchId(), client.getGlobalCustNum());
+        
+
+        List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
+        for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
+            customerPositions.add(new CustomerPositionDto(customerPosition.getPosition().getName(), customerPosition
+                    .getCustomer().getCustomerId(), customerPosition.getCustomer().getDisplayName()));
+        }
+        
+        String positionName = CustomerUIHelperFn.getClientPosition(customerPositions, clientDetail);
+        Assert.assertEquals("(Center Leader)", positionName);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
         addRequestParameter("customerId", client.getCustomerId().toString());
         actionPerform();
         verifyForward(ActionForwards.loadStatus_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
-                SavingsConstants.STATUS_LIST, request)).size());
+        Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
+                .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());

@@ -403,7 +403,7 @@ explanation of the license and how it is applied.
 											</bean:define>
 											<tr class="fontnormal">
 												<td width="21%" align="right">
-													<span id="createnewcenter.label.customField"><mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="CenterUIResources" isColonRequired="yes"/></span>
+													<span id="createnewcenter.label.customField"><mifos:mifoslabel name="${cf.lookUpEntityType}" mandatory="${cf.mandatoryString}" bundle="CenterUIResources" isColonRequired="yes"/></span>
 												</td>
 												<td width="79%">
 													<html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>

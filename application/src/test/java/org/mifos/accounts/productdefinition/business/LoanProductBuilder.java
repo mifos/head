@@ -24,8 +24,11 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
@@ -40,16 +43,18 @@ public class LoanProductBuilder {
     private final Date startDate = new DateTime().minusDays(14).toDate();
     private final String name = "testLoanProduct";
     private final String shortName = "TLP1";
-
+    
     private final Date createdDate = new DateTime().minusDays(14).toDate();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
-
+    
     private final GLCodeEntity depositGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
     private final GLCodeEntity interesetGLCode = new GLCodeEntity(Short.valueOf("2"), "11000");
 
     private ApplicableTo applicableToCustomer = ApplicableTo.GROUPS;
 
     private ProductCategoryBO category = new ProductCategoryBO(Short.valueOf("1"), "testXX");
+    private GraceType graceType = GraceType.NONE;
+    private MeetingBO meeting;
 
     // loan specific
     private final InterestType interestType = InterestType.FLAT;
@@ -63,7 +68,7 @@ public class LoanProductBuilder {
     private final Short defaultNoOfInstallmentsForLoan = Short.valueOf("6");
     private PrdStatus productStatus = PrdStatus.LOAN_ACTIVE;
     private PrdStatusEntity productStatusEntity;
-
+    
     public LoanOfferingBO buildForUnitTests() {
 
         LoanOfferingBO loanProduct = build();
@@ -72,22 +77,24 @@ public class LoanProductBuilder {
     }
 
     private LoanOfferingBO build() {
-
+        
         final LoanOfferingBO loanProduct = new LoanOfferingBO(depositGLCode, interesetGLCode, interestType,
                 minInterestRate, maxInterestRate, defaultInterestRate, interestPaidAtDisbursement,
                 principalDueLastInstallment, new NoOfInstallSameForAllLoanBO(), name, shortName, globalProductNumber,
                 startDate, applicableToCustomer, category, productStatusEntity, createdDate, createdByUserId);
-
+        
         final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan = new NoOfInstallSameForAllLoanBO(
                 minNoOfInstallmentsForLoan, maxNoOfInstallmentsForLoan, defaultNoOfInstallmentsForLoan, loanProduct);
-
+        
         loanProduct.setNoOfInstallSameForAllLoan(noOfInstallSameForAllLoan);
-
+        loanProduct.setGracePeriodType(new GracePeriodTypeEntity(graceType));
+        loanProduct.setLoanOfferingMeeting(new PrdOfferingMeetingEntity(meeting, loanProduct, MeetingType.LOAN_INSTALLMENT));
+        
         return loanProduct;
     }
 
     public LoanOfferingBO buildForIntegrationTests() {
-
+        
         category = (ProductCategoryBO) StaticHibernateUtil.getSessionTL().get(ProductCategoryBO.class,
                 Short.valueOf("2"));
 
@@ -126,6 +133,16 @@ public class LoanProductBuilder {
 
     public LoanProductBuilder withGlobalProductNumber(final String withGlobalProductNumber) {
         this.globalProductNumber = withGlobalProductNumber;
+        return this;
+    }
+    
+    public LoanProductBuilder withGraceType (final GraceType graceType) {
+        this.graceType = graceType;
+        return this;
+    }
+    
+    public LoanProductBuilder withMeeting (final MeetingBO meeting) {
+        this.meeting = meeting;
         return this;
     }
 }

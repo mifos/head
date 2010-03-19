@@ -26,10 +26,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.CenterTemplate;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -76,15 +78,23 @@ public class CenterPersistence extends Persistence {
         return center;
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao#search(String, PersonnelBO)}.
+     */
+    @Deprecated
     public QueryResult search(String searchString, Short userId) throws PersistenceException {
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
+        
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(PersonnelConstants.USER_LIST);
+        
         PersonnelBO user = new PersonnelPersistence().getPersonnel(userId);
         String officeSearchId = user.getOffice().getSearchId();
+        
         namedQuery[0] = NamedQueryConstants.CENTER_SEARCH_COUNT;
         namedQuery[1] = NamedQueryConstants.CENTER_SEARCH;
+        
         paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId + "%"));
         paramList.add(typeNameValue("String", "CENTER_NAME", searchString + "%"));
         paramList.add(typeNameValue("Short", "LEVEL_ID", CustomerLevel.CENTER.getValue()));
@@ -92,7 +102,9 @@ public class CenterPersistence extends Persistence {
         paramList.add(typeNameValue("Short", "USER_ID", userId));
         paramList.add(typeNameValue("Short", "USER_LEVEL_ID", user.getLevelEnum().getValue()));
         paramList.add(typeNameValue("Short", "LO_LEVEL_ID", PersonnelConstants.LOAN_OFFICER));
+        
         String[] aliasNames = { "parentOfficeId", "parentOfficeName", "centerSystemId", "centerName" };
+        
         queryInputs.setQueryStrings(namedQuery);
         queryInputs.setPath("org.mifos.customers.center.util.helpers.CenterSearchResults");
         queryInputs.setAliasNames(aliasNames);
@@ -103,9 +115,12 @@ public class CenterPersistence extends Persistence {
             throw new PersistenceException(e);
         }
         return queryResult;
-
     }
 
+    /**
+     * @deprecated use {@link CustomerDao#save(org.mifos.customers.business.CustomerBO)} with {@link CustomerBO} static factory methods.
+     */
+    @Deprecated
     public CenterBO createCenter(UserContext userContext, CenterTemplate template) throws CustomerException,
     PersistenceException {
         CenterBO center = new CenterBO(userContext, template.getDisplayName(), template.getAddress(), template
@@ -116,6 +131,10 @@ public class CenterPersistence extends Persistence {
         return center;
     }
 
+    /**
+     * @deprecated use {@link CustomerDao#save(org.mifos.customers.business.CustomerBO)}.
+     */
+    @Deprecated
     public void saveCenter(CenterBO center) throws CustomerException {
         try {
             createOrUpdate(center);

@@ -78,6 +78,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -93,7 +94,10 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
@@ -121,9 +125,12 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
 import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -5161,6 +5168,53 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      *
      * }
      */
+
+    /****************************************
+     * These tests validate new schedule-generating code
+     ****************************************/
+
+    public void testScheduleWeeklyLoanNoFeesNoHoliday() throws Exception {
+
+        Session session = StaticHibernateUtil.getSessionTL();
+        StaticHibernateUtil.startTransaction();
+
+        //setup
+        DateTime startDate = new DateTime().withDate(2010, 10, 15).toDateMidnight().toDateTime(); // Friday
+        MeetingBO meeting = new MeetingBuilder().weekly().withStartDate(startDate).build();
+        OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("12345").build();
+        CenterBO center = new CenterBuilder().withMeeting(meeting).withOffice(office).build();
+        GroupBO group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
+        LoanOfferingBO loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();
+        List<FeeView> feeViews = new ArrayList<FeeView>();
+        LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
+
+        //Make loan and schedule
+        LoanBO loan = LoanBO
+                .createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
+                        getCurrency(), "300.0"), Short.valueOf("6"), startDate.toDate(), false, loanOffering.getDefInterestRate(),
+                        (short) 0, null, feeViews, null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
+                        eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(),
+                        false, null);
+
+        //Validate
+        Assert.assertNotNull(loan.getLoanSummary());
+        Assert.assertNotNull(loan.getPerformanceHistory());
+        Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanSummary().getOriginalPrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanAmount());
+        Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanBalance());
+        Assert.assertEquals(Short.valueOf("6"), loan.getNoOfInstallments());
+        Assert.assertEquals(6, loan.getAccountActionDates().size());
+        Assert.assertEquals(loan.getNoOfInstallments().intValue(), loan.getAccountActionDates().size());
+
+        //since disbursal is on a meeting day, the first installment date is one week from disbursement date
+        for (short installmentId = 1; installmentId <= 6; installmentId++) {
+            Date expectedDate = startDate.plusWeeks(installmentId).toDate();
+            Assert.assertEquals(expectedDate, loan.getAccountActionDate(installmentId).getActionDate());
+        }
+
+        StaticHibernateUtil.rollbackTransaction();
+    }
+
 
     private java.sql.Date setDate(final int dayUnit, final int interval) {
         Calendar calendar = new GregorianCalendar();

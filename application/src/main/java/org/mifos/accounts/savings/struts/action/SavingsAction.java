@@ -312,8 +312,7 @@ public class SavingsAction extends AccountAppAction {
 
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(savings);
-        boolean activeSurveys = surveysPersistence
-                .retrieveSurveysByTypeAndState(SurveyType.SAVINGS, SurveyState.ACTIVE).size() > 0;
+        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.SAVINGS);
         request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
         request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
         request.setAttribute(AccountConstants.SURVEY_KEY, surveys);

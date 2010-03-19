@@ -24,6 +24,7 @@ import junit.framework.Assert;
 
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class CustomerLoanCycleFetchIntegrationTest extends MifosIntegrationTestCase {
@@ -40,11 +41,7 @@ public class CustomerLoanCycleFetchIntegrationTest extends MifosIntegrationTestC
                     return 1;
                 }
 
-                @Override
-                public boolean isGroup() {
-                    return true;
-                }
-            });
+            }.getCustomerId(), CustomerLevel.GROUP.getValue());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Exception fetching customer loan counters");
@@ -68,7 +65,7 @@ public class CustomerLoanCycleFetchIntegrationTest extends MifosIntegrationTestC
                 public boolean isClient() {
                     return true;
                 }
-            });
+            }.getCustomerId(), CustomerLevel.CLIENT.getValue());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Exception fetching customer loan counters");

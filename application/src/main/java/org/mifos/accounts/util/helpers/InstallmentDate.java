@@ -20,13 +20,38 @@
 
 package org.mifos.accounts.util.helpers;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class InstallmentDate {
 
     private Date installmentDueDate = null;
     private Short installmentId;
 
+    public static List<InstallmentDate> createInstallmentDates(final List<DateTime> dueDates) {
+        List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
+        int installmentId = 1;
+        for (DateTime date : dueDates) {
+            installmentDates.add(new InstallmentDate((short) installmentId++, date.toDate()));
+        }
+        return installmentDates;
+    }
+    
+    public static Short findMatchingInstallmentId(List<InstallmentDate> installmentDates, Date feeDate) {
+        for (InstallmentDate installmentDate : installmentDates) {
+            if (DateUtils.getDateWithoutTimeStamp(installmentDate.getInstallmentDueDate().getTime()).compareTo(
+                    DateUtils.getDateWithoutTimeStamp(feeDate.getTime())) >= 0) {
+                return installmentDate.getInstallmentId();
+            }
+        }
+        return null;
+    }
+    
+    @SuppressWarnings("unused")
     private InstallmentDate() {
     }
 

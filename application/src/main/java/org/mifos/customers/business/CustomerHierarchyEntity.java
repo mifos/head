@@ -83,7 +83,7 @@ public class CustomerHierarchyEntity extends PersistentObject {
         return status.equals(Status.ACTIVE.getValue());
     }
 
-    void makeInactive(Short updatedBy) {
+    public void makeInactive(Short updatedBy) {
         updateStatus(Status.INACTIVE);
         setUpdatedBy(updatedBy);
         setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());

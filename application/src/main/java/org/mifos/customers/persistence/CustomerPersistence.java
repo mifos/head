@@ -46,6 +46,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
@@ -54,6 +55,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.CurrencyMismatchException;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -72,17 +74,18 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.ChildrenStateType;
+import org.mifos.customers.util.helpers.ClientDisplayDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerListDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
+import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -98,6 +101,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
 
 public class CustomerPersistence extends Persistence {
 
@@ -157,8 +161,8 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<CustomerView> getActiveParentList(final Short personnelId, final Short customerLevelId, final Short officeId)
-            throws PersistenceException {
+    public List<CustomerView> getActiveParentList(final Short personnelId, final Short customerLevelId,
+            final Short officeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("personnelId", personnelId);
         queryParameters.put("customerLevelId", customerLevelId);
@@ -176,8 +180,8 @@ public class CustomerPersistence extends Persistence {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
         queryParameters.put("ACTION_DATE", actionDate);
-        meetingDate =  (Date) execUniqueResultNamedQuery(
-                NamedQueryConstants.GET_LAST_MEETINGDATE_FOR_CUSTOMER, queryParameters);
+        meetingDate = (Date) execUniqueResultNamedQuery(NamedQueryConstants.GET_LAST_MEETINGDATE_FOR_CUSTOMER,
+                queryParameters);
         return meetingDate;
     }
 
@@ -201,6 +205,10 @@ public class CustomerPersistence extends Persistence {
         return customer;
     }
 
+    /**
+     * use {@link CustomerDao#findCenterBySystemId(String)}.
+     */
+    @Deprecated
     public CustomerBO findBySystemId(final String globalCustNum, final Short levelId) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
         CustomerBO customer = null;
@@ -229,8 +237,8 @@ public class CustomerPersistence extends Persistence {
         return customer;
     }
 
-    public QueryResult search(final String searchString, final Short officeId, final Short userId, final Short userOfficeId)
-            throws PersistenceException {
+    public QueryResult search(final String searchString, final Short officeId, final Short userId,
+            final Short userOfficeId) throws PersistenceException {
 
         QueryResult queryResult = null;
 
@@ -324,8 +332,8 @@ public class CustomerPersistence extends Persistence {
 
     }
 
-    private QueryResult mainSearch(final String searchString, final Short officeId, final Short userId, final Short userOfficeId)
-            throws PersistenceException, HibernateSearchException {
+    private QueryResult mainSearch(final String searchString, final Short officeId, final Short userId,
+            final Short userOfficeId) throws PersistenceException, HibernateSearchException {
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
         QueryInputs queryInputs = setQueryInputsValues(namedQuery, paramList);
@@ -385,8 +393,8 @@ public class CustomerPersistence extends Persistence {
 
     }
 
-    private QueryResult idSearch(final String searchString, final Short officeId, final Short userId) throws HibernateSearchException,
-            SystemException, PersistenceException {
+    private QueryResult idSearch(final String searchString, final Short officeId, final Short userId)
+            throws HibernateSearchException, SystemException, PersistenceException {
         if (!isCustomerExist(searchString)) {
             return null;
         }
@@ -432,8 +440,8 @@ public class CustomerPersistence extends Persistence {
 
     }
 
-    private QueryResult governmentIdSearch(final String searchString, final Short officeId, final Short userId) throws HibernateSearchException,
-            SystemException, PersistenceException {
+    private QueryResult governmentIdSearch(final String searchString, final Short officeId, final Short userId)
+            throws HibernateSearchException, SystemException, PersistenceException {
         if (!isCustomerExistWithGovernmentId(searchString)) {
             return null;
         }
@@ -528,8 +536,8 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    protected List<CustomerBO> getChildrenOtherThanClosedAndCancelled(final String parentSearchId, final Short parentOfficeId,
-            final CustomerLevel childrenLevel) throws PersistenceException {
+    protected List<CustomerBO> getChildrenOtherThanClosedAndCancelled(final String parentSearchId,
+            final Short parentOfficeId, final CustomerLevel childrenLevel) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
         queryParameters.put("OFFICE_ID", parentOfficeId);
@@ -539,8 +547,8 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    protected List<CustomerBO> getAllChildren(final String parentSearchId, final Short parentOfficeId, final CustomerLevel childrenLevel)
-            throws PersistenceException {
+    protected List<CustomerBO> getAllChildren(final String parentSearchId, final Short parentOfficeId,
+            final CustomerLevel childrenLevel) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
         queryParameters.put("OFFICE_ID", parentOfficeId);
@@ -561,8 +569,8 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<CustomerBO> getChildren(final String parentSearchId, final Short parentOfficeId, final CustomerLevel childrenLevel,
-            final ChildrenStateType childrenStateType) throws PersistenceException {
+    public List<CustomerBO> getChildren(final String parentSearchId, final Short parentOfficeId,
+            final CustomerLevel childrenLevel, final ChildrenStateType childrenStateType) throws PersistenceException {
         if (childrenStateType.equals(ChildrenStateType.OTHER_THAN_CLOSED)) {
             return getChildrenOtherThanClosed(parentSearchId, parentOfficeId, childrenLevel);
         }
@@ -643,8 +651,8 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<AccountBO> retrieveAccountsUnderCustomer(final String searchId, final Short officeId, final Short accountTypeId)
-            throws PersistenceException {
+    public List<AccountBO> retrieveAccountsUnderCustomer(final String searchId, final Short officeId,
+            final Short accountTypeId) throws PersistenceException {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING1", searchId);
@@ -654,8 +662,8 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_CUSTOMER, queryParameters);
     }
 
-    public List<CustomerBO> getAllChildrenForParent(final String searchId, final Short officeId, final Short customerLevelId)
-            throws PersistenceException {
+    public List<CustomerBO> getAllChildrenForParent(final String searchId, final Short officeId,
+            final Short customerLevelId) throws PersistenceException {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
@@ -683,7 +691,8 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public int getCustomerCountForOffice(final CustomerLevel customerLevel, final Short officeId) throws PersistenceException {
+    public int getCustomerCountForOffice(final CustomerLevel customerLevel, final Short officeId)
+            throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("LEVEL_ID", customerLevel.getValue());
         queryParameters.put("OFFICE_ID", officeId);
@@ -691,19 +700,20 @@ public class CustomerPersistence extends Persistence {
         return getCountFromQueryResult(queryResult);
     }
 
-    public List<LoanCycleCounter> fetchLoanCycleCounter(final CustomerBO customerBO) throws PersistenceException {
-        if (customerBO.isGroup()) {
-            return runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_GROUP, customerBO);
-        } else if (customerBO.isClient()) {
-            return runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_CLIENT, customerBO);
+    public List<LoanCycleCounter> fetchLoanCycleCounter(final Integer customerId, final Short customerLevelId)
+            throws PersistenceException {
+        if (CustomerLevel.GROUP.getValue().equals(customerLevelId)) {
+            return runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_GROUP, customerId);
+        } else if (CustomerLevel.CLIENT.getValue().equals(customerLevelId)) {
+            return runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_CLIENT, customerId);
         }
         return new ArrayList<LoanCycleCounter>();
     }
 
-    private List<LoanCycleCounter> runLoanCycleQuery(final String queryName, final CustomerBO customerBO)
+    private List<LoanCycleCounter> runLoanCycleQuery(final String queryName, final Integer customerId)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("customerId", customerBO.getCustomerId());
+        queryParameters.put("customerId", customerId);
         List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
         List<Object[]> queryResult = executeNamedQuery(queryName, queryParameters);
         if (null != queryResult && queryResult.size() > 0) {
@@ -746,16 +756,6 @@ public class CustomerPersistence extends Persistence {
         return notesResult;
     }
 
-    public List<PersonnelView> getFormedByPersonnel(final Short levelId, final Short officeId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("levelId", levelId);
-        queryParameters.put("officeId", officeId);
-        queryParameters.put("statusId", PersonnelConstants.ACTIVE);
-        List<PersonnelView> queryResult = executeNamedQuery(NamedQueryConstants.FORMEDBY_LOANOFFICERS_LIST,
-                queryParameters);
-        return queryResult;
-    }
-
     public CustomerPictureEntity retrievePicture(final Integer customerId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("customerId", customerId);
@@ -764,7 +764,8 @@ public class CustomerPersistence extends Persistence {
         return (CustomerPictureEntity) queryResult.get(0);
     }
 
-    public List<AccountBO> getAllClosedAccount(final Integer customerId, final Short accountTypeId) throws PersistenceException {
+    public List<AccountBO> getAllClosedAccount(final Integer customerId, final Short accountTypeId)
+            throws PersistenceException {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("customerId", customerId);
@@ -793,8 +794,8 @@ public class CustomerPersistence extends Persistence {
         update.executeUpdate();
     }
 
-    private void updateAccountsForOneCustomer(final Integer customerId, final Short parentLO, final Connection connection)
-            throws Exception {
+    private void updateAccountsForOneCustomer(final Integer customerId, final Short parentLO,
+            final Connection connection) throws Exception {
 
         Statement statement = connection.createStatement();
         String sql = "update account " + " set personnel_id = " + parentLO.shortValue()
@@ -806,13 +807,11 @@ public class CustomerPersistence extends Persistence {
     /**
      * Update loan officer for all children accounts.
      *
-     * This method was introduced for when a center is assigned a new loan
-     * officer, and this loan officer needs to be re-assigned not just for the
-     * center's groups and clients, but for each account belonging to those
-     * customers.
+     * This method was introduced for when a center is assigned a new loan officer, and this loan officer needs to be
+     * re-assigned not just for the center's groups and clients, but for each account belonging to those customers.
      *
-     * Note: Required as to fix issues 1570 and 1804 Note 10/08/2008: direct
-     * sqls are used to improve performance (issue 2209)
+     * Note: Required as to fix issues 1570 and 1804 Note 10/08/2008: direct sqls are used to improve performance (issue
+     * 2209)
      *
      * @param parentLO
      *            the parent loan officer
@@ -885,8 +884,8 @@ public class CustomerPersistence extends Persistence {
         return (CustomerAccountBO) obj1[0];
     }
 
-    public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(final Integer accountId, final Date transactionDate)
-            throws PersistenceException {
+    public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(final Integer accountId,
+            final Date transactionDate) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("ACCOUNT_ID", accountId);
         queryParameters.put("ACTION_DATE", transactionDate);
@@ -970,16 +969,16 @@ public class CustomerPersistence extends Persistence {
         return veryPoorActiveBorrowers.size();
     }
 
-    public Integer getCustomerReplacementsCountForOffice(final OfficeBO office, final Short fieldId, final String fieldValue)
-            throws PersistenceException {
+    public Integer getCustomerReplacementsCountForOffice(final OfficeBO office, final Short fieldId,
+            final String fieldValue) throws PersistenceException {
         List<ClientBO> clients = runQueryForOffice(NamedQueryConstants.GET_CUSTOMER_REPLACEMENTS_COUNT_UNDER_OFFICE,
                 office);
         CollectionUtils.filter(clients, new FieldStatePredicate(fieldId, fieldValue));
         return clients.size();
     }
 
-    public Integer getVeryPoorReplacementsCountForOffice(final OfficeBO office, final Short fieldId, final String fieldValue)
-            throws PersistenceException {
+    public Integer getVeryPoorReplacementsCountForOffice(final OfficeBO office, final Short fieldId,
+            final String fieldValue) throws PersistenceException {
         List<ClientBO> veryPoorClients = runQueryForOffice(NamedQueryConstants.GET_VERY_POOR_CLIENTS_UNDER_OFFICE,
                 office);
         CollectionUtils.filter(veryPoorClients, new FieldStatePredicate(fieldId, fieldValue));
@@ -993,8 +992,8 @@ public class CustomerPersistence extends Persistence {
                         office, loanCyclePeriod)));
     }
 
-    public Integer getVeryPoorDormantClientsCountByLoanAccountForOffice(final OfficeBO office, final Integer loanCyclePeriod)
-            throws PersistenceException {
+    public Integer getVeryPoorDormantClientsCountByLoanAccountForOffice(final OfficeBO office,
+            final Integer loanCyclePeriod) throws PersistenceException {
         return getCountFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_VERY_POOR_DORMANT_CLIENTS_COUNT_BY_LOAN_ACCOUNT_FOR_OFFICE,
                 populateDormantQueryParams(office, loanCyclePeriod)));
@@ -1007,14 +1006,15 @@ public class CustomerPersistence extends Persistence {
                         office, loanCyclePeriod)));
     }
 
-    public Integer getVeryPoorDormantClientsCountBySavingAccountForOffice(final OfficeBO office, final Integer loanCyclePeriod)
-            throws PersistenceException {
+    public Integer getVeryPoorDormantClientsCountBySavingAccountForOffice(final OfficeBO office,
+            final Integer loanCyclePeriod) throws PersistenceException {
         return getCountFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_VERY_POOR_DORMANT_CLIENTS_COUNT_BY_SAVING_ACCOUNT_FOR_OFFICE,
                 populateDormantQueryParams(office, loanCyclePeriod)));
     }
 
-    public Money getTotalAmountForGroup(final Integer groupId, final AccountState accountState) throws PersistenceException {
+    public Money getTotalAmountForGroup(final Integer groupId, final AccountState accountState)
+            throws PersistenceException {
         MifosCurrency currency = getCurrencyForTotalAmountForGroup(groupId, accountState);
 
         HashMap<String, Object> params = new HashMap<String, Object>();
@@ -1027,12 +1027,11 @@ public class CustomerPersistence extends Persistence {
     }
 
     private MifosCurrency getCurrencyForTotalAmountForGroup(final Integer groupId, final AccountState accountState)
-    throws PersistenceException {
+            throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("customerId", groupId);
         params.put("accountState", accountState.getValue());
-        List queryResult = executeNamedQuery(
-                NamedQueryConstants.GET_LOAN_SUMMARY_CURRENCIES_FOR_GROUP, params);
+        List queryResult = executeNamedQuery(NamedQueryConstants.GET_LOAN_SUMMARY_CURRENCIES_FOR_GROUP, params);
         if (queryResult.size() > 1) {
             throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
@@ -1040,7 +1039,7 @@ public class CustomerPersistence extends Persistence {
             // if we found no results, then return the default currency
             return Money.getDefaultCurrency();
         }
-        Short currencyId = (Short)queryResult.get(0);
+        Short currencyId = (Short) queryResult.get(0);
         return AccountingRules.getCurrencyByCurrencyId(currencyId);
     }
 
@@ -1049,8 +1048,8 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.GET_ALL_BASIC_GROUP_INFO, params);
     }
 
-    public Money getTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState, final String searchIdString)
-            throws PersistenceException {
+    public Money getTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState,
+            final String searchIdString) throws PersistenceException {
         MifosCurrency currency = getCurrencyForTotalAmountForAllClientsOfGroup(officeId, accountState, searchIdString);
 
         HashMap<String, Object> params = new HashMap<String, Object>();
@@ -1064,14 +1063,14 @@ public class CustomerPersistence extends Persistence {
         return totalAmount;
     }
 
-    private MifosCurrency getCurrencyForTotalAmountForAllClientsOfGroup(final Short officeId, final AccountState accountState, final String searchIdString)
-    throws PersistenceException {
+    private MifosCurrency getCurrencyForTotalAmountForAllClientsOfGroup(final Short officeId,
+            final AccountState accountState, final String searchIdString) throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("officeId", officeId);
         params.put("accountState", accountState.getValue());
         params.put("searchId", searchIdString);
-        List queryResult = executeNamedQuery(
-                NamedQueryConstants.GET_LOAN_SUMMARY_CURRENCIES_FOR_ALL_CLIENTS_OF_GROUP, params);
+        List queryResult = executeNamedQuery(NamedQueryConstants.GET_LOAN_SUMMARY_CURRENCIES_FOR_ALL_CLIENTS_OF_GROUP,
+                params);
         if (queryResult.size() > 1) {
             throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
@@ -1079,7 +1078,7 @@ public class CustomerPersistence extends Persistence {
             // if we found no results, then return the default currency
             return Money.getDefaultCurrency();
         }
-        Short currencyId = (Short)queryResult.get(0);
+        Short currencyId = (Short) queryResult.get(0);
         return AccountingRules.getCurrencyByCurrencyId(currencyId);
     }
 
@@ -1145,6 +1144,10 @@ public class CustomerPersistence extends Persistence {
         }
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao}
+     */
+    @Deprecated
     public Integer getActiveAndOnHoldChildrenCount(final String parentSearchId, final Short parentOfficeId,
             final CustomerLevel childrenLevel) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -1155,38 +1158,6 @@ public class CustomerPersistence extends Persistence {
                 queryParameters)).intValue();
         return count;
     }
-
-    public Money retrieveTotalLoan(final String searchId, final Short officeId) throws PersistenceException {
-        return retrieveTotalForQuery(NamedQueryConstants.RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER, searchId, officeId);
-    }
-
-    public Money retrieveTotalSavings(final String searchId, final Short officeId) throws PersistenceException {
-        return retrieveTotalForQuery(NamedQueryConstants.RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER, searchId, officeId);
-    }
-
-    private Money retrieveTotalForQuery(String query, final String searchId, final Short officeId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING1", searchId);
-        queryParameters.put("SEARCH_STRING2", searchId + ".%");
-        queryParameters.put("OFFICE_ID", officeId);
-        List queryResult = executeNamedQuery(
-                query, queryParameters);
-
-        if (queryResult.size() > 1) {
-            throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
-        }
-        if (queryResult.size() == 0) {
-            // if we found no results, then return zero using the default currency
-            return new Money(Money.getDefaultCurrency(),"0.0");
-        }
-        Integer currencyId = (Integer)((Object[])queryResult.get(0))[0];
-        MifosCurrency currency =  AccountingRules.getCurrencyByCurrencyId(currencyId.shortValue());
-
-        BigDecimal total = (BigDecimal)((Object[])queryResult.get(0))[1];
-
-        return new Money(currency, total);
-    }
-
 
     public CollectionSheetCustomerDto findCustomerWithNoAssocationsLoaded(final Integer customerId) {
 
@@ -1199,26 +1170,282 @@ public class CustomerPersistence extends Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CustomerListDto> getListOfActiveCentersUnderUser(PersonnelBO personnel) {
+    public List<CustomerDetailDto> getListOfActiveCentersUnderUser(PersonnelBO personnel) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
         queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
         queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.CENTER.getValue());
         queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE, CustomerStatus.CENTER_ACTIVE.getValue());
 
-        return executeNamedQueryWithResultTransformer(
-                "Customer.get_loanofficer_list_of_active_centers", queryParameters, CustomerListDto.class);
+        return executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_active_centers",
+                queryParameters, CustomerDetailDto.class);
 
     }
 
     @SuppressWarnings("unchecked")
-    public List<CustomerListDto> getListOfGroupsUnderUser(PersonnelBO personnel) {
+    public List<CustomerDetailDto> getListOfGroupsUnderUser(PersonnelBO personnel) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
         queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
         queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.GROUP.getValue());
-        return executeNamedQueryWithResultTransformer(
-                "Customer.get_loanofficer_list_of_groups", queryParameters, CustomerListDto.class);
+        return executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_groups", queryParameters,
+                CustomerDetailDto.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CustomerDetailDto> getListOfClientsUnderGroupOtherThanClosedAndCancelled(final String searchId,
+            final Short branchId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", searchId + ".%");
+        queryParameters.put("OFFICE_ID", branchId);
+        List<CustomerDetailDto> queryResult = executeNamedQuery(
+                "Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled", queryParameters);
+        return queryResult;
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getAvgLoanAmountForMemberInGoodOrBadStanding(final String groupSearchId, final Short groupOfficeId)
+            throws PersistenceException {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", groupSearchId + ".%");
+        queryParameters.put("OFFICE_ID", groupOfficeId);
+        List<Object[]> queryResult = executeNamedQuery("Customer.getAvgLoanAmountForMemberInGoodOrBadStanding",
+                queryParameters);
+
+        if (queryResult.size() > 1) {
+            return localizedMessageLookup("errors.multipleCurrencies");
+        }
+        if (queryResult.size() == 0) {
+            return new Money(Money.getDefaultCurrency()).toString();
+        }
+
+        // TODO - use default currency or retrieved currency?
+        Short currency = (Short) queryResult.get(0)[0];
+        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
+
+        Integer numberOfLoansInGoodOrBadStanding = (Integer) queryResult.get(0)[1];
+        Money totalLoanAmountInGoodOrBadStanding = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[2]);
+        Money avgLoanAmountInGoodOrBadStanding = new Money(mifosCurrency);
+        if (numberOfLoansInGoodOrBadStanding.intValue() > 0) {
+            avgLoanAmountInGoodOrBadStanding = totalLoanAmountInGoodOrBadStanding
+                    .divide(numberOfLoansInGoodOrBadStanding);
+        }
+
+        return avgLoanAmountInGoodOrBadStanding.toString();
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(final String groupSearchId,
+            final Short groupOfficeId) throws PersistenceException {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", groupSearchId);
+        queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
+        queryParameters.put("OFFICE_ID", groupOfficeId);
+        List<Object[]> queryResult = executeNamedQuery(
+                "Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups", queryParameters);
+
+        if (queryResult.size() > 1) {
+            return localizedMessageLookup("errors.multipleCurrencies");
+        }
+        if (queryResult.size() == 0) {
+            return new Money(Money.getDefaultCurrency()).toString();
+        }
+
+        // TODO - use default currency or retrieved currency?
+        Short currency = (Short) queryResult.get(0)[0];
+        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
+
+        Money totalOutstandingLoanAmount = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[1]);
+        return totalOutstandingLoanAmount.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getTotalSavingsAmountForGroupandClientsOfGroup(final String groupSearchId, final Short groupOfficeId)
+            throws PersistenceException {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", groupSearchId);
+        queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
+        queryParameters.put("OFFICE_ID", groupOfficeId);
+        List<Object[]> queryResult = executeNamedQuery("Customer.getTotalSavingsAmountForGroupandClientsOfGroup",
+                queryParameters);
+
+        if (queryResult.size() > 1) {
+            return localizedMessageLookup("errors.multipleCurrencies");
+        }
+        if (queryResult.size() == 0) {
+            return new Money(Money.getDefaultCurrency()).toString();
+        }
+
+        // TODO - use default currency or retrieved currency?
+        Short currency = (Short) queryResult.get(0)[0];
+        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
+
+        Money totalSavingsAmount = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[1]);
+        return totalSavingsAmount.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public ClientDisplayDto getClientDisplayDto(final Integer clientId, UserContext userContext)
+            throws PersistenceException {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CLIENT_ID", clientId);
+        List<Object[]> queryResult = executeNamedQuery("getClientDisplayDto", queryParameters);
+
+        if (queryResult.size() == 0) {
+            throw new MifosRuntimeException("Client not found: " + clientId);
+        }
+        if (queryResult.size() > 1) {
+            throw new MifosRuntimeException("Error finding Client id: " + clientId + " - Number found: "
+                    + queryResult.size());
+        }
+
+        final Integer customerId = (Integer) queryResult.get(0)[0];
+        final String globalCustNum = (String) queryResult.get(0)[1];
+        final String displayName = (String) queryResult.get(0)[2];
+        final String parentCustomerDisplayName = (String) queryResult.get(0)[3];
+        final String branchName = (String) queryResult.get(0)[4];
+        final String externalId = (String) queryResult.get(0)[5];
+        final String customerFormedByDisplayName = (String) queryResult.get(0)[6];
+        final Date customerActivationDate = (Date) queryResult.get(0)[7];
+        final Short customerLevelId = (Short) queryResult.get(0)[8];
+        final Short customerStatusId = (Short) queryResult.get(0)[9];
+        final String lookupName = (String) queryResult.get(0)[10];
+        final Date trainedDate = (Date) queryResult.get(0)[11];
+        final Date dateOfBirth = (Date) queryResult.get(0)[12];
+        final String governmentId = (String) queryResult.get(0)[13];
+        final Short groupFlag = (Short) queryResult.get(0)[14];
+        final Boolean blackListed = (Boolean) queryResult.get(0)[15];
+        final Short loanOfficerId = (Short) queryResult.get(0)[16];
+        final String loanOfficerName = (String) queryResult.get(0)[17];
+        final String businessActivitiesName = (String) queryResult.get(0)[18];
+        final String handicappedName = (String) queryResult.get(0)[19];
+        final String maritalStatusName = (String) queryResult.get(0)[20];
+        final String citizenshipName = (String) queryResult.get(0)[21];
+        final String ethnicityName = (String) queryResult.get(0)[22];
+        final String educationLevelName = (String) queryResult.get(0)[23];
+        final String povertyStatusName = (String) queryResult.get(0)[24];
+        final Short numChildren = (Short) queryResult.get(0)[25];
+        final Integer pictureId = (Integer) queryResult.get(0)[26];
+        final String spouseFatherValueLookUp = (String) queryResult.get(0)[27];
+        final String spouseFatherName = (String) queryResult.get(0)[28];
+
+        Boolean clientUnderGroup = false;
+        if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
+            clientUnderGroup = true;
+        }
+        Boolean isCustomerPicture = false;
+        if (pictureId != null) {
+            isCustomerPicture = true;
+        }
+        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
+        final String businessActivities = MessageLookup.getInstance().lookup(businessActivitiesName, userContext);
+        final String handicapped = MessageLookup.getInstance().lookup(handicappedName, userContext);
+        final String maritalStatus = MessageLookup.getInstance().lookup(maritalStatusName, userContext);
+        final String citizenship = MessageLookup.getInstance().lookup(citizenshipName, userContext);
+        final String ethnicity = MessageLookup.getInstance().lookup(ethnicityName, userContext);
+        final String educationLevel = MessageLookup.getInstance().lookup(educationLevelName, userContext);
+        final String povertyStatus = MessageLookup.getInstance().lookup(povertyStatusName, userContext);
+        String spouseFatherValue = null;
+        if (spouseFatherValueLookUp != null) {
+            spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+        }
+
+        return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,
+                externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
+                customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
+                loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,
+                educationLevel, povertyStatus, numChildren, isCustomerPicture, ClientRules.isFamilyDetailsRequired(),
+                spouseFatherValue, spouseFatherName);
+    }
+
+    @SuppressWarnings("unchecked")
+    public GroupDisplayDto getGroupDisplayDto(final Integer groupId, UserContext userContext)
+            throws PersistenceException {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("GROUP_ID", groupId);
+        List<Object[]> queryResult = executeNamedQuery("getGroupDisplayDto", queryParameters);
+
+        if (queryResult.size() == 0) {
+            throw new MifosRuntimeException("Group not found: " + groupId);
+        }
+        if (queryResult.size() > 1) {
+            throw new MifosRuntimeException("Error finding Group id: " + groupId + " - Number found: "
+                    + queryResult.size());
+        }
+
+        final Integer customerId = (Integer) queryResult.get(0)[0];
+        final String globalCustNum = (String) queryResult.get(0)[1];
+        final String displayName = (String) queryResult.get(0)[2];
+        final String parentCustomerDisplayName = (String) queryResult.get(0)[3];
+        final Short branchId = (Short) queryResult.get(0)[4];
+        final String externalId = (String) queryResult.get(0)[5];
+        final String customerFormedByDisplayName = (String) queryResult.get(0)[6];
+        final Date customerActivationDate = (Date) queryResult.get(0)[7];
+        final Short customerLevelId = (Short) queryResult.get(0)[8];
+        final Short customerStatusId = (Short) queryResult.get(0)[9];
+        final String lookupName = (String) queryResult.get(0)[10];
+        final Boolean trained = (Boolean) queryResult.get(0)[11];
+        final Date trainedDate = (Date) queryResult.get(0)[12];
+        final Boolean blackListed = (Boolean) queryResult.get(0)[13];
+        final Short loanOfficerId = (Short) queryResult.get(0)[14];
+        final String loanOfficerName = (String) queryResult.get(0)[15];
+        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
+
+        return new GroupDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchId,
+                externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
+                customerStatusName, trained, trainedDate, blackListed, loanOfficerId, loanOfficerName);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<LoanDetailDto> getLoanDetailDto(Integer customerId, UserContext userContext)
+            throws PersistenceException {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMER_ID", customerId);
+        List<Object[]> queryResult = executeNamedQuery("Customer.getLoanDetailDto", queryParameters);
+
+        if (queryResult.size() == 0) {
+            return null;
+        }
+
+        List<LoanDetailDto> loanDetails = new ArrayList<LoanDetailDto>();
+        String globalAccountNum;
+        String prdOfferingName;
+        Short accountStateId;
+        String accountStateName;
+        Money outstandingBalance;
+        Money totalAmountDue;
+        String lookupName;
+        Short currency;
+
+        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
+
+        for (Object[] loanDetail : queryResult) {
+            globalAccountNum = (String) loanDetail[0];
+            prdOfferingName = (String) loanDetail[1];
+            accountStateId = (Short) loanDetail[2];
+            lookupName = (String) loanDetail[3];
+            accountStateName = MessageLookup.getInstance().lookup(lookupName, userContext);
+            // TODO - use default currency or retrieved currency?
+            currency = (Short) loanDetail[4];
+            outstandingBalance = new Money(mifosCurrency, (BigDecimal) loanDetail[5]);
+            // TODO
+            totalAmountDue = new Money(mifosCurrency, "7.7");
+
+            loanDetails.add(new LoanDetailDto(globalAccountNum, prdOfferingName, accountStateId, accountStateName,
+                    outstandingBalance, totalAmountDue));
+        }
+        return loanDetails;
+    }
+
+    protected String localizedMessageLookup(String key) {
+        return MessageLookup.getInstance().lookup(key);
     }
 
 }

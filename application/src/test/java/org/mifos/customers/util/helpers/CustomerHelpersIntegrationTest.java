@@ -52,19 +52,6 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public void testCustomerPositionView() {
-        createCenter();
-        CustomerPositionView customerPositionView = new CustomerPositionView();
-        customerPositionView.setCustomerId(center.getCustomerId());
-        customerPositionView.setCustomerName(center.getDisplayName());
-        customerPositionView.setPositionId(1);
-        customerPositionView.setPositionName("position");
-       Assert.assertEquals(center.getCustomerId(), customerPositionView.getCustomerId());
-       Assert.assertEquals(center.getDisplayName(), customerPositionView.getCustomerName());
-       Assert.assertEquals(Integer.valueOf(1), customerPositionView.getPositionId());
-       Assert.assertEquals("position", customerPositionView.getPositionName());
-    }
-
     public void testCustomerView() {
         createCenter();
         CustomerView customerView = new CustomerView(center.getCustomerId(), center.getDisplayName(), center
@@ -105,18 +92,6 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(center.getPersonnel().getPersonnelId(), customerView.getPersonnelId());
        Assert.assertEquals(center.getLevel().getValue(), customerView.getCustomerLevelId());
        Assert.assertEquals("1", customerView.getVersionNo().toString());
-    }
-
-    public void testPerformanceHistoryView() {
-        PerformanceHistoryView performanceHistoryView = new PerformanceHistoryView();
-        performanceHistoryView.setNumberOfClients(10);
-        performanceHistoryView.setNumberOfGroups(10);
-        performanceHistoryView.setTotalOutstandingPortfolio(10);
-        performanceHistoryView.setTotalSavings(10);
-       Assert.assertEquals(10, performanceHistoryView.getNumberOfClients());
-       Assert.assertEquals(10, performanceHistoryView.getNumberOfGroups());
-       Assert.assertEquals(10.0, performanceHistoryView.getTotalOutstandingPortfolio(), DELTA);
-       Assert.assertEquals(10.0, performanceHistoryView.getTotalSavings(), DELTA);
     }
 
     public void testIdGenerator() {

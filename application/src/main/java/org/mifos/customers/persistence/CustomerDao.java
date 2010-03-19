@@ -22,8 +22,33 @@ package org.mifos.customers.persistence;
 
 import java.util.List;
 
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.ValueListElement;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.util.helpers.CenterDisplayDto;
+import org.mifos.customers.util.helpers.CenterPerformanceHistoryDto;
+import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
+import org.mifos.customers.util.helpers.CustomerAddressDto;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.CustomerMeetingDto;
+import org.mifos.customers.util.helpers.CustomerNoteDto;
+import org.mifos.customers.util.helpers.CustomerPositionDto;
+import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.security.util.UserContext;
 
 /**
  *
@@ -32,6 +57,79 @@ public interface CustomerDao {
 
     CustomerBO findCustomerById(Integer customerId);
 
+    ClientBO findClientBySystemId(String globalCustNum);
+
+    GroupBO findGroupBySystemId(String globalCustNum);
+
+    CenterBO findCenterBySystemId(String globalCustNum);
+
     List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);
 
+    List<CustomFieldView> retrieveCustomFieldsForCenter(UserContext userContext);
+
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenter();
+
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroup();
+
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClient();
+
+    List<FeeBO> retrieveFeesApplicableToCenters();
+
+    List<FeeBO> retrieveFeesApplicableToGroups();
+
+    List<FeeBO> retrieveFeesApplicableToGroupsRefinedBy(MeetingBO customerMeeting);
+
+    void save(CustomerBO customer);
+
+    List<CustomerView> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
+
+    List<CustomerView> findGroupsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
+
+    QueryResult search(String normalisedSearchString, PersonnelBO user);
+
+    void save(CustomerAccountBO customerAccount);
+
+    List<ValueListElement> retrieveSalutations();
+
+    List<ValueListElement> retrieveMaritalStatuses();
+
+    List<ValueListElement> retrieveCitizenship();
+
+    List<ValueListElement> retrieveBusinessActivities();
+
+    List<ValueListElement> retrieveEducationLevels();
+
+    List<ValueListElement> retrieveGenders();
+
+    List<ValueListElement> retrieveHandicapped();
+
+    List<ValueListElement> retrieveEthinicity();
+
+    List<ValueListElement> retrievePoverty();
+
+    CenterDisplayDto getCenterDisplayDto(Integer centerId, UserContext userContext);
+
+    CustomerAccountSummaryDto getCustomerAccountSummaryDto(Integer centerId);
+
+    CustomerAddressDto getCustomerAddressDto(CustomerBO center);
+
+    List<CustomerDetailDto> getGroupsOtherThanClosedAndCancelledForGroup(String searchId, Short branchId);
+
+    List<CustomerNoteDto> getRecentCustomerNoteDto(Integer centerId);
+
+    List<CustomerPositionDto> getCustomerPositionDto(Integer centerId, UserContext userContext);
+
+    List<SavingsDetailDto> getSavingsDetailDto(Integer centerId, UserContext userContext);
+
+    CustomerMeetingDto getCustomerMeetingDto(CustomerMeetingEntity customerMeeting, UserContext userContext);
+
+    List<CustomerSurveyDto> getCustomerSurveyDto(Integer centerId);
+
+    List<CustomFieldView> getCustomFieldViewForCustomers(Integer centerId, Short value, UserContext userContext);
+
+    CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
+
+    List<PersonnelView> findLoanOfficerThatFormedOffice(Short officeId);
+
+    void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 }

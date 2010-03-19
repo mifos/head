@@ -17,53 +17,34 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
 package org.mifos.customers.util.helpers;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
- * A class that is used for displaying customer positions
+ *
  */
-public class CustomerPositionView extends View {
+public class CustomerPositionDto implements DataTransferObject{
+    private final String positionName;
+    private final Integer customerId;
+    private final String customerDisplayName;
 
-    private Integer customerId;
-
-    private String positionName;
-
-    private String customerName;
-
-    private Integer positionId;
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public CustomerPositionDto(final String positionName, final Integer customerId, final String customerDisplayName) {
+        this.positionName = positionName;
+        this.customerId = customerId;
+        this.customerDisplayName = customerDisplayName;
     }
 
     public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
+        return this.positionName;
     }
 
     public Integer getCustomerId() {
-        return customerId;
+        return this.customerId;
     }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
+    public String getCustomerDisplayName() {
+        return this.customerDisplayName;
     }
 
-    public Integer getPositionId() {
-        return positionId;
-    }
-
-    public void setPositionId(Integer positionId) {
-        this.positionId = positionId;
-    }
 }

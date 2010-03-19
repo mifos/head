@@ -36,9 +36,6 @@ explanation of the license and how it is applied.
 	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupCustAction.do">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<c:set
-				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-				var="BusinessKey" />
 			<c:set 
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupInformationDto')}"
 			   	var="groupInformationDto" />			
@@ -54,12 +51,12 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="73%" class="headingorange"><c:out
-								value="${groupInformationDto.displayName}" /> <br>
+								value="${groupInformationDto.groupDisplay.displayName}" /> <br>
 							</td>
 							<td width="27%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if
-								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
-								<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								test="${groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CLOSED.value}">
+								<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${groupInformationDto.groupDisplay.customerId}"/>&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									
 									<fmt:message key="Group.editStatus">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
@@ -74,19 +71,19 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"> <mifoscustom:MifosImage
-								id="${BusinessKey.customerStatus.id}" moduleName="org.mifos.customers.util.resources.customerImages" />
-							<c:out value="${BusinessKey.customerStatus.name}" /> <c:forEach
-								var="flagSet" items="${BusinessKey.customerFlags}">
+								id="${groupInformationDto.groupDisplay.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" />
+							<c:out value="${groupInformationDto.groupDisplay.customerStatusName}" /> <c:forEach
+								var="flagSet" items="${groupInformationDto.customerFlags}">
 								<span class="fontnormal"> <c:if
-									test="${BusinessKey.blackListed}">
+									test="${groupInformationDto.groupDisplay.blackListed}">
 									<mifoscustom:MifosImage id="blackListed" moduleName="org.mifos.customers.util.resources.customerImages" />
-								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
+								</c:if> <c:out value="${flagSet.statusFlagName}" /> </span>
 							</c:forEach> <span class="fontnormal"><br>
 							<mifos:mifoslabel name="Group.systemId" bundle="GroupUIResources" />
-							<c:out value="${BusinessKey.globalCustNum}" /> </span><br>
+							<c:out value="${groupInformationDto.groupDisplay.globalCustNum}" /> </span><br>
 							<span class="fontnormal"> <mifos:mifoslabel
 								name="Group.loanofficer" bundle="GroupUIResources"></mifos:mifoslabel>
-							<c:out value="${BusinessKey.personnel.displayName}" /> </span><br>
+							<c:out value="${groupInformationDto.groupDisplay.loanOfficerName}" /> </span><br>
 							<br>
 							<span class="fontnormalbold">
 								<fmt:message key="Group.clientAssign" >
@@ -95,9 +92,9 @@ explanation of the license and how it is applied.
 								</span>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<c:if
-								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CANCELLED.value and BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
+								test="${groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CANCELLED.value and groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CLOSED.value}">
 								<span class="fontnormal"> <a id="viewgroupdetails.link.add"
-									href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${BusinessKey.customerId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
+									href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}&randomNUm=${sessionScope.randomNUm}">
 								    <fmt:message key="Group.Add" >
 				  				    <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 				  				    </fmt:message>
@@ -116,21 +113,21 @@ explanation of the license and how it is applied.
 								style="border: 1px solid #CECECE; height:100px; width:250px; overflow: auto; padding:6px; margin-top:5px;">
 							<span class="fontnormal"> <!-- Display all client under this group -->
 							<c:choose>
-								<c:when test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clients')}">
+								<c:when test="${!empty groupInformationDto.clientsOtherThanClosedAndCancelled}">
 									<c:choose>
 										<c:when
-											test="${!empty BusinessKey.personnel and !empty BusinessKey.personnel.personnelId}">
-											<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clients')}">
+											test="${!empty groupInformationDto.groupDisplay and !empty groupInformationDto.groupDisplay.loanOfficerId}">
+											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
-													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}">
+													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}">
 												<c:out value="${client.displayName}" /> <c:out
-													value="${customerfn:getClientPosition(BusinessKey.customerPositions,client)}" />
+													value="${customerfn:getClientPosition(groupInformationDto.customerPositions,client)}" />
 												<br>
 												</a>
 											</c:forEach>
 										</c:when>
 										<c:otherwise>
-											<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clients')}">
+											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
 													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 												<c:out value="${client.displayName}" /><%-- <c:out
@@ -167,18 +164,18 @@ explanation of the license and how it is applied.
 						</tr>
 						<!-- bug id 28004. Added if condition to show link to open accounts if only client is active-->
 						<c:if
-							test="${BusinessKey.customerStatus.id == CustomerStatus.GROUP_ACTIVE.value}">
+							test="${groupInformationDto.groupDisplay.customerStatusId == CustomerStatus.GROUP_ACTIVE.value}">
 							<tr align="right">
 								<td class="headingorange"><span class="fontnormal"> <mifos:mifoslabel
 									name="Group.opennewaccount" bundle="GroupUIResources"></mifos:mifoslabel>
 
 								&nbsp; <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
 									<html-el:link styleId="viewgroupdetails.link.newLoanAccount"
-										href="loanAccountAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+										href="loanAccountAction.do?method=getPrdOfferings&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel>
 									</html-el:link> &nbsp;|&nbsp;
 		              </c:if> <html-el:link styleId="viewgroupdetails.link.newSavingsAccount"
-									href="savingsAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+									href="savingsAction.do?method=getPrdOfferings&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"></mifos:mifoslabel>
 								</html-el:link> </span></td>
 							</tr>
@@ -186,7 +183,7 @@ explanation of the license and how it is applied.
 					</table>
 
 
-					<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupLoanAccountsInUse')}">
+					<c:if test="${!empty groupInformationDto.loanAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -201,7 +198,7 @@ explanation of the license and how it is applied.
 								<span class="fontnormal"></span>
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
-									<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupLoanAccountsInUse')}"
+									<c:forEach items="${groupInformationDto.loanAccountsInUse}"
 										var="loan">
 										<tr>
 											<td>
@@ -209,20 +206,20 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewgroupdetails.link.viewLoanAccount"
-														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${BusinessKey.customerId}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
-														<c:out value="${loan.loanOffering.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
+														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
-														id="${loan.accountState.id}" moduleName="org.mifos.accounts.loan.util.resources.loanImages" />
-													<c:out value="${loan.accountState.name}" /> </span></td>
+														id="${loan.accountStateId}" moduleName="org.mifos.accounts.loan.util.resources.loanImages" />
+													<c:out value="${loan.accountStateName}" /> </span></td>
 												</tr>
 											</table>
 											<c:if
-												test="${loan.accountState.id==5 || loan.accountState.id==9}">
+												test="${loan.accountStateId==5 || loan.accountStateId==9}">
 												<span class="fontnormal"> <mifos:mifoslabel
 													name="loan.outstandingbalance" />: <c:out
-													value="${loan.loanSummary.outstandingBalance}" /><br>
+													value="${loan.outstandingBalance}" /><br>
 												<mifos:mifoslabel name="loan.amount_due" />: <c:out
 													value="${loan.totalAmountDue}" /> </span>
 											</c:if></td>
@@ -242,7 +239,7 @@ explanation of the license and how it is applied.
 							</tr>
 						</table>
 					</c:if> <c:if
-						test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupSavingsAccountsInUse')}">
+						test="${!empty groupInformationDto.savingsAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -257,7 +254,7 @@ explanation of the license and how it is applied.
 								<span class="fontnormal"></span>
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
-									<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupSavingsAccountsInUse')}"
+									<c:forEach items="${groupInformationDto.savingsAccountsInUse}"
 										var="savings">
 										<tr>
 											<td>
@@ -266,13 +263,13 @@ explanation of the license and how it is applied.
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewgroupdetails.link.viewSavingsAccount"
 														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
-														<c:out value="${savings.savingsOffering.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
+														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
-														id="${savings.accountState.id}"
+														id="${savings.accountStateId}"
 														moduleName="org.mifos.accounts.savings.util.resources.savingsImages" /> <c:out
-														value="${savings.accountState.name}" /> </span></td>
+														value="${savings.accountStateName}" /> </span></td>
 												</tr>
 											</table>
 											<span class="fontnormal"><mifos:mifoslabel
@@ -311,14 +308,14 @@ explanation of the license and how it is applied.
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="53%"><span class="fontnormal"> <a id="viewgroupdetails.link.viewDetails"
-												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>">
+												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${groupInformationDto.groupDisplay.globalCustNum}"/>">
 											<mifos:mifoslabel name="Group.viewdetails"
 												bundle="GroupUIResources" /> </a> </span></td>
 										</tr>
 										<tr>
 											<td><span class="fontnormal"><mifos:mifoslabel
 												name="Group.amountdue" bundle="GroupUIResources" /> <c:out
-												value="${BusinessKey.customerAccount.nextDueAmount}" /> </span></td>
+												value="${groupInformationDto.customerAccountSummary.nextDueAmount}" /> </span></td>
 										</tr>
 									</table>
 									</td>
@@ -342,8 +339,8 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="38%" align="right" class="fontnormal">
 							<span class="fontnormal">
-								<c:if test="${BusinessKey.customerStatus.id !=7 && BusinessKey.customerStatus.id !=8}">
-									<html-el:link styleId="viewgroupdetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<c:if test="${groupInformationDto.groupDisplay.customerStatusId !=7 && groupInformationDto.groupDisplay.customerStatusId !=8}">
+									<html-el:link styleId="viewgroupdetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${groupInformationDto.groupDisplay.customerId}&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Group.viewallclosedaccounts" bundle="GroupUIResources"></mifos:mifoslabel>
 									</html-el:link>
 								</c:if>
@@ -404,7 +401,7 @@ explanation of the license and how it is applied.
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 									</fmt:message>
 								<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.customerActivationDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,groupInformationDto.groupDisplay.customerActivationDate)}" />
 							<br></td>
 						</tr>
 
@@ -413,7 +410,7 @@ explanation of the license and how it is applied.
 								name="${ConfigurationConstants.EXTERNALID}"
 								isColonRequired="Yes" keyhm="Group.ExternalId"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:out
-								value="${BusinessKey.externalId}" /> <br></td>
+								value="${groupInformationDto.groupDisplay.externalId}" /> <br></td>
 						</tr>
 
 
@@ -423,7 +420,7 @@ explanation of the license and how it is applied.
 							<td class="fontnormalbold"><span class="fontnormal"> <mifos:mifoslabel
 								name="Group.FormedBy" bundle="GroupUIResources"></mifos:mifoslabel>
 							<c:out
-								value="${BusinessKey.customerFormedByPersonnel.displayName}" /><br>
+								value="${groupInformationDto.groupDisplay.customerFormedByDisplayName}" /><br>
 
 							<%-- Collection Sheet
 				  <mifos:mifoslabel name="Group.collectionsheettype" bundle="GroupUIResources"></mifos:mifoslabel> Collection Sheet Type 1
@@ -440,9 +437,9 @@ explanation of the license and how it is applied.
 								name="Group.trainedon" bundle="GroupUIResources"
 								keyhm="Group.TrainedDate"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:if
-								test="${BusinessKey.trained}">
+								test="${groupInformationDto.groupDisplay.trained}">
 								<c:out
-									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.trainedDate)}" />
+									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,groupInformationDto.groupDisplay.trainedDate)}" />
 							</c:if> </span><br>
 							<br>
 							<%--  programs
@@ -460,10 +457,10 @@ explanation of the license and how it is applied.
 								name="Group.officialtitlesassigned" bundle="GroupUIResources"></mifos:mifoslabel>
 							<span class="fontnormal"><br>
 							</span> <span class="fontnormal"><c:forEach var="pos"
-								items="${BusinessKey.customerPositions}">
-								<c:if test="${! empty pos.customer.customerId}">
-									<c:out value="${pos.position.name}" />: <c:out
-										value="${pos.customer.displayName}" />
+								items="${groupInformationDto.customerPositions}">
+								<c:if test="${! empty pos.positionName}">
+									<c:out value="${pos.positionName}" />: <c:out
+										value="${pos.customerDisplayName}" />
 									<br>
 								</c:if>
 							</c:forEach> </span><br>
@@ -477,75 +474,69 @@ explanation of the license and how it is applied.
 								bundle="GroupUIResources" keyhm="Group.Address"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <br>
 							<c:if
-								test="${!empty BusinessKey.customerAddressDetail.address.displayAddress}">
+								test="${!empty groupInformationDto.address.displayAddress}">
 								<span class="fontnormal"> <c:out
-									value="${BusinessKey.customerAddressDetail.address.displayAddress}" /><br>
+									value="${groupInformationDto.address.displayAddress}" /><br>
 								</span>
 							</c:if> <c:if
-								test="${!empty BusinessKey.customerAddressDetail.address.city}">
+								test="${!empty groupInformationDto.address.city}">
 								<span class="fontnormal"> <c:out
-									value="${BusinessKey.customerAddressDetail.address.city}" /><br>
+									value="${groupInformationDto.address.city}" /><br>
 								</span>
 							</c:if> <c:if
-								test="${!empty BusinessKey.customerAddressDetail.address.state}">
+								test="${!empty groupInformationDto.address.state}">
 								<span class="fontnormal"> <c:out
-									value="${BusinessKey.customerAddressDetail.address.state}" /><br>
+									value="${groupInformationDto.address.state}" /><br>
 								</span>
 							</c:if> <c:if
-								test="${!empty BusinessKey.customerAddressDetail.address.country}">
+								test="${!empty groupInformationDto.address.country}">
 								<span class="fontnormal"> <c:out
-									value="${BusinessKey.customerAddressDetail.address.country}" />
+									value="${groupInformationDto.address.country}" />
 								<br>
 								</span>
 							</c:if> <c:if
-								test="${!empty BusinessKey.customerAddressDetail.address.zip}">
+								test="${!empty groupInformationDto.address.zip}">
 								<span class="fontnormal"> <c:out
-									value="${BusinessKey.customerAddressDetail.address.zip}" /><br>
+									value="${groupInformationDto.address.zip}" /><br>
 								</span>
 							</c:if></td>
 						</tr>
 
 						<tr id="Group.PhoneNumber">
 							<td class="fontnormalbold"><span class="fontnormal"> <c:if
-								test="${!empty BusinessKey.customerAddressDetail.address.phoneNumber}">
+								test="${!empty groupInformationDto.address.phoneNumber}">
 								<br>
 								<span class="fontnormal"> <mifos:mifoslabel
 									name="Group.telephone" bundle="GroupUIResources"
 									keyhm="Group.PhoneNumber"
 									isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:out
-									value="${BusinessKey.customerAddressDetail.address.phoneNumber}" />
+									value="${groupInformationDto.address.phoneNumber}" />
 								</span>
 								<br>
 							</c:if> <br></td>
 						</tr>
-
 						<%--Additional information custom fields--%>
-						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+						<c:if test="${!empty groupInformationDto.customFields}">
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><br>
-							<c:if test="${!empty BusinessKey.customFields}">
 								<mifos:mifoslabel name="Group.additionalinformation"
 									bundle="GroupUIResources"></mifos:mifoslabel>
-							</c:if> <span class="fontnormal"><br>
-							<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-								<c:forEach var="cf" items="${BusinessKey.customFields}">
-									<c:if test="${cfdef.fieldId==cf.fieldId}">
+							<span class="fontnormal"><br>
+							<c:forEach var="customField" items="${groupInformationDto.customFields}">
 										<c:choose>
-											<c:when test="${cfdef.fieldType == 3}">
-												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"
+											<c:when test="${customField.fieldType == 3}">
+												<mifos:mifoslabel name="${customField.lookUpEntityType}"
 													bundle="CenterUIResources"></mifos:mifoslabel>:
 							    	<span class="fontnormal"><c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,cf.fieldValue)}" />
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,customField.fieldValue)}" />
 											</c:when>
 											<c:otherwise>
-												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"
+												<mifos:mifoslabel name="${customField.lookUpEntityType}"
 													bundle="CenterUIResources"></mifos:mifoslabel>:
-							    	<span class="fontnormal"><c:out value="${cf.fieldValue}" />
+							    	<span class="fontnormal"><c:out value="${customField.fieldValue}" />
 											</c:otherwise>
 										</c:choose>
 										<br>
-									</c:if>
-								</c:forEach>
 							</c:forEach> <br>
 							</span></td>
 						</tr>
@@ -566,17 +557,17 @@ explanation of the license and how it is applied.
 												<br>
 											<mifos:mifoslabel name="Group.meetings"
 												bundle="GroupUIResources" />&nbsp; <c:out
-												value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,sessionScope.UserContext)}" /></span>
-											<c:set var="updatedMeetingScheduleMessage" value="${customerfn:getUpdatedMeetingSchedule(BusinessKey.customerMeeting,UserContext)}" />
+												value="${groupInformationDto.customerMeeting.meetingSchedule}" /></span>
+											<c:set var="updatedMeetingScheduleMessage" value="${groupInformationDto.customerMeeting.updatedMeetingScheduleMessage}" />
 											<c:if test="${!empty updatedMeetingScheduleMessage}"><span class="fontnormalRed"><br><c:out value="${updatedMeetingScheduleMessage}" /></span></c:if>
 											<span class="fontnormal"><br></span>
 											</span> <span class="fontnormal"> <c:if
-												test="${BusinessKey.customerMeeting.meeting.meetingPlace!=null && !empty BusinessKey.customerMeeting.meeting.meetingPlace}">
+												test="${groupInformationDto.customerMeeting.meetingPlace!=null && !empty groupInformationDto.customerMeeting.meetingPlace}">
 												<c:out
-													value="${BusinessKey.customerMeeting.meeting.meetingPlace}" />
+													value="${groupInformationDto.customerMeeting.meetingPlace}" />
 												<br>
 											</c:if> <c:out
-												value="${BusinessKey.parentCustomer.displayName}" /><br>
+												value="${groupInformationDto.groupDisplay.parentCustomerDisplayName}" /><br>
 											</span></td>
 											<td width="41%" align="right" valign="top" class="fontnormal">
 											<html-el:link styleId="viewgroupdetails.link.editCenterMembership" href="groupTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> 
@@ -596,15 +587,15 @@ explanation of the license and how it is applied.
 											<span class="fontnormalRed"><br>
 											<mifos:mifoslabel name="Group.meetings"
 												bundle="GroupUIResources" /> <c:out
-												value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,sessionScope.UserContext)}" />
+												value="${groupInformationDto.customerMeeting.meetingSchedule}" />
 											</span> <br>
 											<span class="fontnormal"> <c:out
-												value="${BusinessKey.customerMeeting.meeting.meetingPlace}" />
+												value="${groupInformationDto.customerMeeting.meetingPlace}" />
 											</span></td>
 											<td width="41%" align="right" valign="top" class="fontnormal"><br>
 
 											<html-el:link styleId="viewgroupdetails.link.editMeetingSchedule"
-												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
+												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${groupInformationDto.groupDisplay.customerLevelId}">
 												<mifos:mifoslabel name="Group.editmeetingchedule"
 													bundle="GroupUIResources" />
 												<br>
@@ -620,10 +611,10 @@ explanation of the license and how it is applied.
 							</c:choose> <br>
 
 							<%--Historical data link--%> <span class="fontnormal"><a id="viewgroupdetails.link.viewHistoricalData"
-								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${groupInformationDto.groupDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.viewhistoricaldata"
 								bundle="GroupUIResources"></mifos:mifoslabel> </a> <br>
-								<html-el:link styleId="viewgroupdetails.link.viewChangeLog" href="groupCustAction.do?method=loadChangeLog&entityType=Group&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+								<html-el:link styleId="viewgroupdetails.link.viewChangeLog" href="groupCustAction.do?method=loadChangeLog&entityType=Group&entityId=${groupInformationDto.groupDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Group.viewchangelog"
 								bundle="GroupUIResources"></mifos:mifoslabel> </html-el:link> <br>
 							</span></td>
@@ -651,7 +642,7 @@ explanation of the license and how it is applied.
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 					</fmt:message> 
 								<c:out
-								value="${BusinessKey.performanceHistory.activeClientCount}" />
+								value="${groupInformationDto.groupPerformanceHistory.activeClientCount}" />
 							</span></td>
 						</tr>
 						<tr>
@@ -662,7 +653,7 @@ explanation of the license and how it is applied.
 					</fmt:message>:  
 								
 							<c:out
-								value="${BusinessKey.performanceHistory.lastGroupLoanAmount}" /></span></td>
+								value="${groupInformationDto.groupPerformanceHistory.lastGroupLoanAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> 
@@ -671,7 +662,7 @@ explanation of the license and how it is applied.
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>   
 								<c:out
-								value="${groupInformationDto.avgLoanAmountForMember}" /></span></td>
+								value="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMember}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> 
@@ -680,19 +671,19 @@ explanation of the license and how it is applied.
 					</fmt:message>    
 								
 								<c:out
-								value="${groupInformationDto.totalOutStandingLoanAmount}" /></span></td>
+								value="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.PortfolioAtRisk" bundle="GroupUIResources" /> <c:out
-								value="${groupInformationDto.portfolioAtRisk}" /></span></td>
+								value="${groupInformationDto.groupPerformanceHistory.portfolioAtRisk}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
 							<c:out
-								value="${groupInformationDto.totalSavingsAmount}" /></span></td>
+								value="${groupInformationDto.groupPerformanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>
 						<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
 							<tr>
@@ -703,7 +694,7 @@ explanation of the license and how it is applied.
 								</span></td>
 							</tr>
 
-							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanCycleCounter')}"
+							<c:forEach items="${groupInformationDto.groupPerformanceHistory.loanCycleCounters}"
 								var="loanCycleCounter">
 								<tr>
 									<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out
@@ -719,7 +710,7 @@ explanation of the license and how it is applied.
 								height="8"></td>
 						</tr>
 					</table>
-               <c:if test="${surveyCount}">
+               <c:if test="${groupInformationDto.activeSurveys}">
 		<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
@@ -731,12 +722,12 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
             </tr>
-            <c:forEach items="${requestScope.customerSurveys}" var="surveyInstance">
+            <c:forEach items="${groupInformationDto.customerSurveys}" var="surveyInstance">
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
                     <a id="viewgroupdetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=group">
-                      <c:out value="${surveyInstance.survey.name}"/>
+                      <c:out value="${surveyInstance.surveyName}"/>
                     </a>
                   </span>
                 </td>
@@ -750,7 +741,7 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a id="viewgroupdetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=group">
+                  <a id="viewgroupdetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${groupInformationDto.groupDisplay.globalCustNum}&surveyType=group">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                   <a id="viewgroupdetails.link.viewallsurveys" href="surveysAction.do?method=mainpage">
@@ -779,8 +770,8 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="paddingL10"><c:choose>
-								<c:when test="${!empty BusinessKey.recentCustomerNotes}">
-									<c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
+								<c:when test="${!empty groupInformationDto.recentCustomerNotes}">
+									<c:forEach var="note" items="${groupInformationDto.recentCustomerNotes}">
 										<span class="fontnormal8ptbold"> <c:out
 											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
 										</span>
@@ -798,14 +789,14 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td align="right" class="paddingleft05"><span
-								class="fontnormal8pt"> <c:if test="${!empty BusinessKey.customerNotes}">
+								class="fontnormal8pt"> <c:if test="${!empty groupInformationDto.recentCustomerNotes}">
 								<a id="viewgroupdetails.link.seeAllNotes"
-									href="customerNotesAction.do?method=search&customerId=<c:out value="${BusinessKey.customerId}"/>&globalAccountNum=<c:out value="${BusinessKey.globalCustNum}"/>&customerName=<c:out value="${BusinessKey.displayName}"/>&securityParamInput=Group&levelId=<c:out value="${BusinessKey.customerLevel.id}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="customerNotesAction.do?method=search&customerId=<c:out value="${groupInformationDto.groupDisplay.customerId}"/>&globalAccountNum=<c:out value="${groupInformationDto.groupDisplay.globalCustNum}"/>&customerName=<c:out value="${groupInformationDto.groupDisplay.displayName}"/>&securityParamInput=Group&levelId=<c:out value="${groupInformationDto.groupDisplay.customerLevelId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Group.seeallnotes"
 									bundle="GroupUIResources"></mifos:mifoslabel> </a>
 								<br>
 							</c:if> <a id="viewgroupdetails.link.addNote"
-								href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="customerNotesAction.do?method=load&customerId=<c:out value="${groupInformationDto.groupDisplay.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Group.addanote" bundle="GroupUIResources"></mifos:mifoslabel>
 							</a> </span></td>
 						</tr>
@@ -816,15 +807,15 @@ explanation of the license and how it is applied.
 			<br>
 			<br>
 			<html-el:hidden property="customerId"
-				value="${BusinessKey.customerId}" />
+				value="${groupInformationDto.groupDisplay.customerId}" />
 			<html-el:hidden property="globalCustNum"
-				value="${BusinessKey.globalCustNum}" />
+				value="${groupInformationDto.groupDisplay.globalCustNum}" />
 			<html-el:hidden property="globalAccountNum"
-				value="${BusinessKey.customerAccount.globalAccountNum}" />
+				value="${groupInformationDto.customerAccountSummary.globalAccountNum}" />
 			<html-el:hidden property="versionNo"
 				value="${requestScope.GroupVO.versionNo}" />
 			<html-el:hidden property="displayName"
-				value="${BusinessKey.displayName}" />
+				value="${groupInformationDto.groupDisplay.displayName}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

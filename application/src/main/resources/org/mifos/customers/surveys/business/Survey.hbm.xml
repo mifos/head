@@ -35,6 +35,9 @@
 			</list>
 		</joined-subclass>
 	</class>
+	<query name="surveys.isActiveSurveysForSurveyType">
+		<![CDATA[select count(*) from Survey as survey where (survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='all') and survey.state=:SURVEY_STATE]]>
+	</query>
 	<query name="surveys.retrieveAllSurveys">
 		<![CDATA[from Survey as survey order by survey.name]]>
 	</query>

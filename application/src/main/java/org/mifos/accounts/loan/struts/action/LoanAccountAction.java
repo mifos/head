@@ -734,8 +734,7 @@ public class LoanAccountAction extends AccountAppAction {
 
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(loanBO);
-        boolean activeSurveys = surveysPersistence.retrieveSurveysByTypeAndState(SurveyType.LOAN, SurveyState.ACTIVE)
-                .size() > 0;
+        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
         request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
         request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
         request.setAttribute(AccountConstants.SURVEY_KEY, surveys);

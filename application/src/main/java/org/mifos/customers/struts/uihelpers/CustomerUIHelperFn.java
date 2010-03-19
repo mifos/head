@@ -20,13 +20,13 @@
 
 package org.mifos.customers.struts.uihelpers;
 
-import java.util.Set;
+import java.util.List;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerMeetingEntity;
-import org.mifos.customers.business.CustomerPositionEntity;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.security.util.UserContext;
@@ -47,15 +47,15 @@ public class CustomerUIHelperFn {
         StringBuilder stringBuilder = new StringBuilder();
         if (customerPositions != null && customer != null) {
             MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug("Iterating over customerPositions list");
-            Set<CustomerPositionEntity> customerPositionList = (Set<CustomerPositionEntity>) customerPositions;
+            List<CustomerPositionDto> customerPositionList = (List<CustomerPositionDto>) customerPositions;
             String positionNames[] = new String[customerPositionList.size()];
             int i = 0;
-            for (CustomerPositionEntity customerPositionEntity : customerPositionList) {
-                CustomerBO customerBO = (CustomerBO) customer;
-                if (null != customerPositionEntity && customerPositionEntity.getCustomer() != null
-                        && customerBO != null) {
-                    if (customerPositionEntity.getCustomer().getCustomerId().equals((customerBO).getCustomerId())) {
-                        String posName = customerPositionEntity.getPosition().getName();
+            for (CustomerPositionDto customerPosition : customerPositionList) {
+                CustomerDetailDto customerDetails = (CustomerDetailDto) customer;
+                if (null != customerPosition && customerPosition.getCustomerId() != null
+                        && customerDetails != null) {
+                    if (customerPosition.getCustomerId().equals((customerDetails).getCustomerId())) {
+                        String posName = customerPosition.getPositionName();
                         MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER)
                                 .debug("The position name is " + posName);
                         positionNames[i] = posName;

@@ -23,6 +23,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
 
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -125,6 +126,7 @@ explanation of the license and how it is applied.
 
 						</tr>
 					</table>
+					<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOnlyOffices')}" var="branchOnlyOffices" />
 					<office:OfficeListTag methodName="load"
 						actionName="clientCustAction.do" onlyBranchOffices="yes" flowKey="${requestScope.currentFlowKey}" />
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">

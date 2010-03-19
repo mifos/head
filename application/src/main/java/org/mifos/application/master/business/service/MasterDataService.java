@@ -30,6 +30,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -88,6 +89,10 @@ public class MasterDataService implements BusinessService {
         }
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao#retrieveCustomFieldsForCenter(UserContext)}
+     */
+    @Deprecated
     public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(EntityType entityType)
             throws ServiceException {
         try {

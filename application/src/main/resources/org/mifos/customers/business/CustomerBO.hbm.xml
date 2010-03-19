@@ -92,6 +92,8 @@
 			<one-to-many class="org.mifos.customers.business.CustomerPositionEntity" />
 		</set>
 
+		<!--  <one-to-one name="customerAccount" cascade="all" class="org.mifos.accounts.business.AccountBO" /> -->
+
 		<set name="accounts" cascade="all" table="ACCOUNT" lazy="true"
 			order-by="ACCOUNT_ID asc" access="field">
 			<key column="CUSTOMER_ID" />
@@ -204,6 +206,24 @@
 			customer.customerStatus.id not in (6,12)
 		]]>
 	</query>
+	<query name="Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled">
+		<![CDATA[select new org.mifos.customers.util.helpers.CustomerDetailDto(customer.customerId, 
+		customer.displayName, customer.searchId, customer.globalCustNum)
+		from org.mifos.customers.business.CustomerBO as customer 
+		where customer.searchId like :SEARCH_STRING and 
+			customer.office.officeId = :OFFICE_ID and 
+			customer.customerLevel.id = 1 and 
+			customer.customerStatus.id not in (5,6) ]]>
+	</query>
+	<query name="Customer.getListOfGroupsUnderCenterOtherThanClosedAndCancelled">
+		<![CDATA[select new org.mifos.customers.util.helpers.CustomerDetailDto(customer.customerId, 
+		customer.displayName, customer.searchId, customer.globalCustNum)
+		from org.mifos.customers.business.CustomerBO as customer 
+		where customer.searchId like :SEARCH_STRING and 
+			customer.office.officeId = :OFFICE_ID and 
+			customer.customerLevel.id = 2 and 
+			customer.customerStatus.id not in (11,12) ]]>
+	</query>
 	<query name="Customer.getChildrenOtherThanClosedAndCancelled">
 		<![CDATA[
 		from org.mifos.customers.business.CustomerBO as customer 
@@ -235,6 +255,343 @@
 		customer.customerLevel.id = :LEVEL_ID and 
 		customer.customerStatus.id in (3,4,9,10)]]>
 	</query>
+	<sql-query name="getClientDisplayDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="globalCustNum" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="parentDisplayName" type="string" />
+		<return-scalar column="branchName" type="string" />
+		<return-scalar column="externalId" type="string" />
+		<return-scalar column="customerFormedByDisplayName"
+			type="string" />
+		<return-scalar column="customerActivationDate" type="date" />
+		<return-scalar column="customerLevelId" type="short" />
+		<return-scalar column="customerStatusId" type="short" />
+		<return-scalar column="lookupName" type="string" />
+		<return-scalar column="trainedDate" type="date" />
+		<return-scalar column="dateOfBirth" type="date" />
+		<return-scalar column="governmentId" type="string" />
+		<return-scalar column="groupFlag" type="short" />
+		<return-scalar column="blacklisted" type="boolean" />
+		<return-scalar column="loanOfficerId" type="short" />
+		<return-scalar column="LoanOfficerName" type="string" />	
+		<return-scalar column="businessActivitiesName" type="string" />	
+		<return-scalar column="handicappedName" type="string" />	
+		<return-scalar column="maritalStatusName" type="string" />	
+		<return-scalar column="citizenshipName" type="string" />	
+		<return-scalar column="ethnicityName" type="string" />	
+		<return-scalar column="educationLevelName" type="string" />	
+		<return-scalar column="povertyStatusName" type="string" />		
+		<return-scalar column="numChildren" type="short" />		
+		<return-scalar column="pictureId" type="integer" />
+		<return-scalar column="spouseFatherValueLookUp" type="string" />	
+		<return-scalar column="spouseFatherName" type="string" />	
+		<![CDATA[select c.customer_id as customerId,
+				c.global_cust_num as globalCustNum,
+				c.display_name as displayName,
+				parent.display_name as parentDisplayName,
+				o.display_name as branchName,
+				c.external_id as externalId,
+				formedby.display_name as customerFormedByDisplayName,
+				c.customer_activation_date as customerActivationDate,
+				c.customer_level_id as customerLevelId,
+				c.status_id as customerStatusId,
+				lv.lookup_name as lookupName,
+				c.trained_date as trainedDate,
+				c.date_of_birth as dateOfBirth,
+				c.government_id as governmentId,
+				c.group_flag as groupFlag,
+				c.blacklisted as blacklisted,
+				c.loan_officer_id as loanOfficerId,
+				loanOfficer.display_name as loanOfficerName,
+				lv_businessActivities.lookup_name as businessActivitiesName,
+				lv_handicapped.lookup_name as handicappedName,
+				lv_maritalStatus.lookup_name as maritalStatusName,
+				lv_citizenship.lookup_name as citizenshipName,
+				lv_ethnicity.lookup_name as ethnicityName,
+				lv_educationLevel.lookup_name as educationLevelName,
+				lv_povertyStatus.lookup_name as povertyStatusName,
+				cd.num_children as numChildren,
+				cp.picture_id as pictureId,
+				lv_spouseFather.lookup_name as spouseFatherValueLookUp,
+				cnd.display_name as spouseFatherName
+				from customer c
+				left join customer parent on parent.customer_id = c.parent_customer_id
+				join customer_detail cd on cd.customer_id = c.customer_id
+				left join personnel formedby on formedby.personnel_id = c.customer_formedby_id
+				left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
+				left join customer_picture cp on cp.customer_id = c.customer_id
+				join office o on o.office_id = c.branch_id
+        		join customer_state cs on cs.status_id = c.status_id
+        		join lookup_value lv on lv.lookup_id = cs.status_lookup_id
+        		left join lookup_value lv_businessActivities on lv_businessActivities.lookup_id = cd.business_activities
+        		left join lookup_value lv_handicapped on lv_handicapped.lookup_id = cd.handicapped
+        		left join lookup_value lv_maritalStatus on lv_maritalStatus.lookup_id = cd.marital_status
+        		left join lookup_value lv_citizenship on lv_citizenship.lookup_id = cd.citizenship
+        		left join lookup_value lv_ethnicity on lv_ethnicity.lookup_id = cd.ethinicity
+        		left join lookup_value lv_educationLevel on lv_educationLevel.lookup_id = cd.education_level
+        		left join lookup_value lv_povertyStatus on lv_povertyStatus.lookup_id = cd.poverty_status
+        		
+				left join customer_name_detail cnd on cnd.customer_id = c.customer_id and cnd.name_type !=3
+				left join spouse_father_lookup sfl on sfl.spouse_father_id = cnd.name_type
+        		left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
+				where c.customer_id = :CLIENT_ID]]>
+	</sql-query>
+	<sql-query name="getGroupDisplayDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="globalCustNum" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="parentDisplayName" type="string" />
+		<return-scalar column="branchId" type="short" />
+		<return-scalar column="externalId" type="string" />
+		<return-scalar column="customerFormedByDisplayName"
+			type="string" />
+		<return-scalar column="customerActivationDate" type="date" />
+		<return-scalar column="customerLevelId" type="short" />
+		<return-scalar column="customerStatusId" type="short" />
+		<return-scalar column="lookupName" type="string" />
+		<return-scalar column="trained" type="boolean" />
+		<return-scalar column="trainedDate" type="date" />
+		<return-scalar column="blacklisted" type="boolean" />
+		<return-scalar column="loanOfficerId" type="short" />
+		<return-scalar column="LoanOfficerName" type="string" />		
+		<![CDATA[select c.customer_id as customerId,
+				c.global_cust_num as globalCustNum,
+				c.display_name as displayName,
+				parent.display_name as parentDisplayName,
+				c.branch_id as branchId,
+				c.external_id as externalId,
+				formedby.display_name as customerFormedByDisplayName,
+				c.customer_activation_date as customerActivationDate,
+				c.customer_level_id as customerLevelId,
+				c.status_id as customerStatusId,
+				lv.lookup_name as lookupName,
+				c.trained as trained,
+				c.trained_date as trainedDate,
+				c.blacklisted as blacklisted,
+				c.loan_officer_id as loanOfficerId,
+				loanOfficer.display_name as loanOfficerName
+				from customer c
+				left join customer parent on parent.customer_id = c.parent_customer_id
+				left join personnel formedby on formedby.personnel_id = c.customer_formedby_id
+				left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
+        		join customer_state cs on cs.status_id = c.status_id
+        		join lookup_value lv on lv.lookup_id = cs.status_lookup_id
+				where c.customer_id = :GROUP_ID]]>
+	</sql-query>
+	<sql-query name="getCenterDisplayDto">
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="globalCustNum" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="branchId" type="short" />
+		<return-scalar column="mfiJoiningDate" type="date" />
+		<return-scalar column="createdDate" type="date" />
+		<return-scalar column="versionNo" type="integer" />
+		<return-scalar column="externalId" type="string" />
+		<return-scalar column="customerLevelId" type="short" />
+		<return-scalar column="customerStatusId" type="short" />
+		<return-scalar column="lookupName" type="string" />
+		<return-scalar column="loanOfficerId" type="short" />
+		<return-scalar column="LoanOfficerName" type="string" />		
+		<![CDATA[select c.customer_id as customerId,
+				c.global_cust_num as globalCustNum,
+				c.display_name as displayName,
+				c.branch_id as branchId,
+				c.mfi_joining_date as mfiJoiningDate,
+				c.created_date as createdDate,
+				c.version_no as versionNo,
+				c.external_id as externalId,
+				c.customer_level_id as customerLevelId,
+				c.status_id as customerStatusId,
+				lv.lookup_name as lookupName,
+				c.loan_officer_id as loanOfficerId,
+				loanOfficer.display_name as loanOfficerName
+				from customer c
+				left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
+        		join customer_state cs on cs.status_id = c.status_id
+        		join lookup_value lv on lv.lookup_id = cs.status_lookup_id
+				where c.customer_id = :CENTER_ID]]>
+	</sql-query>
+	<sql-query name="Customer.getAvgLoanAmountForMemberInGoodOrBadStanding">
+		<return-scalar column="currency" type="short" />
+		<return-scalar column="numberOfLoansInGoodOrBadStanding"
+			type="integer" />
+		<return-scalar column="totalLoanAmountInGoodOrBadStanding"
+			type="big_decimal" />
+		<![CDATA[select ls.orig_principal_currency_id as currency,
+		count(*) as numberOfLoansInGoodOrBadStanding,
+		sum(ls.orig_principal - ls.principal_paid) as totalLoanAmountInGoodOrBadStanding
+		from loan_summary ls
+		inner join loan_account la on la.account_id = ls.account_id
+		inner join account a on a.account_id = la.account_id
+		inner join customer c on c.customer_id = a.customer_id
+		where c.search_id like :SEARCH_STRING
+    	and c.branch_id = :OFFICE_ID
+		and c.status_id in (3, 4)
+		and a.account_state_id in (5, 9)
+		group by ls.orig_principal_currency_id
+		]]>
+	</sql-query>
+	<sql-query
+		name="Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups">
+		<return-scalar column="currency" type="short" />
+		<return-scalar column="totalOutstandingLoanAmount" type="big_decimal" />
+		<![CDATA[select ls.orig_principal_currency_id as currency,
+		sum(ls.orig_principal - ls.principal_paid) as totalOutstandingLoanAmount
+		from loan_summary ls
+		inner join loan_account la on la.account_id = ls.account_id
+		inner join account a on a.account_id = la.account_id
+		inner join customer c on c.customer_id = a.customer_id
+		where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
+    	and c.branch_id = :OFFICE_ID
+		and c.status_id in (3, 4, 9, 10)
+		and a.account_state_id in (5, 9)
+		group by ls.orig_principal_currency_id
+		]]>
+	</sql-query>
+	<sql-query name="Customer.getTotalSavingsAmountForGroupandClientsOfGroup">
+		<return-scalar column="currency" type="short" />
+		<return-scalar column="totalSavingsAmount" type="big_decimal" />
+		<![CDATA[select sa.savings_balance_currency_id as currency,
+		sum(savings_balance) as totalSavingsAmount
+		from savings_account sa
+		inner join account a on a.account_id = sa.account_id
+		inner join customer c on c.customer_id = a.customer_id
+		where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
+    	and c.branch_id = :OFFICE_ID
+		and c.status_id in (3 ,4, 9, 10)
+		and a.account_state_id in (16, 18)
+		group by sa.savings_balance_currency_id
+		]]>
+	</sql-query>
+	<sql-query name="Customer.getCustomerPositionDto">
+		<return-scalar column="lookupName" type="string" />
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="customerDisplayName" type="string" />
+		<![CDATA[select lv.lookup_name as lookupName,
+				cp.customer_id as customerId,
+				c.display_name as customerDisplayName
+				from customer_position cp
+				join customer c on c.customer_id = cp.customer_id
+				join position p on p.position_id = cp.position_id
+				join lookup_value lv on lv.lookup_id = p.lookup_id
+				where cp.parent_customer_id = :PARENT_ID
+		]]>
+	</sql-query>
+	<sql-query name="Customer.getCustomerNoteDto">
+		<return-scalar column="commentDate" type="date" />
+		<return-scalar column="comment" type="string" />
+		<return-scalar column="personnelName" type="string" />
+		<![CDATA[select cn.comment_date as commentDate,
+				cn.comment as comment,
+				p.display_name as personnelName
+				from customer_note cn
+				join personnel p on p.personnel_id = cn.field_officer_id
+				where customer_id = :CUSTOMER_ID
+				order by comment_id desc
+		]]>
+	</sql-query>
+	<sql-query name="Customer.getCustomerSurveyDto">
+		<return-scalar column="instanceId" type="integer" />
+		<return-scalar column="surveyName" type="string" />
+		<return-scalar column="dateConducted" type="date" />
+		<![CDATA[SELECT si.instance_id as instanceId,
+				s.survey_name as surveyName,
+				si.date_conducted as dateConducted
+				FROM survey_instance si 
+				join survey s on s.survey_id = si.survey_id
+				where si.customer_id = :CUSTOMER_ID
+				order by s.survey_name
+		]]>
+	</sql-query>
+	<sql-query name="Customer.getLoanDetailDto">
+		<return-scalar column="globalAccountNum" type="string" />
+		<return-scalar column="prdOfferingName" type="string" />
+		<return-scalar column="accountStateId" type="short" />
+		<return-scalar column="lookupName" type="string" />
+		<return-scalar column="currency" type="short" />
+		<return-scalar column="outstandingBalance" type="big_decimal" />
+		<![CDATA[select a.global_account_num as globalAccountNum,
+				po.prd_offering_name as prdOfferingName,
+				a.account_state_id as accountStateId,
+				lv.lookup_name as lookupName,
+				ls.orig_principal_currency_id as currency,
+				((ls.orig_principal - ls.principal_paid) +
+					(ls.orig_interest - ls.interest_paid) +
+					(ls.orig_penalty - ls.penalty_paid) +
+					(ls.orig_fees - ls.fees_paid)) as outstandingBalance
+				from loan_summary ls
+				inner join loan_account la on la.account_id = ls.account_id
+				inner join account a on a.account_id = la.account_id
+    			inner join account_state ast on ast.account_state_id = a.account_state_id
+    			inner join prd_offering po on po.prd_offering_id = la.prd_offering_id
+				inner join customer c on c.customer_id = a.customer_id
+				inner join lookup_value lv on lv.lookup_id = ast.lookup_id
+				where c.customer_id = :CUSTOMER_ID
+		]]>
+	</sql-query>
+	<sql-query name="Customer.getSavingsDetailDto">
+		<return-scalar column="globalAccountNum" type="string" />
+		<return-scalar column="prdOfferingName" type="string" />
+		<return-scalar column="accountStateId" type="short" />
+		<return-scalar column="lookupName" type="string" />
+		<return-scalar column="currency" type="short" />
+		<return-scalar column="savingsBalance" type="big_decimal" />
+		<![CDATA[select a.global_account_num as globalAccountNum,
+				po.prd_offering_name as prdOfferingName,
+				a.account_state_id as accountStateId,
+				lv.lookup_name as lookupName,
+				sa.savings_balance_currency_id as currency,
+				sa.savings_balance as savingsBalance
+				from savings_account sa
+				inner join account a on a.account_id = sa.account_id
+    			inner join account_state ast on ast.account_state_id = a.account_state_id
+    			inner join prd_offering po on po.prd_offering_id = sa.prd_offering_id
+				inner join customer c on c.customer_id = a.customer_id
+				inner join lookup_value lv on lv.lookup_id = ast.lookup_id
+				where c.customer_id = :CUSTOMER_ID
+		]]>
+	</sql-query>
+	<sql-query name="getCustomerAccountSummaryDto">
+		<return-scalar column="globalAccountNum" type="string" />
+		<return-scalar column="currency" type="short" />
+		<return-scalar column="nextScheduleChargeDue" type="big_decimal" />
+		<return-scalar column="nextFeesDue" type="big_decimal" />
+		<![CDATA[select a.global_account_num as globalAccountNum,
+				cs.misc_fees_currency_id as currency,
+				((cs.misc_fees - cs.misc_fees_paid) +
+					(cs.misc_penalty - cs.misc_penalty_paid)) as nextScheduleChargeDue,
+				sum(cfs.amount - cfs.amount_paid) as nextFeesDue
+				from account a
+				join customer_schedule cs on cs.account_id = a.account_id
+				left join customer_fee_schedule cfs on cfs.id = cs.id
+				where a.customer_id = :CUSTOMER_ID
+				and cs.action_date =
+					(select min(cs2.action_date)
+					from customer_schedule cs2
+					where cs2.account_id = cs.account_id
+					and cs2.action_date >= date(:TODAY))
+				group by globalAccountNum, currency, nextScheduleChargeDue
+		]]>
+	</sql-query>
+	<sql-query name="Customer.getCustomFieldViewForCustomers">
+		<return-scalar column="fieldId" type="short" />
+		<return-scalar column="fieldValue" type="string" />
+		<return-scalar column="fieldType" type="short" />
+		<return-scalar column="mandatoryFlag" type="short" />
+		<return-scalar column="entityName" type="string" />
+		<![CDATA[select cfd.field_id as fieldId,
+				ccf.field_value as fieldValue,
+				cfd.field_type as fieldType,
+				cfd.mandatory_flag as mandatoryFlag,
+				le.entity_name as entityName
+				from custom_field_definition cfd
+				join lookup_entity le on le.entity_id = cfd.entity_id
+				left join customer_custom_field ccf on ccf.field_id = cfd.field_id
+						and ccf.customer_id = :CUSTOMER_ID
+				where cfd.entity_type = :ENTITY_TYPE
+		]]>
+	</sql-query>
 	<query name="Customer.getActiveLoanAccounts">
 		<![CDATA[
 		from org.mifos.accounts.loan.business.LoanBO as loan 

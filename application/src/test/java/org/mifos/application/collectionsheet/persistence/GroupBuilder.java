@@ -21,6 +21,7 @@ package org.mifos.application.collectionsheet.persistence;
 
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.group.business.GroupBO;
@@ -58,9 +59,11 @@ public class GroupBuilder {
                 parentCustomer);
 
         // add relationship between customer account and group.
-        customerAccountBuilder.withCustomer(group).withOffice(office).withLoanOfficer(loanOfficer)
+        CustomerAccountBO customerAccount = customerAccountBuilder.withCustomer(group).withOffice(office).withLoanOfficer(loanOfficer)
                 .buildForIntegrationTests();
 
+        group.setCustomerAccount(customerAccount);
+        
         return group;
     }
 

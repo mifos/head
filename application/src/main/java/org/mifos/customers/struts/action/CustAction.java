@@ -48,12 +48,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerPositionView;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
@@ -71,7 +69,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
@@ -80,7 +77,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class CustAction extends SearchAction {
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
 
     @Override
     protected BusinessService getService() {
@@ -126,51 +123,6 @@ public class CustAction extends SearchAction {
         return mapping.findForward(getCustomerDetailPage(((CustActionForm) form).getInput()));
     }
 
-    protected void loadCreateCustomFields(CustomerActionForm actionForm, EntityType entityType,
-            HttpServletRequest request) throws ApplicationException {
-        loadCustomFieldDefinitions(entityType, request);
-        // Set Default values for custom fields
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-
-        for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
-                    && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
-                        request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
-            } else {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
-                        .getFieldType()));
-            }
-        }
-        actionForm.setCustomFields(customFields);
-    }
-
-    protected List<CustomFieldView> createCustomFieldViews(Set<CustomerCustomFieldEntity> customFieldEntities,
-            HttpServletRequest request) throws ApplicationException {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        Locale locale = getUserContext(request).getPreferredLocale();
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
-                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                    if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
-                                .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
-                                .getFieldType()));
-                    } else {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), customFieldEntity
-                                .getFieldValue(), customFieldDef.getFieldType()));
-                    }
-                }
-            }
-        }
-        return customFields;
-    }
-
     protected void loadCustomFieldDefinitions(EntityType entityType, HttpServletRequest request)
             throws ApplicationException {
         MasterDataService masterDataService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
@@ -182,8 +134,7 @@ public class CustAction extends SearchAction {
 
     protected void loadFees(CustomerActionForm actionForm, HttpServletRequest request, FeeCategory feeCategory,
             MeetingBO meeting) throws ApplicationException {
-        FeeBusinessService feeService = (FeeBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.FeesService);
+        FeeBusinessService feeService = new FeeBusinessService();
         List<FeeBO> fees = feeService.retrieveCustomerFeesByCategaroyType(feeCategory);
         if (meeting != null) {
             fees = removeMismatchPeriodicFee(fees, meeting);
@@ -216,18 +167,9 @@ public class CustAction extends SearchAction {
                 || (fee.getFeeFrequency().getFeeMeetingFrequency().isWeekly() && meeting.isWeekly());
     }
 
-    protected void loadFormedByPersonnel(Short officeId, HttpServletRequest request) throws ApplicationException {
-        CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.Customer);
-        List<PersonnelView> formedByPersonnel;
-        formedByPersonnel = customerService.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL, officeId);
-        SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, formedByPersonnel, request);
-
-    }
-
     protected void loadLoanOfficers(Short officeId, HttpServletRequest request) throws ApplicationException {
-        PersonnelBusinessService personnelService = (PersonnelBusinessService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.Personnel);
+        PersonnelBusinessService personnelService = new PersonnelBusinessService();
+
         UserContext userContext = getUserContext(request);
         List<PersonnelView> personnelList = personnelService.getActiveLoanOfficersInBranch(officeId, userContext
                 .getId(), userContext.getLevelId());
@@ -256,39 +198,8 @@ public class CustAction extends SearchAction {
                 recordOfficeId, recordLoanOfficerId);
     }
 
-    protected List<CustomerPositionView> createCustomerPositionViews(Set<CustomerPositionEntity> custPosEntities,
-            HttpServletRequest request) throws ApplicationException {
-        List<PositionEntity> positions = (List<PositionEntity>) SessionUtils.getAttribute(CustomerConstants.POSITIONS,
-                request);
-        List<CustomerPositionView> customerPositions = new ArrayList<CustomerPositionView>();
-        for (PositionEntity position : positions) {
-            for (CustomerPositionEntity entity : custPosEntities) {
-                if (position.getId().equals(entity.getPosition().getId())) {
-                    if (entity.getCustomer() != null) {
-                        customerPositions.add(new CustomerPositionView(entity.getCustomer().getCustomerId(), entity
-                                .getPosition().getId()));
-                    } else {
-                        customerPositions.add(new CustomerPositionView(null, entity.getPosition().getId()));
-                    }
-                }
-            }
-        }
-        return customerPositions;
-    }
-
-    protected void loadPositions(HttpServletRequest request) throws ApplicationException {
-        SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, getMasterEntities(PositionEntity.class,
-                getUserContext(request).getLocaleId()), request);
-    }
-
-    protected void loadClients(HttpServletRequest request, CustomerBO customerBO) throws ApplicationException {
-        List<CustomerBO> customerList;
-        customerList = customerBO.getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, customerList, request);
-    }
-
     protected CustomerBusinessService getCustomerBusinessService() {
-        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
+        return new CustomerBusinessService();
     }
 
     private String getCustomerDetailPage(String input) {

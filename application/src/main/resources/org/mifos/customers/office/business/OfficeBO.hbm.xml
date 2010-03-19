@@ -75,10 +75,7 @@
     </query>
 	<query name="masterdata.activeParents">
         <![CDATA[select new org.mifos.customers.office.business.OfficeView(office.officeId, office.officeName,office.level.id,lv.lookUpName,office.versionNo) from org.mifos.customers.office.business.OfficeBO office ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=office.level.lookUpValue.lookUpId and  office.level.id < :LEVEL_ID and office.status.id=:STATUS_ID ]]>
-    </query>       
-    <query name="masterdata.activeLevels">
-        <![CDATA[select new org.mifos.customers.office.business.OfficeView(ol.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=ol.lookUpValue.lookUpId and ol.configured=1 and ol.id !=1 order by ol.id  ]]>
-    </query>       
+    </query>          
     <query name="masterdata.officestatus">
         <![CDATA[select new org.mifos.customers.office.business.OfficeView(os.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeStatusEntity os ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=os.lookUpValue.lookUpId   ]]>
     </query>       
@@ -100,9 +97,6 @@
          <query name="office.getOfficesTillBranchOfficeActive">
             <![CDATA[from org.mifos.customers.office.business.OfficeBO  o where o.level.id != :LEVEL_ID  and o.searchId like :SEARCH_ID and o.status.id = :STATUS_ID order by o.level.id,o.officeName ]]>
     </query>
-    <query name="office.getBranchParents">
-            <![CDATA[ select distinct o.parentOffice from org.mifos.customers.office.business.OfficeBO  o where o.level.id = :LEVEL_ID and o.status.id = :STATUS_ID and o.searchId like :SEARCH_ID order by o.parentOffice.officeName,o.officeName ]]>
-    </query>
     <query name="office.getAllChildOffices">
        <![CDATA[select new org.mifos.customers.office.business.OfficeView(office.officeId, office.officeName,office.level.id,office.versionNo) from org.mifos.customers.office.business.OfficeBO office where office.status.id=:STATUS_ID and office.searchId like :OFFICE_LIKE_SEARCHID order by office.level.id, office.officeName]]>
        																																								 
@@ -118,6 +112,20 @@
 
     <query name="office.getAllOfficesForCustomField">    		
             <![CDATA[from org.mifos.customers.office.business.OfficeBO]]>
+    </query>
+    
+    <!-- querys used by officeDao below this -->
+    <query name="findOfficeById">
+		<![CDATA[from OfficeBO o where o.officeId = :OFFICE_ID]]>
+    </query>
+    <query name="findOfficeDtoById">
+		<![CDATA[select new org.mifos.customers.office.persistence.OfficeDto(o.officeId, o.officeName, o.searchId) from OfficeBO o where o.officeId = :OFFICE_ID]]>
+    </query>
+    <query name="masterdata.activeLevels">
+        <![CDATA[select new org.mifos.customers.office.business.OfficeView(ol.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=ol.lookUpValue.lookUpId and ol.configured=1 and ol.id !=1 order by ol.id  ]]>
+    </query>
+    <query name="office.getBranchParents">
+		<![CDATA[ select distinct o.parentOffice from org.mifos.customers.office.business.OfficeBO  o where o.level.id = :LEVEL_ID and o.status.id = :STATUS_ID and o.searchId like :SEARCH_ID order by o.parentOffice.officeName,o.officeName ]]>
     </query>
       
 </hibernate-mapping>

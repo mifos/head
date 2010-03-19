@@ -26,22 +26,13 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
 
 public class CenterBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public BusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
-    }
-
-    public CenterBO getCenter(Integer customerId) throws ServiceException {
-        try {
-            return new CenterPersistence().getCenter(customerId);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
     }
 
     public CenterBO findBySystemId(String globalCustNum) throws ServiceException {
@@ -49,15 +40,6 @@ public class CenterBusinessService implements BusinessService {
             return new CenterPersistence().findBySystemId(globalCustNum);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
-        }
-    }
-
-    public QueryResult search(String searchString, Short userId) throws ServiceException {
-
-        try {
-            return new CenterPersistence().search(searchString, userId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
         }
     }
 }

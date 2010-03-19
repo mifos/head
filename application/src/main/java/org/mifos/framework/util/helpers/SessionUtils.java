@@ -287,4 +287,9 @@ public class SessionUtils {
         warningMessages.add(key, new ActionMessage(key));
     }
 
+    public static void removeThenSetAttribute(String key, Serializable value, HttpServletRequest request) throws PageExpiredException {
+        SessionUtils.removeAttribute(key, request);
+        SessionUtils.setAttribute(key, value, request);
+    }
+
 }

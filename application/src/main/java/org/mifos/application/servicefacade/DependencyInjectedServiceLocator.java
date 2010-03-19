@@ -35,16 +35,28 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHiber
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.business.service.CustomerService;
+import org.mifos.customers.business.service.CustomerServiceImpl;
+import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
+import org.mifos.customers.center.business.service.WebTierCenterDetailsServiceFacade;
+import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
+import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
+import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
+import org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade;
+import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.customers.office.persistence.OfficeDaoHibernate;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 
 /**
  * I contain static factory methods for locating/creating application services.
- *
+ * 
  * NOTE: Use of DI frameworks method would make this redundant. e.g.
  * spring/juice
  */
@@ -53,28 +65,34 @@ public class DependencyInjectedServiceLocator {
     // service facade
     private static CollectionSheetServiceFacade collectionSheetServiceFacade;
     private static LoanServiceFacade loanServiceFacade;
+    private static CustomerServiceFacade customerServiceFacade;
+    private static CenterDetailsServiceFacade centerDetailsServiceFacade;
+    private static GroupDetailsServiceFacade groupDetailsServiceFacade;
+    private static ClientDetailsServiceFacade clientDetailsServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
-
+    private static CustomerService customerService;
+    
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
     private static MasterPersistence masterPersistence = new MasterPersistence();
     private static PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static CustomerPersistence customerPersistence = new CustomerPersistence();
-    private static ClientPersistence clientPersistence = new ClientPersistence();
     private static SavingsPersistence savingsPersistence = new SavingsPersistence();
     private static LoanPersistence loanPersistence = new LoanPersistence();
     private static AccountPersistence accountPersistence = new AccountPersistence();
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
-
+    
     private static GenericDao genericDao = new GenericDaoHibernate();
+    private static OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
+    private static PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
     private static HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
     private static CustomerDao customerDao = new CustomerDaoHibernate(genericDao);
     private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
-
+    
 
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
@@ -87,6 +105,14 @@ public class DependencyInjectedServiceLocator {
         }
         return collectionSheetService;
     }
+    
+    public static CustomerService locateCustomerService() {
+
+        if (customerService == null) {
+            customerService = new CustomerServiceImpl(customerDao, personnelDao);
+        }
+        return customerService;
+    }
 
     public static CollectionSheetServiceFacade locateCollectionSheetServiceFacade() {
 
@@ -97,6 +123,41 @@ public class DependencyInjectedServiceLocator {
                     masterPersistence, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator);
         }
         return collectionSheetServiceFacade;
+    }
+
+    public static CustomerServiceFacade locateCustomerServiceFacade() {
+        if (customerServiceFacade == null) {
+            
+            customerService = DependencyInjectedServiceLocator.locateCustomerService();
+            
+            customerServiceFacade = new CustomerServiceFacadeWebTier(customerService, officeDao, personnelDao, customerDao);
+        }
+        return customerServiceFacade;
+    }
+    
+
+    public static ClientDetailsServiceFacade locateClientDetailsServiceFacade() {
+        if (clientDetailsServiceFacade == null) {
+            CustomerBusinessService customerBusinessService = new CustomerBusinessService(customerPersistence);
+            clientDetailsServiceFacade = new WebTierClientDetailsServiceFacade(customerDao, customerBusinessService);
+        }
+        return clientDetailsServiceFacade;
+    }
+    
+
+    public static GroupDetailsServiceFacade locateGroupDetailsServiceFacade() {
+        if (groupDetailsServiceFacade == null) {
+            CustomerBusinessService customerBusinessService = new CustomerBusinessService(customerPersistence);
+            groupDetailsServiceFacade = new WebTierGroupDetailsServiceFacade(customerDao, customerBusinessService);
+        }
+        return groupDetailsServiceFacade;
+    }
+    
+    public static CenterDetailsServiceFacade locateCenterDetailsServiceFacade() {
+        if (centerDetailsServiceFacade == null) {
+            centerDetailsServiceFacade = new WebTierCenterDetailsServiceFacade(customerDao);
+        }
+        return centerDetailsServiceFacade;
     }
 
     public static LoanServiceFacade locateLoanServiceFacade() {

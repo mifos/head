@@ -27,6 +27,7 @@ import java.util.List;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -40,7 +41,7 @@ public class AccountFeesEntity extends PersistentObject {
 
     private final Integer accountFeeId;
 
-    private final AccountBO account;
+    private AccountBO account;
 
     private final FeeBO fees;
 
@@ -70,7 +71,13 @@ public class AccountFeesEntity extends PersistentObject {
         this.account = account;
         this.fees = fee;
         this.feeAmount = feeAmount;
-        this.accountFeeAmount = new Money(account.getCurrency(), String.valueOf(feeAmount));
+
+        MifosCurrency currency = Money.getDefaultCurrency();
+        if (account != null) {
+            currency = account.getCurrency();
+        }
+
+        this.accountFeeAmount = new Money(currency, String.valueOf(feeAmount));
     }
 
     public AccountFeesEntity(final AccountBO account, final FeeBO fees, final Double feeAmount, final Short feeStatus, final Date statusChangeDate,
@@ -173,6 +180,16 @@ public class AccountFeesEntity extends PersistentObject {
         return false;
     }
 
+
+    /**
+     * Count the number of fee installments due after this periodic fee's last-applied date, up to and
+     * including the given date. The fees' installment dates are calculated using the customer's meeting
+     * schedule (weekly, monthly) but the periodic fee's recurrence rate (every, every second, etc), and
+     * starting with the fee's last applied date.
+     *
+     * @param date count fee installments up to this date
+     * @throws AccountException
+     */
     public Integer getApplicableDatesCount(final Date date) throws AccountException {
         Integer applicableDatesCount = 0;
         if (getLastAppliedDate() != null) {
@@ -203,6 +220,10 @@ public class AccountFeesEntity extends PersistentObject {
             meetingBO.getMeetingDetails().setRecurAfter(recurAfter);
         }
         return applicableDatesCount;
+    }
+
+    public void setAccount(AccountBO account) {
+        this.account = account;
     }
 
 }

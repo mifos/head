@@ -86,7 +86,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 
 public class AccountBO extends BusinessObject {
@@ -229,8 +229,6 @@ public class AccountBO extends BusinessObject {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
      * minimal legal constructor
      */
     public AccountBO(final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
@@ -238,6 +236,7 @@ public class AccountBO extends BusinessObject {
             final Set<AccountFeesEntity> accountFees, final OfficeBO office,
             final PersonnelBO accountOfficer, final Date createdDate,
             final Short createdByUserId) {
+        this.accountId = null;
         this.accountType = new AccountTypeEntity(accountType.getValue());
         this.accountState = new AccountStateEntity(accountState);
         this.customer = customer;
@@ -248,8 +247,6 @@ public class AccountBO extends BusinessObject {
         this.accountFees = accountFees;
         this.office = office;
         this.personnel = accountOfficer;
-
-        this.accountId = null;
         this.accountFlags = new HashSet<AccountFlagMapping>();
         this.accountCustomFields = new HashSet<AccountCustomFieldEntity>();
         this.accountPayments = new ArrayList<AccountPaymentEntity>();
@@ -391,7 +388,7 @@ public class AccountBO extends BusinessObject {
         this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
     }
 
-    protected void addAccountFees(final AccountFeesEntity fees) {
+    public void addAccountFees(final AccountFeesEntity fees) {
         accountFees.add(fees);
     }
 
@@ -604,6 +601,10 @@ public class AccountBO extends BusinessObject {
         return installment;
     }
 
+    /**
+     * used by subclasses
+     */
+    @SuppressWarnings("unused")
     protected void resetUpdatedFlag() throws AccountException {
     }
 
@@ -658,9 +659,17 @@ public class AccountBO extends BusinessObject {
         }
     }
 
+    /**
+     * used by subclasses
+     */
+    @SuppressWarnings("unused")
     protected void writeOff() throws AccountException {
     }
 
+    /**
+     * used by subclasses
+     */
+    @SuppressWarnings("unused")
     protected void reschedule() throws AccountException {
     }
 
@@ -700,9 +709,9 @@ public class AccountBO extends BusinessObject {
     protected Money removeSign(final Money amount) {
         if (amount != null && amount.isLessThanZero()) {
             return amount.negate();
-        } else {
-            return amount;
         }
+
+        return amount;
     }
 
     public double getLastPmntAmnt() {
@@ -1056,6 +1065,13 @@ public class AccountBO extends BusinessObject {
         return false;
     }
 
+    /**
+     * Returns the next {@link AccountActionDateEntity} occuring after today, if any, otherwise
+     * return null.
+     * <p>If more than one installment occurs on the next closest installment date, the method chooses one
+     * arbitrarily. This could happen, say, if the next normally scheduled installment falls in a holiday
+     * with repayment rule "Next Meeting Date/Repayment".
+     */
     public AccountActionDateEntity getDetailsOfUpcomigInstallment() {
         AccountActionDateEntity nextAccountAction = null;
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -1167,7 +1183,7 @@ public class AccountBO extends BusinessObject {
 
                     DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
                     ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-                    ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+                    ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
                             holidays);
 
                     List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences,

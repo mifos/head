@@ -21,11 +21,14 @@
 package org.mifos.customers.surveys.persistence;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.business.Question;
@@ -68,6 +71,22 @@ public class SurveysPersistence extends Persistence {
         query.setParameter("SURVEY_TYPE", type.getValue());
         query.setParameter("SURVEY_STATE", state.getValue());
         return query.list();
+    }
+
+    public Boolean isActiveSurveysForSurveyType(SurveyType surveyType) {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SURVEY_TYPE", surveyType.getValue());
+        queryParameters.put("SURVEY_STATE", SurveyState.ACTIVE.getValue());
+
+        Integer count;
+        try {
+            count = ((Long) execUniqueResultNamedQuery("surveys.isActiveSurveysForSurveyType", queryParameters))
+                    .intValue();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+        return count > 0 ? true : false;
     }
 
     public List<Survey> retrieveCustomersSurveys() throws PersistenceException {
@@ -118,9 +137,8 @@ public class SurveysPersistence extends Persistence {
             throws PersistenceException {
         List<Question> filteredQuestions = new ArrayList<Question>();
         for (Question question : questions) {
-            if (question.getQuestionType() == questionType) {
+            if (question.getQuestionType() == questionType)
                 filteredQuestions.add(question);
-            }
         }
         return filteredQuestions;
     }

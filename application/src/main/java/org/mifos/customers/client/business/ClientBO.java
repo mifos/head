@@ -40,13 +40,11 @@ import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
@@ -75,7 +73,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
@@ -106,23 +103,14 @@ public class ClientBO extends CustomerBO {
 
     private ClientDetailEntity customerDetail;
 
-    private final Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
+    private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
 
-    private final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
+    public void setOfferingsAssociatedInCreate(Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate) {
+        this.offeringsAssociatedInCreate = offeringsAssociatedInCreate;
+    }
 
-    /*
-     * Injected Persistence classes
-     *
-     * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     *
-     * The Persistence classes below are used by this class and can be injected
-     * via a setter for testing purposes. In order for this mechanism to work
-     * correctly, the getter must be used to access them because the getter will
-     * initialize the Persistence class if it has not been injected.
-     *
-     * Long term these references to Persistence classes should probably be
-     * eliminated.
-     */
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
+
     private ClientPersistence clientPersistence = null;
     private SavingsPersistence savingsPersistence = null;
     private SavingsPrdPersistence savingsPrdPersistence = null;
@@ -418,38 +406,6 @@ public class ClientBO extends CustomerBO {
     }
 
     @Override
-    public void changeStatus(final Short newStatusId, final Short flagId, final String comment) throws CustomerException {
-        super.changeStatus(newStatusId, flagId, comment);
-        if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
-                .equals(CustomerStatus.CLIENT_CANCELLED.getValue())) {
-            if (isClientUnderGroup()) {
-                resetPositions(getParentCustomer());
-                getParentCustomer().setUserContext(getUserContext());
-                getParentCustomer().update();
-                CustomerBO center = getParentCustomer().getParentCustomer();
-                if (center != null) {
-                    resetPositions(center);
-                    center.setUserContext(getUserContext());
-                    center.update();
-                    center = null;
-                }
-            }
-            // close customer account - #MIFOS-1504
-            for (AccountBO account : getAccounts()) {
-                if (account.isOfType(AccountTypes.CUSTOMER_ACCOUNT) && account.isOpen()) {
-                    try {
-                        account.setUserContext(getUserContext());
-                        account.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, flagId, comment);
-                        account.update();
-                    } catch (AccountException e) {
-                        throw new CustomerException(e);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public void updateMeeting(final MeetingBO meeting) throws CustomerException {
         if (getCustomerMeeting() == null) {
             this.setCustomerMeeting(createCustomerMeeting(meeting));
@@ -469,39 +425,10 @@ public class ClientBO extends CustomerBO {
     }
 
     @Override
-    protected void validateStatusChange(final Short newStatusId) throws CustomerException {
-        if (getParentCustomer() != null) {
-            checkIfClientStatusIsLower(newStatusId, getParentCustomer().getCustomerStatus().getId());
-        }
-
-        if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
-            checkIfClientCanBeClosed();
-        }
-
-        if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
-            checkIfClientCanBeActive(newStatusId);
-        }
-    }
-
-    @Override
-    protected boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
+    public boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
         return (oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
                 .equals(CustomerStatus.CLIENT_PENDING.getValue())) && newStatusId.equals(CustomerStatus.CLIENT_ACTIVE
                 .getValue());
-    }
-
-    @Override
-    protected void handleActiveForFirstTime(final Short oldStatusId, final Short newStatusId) throws CustomerException {
-        super.handleActiveForFirstTime(oldStatusId, newStatusId);
-        if (isActiveForFirstTime(oldStatusId, newStatusId)) {
-            this.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
-            createAccountsForClient();
-            getSavingsPersistence().persistSavingAccounts(this);
-
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
-            createDepositSchedule(workingDays, holidays);
-        }
     }
 
     public void updatePersonalInfo(final String displayname, final String governmentId, final Date dateOfBirth) throws CustomerException {
@@ -674,7 +601,7 @@ public class ClientBO extends CustomerBO {
         logger.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :" + getCustomerId());
     }
 
-    public void handleGroupTransfer() throws CustomerException {
+    public void handleGroupTransfer() {
         if (!isSameBranch(getParentCustomer().getOffice())) {
             makeCustomerMovementEntries(getParentCustomer().getOffice());
             if (isActive()) {
@@ -687,7 +614,6 @@ public class ClientBO extends CustomerBO {
             setPersonnel(getParentCustomer().getPersonnel());
             setUpdatedMeeting(getParentCustomer().getParentCustomer().getCustomerMeeting().getMeeting());
         }
-        update();
     }
 
     public ClientNameDetailEntity getClientName() {
@@ -879,13 +805,8 @@ public class ClientBO extends CustomerBO {
         return false;
     }
 
-    private void checkIfClientCanBeClosed() throws CustomerException {
-        if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
-            throw new CustomerException(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-        }
-    }
-
-    private void checkIfClientStatusIsLower(final Short clientStatusId, final Short groupStatus) throws CustomerException {
+    @Deprecated
+    public void checkIfClientStatusIsLower(final Short clientStatusId, final Short groupStatus) throws CustomerException {
         if ((clientStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || clientStatusId
                 .equals(CustomerStatus.CLIENT_PENDING.getValue()))
                 && this.isClientUnderGroup()) {
@@ -903,42 +824,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private void checkIfClientCanBeActive(final Short newStatus) throws CustomerException {
-        boolean loanOfficerActive = false;
-        boolean branchInactive = false;
-        short officeId = getOffice().getOfficeId();
-        if (getPersonnel() == null || getPersonnel().getPersonnelId() == null) {
-            throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
-        }
-        if (getCustomerMeeting() == null || getCustomerMeeting().getMeeting() == null) {
-            throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
-        }
-        if (getPersonnel() != null) {
-            try {
-                loanOfficerActive = getOfficePersistence().hasActivePeronnel(officeId);
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
-        }
-
-        try {
-            branchInactive = getOfficePersistence().isBranchInactive(officeId);
-        } catch (PersistenceException e) {
-            throw new CustomerException(e);
-        }
-        if (loanOfficerActive == false) {
-            throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
-                    new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-                            getUserContext()) });
-        }
-        if (branchInactive == true) {
-            throw new CustomerException(CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
-                    new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-                            getUserContext()) });
-        }
-    }
-
-    private void createAccountsForClient() throws CustomerException {
+    public void createAccountsForClient() throws CustomerException {
         if (offeringsAssociatedInCreate != null) {
             for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
                 try {
@@ -970,7 +856,7 @@ public class ClientBO extends CustomerBO {
         return customFields;
     }
 
-    private boolean isGroupStatusLower(final Short clientStatusId, final Short parentStatus) {
+    public boolean isGroupStatusLower(final Short clientStatusId, final Short parentStatus) {
         return isGroupStatusLower(CustomerStatus.fromInt(clientStatusId), CustomerStatus.fromInt(parentStatus));
     }
 
@@ -986,7 +872,8 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private void createDepositSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws CustomerException {
+    @Deprecated
+    public void createDepositSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws CustomerException {
         try {
             if (getParentCustomer() != null) {
                 List<SavingsBO> savingsList = getCustomerPersistence().retrieveSavingsAccountForCustomer(

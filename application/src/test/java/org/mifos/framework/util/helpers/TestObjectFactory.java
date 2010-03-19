@@ -379,7 +379,7 @@ public class TestObjectFactory {
         try {
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
                     trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
-                    parentCustomer, new GroupPersistence(), new OfficePersistence());
+                    parentCustomer);
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -416,8 +416,7 @@ public class TestObjectFactory {
             }
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
                     trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
-                    new OfficePersistence().getOffice(officeId), meeting, loanOfficer, new GroupPersistence(),
-                    new OfficePersistence());
+                    new OfficePersistence().getOffice(officeId), meeting, loanOfficer);
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -436,7 +435,10 @@ public class TestObjectFactory {
             final CustomerBO parentCustomer, final List<FeeView> fees, final String governmentId, final Date dateOfBirth) {
         ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        ClientNameDetailView clientNameDetailView = clientNameView(NameType.MAYBE_CLIENT, customerName);
+        //john w - changed maybe_client to client... as with new spouse_father functionality... maybe_client is father!
+
+        //ClientNameDetailView clientNameDetailView = clientNameView(NameType.MAYBE_CLIENT, customerName);
+        ClientNameDetailView clientNameDetailView = clientNameView(NameType.CLIENT, customerName);
         ClientNameDetailView spouseNameDetailView = clientNameView(NameType.SPOUSE, customerName);
         ClientBO client;
         try {
@@ -2214,7 +2216,7 @@ public class TestObjectFactory {
         GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
                 .getExternalId(), template.isTrained(), template.getTrainedDate(), template.getAddress(), template
                 .getCustomFieldViews(), template.getFees(), new PersonnelPersistence().getPersonnel(template
-                .getLoanOfficerId()), center, new GroupPersistence(), new OfficePersistence());
+                .getLoanOfficerId()), center);
         group.setCustomerActivationDate(customerActivationDate);
         return group;
     }

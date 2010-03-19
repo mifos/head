@@ -302,4 +302,12 @@ public abstract class FeeBO extends BusinessObject {
             throw new FeeException(pe);
         }
     }
+
+    public boolean isMonthly() {
+        return this.feeFrequency.getFeeMeetingFrequency().isMonthly();
+    }
+
+    public boolean isWeekly() {
+        return this.feeFrequency.getFeeMeetingFrequency().isWeekly();
+    }
 }

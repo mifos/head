@@ -55,7 +55,7 @@ public abstract class BusinessObject extends PersistentObject {
         setCreatedBy(userId);
     }
 
-    protected void setUpdateDetails() {
+    public void setUpdateDetails() {
         setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
         if (userContext != null) {
             setUpdatedBy(userContext.getId());

@@ -45,6 +45,12 @@ import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.security.util.UserContext;
 
 public class HolidayBusinessService implements BusinessService {
+    
+    private MoratoriumSwitch moratoriumSwitch = new MoratoriumSwitch();
+    
+    public void setMoratoriumSwitch (MoratoriumSwitch moratoriumSwitch) {
+        this.moratoriumSwitch = moratoriumSwitch;
+    }
 
     @Override
     public BusinessObject getBusinessObject(final UserContext userContext) {
@@ -75,7 +81,7 @@ public class HolidayBusinessService implements BusinessService {
     public List<RepaymentRuleEntity> getRepaymentRuleTypes() throws ServiceException {
         try {
             List<RepaymentRuleEntity> rules =  new HolidayPersistence().getRepaymentRuleTypes();
-            if ( MoratoriumSwitch.IS_ON ) {
+            if ( moratoriumSwitch.isOn() ) {
                 return rules;
             }
             // remove Repayment Moratorium rule

@@ -20,6 +20,7 @@
 package org.mifos.customers.business;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
@@ -145,5 +146,16 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         // verification
         assertThat(activeClients.size(), is(1));
         assertThat(activeClients.get(0).getCustomerId(), is(activeClient.getCustomerId()));
+    }
+
+    public void testShouldFindGroupWithParentInitialisedBySystemId() {
+
+        // exercise test
+        GroupBO activeGroup = customerDao.findGroupBySystemId(group.getGlobalCustNum());
+
+        // verification
+        assertThat(activeGroup, is(notNullValue()));
+        assertThat(activeGroup.getParentCustomer(), is(notNullValue()));
+        assertThat(activeGroup.getParentCustomer().getDisplayName(), is(notNullValue()));
     }
 }

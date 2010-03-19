@@ -83,7 +83,7 @@ public class ReportsParamsMapAction extends BaseAction {
         if (strReportId == null) {
             strReportId = actionForm.getReportId() + "";
         }
-        if (strReportId.equals("")) {
+        if (strReportId == null || strReportId.equals("")) {
             strReportId = "0";
         }
         int reportId = Integer.parseInt(strReportId);

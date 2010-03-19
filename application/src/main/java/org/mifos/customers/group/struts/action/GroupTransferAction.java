@@ -32,13 +32,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.servicefacade.CustomerServiceFacade;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.service.CenterBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
@@ -52,6 +53,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
@@ -59,12 +61,10 @@ import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -75,11 +75,13 @@ import org.mifos.security.util.UserContext;
 
 public class GroupTransferAction extends BaseAction {
 
+    private final CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
+    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+
     private MasterDataService masterService;
 
     public GroupTransferAction() {
-        masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.MasterDataService);
+        masterService = new MasterDataService();
     }
 
     @Override
@@ -101,49 +103,58 @@ public class GroupTransferAction extends BaseAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward loadBranches(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadBranches(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.loadBranches_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previewBranchTransfer(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previewBranchTransfer(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previewBranchTransfer_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward transferToBranch(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
-        OfficeBO officeToTransfer = getOfficeBusinessService().getOffice(actionForm.getOfficeIdValue());
+        UserContext userContext = getUserContext(request);
         GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        GroupBO group = getGroupBusinessService().getGroup(groupInSession.getCustomerId());
+
+        GroupBO group = this.customerServiceFacade.transferGroupToBranch(groupInSession.getGlobalCustNum(), actionForm.getOfficeIdValue(), userContext, groupInSession.getVersionNo());
+
+        OfficeBO officeToTransfer = getOfficeBusinessService().getOffice(actionForm.getOfficeIdValue());
+//        GroupBO group = getGroupBusinessService().getGroup(groupInSession.getCustomerId());
+
         checkVersionMismatch(groupInSession.getVersionNo(), group.getVersionNo());
-        group.setVersionNo(groupInSession.getVersionNo());
-        group.setUserContext(getUserContext(request));
-        setInitialObjectForAuditLogging(group);
-        group.transferToBranch(officeToTransfer);
-        groupInSession = null;
+
+//        group.setVersionNo(groupInSession.getVersionNo());
+//        group.setUserContext(getUserContext(request));
+//        setInitialObjectForAuditLogging(group);
+
+//        group.transferToBranch(officeToTransfer);
+//        groupInSession = null;
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancel_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward loadParents(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadParents(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CenterSearchInput centerSearchInput = new CenterSearchInput();
         centerSearchInput.setOfficeId(getUserContext(request).getBranchId());
         centerSearchInput.setGroupInput(GroupConstants.GROUP_TRANSFER_INPUT);
@@ -152,38 +163,33 @@ public class GroupTransferAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previewParentTransfer(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previewParentTransfer(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previewParentTransfer_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward transferToCenter(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
-        CenterBO transferToCenter = getCenterBusinessService().findBySystemId(actionForm.getCenterSystemId());
-        transferToCenter.setUserContext(getUserContext(request));
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
+        GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        GroupBO group = getGroupBusinessService().getGroup(groupInSession.getCustomerId());
-        checkVersionMismatch(groupInSession.getVersionNo(), group.getVersionNo());
-        group.setUserContext(getUserContext(request));
-        group.setVersionNo(groupInSession.getVersionNo());
-        setInitialObjectForAuditLogging(group);
-        group.transferToCenter(transferToCenter);
-        groupInSession = null;
+        UserContext userContext = getUserContext(request);
+
+        GroupBO group = this.customerServiceFacade.transferGroupToCenter(groupInSession.getGlobalCustNum(), actionForm.getCenterSystemId(), userContext, groupInSession.getVersionNo());
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
     protected CustomerBusinessService getCustomerBusinessService() {
-        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
+        return new CustomerBusinessService();
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadGrpMemberShip(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         doCleanUp(request.getSession(), form);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
 
@@ -219,7 +225,7 @@ public class GroupTransferAction extends BaseAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward removeGroupMemberShip(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
@@ -232,7 +238,6 @@ public class GroupTransferAction extends BaseAction {
 
         ClientBO client = getClientBusinessService().getClient(customerBO.getCustomerId());
 
-        CustomerPersistence customerPersistence = new CustomerPersistence();
         client.updateClientFlag();
         setInitialObjectForAuditLogging(customerBO);
         PersonnelBO personnel = null;
@@ -249,8 +254,8 @@ public class GroupTransferAction extends BaseAction {
 
     }
 
-    private void checkBeforeRemoving(CustomerBO customerBO, GroupTransferActionForm actionForm,
-            HttpServletRequest request) throws CustomerException {
+    private void checkBeforeRemoving(CustomerBO customerBO, @SuppressWarnings("unused") GroupTransferActionForm actionForm,
+            @SuppressWarnings("unused") HttpServletRequest request) throws CustomerException {
 
         if (customerBO.hasActiveLoanAccounts()) {
             throw new CustomerException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
@@ -274,13 +279,12 @@ public class GroupTransferAction extends BaseAction {
 
     }
 
-    private ClientBusinessService getClientBusinessService() throws ServiceException {
-        return (ClientBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Client);
+    private ClientBusinessService getClientBusinessService() {
+        return new ClientBusinessService();
     }
 
-    private PersonnelBusinessService getPersonnelBusinessService() throws ServiceException {
-        return (PersonnelBusinessService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.Personnel);
+    private PersonnelBusinessService getPersonnelBusinessService() {
+        return new PersonnelBusinessService();
     }
 
     private List<PersonnelView> loadLoanOfficersForBranch(UserContext userContext, Short branchId) throws Exception {
@@ -294,15 +298,15 @@ public class GroupTransferAction extends BaseAction {
     }
 
     private OfficeBusinessService getOfficeBusinessService() throws ServiceException {
-        return (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Office);
+        return new OfficeBusinessService();
     }
 
     private GroupBusinessService getGroupBusinessService() {
-        return (GroupBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Group);
+        return new GroupBusinessService();
     }
 
     private CenterBusinessService getCenterBusinessService() {
-        return (CenterBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Center);
+        return new CenterBusinessService();
     }
 
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -316,5 +320,4 @@ public class GroupTransferAction extends BaseAction {
         }
         return null;
     }
-
 }

@@ -113,7 +113,7 @@ public class CenterCustActionForm extends CustomerActionForm {
         if (method.equals(Methods.preview.toString()) || method.equals(Methods.editPreview.toString())) {
             validateMfiJoiningDate(request, errors);
             validateConfigurableMandatoryFields(request, errors, EntityType.CENTER);
-            validateCustomFields(request, errors);
+            validateCustomFieldsForCustomers(request, errors);
         }
         // fees are only editable in preview and come last
         if (method.equals(Methods.preview.toString())) {

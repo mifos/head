@@ -21,6 +21,7 @@
 package org.mifos.customers.office.struts.tag;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,6 +30,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
+import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -60,14 +63,40 @@ public class OfficeListTag extends BodyTagSupport {
     @Override
     public int doStartTag() throws JspException {
         try {
-            UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
+            String officeListString = "";
 
-            TagUtils.getInstance().write(pageContext, getOfficeList(userContext));
+            OnlyBranchOfficeHierarchyDto officeHierarchyDto = (OnlyBranchOfficeHierarchyDto) pageContext
+                    .getAttribute(OnlyBranchOfficeHierarchyDto.IDENTIFIER);
+
+            if (officeHierarchyDto != null) {
+                officeListString = getOfficeList(officeHierarchyDto);
+            } else {
+
+                // FIXME - keithw - group creation and personnel creation use this still
+                UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
+                OfficePersistence officePersistence = new OfficePersistence();
+                OfficeBO officeBO = officePersistence.getOffice(userContext.getBranchId());
+
+                List<OfficeView> levels = officePersistence.getActiveLevels(userContext.getLocaleId());
+                OfficeBO loggedInOffice = officePersistence.getOffice(userContext.getBranchId());
+
+                List<OfficeBO> branchParents = officePersistence.getBranchParents(officeBO.getSearchId());
+
+                List<OfficeHierarchyDto> officeHierarchy = OfficeBO
+                        .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(branchParents);
+
+                List<OfficeBO> officesTillBranchOffice = officePersistence.getOfficesTillBranchOffice(officeBO
+                        .getSearchId());
+
+                officeListString = getOfficeList(userContext.getPreferredLocale(), levels,
+                        loggedInOffice.getSearchId(), officeHierarchy, officesTillBranchOffice);
+            }
+
+            TagUtils.getInstance().write(pageContext, officeListString);
 
         } catch (Exception e) {
             /**
-             * This turns into a (rather ugly) error 500. TODO: make it more
-             * reasonable.
+             * This turns into a (rather ugly) error 500. TODO: make it more reasonable.
              */
             throw new JspException(e);
         }
@@ -98,34 +127,13 @@ public class OfficeListTag extends BodyTagSupport {
         this.onlyBranchOffices = onlyBranchOffices;
     }
 
-    String getOfficeList(UserContext userContext) throws Exception {
-
-        OfficePersistence officePersistence = new OfficePersistence();
-        OfficeBO officeBO = officePersistence.getOffice(userContext.getBranchId());
-
-        List<OfficeView> levels = officePersistence.getActiveLevels(userContext.getLocaleId());
-        OfficeBO loggedInOffice = officePersistence.getOffice(userContext.getBranchId());
-
-        List<OfficeBO> branchParents = officePersistence.getBranchParents(officeBO.getSearchId());
-        List<OfficeBO> officesTillBranchOffice = officePersistence.getOfficesTillBranchOffice(officeBO.getSearchId());
-
-        return getOfficeList(userContext, levels, loggedInOffice, branchParents, officesTillBranchOffice);
+    private String getOfficeList(OnlyBranchOfficeHierarchyDto officeHierarchy) {
+        return getOfficeList(officeHierarchy.getPreferredLocaleOfUser(), officeHierarchy.getLevels(), officeHierarchy
+                .getLoggedInOfficeSearchId(), officeHierarchy.getBranchOnlyOfficeHierarchy(), null);
     }
 
-    @Deprecated
-    String getOfficeList(UserContext userContext, List<OfficeView> levels, OfficeBO loggedInOffice,
-            List<OfficeBO> branchParents) throws Exception {
-
-        OfficePersistence officePersistence = new OfficePersistence();
-        OfficeBO officeBO = officePersistence.getOffice(userContext.getBranchId());
-
-        List<OfficeBO> officesTillBranchOffice = officePersistence.getOfficesTillBranchOffice(officeBO.getSearchId());
-
-        return getOfficeList(userContext, levels, loggedInOffice, branchParents, officesTillBranchOffice);
-    }
-
-    String getOfficeList(UserContext userContext, List<OfficeView> levels, OfficeBO loggedInOffice,
-            List<OfficeBO> branchParents, List<OfficeBO> officesTillBranchOffice) {
+    String getOfficeList(Locale preferredUserLocale, List<OfficeView> levels, String loggedInOfficeSearchId,
+            List<OfficeHierarchyDto> officeHierarchy, List<OfficeBO> officesTillBranchOffice) {
         String termForBranch = "";
         String regional = "";
         String subregional = "";
@@ -144,17 +152,17 @@ public class OfficeListTag extends BodyTagSupport {
 
         XmlBuilder result = new XmlBuilder();
         if (onlyBranchOffices != null) {
-            getBranchOffices(result, branchParents, userContext, loggedInOffice, termForBranch);
+            getBranchOffices(result, officeHierarchy, preferredUserLocale, loggedInOfficeSearchId, termForBranch);
         } else {
             getAboveBranches(result, officesTillBranchOffice, regional, subregional, area);
-            getBranchOffices(result, branchParents, userContext, loggedInOffice, termForBranch);
+            getBranchOffices(result, officeHierarchy, preferredUserLocale, loggedInOfficeSearchId, termForBranch);
         }
 
         return result.getOutput();
     }
 
-    void getBranchOffices(XmlBuilder html, List<OfficeBO> officeList, UserContext userContext, OfficeBO loggedInOffice,
-            String branchName) {
+    void getBranchOffices(XmlBuilder html, List<OfficeHierarchyDto> officeList, Locale preferredUserLocale,
+            String loggedInOfficeSearchId, String branchName) {
         html.singleTag("br");
 
         html.startTag("span", "class", "fontnormalBold");
@@ -163,8 +171,7 @@ public class OfficeListTag extends BodyTagSupport {
 
         html.singleTag("br");
         if (officeList == null) {
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.OFFICERESOURCEPATH, userContext
-                    .getPreferredLocale());
+            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.OFFICERESOURCEPATH, preferredUserLocale);
             html.startTag("span", "class", "fontnormal");
             html.text(resources.getString("Office.labelNo"));
             html.text(" ");
@@ -174,11 +181,16 @@ public class OfficeListTag extends BodyTagSupport {
             html.endTag("span");
         } else {
             for (int i = 0; i < officeList.size(); i++) {
-                OfficeBO officeParent = officeList.get(i);
-                // Set<OfficeBO> branchList =
-                // officeParent.getBranchOnlyChildren();
-                Set<OfficeBO> branchList = retrieveDataScopeBranches(officeParent.getBranchOnlyChildren(),
-                        loggedInOffice);
+                OfficeHierarchyDto officeParent = officeList.get(i);
+
+                Set<OfficeHierarchyDto> branchList = new TreeSet<OfficeHierarchyDto>();
+
+                for (OfficeHierarchyDto dataScopeBranch : officeParent.getChildren()) {
+                    if (dataScopeBranch.getSearchId().startsWith(loggedInOfficeSearchId) && dataScopeBranch.isActive()) {
+                        branchList.add(dataScopeBranch);
+                    }
+                }
+
                 if (branchList.size() > 0) {
                     if (i > 0) {
                         html.singleTag("br");
@@ -188,37 +200,21 @@ public class OfficeListTag extends BodyTagSupport {
                     html.text(officeParent.getOfficeName());
                     html.endTag("span");
 
-                    if (null != branchList) {
-                        html.startTag("table", "width", "90%", "border", "0", "cellspacing", "0", "cellpadding", "0");
-                        for (OfficeBO office : branchList) {
-                            html.startTag("tr", "class", "fontnormal");
+                    html.startTag("table", "width", "90%", "border", "0", "cellspacing", "0", "cellpadding", "0");
+                    for (OfficeHierarchyDto office : branchList) {
+                        html.startTag("tr", "class", "fontnormal");
 
-                            bullet(html);
+                        bullet(html);
 
-                            html.startTag("td", "width", "99%");
-                            html.append(getLink(office.getOfficeId(), office.getOfficeName()));
-                            html.endTag("td");
-                            html.endTag("tr");
-                        }
-                        html.endTag("table");
+                        html.startTag("td", "width", "99%");
+                        html.append(getLink(office.getOfficeId(), office.getOfficeName()));
+                        html.endTag("td");
+                        html.endTag("tr");
                     }
+                    html.endTag("table");
                 }
             }
         }
-    }
-
-    private Set<OfficeBO> retrieveDataScopeBranches(Set<OfficeBO> branchOnlyChildren, OfficeBO loggedInOffice) {
-        Set<OfficeBO> dataScopeBranches = new TreeSet<OfficeBO>();
-
-        if (branchOnlyChildren.size() > 0) {
-            for (OfficeBO dataScopeBranch : branchOnlyChildren) {
-                if (dataScopeBranch.getSearchId().startsWith(loggedInOffice.getSearchId())
-                        && dataScopeBranch.isActive()) {
-                    dataScopeBranches.add(dataScopeBranch);
-                }
-            }
-        }
-        return dataScopeBranches;
     }
 
     XmlBuilder getLink(Short officeId, String officeName) {
